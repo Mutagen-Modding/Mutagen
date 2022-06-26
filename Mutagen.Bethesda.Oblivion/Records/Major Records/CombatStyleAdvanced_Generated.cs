@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CombatStyleAdvancedBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CombatStyleAdvancedBinaryWriteTranslation Instance = new CombatStyleAdvancedBinaryWriteTranslation();
+        public static readonly CombatStyleAdvancedBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICombatStyleAdvancedGetter item,

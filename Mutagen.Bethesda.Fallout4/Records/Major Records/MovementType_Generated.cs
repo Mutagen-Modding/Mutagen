@@ -3161,7 +3161,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MovementTypeBinaryWriteTranslation Instance = new MovementTypeBinaryWriteTranslation();
+        public new static readonly MovementTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMovementTypeGetter item,

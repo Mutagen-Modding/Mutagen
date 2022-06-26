@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceLandDefaultsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WorldspaceLandDefaultsBinaryWriteTranslation Instance = new WorldspaceLandDefaultsBinaryWriteTranslation();
+        public static readonly WorldspaceLandDefaultsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWorldspaceLandDefaultsGetter item,

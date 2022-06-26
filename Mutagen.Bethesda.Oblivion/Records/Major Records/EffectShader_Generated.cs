@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly EffectShaderBinaryWriteTranslation Instance = new EffectShaderBinaryWriteTranslation();
+        public new static readonly EffectShaderBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IEffectShaderGetter item,

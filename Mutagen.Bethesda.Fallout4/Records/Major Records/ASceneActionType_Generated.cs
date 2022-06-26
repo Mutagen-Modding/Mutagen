@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ASceneActionTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ASceneActionTypeBinaryWriteTranslation Instance = new ASceneActionTypeBinaryWriteTranslation();
+        public static readonly ASceneActionTypeBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

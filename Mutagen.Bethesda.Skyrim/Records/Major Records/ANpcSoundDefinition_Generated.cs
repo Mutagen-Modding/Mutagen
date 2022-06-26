@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ANpcSoundDefinitionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ANpcSoundDefinitionBinaryWriteTranslation Instance = new ANpcSoundDefinitionBinaryWriteTranslation();
+        public static readonly ANpcSoundDefinitionBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

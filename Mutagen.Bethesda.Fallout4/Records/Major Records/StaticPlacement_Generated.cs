@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class StaticPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly StaticPlacementBinaryWriteTranslation Instance = new StaticPlacementBinaryWriteTranslation();
+        public static readonly StaticPlacementBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IStaticPlacementGetter item,

@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AHolotapeDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AHolotapeDataBinaryWriteTranslation Instance = new AHolotapeDataBinaryWriteTranslation();
+        public static readonly AHolotapeDataBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

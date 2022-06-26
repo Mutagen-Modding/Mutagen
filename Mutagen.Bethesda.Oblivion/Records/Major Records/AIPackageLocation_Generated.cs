@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AIPackageLocationBinaryWriteTranslation Instance = new AIPackageLocationBinaryWriteTranslation();
+        public static readonly AIPackageLocationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAIPackageLocationGetter item,

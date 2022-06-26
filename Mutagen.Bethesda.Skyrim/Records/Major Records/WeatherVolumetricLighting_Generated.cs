@@ -1138,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherVolumetricLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WeatherVolumetricLightingBinaryWriteTranslation Instance = new WeatherVolumetricLightingBinaryWriteTranslation();
+        public static readonly WeatherVolumetricLightingBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWeatherVolumetricLightingGetter item,

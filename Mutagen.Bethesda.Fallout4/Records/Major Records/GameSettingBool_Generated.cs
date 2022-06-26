@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Fallout4
         GameSettingBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GameSettingBoolBinaryWriteTranslation Instance = new GameSettingBoolBinaryWriteTranslation();
+        public new static readonly GameSettingBoolBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IGameSettingBoolGetter item,

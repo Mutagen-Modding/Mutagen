@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly FootstepSetBinaryWriteTranslation Instance = new FootstepSetBinaryWriteTranslation();
+        public new static readonly FootstepSetBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IFootstepSetGetter item,

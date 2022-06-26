@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SkyrimGroupBinaryWriteTranslation Instance = new SkyrimGroupBinaryWriteTranslation();
+        public static readonly SkyrimGroupBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded<T>(
             ISkyrimGroupGetter<T> item,

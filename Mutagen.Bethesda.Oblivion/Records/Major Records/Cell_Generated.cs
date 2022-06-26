@@ -4350,7 +4350,7 @@ namespace Mutagen.Bethesda.Oblivion
         PlaceBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly CellBinaryWriteTranslation Instance = new CellBinaryWriteTranslation();
+        public new static readonly CellBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellGetter item,

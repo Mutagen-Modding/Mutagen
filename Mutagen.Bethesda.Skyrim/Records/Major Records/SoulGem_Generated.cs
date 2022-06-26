@@ -2421,7 +2421,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SoulGemBinaryWriteTranslation Instance = new SoulGemBinaryWriteTranslation();
+        public new static readonly SoulGemBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISoulGemGetter item,

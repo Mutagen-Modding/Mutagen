@@ -1600,7 +1600,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly EncounterZoneBinaryWriteTranslation Instance = new EncounterZoneBinaryWriteTranslation();
+        public new static readonly EncounterZoneBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IEncounterZoneGetter item,

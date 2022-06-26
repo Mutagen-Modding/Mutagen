@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellWaterVelocityBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellWaterVelocityBinaryWriteTranslation Instance = new CellWaterVelocityBinaryWriteTranslation();
+        public static readonly CellWaterVelocityBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellWaterVelocityGetter item,

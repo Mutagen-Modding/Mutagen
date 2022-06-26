@@ -7279,7 +7279,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PlacedObjectBinaryWriteTranslation Instance = new PlacedObjectBinaryWriteTranslation();
+        public new static readonly PlacedObjectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedObjectGetter item,

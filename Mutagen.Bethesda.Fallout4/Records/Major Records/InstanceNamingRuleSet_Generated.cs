@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class InstanceNamingRuleSetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly InstanceNamingRuleSetBinaryWriteTranslation Instance = new InstanceNamingRuleSetBinaryWriteTranslation();
+        public static readonly InstanceNamingRuleSetBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IInstanceNamingRuleSetGetter item,

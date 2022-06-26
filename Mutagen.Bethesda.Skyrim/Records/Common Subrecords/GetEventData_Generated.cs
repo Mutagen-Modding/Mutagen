@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
         ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GetEventDataBinaryWriteTranslation Instance = new GetEventDataBinaryWriteTranslation();
+        public new static readonly GetEventDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IGetEventDataGetter item,

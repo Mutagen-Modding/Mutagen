@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PartBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PartBinaryWriteTranslation Instance = new PartBinaryWriteTranslation();
+        public static readonly PartBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IPartGetter item,

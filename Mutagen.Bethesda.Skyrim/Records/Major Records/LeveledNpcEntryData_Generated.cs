@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LeveledNpcEntryDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LeveledNpcEntryDataBinaryWriteTranslation Instance = new LeveledNpcEntryDataBinaryWriteTranslation();
+        public static readonly LeveledNpcEntryDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILeveledNpcEntryDataGetter item,

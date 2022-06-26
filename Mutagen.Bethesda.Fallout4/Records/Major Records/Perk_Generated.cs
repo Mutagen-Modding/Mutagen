@@ -2354,7 +2354,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PerkBinaryWriteTranslation Instance = new PerkBinaryWriteTranslation();
+        public new static readonly PerkBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPerkGetter item,

@@ -2071,7 +2071,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SceneActionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SceneActionBinaryWriteTranslation Instance = new SceneActionBinaryWriteTranslation();
+        public static readonly SceneActionBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ISceneActionGetter item,

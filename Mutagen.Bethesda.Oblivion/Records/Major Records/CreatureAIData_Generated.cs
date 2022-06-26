@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CreatureAIDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CreatureAIDataBinaryWriteTranslation Instance = new CreatureAIDataBinaryWriteTranslation();
+        public static readonly CreatureAIDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICreatureAIDataGetter item,

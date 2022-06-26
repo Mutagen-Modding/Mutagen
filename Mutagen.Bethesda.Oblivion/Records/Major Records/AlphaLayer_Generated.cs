@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion
         BaseLayerBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AlphaLayerBinaryWriteTranslation Instance = new AlphaLayerBinaryWriteTranslation();
+        public new static readonly AlphaLayerBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IAlphaLayerGetter item,

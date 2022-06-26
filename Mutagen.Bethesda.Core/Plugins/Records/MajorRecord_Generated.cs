@@ -1509,7 +1509,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 {
     public partial class MajorRecordBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MajorRecordBinaryWriteTranslation Instance = new MajorRecordBinaryWriteTranslation();
+        public static readonly MajorRecordBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMajorRecordGetter item,

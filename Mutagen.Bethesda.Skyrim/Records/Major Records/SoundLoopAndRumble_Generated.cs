@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundLoopAndRumbleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SoundLoopAndRumbleBinaryWriteTranslation Instance = new SoundLoopAndRumbleBinaryWriteTranslation();
+        public static readonly SoundLoopAndRumbleBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISoundLoopAndRumbleGetter item,

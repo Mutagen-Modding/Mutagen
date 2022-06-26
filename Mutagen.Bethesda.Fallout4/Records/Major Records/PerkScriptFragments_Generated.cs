@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PerkScriptFragmentsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PerkScriptFragmentsBinaryWriteTranslation Instance = new PerkScriptFragmentsBinaryWriteTranslation();
+        public static readonly PerkScriptFragmentsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPerkScriptFragmentsGetter item,

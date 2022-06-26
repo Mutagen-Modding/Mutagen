@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Fallout4
         AAudioEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly StateVariableFilterAudioEffectBinaryWriteTranslation Instance = new StateVariableFilterAudioEffectBinaryWriteTranslation();
+        public new static readonly StateVariableFilterAudioEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IStateVariableFilterAudioEffectGetter item,

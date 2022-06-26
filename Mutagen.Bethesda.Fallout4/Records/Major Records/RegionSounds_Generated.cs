@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Fallout4
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RegionSoundsBinaryWriteTranslation Instance = new RegionSoundsBinaryWriteTranslation();
+        public new static readonly RegionSoundsBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IRegionSoundsGetter item,

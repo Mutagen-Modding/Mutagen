@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class EquipmentSlotBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly EquipmentSlotBinaryWriteTranslation Instance = new EquipmentSlotBinaryWriteTranslation();
+        public static readonly EquipmentSlotBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IEquipmentSlotGetter item,

@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectVisibilityManagerItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ObjectVisibilityManagerItemBinaryWriteTranslation Instance = new ObjectVisibilityManagerItemBinaryWriteTranslation();
+        public static readonly ObjectVisibilityManagerItemBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IObjectVisibilityManagerItemGetter item,

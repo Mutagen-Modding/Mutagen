@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly OblivionModHeaderBinaryWriteTranslation Instance = new OblivionModHeaderBinaryWriteTranslation();
+        public static readonly OblivionModHeaderBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IOblivionModHeaderGetter item,

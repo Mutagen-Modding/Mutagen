@@ -1349,7 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceHdrBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ImageSpaceHdrBinaryWriteTranslation Instance = new ImageSpaceHdrBinaryWriteTranslation();
+        public static readonly ImageSpaceHdrBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IImageSpaceHdrGetter item,

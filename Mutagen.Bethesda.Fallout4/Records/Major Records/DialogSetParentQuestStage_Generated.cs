@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DialogSetParentQuestStageBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DialogSetParentQuestStageBinaryWriteTranslation Instance = new DialogSetParentQuestStageBinaryWriteTranslation();
+        public static readonly DialogSetParentQuestStageBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDialogSetParentQuestStageGetter item,

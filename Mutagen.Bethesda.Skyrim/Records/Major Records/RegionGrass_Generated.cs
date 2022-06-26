@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RegionGrassBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RegionGrassBinaryWriteTranslation Instance = new RegionGrassBinaryWriteTranslation();
+        public static readonly RegionGrassBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRegionGrassGetter item,

@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MessageButtonBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MessageButtonBinaryWriteTranslation Instance = new MessageButtonBinaryWriteTranslation();
+        public static readonly MessageButtonBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IMessageButtonGetter item,

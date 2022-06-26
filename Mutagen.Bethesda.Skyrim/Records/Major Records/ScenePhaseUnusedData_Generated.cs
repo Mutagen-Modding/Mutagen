@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScenePhaseUnusedDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ScenePhaseUnusedDataBinaryWriteTranslation Instance = new ScenePhaseUnusedDataBinaryWriteTranslation();
+        public static readonly ScenePhaseUnusedDataBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IScenePhaseUnusedDataGetter item,

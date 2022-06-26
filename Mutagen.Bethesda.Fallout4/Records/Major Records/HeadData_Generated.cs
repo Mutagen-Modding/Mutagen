@@ -2308,7 +2308,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class HeadDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly HeadDataBinaryWriteTranslation Instance = new HeadDataBinaryWriteTranslation();
+        public static readonly HeadDataBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IHeadDataGetter item,

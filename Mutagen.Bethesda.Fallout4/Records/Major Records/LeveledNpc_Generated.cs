@@ -1989,7 +1989,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LeveledNpcBinaryWriteTranslation Instance = new LeveledNpcBinaryWriteTranslation();
+        public new static readonly LeveledNpcBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ILeveledNpcGetter item,

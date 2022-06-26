@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LoadScreenRotationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LoadScreenRotationBinaryWriteTranslation Instance = new LoadScreenRotationBinaryWriteTranslation();
+        public static readonly LoadScreenRotationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILoadScreenRotationGetter item,

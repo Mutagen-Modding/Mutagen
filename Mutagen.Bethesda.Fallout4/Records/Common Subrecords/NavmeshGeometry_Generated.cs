@@ -2491,7 +2491,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NavmeshGeometryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NavmeshGeometryBinaryWriteTranslation Instance = new NavmeshGeometryBinaryWriteTranslation();
+        public static readonly NavmeshGeometryBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INavmeshGeometryGetter item,

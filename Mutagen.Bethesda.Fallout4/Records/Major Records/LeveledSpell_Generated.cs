@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LeveledSpellBinaryWriteTranslation Instance = new LeveledSpellBinaryWriteTranslation();
+        public new static readonly LeveledSpellBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,

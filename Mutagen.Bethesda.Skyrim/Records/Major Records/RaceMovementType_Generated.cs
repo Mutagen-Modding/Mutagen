@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RaceMovementTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RaceMovementTypeBinaryWriteTranslation Instance = new RaceMovementTypeBinaryWriteTranslation();
+        public static readonly RaceMovementTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IRaceMovementTypeGetter item,

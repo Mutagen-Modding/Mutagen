@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorkbenchDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WorkbenchDataBinaryWriteTranslation Instance = new WorkbenchDataBinaryWriteTranslation();
+        public static readonly WorkbenchDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWorkbenchDataGetter item,

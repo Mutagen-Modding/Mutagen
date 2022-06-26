@@ -3137,7 +3137,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PhonemeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PhonemeBinaryWriteTranslation Instance = new PhonemeBinaryWriteTranslation();
+        public static readonly PhonemeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPhonemeGetter item,

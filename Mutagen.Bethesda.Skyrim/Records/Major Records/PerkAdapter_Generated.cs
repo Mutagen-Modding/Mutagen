@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PerkAdapterBinaryWriteTranslation Instance = new PerkAdapterBinaryWriteTranslation();
+        public new static readonly PerkAdapterBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPerkAdapterGetter item,

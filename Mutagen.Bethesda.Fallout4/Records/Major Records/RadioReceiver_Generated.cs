@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RadioReceiverBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RadioReceiverBinaryWriteTranslation Instance = new RadioReceiverBinaryWriteTranslation();
+        public static readonly RadioReceiverBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRadioReceiverGetter item,

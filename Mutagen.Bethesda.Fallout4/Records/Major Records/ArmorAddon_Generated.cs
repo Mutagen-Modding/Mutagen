@@ -2492,7 +2492,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ArmorAddonBinaryWriteTranslation Instance = new ArmorAddonBinaryWriteTranslation();
+        public new static readonly ArmorAddonBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IArmorAddonGetter item,

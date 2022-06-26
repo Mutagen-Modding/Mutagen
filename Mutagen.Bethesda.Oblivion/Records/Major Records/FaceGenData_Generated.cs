@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class FaceGenDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FaceGenDataBinaryWriteTranslation Instance = new FaceGenDataBinaryWriteTranslation();
+        public static readonly FaceGenDataBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IFaceGenDataGetter item,

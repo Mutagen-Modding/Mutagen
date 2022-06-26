@@ -1784,7 +1784,7 @@ namespace Mutagen.Bethesda.Fallout4
         AQuestAliasBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly QuestLocationAliasBinaryWriteTranslation Instance = new QuestLocationAliasBinaryWriteTranslation();
+        public new static readonly QuestLocationAliasBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IQuestLocationAliasGetter item,

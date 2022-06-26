@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion
         SpellBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SpellLeveledBinaryWriteTranslation Instance = new SpellLeveledBinaryWriteTranslation();
+        public new static readonly SpellLeveledBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,

@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LandscapeVertexHeightMapBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LandscapeVertexHeightMapBinaryWriteTranslation Instance = new LandscapeVertexHeightMapBinaryWriteTranslation();
+        public static readonly LandscapeVertexHeightMapBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILandscapeVertexHeightMapGetter item,

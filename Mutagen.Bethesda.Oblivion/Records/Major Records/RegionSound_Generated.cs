@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RegionSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RegionSoundBinaryWriteTranslation Instance = new RegionSoundBinaryWriteTranslation();
+        public static readonly RegionSoundBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRegionSoundGetter item,

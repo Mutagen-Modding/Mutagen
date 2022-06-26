@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4
         AQuestAliasBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly CollectionAliasBinaryWriteTranslation Instance = new CollectionAliasBinaryWriteTranslation();
+        public new static readonly CollectionAliasBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ICollectionAliasGetter item,

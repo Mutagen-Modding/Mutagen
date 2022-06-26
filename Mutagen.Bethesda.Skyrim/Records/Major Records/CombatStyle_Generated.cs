@@ -2321,7 +2321,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly CombatStyleBinaryWriteTranslation Instance = new CombatStyleBinaryWriteTranslation();
+        public new static readonly CombatStyleBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICombatStyleGetter item,

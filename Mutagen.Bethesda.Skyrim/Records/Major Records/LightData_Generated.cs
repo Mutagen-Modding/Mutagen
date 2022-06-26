@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LightDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LightDataBinaryWriteTranslation Instance = new LightDataBinaryWriteTranslation();
+        public static readonly LightDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILightDataGetter item,

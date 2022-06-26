@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BipedBodyTemplateBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BipedBodyTemplateBinaryWriteTranslation Instance = new BipedBodyTemplateBinaryWriteTranslation();
+        public static readonly BipedBodyTemplateBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IBipedBodyTemplateGetter item,

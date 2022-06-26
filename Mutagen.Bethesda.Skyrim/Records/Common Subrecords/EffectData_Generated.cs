@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EffectDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly EffectDataBinaryWriteTranslation Instance = new EffectDataBinaryWriteTranslation();
+        public static readonly EffectDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IEffectDataGetter item,

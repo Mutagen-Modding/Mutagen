@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ProjectedDecalBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ProjectedDecalBinaryWriteTranslation Instance = new ProjectedDecalBinaryWriteTranslation();
+        public static readonly ProjectedDecalBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IProjectedDecalGetter item,

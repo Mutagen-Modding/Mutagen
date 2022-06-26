@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PotionBinaryWriteTranslation Instance = new PotionBinaryWriteTranslation();
+        public new static readonly PotionBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IPotionGetter item,

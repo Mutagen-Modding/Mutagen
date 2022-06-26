@@ -1924,7 +1924,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LoadScreenBinaryWriteTranslation Instance = new LoadScreenBinaryWriteTranslation();
+        public new static readonly LoadScreenBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ILoadScreenGetter item,

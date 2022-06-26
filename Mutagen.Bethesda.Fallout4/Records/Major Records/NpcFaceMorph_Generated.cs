@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcFaceMorphBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NpcFaceMorphBinaryWriteTranslation Instance = new NpcFaceMorphBinaryWriteTranslation();
+        public static readonly NpcFaceMorphBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INpcFaceMorphGetter item,

@@ -1012,7 +1012,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BipedObjectDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BipedObjectDataBinaryWriteTranslation Instance = new BipedObjectDataBinaryWriteTranslation();
+        public static readonly BipedObjectDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IBipedObjectDataGetter item,

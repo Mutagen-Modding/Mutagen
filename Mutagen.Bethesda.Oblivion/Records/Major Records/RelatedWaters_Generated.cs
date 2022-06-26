@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RelatedWatersBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RelatedWatersBinaryWriteTranslation Instance = new RelatedWatersBinaryWriteTranslation();
+        public static readonly RelatedWatersBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRelatedWatersGetter item,

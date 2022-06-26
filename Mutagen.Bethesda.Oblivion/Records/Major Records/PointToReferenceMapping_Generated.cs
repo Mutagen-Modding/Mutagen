@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PointToReferenceMappingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PointToReferenceMappingBinaryWriteTranslation Instance = new PointToReferenceMappingBinaryWriteTranslation();
+        public static readonly PointToReferenceMappingBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPointToReferenceMappingGetter item,

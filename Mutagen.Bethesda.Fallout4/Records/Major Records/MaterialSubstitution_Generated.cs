@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MaterialSubstitutionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MaterialSubstitutionBinaryWriteTranslation Instance = new MaterialSubstitutionBinaryWriteTranslation();
+        public static readonly MaterialSubstitutionBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IMaterialSubstitutionGetter item,

@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ColorRecordBinaryWriteTranslation Instance = new ColorRecordBinaryWriteTranslation();
+        public new static readonly ColorRecordBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IColorRecordGetter item,

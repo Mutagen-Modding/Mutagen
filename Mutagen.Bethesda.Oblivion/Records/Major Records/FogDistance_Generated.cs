@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class FogDistanceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FogDistanceBinaryWriteTranslation Instance = new FogDistanceBinaryWriteTranslation();
+        public static readonly FogDistanceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IFogDistanceGetter item,

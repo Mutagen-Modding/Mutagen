@@ -1695,7 +1695,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly DualCastDataBinaryWriteTranslation Instance = new DualCastDataBinaryWriteTranslation();
+        public new static readonly DualCastDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDualCastDataGetter item,

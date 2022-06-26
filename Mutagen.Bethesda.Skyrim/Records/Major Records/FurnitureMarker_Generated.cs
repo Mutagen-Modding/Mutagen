@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FurnitureMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FurnitureMarkerBinaryWriteTranslation Instance = new FurnitureMarkerBinaryWriteTranslation();
+        public static readonly FurnitureMarkerBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IFurnitureMarkerGetter item,

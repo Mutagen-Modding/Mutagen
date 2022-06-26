@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DecalBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DecalBinaryWriteTranslation Instance = new DecalBinaryWriteTranslation();
+        public static readonly DecalBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDecalGetter item,

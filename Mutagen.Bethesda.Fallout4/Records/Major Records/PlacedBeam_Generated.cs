@@ -1475,7 +1475,7 @@ namespace Mutagen.Bethesda.Fallout4
         APlacedTrapBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PlacedBeamBinaryWriteTranslation Instance = new PlacedBeamBinaryWriteTranslation();
+        public new static readonly PlacedBeamBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedBeamGetter item,

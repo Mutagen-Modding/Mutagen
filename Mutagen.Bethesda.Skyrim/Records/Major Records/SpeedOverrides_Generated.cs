@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SpeedOverridesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SpeedOverridesBinaryWriteTranslation Instance = new SpeedOverridesBinaryWriteTranslation();
+        public static readonly SpeedOverridesBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISpeedOverridesGetter item,

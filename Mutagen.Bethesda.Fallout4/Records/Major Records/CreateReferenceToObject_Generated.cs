@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CreateReferenceToObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CreateReferenceToObjectBinaryWriteTranslation Instance = new CreateReferenceToObjectBinaryWriteTranslation();
+        public static readonly CreateReferenceToObjectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICreateReferenceToObjectGetter item,

@@ -1462,7 +1462,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CrimeValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CrimeValuesBinaryWriteTranslation Instance = new CrimeValuesBinaryWriteTranslation();
+        public static readonly CrimeValuesBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICrimeValuesGetter item,

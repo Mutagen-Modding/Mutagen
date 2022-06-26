@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class EffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly EffectBinaryWriteTranslation Instance = new EffectBinaryWriteTranslation();
+        public static readonly EffectBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IEffectGetter item,

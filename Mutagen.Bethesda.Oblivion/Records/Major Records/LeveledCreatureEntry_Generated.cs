@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LeveledCreatureEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LeveledCreatureEntryBinaryWriteTranslation Instance = new LeveledCreatureEntryBinaryWriteTranslation();
+        public static readonly LeveledCreatureEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILeveledCreatureEntryGetter item,

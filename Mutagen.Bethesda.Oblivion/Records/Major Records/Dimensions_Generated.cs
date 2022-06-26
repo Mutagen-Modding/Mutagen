@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DimensionsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DimensionsBinaryWriteTranslation Instance = new DimensionsBinaryWriteTranslation();
+        public static readonly DimensionsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDimensionsGetter item,

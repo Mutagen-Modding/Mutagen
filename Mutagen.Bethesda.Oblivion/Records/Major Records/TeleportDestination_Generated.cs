@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class TeleportDestinationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TeleportDestinationBinaryWriteTranslation Instance = new TeleportDestinationBinaryWriteTranslation();
+        public static readonly TeleportDestinationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ITeleportDestinationGetter item,

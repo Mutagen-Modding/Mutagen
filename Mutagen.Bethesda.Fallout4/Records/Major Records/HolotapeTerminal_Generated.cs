@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Fallout4
         AHolotapeDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly HolotapeTerminalBinaryWriteTranslation Instance = new HolotapeTerminalBinaryWriteTranslation();
+        public new static readonly HolotapeTerminalBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IHolotapeTerminalGetter item,

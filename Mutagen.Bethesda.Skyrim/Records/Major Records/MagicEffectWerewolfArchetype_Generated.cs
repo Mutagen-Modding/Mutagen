@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim
         MagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MagicEffectWerewolfArchetypeBinaryWriteTranslation Instance = new MagicEffectWerewolfArchetypeBinaryWriteTranslation();
+        public new static readonly MagicEffectWerewolfArchetypeBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,

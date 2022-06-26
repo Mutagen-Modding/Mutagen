@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ImpactDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ImpactDataBinaryWriteTranslation Instance = new ImpactDataBinaryWriteTranslation();
+        public static readonly ImpactDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IImpactDataGetter item,

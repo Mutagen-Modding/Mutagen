@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LayerHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LayerHeaderBinaryWriteTranslation Instance = new LayerHeaderBinaryWriteTranslation();
+        public static readonly LayerHeaderBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILayerHeaderGetter item,

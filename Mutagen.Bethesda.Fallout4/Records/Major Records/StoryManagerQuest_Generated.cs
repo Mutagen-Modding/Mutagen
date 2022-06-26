@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class StoryManagerQuestBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly StoryManagerQuestBinaryWriteTranslation Instance = new StoryManagerQuestBinaryWriteTranslation();
+        public static readonly StoryManagerQuestBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IStoryManagerQuestGetter item,

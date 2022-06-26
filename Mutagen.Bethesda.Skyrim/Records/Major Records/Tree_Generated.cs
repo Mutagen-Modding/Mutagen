@@ -2209,7 +2209,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly TreeBinaryWriteTranslation Instance = new TreeBinaryWriteTranslation();
+        public new static readonly TreeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ITreeGetter item,

@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class TreeDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TreeDataBinaryWriteTranslation Instance = new TreeDataBinaryWriteTranslation();
+        public static readonly TreeDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ITreeDataGetter item,

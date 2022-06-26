@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IslandDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly IslandDataBinaryWriteTranslation Instance = new IslandDataBinaryWriteTranslation();
+        public static readonly IslandDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IIslandDataGetter item,

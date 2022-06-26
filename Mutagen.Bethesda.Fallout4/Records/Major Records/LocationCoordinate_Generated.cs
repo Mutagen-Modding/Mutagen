@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationCoordinateBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationCoordinateBinaryWriteTranslation Instance = new LocationCoordinateBinaryWriteTranslation();
+        public static readonly LocationCoordinateBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocationCoordinateGetter item,

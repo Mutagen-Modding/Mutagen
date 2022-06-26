@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LensFlareBinaryWriteTranslation Instance = new LensFlareBinaryWriteTranslation();
+        public new static readonly LensFlareBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,

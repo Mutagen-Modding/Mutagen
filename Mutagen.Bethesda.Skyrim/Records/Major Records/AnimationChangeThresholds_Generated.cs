@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AnimationChangeThresholdsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AnimationChangeThresholdsBinaryWriteTranslation Instance = new AnimationChangeThresholdsBinaryWriteTranslation();
+        public static readonly AnimationChangeThresholdsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAnimationChangeThresholdsGetter item,

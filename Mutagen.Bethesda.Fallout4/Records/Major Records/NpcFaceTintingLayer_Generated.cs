@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcFaceTintingLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NpcFaceTintingLayerBinaryWriteTranslation Instance = new NpcFaceTintingLayerBinaryWriteTranslation();
+        public static readonly NpcFaceTintingLayerBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INpcFaceTintingLayerGetter item,

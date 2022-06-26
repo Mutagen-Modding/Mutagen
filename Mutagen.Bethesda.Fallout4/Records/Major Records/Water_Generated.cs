@@ -4138,7 +4138,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
+        public new static readonly WaterBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWaterGetter item,

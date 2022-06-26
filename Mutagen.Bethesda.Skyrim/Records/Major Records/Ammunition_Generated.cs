@@ -2534,7 +2534,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AmmunitionBinaryWriteTranslation Instance = new AmmunitionBinaryWriteTranslation();
+        public new static readonly AmmunitionBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAmmunitionGetter item,

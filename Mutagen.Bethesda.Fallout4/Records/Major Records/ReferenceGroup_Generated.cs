@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ReferenceGroupBinaryWriteTranslation Instance = new ReferenceGroupBinaryWriteTranslation();
+        public new static readonly ReferenceGroupBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IReferenceGroupGetter item,

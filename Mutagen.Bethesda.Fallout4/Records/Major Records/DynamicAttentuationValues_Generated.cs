@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DynamicAttentuationValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DynamicAttentuationValuesBinaryWriteTranslation Instance = new DynamicAttentuationValuesBinaryWriteTranslation();
+        public static readonly DynamicAttentuationValuesBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDynamicAttentuationValuesGetter item,

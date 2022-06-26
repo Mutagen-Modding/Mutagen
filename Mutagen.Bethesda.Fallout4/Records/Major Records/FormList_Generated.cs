@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly FormListBinaryWriteTranslation Instance = new FormListBinaryWriteTranslation();
+        public new static readonly FormListBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IFormListGetter item,

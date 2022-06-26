@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PatrolBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PatrolBinaryWriteTranslation Instance = new PatrolBinaryWriteTranslation();
+        public static readonly PatrolBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IPatrolGetter item,

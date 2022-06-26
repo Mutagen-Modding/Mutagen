@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PackageFlagsOverrideBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PackageFlagsOverrideBinaryWriteTranslation Instance = new PackageFlagsOverrideBinaryWriteTranslation();
+        public static readonly PackageFlagsOverrideBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPackageFlagsOverrideGetter item,

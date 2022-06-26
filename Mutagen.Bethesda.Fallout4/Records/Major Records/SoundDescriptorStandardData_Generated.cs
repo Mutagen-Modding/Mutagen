@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
         ASoundDescriptorBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SoundDescriptorStandardDataBinaryWriteTranslation Instance = new SoundDescriptorStandardDataBinaryWriteTranslation();
+        public new static readonly SoundDescriptorStandardDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISoundDescriptorStandardDataGetter item,

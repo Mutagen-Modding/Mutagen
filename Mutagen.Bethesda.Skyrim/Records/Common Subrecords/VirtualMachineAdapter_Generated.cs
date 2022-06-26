@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly VirtualMachineAdapterBinaryWriteTranslation Instance = new VirtualMachineAdapterBinaryWriteTranslation();
+        public new static readonly VirtualMachineAdapterBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,

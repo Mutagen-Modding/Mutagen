@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundOutputAttenuationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SoundOutputAttenuationBinaryWriteTranslation Instance = new SoundOutputAttenuationBinaryWriteTranslation();
+        public static readonly SoundOutputAttenuationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISoundOutputAttenuationGetter item,

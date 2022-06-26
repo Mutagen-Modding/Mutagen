@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptFieldsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ScriptFieldsBinaryWriteTranslation Instance = new ScriptFieldsBinaryWriteTranslation();
+        public static readonly ScriptFieldsBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IScriptFieldsGetter item,

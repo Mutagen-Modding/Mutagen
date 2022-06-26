@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TransientTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TransientTypeBinaryWriteTranslation Instance = new TransientTypeBinaryWriteTranslation();
+        public static readonly TransientTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ITransientTypeGetter item,

@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CellExteriorLodBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellExteriorLodBinaryWriteTranslation Instance = new CellExteriorLodBinaryWriteTranslation();
+        public static readonly CellExteriorLodBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellExteriorLodGetter item,

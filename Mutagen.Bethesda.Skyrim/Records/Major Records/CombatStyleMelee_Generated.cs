@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CombatStyleMeleeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CombatStyleMeleeBinaryWriteTranslation Instance = new CombatStyleMeleeBinaryWriteTranslation();
+        public static readonly CombatStyleMeleeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICombatStyleMeleeGetter item,

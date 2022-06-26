@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AIPackageBinaryWriteTranslation Instance = new AIPackageBinaryWriteTranslation();
+        public new static readonly AIPackageBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IAIPackageGetter item,

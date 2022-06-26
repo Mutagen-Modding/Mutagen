@@ -1022,7 +1022,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NpcSoundBinaryWriteTranslation Instance = new NpcSoundBinaryWriteTranslation();
+        public static readonly NpcSoundBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             INpcSoundGetter item,

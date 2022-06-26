@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Skyrim
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RegionLandBinaryWriteTranslation Instance = new RegionLandBinaryWriteTranslation();
+        public new static readonly RegionLandBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,

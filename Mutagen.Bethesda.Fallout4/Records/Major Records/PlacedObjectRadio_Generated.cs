@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PlacedObjectRadioBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PlacedObjectRadioBinaryWriteTranslation Instance = new PlacedObjectRadioBinaryWriteTranslation();
+        public static readonly PlacedObjectRadioBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedObjectRadioGetter item,

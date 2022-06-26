@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AIDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AIDataBinaryWriteTranslation Instance = new AIDataBinaryWriteTranslation();
+        public static readonly AIDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAIDataGetter item,

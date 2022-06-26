@@ -1703,7 +1703,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly DialogViewBinaryWriteTranslation Instance = new DialogViewBinaryWriteTranslation();
+        public new static readonly DialogViewBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IDialogViewGetter item,

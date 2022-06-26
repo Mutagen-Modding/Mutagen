@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MagicEffectDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MagicEffectDataBinaryWriteTranslation Instance = new MagicEffectDataBinaryWriteTranslation();
+        public static readonly MagicEffectDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMagicEffectDataGetter item,

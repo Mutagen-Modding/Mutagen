@@ -995,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class KeyDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly KeyDataBinaryWriteTranslation Instance = new KeyDataBinaryWriteTranslation();
+        public static readonly KeyDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IKeyDataGetter item,

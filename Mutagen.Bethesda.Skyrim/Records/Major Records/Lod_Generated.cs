@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LodBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LodBinaryWriteTranslation Instance = new LodBinaryWriteTranslation();
+        public static readonly LodBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILodGetter item,

@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ReferenceAliasLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ReferenceAliasLocationBinaryWriteTranslation Instance = new ReferenceAliasLocationBinaryWriteTranslation();
+        public static readonly ReferenceAliasLocationBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IReferenceAliasLocationGetter item,

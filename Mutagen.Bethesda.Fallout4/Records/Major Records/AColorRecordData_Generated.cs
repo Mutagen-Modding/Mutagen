@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AColorRecordDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AColorRecordDataBinaryWriteTranslation Instance = new AColorRecordDataBinaryWriteTranslation();
+        public static readonly AColorRecordDataBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

@@ -1085,7 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANpcSoundDefinitionBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly NpcSoundTypesBinaryWriteTranslation Instance = new NpcSoundTypesBinaryWriteTranslation();
+        public new static readonly NpcSoundTypesBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             INpcSoundTypesGetter item,

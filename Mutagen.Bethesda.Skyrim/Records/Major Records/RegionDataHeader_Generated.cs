@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RegionDataHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RegionDataHeaderBinaryWriteTranslation Instance = new RegionDataHeaderBinaryWriteTranslation();
+        public static readonly RegionDataHeaderBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRegionDataHeaderGetter item,

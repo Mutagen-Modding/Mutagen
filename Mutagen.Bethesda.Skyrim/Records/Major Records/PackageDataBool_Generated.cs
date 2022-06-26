@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PackageDataBoolBinaryWriteTranslation Instance = new PackageDataBoolBinaryWriteTranslation();
+        public new static readonly PackageDataBoolBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPackageDataBoolGetter item,

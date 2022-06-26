@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellLightingBinaryWriteTranslation Instance = new CellLightingBinaryWriteTranslation();
+        public static readonly CellLightingBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellLightingGetter item,

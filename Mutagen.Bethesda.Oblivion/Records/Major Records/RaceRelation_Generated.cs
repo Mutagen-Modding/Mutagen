@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RaceRelationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RaceRelationBinaryWriteTranslation Instance = new RaceRelationBinaryWriteTranslation();
+        public static readonly RaceRelationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRaceRelationGetter item,

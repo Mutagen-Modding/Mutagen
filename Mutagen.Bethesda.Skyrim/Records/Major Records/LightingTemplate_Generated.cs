@@ -2226,7 +2226,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LightingTemplateBinaryWriteTranslation Instance = new LightingTemplateBinaryWriteTranslation();
+        public new static readonly LightingTemplateBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILightingTemplateGetter item,

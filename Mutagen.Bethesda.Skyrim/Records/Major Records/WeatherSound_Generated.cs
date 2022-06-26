@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WeatherSoundBinaryWriteTranslation Instance = new WeatherSoundBinaryWriteTranslation();
+        public static readonly WeatherSoundBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWeatherSoundGetter item,

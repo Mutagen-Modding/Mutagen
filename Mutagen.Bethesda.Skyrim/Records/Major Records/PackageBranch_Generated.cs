@@ -1845,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageBranchBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PackageBranchBinaryWriteTranslation Instance = new PackageBranchBinaryWriteTranslation();
+        public static readonly PackageBranchBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IPackageBranchGetter item,

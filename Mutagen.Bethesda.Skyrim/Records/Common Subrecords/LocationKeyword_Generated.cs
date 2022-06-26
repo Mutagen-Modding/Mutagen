@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim
         ALocationTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LocationKeywordBinaryWriteTranslation Instance = new LocationKeywordBinaryWriteTranslation();
+        public new static readonly LocationKeywordBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocationKeywordGetter item,

@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TerminalBodyTextBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TerminalBodyTextBinaryWriteTranslation Instance = new TerminalBodyTextBinaryWriteTranslation();
+        public static readonly TerminalBodyTextBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ITerminalBodyTextGetter item,

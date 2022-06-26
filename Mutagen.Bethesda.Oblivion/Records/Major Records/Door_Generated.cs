@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly DoorBinaryWriteTranslation Instance = new DoorBinaryWriteTranslation();
+        public new static readonly DoorBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IDoorGetter item,

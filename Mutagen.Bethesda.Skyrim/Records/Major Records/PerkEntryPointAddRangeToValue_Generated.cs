@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PerkEntryPointAddRangeToValueBinaryWriteTranslation Instance = new PerkEntryPointAddRangeToValueBinaryWriteTranslation();
+        public new static readonly PerkEntryPointAddRangeToValueBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPerkEntryPointAddRangeToValueGetter item,

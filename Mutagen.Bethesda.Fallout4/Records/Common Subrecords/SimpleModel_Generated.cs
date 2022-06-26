@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SimpleModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SimpleModelBinaryWriteTranslation Instance = new SimpleModelBinaryWriteTranslation();
+        public static readonly SimpleModelBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ISimpleModelGetter item,

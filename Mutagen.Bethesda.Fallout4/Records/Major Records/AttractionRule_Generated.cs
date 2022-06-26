@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AttractionRuleBinaryWriteTranslation Instance = new AttractionRuleBinaryWriteTranslation();
+        public new static readonly AttractionRuleBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAttractionRuleGetter item,

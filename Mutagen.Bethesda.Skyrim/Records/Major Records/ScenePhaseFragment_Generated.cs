@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScenePhaseFragmentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ScenePhaseFragmentBinaryWriteTranslation Instance = new ScenePhaseFragmentBinaryWriteTranslation();
+        public static readonly ScenePhaseFragmentBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IScenePhaseFragmentGetter item,

@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Fallout4
         AAudioEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly DelayAudioEffectBinaryWriteTranslation Instance = new DelayAudioEffectBinaryWriteTranslation();
+        public new static readonly DelayAudioEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDelayAudioEffectGetter item,

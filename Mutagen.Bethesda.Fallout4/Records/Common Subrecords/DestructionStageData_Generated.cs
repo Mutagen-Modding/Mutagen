@@ -1324,7 +1324,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DestructionStageDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DestructionStageDataBinaryWriteTranslation Instance = new DestructionStageDataBinaryWriteTranslation();
+        public static readonly DestructionStageDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDestructionStageDataGetter item,

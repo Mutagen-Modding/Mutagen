@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
         AAudioEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly OverdriveAudioEffectBinaryWriteTranslation Instance = new OverdriveAudioEffectBinaryWriteTranslation();
+        public new static readonly OverdriveAudioEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IOverdriveAudioEffectGetter item,

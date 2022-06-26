@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceCinematicBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ImageSpaceCinematicBinaryWriteTranslation Instance = new ImageSpaceCinematicBinaryWriteTranslation();
+        public static readonly ImageSpaceCinematicBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IImageSpaceCinematicGetter item,

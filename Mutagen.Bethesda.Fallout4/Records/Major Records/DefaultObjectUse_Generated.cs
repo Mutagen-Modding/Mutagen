@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DefaultObjectUseBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DefaultObjectUseBinaryWriteTranslation Instance = new DefaultObjectUseBinaryWriteTranslation();
+        public static readonly DefaultObjectUseBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDefaultObjectUseGetter item,

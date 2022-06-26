@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectTemplateBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ObjectTemplateBinaryWriteTranslation Instance = new ObjectTemplateBinaryWriteTranslation();
+        public static readonly ObjectTemplateBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded<T>(
             IObjectTemplateGetter<T> item,

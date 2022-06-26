@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellBlockBinaryWriteTranslation Instance = new CellBlockBinaryWriteTranslation();
+        public static readonly CellBlockBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellBlockGetter item,

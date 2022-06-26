@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BaseLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BaseLayerBinaryWriteTranslation Instance = new BaseLayerBinaryWriteTranslation();
+        public static readonly BaseLayerBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IBaseLayerGetter item,

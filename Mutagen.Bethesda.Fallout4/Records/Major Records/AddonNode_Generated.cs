@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AddonNodeBinaryWriteTranslation Instance = new AddonNodeBinaryWriteTranslation();
+        public new static readonly AddonNodeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAddonNodeGetter item,

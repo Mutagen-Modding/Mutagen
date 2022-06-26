@@ -1580,7 +1580,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AlchemicalApparatusBinaryWriteTranslation Instance = new AlchemicalApparatusBinaryWriteTranslation();
+        public new static readonly AlchemicalApparatusBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IAlchemicalApparatusGetter item,

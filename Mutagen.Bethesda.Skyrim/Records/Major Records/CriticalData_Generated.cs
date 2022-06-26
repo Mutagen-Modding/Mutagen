@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CriticalDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CriticalDataBinaryWriteTranslation Instance = new CriticalDataBinaryWriteTranslation();
+        public static readonly CriticalDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICriticalDataGetter item,

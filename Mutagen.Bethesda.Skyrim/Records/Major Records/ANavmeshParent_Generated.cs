@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ANavmeshParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ANavmeshParentBinaryWriteTranslation Instance = new ANavmeshParentBinaryWriteTranslation();
+        public static readonly ANavmeshParentBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

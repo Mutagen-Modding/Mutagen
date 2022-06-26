@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DistantLODDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DistantLODDataBinaryWriteTranslation Instance = new DistantLODDataBinaryWriteTranslation();
+        public static readonly DistantLODDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDistantLODDataGetter item,

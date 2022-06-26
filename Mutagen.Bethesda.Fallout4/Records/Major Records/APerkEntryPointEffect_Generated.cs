@@ -1085,7 +1085,7 @@ namespace Mutagen.Bethesda.Fallout4
         APerkEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly APerkEntryPointEffectBinaryWriteTranslation Instance = new APerkEntryPointEffectBinaryWriteTranslation();
+        public new static readonly APerkEntryPointEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAPerkEntryPointEffectGetter item,

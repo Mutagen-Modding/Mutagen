@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ActionRecordBinaryWriteTranslation Instance = new ActionRecordBinaryWriteTranslation();
+        public new static readonly ActionRecordBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IActionRecordGetter item,

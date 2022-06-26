@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class HavokDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly HavokDataBinaryWriteTranslation Instance = new HavokDataBinaryWriteTranslation();
+        public static readonly HavokDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IHavokDataGetter item,

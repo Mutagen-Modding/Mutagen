@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LoadScreenLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LoadScreenLocationBinaryWriteTranslation Instance = new LoadScreenLocationBinaryWriteTranslation();
+        public static readonly LoadScreenLocationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILoadScreenLocationGetter item,

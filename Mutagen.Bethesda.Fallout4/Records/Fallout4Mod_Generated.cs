@@ -20928,7 +20928,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4ModBinaryWriteTranslation
     {
-        public static readonly Fallout4ModBinaryWriteTranslation Instance = new Fallout4ModBinaryWriteTranslation();
+        public static readonly Fallout4ModBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IFallout4ModGetter item,

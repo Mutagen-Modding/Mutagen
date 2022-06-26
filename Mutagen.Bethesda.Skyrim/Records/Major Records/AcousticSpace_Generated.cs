@@ -1482,7 +1482,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AcousticSpaceBinaryWriteTranslation Instance = new AcousticSpaceBinaryWriteTranslation();
+        public new static readonly AcousticSpaceBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IAcousticSpaceGetter item,

@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class IconsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly IconsBinaryWriteTranslation Instance = new IconsBinaryWriteTranslation();
+        public static readonly IconsBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IIconsGetter item,

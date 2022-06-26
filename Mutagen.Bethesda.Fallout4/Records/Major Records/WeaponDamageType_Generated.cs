@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WeaponDamageTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WeaponDamageTypeBinaryWriteTranslation Instance = new WeaponDamageTypeBinaryWriteTranslation();
+        public static readonly WeaponDamageTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWeaponDamageTypeGetter item,

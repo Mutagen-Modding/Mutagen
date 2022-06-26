@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MusicTypeBinaryWriteTranslation Instance = new MusicTypeBinaryWriteTranslation();
+        public new static readonly MusicTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IMusicTypeGetter item,

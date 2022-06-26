@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RelationshipBinaryWriteTranslation Instance = new RelationshipBinaryWriteTranslation();
+        public new static readonly RelationshipBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRelationshipGetter item,

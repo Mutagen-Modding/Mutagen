@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim
         ATopicReferenceBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly TopicReferenceBinaryWriteTranslation Instance = new TopicReferenceBinaryWriteTranslation();
+        public new static readonly TopicReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ITopicReferenceGetter item,

@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ShaderParticleGeometryBinaryWriteTranslation Instance = new ShaderParticleGeometryBinaryWriteTranslation();
+        public new static readonly ShaderParticleGeometryBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IShaderParticleGeometryGetter item,

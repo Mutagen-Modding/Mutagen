@@ -1983,7 +1983,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly FootstepSetBinaryWriteTranslation Instance = new FootstepSetBinaryWriteTranslation();
+        public new static readonly FootstepSetBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IFootstepSetGetter item,

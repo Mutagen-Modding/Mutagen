@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlayerSkillsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PlayerSkillsBinaryWriteTranslation Instance = new PlayerSkillsBinaryWriteTranslation();
+        public static readonly PlayerSkillsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlayerSkillsGetter item,

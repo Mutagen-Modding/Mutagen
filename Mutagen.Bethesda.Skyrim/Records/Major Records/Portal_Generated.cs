@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PortalBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PortalBinaryWriteTranslation Instance = new PortalBinaryWriteTranslation();
+        public static readonly PortalBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPortalGetter item,

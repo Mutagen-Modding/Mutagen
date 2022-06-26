@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DialogResponsesUnknownDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DialogResponsesUnknownDataBinaryWriteTranslation Instance = new DialogResponsesUnknownDataBinaryWriteTranslation();
+        public static readonly DialogResponsesUnknownDataBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IDialogResponsesUnknownDataGetter item,

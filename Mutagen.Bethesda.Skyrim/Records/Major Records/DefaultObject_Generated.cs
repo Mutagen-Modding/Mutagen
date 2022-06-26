@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DefaultObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DefaultObjectBinaryWriteTranslation Instance = new DefaultObjectBinaryWriteTranslation();
+        public static readonly DefaultObjectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDefaultObjectGetter item,

@@ -4296,7 +4296,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MagicEffectBinaryWriteTranslation Instance = new MagicEffectBinaryWriteTranslation();
+        public new static readonly MagicEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMagicEffectGetter item,

@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DestructibleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DestructibleBinaryWriteTranslation Instance = new DestructibleBinaryWriteTranslation();
+        public static readonly DestructibleBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IDestructibleGetter item,

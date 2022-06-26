@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RoadBinaryWriteTranslation Instance = new RoadBinaryWriteTranslation();
+        public new static readonly RoadBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IRoadGetter item,

@@ -1347,7 +1347,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly OutfitBinaryWriteTranslation Instance = new OutfitBinaryWriteTranslation();
+        public new static readonly OutfitBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IOutfitGetter item,

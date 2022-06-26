@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class APerkEffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly APerkEffectBinaryWriteTranslation Instance = new APerkEffectBinaryWriteTranslation();
+        public static readonly APerkEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAPerkEffectGetter item,

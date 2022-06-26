@@ -2558,7 +2558,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly FurnitureBinaryWriteTranslation Instance = new FurnitureBinaryWriteTranslation();
+        public new static readonly FurnitureBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IFurnitureGetter item,

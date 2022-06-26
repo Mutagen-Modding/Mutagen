@@ -1991,7 +1991,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly IdleAnimationBinaryWriteTranslation Instance = new IdleAnimationBinaryWriteTranslation();
+        public new static readonly IdleAnimationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IIdleAnimationGetter item,

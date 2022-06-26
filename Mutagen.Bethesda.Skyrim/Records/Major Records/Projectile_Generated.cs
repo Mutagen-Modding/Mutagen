@@ -3169,7 +3169,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ProjectileBinaryWriteTranslation Instance = new ProjectileBinaryWriteTranslation();
+        public new static readonly ProjectileBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IProjectileGetter item,

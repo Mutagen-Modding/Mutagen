@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RoadPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RoadPointBinaryWriteTranslation Instance = new RoadPointBinaryWriteTranslation();
+        public static readonly RoadPointBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRoadPointGetter item,

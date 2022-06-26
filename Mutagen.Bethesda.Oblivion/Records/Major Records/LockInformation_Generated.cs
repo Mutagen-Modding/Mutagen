@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LockInformationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LockInformationBinaryWriteTranslation Instance = new LockInformationBinaryWriteTranslation();
+        public static readonly LockInformationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILockInformationGetter item,

@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion
         SoundDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SoundDataExtendedBinaryWriteTranslation Instance = new SoundDataExtendedBinaryWriteTranslation();
+        public new static readonly SoundDataExtendedBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISoundDataExtendedInternalGetter item,

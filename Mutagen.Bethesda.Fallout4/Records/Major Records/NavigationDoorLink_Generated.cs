@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NavigationDoorLinkBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NavigationDoorLinkBinaryWriteTranslation Instance = new NavigationDoorLinkBinaryWriteTranslation();
+        public static readonly NavigationDoorLinkBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INavigationDoorLinkGetter item,

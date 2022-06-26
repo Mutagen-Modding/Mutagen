@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AlphaBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AlphaBinaryWriteTranslation Instance = new AlphaBinaryWriteTranslation();
+        public static readonly AlphaBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAlphaGetter item,

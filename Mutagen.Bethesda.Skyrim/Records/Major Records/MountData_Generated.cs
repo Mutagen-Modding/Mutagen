@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MountDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MountDataBinaryWriteTranslation Instance = new MountDataBinaryWriteTranslation();
+        public static readonly MountDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMountDataGetter item,

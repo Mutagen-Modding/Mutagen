@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ModStatsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ModStatsBinaryWriteTranslation Instance = new ModStatsBinaryWriteTranslation();
+        public static readonly ModStatsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IModStatsGetter item,

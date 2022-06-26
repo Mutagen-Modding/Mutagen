@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Fallout4
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RegionLandBinaryWriteTranslation Instance = new RegionLandBinaryWriteTranslation();
+        public new static readonly RegionLandBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IRegionLandGetter item,

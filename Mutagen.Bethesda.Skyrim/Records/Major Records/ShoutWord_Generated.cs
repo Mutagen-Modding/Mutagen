@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ShoutWordBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ShoutWordBinaryWriteTranslation Instance = new ShoutWordBinaryWriteTranslation();
+        public static readonly ShoutWordBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IShoutWordGetter item,

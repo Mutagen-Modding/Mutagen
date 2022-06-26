@@ -1641,7 +1641,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ImageSpaceBinaryWriteTranslation Instance = new ImageSpaceBinaryWriteTranslation();
+        public new static readonly ImageSpaceBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IImageSpaceGetter item,

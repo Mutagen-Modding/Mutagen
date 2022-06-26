@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LockDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LockDataBinaryWriteTranslation Instance = new LockDataBinaryWriteTranslation();
+        public static readonly LockDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILockDataGetter item,

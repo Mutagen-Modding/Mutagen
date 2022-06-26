@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkScriptFlagBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PerkScriptFlagBinaryWriteTranslation Instance = new PerkScriptFlagBinaryWriteTranslation();
+        public static readonly PerkScriptFlagBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPerkScriptFlagGetter item,

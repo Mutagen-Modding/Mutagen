@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AStoryManagerNodeBinaryWriteTranslation Instance = new AStoryManagerNodeBinaryWriteTranslation();
+        public new static readonly AStoryManagerNodeBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IAStoryManagerNodeGetter item,

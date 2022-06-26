@@ -1853,7 +1853,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DialogResponseBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DialogResponseBinaryWriteTranslation Instance = new DialogResponseBinaryWriteTranslation();
+        public static readonly DialogResponseBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDialogResponseGetter item,

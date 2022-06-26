@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AmmunitionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AmmunitionDataBinaryWriteTranslation Instance = new AmmunitionDataBinaryWriteTranslation();
+        public static readonly AmmunitionDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAmmunitionDataGetter item,

@@ -995,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SoulGemDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SoulGemDataBinaryWriteTranslation Instance = new SoulGemDataBinaryWriteTranslation();
+        public static readonly SoulGemDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISoulGemDataGetter item,

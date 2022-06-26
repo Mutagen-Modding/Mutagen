@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 {
     public partial class MasterReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MasterReferenceBinaryWriteTranslation Instance = new MasterReferenceBinaryWriteTranslation();
+        public static readonly MasterReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IMasterReferenceGetter item,

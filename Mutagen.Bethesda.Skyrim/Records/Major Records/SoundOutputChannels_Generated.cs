@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundOutputChannelsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SoundOutputChannelsBinaryWriteTranslation Instance = new SoundOutputChannelsBinaryWriteTranslation();
+        public static readonly SoundOutputChannelsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISoundOutputChannelsGetter item,

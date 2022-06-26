@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class StaticPartBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly StaticPartBinaryWriteTranslation Instance = new StaticPartBinaryWriteTranslation();
+        public static readonly StaticPartBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IStaticPartGetter item,

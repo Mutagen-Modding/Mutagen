@@ -1908,7 +1908,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly TextureSetBinaryWriteTranslation Instance = new TextureSetBinaryWriteTranslation();
+        public new static readonly TextureSetBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ITextureSetGetter item,

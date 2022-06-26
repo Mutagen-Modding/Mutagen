@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class VendorValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly VendorValuesBinaryWriteTranslation Instance = new VendorValuesBinaryWriteTranslation();
+        public static readonly VendorValuesBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IVendorValuesGetter item,

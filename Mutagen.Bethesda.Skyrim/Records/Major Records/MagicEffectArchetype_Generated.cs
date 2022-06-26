@@ -1056,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectArchetypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MagicEffectArchetypeBinaryWriteTranslation Instance = new MagicEffectArchetypeBinaryWriteTranslation();
+        public static readonly MagicEffectArchetypeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMagicEffectArchetypeGetter item,

@@ -2996,7 +2996,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ScrollBinaryWriteTranslation Instance = new ScrollBinaryWriteTranslation();
+        public new static readonly ScrollBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IScrollGetter item,

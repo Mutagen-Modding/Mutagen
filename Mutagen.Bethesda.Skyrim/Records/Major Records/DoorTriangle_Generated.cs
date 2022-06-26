@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DoorTriangleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DoorTriangleBinaryWriteTranslation Instance = new DoorTriangleBinaryWriteTranslation();
+        public static readonly DoorTriangleBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDoorTriangleGetter item,

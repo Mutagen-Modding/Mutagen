@@ -1924,7 +1924,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WorldspaceSubBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WorldspaceSubBlockBinaryWriteTranslation Instance = new WorldspaceSubBlockBinaryWriteTranslation();
+        public static readonly WorldspaceSubBlockBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWorldspaceSubBlockGetter item,

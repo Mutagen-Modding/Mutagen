@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class GrassDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly GrassDataBinaryWriteTranslation Instance = new GrassDataBinaryWriteTranslation();
+        public static readonly GrassDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IGrassDataGetter item,

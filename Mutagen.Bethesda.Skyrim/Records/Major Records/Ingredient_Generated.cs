@@ -2750,7 +2750,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly IngredientBinaryWriteTranslation Instance = new IngredientBinaryWriteTranslation();
+        public new static readonly IngredientBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IIngredientGetter item,

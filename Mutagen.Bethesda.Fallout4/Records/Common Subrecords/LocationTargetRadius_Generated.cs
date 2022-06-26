@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationTargetRadiusBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationTargetRadiusBinaryWriteTranslation Instance = new LocationTargetRadiusBinaryWriteTranslation();
+        public static readonly LocationTargetRadiusBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocationTargetRadiusGetter item,

@@ -1478,7 +1478,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly BodyPartDataBinaryWriteTranslation Instance = new BodyPartDataBinaryWriteTranslation();
+        public new static readonly BodyPartDataBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IBodyPartDataGetter item,

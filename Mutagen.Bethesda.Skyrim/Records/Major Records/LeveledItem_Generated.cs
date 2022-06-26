@@ -1643,7 +1643,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LeveledItemBinaryWriteTranslation Instance = new LeveledItemBinaryWriteTranslation();
+        public new static readonly LeveledItemBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ILeveledItemGetter item,

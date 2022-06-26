@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AnimationSoundTagBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AnimationSoundTagBinaryWriteTranslation Instance = new AnimationSoundTagBinaryWriteTranslation();
+        public static readonly AnimationSoundTagBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAnimationSoundTagGetter item,

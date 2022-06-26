@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SplineLinkBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SplineLinkBinaryWriteTranslation Instance = new SplineLinkBinaryWriteTranslation();
+        public static readonly SplineLinkBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISplineLinkGetter item,

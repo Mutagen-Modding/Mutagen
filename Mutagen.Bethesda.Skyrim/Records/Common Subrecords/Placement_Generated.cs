@@ -995,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PlacementBinaryWriteTranslation Instance = new PlacementBinaryWriteTranslation();
+        public static readonly PlacementBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacementGetter item,

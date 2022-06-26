@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Fallout4
         ScriptPropertyBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ScriptObjectListPropertyBinaryWriteTranslation Instance = new ScriptObjectListPropertyBinaryWriteTranslation();
+        public new static readonly ScriptObjectListPropertyBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IScriptObjectListPropertyGetter item,

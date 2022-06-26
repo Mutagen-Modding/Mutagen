@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptPropertyBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ScriptIntListPropertyBinaryWriteTranslation Instance = new ScriptIntListPropertyBinaryWriteTranslation();
+        public new static readonly ScriptIntListPropertyBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IScriptIntListPropertyGetter item,

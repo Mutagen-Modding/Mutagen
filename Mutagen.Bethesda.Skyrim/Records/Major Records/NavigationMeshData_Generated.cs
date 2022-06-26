@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavigationMeshDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NavigationMeshDataBinaryWriteTranslation Instance = new NavigationMeshDataBinaryWriteTranslation();
+        public static readonly NavigationMeshDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INavigationMeshDataGetter item,

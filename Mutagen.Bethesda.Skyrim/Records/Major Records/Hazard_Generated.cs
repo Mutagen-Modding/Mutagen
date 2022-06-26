@@ -2186,7 +2186,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly HazardBinaryWriteTranslation Instance = new HazardBinaryWriteTranslation();
+        public new static readonly HazardBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IHazardGetter item,

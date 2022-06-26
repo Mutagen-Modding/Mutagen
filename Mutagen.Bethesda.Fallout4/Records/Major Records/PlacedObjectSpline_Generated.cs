@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PlacedObjectSplineBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PlacedObjectSplineBinaryWriteTranslation Instance = new PlacedObjectSplineBinaryWriteTranslation();
+        public static readonly PlacedObjectSplineBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedObjectSplineGetter item,

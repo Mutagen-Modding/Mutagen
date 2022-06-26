@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AlternateTextureBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AlternateTextureBinaryWriteTranslation Instance = new AlternateTextureBinaryWriteTranslation();
+        public static readonly AlternateTextureBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAlternateTextureGetter item,

@@ -1996,7 +1996,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly CameraShotBinaryWriteTranslation Instance = new CameraShotBinaryWriteTranslation();
+        public new static readonly CameraShotBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICameraShotGetter item,

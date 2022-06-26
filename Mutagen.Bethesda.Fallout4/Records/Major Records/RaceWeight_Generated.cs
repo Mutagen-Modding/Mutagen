@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RaceWeightBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RaceWeightBinaryWriteTranslation Instance = new RaceWeightBinaryWriteTranslation();
+        public static readonly RaceWeightBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRaceWeightGetter item,

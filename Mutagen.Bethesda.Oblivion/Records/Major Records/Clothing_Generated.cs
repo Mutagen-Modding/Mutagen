@@ -2175,7 +2175,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ClothingBinaryWriteTranslation Instance = new ClothingBinaryWriteTranslation();
+        public new static readonly ClothingBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IClothingGetter item,

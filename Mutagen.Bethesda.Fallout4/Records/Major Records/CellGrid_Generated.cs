@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CellGridBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellGridBinaryWriteTranslation Instance = new CellGridBinaryWriteTranslation();
+        public static readonly CellGridBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellGridGetter item,

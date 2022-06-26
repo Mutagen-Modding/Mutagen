@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class QuestStageBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly QuestStageBinaryWriteTranslation Instance = new QuestStageBinaryWriteTranslation();
+        public static readonly QuestStageBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IQuestStageGetter item,

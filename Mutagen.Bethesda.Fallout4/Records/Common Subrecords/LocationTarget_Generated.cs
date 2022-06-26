@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Fallout4
         ALocationTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LocationTargetBinaryWriteTranslation Instance = new LocationTargetBinaryWriteTranslation();
+        public new static readonly LocationTargetBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocationTargetGetter item,

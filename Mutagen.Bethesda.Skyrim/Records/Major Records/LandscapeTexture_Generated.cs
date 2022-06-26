@@ -1737,7 +1737,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LandscapeTextureBinaryWriteTranslation Instance = new LandscapeTextureBinaryWriteTranslation();
+        public new static readonly LandscapeTextureBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILandscapeTextureGetter item,

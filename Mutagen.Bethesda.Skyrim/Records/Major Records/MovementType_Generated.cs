@@ -1985,7 +1985,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MovementTypeBinaryWriteTranslation Instance = new MovementTypeBinaryWriteTranslation();
+        public new static readonly MovementTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMovementTypeGetter item,

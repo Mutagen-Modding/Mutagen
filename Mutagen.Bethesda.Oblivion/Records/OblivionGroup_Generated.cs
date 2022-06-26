@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly OblivionGroupBinaryWriteTranslation Instance = new OblivionGroupBinaryWriteTranslation();
+        public static readonly OblivionGroupBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded<T>(
             IOblivionGroupGetter<T> item,

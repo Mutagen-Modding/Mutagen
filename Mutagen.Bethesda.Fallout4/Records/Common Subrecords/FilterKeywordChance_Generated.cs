@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FilterKeywordChanceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FilterKeywordChanceBinaryWriteTranslation Instance = new FilterKeywordChanceBinaryWriteTranslation();
+        public static readonly FilterKeywordChanceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IFilterKeywordChanceGetter item,

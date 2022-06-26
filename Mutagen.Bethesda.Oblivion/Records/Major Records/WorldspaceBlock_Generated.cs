@@ -1793,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WorldspaceBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WorldspaceBlockBinaryWriteTranslation Instance = new WorldspaceBlockBinaryWriteTranslation();
+        public static readonly WorldspaceBlockBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWorldspaceBlockGetter item,

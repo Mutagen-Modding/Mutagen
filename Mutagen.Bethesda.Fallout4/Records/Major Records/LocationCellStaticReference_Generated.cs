@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationCellStaticReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationCellStaticReferenceBinaryWriteTranslation Instance = new LocationCellStaticReferenceBinaryWriteTranslation();
+        public static readonly LocationCellStaticReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocationCellStaticReferenceGetter item,

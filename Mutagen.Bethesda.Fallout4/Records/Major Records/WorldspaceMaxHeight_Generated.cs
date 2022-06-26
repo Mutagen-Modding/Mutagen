@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WorldspaceMaxHeightBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WorldspaceMaxHeightBinaryWriteTranslation Instance = new WorldspaceMaxHeightBinaryWriteTranslation();
+        public static readonly WorldspaceMaxHeightBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWorldspaceMaxHeightGetter item,

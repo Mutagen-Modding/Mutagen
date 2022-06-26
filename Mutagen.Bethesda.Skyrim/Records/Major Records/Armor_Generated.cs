@@ -3130,7 +3130,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ArmorBinaryWriteTranslation Instance = new ArmorBinaryWriteTranslation();
+        public new static readonly ArmorBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IArmorGetter item,

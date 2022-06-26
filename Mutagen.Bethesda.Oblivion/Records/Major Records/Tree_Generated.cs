@@ -1691,7 +1691,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly TreeBinaryWriteTranslation Instance = new TreeBinaryWriteTranslation();
+        public new static readonly TreeBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ITreeGetter item,

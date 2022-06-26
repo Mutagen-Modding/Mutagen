@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly OutfitBinaryWriteTranslation Instance = new OutfitBinaryWriteTranslation();
+        public new static readonly OutfitBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IOutfitGetter item,

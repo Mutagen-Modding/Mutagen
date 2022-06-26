@@ -1413,7 +1413,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly DialogBranchBinaryWriteTranslation Instance = new DialogBranchBinaryWriteTranslation();
+        public new static readonly DialogBranchBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IDialogBranchGetter item,

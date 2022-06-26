@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class EdgeLinkBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly EdgeLinkBinaryWriteTranslation Instance = new EdgeLinkBinaryWriteTranslation();
+        public static readonly EdgeLinkBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IEdgeLinkGetter item,

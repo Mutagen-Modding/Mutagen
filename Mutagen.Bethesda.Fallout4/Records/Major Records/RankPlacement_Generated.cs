@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RankPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RankPlacementBinaryWriteTranslation Instance = new RankPlacementBinaryWriteTranslation();
+        public static readonly RankPlacementBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRankPlacementGetter item,

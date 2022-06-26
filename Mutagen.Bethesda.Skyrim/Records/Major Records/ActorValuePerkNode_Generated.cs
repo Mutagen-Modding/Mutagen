@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActorValuePerkNodeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ActorValuePerkNodeBinaryWriteTranslation Instance = new ActorValuePerkNodeBinaryWriteTranslation();
+        public static readonly ActorValuePerkNodeBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IActorValuePerkNodeGetter item,

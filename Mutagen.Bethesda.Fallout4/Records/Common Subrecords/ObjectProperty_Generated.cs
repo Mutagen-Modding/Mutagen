@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ObjectPropertyBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ObjectPropertyBinaryWriteTranslation Instance = new ObjectPropertyBinaryWriteTranslation();
+        public static readonly ObjectPropertyBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IObjectPropertyGetter item,

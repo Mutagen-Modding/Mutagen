@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim
         APlacedTrapBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PlacedBeamBinaryWriteTranslation Instance = new PlacedBeamBinaryWriteTranslation();
+        public new static readonly PlacedBeamBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedBeamGetter item,

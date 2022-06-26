@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AQuestAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AQuestAliasBinaryWriteTranslation Instance = new AQuestAliasBinaryWriteTranslation();
+        public static readonly AQuestAliasBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4
         MagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MagicEffectVampireArchetypeBinaryWriteTranslation Instance = new MagicEffectVampireArchetypeBinaryWriteTranslation();
+        public new static readonly MagicEffectVampireArchetypeBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,

@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANavmeshParentBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly CellNavmeshParentBinaryWriteTranslation Instance = new CellNavmeshParentBinaryWriteTranslation();
+        public new static readonly CellNavmeshParentBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellNavmeshParentGetter item,

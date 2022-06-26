@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SigilStoneBinaryWriteTranslation Instance = new SigilStoneBinaryWriteTranslation();
+        public new static readonly SigilStoneBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ISigilStoneGetter item,

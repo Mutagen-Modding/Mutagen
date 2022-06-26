@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Fallout4
         ConditionBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ConditionGlobalBinaryWriteTranslation Instance = new ConditionGlobalBinaryWriteTranslation();
+        public new static readonly ConditionGlobalBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IConditionGlobalGetter item,

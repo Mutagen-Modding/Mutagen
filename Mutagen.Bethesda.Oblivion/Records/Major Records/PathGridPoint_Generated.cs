@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PathGridPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PathGridPointBinaryWriteTranslation Instance = new PathGridPointBinaryWriteTranslation();
+        public static readonly PathGridPointBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPathGridPointGetter item,

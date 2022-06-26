@@ -2023,7 +2023,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly WeatherBinaryWriteTranslation Instance = new WeatherBinaryWriteTranslation();
+        public new static readonly WeatherBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IWeatherGetter item,

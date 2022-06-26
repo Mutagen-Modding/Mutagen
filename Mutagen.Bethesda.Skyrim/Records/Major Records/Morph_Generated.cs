@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MorphBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MorphBinaryWriteTranslation Instance = new MorphBinaryWriteTranslation();
+        public static readonly MorphBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMorphGetter item,

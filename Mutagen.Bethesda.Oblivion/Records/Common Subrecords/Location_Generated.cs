@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationBinaryWriteTranslation Instance = new LocationBinaryWriteTranslation();
+        public static readonly LocationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocationGetter item,

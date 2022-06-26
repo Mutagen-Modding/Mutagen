@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ItemEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ItemEntryBinaryWriteTranslation Instance = new ItemEntryBinaryWriteTranslation();
+        public static readonly ItemEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IItemEntryGetter item,

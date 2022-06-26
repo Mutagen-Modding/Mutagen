@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CellMaxHeightDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellMaxHeightDataBinaryWriteTranslation Instance = new CellMaxHeightDataBinaryWriteTranslation();
+        public static readonly CellMaxHeightDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellMaxHeightDataGetter item,

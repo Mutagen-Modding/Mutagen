@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PerkPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PerkPlacementBinaryWriteTranslation Instance = new PerkPlacementBinaryWriteTranslation();
+        public static readonly PerkPlacementBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPerkPlacementGetter item,

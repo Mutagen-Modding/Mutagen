@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class QuestFragmentAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly QuestFragmentAliasBinaryWriteTranslation Instance = new QuestFragmentAliasBinaryWriteTranslation();
+        public static readonly QuestFragmentAliasBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IQuestFragmentAliasGetter item,

@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly VolumetricLightingBinaryWriteTranslation Instance = new VolumetricLightingBinaryWriteTranslation();
+        public new static readonly VolumetricLightingBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IVolumetricLightingGetter item,

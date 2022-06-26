@@ -1844,7 +1844,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MessageBinaryWriteTranslation Instance = new MessageBinaryWriteTranslation();
+        public new static readonly MessageBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IMessageGetter item,

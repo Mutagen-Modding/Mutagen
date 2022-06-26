@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PotionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PotionDataBinaryWriteTranslation Instance = new PotionDataBinaryWriteTranslation();
+        public static readonly PotionDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPotionDataGetter item,

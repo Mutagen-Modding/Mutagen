@@ -6956,7 +6956,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly WeatherBinaryWriteTranslation Instance = new WeatherBinaryWriteTranslation();
+        public new static readonly WeatherBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWeatherGetter item,

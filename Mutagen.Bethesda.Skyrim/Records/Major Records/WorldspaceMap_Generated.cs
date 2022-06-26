@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceMapBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WorldspaceMapBinaryWriteTranslation Instance = new WorldspaceMapBinaryWriteTranslation();
+        public static readonly WorldspaceMapBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWorldspaceMapGetter item,

@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AttackBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AttackBinaryWriteTranslation Instance = new AttackBinaryWriteTranslation();
+        public static readonly AttackBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IAttackGetter item,

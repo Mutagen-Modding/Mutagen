@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ColorFrameBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ColorFrameBinaryWriteTranslation Instance = new ColorFrameBinaryWriteTranslation();
+        public static readonly ColorFrameBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IColorFrameGetter item,

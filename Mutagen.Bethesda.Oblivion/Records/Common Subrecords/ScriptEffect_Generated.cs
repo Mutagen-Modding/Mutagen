@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptEffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ScriptEffectBinaryWriteTranslation Instance = new ScriptEffectBinaryWriteTranslation();
+        public static readonly ScriptEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IScriptEffectGetter item,

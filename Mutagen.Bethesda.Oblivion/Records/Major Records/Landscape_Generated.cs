@@ -1785,7 +1785,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LandscapeBinaryWriteTranslation Instance = new LandscapeBinaryWriteTranslation();
+        public new static readonly LandscapeBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ILandscapeGetter item,

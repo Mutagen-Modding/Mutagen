@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Fallout4
         ASceneActionTypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SceneActionTypicalTypeBinaryWriteTranslation Instance = new SceneActionTypicalTypeBinaryWriteTranslation();
+        public new static readonly SceneActionTypicalTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISceneActionTypicalTypeGetter item,

@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ContainerEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ContainerEntryBinaryWriteTranslation Instance = new ContainerEntryBinaryWriteTranslation();
+        public static readonly ContainerEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IContainerEntryGetter item,

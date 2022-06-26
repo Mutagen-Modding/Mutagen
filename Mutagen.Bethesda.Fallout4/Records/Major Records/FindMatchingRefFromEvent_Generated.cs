@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FindMatchingRefFromEventBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FindMatchingRefFromEventBinaryWriteTranslation Instance = new FindMatchingRefFromEventBinaryWriteTranslation();
+        public static readonly FindMatchingRefFromEventBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IFindMatchingRefFromEventGetter item,

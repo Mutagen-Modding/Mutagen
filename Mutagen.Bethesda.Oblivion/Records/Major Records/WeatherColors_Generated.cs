@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeatherColorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WeatherColorsBinaryWriteTranslation Instance = new WeatherColorsBinaryWriteTranslation();
+        public static readonly WeatherColorsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWeatherColorsGetter item,

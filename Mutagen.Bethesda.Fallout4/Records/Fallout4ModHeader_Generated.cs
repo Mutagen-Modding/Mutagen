@@ -2200,7 +2200,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4ModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly Fallout4ModHeaderBinaryWriteTranslation Instance = new Fallout4ModHeaderBinaryWriteTranslation();
+        public static readonly Fallout4ModHeaderBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IFallout4ModHeaderGetter item,

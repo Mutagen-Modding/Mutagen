@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LinkedDoorBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LinkedDoorBinaryWriteTranslation Instance = new LinkedDoorBinaryWriteTranslation();
+        public static readonly LinkedDoorBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILinkedDoorGetter item,

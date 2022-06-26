@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Fallout4
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly VirtualMachineAdapterBinaryWriteTranslation Instance = new VirtualMachineAdapterBinaryWriteTranslation();
+        public new static readonly VirtualMachineAdapterBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,

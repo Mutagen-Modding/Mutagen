@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Fallout4
         ADamageTypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly DamageTypeIndexedBinaryWriteTranslation Instance = new DamageTypeIndexedBinaryWriteTranslation();
+        public new static readonly DamageTypeIndexedBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IDamageTypeIndexedGetter item,

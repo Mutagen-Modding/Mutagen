@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageScheduleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AIPackageScheduleBinaryWriteTranslation Instance = new AIPackageScheduleBinaryWriteTranslation();
+        public static readonly AIPackageScheduleBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAIPackageScheduleGetter item,

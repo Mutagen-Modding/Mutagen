@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Fallout4
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RegionGrassesBinaryWriteTranslation Instance = new RegionGrassesBinaryWriteTranslation();
+        public new static readonly RegionGrassesBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IRegionGrassesGetter item,

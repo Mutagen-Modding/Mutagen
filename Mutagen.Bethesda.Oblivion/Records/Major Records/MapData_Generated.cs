@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MapDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MapDataBinaryWriteTranslation Instance = new MapDataBinaryWriteTranslation();
+        public static readonly MapDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMapDataGetter item,

@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BodyDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BodyDataBinaryWriteTranslation Instance = new BodyDataBinaryWriteTranslation();
+        public static readonly BodyDataBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IBodyDataGetter item,

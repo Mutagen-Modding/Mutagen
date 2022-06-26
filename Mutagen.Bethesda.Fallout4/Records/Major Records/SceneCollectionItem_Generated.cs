@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SceneCollectionItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SceneCollectionItemBinaryWriteTranslation Instance = new SceneCollectionItemBinaryWriteTranslation();
+        public static readonly SceneCollectionItemBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ISceneCollectionItemGetter item,

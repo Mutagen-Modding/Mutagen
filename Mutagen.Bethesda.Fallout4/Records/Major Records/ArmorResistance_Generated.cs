@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ArmorResistanceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ArmorResistanceBinaryWriteTranslation Instance = new ArmorResistanceBinaryWriteTranslation();
+        public static readonly ArmorResistanceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IArmorResistanceGetter item,

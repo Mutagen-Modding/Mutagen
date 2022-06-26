@@ -1370,7 +1370,7 @@ namespace Mutagen.Bethesda.Fallout4
         GlobalBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GlobalFloatBinaryWriteTranslation Instance = new GlobalFloatBinaryWriteTranslation();
+        public new static readonly GlobalFloatBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IGlobalFloatGetter item,

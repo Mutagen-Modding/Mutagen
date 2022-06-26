@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ASoundDescriptorBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ASoundDescriptorBinaryWriteTranslation Instance = new ASoundDescriptorBinaryWriteTranslation();
+        public static readonly ASoundDescriptorBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

@@ -1873,7 +1873,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CellSubBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellSubBlockBinaryWriteTranslation Instance = new CellSubBlockBinaryWriteTranslation();
+        public static readonly CellSubBlockBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellSubBlockGetter item,

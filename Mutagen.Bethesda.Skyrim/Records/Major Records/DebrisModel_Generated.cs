@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DebrisModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DebrisModelBinaryWriteTranslation Instance = new DebrisModelBinaryWriteTranslation();
+        public static readonly DebrisModelBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDebrisModelGetter item,

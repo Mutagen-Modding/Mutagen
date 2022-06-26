@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationReferenceBinaryWriteTranslation Instance = new LocationReferenceBinaryWriteTranslation();
+        public static readonly LocationReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocationReferenceGetter item,

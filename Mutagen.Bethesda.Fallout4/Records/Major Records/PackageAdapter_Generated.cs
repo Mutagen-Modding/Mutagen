@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Fallout4
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PackageAdapterBinaryWriteTranslation Instance = new PackageAdapterBinaryWriteTranslation();
+        public new static readonly PackageAdapterBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPackageAdapterGetter item,

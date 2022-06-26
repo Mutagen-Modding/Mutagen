@@ -1328,7 +1328,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AudioEffectChainBinaryWriteTranslation Instance = new AudioEffectChainBinaryWriteTranslation();
+        public new static readonly AudioEffectChainBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IAudioEffectChainGetter item,

@@ -1239,7 +1239,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TintGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TintGroupBinaryWriteTranslation Instance = new TintGroupBinaryWriteTranslation();
+        public static readonly TintGroupBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ITintGroupGetter item,

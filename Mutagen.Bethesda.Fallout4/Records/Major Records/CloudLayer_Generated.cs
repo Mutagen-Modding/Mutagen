@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CloudLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CloudLayerBinaryWriteTranslation Instance = new CloudLayerBinaryWriteTranslation();
+        public static readonly CloudLayerBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICloudLayerGetter item,

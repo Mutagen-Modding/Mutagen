@@ -4085,7 +4085,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly CombatStyleBinaryWriteTranslation Instance = new CombatStyleBinaryWriteTranslation();
+        public new static readonly CombatStyleBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICombatStyleGetter item,

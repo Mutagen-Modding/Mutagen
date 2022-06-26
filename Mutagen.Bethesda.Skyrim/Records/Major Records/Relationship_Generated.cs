@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RelationshipBinaryWriteTranslation Instance = new RelationshipBinaryWriteTranslation();
+        public new static readonly RelationshipBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRelationshipGetter item,

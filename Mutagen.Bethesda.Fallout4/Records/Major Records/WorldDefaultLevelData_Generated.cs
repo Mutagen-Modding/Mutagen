@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WorldDefaultLevelDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WorldDefaultLevelDataBinaryWriteTranslation Instance = new WorldDefaultLevelDataBinaryWriteTranslation();
+        public static readonly WorldDefaultLevelDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWorldDefaultLevelDataGetter item,

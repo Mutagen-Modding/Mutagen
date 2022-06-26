@@ -6913,7 +6913,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly EffectShaderBinaryWriteTranslation Instance = new EffectShaderBinaryWriteTranslation();
+        public new static readonly EffectShaderBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IEffectShaderGetter item,

@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DialogResponseFlagsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DialogResponseFlagsBinaryWriteTranslation Instance = new DialogResponseFlagsBinaryWriteTranslation();
+        public static readonly DialogResponseFlagsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDialogResponseFlagsGetter item,

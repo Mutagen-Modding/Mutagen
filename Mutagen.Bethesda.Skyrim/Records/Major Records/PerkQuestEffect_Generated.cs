@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PerkQuestEffectBinaryWriteTranslation Instance = new PerkQuestEffectBinaryWriteTranslation();
+        public new static readonly PerkQuestEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPerkQuestEffectGetter item,

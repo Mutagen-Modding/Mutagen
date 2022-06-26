@@ -1521,7 +1521,7 @@ namespace Mutagen.Bethesda.Fallout4
         AObjectModificationBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly NpcModificationBinaryWriteTranslation Instance = new NpcModificationBinaryWriteTranslation();
+        public new static readonly NpcModificationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INpcModificationGetter item,

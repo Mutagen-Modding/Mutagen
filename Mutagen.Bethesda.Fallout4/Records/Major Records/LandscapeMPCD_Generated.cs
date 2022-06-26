@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LandscapeMPCDBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LandscapeMPCDBinaryWriteTranslation Instance = new LandscapeMPCDBinaryWriteTranslation();
+        public static readonly LandscapeMPCDBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILandscapeMPCDGetter item,

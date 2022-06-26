@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly FloraBinaryWriteTranslation Instance = new FloraBinaryWriteTranslation();
+        public new static readonly FloraBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IFloraGetter item,

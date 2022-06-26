@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MovementDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MovementDataBinaryWriteTranslation Instance = new MovementDataBinaryWriteTranslation();
+        public static readonly MovementDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMovementDataGetter item,

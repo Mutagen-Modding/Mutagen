@@ -1667,7 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ClimateBinaryWriteTranslation Instance = new ClimateBinaryWriteTranslation();
+        public new static readonly ClimateBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IClimateGetter item,

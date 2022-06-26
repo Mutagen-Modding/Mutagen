@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AAudioEffectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AAudioEffectBinaryWriteTranslation Instance = new AAudioEffectBinaryWriteTranslation();
+        public static readonly AAudioEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAAudioEffectGetter item,

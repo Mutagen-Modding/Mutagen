@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly NavigationMeshInfoMapBinaryWriteTranslation Instance = new NavigationMeshInfoMapBinaryWriteTranslation();
+        public new static readonly NavigationMeshInfoMapBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             INavigationMeshInfoMapGetter item,

@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class OwnershipBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly OwnershipBinaryWriteTranslation Instance = new OwnershipBinaryWriteTranslation();
+        public static readonly OwnershipBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IOwnershipGetter item,

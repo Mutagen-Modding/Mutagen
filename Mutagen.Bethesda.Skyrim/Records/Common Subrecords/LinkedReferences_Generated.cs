@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LinkedReferencesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LinkedReferencesBinaryWriteTranslation Instance = new LinkedReferencesBinaryWriteTranslation();
+        public static readonly LinkedReferencesBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILinkedReferencesGetter item,

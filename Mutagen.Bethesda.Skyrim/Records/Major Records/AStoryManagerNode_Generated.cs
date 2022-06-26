@@ -1455,7 +1455,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AStoryManagerNodeBinaryWriteTranslation Instance = new AStoryManagerNodeBinaryWriteTranslation();
+        public new static readonly AStoryManagerNodeBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IAStoryManagerNodeGetter item,

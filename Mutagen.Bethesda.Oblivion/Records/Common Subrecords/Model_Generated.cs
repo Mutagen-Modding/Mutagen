@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ModelBinaryWriteTranslation Instance = new ModelBinaryWriteTranslation();
+        public static readonly ModelBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IModelGetter item,

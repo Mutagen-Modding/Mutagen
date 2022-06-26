@@ -4369,7 +4369,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MagicEffectBinaryWriteTranslation Instance = new MagicEffectBinaryWriteTranslation();
+        public new static readonly MagicEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMagicEffectGetter item,

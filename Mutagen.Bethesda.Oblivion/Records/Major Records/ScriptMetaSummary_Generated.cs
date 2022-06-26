@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptMetaSummaryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ScriptMetaSummaryBinaryWriteTranslation Instance = new ScriptMetaSummaryBinaryWriteTranslation();
+        public static readonly ScriptMetaSummaryBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IScriptMetaSummaryGetter item,

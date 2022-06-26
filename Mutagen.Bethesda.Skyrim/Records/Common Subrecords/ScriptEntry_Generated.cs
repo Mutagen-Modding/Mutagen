@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScriptEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ScriptEntryBinaryWriteTranslation Instance = new ScriptEntryBinaryWriteTranslation();
+        public static readonly ScriptEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IScriptEntryGetter item,

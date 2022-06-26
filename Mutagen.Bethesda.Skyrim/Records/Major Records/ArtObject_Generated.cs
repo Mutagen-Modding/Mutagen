@@ -1470,7 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ArtObjectBinaryWriteTranslation Instance = new ArtObjectBinaryWriteTranslation();
+        public new static readonly ArtObjectBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IArtObjectGetter item,

@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Fallout4
         APerkEntryPointEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PerkEntryPointAddActivateChoiceBinaryWriteTranslation Instance = new PerkEntryPointAddActivateChoiceBinaryWriteTranslation();
+        public new static readonly PerkEntryPointAddActivateChoiceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPerkEntryPointAddActivateChoiceGetter item,

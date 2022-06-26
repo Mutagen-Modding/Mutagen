@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SpellDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SpellDataBinaryWriteTranslation Instance = new SpellDataBinaryWriteTranslation();
+        public static readonly SpellDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISpellDataGetter item,

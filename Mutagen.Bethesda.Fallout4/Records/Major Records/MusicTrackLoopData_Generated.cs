@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MusicTrackLoopDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MusicTrackLoopDataBinaryWriteTranslation Instance = new MusicTrackLoopDataBinaryWriteTranslation();
+        public static readonly MusicTrackLoopDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMusicTrackLoopDataGetter item,

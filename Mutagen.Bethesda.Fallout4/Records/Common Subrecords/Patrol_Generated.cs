@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PatrolBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PatrolBinaryWriteTranslation Instance = new PatrolBinaryWriteTranslation();
+        public static readonly PatrolBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IPatrolGetter item,

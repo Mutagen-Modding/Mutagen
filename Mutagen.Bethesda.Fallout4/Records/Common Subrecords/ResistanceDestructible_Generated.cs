@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ResistanceDestructibleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ResistanceDestructibleBinaryWriteTranslation Instance = new ResistanceDestructibleBinaryWriteTranslation();
+        public static readonly ResistanceDestructibleBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IResistanceDestructibleGetter item,

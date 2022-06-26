@@ -1731,7 +1731,7 @@ namespace Mutagen.Bethesda.Skyrim
         AStoryManagerNodeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly StoryManagerQuestNodeBinaryWriteTranslation Instance = new StoryManagerQuestNodeBinaryWriteTranslation();
+        public new static readonly StoryManagerQuestNodeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IStoryManagerQuestNodeGetter item,

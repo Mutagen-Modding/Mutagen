@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ScriptBinaryWriteTranslation Instance = new ScriptBinaryWriteTranslation();
+        public new static readonly ScriptBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IScriptGetter item,

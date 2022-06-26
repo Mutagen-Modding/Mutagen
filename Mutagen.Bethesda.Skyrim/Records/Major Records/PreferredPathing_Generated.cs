@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PreferredPathingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PreferredPathingBinaryWriteTranslation Instance = new PreferredPathingBinaryWriteTranslation();
+        public static readonly PreferredPathingBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPreferredPathingGetter item,

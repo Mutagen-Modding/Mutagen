@@ -2240,7 +2240,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeaponDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WeaponDataBinaryWriteTranslation Instance = new WeaponDataBinaryWriteTranslation();
+        public static readonly WeaponDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWeaponDataGetter item,

@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CellCombinedMeshReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellCombinedMeshReferenceBinaryWriteTranslation Instance = new CellCombinedMeshReferenceBinaryWriteTranslation();
+        public static readonly CellCombinedMeshReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellCombinedMeshReferenceGetter item,

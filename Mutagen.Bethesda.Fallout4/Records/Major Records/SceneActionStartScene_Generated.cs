@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Fallout4
         ASceneActionTypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SceneActionStartSceneBinaryWriteTranslation Instance = new SceneActionStartSceneBinaryWriteTranslation();
+        public new static readonly SceneActionStartSceneBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISceneActionStartSceneGetter item,

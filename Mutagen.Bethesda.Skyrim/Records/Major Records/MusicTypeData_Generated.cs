@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MusicTypeDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MusicTypeDataBinaryWriteTranslation Instance = new MusicTypeDataBinaryWriteTranslation();
+        public static readonly MusicTypeDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMusicTypeDataGetter item,

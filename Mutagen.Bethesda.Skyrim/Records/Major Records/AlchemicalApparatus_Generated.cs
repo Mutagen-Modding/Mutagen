@@ -2279,7 +2279,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AlchemicalApparatusBinaryWriteTranslation Instance = new AlchemicalApparatusBinaryWriteTranslation();
+        public new static readonly AlchemicalApparatusBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAlchemicalApparatusGetter item,

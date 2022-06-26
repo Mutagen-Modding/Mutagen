@@ -2499,7 +2499,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FaceFxPhonemesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FaceFxPhonemesBinaryWriteTranslation Instance = new FaceFxPhonemesBinaryWriteTranslation();
+        public static readonly FaceFxPhonemesBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IFaceFxPhonemesGetter item,

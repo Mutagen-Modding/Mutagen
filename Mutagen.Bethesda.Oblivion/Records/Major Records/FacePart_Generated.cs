@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class FacePartBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FacePartBinaryWriteTranslation Instance = new FacePartBinaryWriteTranslation();
+        public static readonly FacePartBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IFacePartGetter item,

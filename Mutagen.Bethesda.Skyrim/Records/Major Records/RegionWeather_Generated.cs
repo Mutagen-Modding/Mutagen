@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RegionWeatherBinaryWriteTranslation Instance = new RegionWeatherBinaryWriteTranslation();
+        public new static readonly RegionWeatherBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IRegionWeatherGetter item,

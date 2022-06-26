@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SkyrimModHeaderBinaryWriteTranslation Instance = new SkyrimModHeaderBinaryWriteTranslation();
+        public static readonly SkyrimModHeaderBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISkyrimModHeaderGetter item,

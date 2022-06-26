@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4GroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly Fallout4GroupBinaryWriteTranslation Instance = new Fallout4GroupBinaryWriteTranslation();
+        public static readonly Fallout4GroupBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded<T>(
             IFallout4GroupGetter<T> item,

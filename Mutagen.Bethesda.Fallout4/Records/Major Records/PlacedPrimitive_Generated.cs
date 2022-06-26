@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PlacedPrimitiveBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PlacedPrimitiveBinaryWriteTranslation Instance = new PlacedPrimitiveBinaryWriteTranslation();
+        public static readonly PlacedPrimitiveBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedPrimitiveGetter item,

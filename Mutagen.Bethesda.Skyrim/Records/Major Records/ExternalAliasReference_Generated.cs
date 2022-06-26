@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ExternalAliasReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ExternalAliasReferenceBinaryWriteTranslation Instance = new ExternalAliasReferenceBinaryWriteTranslation();
+        public static readonly ExternalAliasReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IExternalAliasReferenceGetter item,

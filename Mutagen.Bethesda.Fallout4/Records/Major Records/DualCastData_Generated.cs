@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly DualCastDataBinaryWriteTranslation Instance = new DualCastDataBinaryWriteTranslation();
+        public new static readonly DualCastDataBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,

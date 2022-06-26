@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim
         GlobalBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GlobalFloatBinaryWriteTranslation Instance = new GlobalFloatBinaryWriteTranslation();
+        public new static readonly GlobalFloatBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IGlobalFloatGetter item,

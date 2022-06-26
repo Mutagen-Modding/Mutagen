@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LoadScreenZoomBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LoadScreenZoomBinaryWriteTranslation Instance = new LoadScreenZoomBinaryWriteTranslation();
+        public static readonly LoadScreenZoomBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILoadScreenZoomGetter item,

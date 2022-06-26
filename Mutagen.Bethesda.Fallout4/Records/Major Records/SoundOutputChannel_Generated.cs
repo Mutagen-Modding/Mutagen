@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SoundOutputChannelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SoundOutputChannelBinaryWriteTranslation Instance = new SoundOutputChannelBinaryWriteTranslation();
+        public static readonly SoundOutputChannelBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISoundOutputChannelGetter item,

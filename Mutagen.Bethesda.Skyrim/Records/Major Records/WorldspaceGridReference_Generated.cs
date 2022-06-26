@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceGridReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WorldspaceGridReferenceBinaryWriteTranslation Instance = new WorldspaceGridReferenceBinaryWriteTranslation();
+        public static readonly WorldspaceGridReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWorldspaceGridReferenceGetter item,

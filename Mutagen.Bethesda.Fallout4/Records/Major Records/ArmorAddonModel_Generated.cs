@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ArmorAddonModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ArmorAddonModelBinaryWriteTranslation Instance = new ArmorAddonModelBinaryWriteTranslation();
+        public static readonly ArmorAddonModelBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IArmorAddonModelGetter item,

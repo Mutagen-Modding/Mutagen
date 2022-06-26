@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class StartSceneBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly StartSceneBinaryWriteTranslation Instance = new StartSceneBinaryWriteTranslation();
+        public static readonly StartSceneBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IStartSceneGetter item,

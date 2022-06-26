@@ -1735,7 +1735,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PathGridBinaryWriteTranslation Instance = new PathGridBinaryWriteTranslation();
+        public new static readonly PathGridBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IPathGridGetter item,

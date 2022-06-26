@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavmeshTriangleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NavmeshTriangleBinaryWriteTranslation Instance = new NavmeshTriangleBinaryWriteTranslation();
+        public static readonly NavmeshTriangleBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INavmeshTriangleGetter item,

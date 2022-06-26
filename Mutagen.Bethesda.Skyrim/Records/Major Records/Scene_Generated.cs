@@ -2422,7 +2422,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SceneBinaryWriteTranslation Instance = new SceneBinaryWriteTranslation();
+        public new static readonly SceneBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ISceneGetter item,

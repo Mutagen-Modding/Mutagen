@@ -2924,7 +2924,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly QuestBinaryWriteTranslation Instance = new QuestBinaryWriteTranslation();
+        public new static readonly QuestBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IQuestGetter item,

@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MapMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MapMarkerBinaryWriteTranslation Instance = new MapMarkerBinaryWriteTranslation();
+        public static readonly MapMarkerBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IMapMarkerGetter item,

@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly HairBinaryWriteTranslation Instance = new HairBinaryWriteTranslation();
+        public new static readonly HairBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IHairGetter item,

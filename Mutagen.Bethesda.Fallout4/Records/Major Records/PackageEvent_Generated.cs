@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PackageEventBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PackageEventBinaryWriteTranslation Instance = new PackageEventBinaryWriteTranslation();
+        public static readonly PackageEventBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IPackageEventGetter item,

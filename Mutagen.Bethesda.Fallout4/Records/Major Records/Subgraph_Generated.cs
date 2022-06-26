@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SubgraphBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SubgraphBinaryWriteTranslation Instance = new SubgraphBinaryWriteTranslation();
+        public static readonly SubgraphBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISubgraphGetter item,

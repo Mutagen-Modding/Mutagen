@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AmbientColorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AmbientColorsBinaryWriteTranslation Instance = new AmbientColorsBinaryWriteTranslation();
+        public static readonly AmbientColorsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAmbientColorsGetter item,

@@ -2806,7 +2806,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CombatStyleDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CombatStyleDataBinaryWriteTranslation Instance = new CombatStyleDataBinaryWriteTranslation();
+        public static readonly CombatStyleDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICombatStyleDataGetter item,

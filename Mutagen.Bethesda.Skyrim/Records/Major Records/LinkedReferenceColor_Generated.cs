@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LinkedReferenceColorBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LinkedReferenceColorBinaryWriteTranslation Instance = new LinkedReferenceColorBinaryWriteTranslation();
+        public static readonly LinkedReferenceColorBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILinkedReferenceColorGetter item,

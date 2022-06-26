@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AlchemicalApparatusDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AlchemicalApparatusDataBinaryWriteTranslation Instance = new AlchemicalApparatusDataBinaryWriteTranslation();
+        public static readonly AlchemicalApparatusDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAlchemicalApparatusDataGetter item,

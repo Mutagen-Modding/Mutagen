@@ -3807,7 +3807,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class EffectShaderDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly EffectShaderDataBinaryWriteTranslation Instance = new EffectShaderDataBinaryWriteTranslation();
+        public static readonly EffectShaderDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IEffectShaderDataGetter item,

@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ScriptFragmentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ScriptFragmentBinaryWriteTranslation Instance = new ScriptFragmentBinaryWriteTranslation();
+        public static readonly ScriptFragmentBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IScriptFragmentGetter item,

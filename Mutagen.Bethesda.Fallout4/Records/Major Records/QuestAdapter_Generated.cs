@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Fallout4
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly QuestAdapterBinaryWriteTranslation Instance = new QuestAdapterBinaryWriteTranslation();
+        public new static readonly QuestAdapterBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IQuestAdapterGetter item,

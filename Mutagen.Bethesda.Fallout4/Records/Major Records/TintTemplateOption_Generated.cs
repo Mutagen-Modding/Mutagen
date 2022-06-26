@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TintTemplateOptionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TintTemplateOptionBinaryWriteTranslation Instance = new TintTemplateOptionBinaryWriteTranslation();
+        public static readonly TintTemplateOptionBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ITintTemplateOptionGetter item,

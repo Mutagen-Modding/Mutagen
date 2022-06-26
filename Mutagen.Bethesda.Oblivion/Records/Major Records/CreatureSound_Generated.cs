@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CreatureSoundBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CreatureSoundBinaryWriteTranslation Instance = new CreatureSoundBinaryWriteTranslation();
+        public static readonly CreatureSoundBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ICreatureSoundGetter item,

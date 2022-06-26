@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LocalVariableDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocalVariableDataBinaryWriteTranslation Instance = new LocalVariableDataBinaryWriteTranslation();
+        public static readonly LocalVariableDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocalVariableDataGetter item,

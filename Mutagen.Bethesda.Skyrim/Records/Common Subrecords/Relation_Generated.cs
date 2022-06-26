@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RelationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RelationBinaryWriteTranslation Instance = new RelationBinaryWriteTranslation();
+        public static readonly RelationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRelationGetter item,

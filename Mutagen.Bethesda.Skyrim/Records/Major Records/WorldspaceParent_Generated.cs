@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WorldspaceParentBinaryWriteTranslation Instance = new WorldspaceParentBinaryWriteTranslation();
+        public static readonly WorldspaceParentBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IWorldspaceParentGetter item,

@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RankBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RankBinaryWriteTranslation Instance = new RankBinaryWriteTranslation();
+        public static readonly RankBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IRankGetter item,

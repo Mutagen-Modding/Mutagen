@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellMaxHeightDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellMaxHeightDataBinaryWriteTranslation Instance = new CellMaxHeightDataBinaryWriteTranslation();
+        public static readonly CellMaxHeightDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICellMaxHeightDataGetter item,

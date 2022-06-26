@@ -1362,7 +1362,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AnimatedObjectBinaryWriteTranslation Instance = new AnimatedObjectBinaryWriteTranslation();
+        public new static readonly AnimatedObjectBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IAnimatedObjectGetter item,

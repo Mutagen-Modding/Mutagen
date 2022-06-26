@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class QuestObjectiveBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly QuestObjectiveBinaryWriteTranslation Instance = new QuestObjectiveBinaryWriteTranslation();
+        public static readonly QuestObjectiveBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IQuestObjectiveGetter item,

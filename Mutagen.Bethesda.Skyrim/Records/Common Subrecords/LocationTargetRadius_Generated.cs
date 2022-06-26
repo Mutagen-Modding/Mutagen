@@ -1022,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationTargetRadiusBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationTargetRadiusBinaryWriteTranslation Instance = new LocationTargetRadiusBinaryWriteTranslation();
+        public static readonly LocationTargetRadiusBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocationTargetRadiusGetter item,

@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ExtraDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ExtraDataBinaryWriteTranslation Instance = new ExtraDataBinaryWriteTranslation();
+        public static readonly ExtraDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IExtraDataGetter item,

@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class QuestLogEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly QuestLogEntryBinaryWriteTranslation Instance = new QuestLogEntryBinaryWriteTranslation();
+        public static readonly QuestLogEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IQuestLogEntryGetter item,

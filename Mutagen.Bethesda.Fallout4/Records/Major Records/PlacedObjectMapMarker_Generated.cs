@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PlacedObjectMapMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PlacedObjectMapMarkerBinaryWriteTranslation Instance = new PlacedObjectMapMarkerBinaryWriteTranslation();
+        public static readonly PlacedObjectMapMarkerBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedObjectMapMarkerGetter item,

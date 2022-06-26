@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LensFlareSpriteDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LensFlareSpriteDataBinaryWriteTranslation Instance = new LensFlareSpriteDataBinaryWriteTranslation();
+        public static readonly LensFlareSpriteDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILensFlareSpriteDataGetter item,

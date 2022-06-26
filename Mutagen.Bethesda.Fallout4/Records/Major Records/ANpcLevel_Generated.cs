@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ANpcLevelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ANpcLevelBinaryWriteTranslation Instance = new ANpcLevelBinaryWriteTranslation();
+        public static readonly ANpcLevelBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

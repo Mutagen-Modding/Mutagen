@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Fallout4
         AColorRecordDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ColorDataBinaryWriteTranslation Instance = new ColorDataBinaryWriteTranslation();
+        public new static readonly ColorDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IColorDataGetter item,

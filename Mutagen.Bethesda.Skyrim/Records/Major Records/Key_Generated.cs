@@ -2352,7 +2352,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly KeyBinaryWriteTranslation Instance = new KeyBinaryWriteTranslation();
+        public new static readonly KeyBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IKeyGetter item,

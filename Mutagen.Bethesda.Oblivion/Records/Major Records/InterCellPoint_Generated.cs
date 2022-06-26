@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class InterCellPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly InterCellPointBinaryWriteTranslation Instance = new InterCellPointBinaryWriteTranslation();
+        public static readonly InterCellPointBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IInterCellPointGetter item,

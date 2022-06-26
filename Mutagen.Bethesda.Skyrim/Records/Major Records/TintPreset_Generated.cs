@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TintPresetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TintPresetBinaryWriteTranslation Instance = new TintPresetBinaryWriteTranslation();
+        public static readonly TintPresetBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ITintPresetGetter item,

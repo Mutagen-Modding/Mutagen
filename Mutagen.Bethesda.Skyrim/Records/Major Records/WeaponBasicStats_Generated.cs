@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeaponBasicStatsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WeaponBasicStatsBinaryWriteTranslation Instance = new WeaponBasicStatsBinaryWriteTranslation();
+        public static readonly WeaponBasicStatsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWeaponBasicStatsGetter item,

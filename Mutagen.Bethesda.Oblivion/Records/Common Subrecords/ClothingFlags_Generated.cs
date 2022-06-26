@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClothingFlagsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ClothingFlagsBinaryWriteTranslation Instance = new ClothingFlagsBinaryWriteTranslation();
+        public static readonly ClothingFlagsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IClothingFlagsGetter item,

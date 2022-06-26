@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Oblivion
         AScriptReferenceBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ScriptVariableReferenceBinaryWriteTranslation Instance = new ScriptVariableReferenceBinaryWriteTranslation();
+        public new static readonly ScriptVariableReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IScriptVariableReferenceGetter item,

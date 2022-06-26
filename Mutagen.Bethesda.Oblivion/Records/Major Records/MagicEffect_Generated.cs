@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MagicEffectBinaryWriteTranslation Instance = new MagicEffectBinaryWriteTranslation();
+        public new static readonly MagicEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IMagicEffectGetter item,

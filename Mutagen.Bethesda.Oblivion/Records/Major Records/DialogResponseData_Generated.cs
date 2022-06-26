@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DialogResponseDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly DialogResponseDataBinaryWriteTranslation Instance = new DialogResponseDataBinaryWriteTranslation();
+        public static readonly DialogResponseDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IDialogResponseDataGetter item,

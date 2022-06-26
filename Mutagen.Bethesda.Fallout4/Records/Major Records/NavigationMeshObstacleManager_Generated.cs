@@ -1331,7 +1331,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly NavigationMeshObstacleManagerBinaryWriteTranslation Instance = new NavigationMeshObstacleManagerBinaryWriteTranslation();
+        public new static readonly NavigationMeshObstacleManagerBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             INavigationMeshObstacleManagerGetter item,

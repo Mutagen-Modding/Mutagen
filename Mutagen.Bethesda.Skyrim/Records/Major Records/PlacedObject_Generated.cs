@@ -6137,7 +6137,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PlacedObjectBinaryWriteTranslation Instance = new PlacedObjectBinaryWriteTranslation();
+        public new static readonly PlacedObjectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedObjectGetter item,

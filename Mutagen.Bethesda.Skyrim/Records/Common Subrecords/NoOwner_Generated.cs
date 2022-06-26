@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
         OwnerTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly NoOwnerBinaryWriteTranslation Instance = new NoOwnerBinaryWriteTranslation();
+        public new static readonly NoOwnerBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INoOwnerGetter item,

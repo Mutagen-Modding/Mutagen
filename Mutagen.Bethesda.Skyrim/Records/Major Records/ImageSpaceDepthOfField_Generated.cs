@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceDepthOfFieldBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ImageSpaceDepthOfFieldBinaryWriteTranslation Instance = new ImageSpaceDepthOfFieldBinaryWriteTranslation();
+        public static readonly ImageSpaceDepthOfFieldBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IImageSpaceDepthOfFieldGetter item,

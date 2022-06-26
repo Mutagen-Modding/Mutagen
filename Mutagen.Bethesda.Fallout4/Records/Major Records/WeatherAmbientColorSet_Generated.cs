@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WeatherAmbientColorSetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WeatherAmbientColorSetBinaryWriteTranslation Instance = new WeatherAmbientColorSetBinaryWriteTranslation();
+        public static readonly WeatherAmbientColorSetBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWeatherAmbientColorSetGetter item,

@@ -3335,7 +3335,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly QuestAliasBinaryWriteTranslation Instance = new QuestAliasBinaryWriteTranslation();
+        public static readonly QuestAliasBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IQuestAliasGetter item,

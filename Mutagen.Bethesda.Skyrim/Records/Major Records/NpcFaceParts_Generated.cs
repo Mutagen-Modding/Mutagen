@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcFacePartsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NpcFacePartsBinaryWriteTranslation Instance = new NpcFacePartsBinaryWriteTranslation();
+        public static readonly NpcFacePartsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INpcFacePartsGetter item,

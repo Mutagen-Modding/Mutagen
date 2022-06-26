@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
         BookTeachTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly BookSkillBinaryWriteTranslation Instance = new BookSkillBinaryWriteTranslation();
+        public new static readonly BookSkillBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IBookSkillGetter item,

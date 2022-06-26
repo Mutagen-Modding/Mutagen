@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ConditionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ConditionDataBinaryWriteTranslation Instance = new ConditionDataBinaryWriteTranslation();
+        public static readonly ConditionDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IConditionDataGetter item,

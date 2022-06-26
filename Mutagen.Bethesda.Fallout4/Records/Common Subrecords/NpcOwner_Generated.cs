@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Fallout4
         OwnerTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly NpcOwnerBinaryWriteTranslation Instance = new NpcOwnerBinaryWriteTranslation();
+        public new static readonly NpcOwnerBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INpcOwnerGetter item,

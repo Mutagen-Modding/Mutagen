@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NpcBodyMorphRegionValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NpcBodyMorphRegionValuesBinaryWriteTranslation Instance = new NpcBodyMorphRegionValuesBinaryWriteTranslation();
+        public static readonly NpcBodyMorphRegionValuesBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INpcBodyMorphRegionValuesGetter item,

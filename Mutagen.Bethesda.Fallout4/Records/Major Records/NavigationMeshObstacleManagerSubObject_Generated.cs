@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NavigationMeshObstacleManagerSubObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NavigationMeshObstacleManagerSubObjectBinaryWriteTranslation Instance = new NavigationMeshObstacleManagerSubObjectBinaryWriteTranslation();
+        public static readonly NavigationMeshObstacleManagerSubObjectBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             INavigationMeshObstacleManagerSubObjectGetter item,

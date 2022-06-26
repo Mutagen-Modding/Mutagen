@@ -2283,7 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WaterDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WaterDataBinaryWriteTranslation Instance = new WaterDataBinaryWriteTranslation();
+        public static readonly WaterDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWaterDataGetter item,

@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FurnitureMarkerEntryPointsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FurnitureMarkerEntryPointsBinaryWriteTranslation Instance = new FurnitureMarkerEntryPointsBinaryWriteTranslation();
+        public static readonly FurnitureMarkerEntryPointsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IFurnitureMarkerEntryPointsGetter item,

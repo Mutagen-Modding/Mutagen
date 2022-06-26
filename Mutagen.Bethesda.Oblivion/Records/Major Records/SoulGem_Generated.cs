@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SoulGemBinaryWriteTranslation Instance = new SoulGemBinaryWriteTranslation();
+        public new static readonly SoulGemBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ISoulGemGetter item,

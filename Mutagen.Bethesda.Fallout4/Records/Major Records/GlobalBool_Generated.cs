@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Fallout4
         GlobalBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GlobalBoolBinaryWriteTranslation Instance = new GlobalBoolBinaryWriteTranslation();
+        public new static readonly GlobalBoolBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IGlobalBoolGetter item,

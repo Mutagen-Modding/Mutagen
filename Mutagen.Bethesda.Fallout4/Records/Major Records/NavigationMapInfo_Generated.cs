@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NavigationMapInfoBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NavigationMapInfoBinaryWriteTranslation Instance = new NavigationMapInfoBinaryWriteTranslation();
+        public static readonly NavigationMapInfoBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INavigationMapInfoGetter item,

@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RaceStatsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RaceStatsBinaryWriteTranslation Instance = new RaceStatsBinaryWriteTranslation();
+        public static readonly RaceStatsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRaceStatsGetter item,

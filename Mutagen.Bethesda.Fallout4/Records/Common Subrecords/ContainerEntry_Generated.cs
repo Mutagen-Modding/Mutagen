@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ContainerEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ContainerEntryBinaryWriteTranslation Instance = new ContainerEntryBinaryWriteTranslation();
+        public static readonly ContainerEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IContainerEntryGetter item,

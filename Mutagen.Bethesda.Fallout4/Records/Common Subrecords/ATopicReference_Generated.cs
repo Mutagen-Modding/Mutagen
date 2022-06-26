@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ATopicReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ATopicReferenceBinaryWriteTranslation Instance = new ATopicReferenceBinaryWriteTranslation();
+        public static readonly ATopicReferenceBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

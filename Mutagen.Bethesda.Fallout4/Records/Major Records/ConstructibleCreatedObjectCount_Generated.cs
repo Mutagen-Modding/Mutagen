@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ConstructibleCreatedObjectCountBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ConstructibleCreatedObjectCountBinaryWriteTranslation Instance = new ConstructibleCreatedObjectCountBinaryWriteTranslation();
+        public static readonly ConstructibleCreatedObjectCountBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IConstructibleCreatedObjectCountGetter item,

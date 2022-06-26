@@ -1370,7 +1370,7 @@ namespace Mutagen.Bethesda.Fallout4
         ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly FunctionConditionDataBinaryWriteTranslation Instance = new FunctionConditionDataBinaryWriteTranslation();
+        public new static readonly FunctionConditionDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IFunctionConditionDataGetter item,

@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SeasonalIngredientProductionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SeasonalIngredientProductionBinaryWriteTranslation Instance = new SeasonalIngredientProductionBinaryWriteTranslation();
+        public static readonly SeasonalIngredientProductionBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISeasonalIngredientProductionGetter item,

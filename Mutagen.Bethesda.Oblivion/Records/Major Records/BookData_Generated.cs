@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class BookDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BookDataBinaryWriteTranslation Instance = new BookDataBinaryWriteTranslation();
+        public static readonly BookDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IBookDataGetter item,

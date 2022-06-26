@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PlacedObjectLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PlacedObjectLightingBinaryWriteTranslation Instance = new PlacedObjectLightingBinaryWriteTranslation();
+        public static readonly PlacedObjectLightingBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedObjectLightingGetter item,

@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4
         APackageTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PackageTargetSpecificReferenceBinaryWriteTranslation Instance = new PackageTargetSpecificReferenceBinaryWriteTranslation();
+        public new static readonly PackageTargetSpecificReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPackageTargetSpecificReferenceGetter item,

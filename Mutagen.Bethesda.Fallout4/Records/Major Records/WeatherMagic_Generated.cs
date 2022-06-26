@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WeatherMagicBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WeatherMagicBinaryWriteTranslation Instance = new WeatherMagicBinaryWriteTranslation();
+        public static readonly WeatherMagicBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWeatherMagicGetter item,

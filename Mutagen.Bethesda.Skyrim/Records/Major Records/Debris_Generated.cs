@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly DebrisBinaryWriteTranslation Instance = new DebrisBinaryWriteTranslation();
+        public new static readonly DebrisBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IDebrisGetter item,

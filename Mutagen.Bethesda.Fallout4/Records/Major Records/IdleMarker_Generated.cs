@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly IdleMarkerBinaryWriteTranslation Instance = new IdleMarkerBinaryWriteTranslation();
+        public new static readonly IdleMarkerBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IIdleMarkerGetter item,

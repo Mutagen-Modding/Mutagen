@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EntryPointsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly EntryPointsBinaryWriteTranslation Instance = new EntryPointsBinaryWriteTranslation();
+        public static readonly EntryPointsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IEntryPointsGetter item,

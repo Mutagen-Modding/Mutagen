@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class QuestDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly QuestDataBinaryWriteTranslation Instance = new QuestDataBinaryWriteTranslation();
+        public static readonly QuestDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IQuestDataGetter item,

@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RegionDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RegionDataBinaryWriteTranslation Instance = new RegionDataBinaryWriteTranslation();
+        public static readonly RegionDataBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IRegionDataGetter item,

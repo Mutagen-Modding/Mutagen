@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class KeyFrameBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly KeyFrameBinaryWriteTranslation Instance = new KeyFrameBinaryWriteTranslation();
+        public static readonly KeyFrameBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IKeyFrameGetter item,

@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActorValueSkillBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ActorValueSkillBinaryWriteTranslation Instance = new ActorValueSkillBinaryWriteTranslation();
+        public static readonly ActorValueSkillBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IActorValueSkillGetter item,

@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LeveledNpcEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LeveledNpcEntryBinaryWriteTranslation Instance = new LeveledNpcEntryBinaryWriteTranslation();
+        public static readonly LeveledNpcEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ILeveledNpcEntryGetter item,

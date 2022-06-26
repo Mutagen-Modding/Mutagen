@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim
         APlacedTrapBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PlacedBarrierBinaryWriteTranslation Instance = new PlacedBarrierBinaryWriteTranslation();
+        public new static readonly PlacedBarrierBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedBarrierGetter item,

@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ColorRecordBinaryWriteTranslation Instance = new ColorRecordBinaryWriteTranslation();
+        public new static readonly ColorRecordBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IColorRecordGetter item,

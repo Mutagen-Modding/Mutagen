@@ -1379,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly EyesBinaryWriteTranslation Instance = new EyesBinaryWriteTranslation();
+        public new static readonly EyesBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IEyesGetter item,

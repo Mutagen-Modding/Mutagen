@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim
         GameSettingBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GameSettingIntBinaryWriteTranslation Instance = new GameSettingIntBinaryWriteTranslation();
+        public new static readonly GameSettingIntBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IGameSettingIntGetter item,

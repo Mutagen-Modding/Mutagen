@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationCellUniqueBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationCellUniqueBinaryWriteTranslation Instance = new LocationCellUniqueBinaryWriteTranslation();
+        public static readonly LocationCellUniqueBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocationCellUniqueGetter item,

@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ReverbParametersBinaryWriteTranslation Instance = new ReverbParametersBinaryWriteTranslation();
+        public new static readonly ReverbParametersBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IReverbParametersGetter item,

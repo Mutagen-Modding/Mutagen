@@ -18941,7 +18941,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimModBinaryWriteTranslation
     {
-        public static readonly SkyrimModBinaryWriteTranslation Instance = new SkyrimModBinaryWriteTranslation();
+        public static readonly SkyrimModBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ISkyrimModGetter item,

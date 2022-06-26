@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ATopicReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ATopicReferenceBinaryWriteTranslation Instance = new ATopicReferenceBinaryWriteTranslation();
+        public static readonly ATopicReferenceBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

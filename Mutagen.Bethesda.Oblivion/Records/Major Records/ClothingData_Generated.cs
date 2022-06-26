@@ -995,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClothingDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ClothingDataBinaryWriteTranslation Instance = new ClothingDataBinaryWriteTranslation();
+        public static readonly ClothingDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IClothingDataGetter item,

@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Fallout4
         BookTeachTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly BookActorValueBinaryWriteTranslation Instance = new BookActorValueBinaryWriteTranslation();
+        public new static readonly BookActorValueBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IBookActorValueGetter item,

@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class HeadPartReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly HeadPartReferenceBinaryWriteTranslation Instance = new HeadPartReferenceBinaryWriteTranslation();
+        public static readonly HeadPartReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IHeadPartReferenceGetter item,

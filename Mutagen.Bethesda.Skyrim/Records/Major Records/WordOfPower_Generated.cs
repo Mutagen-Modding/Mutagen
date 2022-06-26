@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly WordOfPowerBinaryWriteTranslation Instance = new WordOfPowerBinaryWriteTranslation();
+        public new static readonly WordOfPowerBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IWordOfPowerGetter item,

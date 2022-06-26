@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SigilStoneDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SigilStoneDataBinaryWriteTranslation Instance = new SigilStoneDataBinaryWriteTranslation();
+        public static readonly SigilStoneDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISigilStoneDataGetter item,

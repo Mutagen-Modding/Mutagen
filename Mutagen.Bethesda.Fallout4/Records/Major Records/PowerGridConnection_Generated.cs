@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PowerGridConnectionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PowerGridConnectionBinaryWriteTranslation Instance = new PowerGridConnectionBinaryWriteTranslation();
+        public static readonly PowerGridConnectionBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPowerGridConnectionGetter item,

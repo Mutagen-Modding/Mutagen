@@ -4998,7 +4998,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
+        public new static readonly WaterBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWaterGetter item,

@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NavmeshWaypointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NavmeshWaypointBinaryWriteTranslation Instance = new NavmeshWaypointBinaryWriteTranslation();
+        public static readonly NavmeshWaypointBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INavmeshWaypointGetter item,

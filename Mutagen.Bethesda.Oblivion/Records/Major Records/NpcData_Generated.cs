@@ -2420,7 +2420,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class NpcDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NpcDataBinaryWriteTranslation Instance = new NpcDataBinaryWriteTranslation();
+        public static readonly NpcDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INpcDataGetter item,

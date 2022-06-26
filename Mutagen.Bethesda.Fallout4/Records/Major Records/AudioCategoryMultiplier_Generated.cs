@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AudioCategoryMultiplierBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AudioCategoryMultiplierBinaryWriteTranslation Instance = new AudioCategoryMultiplierBinaryWriteTranslation();
+        public static readonly AudioCategoryMultiplierBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAudioCategoryMultiplierGetter item,

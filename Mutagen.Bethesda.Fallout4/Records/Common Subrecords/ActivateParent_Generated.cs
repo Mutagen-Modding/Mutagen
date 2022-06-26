@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ActivateParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ActivateParentBinaryWriteTranslation Instance = new ActivateParentBinaryWriteTranslation();
+        public static readonly ActivateParentBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IActivateParentGetter item,

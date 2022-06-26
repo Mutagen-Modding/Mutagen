@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Int16MinMaxBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly Int16MinMaxBinaryWriteTranslation Instance = new Int16MinMaxBinaryWriteTranslation();
+        public static readonly Int16MinMaxBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IInt16MinMaxGetter item,

@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceTintBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ImageSpaceTintBinaryWriteTranslation Instance = new ImageSpaceTintBinaryWriteTranslation();
+        public static readonly ImageSpaceTintBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IImageSpaceTintGetter item,

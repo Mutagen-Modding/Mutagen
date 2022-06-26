@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly HairBinaryWriteTranslation Instance = new HairBinaryWriteTranslation();
+        public new static readonly HairBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,

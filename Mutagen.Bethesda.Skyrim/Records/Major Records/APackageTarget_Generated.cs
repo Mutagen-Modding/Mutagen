@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class APackageTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly APackageTargetBinaryWriteTranslation Instance = new APackageTargetBinaryWriteTranslation();
+        public static readonly APackageTargetBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAPackageTargetGetter item,

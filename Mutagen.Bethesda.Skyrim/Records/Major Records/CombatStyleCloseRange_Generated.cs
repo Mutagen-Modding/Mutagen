@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CombatStyleCloseRangeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CombatStyleCloseRangeBinaryWriteTranslation Instance = new CombatStyleCloseRangeBinaryWriteTranslation();
+        public static readonly CombatStyleCloseRangeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ICombatStyleCloseRangeGetter item,

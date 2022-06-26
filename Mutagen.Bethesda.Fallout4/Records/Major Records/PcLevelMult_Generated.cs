@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Fallout4
         ANpcLevelBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PcLevelMultBinaryWriteTranslation Instance = new PcLevelMultBinaryWriteTranslation();
+        public new static readonly PcLevelMultBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPcLevelMultGetter item,

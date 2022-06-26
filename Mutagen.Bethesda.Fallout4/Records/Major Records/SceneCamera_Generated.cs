@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SceneCameraBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SceneCameraBinaryWriteTranslation Instance = new SceneCameraBinaryWriteTranslation();
+        public static readonly SceneCameraBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISceneCameraGetter item,

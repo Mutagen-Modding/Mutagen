@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TerminalHolotapeEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TerminalHolotapeEntryBinaryWriteTranslation Instance = new TerminalHolotapeEntryBinaryWriteTranslation();
+        public static readonly TerminalHolotapeEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ITerminalHolotapeEntryGetter item,

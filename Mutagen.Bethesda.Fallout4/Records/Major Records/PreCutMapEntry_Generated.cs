@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class PreCutMapEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PreCutMapEntryBinaryWriteTranslation Instance = new PreCutMapEntryBinaryWriteTranslation();
+        public static readonly PreCutMapEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPreCutMapEntryGetter item,

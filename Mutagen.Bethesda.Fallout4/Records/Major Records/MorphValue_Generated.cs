@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MorphValueBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MorphValueBinaryWriteTranslation Instance = new MorphValueBinaryWriteTranslation();
+        public static readonly MorphValueBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IMorphValueGetter item,

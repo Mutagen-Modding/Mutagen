@@ -1412,7 +1412,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly EquipTypeBinaryWriteTranslation Instance = new EquipTypeBinaryWriteTranslation();
+        public new static readonly EquipTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IEquipTypeGetter item,

@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Fallout4
         APackageDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PackageDataTopicBinaryWriteTranslation Instance = new PackageDataTopicBinaryWriteTranslation();
+        public new static readonly PackageDataTopicBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IPackageDataTopicGetter item,

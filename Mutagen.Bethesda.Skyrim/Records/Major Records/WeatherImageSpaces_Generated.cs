@@ -1138,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherImageSpacesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WeatherImageSpacesBinaryWriteTranslation Instance = new WeatherImageSpacesBinaryWriteTranslation();
+        public static readonly WeatherImageSpacesBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWeatherImageSpacesGetter item,

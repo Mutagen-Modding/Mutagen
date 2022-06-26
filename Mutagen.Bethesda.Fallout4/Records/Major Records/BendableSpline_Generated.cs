@@ -1731,7 +1731,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly BendableSplineBinaryWriteTranslation Instance = new BendableSplineBinaryWriteTranslation();
+        public new static readonly BendableSplineBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IBendableSplineGetter item,

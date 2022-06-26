@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4
         OwnerTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly FactionOwnerBinaryWriteTranslation Instance = new FactionOwnerBinaryWriteTranslation();
+        public new static readonly FactionOwnerBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IFactionOwnerGetter item,

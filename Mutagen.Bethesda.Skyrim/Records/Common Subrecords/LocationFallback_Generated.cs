@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
         ALocationTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LocationFallbackBinaryWriteTranslation Instance = new LocationFallbackBinaryWriteTranslation();
+        public new static readonly LocationFallbackBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILocationFallbackGetter item,

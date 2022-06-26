@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class BookTeachTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BookTeachTargetBinaryWriteTranslation Instance = new BookTeachTargetBinaryWriteTranslation();
+        public static readonly BookTeachTargetBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

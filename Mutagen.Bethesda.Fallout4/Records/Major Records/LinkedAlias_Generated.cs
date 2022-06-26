@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LinkedAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LinkedAliasBinaryWriteTranslation Instance = new LinkedAliasBinaryWriteTranslation();
+        public static readonly LinkedAliasBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ILinkedAliasGetter item,

@@ -1604,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class HDRDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly HDRDataBinaryWriteTranslation Instance = new HDRDataBinaryWriteTranslation();
+        public static readonly HDRDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IHDRDataGetter item,

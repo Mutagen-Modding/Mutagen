@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BoundingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BoundingBinaryWriteTranslation Instance = new BoundingBinaryWriteTranslation();
+        public static readonly BoundingBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IBoundingGetter item,

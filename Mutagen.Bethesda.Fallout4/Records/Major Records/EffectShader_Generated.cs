@@ -4050,7 +4050,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly EffectShaderBinaryWriteTranslation Instance = new EffectShaderBinaryWriteTranslation();
+        public new static readonly EffectShaderBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IEffectShaderGetter item,

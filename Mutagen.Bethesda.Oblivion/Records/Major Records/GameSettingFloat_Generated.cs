@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion
         GameSettingBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GameSettingFloatBinaryWriteTranslation Instance = new GameSettingFloatBinaryWriteTranslation();
+        public new static readonly GameSettingFloatBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IGameSettingFloatGetter item,

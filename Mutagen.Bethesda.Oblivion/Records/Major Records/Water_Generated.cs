@@ -1659,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
+        public new static readonly WaterBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IWaterGetter item,

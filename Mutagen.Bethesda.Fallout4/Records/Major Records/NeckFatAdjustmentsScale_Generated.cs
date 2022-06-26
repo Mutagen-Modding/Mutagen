@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class NeckFatAdjustmentsScaleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NeckFatAdjustmentsScaleBinaryWriteTranslation Instance = new NeckFatAdjustmentsScaleBinaryWriteTranslation();
+        public static readonly NeckFatAdjustmentsScaleBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INeckFatAdjustmentsScaleGetter item,

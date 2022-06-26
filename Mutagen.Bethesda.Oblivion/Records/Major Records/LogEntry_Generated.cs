@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LogEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LogEntryBinaryWriteTranslation Instance = new LogEntryBinaryWriteTranslation();
+        public static readonly LogEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ILogEntryGetter item,

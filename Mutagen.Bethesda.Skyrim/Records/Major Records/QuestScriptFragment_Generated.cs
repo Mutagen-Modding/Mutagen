@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestScriptFragmentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly QuestScriptFragmentBinaryWriteTranslation Instance = new QuestScriptFragmentBinaryWriteTranslation();
+        public static readonly QuestScriptFragmentBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IQuestScriptFragmentGetter item,

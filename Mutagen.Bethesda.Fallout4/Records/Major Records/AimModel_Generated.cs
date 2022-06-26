@@ -2039,7 +2039,7 @@ namespace Mutagen.Bethesda.Fallout4
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AimModelBinaryWriteTranslation Instance = new AimModelBinaryWriteTranslation();
+        public new static readonly AimModelBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IAimModelGetter item,

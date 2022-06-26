@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SkillDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SkillDataBinaryWriteTranslation Instance = new SkillDataBinaryWriteTranslation();
+        public static readonly SkillDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISkillDataGetter item,

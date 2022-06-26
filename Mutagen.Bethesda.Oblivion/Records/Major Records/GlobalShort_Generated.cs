@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion
         GlobalBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GlobalShortBinaryWriteTranslation Instance = new GlobalShortBinaryWriteTranslation();
+        public new static readonly GlobalShortBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IGlobalShortGetter item,

@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class WorldspaceReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly WorldspaceReferenceBinaryWriteTranslation Instance = new WorldspaceReferenceBinaryWriteTranslation();
+        public static readonly WorldspaceReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IWorldspaceReferenceGetter item,

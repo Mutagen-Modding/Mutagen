@@ -1678,7 +1678,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TemplateActorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TemplateActorsBinaryWriteTranslation Instance = new TemplateActorsBinaryWriteTranslation();
+        public static readonly TemplateActorsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ITemplateActorsGetter item,

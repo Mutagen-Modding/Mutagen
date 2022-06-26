@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly QuestBinaryWriteTranslation Instance = new QuestBinaryWriteTranslation();
+        public new static readonly QuestBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IQuestGetter item,

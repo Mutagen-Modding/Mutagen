@@ -1056,7 +1056,7 @@ namespace Mutagen.Bethesda.Fallout4
         APerkEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PerkQuestEffectBinaryWriteTranslation Instance = new PerkQuestEffectBinaryWriteTranslation();
+        public new static readonly PerkQuestEffectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPerkQuestEffectGetter item,

@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavmeshNodeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly NavmeshNodeBinaryWriteTranslation Instance = new NavmeshNodeBinaryWriteTranslation();
+        public static readonly NavmeshNodeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             INavmeshNodeGetter item,

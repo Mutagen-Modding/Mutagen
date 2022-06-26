@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkillBoostBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SkillBoostBinaryWriteTranslation Instance = new SkillBoostBinaryWriteTranslation();
+        public static readonly SkillBoostBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             ISkillBoostGetter item,

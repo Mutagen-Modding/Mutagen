@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MusicTypeBinaryWriteTranslation Instance = new MusicTypeBinaryWriteTranslation();
+        public new static readonly MusicTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IMusicTypeGetter item,

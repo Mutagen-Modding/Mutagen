@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AScriptReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AScriptReferenceBinaryWriteTranslation Instance = new AScriptReferenceBinaryWriteTranslation();
+        public static readonly AScriptReferenceBinaryWriteTranslation Instance = new();
 
         public virtual void Write(
             MutagenWriter writer,

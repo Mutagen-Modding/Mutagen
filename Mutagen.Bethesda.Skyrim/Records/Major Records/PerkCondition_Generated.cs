@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkConditionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PerkConditionBinaryWriteTranslation Instance = new PerkConditionBinaryWriteTranslation();
+        public static readonly PerkConditionBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IPerkConditionGetter item,

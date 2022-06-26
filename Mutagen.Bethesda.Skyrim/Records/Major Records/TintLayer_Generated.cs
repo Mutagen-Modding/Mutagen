@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TintLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly TintLayerBinaryWriteTranslation Instance = new TintLayerBinaryWriteTranslation();
+        public static readonly TintLayerBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ITintLayerGetter item,

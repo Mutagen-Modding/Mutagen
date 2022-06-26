@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MiscItemComponentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MiscItemComponentBinaryWriteTranslation Instance = new MiscItemComponentBinaryWriteTranslation();
+        public static readonly MiscItemComponentBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IMiscItemComponentGetter item,

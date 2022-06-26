@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FindMatchingRefNearAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FindMatchingRefNearAliasBinaryWriteTranslation Instance = new FindMatchingRefNearAliasBinaryWriteTranslation();
+        public static readonly FindMatchingRefNearAliasBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IFindMatchingRefNearAliasGetter item,

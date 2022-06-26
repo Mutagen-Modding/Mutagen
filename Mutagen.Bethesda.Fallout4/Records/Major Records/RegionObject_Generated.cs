@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RegionObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly RegionObjectBinaryWriteTranslation Instance = new RegionObjectBinaryWriteTranslation();
+        public static readonly RegionObjectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IRegionObjectGetter item,

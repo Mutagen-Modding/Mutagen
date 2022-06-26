@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim
         APlacedTrapBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PlacedArrowBinaryWriteTranslation Instance = new PlacedArrowBinaryWriteTranslation();
+        public new static readonly PlacedArrowBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlacedArrowGetter item,

@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim
         ConditionBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ConditionFloatBinaryWriteTranslation Instance = new ConditionFloatBinaryWriteTranslation();
+        public new static readonly ConditionFloatBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IConditionFloatGetter item,
