@@ -2020,7 +2020,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region INAM
         private int? _INAMLocation;
-        public ReadOnlyMemorySlice<Byte> INAM => _INAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
+        public ReadOnlyMemorySlice<Byte> INAM => _INAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         #region Quest
         private int? _QuestLocation;

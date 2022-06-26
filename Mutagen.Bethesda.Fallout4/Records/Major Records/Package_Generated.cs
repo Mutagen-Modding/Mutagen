@@ -3877,7 +3877,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown3
         private int _Unknown3Location => _PSDTLocation!.Value.Min + 0x5;
         private bool _Unknown3_IsSet => _PSDTLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         #region ScheduleDurationInMinutes
         private int _ScheduleDurationInMinutesLocation => _PSDTLocation!.Value.Min + 0x8;

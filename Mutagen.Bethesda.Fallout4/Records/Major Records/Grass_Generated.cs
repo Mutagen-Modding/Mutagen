@@ -2461,7 +2461,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown3
         private int _Unknown3Location => _DATALocation!.Value.Min + 0x1D;
         private bool _Unknown3_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
