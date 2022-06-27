@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AVirtualMachineAdapter" objType="Subrecord" abstract="true" recordType="VMAD" GUID="970d5a2e-9a0c-401d-b721-db89f4350df7" ID="110">
+  <Object name="AVirtualMachineAdapter" objType="Subrecord" abstract="true" recordType="VMAD"  GUID="970d5a2e-9a0c-401d-b721-db89f4350df7" ID="110">
     <Fields>
       <Int16 name="Version" default="6" />
       <UInt16 name="ObjectFormat" default="2" />

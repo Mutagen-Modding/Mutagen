@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MagicEffect" recordType="MGEF" objType="Record" baseClass="Fallout4MajorRecord" GUID="daa8d891-40bb-4c9f-b41b-be62f907dda4" ID="103">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">

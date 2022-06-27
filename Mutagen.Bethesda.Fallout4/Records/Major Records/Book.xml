@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Book" objType="Record" recordType="BOOK" baseClass="Fallout4MajorRecord" GUID="c56f0c8d-eb97-4ab3-9fd8-1eb891d6ac5a" ID="156">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="Name" recordType="FULL" translated="Normal" />

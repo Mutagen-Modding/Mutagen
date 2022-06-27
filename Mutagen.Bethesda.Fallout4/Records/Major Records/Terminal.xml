@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Terminal" recordType="TERM" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="fc083bd7-24db-4bc1-995b-b6a767179566" ID="193">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapterIndexed" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapterIndexed" recordType="VMAD" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="HeaderText" recordType="NAM0" translated="DL" />

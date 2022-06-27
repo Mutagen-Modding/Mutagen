@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Armor" objType="Record" recordType="ARMO" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="c4d097a3-85cc-49c7-8a94-606c9086f0ca" ID="136">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="Name" recordType="FULL" translated="Normal" />

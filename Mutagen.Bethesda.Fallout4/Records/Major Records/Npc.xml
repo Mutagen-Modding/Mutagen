@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Npc" recordType="NPC_" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="8074d783-8164-453f-bdd2-f39627cf7a6b" ID="166">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />

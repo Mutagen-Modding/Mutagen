@@ -3,7 +3,7 @@
   <Object name="PlacedNpc" recordType="ACHR" baseClass="Fallout4MajorRecord" objType="Record" majorFlag="true" GUID="49a147f4-d981-40c5-837b-4d6c09623a62" ID="237">
     <Interface>IPositionRotation</Interface>
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <FormLink name="Base" refName="Npc" recordType="NAME" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
       <ByteArray name="RagdollData" recordType="XRGD" />

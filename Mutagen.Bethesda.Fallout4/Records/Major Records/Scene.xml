@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Scene" objType="Record" recordType="SCEN" baseClass="Fallout4MajorRecord" GUID="4ede0e86-8f66-4dc0-819f-9e63a94fd469" ID="357">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="SceneAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="SceneAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <Enum name="Flags" enumName="Scene.Flag" byteLength="4" recordType="FNAM" />
       <RefList name="Phases" refName="ScenePhase" />
       <RefList name="Actors" refName="SceneActor" />

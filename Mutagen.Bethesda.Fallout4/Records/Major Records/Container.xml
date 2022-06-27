@@ -3,7 +3,7 @@
   <Object name="Container" recordType="CONT" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord"
           GUID="d5eebb15-76fe-43cd-9ba9-7ad6eac2b785" ID="165">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter"/>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False"/>
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN"/>
       <String name="Name" recordType="FULL" translated="Normal"/>

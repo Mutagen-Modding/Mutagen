@@ -3,7 +3,7 @@
   <Object name="APlacedTrap" baseClass="Fallout4MajorRecord" abstract="true" objType="Record" majorFlag="true" GUID="31d1155a-457d-4775-ab46-54c028d5613e" ID="474">
     <Interface>IPositionRotation</Interface>
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <CustomLogic name="TrapForm" byteLength="4" recordType="NAME" />
       <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />
       <Float name="HeadTrackingWeight" recordType="XHTW" />
