@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Cell :
-        Place,
+        OblivionMajorRecord,
         ICellInternal,
         IEquatable<ICellGetter>,
         ILoquiObjectSetter<Cell>
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            Place.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            Place.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            Place.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
-        IPlaceInternal
+        IOblivionMajorRecordInternal
     {
         /// <summary>
         /// Aspects: INamed, INamedRequired
@@ -1586,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface ICellInternal :
-        IPlaceInternal,
+        IOblivionMajorRecordInternal,
         ICell,
         ICellGetter
     {
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts.CELL)]
     public partial interface ICellGetter :
-        IPlaceGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ICellGetter>,
@@ -2130,7 +2130,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common
-    internal partial class CellSetterCommon : PlaceSetterCommon
+    internal partial class CellSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly CellSetterCommon Instance = new CellSetterCommon();
 
@@ -2161,11 +2161,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.VisibleWhenDistantTimestamp = default;
             item.VisibleWhenDistant.Clear();
             base.Clear(item);
-        }
-        
-        public override void Clear(IPlaceInternal item)
-        {
-            Clear(item: (ICellInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -2343,17 +2338,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         public override void CopyInFromBinary(
-            IPlaceInternal item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (Cell)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
-        public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
@@ -2378,7 +2362,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         
     }
-    internal partial class CellCommon : PlaceCommon
+    internal partial class CellCommon : OblivionMajorRecordCommon
     {
         public new static readonly CellCommon Instance = new CellCommon();
 
@@ -2492,7 +2476,7 @@ namespace Mutagen.Bethesda.Oblivion
             StructuredStringBuilder sb,
             Cell.Mask<bool>? printMask = null)
         {
-            PlaceCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
@@ -2632,26 +2616,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
-        public static Cell_FieldIndex ConvertFieldIndex(Place_FieldIndex index)
-        {
-            switch (index)
-            {
-                case Place_FieldIndex.MajorRecordFlagsRaw:
-                    return (Cell_FieldIndex)((int)index);
-                case Place_FieldIndex.FormKey:
-                    return (Cell_FieldIndex)((int)index);
-                case Place_FieldIndex.VersionControl:
-                    return (Cell_FieldIndex)((int)index);
-                case Place_FieldIndex.EditorID:
-                    return (Cell_FieldIndex)((int)index);
-                case Place_FieldIndex.OblivionMajorRecordFlags:
-                    return (Cell_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Cell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static Cell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2694,7 +2659,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IPlaceGetter)lhs, (IPlaceGetter)rhs, crystal)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
@@ -2795,17 +2760,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         public override bool Equals(
-            IPlaceGetter? lhs,
-            IPlaceGetter? rhs,
-            TranslationCrystal? crystal)
-        {
-            return Equals(
-                lhs: (ICellGetter?)lhs,
-                rhs: rhs as ICellGetter,
-                crystal: crystal);
-        }
-        
-        public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
             TranslationCrystal? crystal)
@@ -2880,11 +2834,6 @@ namespace Mutagen.Bethesda.Oblivion
             hash.Add(item.VisibleWhenDistant);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IPlaceGetter item)
-        {
-            return GetHashCode(item: (ICellGetter)item);
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)
@@ -3876,17 +3825,6 @@ namespace Mutagen.Bethesda.Oblivion
             return newRec;
         }
         
-        public override Place Duplicate(
-            IPlaceGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ICellGetter)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
@@ -3914,7 +3852,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         
     }
-    internal partial class CellSetterTranslationCommon : PlaceSetterTranslationCommon
+    internal partial class CellSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly CellSetterTranslationCommon Instance = new CellSetterTranslationCommon();
 
@@ -3942,8 +3880,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IPlace)item,
-                (IPlaceGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -4177,36 +4115,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         public override void DeepCopyIn(
-            IPlaceInternal item,
-            IPlaceGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICellInternal)item,
-                rhs: (ICellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IPlace item,
-            IPlaceGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICell)item,
-                rhs: (ICellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -4347,7 +4255,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellBinaryWriteTranslation :
-        PlaceBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly CellBinaryWriteTranslation Instance = new();
@@ -4490,17 +4398,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write(
             MutagenWriter writer,
-            IPlaceGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (ICellGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             TypedWriteParams translationParams)
         {
@@ -4523,7 +4420,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    internal partial class CellBinaryCreateTranslation : PlaceBinaryCreateTranslation
+    internal partial class CellBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new static readonly CellBinaryCreateTranslation Instance = new CellBinaryCreateTranslation();
 
@@ -4532,7 +4429,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICellInternal item,
             MutagenFrame frame)
         {
-            PlaceBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -4631,7 +4528,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return (int)Cell_FieldIndex.GlobalVariable;
                 }
                 default:
-                    return PlaceBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         lastParsed: lastParsed,
@@ -4669,7 +4566,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion
 {
     internal partial class CellBinaryOverlay :
-        PlaceBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         ICellGetter
     {
         #region Common Routing

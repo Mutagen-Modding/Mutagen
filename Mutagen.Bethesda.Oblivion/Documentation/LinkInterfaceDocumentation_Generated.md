@@ -30,6 +30,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IOwner
 - Faction
 - Npc
+### IPlace
+- Worldspace
 ### IPlaced
 - Landscape
 - PlacedCreature
@@ -90,3 +92,5 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - ISpellRecord
 ### Weapon
 - IItem
+### Worldspace
+- IPlace

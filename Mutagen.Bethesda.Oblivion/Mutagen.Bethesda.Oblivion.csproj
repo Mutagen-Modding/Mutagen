@@ -624,9 +624,6 @@
     <Compile Include="Records\Major Records\PointToReferenceMapping_Generated.cs">
       <DependentUpon>PathGrid.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Place_Generated.cs">
-      <DependentUpon>Place.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlacedCreature_Generated.cs">
       <DependentUpon>PlacedCreature.xml</DependentUpon>
     </Compile>
@@ -898,6 +895,7 @@
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Interfaces\InheritingInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlace_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

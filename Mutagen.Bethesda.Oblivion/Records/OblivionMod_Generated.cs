@@ -5025,6 +5025,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ISpellRecordGetter":
                     Remove(obj, keys, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "IPlace":
+                case "IPlaceGetter":
+                    Remove(obj, keys, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 default:
                     if (throwIfUnknown)
                     {

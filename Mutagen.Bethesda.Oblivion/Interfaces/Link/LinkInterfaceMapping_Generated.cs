@@ -70,6 +70,11 @@ internal class OblivionLinkInterfaceMapping : IInterfaceMapping
             Spell_Registration.Instance,
         });
         dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
+        dict[typeof(IPlace)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Worldspace_Registration.Instance,
+        });
+        dict[typeof(IPlaceGetter)] = dict[typeof(IPlace)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

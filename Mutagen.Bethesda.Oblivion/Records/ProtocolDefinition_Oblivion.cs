@@ -147,7 +147,6 @@ internal class ProtocolDefinition_Oblivion : IProtocolRegistration
             CombatStyleAdvanced_Registration.Instance,
             LoadScreen_Registration.Instance,
             LoadScreenLocation_Registration.Instance,
-            Place_Registration.Instance,
             LeveledSpell_Registration.Instance,
             AnimatedObject_Registration.Instance,
             RelatedWaters_Registration.Instance,
