@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     /// <summary>
-    /// Implemented by: [Activator, AIPackage, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, Birthsign, Book, Cell, Class, Climate, Clothing, CombatStyle, Container, Creature, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Ingredient, Key, Landscape, LandTexture, LeveledCreature, LeveledItem, LeveledSpell, Light, LoadScreen, MagicEffect, Miscellaneous, Npc, PathGrid, PlacedCreature, PlacedNpc, PlacedObject, Potion, Quest, Race, Region, Road, Script, SigilStone, SkillRecord, SoulGem, Sound, Spell, Static, Subspace, Tree, Water, Weapon, Weather, Worldspace]
+    /// Implemented by: [Activator, AIPackage, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, Birthsign, Book, Cell, Class, Climate, Clothing, CombatStyle, Container, Creature, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Ingredient, Key, Landscape, LandTexture, LeveledCreature, LeveledItem, LeveledSpell, Light, LoadScreen, MagicEffect, Miscellaneous, Npc, PathGrid, PlacedCreature, PlacedNpc, PlacedObject, Potion, Quest, Race, Region, Road, Script, SigilStone, SkillRecord, SoulGem, Sound, Spell, SpellLeveled, Static, Subspace, Tree, Water, Weapon, Weather, Worldspace]
     /// </summary>
     public abstract partial class OblivionMajorRecord :
         MajorRecord,
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     /// <summary>
-    /// Implemented by: [Activator, AIPackage, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, Birthsign, Book, Cell, Class, Climate, Clothing, CombatStyle, Container, Creature, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Ingredient, Key, Landscape, LandTexture, LeveledCreature, LeveledItem, LeveledSpell, Light, LoadScreen, MagicEffect, Miscellaneous, Npc, PathGrid, PlacedCreature, PlacedNpc, PlacedObject, Potion, Quest, Race, Region, Road, Script, SigilStone, SkillRecord, SoulGem, Sound, Spell, Static, Subspace, Tree, Water, Weapon, Weather, Worldspace]
+    /// Implemented by: [Activator, AIPackage, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, Birthsign, Book, Cell, Class, Climate, Clothing, CombatStyle, Container, Creature, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Ingredient, Key, Landscape, LandTexture, LeveledCreature, LeveledItem, LeveledSpell, Light, LoadScreen, MagicEffect, Miscellaneous, Npc, PathGrid, PlacedCreature, PlacedNpc, PlacedObject, Potion, Quest, Race, Region, Road, Script, SigilStone, SkillRecord, SoulGem, Sound, Spell, SpellLeveled, Static, Subspace, Tree, Water, Weapon, Weather, Worldspace]
     /// </summary>
     public partial interface IOblivionMajorRecord :
         IFormLinkContainer,
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     /// <summary>
-    /// Implemented by: [Activator, AIPackage, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, Birthsign, Book, Cell, Class, Climate, Clothing, CombatStyle, Container, Creature, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Ingredient, Key, Landscape, LandTexture, LeveledCreature, LeveledItem, LeveledSpell, Light, LoadScreen, MagicEffect, Miscellaneous, Npc, PathGrid, PlacedCreature, PlacedNpc, PlacedObject, Potion, Quest, Race, Region, Road, Script, SigilStone, SkillRecord, SoulGem, Sound, Spell, Static, Subspace, Tree, Water, Weapon, Weather, Worldspace]
+    /// Implemented by: [Activator, AIPackage, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, Birthsign, Book, Cell, Class, Climate, Clothing, CombatStyle, Container, Creature, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Ingredient, Key, Landscape, LandTexture, LeveledCreature, LeveledItem, LeveledSpell, Light, LoadScreen, MagicEffect, Miscellaneous, Npc, PathGrid, PlacedCreature, PlacedNpc, PlacedObject, Potion, Quest, Race, Region, Road, Script, SigilStone, SkillRecord, SoulGem, Sound, Spell, SpellLeveled, Static, Subspace, Tree, Water, Weapon, Weather, Worldspace]
     /// </summary>
     public partial interface IOblivionMajorRecordGetter :
         IMajorRecordGetter,

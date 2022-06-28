@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Oblivion
 {
     /// <summary>
-    /// Implemented by: [LeveledSpell, Spell]
+    /// Implemented by: [LeveledSpell, Spell, SpellLeveled]
     /// </summary>
     public partial interface ISpellRecord :
         IOblivionMajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     /// <summary>
-    /// Implemented by: [LeveledSpell, Spell]
+    /// Implemented by: [LeveledSpell, Spell, SpellLeveled]
     /// </summary>
     public partial interface ISpellRecordGetter : IOblivionMajorRecordGetter
     {

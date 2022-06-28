@@ -1501,9 +1501,9 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Spell</returns>
-        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter> Spell(this IEnumerable<IModListingGetter<IOblivionModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter> Spell(this IEnumerable<IModListingGetter<IOblivionModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter>(
+            return new TopLevelTypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISpellGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1513,9 +1513,9 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Spell</returns>
-        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter> Spell(this IEnumerable<IOblivionModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter> Spell(this IEnumerable<IOblivionModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter>(
+            return new TopLevelTypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISpellGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1542,30 +1542,6 @@ namespace Mutagen.Bethesda.Oblivion
             return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpellLeveled, ISpellLeveledGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISpellLeveledGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellLeveled, ISpellLeveledGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to SpellUnleveled
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on SpellUnleveled</returns>
-        public static TopLevelTypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpellUnleveled, ISpellUnleveledGetter> SpellUnleveled(this IEnumerable<IModListingGetter<IOblivionModGetter>> listings)
-        {
-            return new TopLevelTypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpellUnleveled, ISpellUnleveledGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<ISpellUnleveledGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellUnleveled, ISpellUnleveledGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to SpellUnleveled
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on SpellUnleveled</returns>
-        public static TopLevelTypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpellUnleveled, ISpellUnleveledGetter> SpellUnleveled(this IEnumerable<IOblivionModGetter> mods)
-        {
-            return new TopLevelTypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, ISpellUnleveled, ISpellUnleveledGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<ISpellUnleveledGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellUnleveled, ISpellUnleveledGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

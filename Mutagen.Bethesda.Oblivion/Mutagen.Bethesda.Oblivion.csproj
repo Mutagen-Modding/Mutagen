@@ -71,6 +71,9 @@
     <Compile Include="Records\Common Subrecords\ScriptEffect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Spell.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\OblivionGroup.cs">
       <DependentUpon>OblivionGroup.xml</DependentUpon>
     </Compile>
@@ -253,9 +256,6 @@
     </Compile>
     <Compile Include="Records\Major Records\SoundDataExtended.cs">
       <DependentUpon>Sound.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Spell.cs">
-      <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Water.cs">
       <DependentUpon>Water.xml</DependentUpon>
@@ -783,17 +783,8 @@
     <Compile Include="Records\Major Records\SoundDataExtended_Generated.cs">
       <DependentUpon>Sound.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Spell_Generated.cs">
-      <DependentUpon>Spell.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\SpellLeveled_Generated.cs">
       <DependentUpon>SpellLeveled.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SpellUnleveled_Generated.cs">
-      <DependentUpon>SpellUnleveled.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SpellData_Generated.cs">
-      <DependentUpon>SpellUnleveled.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Static_Generated.cs">
       <DependentUpon>Static.xml</DependentUpon>
@@ -896,6 +887,12 @@
     <Compile Include="Interfaces\InheritingInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Link\IPlace_Generated.cs" />
+    <Compile Include="Records\Major Records\Spell_Generated.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SpellData_Generated.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

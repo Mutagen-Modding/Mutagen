@@ -40,6 +40,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### ISpellRecord
 - LeveledSpell
 - Spell
+- SpellLeveled
 ## Concrete Classes to Interfaces
 ### AlchemicalApparatus
 - IItem
@@ -89,6 +90,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### SoulGem
 - IItem
 ### Spell
+- ISpellRecord
+### SpellLeveled
 - ISpellRecord
 ### Weapon
 - IItem

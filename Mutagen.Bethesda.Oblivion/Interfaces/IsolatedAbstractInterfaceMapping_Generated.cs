@@ -19,11 +19,6 @@ internal class OblivionIsolatedAbstractInterfaceMapping : IInterfaceMapping
     public OblivionIsolatedAbstractInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
-        dict[typeof(ISpell)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            SpellUnleveled_Registration.Instance,
-        });
-        dict[typeof(ISpellGetter)] = dict[typeof(ISpell)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

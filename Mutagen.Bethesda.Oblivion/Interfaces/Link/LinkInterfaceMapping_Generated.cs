@@ -68,6 +68,7 @@ internal class OblivionLinkInterfaceMapping : IInterfaceMapping
         {
             LeveledSpell_Registration.Instance,
             Spell_Registration.Instance,
+            SpellLeveled_Registration.Instance,
         });
         dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
         dict[typeof(IPlace)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
