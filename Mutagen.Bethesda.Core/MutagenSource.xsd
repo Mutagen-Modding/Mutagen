@@ -183,6 +183,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="circular" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether field has a circular reference chain
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

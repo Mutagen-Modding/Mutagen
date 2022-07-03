@@ -32,26 +32,6 @@ public class AspectInterfaceModule : GenerationModule
             ("Rotation", "P3Float")));
     }
 
-    public override async Task LoadWrapup(ObjectGeneration obj)
-    {
-        await obj.GetObjectData().WiringComplete.Task;
-        var allFields = obj.IterateFields(includeBaseClass: true).ToDictionary(x => x.Name);
-        foreach (var def in Definitions)
-        {
-            if (!def.Test(obj, allFields)) continue;
-            foreach (var subDef in def.SubDefinitions)
-            {
-                if (!subDef.Test(obj, allFields)) continue;
-                subDef.Registrations.ForEach(x => obj.Interfaces.Add(x.Setter ? LoquiInterfaceDefinitionType.ISetter : LoquiInterfaceDefinitionType.IGetter, x.Name));
-                lock (ObjectMappings)
-                {
-                    ObjectMappings.GetOrAdd(obj.ProtoGen.Protocol).GetOrAdd(def).GetOrAdd(subDef).Add(obj);
-                }
-                obj.RequiredNamespaces.Add("Mutagen.Bethesda.Plugins.Aspects");
-            }
-        }
-    }
-
     public override async Task GenerateInField(ObjectGeneration obj, TypeGeneration tg, StructuredStringBuilder sb, LoquiInterfaceType type)
     {
         using (sb.Region("Aspects", appendExtraLine: false, skipIfOnlyOneLine: true))
@@ -69,10 +49,25 @@ public class AspectInterfaceModule : GenerationModule
 
     public override async Task PostLoad(ObjectGeneration obj)
     {
+        await obj.GetObjectData().WiringComplete.Task;
+        var allFields = obj.IterateFields(includeBaseClass: true).ToDictionary(x => x.Name);
+        foreach (var def in Definitions)
+        {
+            if (!def.Test(obj, allFields)) continue;
+            foreach (var subDef in def.SubDefinitions)
+            {
+                if (!subDef.Test(obj, allFields)) continue;
+                subDef.Registrations.ForEach(x => obj.Interfaces.Add(x.Setter ? LoquiInterfaceDefinitionType.ISetter : LoquiInterfaceDefinitionType.IGetter, x.Name));
+                lock (ObjectMappings)
+                {
+                    ObjectMappings.GetOrAdd(obj.ProtoGen.Protocol).GetOrAdd(def).GetOrAdd(subDef).Add(obj);
+                }
+                obj.RequiredNamespaces.Add("Mutagen.Bethesda.Plugins.Aspects");
+            }
+        }
+
         Dictionary<LoquiInterfaceDefinitionType, HashSet<string>>? aspects = null;
         Dictionary<string, (TypeGeneration type, Dictionary<LoquiInterfaceDefinitionType, HashSet<string>> aspects)>? fieldsToAspects = null;
-
-        var allFields = obj.IterateFields(includeBaseClass: true).ToDictionary(x => x.Name);
 
         foreach (var def in Definitions)
         {

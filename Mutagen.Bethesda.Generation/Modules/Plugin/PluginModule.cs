@@ -47,6 +47,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new ImplicitsModule());
         SubModules.Add(new BreakMarkingModule());
         SubModules.Add(new SubgroupsModule());
+        SubModules.Add(new CircularHandlingModule());
         SubModules.Add(new PartialFormModule());
     }
 
