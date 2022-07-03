@@ -9626,10 +9626,6 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "IDamageTypeTarget":
-                case "IDamageTypeTargetGetter":
-                    Remove(obj, keys, typeof(IActorValueInformationGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IItem":
                 case "IItemGetter":
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);

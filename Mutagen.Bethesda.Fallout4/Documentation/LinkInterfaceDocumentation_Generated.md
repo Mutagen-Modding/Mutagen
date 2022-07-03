@@ -23,8 +23,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Key
 - Light
 - MiscItem
-### IDamageTypeTarget
-- ActorValueInformation
 ### IEffectRecord
 - ObjectEffect
 - Spell
@@ -235,8 +233,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 - IStaticTarget
-### ActorValueInformation
-- IDamageTypeTarget
 ### AddonNode
 - IExplodeSpawn
 ### Ammunition

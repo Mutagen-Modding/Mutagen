@@ -141,11 +141,6 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IStaticTargetGetter)] = dict[typeof(IStaticTarget)] with { Setter = false };
-        dict[typeof(IDamageTypeTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            ActorValueInformation_Registration.Instance,
-        });
-        dict[typeof(IDamageTypeTargetGetter)] = dict[typeof(IDamageTypeTarget)] with { Setter = false };
         dict[typeof(IItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Ammunition_Registration.Instance,

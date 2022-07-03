@@ -3396,30 +3396,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         /// <summary>
-        /// Scope a load order query to IDamageTypeTarget
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IDamageTypeTarget</returns>
-        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IDamageTypeTarget, IDamageTypeTargetGetter> IDamageTypeTarget(this IEnumerable<IModListingGetter<IFallout4ModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IDamageTypeTarget, IDamageTypeTargetGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IDamageTypeTargetGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IDamageTypeTarget, IDamageTypeTargetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to IDamageTypeTarget
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IDamageTypeTarget</returns>
-        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IDamageTypeTarget, IDamageTypeTargetGetter> IDamageTypeTarget(this IEnumerable<IFallout4ModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IDamageTypeTarget, IDamageTypeTargetGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IDamageTypeTargetGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IDamageTypeTarget, IDamageTypeTargetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
         /// Scope a load order query to IItem
         /// </summary>
         /// <param name="listings">ModListings to query</param>

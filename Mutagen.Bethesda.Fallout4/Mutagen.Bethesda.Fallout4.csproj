@@ -1001,7 +1001,6 @@
     </Compile>
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
-    <Compile Include="Interfaces\Link\IDamageTypeTarget_Generated.cs" />
     <Compile Include="Interfaces\Link\IObjectId_Generated.cs" />
     <Compile Include="Interfaces\Link\ILocationTargetable_Generated.cs" />
     <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
@@ -2439,6 +2438,9 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptEntryStructs_Generated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DamageTypeItem_Generated.cs">
+      <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

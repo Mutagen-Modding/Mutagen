@@ -9,6 +9,5 @@
       <Enum name="Flags" enumName="ActorValueInformation.Flag" recordType="AVFL" byteLength="4" />
       <Enum name="Type" enumName="ActorValueInformation.Types" recordType="NAM1" byteLength="4" />
     </Fields>
-    <LinkInterface>IDamageTypeTarget</LinkInterface>
   </Object>
 </Loqui>
