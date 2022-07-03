@@ -20,25 +20,10 @@
       <RefList name="Properties" refName="ScriptProperty" binary="NoGeneration" />
     </Fields>
   </Object>
-  <!-- This exists to avoid circular dependency -->
-  <Object name="ScriptEntryStruct" objType="Subrecord" GUID="3618b030-3127-4b3c-990c-b6e72156cdf0" ID="208">
-    <Fields>
-      <String name="Name" binaryType="PrependLengthUShort" binary="NoGeneration" />
-      <Enum name="Flags" byteLength="1" enumName="ScriptEntryStruct.Flag" binary="NoGeneration" />
-      <RefList name="Properties" refName="ScriptPropertyStruct" binary="NoGeneration" />
-    </Fields>
-  </Object>
   <Object name="ScriptProperty" objType="Subrecord" GUID="ceb6f4fb-96a0-44bf-9837-6b8deec1f44a" ID="113">
     <Fields>
       <String name="Name" binaryType="PrependLengthUShort" binary="NoGeneration" />
       <Enum name="Flags" byteLength="1" enumName="ScriptProperty.Flag" binary="NoGeneration" default="ScriptProperty.Flag.Edited" />
-    </Fields>
-  </Object>
-  <!-- This exists to avoid circular dependency -->
-  <Object name="ScriptPropertyStruct" objType="Subrecord" GUID="10554191-09f4-4f78-ac1d-36e7b6ed8174" ID="213">
-    <Fields>
-      <String name="Name" binaryType="PrependLengthUShort" binary="NoGeneration" />
-      <Enum name="Flags" byteLength="1" enumName="ScriptPropertyStruct.Flag" binary="NoGeneration" default="ScriptPropertyStruct.Flag.Edited" />
     </Fields>
   </Object>
   <Object name="ScriptObjectProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="f6e60e54-7812-4d0e-a0d0-22dc5b278d98" ID="114">
@@ -75,7 +60,7 @@
   </Object>
   <Object name="ScriptStructProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="3049aa54-5ced-4a9f-b8e0-29de5476f60e" ID="210">
     <Fields>
-      <RefList name="Members" refName="ScriptEntryStruct" counterLength="4" />
+      <RefList name="Members" refName="ScriptEntry" counterLength="4" circular="true" />
     </Fields>
   </Object>
   <Object name="ScriptObjectListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="cd596198-106e-4bc5-b934-2996a002b9ad" ID="119">

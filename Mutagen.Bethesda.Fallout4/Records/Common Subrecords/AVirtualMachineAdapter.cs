@@ -130,7 +130,7 @@ partial class AVirtualMachineAdapterBinaryCreateTranslation
 
     public static void FillStruct(MutagenFrame frame, IScriptStructProperty subStructs, ushort objectFormat)
     {
-        var member = new ScriptEntryStruct();
+        var member = new ScriptEntry();
         FillProperties(frame, objectFormat, member, true);
         subStructs.Members.Add(member);
     }

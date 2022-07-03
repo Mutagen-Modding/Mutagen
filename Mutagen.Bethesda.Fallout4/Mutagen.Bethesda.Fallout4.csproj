@@ -136,9 +136,6 @@
     <Compile Include="Records\Common Subrecords\ScriptEntry.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptEntryStruct.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\ScriptFragments.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
@@ -146,9 +143,6 @@
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptProperty.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptPropertyStruct.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\VirtualMachineAdapterIndexed.cs">
@@ -1382,12 +1376,6 @@
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptStructListProperty_Generated.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptEntryStruct_Generated.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptPropertyStruct_Generated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LeveledNpc_Generated.cs">
