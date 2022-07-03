@@ -10,5 +10,6 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>ILockList</LinkInterface>
     <LinkInterface>IAliasVoiceType</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

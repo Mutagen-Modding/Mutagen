@@ -33,5 +33,6 @@
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>
