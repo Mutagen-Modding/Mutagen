@@ -3085,10 +3085,9 @@ namespace Mutagen.Bethesda.Fallout4
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
-                EnumBinaryTranslation<Book.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 1);
+                BookBinaryWriteTranslation.WriteBinaryFlags(
+                    writer: writer,
+                    item: item);
                 BookBinaryWriteTranslation.WriteBinaryTeaches(
                     writer: writer,
                     item: item);
@@ -3105,6 +3104,19 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.InventoryArt,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM));
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            IBookGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            IBookGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
         }
 
         public static partial void WriteBinaryTeachesCustom(
@@ -3323,9 +3335,9 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<Book.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
+                    BookBinaryCreateTranslation.FillBinaryFlagsCustom(
+                        frame: dataFrame,
+                        item: item);
                     BookBinaryCreateTranslation.FillBinaryTeachesCustom(
                         frame: dataFrame,
                         item: item);
@@ -3364,6 +3376,10 @@ namespace Mutagen.Bethesda.Fallout4
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial void FillBinaryFlagsCustom(
+            MutagenFrame frame,
+            IBookInternal item);
 
         public static partial void FillBinaryTeachesCustom(
             MutagenFrame frame,
@@ -3482,8 +3498,8 @@ namespace Mutagen.Bethesda.Fallout4
         public Book.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
-        private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public Book.Flag Flags => _Flags_IsSet ? (Book.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public partial Book.Flag GetFlagsCustom();
+        public Book.Flag Flags => GetFlagsCustom();
         #endregion
         #region Teaches
         private int _TeachesLocation => _DNAMLocation!.Value.Min + 0x1;

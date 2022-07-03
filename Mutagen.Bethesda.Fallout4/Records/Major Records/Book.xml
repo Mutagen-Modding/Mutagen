@@ -24,7 +24,7 @@
       </Data>
       <Data recordType="DNAM">
         <Fields>
-          <Enum name="Flags" enumName="Book.Flag" byteLength="1" />
+          <Enum name="Flags" enumName="Book.Flag" byteLength="1" binary="Custom" />
           <RefDirect name="Teaches" objType="Subrecord" nullable="True" refName="BookTeachTarget" binary="Custom" byteLength="4" />
           <UInt32 name="TextOffsetX" />
           <UInt32 name="TextOffsetY" />
