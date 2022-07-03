@@ -65,6 +65,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.LENS, ProcessLenses);
         AddDynamicProcessing(RecordTypes.GDRY, ProcessGodRays);
         AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
+        AddDynamicProcessing(RecordTypes.ARMA, ProcessArmorAddons);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -713,6 +714,23 @@ public class Fallout4Processor : Processor
         foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.RCSR))
         {
             ProcessFormIDOverflows(subRec, fileOffset);
+        }
+    }
+
+    private void ProcessArmorAddons(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.DNAM))
+        {
+            if (subRec.Content[2] == 3)
+            {
+                _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 2, 2);
+            }
+            if (subRec.Content[3] == 3)
+            {
+                _instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 3, 2);
+            }
         }
     }
 
