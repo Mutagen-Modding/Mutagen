@@ -55,6 +55,7 @@
   </Object>
   <Object name="FurnitureMarkerParameters" objType="Subrecord" GUID="c75d9213-af7a-438c-a3d9-d953c0001d6a" ID="334">
     <Fields>
+      <Bool name="Enabled" binary="NoGeneration" />
       <P3Float name="Offset" />
       <Float name="RotationZ" isRotation="true" />
       <Break />
@@ -62,7 +63,6 @@
       <Break />
       <Enum name="EntryTypes" byteLength="1" enumName="Furniture.EntryParameterType" />
       <ByteArray name="Unknown" byteLength="3" nullable="False" />
-      <Bool name="Enabled" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="FurnitureMarkerEntryPoints" objType="Subrecord" recordType="FNPR" GUID="cefc97c6-4b33-4ed3-a48a-de3409c765bd" ID="333">

@@ -53,6 +53,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Versioning
         public FurnitureMarkerParameters.VersioningBreaks Versioning { get; set; } = default;
         #endregion
+        #region Enabled
+        public Boolean Enabled { get; set; } = default;
+        #endregion
         #region Offset
         public P3Float Offset { get; set; } = default;
         #endregion
@@ -82,9 +85,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IFurnitureMarkerParametersGetter.Unknown => this.Unknown;
-        #endregion
-        #region Enabled
-        public Boolean Enabled { get; set; } = default;
         #endregion
 
         #region To String
@@ -126,30 +126,30 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Versioning = initialValue;
+                this.Enabled = initialValue;
                 this.Offset = initialValue;
                 this.RotationZ = initialValue;
                 this.Keyword = initialValue;
                 this.EntryTypes = initialValue;
                 this.Unknown = initialValue;
-                this.Enabled = initialValue;
             }
 
             public Mask(
                 TItem Versioning,
+                TItem Enabled,
                 TItem Offset,
                 TItem RotationZ,
                 TItem Keyword,
                 TItem EntryTypes,
-                TItem Unknown,
-                TItem Enabled)
+                TItem Unknown)
             {
                 this.Versioning = Versioning;
+                this.Enabled = Enabled;
                 this.Offset = Offset;
                 this.RotationZ = RotationZ;
                 this.Keyword = Keyword;
                 this.EntryTypes = EntryTypes;
                 this.Unknown = Unknown;
-                this.Enabled = Enabled;
             }
 
             #pragma warning disable CS8618
@@ -162,12 +162,12 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem Versioning;
+            public TItem Enabled;
             public TItem Offset;
             public TItem RotationZ;
             public TItem Keyword;
             public TItem EntryTypes;
             public TItem Unknown;
-            public TItem Enabled;
             #endregion
 
             #region Equals
@@ -181,24 +181,24 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
+                if (!object.Equals(this.Enabled, rhs.Enabled)) return false;
                 if (!object.Equals(this.Offset, rhs.Offset)) return false;
                 if (!object.Equals(this.RotationZ, rhs.RotationZ)) return false;
                 if (!object.Equals(this.Keyword, rhs.Keyword)) return false;
                 if (!object.Equals(this.EntryTypes, rhs.EntryTypes)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Enabled, rhs.Enabled)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Versioning);
+                hash.Add(this.Enabled);
                 hash.Add(this.Offset);
                 hash.Add(this.RotationZ);
                 hash.Add(this.Keyword);
                 hash.Add(this.EntryTypes);
                 hash.Add(this.Unknown);
-                hash.Add(this.Enabled);
                 return hash.ToHashCode();
             }
 
@@ -208,12 +208,12 @@ namespace Mutagen.Bethesda.Fallout4
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Versioning)) return false;
+                if (!eval(this.Enabled)) return false;
                 if (!eval(this.Offset)) return false;
                 if (!eval(this.RotationZ)) return false;
                 if (!eval(this.Keyword)) return false;
                 if (!eval(this.EntryTypes)) return false;
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.Enabled)) return false;
                 return true;
             }
             #endregion
@@ -222,12 +222,12 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Versioning)) return true;
+                if (eval(this.Enabled)) return true;
                 if (eval(this.Offset)) return true;
                 if (eval(this.RotationZ)) return true;
                 if (eval(this.Keyword)) return true;
                 if (eval(this.EntryTypes)) return true;
                 if (eval(this.Unknown)) return true;
-                if (eval(this.Enabled)) return true;
                 return false;
             }
             #endregion
@@ -243,12 +243,12 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Versioning = eval(this.Versioning);
+                obj.Enabled = eval(this.Enabled);
                 obj.Offset = eval(this.Offset);
                 obj.RotationZ = eval(this.RotationZ);
                 obj.Keyword = eval(this.Keyword);
                 obj.EntryTypes = eval(this.EntryTypes);
                 obj.Unknown = eval(this.Unknown);
-                obj.Enabled = eval(this.Enabled);
             }
             #endregion
 
@@ -271,6 +271,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Versioning, "Versioning");
                     }
+                    if (printMask?.Enabled ?? true)
+                    {
+                        sb.AppendItem(Enabled, "Enabled");
+                    }
                     if (printMask?.Offset ?? true)
                     {
                         sb.AppendItem(Offset, "Offset");
@@ -290,10 +294,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (printMask?.Unknown ?? true)
                     {
                         sb.AppendItem(Unknown, "Unknown");
-                    }
-                    if (printMask?.Enabled ?? true)
-                    {
-                        sb.AppendItem(Enabled, "Enabled");
                     }
                 }
             }
@@ -320,12 +320,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             public Exception? Versioning;
+            public Exception? Enabled;
             public Exception? Offset;
             public Exception? RotationZ;
             public Exception? Keyword;
             public Exception? EntryTypes;
             public Exception? Unknown;
-            public Exception? Enabled;
             #endregion
 
             #region IErrorMask
@@ -336,6 +336,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case FurnitureMarkerParameters_FieldIndex.Versioning:
                         return Versioning;
+                    case FurnitureMarkerParameters_FieldIndex.Enabled:
+                        return Enabled;
                     case FurnitureMarkerParameters_FieldIndex.Offset:
                         return Offset;
                     case FurnitureMarkerParameters_FieldIndex.RotationZ:
@@ -346,8 +348,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return EntryTypes;
                     case FurnitureMarkerParameters_FieldIndex.Unknown:
                         return Unknown;
-                    case FurnitureMarkerParameters_FieldIndex.Enabled:
-                        return Enabled;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -360,6 +360,9 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case FurnitureMarkerParameters_FieldIndex.Versioning:
                         this.Versioning = ex;
+                        break;
+                    case FurnitureMarkerParameters_FieldIndex.Enabled:
+                        this.Enabled = ex;
                         break;
                     case FurnitureMarkerParameters_FieldIndex.Offset:
                         this.Offset = ex;
@@ -376,9 +379,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case FurnitureMarkerParameters_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case FurnitureMarkerParameters_FieldIndex.Enabled:
-                        this.Enabled = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -391,6 +391,9 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case FurnitureMarkerParameters_FieldIndex.Versioning:
                         this.Versioning = (Exception?)obj;
+                        break;
+                    case FurnitureMarkerParameters_FieldIndex.Enabled:
+                        this.Enabled = (Exception?)obj;
                         break;
                     case FurnitureMarkerParameters_FieldIndex.Offset:
                         this.Offset = (Exception?)obj;
@@ -407,9 +410,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case FurnitureMarkerParameters_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case FurnitureMarkerParameters_FieldIndex.Enabled:
-                        this.Enabled = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -419,12 +419,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (Versioning != null) return true;
+                if (Enabled != null) return true;
                 if (Offset != null) return true;
                 if (RotationZ != null) return true;
                 if (Keyword != null) return true;
                 if (EntryTypes != null) return true;
                 if (Unknown != null) return true;
-                if (Enabled != null) return true;
                 return false;
             }
             #endregion
@@ -454,6 +454,9 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Versioning, "Versioning");
                 }
                 {
+                    sb.AppendItem(Enabled, "Enabled");
+                }
+                {
                     sb.AppendItem(Offset, "Offset");
                 }
                 {
@@ -468,9 +471,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Unknown, "Unknown");
                 }
-                {
-                    sb.AppendItem(Enabled, "Enabled");
-                }
             }
             #endregion
 
@@ -480,12 +480,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Versioning = this.Versioning.Combine(rhs.Versioning);
+                ret.Enabled = this.Enabled.Combine(rhs.Enabled);
                 ret.Offset = this.Offset.Combine(rhs.Offset);
                 ret.RotationZ = this.RotationZ.Combine(rhs.RotationZ);
                 ret.Keyword = this.Keyword.Combine(rhs.Keyword);
                 ret.EntryTypes = this.EntryTypes.Combine(rhs.EntryTypes);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Enabled = this.Enabled.Combine(rhs.Enabled);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -510,12 +510,12 @@ namespace Mutagen.Bethesda.Fallout4
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Versioning;
+            public bool Enabled;
             public bool Offset;
             public bool RotationZ;
             public bool Keyword;
             public bool EntryTypes;
             public bool Unknown;
-            public bool Enabled;
             #endregion
 
             #region Ctors
@@ -526,12 +526,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Versioning = defaultOn;
+                this.Enabled = defaultOn;
                 this.Offset = defaultOn;
                 this.RotationZ = defaultOn;
                 this.Keyword = defaultOn;
                 this.EntryTypes = defaultOn;
                 this.Unknown = defaultOn;
-                this.Enabled = defaultOn;
             }
 
             #endregion
@@ -548,12 +548,12 @@ namespace Mutagen.Bethesda.Fallout4
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Versioning, null));
+                ret.Add((Enabled, null));
                 ret.Add((Offset, null));
                 ret.Add((RotationZ, null));
                 ret.Add((Keyword, null));
                 ret.Add((EntryTypes, null));
                 ret.Add((Unknown, null));
-                ret.Add((Enabled, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -639,12 +639,12 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IFurnitureMarkerParameters>
     {
         new FurnitureMarkerParameters.VersioningBreaks Versioning { get; set; }
+        new Boolean Enabled { get; set; }
         new P3Float Offset { get; set; }
         new Single RotationZ { get; set; }
         new IFormLink<IKeywordGetter> Keyword { get; set; }
         new Furniture.EntryParameterType EntryTypes { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
-        new Boolean Enabled { get; set; }
     }
 
     public partial interface IFurnitureMarkerParametersGetter :
@@ -661,12 +661,12 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => FurnitureMarkerParameters_Registration.Instance;
         FurnitureMarkerParameters.VersioningBreaks Versioning { get; }
+        Boolean Enabled { get; }
         P3Float Offset { get; }
         Single RotationZ { get; }
         IFormLinkGetter<IKeywordGetter> Keyword { get; }
         Furniture.EntryParameterType EntryTypes { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
-        Boolean Enabled { get; }
 
     }
 
@@ -837,12 +837,12 @@ namespace Mutagen.Bethesda.Fallout4
     internal enum FurnitureMarkerParameters_FieldIndex
     {
         Versioning = 0,
-        Offset = 1,
-        RotationZ = 2,
-        Keyword = 3,
-        EntryTypes = 4,
-        Unknown = 5,
-        Enabled = 6,
+        Enabled = 1,
+        Offset = 2,
+        RotationZ = 3,
+        Keyword = 4,
+        EntryTypes = 5,
+        Unknown = 6,
     }
     #endregion
 
@@ -931,12 +931,12 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Versioning = default;
+            item.Enabled = default;
             item.Offset = default;
             item.RotationZ = default;
             item.Keyword.Clear();
             item.EntryTypes = default;
             item.Unknown = new byte[3];
-            item.Enabled = default;
         }
         
         #region Mutagen
@@ -988,12 +988,12 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Versioning = item.Versioning == rhs.Versioning;
+            ret.Enabled = item.Enabled == rhs.Enabled;
             ret.Offset = item.Offset.Equals(rhs.Offset);
             ret.RotationZ = item.RotationZ.EqualsWithin(rhs.RotationZ);
             ret.Keyword = item.Keyword.Equals(rhs.Keyword);
             ret.EntryTypes = item.EntryTypes == rhs.EntryTypes;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
-            ret.Enabled = item.Enabled == rhs.Enabled;
         }
         
         public string Print(
@@ -1042,6 +1042,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Versioning, "Versioning");
             }
+            if (printMask?.Enabled ?? true)
+            {
+                sb.AppendItem(item.Enabled, "Enabled");
+            }
             if (printMask?.Offset ?? true)
             {
                 sb.AppendItem(item.Offset, "Offset");
@@ -1062,10 +1066,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
-            if (printMask?.Enabled ?? true)
-            {
-                sb.AppendItem(item.Enabled, "Enabled");
-            }
         }
         
         #region Equals and Hash
@@ -1078,6 +1078,10 @@ namespace Mutagen.Bethesda.Fallout4
             if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Enabled) ?? true))
+            {
+                if (lhs.Enabled != rhs.Enabled) return false;
             }
             if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Offset) ?? true))
             {
@@ -1099,10 +1103,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Enabled) ?? true))
-            {
-                if (lhs.Enabled != rhs.Enabled) return false;
-            }
             return true;
         }
         
@@ -1110,12 +1110,12 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var hash = new HashCode();
             hash.Add(item.Versioning);
+            hash.Add(item.Enabled);
             hash.Add(item.Offset);
             hash.Add(item.RotationZ);
             hash.Add(item.Keyword);
             hash.Add(item.EntryTypes);
             hash.Add(item.Unknown);
-            hash.Add(item.Enabled);
             return hash.ToHashCode();
         }
         
@@ -1153,6 +1153,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Versioning = rhs.Versioning;
             }
+            if ((copyMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Enabled) ?? true))
+            {
+                item.Enabled = rhs.Enabled;
+            }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Offset) ?? true))
             {
                 item.Offset = rhs.Offset;
@@ -1174,10 +1178,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown.ToArray();
-            }
-            if ((copyMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Enabled) ?? true))
-            {
-                item.Enabled = rhs.Enabled;
             }
         }
         
