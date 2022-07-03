@@ -549,7 +549,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             ObjectVisibilityManager_Registration.Instance,
             ObjectVisibilityManagerItem_Registration.Instance,
             QuestData_Registration.Instance,
-            PerkEntryPointModifyValues_Registration.Instance
+            PerkEntryPointModifyValues_Registration.Instance,
+            ScriptEntryStructs_Registration.Instance
         );
     }
 }

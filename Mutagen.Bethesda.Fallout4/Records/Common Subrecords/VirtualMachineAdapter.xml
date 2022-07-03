@@ -105,7 +105,12 @@
   </Object>
   <Object name="ScriptStructListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="06a4db94-b0bb-42fd-bfdf-18343fc53a61" ID="212">
     <Fields>
-      <RefList name="Structs" refName="ScriptStructProperty" counterLength="4" />
+      <RefList name="Structs" refName="ScriptEntryStructs" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="ScriptEntryStructs" objType="Subrecord" GUID="52485253-6e33-4642-a4ab-649bc593fb33" ID="683">
+    <Fields>
+      <RefList name="Members" refName="ScriptProperty" counterLength="4" circular="true" />
     </Fields>
   </Object>
   <Object name="ScriptFragment" objType="Subrecord" GUID="82853f4c-012a-4c5e-8fce-a74708283750" ID="124">
