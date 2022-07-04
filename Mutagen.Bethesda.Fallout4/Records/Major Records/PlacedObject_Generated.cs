@@ -151,14 +151,14 @@ namespace Mutagen.Bethesda.Fallout4
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region LightingTemplate
-        private readonly IFormLinkNullable<ILightGetter> _LightingTemplate = new FormLinkNullable<ILightGetter>();
-        public IFormLinkNullable<ILightGetter> LightingTemplate
+        private readonly IFormLinkNullable<ILightingTemplateGetter> _LightingTemplate = new FormLinkNullable<ILightingTemplateGetter>();
+        public IFormLinkNullable<ILightingTemplateGetter> LightingTemplate
         {
             get => _LightingTemplate;
             set => _LightingTemplate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILightGetter> IPlacedObjectGetter.LightingTemplate => this.LightingTemplate;
+        IFormLinkNullableGetter<ILightingTemplateGetter> IPlacedObjectGetter.LightingTemplate => this.LightingTemplate;
         #endregion
         #region ImageSpace
         private readonly IFormLinkNullable<IImageSpaceGetter> _ImageSpace = new FormLinkNullable<IImageSpaceGetter>();
@@ -3936,7 +3936,7 @@ namespace Mutagen.Bethesda.Fallout4
         new MemorySlice<Byte>? XORD { get; set; }
         new Bounding? OcclusionPlane { get; set; }
         new Int16 Unknown { get; set; }
-        new IFormLinkNullable<ILightGetter> LightingTemplate { get; set; }
+        new IFormLinkNullable<ILightingTemplateGetter> LightingTemplate { get; set; }
         new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         new Boolean IsMultiBoundPrimitive { get; set; }
@@ -4041,7 +4041,7 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? XORD { get; }
         IBoundingGetter? OcclusionPlane { get; }
         Int16 Unknown { get; }
-        IFormLinkNullableGetter<ILightGetter> LightingTemplate { get; }
+        IFormLinkNullableGetter<ILightingTemplateGetter> LightingTemplate { get; }
         IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         Boolean IsMultiBoundPrimitive { get; }

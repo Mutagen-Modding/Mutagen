@@ -14,7 +14,7 @@
       <RefDirect name="OcclusionPlane" refName="Bounding" recordType="XOCP" />
       <CustomLogic name="BoundData" recordType="XRMR" />
       <Int16 name="Unknown" binary="NoGeneration" />
-      <FormLink name="LightingTemplate" recordType="LNAM" refName="Light" binary="NoGeneration" />
+      <FormLink name="LightingTemplate" recordType="LNAM" refName="LightingTemplate" binary="NoGeneration" />
       <FormLink name="ImageSpace" refName="ImageSpace" recordType="INAM" binary="NoGeneration" />
       <List name="LinkedRooms" binary="NoGeneration">
         <FormLink recordType="XLRM" refName="PlacedObject" />
