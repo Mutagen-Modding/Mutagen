@@ -276,6 +276,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
         {
             Faction_Registration.Instance,
             FormList_Registration.Instance,
+            Npc_Registration.Instance,
             VoiceType_Registration.Instance,
         });
         dict[typeof(IAliasVoiceTypeGetter)] = dict[typeof(IAliasVoiceType)] with { Setter = false };

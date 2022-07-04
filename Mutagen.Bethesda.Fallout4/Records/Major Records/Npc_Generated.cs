@@ -4984,6 +4984,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface INpc :
+        IAliasVoiceType,
         IConstructibleObjectTarget,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
@@ -5121,6 +5122,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.NPC_)]
     public partial interface INpcGetter :
         IFallout4MajorRecordGetter,
+        IAliasVoiceTypeGetter,
         IBinaryItem,
         IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,

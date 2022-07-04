@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [Faction, FormList, VoiceType]
+    /// Implemented by: [Faction, FormList, Npc, VoiceType]
     /// </summary>
     public partial interface IAliasVoiceType :
         IAliasVoiceTypeGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [Faction, FormList, VoiceType]
+    /// Implemented by: [Faction, FormList, Npc, VoiceType]
     /// </summary>
     public partial interface IAliasVoiceTypeGetter : IFallout4MajorRecordGetter
     {

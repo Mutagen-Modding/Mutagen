@@ -8,6 +8,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IAliasVoiceType
 - Faction
 - FormList
+- Npc
 - VoiceType
 ### IBindableEquipment
 - Armor
@@ -484,6 +485,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IRegionTarget
 - IStaticTarget
 ### Npc
+- IAliasVoiceType
 - IConstructibleObjectTarget
 - IExplodeSpawn
 - ILockList
