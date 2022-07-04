@@ -288,14 +288,14 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IVoiceTypeGetter> IQuestReferenceAliasGetter.ForcedVoice => this.ForcedVoice;
         #endregion
         #region DeathItem
-        private readonly IFormLinkNullable<IMessageGetter> _DeathItem = new FormLinkNullable<IMessageGetter>();
-        public IFormLinkNullable<IMessageGetter> DeathItem
+        private readonly IFormLinkNullable<ILeveledItemGetter> _DeathItem = new FormLinkNullable<ILeveledItemGetter>();
+        public IFormLinkNullable<ILeveledItemGetter> DeathItem
         {
             get => _DeathItem;
             set => _DeathItem.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMessageGetter> IQuestReferenceAliasGetter.DeathItem => this.DeathItem;
+        IFormLinkNullableGetter<ILeveledItemGetter> IQuestReferenceAliasGetter.DeathItem => this.DeathItem;
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2001,7 +2001,7 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<LinkedAlias>? LinkedAliases { get; set; }
         new IFormLinkNullable<IMessageGetter> DisplayName { get; set; }
         new IFormLinkNullable<IVoiceTypeGetter> ForcedVoice { get; set; }
-        new IFormLinkNullable<IMessageGetter> DeathItem { get; set; }
+        new IFormLinkNullable<ILeveledItemGetter> DeathItem { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellGetter>> Spells { get; }
         new ExtendedList<IFormLinkGetter<IFactionGetter>> Factions { get; }
         new ExtendedList<IFormLinkGetter<IPackageGetter>> PackageData { get; }
@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<ILinkedAliasGetter>? LinkedAliases { get; }
         IFormLinkNullableGetter<IMessageGetter> DisplayName { get; }
         IFormLinkNullableGetter<IVoiceTypeGetter> ForcedVoice { get; }
-        IFormLinkNullableGetter<IMessageGetter> DeathItem { get; }
+        IFormLinkNullableGetter<ILeveledItemGetter> DeathItem { get; }
         IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; }
         IReadOnlyList<IFormLinkGetter<IFactionGetter>> Factions { get; }
         IReadOnlyList<IFormLinkGetter<IPackageGetter>> PackageData { get; }
@@ -4179,7 +4179,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<IMessageGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
+        public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellGetter>>();
         public IReadOnlyList<IFormLinkGetter<IFactionGetter>> Factions { get; private set; } = Array.Empty<IFormLinkGetter<IFactionGetter>>();

@@ -144,7 +144,7 @@
       <RefList name="LinkedAliases" refName="LinkedAlias" recordType="ALLA" />
       <FormLink name="DisplayName" refName="Message" recordType="ALDN" />
       <FormLink name="ForcedVoice" refName="VoiceType" recordType="ALFV" />
-      <FormLink name="DeathItem" refName="Message" recordType="ALDI" />
+      <FormLink name="DeathItem" refName="LeveledItem" recordType="ALDI" />
       <List name="Spells">
         <FormLink recordType="ALSP" refName="Spell" />
       </List>
