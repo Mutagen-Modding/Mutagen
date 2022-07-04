@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using Loqui;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 
@@ -11,22 +10,7 @@ public record FormLinkInformation(FormKey FormKey, Type Type) : IFormLinkGetter
 
     public bool IsNull => FormKey.IsNull;
 
-    public override string ToString()
-    {
-        return $"<{GetTypeString()}>{FormKey}";
-    }
-
-    private string GetTypeString()
-    {
-        if (LoquiRegistration.TryGetRegister(Type, out var regis))
-        {
-            return $"{regis.ProtocolKey.Namespace}.{Type.Name}";
-        }
-        else
-        {
-            return Type.Name;
-        }
-    }
+    public override string ToString() => IFormLinkIdentifier.GetString(this);
 
     public static FormLinkInformation Factory<TMajorGetter>(IFormLinkGetter<TMajorGetter> link)
         where TMajorGetter : class, IMajorRecordGetter
