@@ -12,7 +12,7 @@ public interface IFormLinkIdentifier : IFormKeyGetter, ILinkIdentifier
 {
     public static string GetString(IFormLinkIdentifier ident)
     {
-        return $"<{GetTypeString(ident)}>{ident.FormKey}";
+        return $"{ident.FormKey}<{GetTypeString(ident)}>";
     }
 
     private static string GetTypeString(IFormLinkIdentifier ident)

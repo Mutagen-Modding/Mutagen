@@ -127,7 +127,7 @@ public class FormLinkGetter<TMajorGetter> : IFormLinkGetter<TMajorGetter>,
     /// Returns string representation of link
     /// </summary>
     /// <returns>Returns FormKey string</returns>
-    public override string ToString() => $"<{MajorRecordPrinter<TMajorGetter>.TypeString}>{FormKey}";
+    public override string ToString() => $"{FormKey}<{MajorRecordPrinter<TMajorGetter>.TypeString}>";
 
     public bool Equals(TMajorGetter? other)
     {

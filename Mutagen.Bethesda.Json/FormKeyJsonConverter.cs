@@ -112,7 +112,8 @@ public class FormKeyJsonConverter : JsonConverter
                 }
                 
                 var span = str.AsSpan();
-                if (span[0] != '<')
+                var startIndex = span.IndexOf('<');
+                if (startIndex == -1)
                 {
                     throw new ArgumentException();
                 }
@@ -123,7 +124,7 @@ public class FormKeyJsonConverter : JsonConverter
                     throw new ArgumentException();
                 }
 
-                var typeName = span.Slice(1, endIndex - 1).ToString();
+                var typeName = span.Slice(startIndex + 1, endIndex - 1 - startIndex).ToString();
                 if (!typeName.StartsWith("Mutagen.Bethesda."))
                 {
                     typeName = "Mutagen.Bethesda." + typeName;
@@ -135,7 +136,7 @@ public class FormKeyJsonConverter : JsonConverter
                 }
 
                 return new FormLinkInformation(
-                    FormKey.Factory(span.Slice(endIndex + 1)),
+                    FormKey.Factory(span.Slice(0, startIndex)),
                     regis.GetterType);
             }
         }
