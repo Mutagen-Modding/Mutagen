@@ -1,5 +1,7 @@
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Strings.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -69,6 +71,11 @@ public class BinaryWriteParameters
     /// If a FormID has all zeros for the ID, but a non-zero mod index, then set mod index to zero as well.
     /// </summary>
     public bool CleanNulls { get; set; } = true;
+
+    /// <summary>
+    /// Encoding overrides to use for embedded strings
+    /// </summary>
+    public EncodingBundle? Encodings { get; set; }
 
     /// <summary>
     /// Aligns a mod's ModKey to a path's implied ModKey.

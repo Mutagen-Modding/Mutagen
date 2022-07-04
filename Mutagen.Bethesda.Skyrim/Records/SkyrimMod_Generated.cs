@@ -11258,6 +11258,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 StringsWriter = param.StringsWriter,
                 TargetLanguageOverride = param.TargetLanguageOverride,
+                Encodings = param.Encodings ?? gameConstants.Encodings,
             };
             var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
@@ -21888,6 +21889,10 @@ namespace Mutagen.Bethesda.Skyrim
                 CleanNulls = param.CleanNulls,
                 TargetLanguageOverride = param.TargetLanguageOverride
             };
+            if (param.Encodings != null)
+            {
+                bundle.Encodings = param.Encodings;
+            }
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(
                 memStream,

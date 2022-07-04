@@ -604,6 +604,7 @@ public class ModModule : GenerationModule
             {
                 sb.AppendLine("StringsWriter = param.StringsWriter,");
                 sb.AppendLine("TargetLanguageOverride = param.TargetLanguageOverride,");
+                sb.AppendLine($"Encodings = param.Encodings ?? {gameConstantsStr}.Encodings,");
             }
 
             sb.AppendLine($"var writer = new MutagenWriter(stream, bundle);");

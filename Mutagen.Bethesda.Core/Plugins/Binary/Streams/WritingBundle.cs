@@ -43,5 +43,5 @@ public record WritingBundle(GameConstants Constants)
     
     public Language? TargetLanguageOverride { get; set; }
 
-    public EncodingBundle Encodings { get; set; } = new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._utf8);
+    public EncodingBundle Encodings { get; set; } = Constants.Encodings;
 }
