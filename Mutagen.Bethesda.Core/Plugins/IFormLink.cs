@@ -10,20 +10,28 @@ namespace Mutagen.Bethesda.Plugins;
 /// </summary>
 public interface IFormLinkIdentifier : IFormKeyGetter, ILinkIdentifier
 {
-    public static string GetString(IFormLinkIdentifier ident)
+    public static string GetString(IFormLinkIdentifier ident, bool simpleType = false) => 
+        GetString(ident.FormKey, ident.Type, simpleType: simpleType);
+    
+    public static string GetString(FormKey formKey, Type type, bool simpleType = false)
     {
-        return $"{ident.FormKey}<{GetTypeString(ident)}>";
+        return $"{formKey}<{GetTypeString(type, simpleType: simpleType)}>";
     }
 
-    private static string GetTypeString(IFormLinkIdentifier ident)
+    private static string GetTypeString(Type type, bool simpleType = false)
     {
-        if (LoquiRegistration.TryGetRegister(ident.Type, out var regis))
+        if (LoquiRegistration.TryGetRegister(type, out var regis))
         {
-            return $"{regis.ProtocolKey.Namespace}.{ident.Type.Name}";
+            var name = type.Name;
+            if (simpleType)
+            {
+                name = regis.ClassType.Name;
+            }
+            return $"{regis.ProtocolKey.Namespace}.{name}";
         }
         else
         {
-            return ident.Type.Name;
+            return type.Name;
         }
     }
 }

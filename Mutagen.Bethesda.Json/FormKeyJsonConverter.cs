@@ -159,7 +159,7 @@ public class FormKeyJsonConverter : JsonConverter
                 writer.WriteValue(fl.FormKeyNullable?.ToString());
                 break;
             case IFormLinkIdentifier ident:
-                writer.WriteValue(IFormLinkIdentifier.GetString(ident));
+                writer.WriteValue(IFormLinkIdentifier.GetString(ident, simpleType: true));
                 break;
             default:
                 throw new ArgumentException();

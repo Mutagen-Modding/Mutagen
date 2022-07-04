@@ -543,7 +543,7 @@ public class JsonConverterTests
             Interface = new FormLinkInformation(TestConstants.Form2, typeof(IBookGetter)),
         };
         JsonConvert.SerializeObject(toSerialize, settings)
-            .Should().Be($"{{\"Interface\":\"{toSerialize.Direct}\",\"Direct\":\"{toSerialize.Direct}\"}}");
+            .Should().Be($"{{\"Interface\":\"{toSerialize.Direct.FormKey}<Skyrim.Book>\",\"Direct\":\"{toSerialize.Direct.FormKey}<Skyrim.Book>\"}}");
     }
 
     [Fact]
@@ -557,7 +557,7 @@ public class JsonConverterTests
             Direct = new FormLinkInformation(TestConstants.Form2, typeof(IBookGetter)),
             Interface = new FormLinkInformation(TestConstants.Form2, typeof(IBookGetter)),
         };
-        var toDeserialize = $"{{\"Interface\":\"{target.Direct}\",\"Direct\":\"{target.Direct}\"}}";
+        var toDeserialize = $"{{\"Interface\":\"{target.Direct.FormKey}<Skyrim.Book>\",\"Direct\":\"{target.Direct.FormKey}<Skyrim.Book>\"}}";
         JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
             .Direct
             .Should().Be(target.Direct);
