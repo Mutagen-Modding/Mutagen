@@ -17,6 +17,8 @@
     <LinkInterface>IOutfitTarget</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
   <Object name="LeveledItemEntry" objType="Subrecord" GUID="dd7621bd-5dc8-442d-80ba-9ee8f28f13dc" ID="219">
     <Fields>

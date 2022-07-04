@@ -762,7 +762,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<IAddonNodeInternal>,
         IModeled,
-        IObjectBounded
+        IObjectBounded,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -796,7 +797,8 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IAddonNodeGetter>,
         IMapsToGetter<IAddonNodeGetter>,
         IModeledGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => AddonNode_Registration.Instance;
         #region ObjectBounds

@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Perk" recordType="PERK" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="137b6882-7400-436a-8cb1-aca1870f6bc4" ID="129">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="PerkAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="PerkAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
       <String name="Icon" recordType="ICON" />

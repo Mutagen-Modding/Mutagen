@@ -611,6 +611,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IFormList :
         IAliasVoiceType,
+        IConstructibleObjectTarget,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IFormListGetter,
@@ -619,6 +620,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamed,
         INamedRequired,
         IObjectId,
+        IPlaceableObject,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -641,6 +643,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IAliasVoiceTypeGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
         ILockListGetter,
         ILoquiObject<IFormListGetter>,
@@ -648,6 +651,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedGetter,
         INamedRequiredGetter,
         IObjectIdGetter,
+        IPlaceableObjectGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

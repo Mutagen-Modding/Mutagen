@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Static" recordType="STAT" objType="Record" baseClass="Fallout4MajorRecord" majorFlags="true" GUID="ecd28406-13ba-4ad0-b206-c6b54b791a0b" ID="155">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
@@ -26,6 +26,8 @@
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
   <Object name="DistantLod" objType="Subrecord" GUID="795bff20-ec22-4c22-a3f5-bfb3b2ee105e" ID="331">
     <Fields>

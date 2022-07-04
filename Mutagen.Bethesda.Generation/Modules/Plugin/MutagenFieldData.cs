@@ -32,6 +32,7 @@ public class MutagenFieldData
     public List<(ushort Version, VersionAction Action)> Versioning = new();
     public bool HasVersioning => Versioning.Count > 0;
     public bool IsAfterBreak;
+    public bool Circular;
 
     public MutagenFieldData(TypeGeneration source)
     {

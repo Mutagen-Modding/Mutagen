@@ -1404,6 +1404,7 @@ namespace Mutagen.Bethesda.Fallout4
     /// </summary>
     public partial interface IAObjectModification :
         IAObjectModificationGetter,
+        IConstructibleObjectTarget,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IAObjectModificationInternal>,
@@ -1411,6 +1412,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamed,
         INamedRequired,
         IObjectId,
+        IPlaceableObject,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -1455,12 +1457,14 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IAObjectModificationGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IAObjectModificationGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         IObjectIdGetter,
+        IPlaceableObjectGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

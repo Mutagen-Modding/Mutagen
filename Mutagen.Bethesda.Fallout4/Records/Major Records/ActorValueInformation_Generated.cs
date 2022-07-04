@@ -672,7 +672,6 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IActorValueInformation :
         IActorValueInformationGetter,
-        IDamageTypeTarget,
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IActorValueInformationInternal>,
         INamed,
@@ -702,7 +701,6 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IActorValueInformationGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        IDamageTypeTargetGetter,
         ILoquiObject<IActorValueInformationGetter>,
         IMapsToGetter<IActorValueInformationGetter>,
         INamedGetter,

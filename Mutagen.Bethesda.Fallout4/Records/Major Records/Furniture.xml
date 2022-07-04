@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Furniture" recordType="FURN" baseClass="Fallout4MajorRecord" objType="Record" majorFlag="true" GUID="37ea297d-9233-4548-b692-fe2d298b35c4" ID="204">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -52,9 +52,11 @@
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
   <Object name="FurnitureMarkerParameters" objType="Subrecord" GUID="c75d9213-af7a-438c-a3d9-d953c0001d6a" ID="334">
     <Fields>
+      <Bool name="Enabled" binary="NoGeneration" />
       <P3Float name="Offset" />
       <Float name="RotationZ" isRotation="true" />
       <Break />
@@ -62,7 +64,6 @@
       <Break />
       <Enum name="EntryTypes" byteLength="1" enumName="Furniture.EntryParameterType" />
       <ByteArray name="Unknown" byteLength="3" nullable="False" />
-      <Bool name="Enabled" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="FurnitureMarkerEntryPoints" objType="Subrecord" recordType="FNPR" GUID="cefc97c6-4b33-4ed3-a48a-de3409c765bd" ID="333">

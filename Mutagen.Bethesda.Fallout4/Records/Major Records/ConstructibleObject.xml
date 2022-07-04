@@ -8,7 +8,7 @@
       <String name="Description" recordType="DESC" translated="DL" />
       <RefList name="Conditions" refName="Condition" />
       <FormLink name="CreatedObject" recordType="CNAM">
-        <Interface>IItem</Interface>
+        <Interface>IConstructibleObjectTarget</Interface>
       </FormLink>
       <FormLink name="WorkbenchKeyword" refName="Keyword" recordType="BNAM" />
       <ByteArray name="NAM1" recordType="NAM1" />
@@ -22,6 +22,7 @@
     </Fields>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
   <Object name="ConstructibleObjectComponent" objType="Subrecord" GUID="c43e9372-638e-4849-aabb-1575e750f577" ID="652">
     <Fields>

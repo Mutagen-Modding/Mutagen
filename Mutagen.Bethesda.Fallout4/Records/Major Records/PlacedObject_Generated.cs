@@ -151,14 +151,14 @@ namespace Mutagen.Bethesda.Fallout4
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region LightingTemplate
-        private readonly IFormLinkNullable<ILightGetter> _LightingTemplate = new FormLinkNullable<ILightGetter>();
-        public IFormLinkNullable<ILightGetter> LightingTemplate
+        private readonly IFormLinkNullable<ILightingTemplateGetter> _LightingTemplate = new FormLinkNullable<ILightingTemplateGetter>();
+        public IFormLinkNullable<ILightingTemplateGetter> LightingTemplate
         {
             get => _LightingTemplate;
             set => _LightingTemplate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILightGetter> IPlacedObjectGetter.LightingTemplate => this.LightingTemplate;
+        IFormLinkNullableGetter<ILightingTemplateGetter> IPlacedObjectGetter.LightingTemplate => this.LightingTemplate;
         #endregion
         #region ImageSpace
         private readonly IFormLinkNullable<IImageSpaceGetter> _ImageSpace = new FormLinkNullable<IImageSpaceGetter>();
@@ -3914,6 +3914,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        ILinkedReference,
         ILocationTargetable,
         ILoquiObjectSetter<IPlacedObjectInternal>,
         IPlaced,
@@ -3921,6 +3922,7 @@ namespace Mutagen.Bethesda.Fallout4
         IPlacedSimple,
         IPlacedThing,
         IPositionRotation,
+        IPreCutMapEntryReference,
         IScripted
     {
         /// <summary>
@@ -3935,7 +3937,7 @@ namespace Mutagen.Bethesda.Fallout4
         new MemorySlice<Byte>? XORD { get; set; }
         new Bounding? OcclusionPlane { get; set; }
         new Int16 Unknown { get; set; }
-        new IFormLinkNullable<ILightGetter> LightingTemplate { get; set; }
+        new IFormLinkNullable<ILightingTemplateGetter> LightingTemplate { get; set; }
         new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         new Boolean IsMultiBoundPrimitive { get; set; }
@@ -4015,6 +4017,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
+        ILinkedReferenceGetter,
         ILocationTargetableGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IMapsToGetter<IPlacedObjectGetter>,
@@ -4022,6 +4025,7 @@ namespace Mutagen.Bethesda.Fallout4
         IPlacedSimpleGetter,
         IPlacedThingGetter,
         IPositionRotationGetter,
+        IPreCutMapEntryReferenceGetter,
         IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
@@ -4039,7 +4043,7 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? XORD { get; }
         IBoundingGetter? OcclusionPlane { get; }
         Int16 Unknown { get; }
-        IFormLinkNullableGetter<ILightGetter> LightingTemplate { get; }
+        IFormLinkNullableGetter<ILightingTemplateGetter> LightingTemplate { get; }
         IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         Boolean IsMultiBoundPrimitive { get; }
@@ -4393,6 +4397,7 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.REFR,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.NAME,
                 RecordTypes.XMBO,
                 RecordTypes.XPRM,
@@ -7304,7 +7309,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -7793,7 +7798,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Fallout4.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Fallout4.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
@@ -8245,6 +8252,11 @@ namespace Mutagen.Bethesda.Fallout4
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)PlacedObject_FieldIndex.Comments;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -8309,8 +8321,9 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Base
@@ -8626,6 +8639,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)PlacedObject_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
@@ -9063,6 +9081,11 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     _CommentsLocation = (stream.Position - offset);
                     return (int)PlacedObject_FieldIndex.Comments;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

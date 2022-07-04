@@ -1,3 +1,4 @@
+using Loqui;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -9,6 +10,30 @@ namespace Mutagen.Bethesda.Plugins;
 /// </summary>
 public interface IFormLinkIdentifier : IFormKeyGetter, ILinkIdentifier
 {
+    public static string GetString(IFormLinkIdentifier ident, bool simpleType = false) => 
+        GetString(ident.FormKey, ident.Type, simpleType: simpleType);
+    
+    public static string GetString(FormKey formKey, Type type, bool simpleType = false)
+    {
+        return $"{formKey}<{GetTypeString(type, simpleType: simpleType)}>";
+    }
+
+    private static string GetTypeString(Type type, bool simpleType = false)
+    {
+        if (LoquiRegistration.TryGetRegister(type, out var regis))
+        {
+            var name = type.Name;
+            if (simpleType)
+            {
+                name = regis.ClassType.Name;
+            }
+            return $"{regis.ProtocolKey.Namespace}.{name}";
+        }
+        else
+        {
+            return type.Name;
+        }
+    }
 }
     
 /// <summary>

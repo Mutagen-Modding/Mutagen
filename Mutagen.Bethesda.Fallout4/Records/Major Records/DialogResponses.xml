@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DialogResponses" recordType="INFO" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="5068f739-6d69-4494-af56-ca46c299b41b" ID="544">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <RefDirect name="Flags" refName="DialogResponseFlags" />
       <FormLink name="Topic" recordType="TPIC" refName="DialogTopic" />
       <FormLink name="PreviousDialog" recordType="PNAM" refName="DialogResponses" />

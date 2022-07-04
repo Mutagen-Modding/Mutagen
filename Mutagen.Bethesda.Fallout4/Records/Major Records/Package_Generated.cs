@@ -2098,6 +2098,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.PACK,
                 RecordTypes.PLDT,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.PKDT,
                 RecordTypes.PSDT,
                 RecordTypes.CTDA,
@@ -3410,7 +3411,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ((PackageAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.PKDT)))
             {
@@ -3630,7 +3631,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Fallout4.PackageAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Fallout4.PackageAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Package_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.PKDT:
@@ -3738,6 +3741,11 @@ namespace Mutagen.Bethesda.Fallout4
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnChange;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -3806,8 +3814,9 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IPackageAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PackageAdapterBinaryOverlay.PackageAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IPackageAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PackageAdapterBinaryOverlay.PackageAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         private RangeInt32? _PKDTLocation;
@@ -3985,6 +3994,11 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Package_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.PKDT:
@@ -4072,6 +4086,11 @@ namespace Mutagen.Bethesda.Fallout4
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.OnChange;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

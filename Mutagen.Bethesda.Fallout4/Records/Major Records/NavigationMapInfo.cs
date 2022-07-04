@@ -18,15 +18,23 @@ partial class NavigationMapInfoBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryParentParseLogicCustom(MutagenFrame frame, INavigationMapInfo item)
+    public static partial void FillBinaryParentCustom(MutagenFrame frame, INavigationMapInfo item)
     {
-        if (item.ParentWorldspace.IsNull)
+        var worldspace = FormLinkBinaryTranslation.Instance.Parse(reader: frame);
+        if (worldspace.IsNull)
         {
-            item.ParentCell.SetTo(FormKeyBinaryTranslation.Instance.Parse(frame));
+            item.Parent = new NavigationMapInfoCellParent()
+            {
+                Cell = FormKeyBinaryTranslation.Instance.Parse(frame).ToLink<ICellGetter>()
+            };
         }
         else
         {
-            item.ParentWorldspaceCoord = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame);
+            item.Parent = new NavigationMapInfoWorldspaceParent()
+            {
+                Worldspace = worldspace.ToLink<IWorldspaceGetter>(),
+                Coord = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame),
+            };
         }
     }
 }
@@ -46,15 +54,20 @@ partial class NavigationMapInfoBinaryWriteTranslation
         }
     }
 
-    public static partial void WriteBinaryParentParseLogicCustom(MutagenWriter writer, INavigationMapInfoGetter item)
+    public static partial void WriteBinaryParentCustom(MutagenWriter writer, INavigationMapInfoGetter item)
     {
-        if (item.ParentWorldspace.IsNull)
+        switch (item.Parent)
         {
-            FormKeyBinaryTranslation.Instance.Write(writer, item.ParentCell.FormKey);
-        }
-        else
-        {
-            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, item.ParentWorldspaceCoord);
+            case INavigationMapInfoWorldspaceParentGetter wrldSpace:
+                FormKeyBinaryTranslation.Instance.Write(writer, wrldSpace.Worldspace.FormKey);
+                P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, wrldSpace.Coord);
+                break;
+            case INavigationMapInfoCellParentGetter cellParent:
+                FormKeyBinaryTranslation.Instance.Write(writer, FormKey.Null);
+                FormKeyBinaryTranslation.Instance.Write(writer, cellParent.Cell.FormKey);
+                break;
+            default:
+                throw new NotImplementedException();
         }
     }
 }
@@ -64,21 +77,25 @@ partial class NavigationMapInfoBinaryOverlay
     IIslandDataGetter? _island;
     public partial IIslandDataGetter? GetIslandCustom(int location) => _island;
 
-    public P2Int16 ParentWorldspaceCoord
+    public partial IANavigationMapInfoParentGetter GetParentCustom(int location)
     {
-        get
+        var worldspace = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x4, 0x4)));
+        if (worldspace.IsNull)
         {
-            return new P2Int16(
-                BinaryPrimitives.ReadInt16LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x8)),
-                BinaryPrimitives.ReadInt16LittleEndian(_structData.Span.Slice(IslandEndingPos + 0xA)));
+            return new NavigationMapInfoCellParent()
+            {
+                Cell = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x8, 0x4))).ToLink<ICellGetter>()
+            };
         }
-    }
-
-    public IFormLinkGetter<ICellGetter> ParentCell
-    {
-        get
+        else
         {
-            return new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x8, 0x4))));
+            return new NavigationMapInfoWorldspaceParent()
+            {
+                Worldspace = worldspace.ToLink<IWorldspaceGetter>(),
+                Coord = new P2Int16(
+                    BinaryPrimitives.ReadInt16LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x8)),
+                    BinaryPrimitives.ReadInt16LittleEndian(_structData.Span.Slice(IslandEndingPos + 0xA)))
+            };
         }
     }
 

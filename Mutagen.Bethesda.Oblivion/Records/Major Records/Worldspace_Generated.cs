@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Worldspace :
-        Place,
+        OblivionMajorRecord,
         IEquatable<IWorldspaceGetter>,
         ILoquiObjectSetter<Worldspace>,
         IWorldspaceInternal
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            Place.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            Place.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -899,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            Place.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -1123,7 +1123,8 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
-        IPlaceInternal,
+        IOblivionMajorRecordInternal,
+        IPlace,
         IWorldspaceGetter
     {
         /// <summary>
@@ -1147,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface IWorldspaceInternal :
-        IPlaceInternal,
+        IOblivionMajorRecordInternal,
         IWorldspace,
         IWorldspaceGetter
     {
@@ -1155,14 +1156,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts.WRLD)]
     public partial interface IWorldspaceGetter :
-        IPlaceGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IWorldspaceGetter>,
         IMajorRecordGetterEnumerable,
         IMapsToGetter<IWorldspaceGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        IPlaceGetter
     {
         static new ILoquiRegistration StaticRegistration => Worldspace_Registration.Instance;
         #region Name
@@ -1692,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common
-    internal partial class WorldspaceSetterCommon : PlaceSetterCommon
+    internal partial class WorldspaceSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly WorldspaceSetterCommon Instance = new WorldspaceSetterCommon();
 
@@ -1717,11 +1719,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.SubCellsTimestamp = default;
             item.SubCells.Clear();
             base.Clear(item);
-        }
-        
-        public override void Clear(IPlaceInternal item)
-        {
-            Clear(item: (IWorldspaceInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -1961,17 +1958,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         public override void CopyInFromBinary(
-            IPlaceInternal item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (Worldspace)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
-        public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
@@ -1996,7 +1982,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         
     }
-    internal partial class WorldspaceCommon : PlaceCommon
+    internal partial class WorldspaceCommon : OblivionMajorRecordCommon
     {
         public new static readonly WorldspaceCommon Instance = new WorldspaceCommon();
 
@@ -2095,7 +2081,7 @@ namespace Mutagen.Bethesda.Oblivion
             StructuredStringBuilder sb,
             Worldspace.Mask<bool>? printMask = null)
         {
-            PlaceCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
@@ -2181,26 +2167,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
-        public static Worldspace_FieldIndex ConvertFieldIndex(Place_FieldIndex index)
-        {
-            switch (index)
-            {
-                case Place_FieldIndex.MajorRecordFlagsRaw:
-                    return (Worldspace_FieldIndex)((int)index);
-                case Place_FieldIndex.FormKey:
-                    return (Worldspace_FieldIndex)((int)index);
-                case Place_FieldIndex.VersionControl:
-                    return (Worldspace_FieldIndex)((int)index);
-                case Place_FieldIndex.EditorID:
-                    return (Worldspace_FieldIndex)((int)index);
-                case Place_FieldIndex.OblivionMajorRecordFlags:
-                    return (Worldspace_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Worldspace_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static Worldspace_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2243,7 +2210,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IPlaceGetter)lhs, (IPlaceGetter)rhs, crystal)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
@@ -2320,17 +2287,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         public override bool Equals(
-            IPlaceGetter? lhs,
-            IPlaceGetter? rhs,
-            TranslationCrystal? crystal)
-        {
-            return Equals(
-                lhs: (IWorldspaceGetter?)lhs,
-                rhs: rhs as IWorldspaceGetter,
-                crystal: crystal);
-        }
-        
-        public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
             TranslationCrystal? crystal)
@@ -2402,11 +2358,6 @@ namespace Mutagen.Bethesda.Oblivion
             hash.Add(item.SubCells);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IPlaceGetter item)
-        {
-            return GetHashCode(item: (IWorldspaceGetter)item);
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)
@@ -3220,17 +3171,6 @@ namespace Mutagen.Bethesda.Oblivion
             return newRec;
         }
         
-        public override Place Duplicate(
-            IPlaceGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IWorldspaceGetter)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
@@ -3258,7 +3198,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         
     }
-    internal partial class WorldspaceSetterTranslationCommon : PlaceSetterTranslationCommon
+    internal partial class WorldspaceSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly WorldspaceSetterTranslationCommon Instance = new WorldspaceSetterTranslationCommon();
 
@@ -3286,8 +3226,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IPlace)item,
-                (IPlaceGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -3447,36 +3387,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         public override void DeepCopyIn(
-            IPlaceInternal item,
-            IPlaceGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IWorldspaceInternal)item,
-                rhs: (IWorldspaceGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IPlace item,
-            IPlaceGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IWorldspace)item,
-                rhs: (IWorldspaceGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -3617,7 +3527,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WorldspaceBinaryWriteTranslation :
-        PlaceBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly WorldspaceBinaryWriteTranslation Instance = new();
@@ -3752,17 +3662,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write(
             MutagenWriter writer,
-            IPlaceGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (IWorldspaceGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             TypedWriteParams translationParams)
         {
@@ -3785,7 +3684,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    internal partial class WorldspaceBinaryCreateTranslation : PlaceBinaryCreateTranslation
+    internal partial class WorldspaceBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new static readonly WorldspaceBinaryCreateTranslation Instance = new WorldspaceBinaryCreateTranslation();
 
@@ -3794,7 +3693,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWorldspaceInternal item,
             MutagenFrame frame)
         {
-            PlaceBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -3890,7 +3789,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
-                    return PlaceBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         lastParsed: lastParsed,
@@ -3928,7 +3827,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion
 {
     internal partial class WorldspaceBinaryOverlay :
-        PlaceBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         IWorldspaceGetter
     {
         #region Common Routing

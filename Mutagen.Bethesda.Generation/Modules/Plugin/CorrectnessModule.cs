@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
 public class CorrectnessModule : GenerationModule
 {
-    public override async Task LoadWrapup(ObjectGeneration obj)
+    public override async Task PostLoad(ObjectGeneration obj)
     {
         var objData = obj.GetObjectData();
         await Task.WhenAll(
@@ -31,6 +31,6 @@ public class CorrectnessModule : GenerationModule
             }
         }
 
-        await base.LoadWrapup(obj);
+        await base.PostLoad(obj);
     }
 }

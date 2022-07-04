@@ -10,11 +10,11 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -37,28 +37,38 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    public partial class ScriptPropertyStruct :
-        IEquatable<IScriptPropertyStructGetter>,
-        ILoquiObjectSetter<ScriptPropertyStruct>,
-        IScriptPropertyStruct
+    public partial class DamageTypeItem :
+        IDamageTypeItem,
+        IEquatable<IDamageTypeItemGetter>,
+        ILoquiObjectSetter<DamageTypeItem>
     {
         #region Ctor
-        public ScriptPropertyStruct()
+        public DamageTypeItem()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Name
-        /// <summary>
-        /// Aspects: INamedRequired
-        /// </summary>
-        public String Name { get; set; } = string.Empty;
+        #region ActorValue
+        private readonly IFormLink<IActorValueInformationGetter> _ActorValue = new FormLink<IActorValueInformationGetter>();
+        public IFormLink<IActorValueInformationGetter> ActorValue
+        {
+            get => _ActorValue;
+            set => _ActorValue.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IActorValueInformationGetter> IDamageTypeItemGetter.ActorValue => this.ActorValue;
         #endregion
-        #region Flags
-        public readonly static ScriptPropertyStruct.Flag _Flags_Default = ScriptPropertyStruct.Flag.Edited;
-        public ScriptPropertyStruct.Flag Flags { get; set; } = _Flags_Default;
+        #region Spell
+        private readonly IFormLink<ISpellGetter> _Spell = new FormLink<ISpellGetter>();
+        public IFormLink<ISpellGetter> Spell
+        {
+            get => _Spell;
+            set => _Spell.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISpellGetter> IDamageTypeItemGetter.Spell => this.Spell;
         #endregion
 
         #region To String
@@ -67,7 +77,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptPropertyStructMixIn.Print(
+            DamageTypeItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -78,16 +88,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IScriptPropertyStructGetter rhs) return false;
-            return ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IDamageTypeItemGetter rhs) return false;
+            return ((DamageTypeItemCommon)((IDamageTypeItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IScriptPropertyStructGetter? obj)
+        public bool Equals(IDamageTypeItemGetter? obj)
         {
-            return ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DamageTypeItemCommon)((IDamageTypeItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((DamageTypeItemCommon)((IDamageTypeItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -99,16 +109,16 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Name = initialValue;
-                this.Flags = initialValue;
+                this.ActorValue = initialValue;
+                this.Spell = initialValue;
             }
 
             public Mask(
-                TItem Name,
-                TItem Flags)
+                TItem ActorValue,
+                TItem Spell)
             {
-                this.Name = Name;
-                this.Flags = Flags;
+                this.ActorValue = ActorValue;
+                this.Spell = Spell;
             }
 
             #pragma warning disable CS8618
@@ -120,8 +130,8 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem Name;
-            public TItem Flags;
+            public TItem ActorValue;
+            public TItem Spell;
             #endregion
 
             #region Equals
@@ -134,15 +144,15 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
+                if (!object.Equals(this.Spell, rhs.Spell)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Name);
-                hash.Add(this.Flags);
+                hash.Add(this.ActorValue);
+                hash.Add(this.Spell);
                 return hash.ToHashCode();
             }
 
@@ -151,8 +161,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Name)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.ActorValue)) return false;
+                if (!eval(this.Spell)) return false;
                 return true;
             }
             #endregion
@@ -160,8 +170,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Name)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.ActorValue)) return true;
+                if (eval(this.Spell)) return true;
                 return false;
             }
             #endregion
@@ -169,40 +179,40 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ScriptPropertyStruct.Mask<R>();
+                var ret = new DamageTypeItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Name = eval(this.Name);
-                obj.Flags = eval(this.Flags);
+                obj.ActorValue = eval(this.ActorValue);
+                obj.Spell = eval(this.Spell);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ScriptPropertyStruct.Mask<bool>? printMask = null)
+            public string Print(DamageTypeItem.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ScriptPropertyStruct.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DamageTypeItem.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ScriptPropertyStruct.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(DamageTypeItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Name ?? true)
+                    if (printMask?.ActorValue ?? true)
                     {
-                        sb.AppendItem(Name, "Name");
+                        sb.AppendItem(ActorValue, "ActorValue");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Spell ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Spell, "Spell");
                     }
                 }
             }
@@ -228,20 +238,20 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public Exception? Name;
-            public Exception? Flags;
+            public Exception? ActorValue;
+            public Exception? Spell;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ScriptPropertyStruct_FieldIndex enu = (ScriptPropertyStruct_FieldIndex)index;
+                DamageTypeItem_FieldIndex enu = (DamageTypeItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptPropertyStruct_FieldIndex.Name:
-                        return Name;
-                    case ScriptPropertyStruct_FieldIndex.Flags:
-                        return Flags;
+                    case DamageTypeItem_FieldIndex.ActorValue:
+                        return ActorValue;
+                    case DamageTypeItem_FieldIndex.Spell:
+                        return Spell;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -249,14 +259,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                ScriptPropertyStruct_FieldIndex enu = (ScriptPropertyStruct_FieldIndex)index;
+                DamageTypeItem_FieldIndex enu = (DamageTypeItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptPropertyStruct_FieldIndex.Name:
-                        this.Name = ex;
+                    case DamageTypeItem_FieldIndex.ActorValue:
+                        this.ActorValue = ex;
                         break;
-                    case ScriptPropertyStruct_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case DamageTypeItem_FieldIndex.Spell:
+                        this.Spell = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -265,14 +275,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                ScriptPropertyStruct_FieldIndex enu = (ScriptPropertyStruct_FieldIndex)index;
+                DamageTypeItem_FieldIndex enu = (DamageTypeItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptPropertyStruct_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
+                    case DamageTypeItem_FieldIndex.ActorValue:
+                        this.ActorValue = (Exception?)obj;
                         break;
-                    case ScriptPropertyStruct_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case DamageTypeItem_FieldIndex.Spell:
+                        this.Spell = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -282,8 +292,8 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Name != null) return true;
-                if (Flags != null) return true;
+                if (ActorValue != null) return true;
+                if (Spell != null) return true;
                 return false;
             }
             #endregion
@@ -310,10 +320,10 @@ namespace Mutagen.Bethesda.Fallout4
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Name, "Name");
+                    sb.AppendItem(ActorValue, "ActorValue");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(Spell, "Spell");
                 }
             }
             #endregion
@@ -323,8 +333,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Name = this.Name.Combine(rhs.Name);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
+                ret.Spell = this.Spell.Combine(rhs.Spell);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -348,8 +358,8 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Name;
-            public bool Flags;
+            public bool ActorValue;
+            public bool Spell;
             #endregion
 
             #region Ctors
@@ -359,8 +369,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Name = defaultOn;
-                this.Flags = defaultOn;
+                this.ActorValue = defaultOn;
+                this.Spell = defaultOn;
             }
 
             #endregion
@@ -376,8 +386,8 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Name, null));
-                ret.Add((Flags, null));
+                ret.Add((ActorValue, null));
+                ret.Add((Spell, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -388,27 +398,32 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DamageTypeItemCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DamageTypeItemSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ScriptPropertyStructBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => DamageTypeItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ScriptPropertyStructBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DamageTypeItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static ScriptPropertyStruct CreateFromBinary(
+        public static DamageTypeItem CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ScriptPropertyStruct();
-            ((ScriptPropertyStructSetterCommon)((IScriptPropertyStructGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new DamageTypeItem();
+            ((DamageTypeItemSetterCommon)((IDamageTypeItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -419,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ScriptPropertyStruct item,
+            out DamageTypeItem item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -434,35 +449,32 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((ScriptPropertyStructSetterCommon)((IScriptPropertyStructGetter)this).CommonSetterInstance()!).Clear(this);
+            ((DamageTypeItemSetterCommon)((IDamageTypeItemGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ScriptPropertyStruct GetNew()
+        internal static DamageTypeItem GetNew()
         {
-            return new ScriptPropertyStruct();
+            return new DamageTypeItem();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IScriptPropertyStruct :
-        ILoquiObjectSetter<IScriptPropertyStruct>,
-        INamedRequired,
-        IScriptPropertyStructGetter
+    public partial interface IDamageTypeItem :
+        IDamageTypeItemGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IDamageTypeItem>
     {
-        /// <summary>
-        /// Aspects: INamedRequired
-        /// </summary>
-        new String Name { get; set; }
-        new ScriptPropertyStruct.Flag Flags { get; set; }
+        new IFormLink<IActorValueInformationGetter> ActorValue { get; set; }
+        new IFormLink<ISpellGetter> Spell { get; set; }
     }
 
-    public partial interface IScriptPropertyStructGetter :
+    public partial interface IDamageTypeItemGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IScriptPropertyStructGetter>,
-        INamedRequiredGetter
+        IFormLinkContainerGetter,
+        ILoquiObject<IDamageTypeItemGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -470,56 +482,51 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => ScriptPropertyStruct_Registration.Instance;
-        #region Name
-        /// <summary>
-        /// Aspects: INamedRequiredGetter
-        /// </summary>
-        String Name { get; }
-        #endregion
-        ScriptPropertyStruct.Flag Flags { get; }
+        static ILoquiRegistration StaticRegistration => DamageTypeItem_Registration.Instance;
+        IFormLinkGetter<IActorValueInformationGetter> ActorValue { get; }
+        IFormLinkGetter<ISpellGetter> Spell { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ScriptPropertyStructMixIn
+    public static partial class DamageTypeItemMixIn
     {
-        public static void Clear(this IScriptPropertyStruct item)
+        public static void Clear(this IDamageTypeItem item)
         {
-            ((ScriptPropertyStructSetterCommon)((IScriptPropertyStructGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((DamageTypeItemSetterCommon)((IDamageTypeItemGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ScriptPropertyStruct.Mask<bool> GetEqualsMask(
-            this IScriptPropertyStructGetter item,
-            IScriptPropertyStructGetter rhs,
+        public static DamageTypeItem.Mask<bool> GetEqualsMask(
+            this IDamageTypeItemGetter item,
+            IDamageTypeItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((DamageTypeItemCommon)((IDamageTypeItemGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IScriptPropertyStructGetter item,
+            this IDamageTypeItemGetter item,
             string? name = null,
-            ScriptPropertyStruct.Mask<bool>? printMask = null)
+            DamageTypeItem.Mask<bool>? printMask = null)
         {
-            return ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)item).CommonInstance()!).Print(
+            return ((DamageTypeItemCommon)((IDamageTypeItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IScriptPropertyStructGetter item,
+            this IDamageTypeItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ScriptPropertyStruct.Mask<bool>? printMask = null)
+            DamageTypeItem.Mask<bool>? printMask = null)
         {
-            ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)item).CommonInstance()!).Print(
+            ((DamageTypeItemCommon)((IDamageTypeItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -527,21 +534,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IScriptPropertyStructGetter item,
-            IScriptPropertyStructGetter rhs,
-            ScriptPropertyStruct.TranslationMask? equalsMask = null)
+            this IDamageTypeItemGetter item,
+            IDamageTypeItemGetter rhs,
+            DamageTypeItem.TranslationMask? equalsMask = null)
         {
-            return ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)item).CommonInstance()!).Equals(
+            return ((DamageTypeItemCommon)((IDamageTypeItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IScriptPropertyStruct lhs,
-            IScriptPropertyStructGetter rhs)
+            this IDamageTypeItem lhs,
+            IDamageTypeItemGetter rhs)
         {
-            ((ScriptPropertyStructSetterTranslationCommon)((IScriptPropertyStructGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DamageTypeItemSetterTranslationCommon)((IDamageTypeItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -550,11 +557,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IScriptPropertyStruct lhs,
-            IScriptPropertyStructGetter rhs,
-            ScriptPropertyStruct.TranslationMask? copyMask = null)
+            this IDamageTypeItem lhs,
+            IDamageTypeItemGetter rhs,
+            DamageTypeItem.TranslationMask? copyMask = null)
         {
-            ((ScriptPropertyStructSetterTranslationCommon)((IScriptPropertyStructGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DamageTypeItemSetterTranslationCommon)((IDamageTypeItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -563,28 +570,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IScriptPropertyStruct lhs,
-            IScriptPropertyStructGetter rhs,
-            out ScriptPropertyStruct.ErrorMask errorMask,
-            ScriptPropertyStruct.TranslationMask? copyMask = null)
+            this IDamageTypeItem lhs,
+            IDamageTypeItemGetter rhs,
+            out DamageTypeItem.ErrorMask errorMask,
+            DamageTypeItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptPropertyStructSetterTranslationCommon)((IScriptPropertyStructGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DamageTypeItemSetterTranslationCommon)((IDamageTypeItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ScriptPropertyStruct.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DamageTypeItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IScriptPropertyStruct lhs,
-            IScriptPropertyStructGetter rhs,
+            this IDamageTypeItem lhs,
+            IDamageTypeItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ScriptPropertyStructSetterTranslationCommon)((IScriptPropertyStructGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DamageTypeItemSetterTranslationCommon)((IDamageTypeItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -592,32 +599,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static ScriptPropertyStruct DeepCopy(
-            this IScriptPropertyStructGetter item,
-            ScriptPropertyStruct.TranslationMask? copyMask = null)
+        public static DamageTypeItem DeepCopy(
+            this IDamageTypeItemGetter item,
+            DamageTypeItem.TranslationMask? copyMask = null)
         {
-            return ((ScriptPropertyStructSetterTranslationCommon)((IScriptPropertyStructGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DamageTypeItemSetterTranslationCommon)((IDamageTypeItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ScriptPropertyStruct DeepCopy(
-            this IScriptPropertyStructGetter item,
-            out ScriptPropertyStruct.ErrorMask errorMask,
-            ScriptPropertyStruct.TranslationMask? copyMask = null)
+        public static DamageTypeItem DeepCopy(
+            this IDamageTypeItemGetter item,
+            out DamageTypeItem.ErrorMask errorMask,
+            DamageTypeItem.TranslationMask? copyMask = null)
         {
-            return ((ScriptPropertyStructSetterTranslationCommon)((IScriptPropertyStructGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DamageTypeItemSetterTranslationCommon)((IDamageTypeItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ScriptPropertyStruct DeepCopy(
-            this IScriptPropertyStructGetter item,
+        public static DamageTypeItem DeepCopy(
+            this IDamageTypeItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ScriptPropertyStructSetterTranslationCommon)((IScriptPropertyStructGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DamageTypeItemSetterTranslationCommon)((IDamageTypeItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -625,11 +632,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IScriptPropertyStruct item,
+            this IDamageTypeItem item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ScriptPropertyStructSetterCommon)((IScriptPropertyStructGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((DamageTypeItemSetterCommon)((IDamageTypeItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -645,48 +652,48 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    internal enum ScriptPropertyStruct_FieldIndex
+    internal enum DamageTypeItem_FieldIndex
     {
-        Name = 0,
-        Flags = 1,
+        ActorValue = 0,
+        Spell = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class ScriptPropertyStruct_Registration : ILoquiRegistration
+    internal partial class DamageTypeItem_Registration : ILoquiRegistration
     {
-        public static readonly ScriptPropertyStruct_Registration Instance = new ScriptPropertyStruct_Registration();
+        public static readonly DamageTypeItem_Registration Instance = new DamageTypeItem_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 213,
+            msgID: 684,
             version: 0);
 
-        public const string GUID = "10554191-09f4-4f78-ac1d-36e7b6ed8174";
+        public const string GUID = "4f991913-62f5-4252-9102-b4f7002d5a38";
 
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(ScriptPropertyStruct.Mask<>);
+        public static readonly Type MaskType = typeof(DamageTypeItem.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ScriptPropertyStruct.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(DamageTypeItem.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ScriptPropertyStruct);
+        public static readonly Type ClassType = typeof(DamageTypeItem);
 
-        public static readonly Type GetterType = typeof(IScriptPropertyStructGetter);
+        public static readonly Type GetterType = typeof(IDamageTypeItemGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IScriptPropertyStruct);
+        public static readonly Type SetterType = typeof(IDamageTypeItem);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.ScriptPropertyStruct";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.DamageTypeItem";
 
-        public const string Name = "ScriptPropertyStruct";
+        public const string Name = "DamageTypeItem";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -694,7 +701,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(ScriptPropertyStructBinaryWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
+        public static readonly Type BinaryWriteTranslation = typeof(DamageTypeItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -727,53 +741,59 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class ScriptPropertyStructSetterCommon
+    internal partial class DamageTypeItemSetterCommon
     {
-        public static readonly ScriptPropertyStructSetterCommon Instance = new ScriptPropertyStructSetterCommon();
+        public static readonly DamageTypeItemSetterCommon Instance = new DamageTypeItemSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IScriptPropertyStruct item)
+        public void Clear(IDamageTypeItem item)
         {
             ClearPartial();
-            item.Name = string.Empty;
-            item.Flags = ScriptPropertyStruct._Flags_Default;
+            item.ActorValue.Clear();
+            item.Spell.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IScriptPropertyStruct obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IDamageTypeItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.ActorValue.Relink(mapping);
+            obj.Spell.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IScriptPropertyStruct item,
+            IDamageTypeItem item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                translationParams.ConvertToCustom(RecordTypes.DNAM),
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ScriptPropertyStructBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: DamageTypeItemBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class ScriptPropertyStructCommon
+    internal partial class DamageTypeItemCommon
     {
-        public static readonly ScriptPropertyStructCommon Instance = new ScriptPropertyStructCommon();
+        public static readonly DamageTypeItemCommon Instance = new DamageTypeItemCommon();
 
-        public ScriptPropertyStruct.Mask<bool> GetEqualsMask(
-            IScriptPropertyStructGetter item,
-            IScriptPropertyStructGetter rhs,
+        public DamageTypeItem.Mask<bool> GetEqualsMask(
+            IDamageTypeItemGetter item,
+            IDamageTypeItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ScriptPropertyStruct.Mask<bool>(false);
-            ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new DamageTypeItem.Mask<bool>(false);
+            ((DamageTypeItemCommon)((IDamageTypeItemGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -782,19 +802,19 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IScriptPropertyStructGetter item,
-            IScriptPropertyStructGetter rhs,
-            ScriptPropertyStruct.Mask<bool> ret,
+            IDamageTypeItemGetter item,
+            IDamageTypeItemGetter rhs,
+            DamageTypeItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.ActorValue = item.ActorValue.Equals(rhs.ActorValue);
+            ret.Spell = item.Spell.Equals(rhs.Spell);
         }
         
         public string Print(
-            IScriptPropertyStructGetter item,
+            IDamageTypeItemGetter item,
             string? name = null,
-            ScriptPropertyStruct.Mask<bool>? printMask = null)
+            DamageTypeItem.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -806,18 +826,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IScriptPropertyStructGetter item,
+            IDamageTypeItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ScriptPropertyStruct.Mask<bool>? printMask = null)
+            DamageTypeItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ScriptPropertyStruct =>");
+                sb.AppendLine($"DamageTypeItem =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ScriptPropertyStruct) =>");
+                sb.AppendLine($"{name} (DamageTypeItem) =>");
             }
             using (sb.Brace())
             {
@@ -829,43 +849,43 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IScriptPropertyStructGetter item,
+            IDamageTypeItemGetter item,
             StructuredStringBuilder sb,
-            ScriptPropertyStruct.Mask<bool>? printMask = null)
+            DamageTypeItem.Mask<bool>? printMask = null)
         {
-            if (printMask?.Name ?? true)
+            if (printMask?.ActorValue ?? true)
             {
-                sb.AppendItem(item.Name, "Name");
+                sb.AppendItem(item.ActorValue.FormKey, "ActorValue");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.Spell ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Spell.FormKey, "Spell");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IScriptPropertyStructGetter? lhs,
-            IScriptPropertyStructGetter? rhs,
+            IDamageTypeItemGetter? lhs,
+            IDamageTypeItemGetter? rhs,
             TranslationCrystal? crystal)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScriptPropertyStruct_FieldIndex.Name) ?? true))
+            if ((crystal?.GetShouldTranslate((int)DamageTypeItem_FieldIndex.ActorValue) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!lhs.ActorValue.Equals(rhs.ActorValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptPropertyStruct_FieldIndex.Flags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)DamageTypeItem_FieldIndex.Spell) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (!lhs.Spell.Equals(rhs.Spell)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IScriptPropertyStructGetter item)
+        public virtual int GetHashCode(IDamageTypeItemGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Name);
-            hash.Add(item.Flags);
+            hash.Add(item.ActorValue);
+            hash.Add(item.Spell);
             return hash.ToHashCode();
         }
         
@@ -874,48 +894,50 @@ namespace Mutagen.Bethesda.Fallout4
         
         public object GetNew()
         {
-            return ScriptPropertyStruct.GetNew();
+            return DamageTypeItem.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptPropertyStructGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDamageTypeItemGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.ActorValue);
+            yield return FormLinkInformation.Factory(obj.Spell);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class ScriptPropertyStructSetterTranslationCommon
+    internal partial class DamageTypeItemSetterTranslationCommon
     {
-        public static readonly ScriptPropertyStructSetterTranslationCommon Instance = new ScriptPropertyStructSetterTranslationCommon();
+        public static readonly DamageTypeItemSetterTranslationCommon Instance = new DamageTypeItemSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IScriptPropertyStruct item,
-            IScriptPropertyStructGetter rhs,
+            IDamageTypeItem item,
+            IDamageTypeItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ScriptPropertyStruct_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DamageTypeItem_FieldIndex.ActorValue) ?? true))
             {
-                item.Name = rhs.Name;
+                item.ActorValue.SetTo(rhs.ActorValue.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)ScriptPropertyStruct_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DamageTypeItem_FieldIndex.Spell) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.Spell.SetTo(rhs.Spell.FormKey);
             }
         }
         
         #endregion
         
-        public ScriptPropertyStruct DeepCopy(
-            IScriptPropertyStructGetter item,
-            ScriptPropertyStruct.TranslationMask? copyMask = null)
+        public DamageTypeItem DeepCopy(
+            IDamageTypeItemGetter item,
+            DamageTypeItem.TranslationMask? copyMask = null)
         {
-            ScriptPropertyStruct ret = (ScriptPropertyStruct)((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)item).CommonInstance()!).GetNew();
-            ((ScriptPropertyStructSetterTranslationCommon)((IScriptPropertyStructGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            DamageTypeItem ret = (DamageTypeItem)((DamageTypeItemCommon)((IDamageTypeItemGetter)item).CommonInstance()!).GetNew();
+            ((DamageTypeItemSetterTranslationCommon)((IDamageTypeItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -924,30 +946,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public ScriptPropertyStruct DeepCopy(
-            IScriptPropertyStructGetter item,
-            out ScriptPropertyStruct.ErrorMask errorMask,
-            ScriptPropertyStruct.TranslationMask? copyMask = null)
+        public DamageTypeItem DeepCopy(
+            IDamageTypeItemGetter item,
+            out DamageTypeItem.ErrorMask errorMask,
+            DamageTypeItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ScriptPropertyStruct ret = (ScriptPropertyStruct)((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)item).CommonInstance()!).GetNew();
-            ((ScriptPropertyStructSetterTranslationCommon)((IScriptPropertyStructGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            DamageTypeItem ret = (DamageTypeItem)((DamageTypeItemCommon)((IDamageTypeItemGetter)item).CommonInstance()!).GetNew();
+            ((DamageTypeItemSetterTranslationCommon)((IDamageTypeItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ScriptPropertyStruct.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DamageTypeItem.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ScriptPropertyStruct DeepCopy(
-            IScriptPropertyStructGetter item,
+        public DamageTypeItem DeepCopy(
+            IDamageTypeItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ScriptPropertyStruct ret = (ScriptPropertyStruct)((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)item).CommonInstance()!).GetNew();
-            ((ScriptPropertyStructSetterTranslationCommon)((IScriptPropertyStructGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            DamageTypeItem ret = (DamageTypeItem)((DamageTypeItemCommon)((IDamageTypeItemGetter)item).CommonInstance()!).GetNew();
+            ((DamageTypeItemSetterTranslationCommon)((IDamageTypeItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -963,27 +985,27 @@ namespace Mutagen.Bethesda.Fallout4
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ScriptPropertyStruct
+    public partial class DamageTypeItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptPropertyStruct_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ScriptPropertyStruct_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => DamageTypeItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DamageTypeItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ScriptPropertyStructCommon.Instance;
+        protected object CommonInstance() => DamageTypeItemCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ScriptPropertyStructSetterCommon.Instance;
+            return DamageTypeItemSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ScriptPropertyStructSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DamageTypeItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IScriptPropertyStructGetter.CommonInstance() => this.CommonInstance();
+        object IDamageTypeItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IScriptPropertyStructGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IDamageTypeItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IScriptPropertyStructGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IDamageTypeItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -994,24 +1016,37 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ScriptPropertyStructBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class DamageTypeItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ScriptPropertyStructBinaryWriteTranslation Instance = new();
+        public static readonly DamageTypeItemBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IScriptPropertyStructGetter item,
+            IDamageTypeItemGetter item,
             MutagenWriter writer)
         {
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.ActorValue);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Spell);
         }
 
         public void Write(
             MutagenWriter writer,
-            IScriptPropertyStructGetter item,
+            IDamageTypeItemGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
+            using (HeaderExport.Subrecord(
+                writer: writer,
+                record: translationParams.ConvertToCustom(RecordTypes.DNAM),
+                overflowRecord: translationParams.OverflowRecordType,
+                out var writerToUse))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writerToUse);
+            }
         }
 
         public void Write(
@@ -1020,21 +1055,23 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IScriptPropertyStructGetter)item,
+                item: (IDamageTypeItemGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ScriptPropertyStructBinaryCreateTranslation
+    internal partial class DamageTypeItemBinaryCreateTranslation
     {
-        public static readonly ScriptPropertyStructBinaryCreateTranslation Instance = new ScriptPropertyStructBinaryCreateTranslation();
+        public static readonly DamageTypeItemBinaryCreateTranslation Instance = new DamageTypeItemBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IScriptPropertyStruct item,
+            IDamageTypeItem item,
             MutagenFrame frame)
         {
+            item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1043,14 +1080,14 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class ScriptPropertyStructBinaryTranslationMixIn
+    public static class DamageTypeItemBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IScriptPropertyStructGetter item,
+            this IDamageTypeItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ScriptPropertyStructBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((DamageTypeItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1063,50 +1100,53 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class ScriptPropertyStructBinaryOverlay :
+    internal partial class DamageTypeItemBinaryOverlay :
         PluginBinaryOverlay,
-        IScriptPropertyStructGetter
+        IDamageTypeItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptPropertyStruct_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ScriptPropertyStruct_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => DamageTypeItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DamageTypeItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ScriptPropertyStructCommon.Instance;
+        protected object CommonInstance() => DamageTypeItemCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ScriptPropertyStructSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DamageTypeItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IScriptPropertyStructGetter.CommonInstance() => this.CommonInstance();
+        object IDamageTypeItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IScriptPropertyStructGetter.CommonSetterInstance() => null;
+        object? IDamageTypeItemGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IScriptPropertyStructGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IDamageTypeItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DamageTypeItemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ScriptPropertyStructBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => DamageTypeItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ScriptPropertyStructBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DamageTypeItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ScriptPropertyStructBinaryOverlay(
+        protected DamageTypeItemBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1116,21 +1156,22 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IScriptPropertyStructGetter ScriptPropertyStructFactory(
+        public static IDamageTypeItemGetter DamageTypeItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractTypelessSubrecordStructMemory(
+            stream = ExtractSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x8,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
-            var ret = new ScriptPropertyStructBinaryOverlay(
+                offset: out var offset);
+            var ret = new DamageTypeItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1138,12 +1179,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IScriptPropertyStructGetter ScriptPropertyStructFactory(
+        public static IDamageTypeItemGetter DamageTypeItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ScriptPropertyStructFactory(
+            return DamageTypeItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1155,7 +1196,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptPropertyStructMixIn.Print(
+            DamageTypeItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1166,16 +1207,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IScriptPropertyStructGetter rhs) return false;
-            return ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            if (obj is not IDamageTypeItemGetter rhs) return false;
+            return ((DamageTypeItemCommon)((IDamageTypeItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
-        public bool Equals(IScriptPropertyStructGetter? obj)
+        public bool Equals(IDamageTypeItemGetter? obj)
         {
-            return ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DamageTypeItemCommon)((IDamageTypeItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
-        public override int GetHashCode() => ((ScriptPropertyStructCommon)((IScriptPropertyStructGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((DamageTypeItemCommon)((IDamageTypeItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -84,7 +84,7 @@ public static class ObjectGenerationExt
 
     public static async Task<TryGet<IEnumerable<RecordType>>> TryGetTriggeringRecordTypes(this ObjectGeneration objGen)
     {
-        await objGen.LoadingCompleteTask.Task;
+        await objGen.GetObjectData().WiringComplete.Task;
         var data = objGen.GetObjectData();
         return TryGet<IEnumerable<RecordType>>.Create(
             successful: data.TriggeringRecordTypes.Any(),

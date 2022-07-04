@@ -1548,6 +1548,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.TIFC,
                 RecordTypes.INFO,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.ENAM,
                 RecordTypes.TPIC,
                 RecordTypes.DNAM,

@@ -1,4 +1,6 @@
+using Loqui;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records;
 using Newtonsoft.Json;
 using Noggog;
 
@@ -10,7 +12,7 @@ public class FormKeyJsonConverter : JsonConverter
     {
         if (objectType == typeof(FormKey)) return true;
         if (objectType == typeof(FormKey?)) return true;
-        if (!objectType.IsGenericType) return false;
+        if (objectType == typeof(FormLinkInformation)) return true;
         if (typeof(IFormLinkGetter).IsAssignableFrom(objectType)) return true;
         return false;
     }
@@ -77,27 +79,65 @@ public class FormKeyJsonConverter : JsonConverter
                 throw new ArgumentException();
             }
 
-            FormKey key;
-            if (str.IsNullOrWhitespace())
+            if (objectType.IsGenericType)
             {
-                key = FormKey.Null;
-            }
-            else
-            {
-                key = FormKey.Factory(str);
-            }
+                FormKey key;
+                if (str.IsNullOrWhitespace())
+                {
+                    key = FormKey.Null;
+                }
+                else
+                {
+                    key = FormKey.Factory(str);
+                }
                 
-            if (IsNullableLink(objectType))
-            {
-                return Activator.CreateInstance(
-                    typeof(FormLinkNullable<>).MakeGenericType(objectType.GenericTypeArguments[0]),
-                    key);
+                if (IsNullableLink(objectType))
+                {
+                    return Activator.CreateInstance(
+                        typeof(FormLinkNullable<>).MakeGenericType(objectType.GenericTypeArguments[0]),
+                        key);
+                }
+                else
+                {
+                    return Activator.CreateInstance(
+                        typeof(FormLink<>).MakeGenericType(objectType.GenericTypeArguments[0]),
+                        key);
+                }
             }
             else
             {
-                return Activator.CreateInstance(
-                    typeof(FormLink<>).MakeGenericType(objectType.GenericTypeArguments[0]),
-                    key);
+                if (str.IsNullOrWhitespace() || str == "Null")
+                {
+                    return new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter));
+                }
+                
+                var span = str.AsSpan();
+                var startIndex = span.IndexOf('<');
+                if (startIndex == -1)
+                {
+                    throw new ArgumentException();
+                }
+
+                var endIndex = span.IndexOf('>');
+                if (endIndex == -1)
+                {
+                    throw new ArgumentException();
+                }
+
+                var typeName = span.Slice(startIndex + 1, endIndex - 1 - startIndex).ToString();
+                if (!typeName.StartsWith("Mutagen.Bethesda."))
+                {
+                    typeName = "Mutagen.Bethesda." + typeName;
+                }
+                var regis = LoquiRegistration.GetRegisterByFullName(typeName);
+                if (regis == null)
+                {
+                    throw new ArgumentException($"Unknown object type: {typeName}");
+                }
+
+                return new FormLinkInformation(
+                    FormKey.Factory(span.Slice(0, startIndex)),
+                    regis.GetterType);
             }
         }
     }
@@ -115,8 +155,11 @@ public class FormKeyJsonConverter : JsonConverter
             case FormKey fk:
                 writer.WriteValue(fk.ToString());
                 break;
-            case IFormLinkGetter fl:
+            case IFormLinkGetter fl when fl.GetType().IsGenericType:
                 writer.WriteValue(fl.FormKeyNullable?.ToString());
+                break;
+            case IFormLinkIdentifier ident:
+                writer.WriteValue(IFormLinkIdentifier.GetString(ident, simpleType: true));
                 break;
             default:
                 throw new ArgumentException();

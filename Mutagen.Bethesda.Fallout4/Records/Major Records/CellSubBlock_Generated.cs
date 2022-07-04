@@ -1327,8 +1327,22 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IOwner":
+                case "IOwnerGetter":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPreCutMapEntryReference":
+                case "IPreCutMapEntryReferenceGetter":
                     foreach (var subItem in obj.Cells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1355,15 +1369,15 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IPlacedThing":
-                case "IPlacedThingGetter":
+                case "ILinkedReference":
+                case "ILinkedReferenceGetter":
                     foreach (var subItem in obj.Cells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ILinkedReference":
-                case "ILinkedReferenceGetter":
+                case "IPlacedThing":
+                case "IPlacedThingGetter":
                     foreach (var subItem in obj.Cells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);

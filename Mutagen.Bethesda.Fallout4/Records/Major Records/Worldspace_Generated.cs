@@ -3061,8 +3061,34 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IOwner":
+                case "IOwnerGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPreCutMapEntryReference":
+                case "IPreCutMapEntryReferenceGetter":
                     {
                         if (obj.TopCell is {} TopCellitem)
                         {
@@ -3113,8 +3139,8 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IPlacedThing":
-                case "IPlacedThingGetter":
+                case "ILinkedReference":
+                case "ILinkedReferenceGetter":
                     {
                         if (obj.TopCell is {} TopCellitem)
                         {
@@ -3126,8 +3152,8 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ILinkedReference":
-                case "ILinkedReferenceGetter":
+                case "IPlacedThing":
+                case "IPlacedThingGetter":
                     {
                         if (obj.TopCell is {} TopCellitem)
                         {

@@ -136,9 +136,6 @@
     <Compile Include="Records\Common Subrecords\ScriptEntry.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptEntryStruct.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\ScriptFragments.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
@@ -146,9 +143,6 @@
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptProperty.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptPropertyStruct.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\VirtualMachineAdapterIndexed.cs">
@@ -1007,7 +1001,6 @@
     </Compile>
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
-    <Compile Include="Interfaces\Link\IDamageTypeTarget_Generated.cs" />
     <Compile Include="Interfaces\Link\IObjectId_Generated.cs" />
     <Compile Include="Interfaces\Link\ILocationTargetable_Generated.cs" />
     <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
@@ -1382,12 +1375,6 @@
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptStructListProperty_Generated.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptEntryStruct_Generated.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptPropertyStruct_Generated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LeveledNpc_Generated.cs">
@@ -2449,6 +2436,23 @@
     <Compile Include="Records\Major Records\PerkEntryPointModifyValues_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptEntryStructs_Generated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DamageTypeItem_Generated.cs">
+      <DependentUpon>DamageType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ANavigationMapInfoParent_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMapInfoWorldspaceParent_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMapInfoCellParent_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IPreCutMapEntryReference_Generated.cs" />
+    <Compile Include="Interfaces\Link\IConstructibleObjectTarget_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

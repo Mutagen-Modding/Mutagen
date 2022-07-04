@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Package" recordType="PACK" objType="Record" baseClass="Fallout4MajorRecord" GUID="04e6122f-851d-4177-afc4-9f645560c389" ID="347">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="PackageAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="PackageAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <Data recordType="PKDT">
         <Fields>
           <Enum name="Flags" enumName="Package.Flag" byteLength="4" />

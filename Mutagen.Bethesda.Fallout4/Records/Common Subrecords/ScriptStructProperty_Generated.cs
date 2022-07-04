@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -54,15 +55,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ScriptEntryStruct> _Members = new ExtendedList<ScriptEntryStruct>();
-        public ExtendedList<ScriptEntryStruct> Members
+        private ExtendedList<ScriptEntry> _Members = new ExtendedList<ScriptEntry>();
+        public ExtendedList<ScriptEntry> Members
         {
             get => this._Members;
             init => this._Members = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IScriptEntryStructGetter> IScriptStructPropertyGetter.Members => _Members;
+        IReadOnlyList<IScriptEntryGetter> IScriptStructPropertyGetter.Members => _Members;
         #endregion
 
         #endregion
@@ -107,7 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Members = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntryStruct.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptEntryStruct.Mask<TItem>?>>());
+                this.Members = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -118,7 +119,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Name: Name,
                 Flags: Flags)
             {
-                this.Members = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntryStruct.Mask<TItem>?>>?>(Members, Enumerable.Empty<MaskItemIndexed<TItem, ScriptEntryStruct.Mask<TItem>?>>());
+                this.Members = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>(Members, Enumerable.Empty<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -130,7 +131,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntryStruct.Mask<TItem>?>>?>? Members;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>? Members;
             #endregion
 
             #region Equals
@@ -210,14 +211,14 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (Members != null)
                 {
-                    obj.Members = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptEntryStruct.Mask<R>?>>?>(eval(this.Members.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptEntryStruct.Mask<R>?>>());
+                    obj.Members = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptEntry.Mask<R>?>>?>(eval(this.Members.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptEntry.Mask<R>?>>());
                     if (Members.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, ScriptEntryStruct.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, ScriptEntry.Mask<R>?>>();
                         obj.Members.Specific = l;
                         foreach (var item in Members.Specific)
                         {
-                            MaskItemIndexed<R, ScriptEntryStruct.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ScriptEntryStruct.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ScriptEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ScriptEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -271,7 +272,7 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntryStruct.ErrorMask?>>?>? Members;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>? Members;
             #endregion
 
             #region IErrorMask
@@ -293,7 +294,7 @@ namespace Mutagen.Bethesda.Fallout4
                 switch (enu)
                 {
                     case ScriptStructProperty_FieldIndex.Members:
-                        this.Members = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntryStruct.ErrorMask?>>?>(ex, null);
+                        this.Members = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -307,7 +308,7 @@ namespace Mutagen.Bethesda.Fallout4
                 switch (enu)
                 {
                     case ScriptStructProperty_FieldIndex.Members:
-                        this.Members = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntryStruct.ErrorMask?>>?>)obj;
+                        this.Members = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -371,7 +372,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Members = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntryStruct.ErrorMask?>>?>(ExceptionExt.Combine(this.Members?.Overall, rhs.Members?.Overall), ExceptionExt.Combine(this.Members?.Specific, rhs.Members?.Specific));
+                ret.Members = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Members?.Overall, rhs.Members?.Overall), ExceptionExt.Combine(this.Members?.Specific, rhs.Members?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -394,7 +395,7 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public ScriptEntryStruct.TranslationMask? Members;
+            public ScriptEntry.TranslationMask? Members;
             #endregion
 
             #region Ctors
@@ -419,6 +420,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptStructPropertyCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptStructPropertySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -478,22 +484,24 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IScriptStructProperty :
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptStructProperty>,
         INamedRequired,
         IScriptProperty,
         IScriptStructPropertyGetter
     {
-        new ExtendedList<ScriptEntryStruct> Members { get; }
+        new ExtendedList<ScriptEntry> Members { get; }
     }
 
     public partial interface IScriptStructPropertyGetter :
         IScriptPropertyGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IScriptStructPropertyGetter>,
         INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => ScriptStructProperty_Registration.Instance;
-        IReadOnlyList<IScriptEntryStructGetter> Members { get; }
+        IReadOnlyList<IScriptEntryGetter> Members { get; }
 
     }
 
@@ -741,6 +749,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IScriptStructProperty obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Members.RemapLinks(mapping);
         }
         
         #endregion
@@ -888,7 +897,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)ScriptStructProperty_FieldIndex.Members) ?? true))
             {
-                if (!lhs.Members.SequenceEqual(rhs.Members, (l, r) => ((ScriptEntryStructCommon)((IScriptEntryStructGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScriptStructProperty_FieldIndex.Members)))) return false;
+                if (!lhs.Members.SequenceEqual(rhs.Members, (l, r) => ((ScriptEntryCommon)((IScriptEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScriptStructProperty_FieldIndex.Members)))) return false;
             }
             return true;
         }
@@ -931,6 +940,11 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Members.WhereCastable<IScriptEntryGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1091,14 +1105,14 @@ namespace Mutagen.Bethesda.Fallout4
             ScriptPropertyBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IScriptEntryStructGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IScriptEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.Members,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IScriptEntryStructGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IScriptEntryGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((ScriptEntryStructBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((ScriptEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1151,10 +1165,10 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 frame: frame);
             item.Members.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScriptEntryStruct>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScriptEntry>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
-                    transl: ScriptEntryStruct.TryCreateFromBinary));
+                    transl: ScriptEntry.TryCreateFromBinary));
         }
 
     }
@@ -1189,6 +1203,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptStructPropertyCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptStructPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1202,7 +1217,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Members
-        public IReadOnlyList<IScriptEntryStructGetter> Members => BinaryOverlayList.FactoryByCountLength<IScriptEntryStructGetter>(_structData, _package, 0, countLength: 4, (s, p) => ScriptEntryStructBinaryOverlay.ScriptEntryStructFactory(s, p));
+        public IReadOnlyList<IScriptEntryGetter> Members => BinaryOverlayList.FactoryByCountLength<IScriptEntryGetter>(_structData, _package, 0, countLength: 4, (s, p) => ScriptEntryBinaryOverlay.ScriptEntryFactory(s, p));
         protected int MembersEndingPos;
         #endregion
         partial void CustomFactoryEnd(

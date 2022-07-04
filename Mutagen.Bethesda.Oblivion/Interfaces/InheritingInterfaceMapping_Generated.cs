@@ -49,11 +49,6 @@ internal class OblivionInheritingInterfaceMapping : IInterfaceMapping
             Global_Registration.Instance,
         });
         dict[typeof(IGlobalShortGetter)] = dict[typeof(IGlobalShort)] with { Setter = false };
-        dict[typeof(ISpellLeveled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Spell_Registration.Instance,
-        });
-        dict[typeof(ISpellLeveledGetter)] = dict[typeof(ISpellLeveled)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

@@ -8,18 +8,18 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [ActorValueInformation]
+    /// Implemented by: [Landscape, PlacedObject]
     /// </summary>
-    public partial interface IDamageTypeTarget :
-        IDamageTypeTargetGetter,
-        IFallout4MajorRecordInternal
+    public partial interface IPreCutMapEntryReference :
+        IFallout4MajorRecordInternal,
+        IPreCutMapEntryReferenceGetter
     {
     }
 
     /// <summary>
-    /// Implemented by: [ActorValueInformation]
+    /// Implemented by: [Landscape, PlacedObject]
     /// </summary>
-    public partial interface IDamageTypeTargetGetter : IFallout4MajorRecordGetter
+    public partial interface IPreCutMapEntryReferenceGetter : IFallout4MajorRecordGetter
     {
     }
 }

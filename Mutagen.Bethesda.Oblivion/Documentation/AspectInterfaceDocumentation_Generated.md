@@ -69,7 +69,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SoulGem
 - Spell
 - SpellLeveled
-- SpellUnleveled
 - Weapon
 - Worldspace
 ### IPositionRotation
@@ -204,8 +203,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Spell
 - INamed
 ### SpellLeveled
-- INamed
-### SpellUnleveled
 - INamed
 ### Static
 - IModeled

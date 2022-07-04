@@ -1072,7 +1072,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILandscapeGetter,
-        ILoquiObjectSetter<ILandscapeInternal>
+        ILoquiObjectSetter<ILandscapeInternal>,
+        IPreCutMapEntryReference
     {
         new MemorySlice<Byte>? DATA { get; set; }
         new IArray2d<P3UInt8>? VertexNormals { get; set; }
@@ -1096,7 +1097,8 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILandscapeGetter>,
-        IMapsToGetter<ILandscapeGetter>
+        IMapsToGetter<ILandscapeGetter>,
+        IPreCutMapEntryReferenceGetter
     {
         static new ILoquiRegistration StaticRegistration => Landscape_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? DATA { get; }

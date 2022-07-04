@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Weapon" recordType="WEAP" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" GUID="ea1189a0-716d-4099-ad06-721ccd313caa" ID="286">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
@@ -108,6 +108,7 @@
     <LinkInterface>IFurnitureAssociation</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
   <Object name="WeaponDamageType" recordType="DAMA" objType="Subrecord" GUID="a188e5af-64a3-40af-8022-3898f4d59cdf" ID="337">
     <Fields>

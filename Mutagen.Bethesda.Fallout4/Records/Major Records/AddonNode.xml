@@ -15,5 +15,6 @@
       </Data>
     </Fields>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

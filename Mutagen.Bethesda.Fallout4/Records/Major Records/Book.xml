@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Book" objType="Record" recordType="BOOK" baseClass="Fallout4MajorRecord" GUID="c56f0c8d-eb97-4ab3-9fd8-1eb891d6ac5a" ID="156">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -24,7 +24,7 @@
       </Data>
       <Data recordType="DNAM">
         <Fields>
-          <Enum name="Flags" enumName="Book.Flag" byteLength="1" />
+          <Enum name="Flags" enumName="Book.Flag" byteLength="1" binary="Custom" />
           <RefDirect name="Teaches" objType="Subrecord" nullable="True" refName="BookTeachTarget" binary="Custom" byteLength="4" />
           <UInt32 name="TextOffsetX" />
           <UInt32 name="TextOffsetY" />
@@ -40,6 +40,7 @@
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
   <Object name="BookTeachTarget" abstract="true" objType="Subrecord" GUID="882ce8ae-f4ee-46cf-9943-307e3e6e8945" ID="147" />
   <Object name="BookActorValue" objType="Subrecord" baseClass="BookTeachTarget" GUID="57859959-1b9f-40b0-a637-afa7838fc143" ID="148">

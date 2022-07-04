@@ -2,26 +2,27 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Door" recordType="DOOR" majorFlag="true" baseClass="Fallout4MajorRecord" objType="Record" GUID="a7b54091-ef8c-4eec-ac2e-f17b2ae6c1b3" ID="77">
     <Fields>
-		<RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
-		<RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-		<FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
-		<String name="Name" recordType="FULL" translated="Normal" />
-		<RefDirect name="Model" refName="Model" />
-		<RefDirect name="Destructible" refName="Destructible" />
-		<List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
-			<FormLink refName="Keyword" />
-		</List>
-		<FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />
-		<FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
-		<FormLink name="CloseSound" refName="SoundDescriptor" recordType="ANAM" />
-		<FormLink name="LoopSound" refName="SoundDescriptor" recordType="BNAM" />
-		<Enum name="Flags" enumName="Door.Flag" byteLength="1" recordType="FNAM" nullable="False" />
-		<String name="AlternateTextOpen" recordType="ONAM" translated="Normal" />
-		<String name="AlternateTextClose" recordType="CNAM" translated="Normal" />
-	</Fields>
-	<LinkInterface>IObjectId</LinkInterface>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX"/>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False"/>
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN"/>
+      <String name="Name" recordType="FULL" translated="Normal"/>
+      <RefDirect name="Model" refName="Model"/>
+      <RefDirect name="Destructible" refName="Destructible"/>
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"/>
+      </List>
+      <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM"/>
+      <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM"/>
+      <FormLink name="CloseSound" refName="SoundDescriptor" recordType="ANAM"/>
+      <FormLink name="LoopSound" refName="SoundDescriptor" recordType="BNAM"/>
+      <Enum name="Flags" enumName="Door.Flag" byteLength="1" recordType="FNAM" nullable="False"/>
+      <String name="AlternateTextOpen" recordType="ONAM" translated="Normal"/>
+      <String name="AlternateTextClose" recordType="CNAM" translated="Normal"/>
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
 </Loqui>

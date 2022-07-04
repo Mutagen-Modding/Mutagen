@@ -23,26 +23,44 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
         {
             AcousticSpace_Registration.Instance,
             Activator_Registration.Instance,
+            AddonNode_Registration.Instance,
             Ammunition_Registration.Instance,
             Armor_Registration.Instance,
+            ArtObject_Registration.Instance,
             BendableSpline_Registration.Instance,
             Book_Registration.Instance,
+            Component_Registration.Instance,
+            ConstructibleObject_Registration.Instance,
             Container_Registration.Instance,
+            Debris_Registration.Instance,
             Door_Registration.Instance,
+            Explosion_Registration.Instance,
             Flora_Registration.Instance,
+            FormList_Registration.Instance,
             Furniture_Registration.Instance,
+            Hazard_Registration.Instance,
             Holotape_Registration.Instance,
             IdleMarker_Registration.Instance,
             Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
             Key_Registration.Instance,
+            LeveledItem_Registration.Instance,
+            LeveledNpc_Registration.Instance,
+            LeveledSpell_Registration.Instance,
             Light_Registration.Instance,
             MiscItem_Registration.Instance,
             MovableStatic_Registration.Instance,
+            AObjectModification_Registration.Instance,
+            Projectile_Registration.Instance,
             SoundMarker_Registration.Instance,
+            Spell_Registration.Instance,
+            Static_Registration.Instance,
             StaticCollection_Registration.Instance,
             TalkingActivator_Registration.Instance,
             Terminal_Registration.Instance,
             TextureSet_Registration.Instance,
+            Tree_Registration.Instance,
+            Water_Registration.Instance,
             Weapon_Registration.Instance,
         });
         dict[typeof(IPlaceableObjectGetter)] = dict[typeof(IPlaceableObject)] with { Setter = false };
@@ -86,6 +104,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Static_Registration.Instance,
             TalkingActivator_Registration.Instance,
             Terminal_Registration.Instance,
+            TextureSet_Registration.Instance,
             Tree_Registration.Instance,
             Weapon_Registration.Instance,
         });
@@ -141,11 +160,33 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IStaticTargetGetter)] = dict[typeof(IStaticTarget)] with { Setter = false };
-        dict[typeof(IDamageTypeTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        dict[typeof(IConstructibleObjectTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
-            ActorValueInformation_Registration.Instance,
+            Activator_Registration.Instance,
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            Book_Registration.Instance,
+            Container_Registration.Instance,
+            Door_Registration.Instance,
+            Flora_Registration.Instance,
+            FormList_Registration.Instance,
+            Furniture_Registration.Instance,
+            Holotape_Registration.Instance,
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            Key_Registration.Instance,
+            LeveledItem_Registration.Instance,
+            Light_Registration.Instance,
+            MiscItem_Registration.Instance,
+            MovableStatic_Registration.Instance,
+            Npc_Registration.Instance,
+            AObjectModification_Registration.Instance,
+            Static_Registration.Instance,
+            StaticCollection_Registration.Instance,
+            Terminal_Registration.Instance,
+            Weapon_Registration.Instance,
         });
-        dict[typeof(IDamageTypeTargetGetter)] = dict[typeof(IDamageTypeTarget)] with { Setter = false };
+        dict[typeof(IConstructibleObjectTargetGetter)] = dict[typeof(IConstructibleObjectTarget)] with { Setter = false };
         dict[typeof(IItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Ammunition_Registration.Instance,
@@ -221,6 +262,8 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
         dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Faction_Registration.Instance,
+            Npc_Registration.Instance,
+            PlacedNpc_Registration.Instance,
         });
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
         dict[typeof(IRelatable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -233,6 +276,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
         {
             Faction_Registration.Instance,
             FormList_Registration.Instance,
+            Npc_Registration.Instance,
             VoiceType_Registration.Instance,
         });
         dict[typeof(IAliasVoiceTypeGetter)] = dict[typeof(IAliasVoiceType)] with { Setter = false };
@@ -262,9 +306,16 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)] with { Setter = false };
+        dict[typeof(IPreCutMapEntryReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Landscape_Registration.Instance,
+            PlacedObject_Registration.Instance,
+        });
+        dict[typeof(IPreCutMapEntryReferenceGetter)] = dict[typeof(IPreCutMapEntryReference)] with { Setter = false };
         dict[typeof(INpcSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             LeveledNpc_Registration.Instance,
+            Npc_Registration.Instance,
         });
         dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)] with { Setter = false };
         dict[typeof(ISpellRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -311,17 +362,19 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             PlacedObject_Registration.Instance,
         });
         dict[typeof(IPlacedSimpleGetter)] = dict[typeof(IPlacedSimple)] with { Setter = false };
+        dict[typeof(ILinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            PlacedNpc_Registration.Instance,
+            PlacedObject_Registration.Instance,
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)] with { Setter = false };
         dict[typeof(IPlacedThing)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             PlacedObject_Registration.Instance,
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(IPlacedThingGetter)] = dict[typeof(IPlacedThing)] with { Setter = false };
-        dict[typeof(ILinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            APlacedTrap_Registration.Instance,
-        });
-        dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)] with { Setter = false };
         dict[typeof(ISound)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             SoundDescriptor_Registration.Instance,

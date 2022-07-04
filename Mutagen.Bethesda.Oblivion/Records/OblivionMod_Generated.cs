@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
             _Scripts_Object = new OblivionGroup<Script>(this);
             _LandTextures_Object = new OblivionGroup<LandTexture>(this);
             _Enchantments_Object = new OblivionGroup<Enchantment>(this);
-            _Spells_Object = new OblivionGroup<SpellUnleveled>(this);
+            _Spells_Object = new OblivionGroup<Spell>(this);
             _Birthsigns_Object = new OblivionGroup<Birthsign>(this);
             _Activators_Object = new OblivionGroup<Activator>(this);
             _AlchemicalApparatus_Object = new OblivionGroup<AlchemicalApparatus>(this);
@@ -218,10 +218,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private OblivionGroup<SpellUnleveled> _Spells_Object;
-        public OblivionGroup<SpellUnleveled> Spells => _Spells_Object;
+        private OblivionGroup<Spell> _Spells_Object;
+        public OblivionGroup<Spell> Spells => _Spells_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IOblivionGroupGetter<ISpellUnleveledGetter> IOblivionModGetter.Spells => _Spells_Object;
+        IOblivionGroupGetter<ISpellGetter> IOblivionModGetter.Spells => _Spells_Object;
         #endregion
         #region Birthsigns
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<Exception?, OblivionGroup.ErrorMask<Script.ErrorMask>?>? Scripts;
             public MaskItem<Exception?, OblivionGroup.ErrorMask<LandTexture.ErrorMask>?>? LandTextures;
             public MaskItem<Exception?, OblivionGroup.ErrorMask<Enchantment.ErrorMask>?>? Enchantments;
-            public MaskItem<Exception?, OblivionGroup.ErrorMask<SpellUnleveled.ErrorMask>?>? Spells;
+            public MaskItem<Exception?, OblivionGroup.ErrorMask<Spell.ErrorMask>?>? Spells;
             public MaskItem<Exception?, OblivionGroup.ErrorMask<Birthsign.ErrorMask>?>? Birthsigns;
             public MaskItem<Exception?, OblivionGroup.ErrorMask<Activator.ErrorMask>?>? Activators;
             public MaskItem<Exception?, OblivionGroup.ErrorMask<AlchemicalApparatus.ErrorMask>?>? AlchemicalApparatus;
@@ -2088,7 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Enchantments = new MaskItem<Exception?, OblivionGroup.ErrorMask<Enchantment.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Spells:
-                        this.Spells = new MaskItem<Exception?, OblivionGroup.ErrorMask<SpellUnleveled.ErrorMask>?>(ex, null);
+                        this.Spells = new MaskItem<Exception?, OblivionGroup.ErrorMask<Spell.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Birthsigns:
                         this.Birthsigns = new MaskItem<Exception?, OblivionGroup.ErrorMask<Birthsign.ErrorMask>?>(ex, null);
@@ -2269,7 +2269,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Enchantments = (MaskItem<Exception?, OblivionGroup.ErrorMask<Enchantment.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Spells:
-                        this.Spells = (MaskItem<Exception?, OblivionGroup.ErrorMask<SpellUnleveled.ErrorMask>?>?)obj;
+                        this.Spells = (MaskItem<Exception?, OblivionGroup.ErrorMask<Spell.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Birthsigns:
                         this.Birthsigns = (MaskItem<Exception?, OblivionGroup.ErrorMask<Birthsign.ErrorMask>?>?)obj;
@@ -2646,7 +2646,7 @@ namespace Mutagen.Bethesda.Oblivion
             public OblivionGroup.TranslationMask<Script.TranslationMask>? Scripts;
             public OblivionGroup.TranslationMask<LandTexture.TranslationMask>? LandTextures;
             public OblivionGroup.TranslationMask<Enchantment.TranslationMask>? Enchantments;
-            public OblivionGroup.TranslationMask<SpellUnleveled.TranslationMask>? Spells;
+            public OblivionGroup.TranslationMask<Spell.TranslationMask>? Spells;
             public OblivionGroup.TranslationMask<Birthsign.TranslationMask>? Birthsigns;
             public OblivionGroup.TranslationMask<Activator.TranslationMask>? Activators;
             public OblivionGroup.TranslationMask<AlchemicalApparatus.TranslationMask>? AlchemicalApparatus;
@@ -2824,7 +2824,7 @@ namespace Mutagen.Bethesda.Oblivion
             _Scripts_Object = new OblivionGroup<Script>(this);
             _LandTextures_Object = new OblivionGroup<LandTexture>(this);
             _Enchantments_Object = new OblivionGroup<Enchantment>(this);
-            _Spells_Object = new OblivionGroup<SpellUnleveled>(this);
+            _Spells_Object = new OblivionGroup<Spell>(this);
             _Birthsigns_Object = new OblivionGroup<Birthsign>(this);
             _Activators_Object = new OblivionGroup<Activator>(this);
             _AlchemicalApparatus_Object = new OblivionGroup<AlchemicalApparatus>(this);
@@ -3405,7 +3405,7 @@ namespace Mutagen.Bethesda.Oblivion
         new OblivionGroup<Script> Scripts { get; }
         new OblivionGroup<LandTexture> LandTextures { get; }
         new OblivionGroup<Enchantment> Enchantments { get; }
-        new OblivionGroup<SpellUnleveled> Spells { get; }
+        new OblivionGroup<Spell> Spells { get; }
         new OblivionGroup<Birthsign> Birthsigns { get; }
         new OblivionGroup<Activator> Activators { get; }
         new OblivionGroup<AlchemicalApparatus> AlchemicalApparatus { get; }
@@ -3480,7 +3480,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionGroupGetter<IScriptGetter> Scripts { get; }
         IOblivionGroupGetter<ILandTextureGetter> LandTextures { get; }
         IOblivionGroupGetter<IEnchantmentGetter> Enchantments { get; }
-        IOblivionGroupGetter<ISpellUnleveledGetter> Spells { get; }
+        IOblivionGroupGetter<ISpellGetter> Spells { get; }
         IOblivionGroupGetter<IBirthsignGetter> Birthsigns { get; }
         IOblivionGroupGetter<IActivatorGetter> Activators { get; }
         IOblivionGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatus { get; }
@@ -4561,10 +4561,10 @@ namespace Mutagen.Bethesda.Oblivion
                         type: type,
                         keys: keys);
                     break;
-                case "SpellUnleveled":
-                case "ISpellUnleveledGetter":
-                case "ISpellUnleveled":
-                case "ISpellUnleveledInternal":
+                case "Spell":
+                case "ISpellGetter":
+                case "ISpell":
+                case "ISpellInternal":
                     obj.Spells.Remove(
                         type: type,
                         keys: keys);
@@ -5024,6 +5024,11 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ISpellRecord":
                 case "ISpellRecordGetter":
                     Remove(obj, keys, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IPlace":
+                case "IPlaceGetter":
+                    Remove(obj, keys, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 default:
                     if (throwIfUnknown)
@@ -6020,10 +6025,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IEnchantment":
                 case "IEnchantmentInternal":
                     return obj.Enchantments;
-                case "SpellUnleveled":
-                case "ISpellUnleveledGetter":
-                case "ISpellUnleveled":
-                case "ISpellUnleveledInternal":
+                case "Spell":
+                case "ISpellGetter":
+                case "ISpell":
+                case "ISpellInternal":
                     return obj.Spells;
                 case "Birthsign":
                 case "IBirthsignGetter":
@@ -6250,6 +6255,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 StringsWriter = param.StringsWriter,
                 TargetLanguageOverride = param.TargetLanguageOverride,
+                Encodings = param.Encodings ?? GameConstants.Oblivion.Encodings,
             };
             var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
@@ -6916,10 +6922,10 @@ namespace Mutagen.Bethesda.Oblivion
                         yield return item;
                     }
                     yield break;
-                case "SpellUnleveled":
-                case "ISpellUnleveledGetter":
-                case "ISpellUnleveled":
-                case "ISpellUnleveledInternal":
+                case "Spell":
+                case "ISpellGetter":
+                case "ISpell":
+                case "ISpellInternal":
                     foreach (var item in obj.Spells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -7531,9 +7537,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, SpellUnleveled, ISpellUnleveledGetter>(
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Spell, ISpellGetter>(
                 srcGroup: obj.Spells,
-                type: typeof(ISpellUnleveledGetter),
+                type: typeof(ISpellGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.Spells,
                 groupGetter: (m) => m.Spells))
@@ -8155,11 +8161,11 @@ namespace Mutagen.Bethesda.Oblivion
                         yield return item;
                     }
                     yield break;
-                case "SpellUnleveled":
-                case "ISpellUnleveledGetter":
-                case "ISpellUnleveled":
-                case "ISpellUnleveledInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, SpellUnleveled, ISpellUnleveledGetter>(
+                case "Spell":
+                case "ISpellGetter":
+                case "ISpell":
+                case "ISpellInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IOblivionMod, IOblivionModGetter, Spell, ISpellGetter>(
                         srcGroup: obj.Spells,
                         type: type,
                         modKey: obj.ModKey,
@@ -10523,7 +10529,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var SpellsItem = item.Spells;
                 if (SpellsItem.RecordCache.Count > 0)
                 {
-                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellUnleveledGetter>(
+                    ((OblivionGroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellGetter>(
                         item: SpellsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -11886,6 +11892,10 @@ namespace Mutagen.Bethesda.Oblivion
                 CleanNulls = param.CleanNulls,
                 TargetLanguageOverride = param.TargetLanguageOverride
             };
+            if (param.Encodings != null)
+            {
+                bundle.Encodings = param.Encodings;
+            }
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(
                 memStream,
@@ -12064,8 +12074,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         private List<RangeInt64>? _SpellsLocations;
-        private IOblivionGroupGetter<ISpellUnleveledGetter>? _Spells => _SpellsLocations != null ? OblivionGroupBinaryOverlay<ISpellUnleveledGetter>.OblivionGroupFactory(_stream, _SpellsLocations, _package) : default;
-        public IOblivionGroupGetter<ISpellUnleveledGetter> Spells => _Spells ?? new OblivionGroup<SpellUnleveled>(this);
+        private IOblivionGroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? OblivionGroupBinaryOverlay<ISpellGetter>.OblivionGroupFactory(_stream, _SpellsLocations, _package) : default;
+        public IOblivionGroupGetter<ISpellGetter> Spells => _Spells ?? new OblivionGroup<Spell>(this);
         #endregion
         #region Birthsigns
         private List<RangeInt64>? _BirthsignsLocations;

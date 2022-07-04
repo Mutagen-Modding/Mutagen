@@ -407,6 +407,11 @@ public class PluginTranslationModule : BinaryTranslationModule
             prop.Add($"{nameof(WritingBundle.CleanNulls)} = param.{nameof(BinaryWriteParameters.CleanNulls)}");
             prop.Add($"{nameof(WritingBundle.TargetLanguageOverride)} = param.{nameof(BinaryWriteParameters.TargetLanguageOverride)}");
         }
+        sb.AppendLine($"if (param.{nameof(BinaryWriteParameters.Encodings)} != null)");
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine($"bundle.Encodings = param.{nameof(BinaryWriteParameters.Encodings)};");
+        }
         sb.AppendLine("using var memStream = new MemoryTributary();");
         using (var args = sb.Call(
                    $"using (var writer = new MutagenWriter",

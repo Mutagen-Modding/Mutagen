@@ -23,41 +23,6 @@ public partial class ArmorAddon
     IGenderedItemGetter<Boolean> IArmorAddonGetter.WeightSliderEnabled => this.WeightSliderEnabled;
 }
 
-internal class ArmorAddonWeightSliderContainer : IGenderedItem<bool>
-{
-    internal byte _male;
-    public bool Male
-    {
-        get => ArmorAddonBinaryCreateTranslation.IsEnabled(_male);
-        set => _male = (byte)(value ? 2 : 0);
-    }
-
-    internal byte _female;
-    public bool Female
-    {
-        get => ArmorAddonBinaryCreateTranslation.IsEnabled(_female);
-        set => _female = (byte)(value ? 2 : 0);
-    }
-
-    public ArmorAddonWeightSliderContainer(byte male, byte female)
-    {
-        _male = male;
-        _female = female;
-    }
-
-    public IEnumerator<bool> GetEnumerator()
-    {
-        yield return Male;
-        yield return Female;
-    }
-
-    public void Print(StructuredStringBuilder fg, string? name = null)
-    {
-        GenderedItem.Print(this, fg, name);
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
-}
 
 partial class ArmorAddonBinaryCreateTranslation
 {
@@ -65,7 +30,7 @@ partial class ArmorAddonBinaryCreateTranslation
 
     public static partial void FillBinaryWeightSliderEnabledCustom(MutagenFrame frame, IArmorAddonInternal item)
     {
-        item.WeightSliderEnabled = new ArmorAddonWeightSliderContainer(frame.ReadUInt8(), frame.ReadUInt8());
+        item.WeightSliderEnabled = new GenderedItem<bool>(frame.ReadUInt8() >= 2, frame.ReadUInt8() >= 2);
     }
 
     public static partial ParseResult FillBinaryBoneDataParseCustom(MutagenFrame frame, IArmorAddonInternal item)
@@ -93,16 +58,8 @@ partial class ArmorAddonBinaryWriteTranslation
     public static partial void WriteBinaryWeightSliderEnabledCustom(MutagenWriter writer, IArmorAddonGetter item)
     {
         var weightSlider = item.WeightSliderEnabled;
-        if (weightSlider is ArmorAddonWeightSliderContainer special)
-        {
-            writer.Write(special._male);
-            writer.Write(special._female);
-        }
-        else
-        {
-            writer.Write(weightSlider.Male ? (byte)2 : default(byte));
-            writer.Write(weightSlider.Female ? (byte)2 : default(byte));
-        }
+        writer.Write(weightSlider.Male ? (byte)2 : default(byte));
+        writer.Write(weightSlider.Female ? (byte)2 : default(byte));
     }
 
     public static partial void WriteBinaryBoneDataParseCustom(MutagenWriter writer, IArmorAddonGetter item)
@@ -133,9 +90,9 @@ partial class ArmorAddonBinaryWriteTranslation
 
 internal partial class ArmorAddonBinaryOverlay
 {
-    public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom() => new ArmorAddonWeightSliderContainer(
-        _recordData.Slice(_DNAMLocation!.Value.Min + 2)[0],
-        _recordData.Slice(_DNAMLocation!.Value.Min + 3)[0]);
+    public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom() => new GenderedItem<bool>(
+        _recordData.Slice(_DNAMLocation!.Value.Min + 2)[0] >= 2,
+        _recordData.Slice(_DNAMLocation!.Value.Min + 3)[0] >= 2);
 
     private GenderedItem<IReadOnlyList<IBoneGetter>?>? _boneData;
     public IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData => _boneData ?? new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);

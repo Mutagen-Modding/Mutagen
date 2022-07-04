@@ -3,7 +3,7 @@
   <Object name="Tree" recordType="TREE" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="0cc3a259-8223-4da7-9ef5-9fcb393486a2" ID="202">
     <Interface>IHarvestable</Interface>
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />
       <FormLink name="Ingredient" recordType="PFIG">
@@ -31,5 +31,6 @@
     </Fields>
     <LinkInterface>IRegionTarget</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

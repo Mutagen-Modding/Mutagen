@@ -46,6 +46,7 @@ public class TypeOptionSolidifier : GenerationModule
                                  .Select(x => x.Value))
                     {
                         if (!await obj.IsMajorRecord()) continue;
+                        if (!obj.BaseClass.Name.EndsWith("MajorRecord")) continue;
 
                         var topLevel = modObj.Fields.Any(x =>
                         {

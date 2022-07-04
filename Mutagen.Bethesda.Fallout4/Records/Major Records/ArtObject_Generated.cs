@@ -740,7 +740,8 @@ namespace Mutagen.Bethesda.Fallout4
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IArtObjectInternal>,
         IModeled,
-        IObjectBounded
+        IObjectBounded,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -775,7 +776,8 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IArtObjectGetter>,
         IMapsToGetter<IArtObjectGetter>,
         IModeledGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => ArtObject_Registration.Instance;
         #region ObjectBounds

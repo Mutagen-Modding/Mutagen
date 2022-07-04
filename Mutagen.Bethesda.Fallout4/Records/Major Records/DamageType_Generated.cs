@@ -56,15 +56,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region DamageTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IDamageTypeTargetGetter>>? _DamageTypes;
-        public ExtendedList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes
+        private ExtendedList<DamageTypeItem> _DamageTypes = new ExtendedList<DamageTypeItem>();
+        public ExtendedList<DamageTypeItem> DamageTypes
         {
             get => this._DamageTypes;
-            set => this._DamageTypes = value;
+            init => this._DamageTypes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IDamageTypeTargetGetter>>? IDamageTypeGetter.DamageTypes => _DamageTypes;
+        IReadOnlyList<IDamageTypeItemGetter> IDamageTypeGetter.DamageTypes => _DamageTypes;
         #endregion
 
         #endregion
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.DamageTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.DamageTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DamageTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>(DamageTypes, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? DamageTypes;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>? DamageTypes;
             #endregion
 
             #region Equals
@@ -162,7 +162,8 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         foreach (var item in this.DamageTypes.Specific)
                         {
-                            if (!eval(item.Value)) return false;
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -181,7 +182,8 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         foreach (var item in this.DamageTypes.Specific)
                         {
-                            if (!eval(item.Value)) return false;
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -202,15 +204,16 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (DamageTypes != null)
                 {
-                    obj.DamageTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DamageTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.DamageTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>?>(eval(this.DamageTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>());
                     if (DamageTypes.Specific != null)
                     {
-                        var l = new List<(int Index, R Item)>();
+                        var l = new List<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>();
                         obj.DamageTypes.Specific = l;
                         foreach (var item in DamageTypes.Specific)
                         {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
+                            MaskItemIndexed<R, DamageTypeItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DamageTypeItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
                         }
                     }
                 }
@@ -245,9 +248,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 {
                                     using (sb.Brace())
                                     {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
+                                        subItem?.Print(sb);
                                     }
                                 }
                             }
@@ -264,7 +265,7 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? DamageTypes;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeItem.ErrorMask?>>?>? DamageTypes;
             #endregion
 
             #region IErrorMask
@@ -286,7 +287,7 @@ namespace Mutagen.Bethesda.Fallout4
                 switch (enu)
                 {
                     case DamageType_FieldIndex.DamageTypes:
-                        this.DamageTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        this.DamageTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeItem.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -300,7 +301,7 @@ namespace Mutagen.Bethesda.Fallout4
                 switch (enu)
                 {
                     case DamageType_FieldIndex.DamageTypes:
-                        this.DamageTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        this.DamageTypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeItem.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -350,9 +351,7 @@ namespace Mutagen.Bethesda.Fallout4
                             {
                                 using (sb.Brace())
                                 {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
+                                    subItem?.Print(sb);
                                 }
                             }
                         }
@@ -366,7 +365,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.DamageTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DamageTypes?.Overall, rhs.DamageTypes?.Overall), ExceptionExt.Combine(this.DamageTypes?.Specific, rhs.DamageTypes?.Specific));
+                ret.DamageTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DamageTypeItem.ErrorMask?>>?>(ExceptionExt.Combine(this.DamageTypes?.Overall, rhs.DamageTypes?.Overall), ExceptionExt.Combine(this.DamageTypes?.Specific, rhs.DamageTypes?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -389,7 +388,7 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool DamageTypes;
+            public DamageTypeItem.TranslationMask? DamageTypes;
             #endregion
 
             #region Ctors
@@ -398,7 +397,6 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.DamageTypes = defaultOn;
             }
 
             #endregion
@@ -406,7 +404,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((DamageTypes, null));
+                ret.Add((DamageTypes == null ? DefaultOn : !DamageTypes.GetCrystal().CopyNothing, DamageTypes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -547,7 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<IDamageTypeInternal>
     {
-        new ExtendedList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes { get; set; }
+        new ExtendedList<DamageTypeItem> DamageTypes { get; }
     }
 
     public partial interface IDamageTypeInternal :
@@ -566,7 +564,7 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IDamageTypeGetter>
     {
         static new ILoquiRegistration StaticRegistration => DamageType_Registration.Instance;
-        IReadOnlyList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes { get; }
+        IReadOnlyList<IDamageTypeItemGetter> DamageTypes { get; }
 
     }
 
@@ -829,7 +827,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDamageTypeInternal item)
         {
             ClearPartial();
-            item.DamageTypes = null;
+            item.DamageTypes.Clear();
             base.Clear(item);
         }
         
@@ -852,7 +850,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IDamageType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.DamageTypes?.RemapLinks(mapping);
+            obj.DamageTypes.RemapLinks(mapping);
         }
         
         #endregion
@@ -933,7 +931,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.DamageTypes = item.DamageTypes.CollectionEqualsHelper(
                 rhs.DamageTypes,
-                (l, r) => object.Equals(l, r),
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -984,17 +982,16 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.DamageTypes?.Overall ?? true)
-                && item.DamageTypes is {} DamageTypesItem)
+            if (printMask?.DamageTypes?.Overall ?? true)
             {
                 sb.AppendLine("DamageTypes =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in DamageTypesItem)
+                    foreach (var subItem in item.DamageTypes)
                     {
                         using (sb.Brace())
                         {
-                            sb.AppendItem(subItem.FormKey);
+                            subItem?.Print(sb, "Item");
                         }
                     }
                 }
@@ -1070,7 +1067,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IADamageTypeGetter)lhs, (IADamageTypeGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)DamageType_FieldIndex.DamageTypes) ?? true))
             {
-                if (!lhs.DamageTypes.SequenceEqualNullable(rhs.DamageTypes)) return false;
+                if (!lhs.DamageTypes.SequenceEqual(rhs.DamageTypes, (l, r) => ((DamageTypeItemCommon)((IDamageTypeItemGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DamageType_FieldIndex.DamageTypes)))) return false;
             }
             return true;
         }
@@ -1146,12 +1143,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
-            if (obj.DamageTypes is {} DamageTypesItem)
+            foreach (var item in obj.DamageTypes.SelectMany(f => f.EnumerateFormLinks()))
             {
-                foreach (var item in DamageTypesItem)
-                {
-                    yield return FormLinkInformation.Factory(item);
-                }
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1243,17 +1237,14 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask?.PushIndex((int)DamageType_FieldIndex.DamageTypes);
                 try
                 {
-                    if ((rhs.DamageTypes != null))
-                    {
-                        item.DamageTypes = 
-                            rhs.DamageTypes
-                            .Select(r => (IFormLinkGetter<IDamageTypeTargetGetter>)new FormLink<IDamageTypeTargetGetter>(r.FormKey))
-                            .ToExtendedList<IFormLinkGetter<IDamageTypeTargetGetter>>();
-                    }
-                    else
-                    {
-                        item.DamageTypes = null;
-                    }
+                    item.DamageTypes.SetTo(
+                        rhs.DamageTypes
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1452,15 +1443,16 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDamageTypeTargetGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDamageTypeItemGetter>.Instance.Write(
                 writer: writer,
                 items: item.DamageTypes,
-                recordType: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDamageTypeTargetGetter> subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IDamageTypeItemGetter subItem, TypedWriteParams conv) =>
                 {
-                    FormLinkBinaryTranslation.Instance.Write(
+                    var Item = subItem;
+                    ((DamageTypeItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
                         writer: subWriter,
-                        item: subItem);
+                        translationParams: conv);
                 });
         }
 
@@ -1569,12 +1561,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DamageTypes = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDamageTypeTargetGetter>>.Instance.Parse(
-                            reader: frame.SpawnWithLength(contentLength),
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLinkGetter<IDamageTypeTargetGetter>>();
+                    item.DamageTypes.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DamageTypeItem>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: DamageTypeItem_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: DamageTypeItem.TryCreateFromBinary));
                     return (int)DamageType_FieldIndex.DamageTypes;
                 }
                 default:
@@ -1636,7 +1628,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IDamageType);
 
 
-        public IReadOnlyList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes { get; private set; }
+        public IReadOnlyList<IDamageTypeItemGetter> DamageTypes { get; private set; } = Array.Empty<IDamageTypeItemGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1708,14 +1700,17 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DamageTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IDamageTypeTargetGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DamageTypes = BinaryOverlayList.FactoryByArray<IDamageTypeItemGetter>(
+                        mem: stream.RemainingMemory,
                         package: _package,
-                        itemLength: 4,
-                        getter: (s, p) => new FormLink<IDamageTypeTargetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => DamageTypeItemBinaryOverlay.DamageTypeItemFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: DamageTypeItem_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)DamageType_FieldIndex.DamageTypes;
                 }
                 default:

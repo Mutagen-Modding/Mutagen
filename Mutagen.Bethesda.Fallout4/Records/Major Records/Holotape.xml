@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Holotape" recordType="NOTE" objType="Record" baseClass="Fallout4MajorRecord" GUID="2bbbff8d-bde9-4838-8c78-87cbd8407d32" ID="235">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -28,6 +28,7 @@
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
   <Object name="AHolotapeData" objType="Subrecord" abstract="true" GUID="5a1db957-f49f-4455-a3db-fad5ccf4a929" ID="352" />
   <Object name="HolotapeSound" objType="Subrecord" baseClass="AHolotapeData" GUID="e667cb0b-dcdc-40b9-9b73-b740758f9e50" ID="353">

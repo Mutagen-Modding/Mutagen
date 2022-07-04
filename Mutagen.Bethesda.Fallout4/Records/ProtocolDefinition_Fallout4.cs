@@ -180,12 +180,10 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             RankPlacement_Registration.Instance,
             Bone_Registration.Instance,
             MovementType_Registration.Instance,
-            ScriptEntryStruct_Registration.Instance,
             ScriptVariableProperty_Registration.Instance,
             ScriptStructProperty_Registration.Instance,
             ScriptVariableListProperty_Registration.Instance,
             ScriptStructListProperty_Registration.Instance,
-            ScriptPropertyStruct_Registration.Instance,
             LeveledNpc_Registration.Instance,
             LeveledNpcEntry_Registration.Instance,
             LeveledNpcEntryData_Registration.Instance,
@@ -551,7 +549,12 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             ObjectVisibilityManager_Registration.Instance,
             ObjectVisibilityManagerItem_Registration.Instance,
             QuestData_Registration.Instance,
-            PerkEntryPointModifyValues_Registration.Instance
+            PerkEntryPointModifyValues_Registration.Instance,
+            ScriptEntryStructs_Registration.Instance,
+            DamageTypeItem_Registration.Instance,
+            ANavigationMapInfoParent_Registration.Instance,
+            NavigationMapInfoWorldspaceParent_Registration.Instance,
+            NavigationMapInfoCellParent_Registration.Instance
         );
     }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -78,14 +79,22 @@ partial class AVirtualMachineAdapterBinaryCreateTranslation
             case ScriptVariableListProperty varPropList:
                 throw new NotImplementedException();
             case ScriptStructProperty subStructs:
-                FillStruct(frame, subStructs, objectFormat);
+                subStructs.Members.Add(GetScriptEntryStruct(frame, objectFormat));
                 break;
             case ScriptStructListProperty structList:
                 var structListCount = frame.ReadUInt32();
                 for (int j = 0; j < structListCount; j++)
                 {
-                    var subStructs = new ScriptStructProperty();
-                    FillStruct(frame, subStructs, objectFormat);
+                    var subStructs = new ScriptEntryStructs();
+                    subStructs.Members.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScriptProperty>.Instance.Parse(
+                            amount: frame.ReadInt32(),
+                            reader: frame,
+                            transl: (MutagenFrame f, [MaybeNullWhen(false)] out ScriptProperty item, TypedParseParams p) =>
+                            {
+                                item = ParseProperty(f, objectFormat);
+                                return true;
+                            }));
                     structList.Structs.Add(subStructs);
                 }
                 break;
@@ -102,6 +111,15 @@ partial class AVirtualMachineAdapterBinaryCreateTranslation
         for (int i = 0; i < count; i++)
         {
             item.Properties.Add(ParseProperty(frame, objectFormat));
+        }
+    }
+
+    static IEnumerable<ScriptProperty> ParseProperties(MutagenFrame frame, ushort objectFormat, bool isStruct = false)
+    {
+        var count = isStruct ? frame.ReadUInt32() : frame.ReadUInt16();
+        for (int i = 0; i < count; i++)
+        {
+            yield return ParseProperty(frame, objectFormat);
         }
     }
 
@@ -128,11 +146,11 @@ partial class AVirtualMachineAdapterBinaryCreateTranslation
         }
     }
 
-    public static void FillStruct(MutagenFrame frame, IScriptStructProperty subStructs, ushort objectFormat)
+    public static ScriptEntry GetScriptEntryStruct(MutagenFrame frame, ushort objectFormat)
     {
-        var member = new ScriptEntryStruct();
+        var member = new ScriptEntry();
         FillProperties(frame, objectFormat, member, true);
-        subStructs.Members.Add(member);
+        return member;
     }
 }
 
@@ -187,7 +205,7 @@ partial class AVirtualMachineAdapterBinaryWriteTranslation
                 for (int i = 0; i < structsList.Count; ++i)
                 {
                     var subStructs = structsList[i];
-                    WriteScripts(writer, objFormat, (IReadOnlyList<IScriptEntryGetter>)subStructs.Members, true);
+                    WriteProperties(writer, objFormat, (IReadOnlyList<IScriptPropertyGetter>)subStructs.Members);
                 }
 
                 break;
@@ -198,8 +216,8 @@ partial class AVirtualMachineAdapterBinaryWriteTranslation
     }
 
     public static void WriteEntry(
-        MutagenWriter writer, 
-        IScriptEntryGetter entry, 
+        MutagenWriter writer,
+        IScriptEntryGetter entry,
         ushort objFormat,
         bool isStruct = false)
     {
@@ -223,6 +241,20 @@ partial class AVirtualMachineAdapterBinaryWriteTranslation
         }
     }
 
+    public static void WriteEntry(
+        MutagenWriter writer,
+        IScriptEntryStructsGetter entry,
+        ushort objFormat)
+    {
+        var properties = entry.Members;
+        writer.Write(checked((uint)properties.Count));
+
+        foreach (var property in properties)
+        {
+            WriteProperty(writer, property, objFormat);
+        }
+    }
+
     public static void WriteScripts(
         MutagenWriter writer,
         ushort objFormat,
@@ -235,6 +267,18 @@ partial class AVirtualMachineAdapterBinaryWriteTranslation
         foreach (var entry in scripts)
         {
             WriteEntry(writer, entry, objFormat, isStruct: isStruct);
+        }
+    }
+
+    public static void WriteProperties(
+        MutagenWriter writer,
+        ushort objFormat,
+        IReadOnlyList<IScriptPropertyGetter> properties)
+    {
+        writer.Write(checked((uint)properties.Count));
+        foreach (var property in properties)
+        {
+            WriteProperty(writer, property, objFormat);
         }
     }
 

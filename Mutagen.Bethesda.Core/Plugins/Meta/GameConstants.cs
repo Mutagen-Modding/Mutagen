@@ -1,6 +1,8 @@
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Meta;
 
@@ -40,6 +42,7 @@ public record GameConstants
     public RecordHeaderConstants SubConstants { get; }
 
     public ReadOnlyMemorySlice<Language> Languages { get; }
+    public EncodingBundle Encodings { get; }
 
     public IReadOnlyCollection<RecordType> HeaderOverflow { get; } = new SingleCollection<RecordType>(RecordTypes.XXXX);
 
@@ -60,7 +63,8 @@ public record GameConstants
         GroupConstants groupConstants,
         MajorRecordConstants majorConstants,
         RecordHeaderConstants subConstants,
-        Language[] languages)
+        Language[] languages,
+        EncodingBundle encodings)
     {
         Release = release;
         ModHeaderLength = modHeaderLength;
@@ -69,6 +73,7 @@ public record GameConstants
         MajorConstants = majorConstants;
         SubConstants = subConstants;
         Languages = languages;
+        Encodings = encodings;
     }
 
     /// <summary> 
@@ -123,7 +128,8 @@ public record GameConstants
             ObjectType.Subrecord,
             headerLength: 6,
             lengthLength: 2),
-        languages: Array.Empty<Language>());
+        languages: Array.Empty<Language>(),
+        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     /// <summary> 
     /// Readonly singleton of Skyrim LE game constants 
@@ -184,7 +190,8 @@ public record GameConstants
             Language.Polish,
             Language.Chinese,
             Language.Russian,
-        });
+        },
+        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     /// <summary> 
     /// Readonly singleton of Skyrim SE game constants 
@@ -262,7 +269,8 @@ public record GameConstants
             Language.Chinese,
             Language.Russian,
             Language.Japanese,
-        });
+        },
+        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     /// <summary> 
     /// Returns record constants related to a certain ObjectType 

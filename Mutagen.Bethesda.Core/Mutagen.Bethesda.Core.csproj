@@ -225,6 +225,11 @@
     <Compile Include="Plugins\Extensions\LinkCacheConstructionMixIn.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
     <Compile Include="Plugins\Extensions\ModContextExt.cs" />
+    <Compile Include="Plugins\FormLinkInformation.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Implicit\DI\ImplicitBaseMasterProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -518,7 +523,6 @@
     <Compile Include="Plugins\Aspects\ITranslatedNamed.cs" />
     <Compile Include="Plugins\Aspects\ITranslatedNamedRequired.cs" />
     <Compile Include="Plugins\Aspects\IWeightValue.cs" />
-    <Compile Include="Plugins\Internals\FormLinkInformation.cs" />
     <Compile Include="Plugins\FormLinkNullable.cs" />
     <Compile Include="Plugins\IFormLink.cs" />
     <Compile Include="Plugins\Cache\ILinkCache.cs" />

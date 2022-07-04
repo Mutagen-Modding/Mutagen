@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Quest" recordType="QUST" objType="Record" majorFlag="true" partialForm="true" baseClass="Fallout4MajorRecord" GUID="3299b1c9-621b-4a10-961a-698116d54617" ID="154">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="QuestAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="QuestAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Data" refName="QuestData" />
       <RecordType name="Event" recordType="ENAM" />
@@ -144,7 +144,7 @@
       <RefList name="LinkedAliases" refName="LinkedAlias" recordType="ALLA" />
       <FormLink name="DisplayName" refName="Message" recordType="ALDN" />
       <FormLink name="ForcedVoice" refName="VoiceType" recordType="ALFV" />
-      <FormLink name="DeathItem" refName="Message" recordType="ALDI" />
+      <FormLink name="DeathItem" refName="LeveledItem" recordType="ALDI" />
       <List name="Spells">
         <FormLink recordType="ALSP" refName="Spell" />
       </List>

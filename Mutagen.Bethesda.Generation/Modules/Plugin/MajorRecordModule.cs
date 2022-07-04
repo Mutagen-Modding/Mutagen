@@ -13,9 +13,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
 public class MajorRecordModule : GenerationModule
 {
-    public override async Task LoadWrapup(ObjectGeneration obj)
+    public override async Task PostLoad(ObjectGeneration obj)
     {
-        await base.LoadWrapup(obj);
+        await base.PostLoad(obj);
         if (!await obj.IsMajorRecord()) return;
         obj.BasicCtorPermission = CtorPermissionLevel.@protected;
         if (!obj.Abstract)
@@ -175,6 +175,7 @@ public class MajorRecordModule : GenerationModule
         if (obj.Name.EndsWith("ListGroup")) return Case.Yes;
         foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
         {
+            if (field.GetFieldData().Circular) continue;
             if (field is LoquiType loqui)
             {
                 if (includeSelf

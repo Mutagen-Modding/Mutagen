@@ -94,7 +94,7 @@ public class TriggeringRecordModule : GenerationModule
         return base.PreLoad(obj);
     }
 
-    public override async Task LoadWrapup(ObjectGeneration obj)
+    public override async Task Resolve(ObjectGeneration obj)
     {
         try
         {
@@ -117,6 +117,7 @@ public class TriggeringRecordModule : GenerationModule
             obj.GetObjectData().WiringComplete.SetException(ex);
             throw;
         }
+        await base.Resolve(obj);
     }
 
     public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
@@ -145,6 +146,7 @@ public class TriggeringRecordModule : GenerationModule
         foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
         {
             var fieldData = field.GetFieldData();
+            if (fieldData.Circular) continue;
             if (fieldData.RecordTypeConverter != null)
             {
                 foreach (var type in fieldData.RecordTypeConverter.FromConversions.Values)
@@ -326,6 +328,7 @@ public class TriggeringRecordModule : GenerationModule
         if (field is ContainerType contType
             && contType.SubTypeGeneration is LoquiType contLoqui)
         {
+            if (field.GetFieldData().Circular) return;
             var nullable = contType.SubTypeGeneration.Nullable;
             var subData = contLoqui.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
             await SetRecordTrigger(
@@ -380,8 +383,10 @@ public class TriggeringRecordModule : GenerationModule
         if (field is LoquiType loqui
             && !(field is FormLinkType))
         {
+            if (field.GetFieldData().Circular) return;
             IEnumerable<RecordType> trigRecTypes = await TaskExt.AwaitOrDefaultValue(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
             if (loqui.TargetObjectGeneration != null
+                && loqui.RefType == LoquiType.LoquiRefType.Direct
                 && (loqui.TargetObjectGeneration.TryGetRecordType(out var recType)
                     || trigRecTypes != null))
             {
@@ -761,7 +766,7 @@ public class TriggeringRecordModule : GenerationModule
         }
         else if (loqui != null)
         {
-            if (loqui.TargetObjectGeneration != null)
+            if (loqui.TargetObjectGeneration != null && loqui.RefType == LoquiType.LoquiRefType.Direct)
             {
                 var all = await GetAllRecordTypes(loqui.TargetObjectGeneration).ToArrayAsync();
                 if (all.Length > 0 && loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group)

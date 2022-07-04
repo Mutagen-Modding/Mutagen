@@ -90,7 +90,6 @@ namespace Mutagen.Bethesda.Oblivion
                 SoulGem_Registration.Instance,
                 Spell_Registration.Instance,
                 SpellLeveled_Registration.Instance,
-                SpellUnleveled_Registration.Instance,
                 Weapon_Registration.Instance,
                 Worldspace_Registration.Instance,
             });
@@ -132,7 +131,6 @@ namespace Mutagen.Bethesda.Oblivion
                 SoulGem_Registration.Instance,
                 Spell_Registration.Instance,
                 SpellLeveled_Registration.Instance,
-                SpellUnleveled_Registration.Instance,
                 Weapon_Registration.Instance,
                 Worldspace_Registration.Instance,
             });

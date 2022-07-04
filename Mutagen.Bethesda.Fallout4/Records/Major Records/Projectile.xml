@@ -43,5 +43,6 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IPlacedTrapTarget</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>
