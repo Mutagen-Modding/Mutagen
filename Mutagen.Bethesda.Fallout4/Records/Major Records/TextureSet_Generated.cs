@@ -878,6 +878,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITextureSet :
+        IExplodeSpawn,
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<ITextureSetInternal>,
         IObjectBounded,
@@ -913,6 +914,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ITextureSetGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         ILoquiObject<ITextureSetGetter>,
         IMapsToGetter<ITextureSetGetter>,
         IObjectBoundedGetter,

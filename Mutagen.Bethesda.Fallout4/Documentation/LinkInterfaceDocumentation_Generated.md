@@ -92,6 +92,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Static
 - TalkingActivator
 - Terminal
+- TextureSet
 - Tree
 - Weapon
 ### IFurnitureAssociation
@@ -550,6 +551,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaceableObject
 - IStaticTarget
 ### TextureSet
+- IExplodeSpawn
 - IObjectId
 - IPlaceableObject
 ### Tree

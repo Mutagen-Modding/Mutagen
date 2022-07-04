@@ -104,6 +104,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Static_Registration.Instance,
             TalkingActivator_Registration.Instance,
             Terminal_Registration.Instance,
+            TextureSet_Registration.Instance,
             Tree_Registration.Instance,
             Weapon_Registration.Instance,
         });

@@ -9586,6 +9586,7 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ITalkingActivatorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     obj.Cells.Remove(
