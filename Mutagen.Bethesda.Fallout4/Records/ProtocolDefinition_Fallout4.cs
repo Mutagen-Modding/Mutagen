@@ -551,7 +551,10 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             QuestData_Registration.Instance,
             PerkEntryPointModifyValues_Registration.Instance,
             ScriptEntryStructs_Registration.Instance,
-            DamageTypeItem_Registration.Instance
+            DamageTypeItem_Registration.Instance,
+            ANavigationMapInfoParent_Registration.Instance,
+            NavigationMapInfoWorldspaceParent_Registration.Instance,
+            NavigationMapInfoCellParent_Registration.Instance
         );
     }
 }

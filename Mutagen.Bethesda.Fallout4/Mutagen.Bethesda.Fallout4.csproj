@@ -2442,6 +2442,15 @@
     <Compile Include="Records\Major Records\DamageTypeItem_Generated.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ANavigationMapInfoParent_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMapInfoWorldspaceParent_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMapInfoCellParent_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
