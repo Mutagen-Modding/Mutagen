@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [LeveledNpc]
+    /// Implemented by: [LeveledNpc, Npc]
     /// </summary>
     public partial interface INpcSpawn :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [LeveledNpc]
+    /// Implemented by: [LeveledNpc, Npc]
     /// </summary>
     public partial interface INpcSpawnGetter : IFallout4MajorRecordGetter
     {

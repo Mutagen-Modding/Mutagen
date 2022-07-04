@@ -124,6 +124,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Npc
 ### INpcSpawn
 - LeveledNpc
+- Npc
 ### IObjectId
 - Activator
 - Ammunition
@@ -433,6 +434,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Npc
 - IExplodeSpawn
 - ILockList
+- INpcSpawn
 - IObjectId
 ### ObjectEffect
 - IEffectRecord

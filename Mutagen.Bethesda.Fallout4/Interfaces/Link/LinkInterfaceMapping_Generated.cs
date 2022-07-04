@@ -278,6 +278,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
         dict[typeof(INpcSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             LeveledNpc_Registration.Instance,
+            Npc_Registration.Instance,
         });
         dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)] with { Setter = false };
         dict[typeof(ISpellRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

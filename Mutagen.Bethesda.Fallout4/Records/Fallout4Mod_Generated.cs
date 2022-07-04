@@ -9755,6 +9755,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "INpcSpawn":
                 case "INpcSpawnGetter":
                     Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "ISpellRecord":
                 case "ISpellRecordGetter":
