@@ -3,7 +3,7 @@ using Loqui;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Plugins.Internals;
+namespace Mutagen.Bethesda.Plugins;
 
 public record FormLinkInformation(FormKey FormKey, Type Type) : IFormLinkGetter
 {
