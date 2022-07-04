@@ -54,5 +54,7 @@
     <LinkInterface>ILocationTargetable</LinkInterface>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
+    <LinkInterface>ILinkedReference</LinkInterface>
+    <LinkInterface>IOwner</LinkInterface>
   </Object>
 </Loqui>

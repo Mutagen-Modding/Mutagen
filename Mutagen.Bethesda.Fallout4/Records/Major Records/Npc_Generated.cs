@@ -4996,6 +4996,7 @@ namespace Mutagen.Bethesda.Fallout4
         INpcSpawn,
         IObjectBounded,
         IObjectId,
+        IOwner,
         IScripted,
         ITranslatedNamed,
         ITranslatedNamedRequired
@@ -5132,6 +5133,7 @@ namespace Mutagen.Bethesda.Fallout4
         INpcSpawnGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IOwnerGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

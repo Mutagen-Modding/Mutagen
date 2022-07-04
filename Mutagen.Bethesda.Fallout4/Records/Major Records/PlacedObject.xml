@@ -103,6 +103,7 @@
     <LinkInterface>IPlacedSimple</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>ILinkedReference</LinkInterface>
   </Object>
   <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM" GUID="09069228-afa1-4393-8b84-4c71d5b70c4e" ID="491">
     <Fields>
