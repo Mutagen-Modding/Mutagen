@@ -8,7 +8,7 @@
       <String name="Description" recordType="DESC" translated="DL" />
       <RefList name="Conditions" refName="Condition" />
       <FormLink name="CreatedObject" recordType="CNAM">
-        <Interface>IItem</Interface>
+        <Interface>IConstructibleObjectTarget</Interface>
       </FormLink>
       <FormLink name="WorkbenchKeyword" refName="Keyword" recordType="BNAM" />
       <ByteArray name="NAM1" recordType="NAM1" />

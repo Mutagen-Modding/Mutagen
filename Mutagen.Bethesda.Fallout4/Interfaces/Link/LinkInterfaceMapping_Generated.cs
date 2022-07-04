@@ -159,6 +159,33 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IStaticTargetGetter)] = dict[typeof(IStaticTarget)] with { Setter = false };
+        dict[typeof(IConstructibleObjectTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Activator_Registration.Instance,
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            Book_Registration.Instance,
+            Container_Registration.Instance,
+            Door_Registration.Instance,
+            Flora_Registration.Instance,
+            FormList_Registration.Instance,
+            Furniture_Registration.Instance,
+            Holotape_Registration.Instance,
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            Key_Registration.Instance,
+            LeveledItem_Registration.Instance,
+            Light_Registration.Instance,
+            MiscItem_Registration.Instance,
+            MovableStatic_Registration.Instance,
+            Npc_Registration.Instance,
+            AObjectModification_Registration.Instance,
+            Static_Registration.Instance,
+            StaticCollection_Registration.Instance,
+            Terminal_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IConstructibleObjectTargetGetter)] = dict[typeof(IConstructibleObjectTarget)] with { Setter = false };
         dict[typeof(IItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Ammunition_Registration.Instance,

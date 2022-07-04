@@ -3396,6 +3396,30 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         /// <summary>
+        /// Scope a load order query to IConstructibleObjectTarget
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IConstructibleObjectTarget</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IConstructibleObjectTarget, IConstructibleObjectTargetGetter> IConstructibleObjectTarget(this IEnumerable<IModListingGetter<IFallout4ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IConstructibleObjectTarget, IConstructibleObjectTargetGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IConstructibleObjectTargetGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IConstructibleObjectTarget, IConstructibleObjectTargetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IConstructibleObjectTarget
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IConstructibleObjectTarget</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IConstructibleObjectTarget, IConstructibleObjectTargetGetter> IConstructibleObjectTarget(this IEnumerable<IFallout4ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IConstructibleObjectTarget, IConstructibleObjectTargetGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IConstructibleObjectTargetGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IConstructibleObjectTarget, IConstructibleObjectTargetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to IItem
         /// </summary>
         /// <param name="listings">ModListings to query</param>

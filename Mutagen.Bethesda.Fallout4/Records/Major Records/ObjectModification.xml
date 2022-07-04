@@ -29,6 +29,7 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <AdditionalContainedRecordType>NONE</AdditionalContainedRecordType>
   </Object>
   <Object name="ObjectModItem" objType="Subrecord" GUID="f8b8c99c-63f5-42ba-897c-2ee4dc442e9d" ID="654">

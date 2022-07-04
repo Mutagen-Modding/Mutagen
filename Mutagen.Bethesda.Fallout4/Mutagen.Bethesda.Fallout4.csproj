@@ -2452,6 +2452,7 @@
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IPreCutMapEntryReference_Generated.cs" />
+    <Compile Include="Interfaces\Link\IConstructibleObjectTarget_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">

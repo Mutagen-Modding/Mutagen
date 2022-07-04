@@ -1434,6 +1434,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IBook :
         IBookGetter,
         IConstructible,
+        IConstructibleObjectTarget,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -1508,6 +1509,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IConstructibleGetter,
+        IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,

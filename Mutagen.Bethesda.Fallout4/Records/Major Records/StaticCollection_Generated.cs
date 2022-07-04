@@ -850,6 +850,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IStaticCollection :
+        IConstructibleObjectTarget,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IStaticCollectionInternal>,
@@ -900,6 +901,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IStaticCollectionGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IStaticCollectionGetter>,

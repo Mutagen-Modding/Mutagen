@@ -4984,6 +4984,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface INpc :
+        IConstructibleObjectTarget,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -5121,6 +5122,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface INpcGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,

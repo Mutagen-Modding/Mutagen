@@ -28,6 +28,7 @@
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <AdditionalContainedRecordType>MNAM</AdditionalContainedRecordType>
   </Object>
   <Object name="TerminalHolotapeEntry" objType="Subrecord" recordType="CNTO" GUID="75a1eb63-312c-4870-b12e-a3530123d3d9" ID="431">

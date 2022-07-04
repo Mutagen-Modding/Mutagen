@@ -109,14 +109,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region CreatedObject
-        private readonly IFormLinkNullable<IItemGetter> _CreatedObject = new FormLinkNullable<IItemGetter>();
-        public IFormLinkNullable<IItemGetter> CreatedObject
+        private readonly IFormLinkNullable<IConstructibleObjectTargetGetter> _CreatedObject = new FormLinkNullable<IConstructibleObjectTargetGetter>();
+        public IFormLinkNullable<IConstructibleObjectTargetGetter> CreatedObject
         {
             get => _CreatedObject;
             set => _CreatedObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IItemGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject;
+        IFormLinkNullableGetter<IConstructibleObjectTargetGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject;
         #endregion
         #region WorkbenchKeyword
         private readonly IFormLinkNullable<IKeywordGetter> _WorkbenchKeyword = new FormLinkNullable<IKeywordGetter>();
@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<ConstructibleObjectComponent>? Components { get; set; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new IFormLinkNullable<IItemGetter> CreatedObject { get; set; }
+        new IFormLinkNullable<IConstructibleObjectTargetGetter> CreatedObject { get; set; }
         new IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; set; }
         new MemorySlice<Byte>? NAM1 { get; set; }
         new MemorySlice<Byte>? NAM2 { get; set; }
@@ -1275,7 +1275,7 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IConstructibleObjectComponentGetter>? Components { get; }
         ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IFormLinkNullableGetter<IItemGetter> CreatedObject { get; }
+        IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject { get; }
         IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword { get; }
         ReadOnlyMemorySlice<Byte>? NAM1 { get; }
         ReadOnlyMemorySlice<Byte>? NAM2 { get; }
@@ -2822,7 +2822,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region CreatedObject
         private int? _CreatedObjectLocation;
-        public IFormLinkNullableGetter<IItemGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IItemGetter>.Null;
+        public IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<IConstructibleObjectTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IConstructibleObjectTargetGetter>.Null;
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;

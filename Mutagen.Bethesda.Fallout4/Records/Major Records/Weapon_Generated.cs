@@ -3461,6 +3461,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IWeapon :
+        IConstructibleObjectTarget,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -3591,6 +3592,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IWeaponGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IFurnitureAssociationGetter,

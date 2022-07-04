@@ -975,6 +975,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IHolotape :
+        IConstructibleObjectTarget,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -1034,6 +1035,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IHolotapeGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,

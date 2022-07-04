@@ -1133,6 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IDoor :
+        IConstructibleObjectTarget,
         IDoorGetter,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
@@ -1196,6 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IDoorGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,

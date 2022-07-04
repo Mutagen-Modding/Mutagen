@@ -1567,6 +1567,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IActivator :
         IActivatorGetter,
+        IConstructibleObjectTarget,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -1636,6 +1637,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IActivatorGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,

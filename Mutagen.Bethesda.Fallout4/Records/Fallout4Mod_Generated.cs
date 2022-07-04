@@ -9643,6 +9643,32 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "IConstructibleObjectTarget":
+                case "IConstructibleObjectTargetGetter":
+                    Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFloraGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IHolotapeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMovableStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAObjectModificationGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticCollectionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IItem":
                 case "IItemGetter":
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);

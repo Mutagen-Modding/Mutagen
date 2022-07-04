@@ -11,5 +11,6 @@
     <LinkInterface>ILockList</LinkInterface>
     <LinkInterface>IAliasVoiceType</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
 </Loqui>

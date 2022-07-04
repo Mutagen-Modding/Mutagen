@@ -1830,6 +1830,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface ILight :
         IConstructible,
+        IConstructibleObjectTarget,
         IEmittance,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
@@ -1918,6 +1919,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IConstructibleGetter,
+        IConstructibleObjectTargetGetter,
         IEmittanceGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,

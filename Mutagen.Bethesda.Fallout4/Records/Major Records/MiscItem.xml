@@ -33,6 +33,7 @@
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
   <Object name="MiscItemComponent" objType="Subrecord" GUID="2b777f92-de56-4260-a32d-5c28592a7fe8" ID="170">
     <Fields>

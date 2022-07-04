@@ -30,6 +30,7 @@
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
   <Object name="RadioReceiver" objType="Subrecord" recordType="RADR" GUID="8be06abd-cae8-4862-a510-a942533bda27" ID="223">
     <Fields>

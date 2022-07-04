@@ -1314,6 +1314,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IIngredient :
         IConstructible,
+        IConstructibleObjectTarget,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -1382,6 +1383,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         IConstructibleGetter,
+        IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,

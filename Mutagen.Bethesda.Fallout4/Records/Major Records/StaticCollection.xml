@@ -12,6 +12,7 @@
     </Fields>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
   <Object name="StaticPart" objType="Subrecord" GUID="24d0a7c0-8933-4abb-9d66-c56a3ce655fa" ID="198">
     <Fields>

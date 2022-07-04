@@ -27,6 +27,7 @@
     <LinkInterface>IStaticObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
   <Object name="DistantLod" objType="Subrecord" GUID="795bff20-ec22-4c22-a3f5-bfb3b2ee105e" ID="331">
     <Fields>
