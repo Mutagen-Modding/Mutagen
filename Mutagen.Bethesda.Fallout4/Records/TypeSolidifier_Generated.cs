@@ -3732,6 +3732,30 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         /// <summary>
+        /// Scope a load order query to IPreCutMapEntryReference
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IPreCutMapEntryReference</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IPreCutMapEntryReference, IPreCutMapEntryReferenceGetter> IPreCutMapEntryReference(this IEnumerable<IModListingGetter<IFallout4ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IPreCutMapEntryReference, IPreCutMapEntryReferenceGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IPreCutMapEntryReferenceGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IPreCutMapEntryReference, IPreCutMapEntryReferenceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IPreCutMapEntryReference
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IPreCutMapEntryReference</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IPreCutMapEntryReference, IPreCutMapEntryReferenceGetter> IPreCutMapEntryReference(this IEnumerable<IFallout4ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IPreCutMapEntryReference, IPreCutMapEntryReferenceGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IPreCutMapEntryReferenceGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IPreCutMapEntryReference, IPreCutMapEntryReferenceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to INpcSpawn
         /// </summary>
         /// <param name="listings">ModListings to query</param>

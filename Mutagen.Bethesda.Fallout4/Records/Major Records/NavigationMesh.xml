@@ -13,7 +13,9 @@
   </Object>
   <Object name="PreCutMapEntry" objType="Subrecord" GUID="71a62569-c830-4f10-a951-b10913571339" ID="484">
     <Fields>
-      <FormLink name="Reference" refName="PlacedObject" />
+      <FormLink name="Reference" >
+        <Interface>IPreCutMapEntryReference</Interface>
+      </FormLink>
       <List name="Triangles" counterLength="2" >
         <UInt16 />
       </List>

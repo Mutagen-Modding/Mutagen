@@ -1393,6 +1393,13 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IPreCutMapEntryReference":
+                case "IPreCutMapEntryReferenceGetter":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "ILocationTargetable":
                 case "ILocationTargetableGetter":
                     foreach (var subItem in obj.Items)

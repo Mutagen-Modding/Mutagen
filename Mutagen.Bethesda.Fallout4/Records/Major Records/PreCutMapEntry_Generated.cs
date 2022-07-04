@@ -51,14 +51,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Reference
-        private readonly IFormLink<IPlacedObjectGetter> _Reference = new FormLink<IPlacedObjectGetter>();
-        public IFormLink<IPlacedObjectGetter> Reference
+        private readonly IFormLink<IPreCutMapEntryReferenceGetter> _Reference = new FormLink<IPreCutMapEntryReferenceGetter>();
+        public IFormLink<IPreCutMapEntryReferenceGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlacedObjectGetter> IPreCutMapEntryGetter.Reference => this.Reference;
+        IFormLinkGetter<IPreCutMapEntryReferenceGetter> IPreCutMapEntryGetter.Reference => this.Reference;
         #endregion
         #region Triangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IPreCutMapEntry>,
         IPreCutMapEntryGetter
     {
-        new IFormLink<IPlacedObjectGetter> Reference { get; set; }
+        new IFormLink<IPreCutMapEntryReferenceGetter> Reference { get; set; }
         new ExtendedList<UInt16> Triangles { get; }
     }
 
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PreCutMapEntry_Registration.Instance;
-        IFormLinkGetter<IPlacedObjectGetter> Reference { get; }
+        IFormLinkGetter<IPreCutMapEntryReferenceGetter> Reference { get; }
         IReadOnlyList<UInt16> Triangles { get; }
 
     }
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPlacedObjectGetter> Reference => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPreCutMapEntryReferenceGetter> Reference => new FormLink<IPreCutMapEntryReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         #region Triangles
         public IReadOnlyList<UInt16> Triangles => BinaryOverlayList.FactoryByCountLength<UInt16>(_structData.Slice(0x4), _package, 2, countLength: 2, (s, p) => BinaryPrimitives.ReadUInt16LittleEndian(s));
         protected int TrianglesEndingPos;

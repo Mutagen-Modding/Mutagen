@@ -214,6 +214,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IPlacedTrapTarget
 - Hazard
 - Projectile
+### IPreCutMapEntryReference
+- Landscape
+- PlacedObject
 ### IRegionTarget
 - Flora
 - LandscapeTexture
@@ -392,6 +395,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaceableObject
 ### Keyword
 - IKeywordLinkedReference
+### Landscape
+- IPreCutMapEntryReference
 ### LandscapeTexture
 - IRegionTarget
 ### LeveledItem
@@ -459,6 +464,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaced
 - IPlacedSimple
 - IPlacedThing
+- IPreCutMapEntryReference
 ### Projectile
 - IExplodeSpawn
 - IObjectId

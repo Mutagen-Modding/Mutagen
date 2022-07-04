@@ -277,6 +277,12 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)] with { Setter = false };
+        dict[typeof(IPreCutMapEntryReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Landscape_Registration.Instance,
+            PlacedObject_Registration.Instance,
+        });
+        dict[typeof(IPreCutMapEntryReferenceGetter)] = dict[typeof(IPreCutMapEntryReference)] with { Setter = false };
         dict[typeof(INpcSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             LeveledNpc_Registration.Instance,

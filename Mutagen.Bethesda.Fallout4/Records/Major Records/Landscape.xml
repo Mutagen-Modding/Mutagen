@@ -16,6 +16,7 @@
       </List>
       <RefList name="MPCDs" refName="LandscapeMPCD" />
     </Fields>
+    <LinkInterface>IPreCutMapEntryReference</LinkInterface>
   </Object>
   <Object name="BaseLayer" objType="Subrecord" GUID="af7341e2-b802-425e-899b-361022db95dc" ID="517">
     <Fields>

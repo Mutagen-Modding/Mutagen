@@ -3922,6 +3922,7 @@ namespace Mutagen.Bethesda.Fallout4
         IPlacedSimple,
         IPlacedThing,
         IPositionRotation,
+        IPreCutMapEntryReference,
         IScripted
     {
         /// <summary>
@@ -4024,6 +4025,7 @@ namespace Mutagen.Bethesda.Fallout4
         IPlacedSimpleGetter,
         IPlacedThingGetter,
         IPositionRotationGetter,
+        IPreCutMapEntryReferenceGetter,
         IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
