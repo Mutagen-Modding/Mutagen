@@ -78,7 +78,7 @@ public static class IFormLinkExt
     /// <param name="link">Link to resolve</param>
     /// <param name="cache">Link Cache to resolve against</param>
     /// <returns>Located Major Record</returns>
-    /// <exception cref="NullReferenceException">If link was not succesful</exception>
+    /// <exception cref="NullReferenceException">If link was not successful</exception>
     /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
     public static TMajor? TryResolve<TMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
         where TMajor : class, IMajorRecordGetter
@@ -136,7 +136,7 @@ public static class IFormLinkExt
     /// <param name="link">Link to resolve</param> 
     /// <param name="cache">Link Cache to resolve against</param> 
     /// <returns>Located Major Record</returns> 
-    /// <exception cref="RecordException">If link was not succesful</exception> 
+    /// <exception cref="RecordException">If link was not successful</exception> 
     /// <typeparam name="TMajor">Major Record type of the FormLink</typeparam> 
     /// <typeparam name="TScopedMajor">Major Record type to resolve to</typeparam> 
     public static TScopedMajor Resolve<TMajor, TScopedMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
@@ -160,7 +160,7 @@ public static class IFormLinkExt
     /// <param name="link">Link to resolve</param>
     /// <param name="cache">Link Cache to resolve against</param>
     /// <returns>Located Major Record</returns>
-    /// <exception cref="RecordException">If link was not succesful</exception> 
+    /// <exception cref="RecordException">If link was not successful</exception> 
     /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
     public static TMajor Resolve<TMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
         where TMajor : class, IMajorRecordGetter
@@ -186,7 +186,7 @@ public static class IFormLinkExt
     /// <param name="link">Link to resolve</param> 
     /// <param name="cache">Link Cache to resolve against</param> 
     /// <returns>Located Major Record</returns> 
-    /// <exception cref="RecordException">If link was not succesful</exception> 
+    /// <exception cref="RecordException">If link was not successful</exception> 
     /// <typeparam name="TMajor">Major Record type of the FormLink</typeparam> 
     public static TMajor Resolve<TMajor>(this IFormLinkGetter link, ILinkCache cache)
         where TMajor : class, IMajorRecordGetter
@@ -278,7 +278,7 @@ public static class IFormLinkExt
     /// <param name="link">Link to resolve</param>
     /// <param name="cache">Link Cache to resolve against</param>
     /// <returns>Located Major Record</returns>
-    /// <exception cref="NullReferenceException">If link was not succesful</exception>
+    /// <exception cref="NullReferenceException">If link was not successful</exception>
     /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
     /// <typeparam name="TModGetter">Mod getter type that can be overridden into</typeparam>
     /// <typeparam name="TMajor">Major Record setter type to resolve to</typeparam>
