@@ -53,14 +53,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Scene
-        private readonly IFormLink<ISceneGetter> _Scene = new FormLink<ISceneGetter>();
-        public IFormLink<ISceneGetter> Scene
+        private readonly IFormLinkNullable<ISceneGetter> _Scene = new FormLinkNullable<ISceneGetter>();
+        public IFormLinkNullable<ISceneGetter> Scene
         {
             get => _Scene;
             set => _Scene.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISceneGetter> IHolotapeVoiceGetter.Scene => this.Scene;
+        IFormLinkNullableGetter<ISceneGetter> IHolotapeVoiceGetter.Scene => this.Scene;
         #endregion
 
         #region To String
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Fallout4
         IHolotapeVoiceGetter,
         ILoquiObjectSetter<IHolotapeVoice>
     {
-        new IFormLink<ISceneGetter> Scene { get; set; }
+        new IFormLinkNullable<ISceneGetter> Scene { get; set; }
     }
 
     public partial interface IHolotapeVoiceGetter :
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IHolotapeVoiceGetter>
     {
         static new ILoquiRegistration StaticRegistration => HolotapeVoice_Registration.Instance;
-        IFormLinkGetter<ISceneGetter> Scene { get; }
+        IFormLinkNullableGetter<ISceneGetter> Scene { get; }
 
     }
 
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Fallout4
                 printMask: printMask);
             if (printMask?.Scene ?? true)
             {
-                sb.AppendItem(item.Scene.FormKey, "Scene");
+                sb.AppendItem(item.Scene.FormKeyNullable, "Scene");
             }
         }
         
@@ -839,7 +839,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.Scene);
+            if (FormLinkInformation.TryFactory(obj.Scene, out var SceneInfo))
+            {
+                yield return SceneInfo;
+            }
             yield break;
         }
         
@@ -866,7 +869,7 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)HolotapeVoice_FieldIndex.Scene) ?? true))
             {
-                item.Scene.SetTo(rhs.Scene.FormKey);
+                item.Scene.SetTo(rhs.Scene.FormKeyNullable);
             }
         }
         
@@ -976,7 +979,7 @@ namespace Mutagen.Bethesda.Fallout4
             IHolotapeVoiceGetter item,
             MutagenWriter writer)
         {
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Scene);
         }
@@ -1023,6 +1026,7 @@ namespace Mutagen.Bethesda.Fallout4
             IHolotapeVoice item,
             MutagenFrame frame)
         {
+            if (frame.Complete) return;
             item.Scene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
@@ -1071,7 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISceneGetter> Scene => new FormLink<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkNullableGetter<ISceneGetter> Scene => new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
