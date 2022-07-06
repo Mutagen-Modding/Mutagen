@@ -52,7 +52,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region File
-        public String File { get; set; } = string.Empty;
+        public String? File { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IHolotapeProgramGetter.File => this.File;
         #endregion
 
         #region To String
@@ -394,7 +396,7 @@ namespace Mutagen.Bethesda.Fallout4
         IHolotapeProgramGetter,
         ILoquiObjectSetter<IHolotapeProgram>
     {
-        new String File { get; set; }
+        new String? File { get; set; }
     }
 
     public partial interface IHolotapeProgramGetter :
@@ -403,7 +405,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IHolotapeProgramGetter>
     {
         static new ILoquiRegistration StaticRegistration => HolotapeProgram_Registration.Instance;
-        String File { get; }
+        String? File { get; }
 
     }
 
@@ -636,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IHolotapeProgram item)
         {
             ClearPartial();
-            item.File = string.Empty;
+            item.File = default;
             base.Clear(item);
         }
         
@@ -754,9 +756,10 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.File ?? true)
+            if ((printMask?.File ?? true)
+                && item.File is {} FileItem)
             {
-                sb.AppendItem(item.File, "File");
+                sb.AppendItem(FileItem, "File");
             }
         }
         
@@ -798,7 +801,10 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IHolotapeProgramGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.File);
+            if (item.File is {} Fileitem)
+            {
+                hash.Add(Fileitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -959,7 +965,7 @@ namespace Mutagen.Bethesda.Fallout4
             IHolotapeProgramGetter item,
             MutagenWriter writer)
         {
-            StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.File,
                 binaryType: StringBinaryType.NullTerminate);
@@ -1007,6 +1013,7 @@ namespace Mutagen.Bethesda.Fallout4
             IHolotapeProgram item,
             MutagenFrame frame)
         {
+            if (frame.Complete) return;
             item.File = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.NullTerminate,
@@ -1058,7 +1065,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region File
-        public String File { get; private set; } = string.Empty;
+        public String? File { get; private set; } = string.Empty;
         protected int FileEndingPos;
         #endregion
         partial void CustomFactoryEnd(

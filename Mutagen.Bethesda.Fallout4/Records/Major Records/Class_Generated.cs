@@ -93,7 +93,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Description
-        public String Description { get; set; } = string.Empty;
+        public TranslatedString Description { get; set; } = string.Empty;
+        ITranslatedStringGetter IClassGetter.Description => this.Description;
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -792,7 +793,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new String Description { get; set; }
+        new TranslatedString Description { get; set; }
         new String? Icon { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new Int32 Unknown { get; set; }
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        String Description { get; }
+        ITranslatedStringGetter Description { get; }
         String? Icon { get; }
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         Int32 Unknown { get; }
@@ -1105,7 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Name = default;
-            item.Description = string.Empty;
+            item.Description.Clear();
             item.Icon = default;
             item.Properties = null;
             item.Unknown = default;
@@ -1197,7 +1198,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Properties = item.Properties.CollectionEqualsHelper(
                 rhs.Properties,
@@ -1350,7 +1351,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
@@ -1529,7 +1530,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
@@ -1755,7 +1756,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
@@ -1888,6 +1890,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Class_FieldIndex.Description;
                 }
@@ -1990,7 +1993,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         #region Icon
         private int? _IconLocation;

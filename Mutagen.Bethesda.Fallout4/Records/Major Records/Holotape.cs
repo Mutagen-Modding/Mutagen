@@ -131,28 +131,20 @@ partial class HolotapeBinaryWriteTranslation
         switch (item.Data)
         {
             case IHolotapeSoundGetter sound:
-            {
-                using var header = HeaderExport.Subrecord(writer, RecordTypes.SNAM);
-                FormKeyBinaryTranslation.Instance.Write(writer, sound.Sound.FormKey);
-            }
+                FormLinkBinaryTranslation.Instance.WriteNullable(writer, sound.Sound, RecordTypes.SNAM);
                 break;
             case IHolotapeVoiceGetter voice:
-            {
-                using var header = HeaderExport.Subrecord(writer, RecordTypes.SNAM);
-                FormKeyBinaryTranslation.Instance.Write(writer, voice.Scene.FormKey);
-            }
+                FormLinkBinaryTranslation.Instance.WriteNullable(writer, voice.Scene, RecordTypes.SNAM);
                 break;
             case IHolotapeProgramGetter prog:
-            {
-                using var header = HeaderExport.Subrecord(writer, RecordTypes.PNAM);
-                StringBinaryTranslation.Instance.Write(writer, prog.File);
-            }
+                if (prog.File is { } file)
+                {
+                    using var header = HeaderExport.Subrecord(writer, RecordTypes.PNAM);
+                    StringBinaryTranslation.Instance.Write(writer, file);
+                }
                 break;
             case IHolotapeTerminalGetter term:
-            {
-                using var header = HeaderExport.Subrecord(writer, RecordTypes.SNAM);
-                FormKeyBinaryTranslation.Instance.Write(writer, term.Terminal.FormKey);
-            }
+                FormLinkBinaryTranslation.Instance.WriteNullable(writer, term.Terminal, RecordTypes.SNAM);
                 break;
             default:
                 break;
@@ -162,46 +154,58 @@ partial class HolotapeBinaryWriteTranslation
 
 partial class HolotapeBinaryOverlay
 {
-    private int? _DataTypeLocation;
-    private int? _DataContentLocation;
+    private int? _dataTypeLocation;
+    private int? _dataContentLocation;
 
     public IAHolotapeDataGetter Data
     {
         get
         {
-            if (!_DataTypeLocation.HasValue)
+            if (!_dataTypeLocation.HasValue)
             {
                 throw new MalformedDataException($"Did not parse {RecordTypes.DNAM} and so cannot provide Holotape data.");
             }
-            if (!_DataContentLocation.HasValue)
-            {
-                throw new MalformedDataException($"Did not parse {RecordTypes.SNAM} and so cannot provide Holotape data.");
-            }
-            var typeMem = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataTypeLocation.Value, _package.MetaData.Constants);
-            var dataMem = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataContentLocation.Value, _package.MetaData.Constants);
+            var typeMem = HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataTypeLocation.Value, _package.MetaData.Constants);
             var type = (Holotape.Types)typeMem[0];
             switch (type)
             {
                 case Holotape.Types.Sound:
-                    return new HolotapeSound()
+                    var sound = new HolotapeSound();
+                    if (_dataContentLocation.HasValue)
                     {
-                        Sound = FormKeyBinaryTranslation.Instance.Parse(dataMem, _package.MetaData.MasterReferences).AsLink<ISoundDescriptorGetter>()
-                    };
+                        sound.Sound.SetTo(
+                            FormKeyBinaryTranslation.Instance.Parse(
+                                HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), 
+                                _package.MetaData.MasterReferences));
+                    }
+                    return sound;
                 case Holotape.Types.Voice:
-                    return new HolotapeVoice()
+                    var voice = new HolotapeVoice();
+                    if (_dataContentLocation.HasValue)
                     {
-                        Scene = FormKeyBinaryTranslation.Instance.Parse(dataMem, _package.MetaData.MasterReferences).AsLink<ISceneGetter>()
-                    };
+                        voice.Scene.SetTo(
+                            FormKeyBinaryTranslation.Instance.Parse(
+                                HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), 
+                                _package.MetaData.MasterReferences));
+                    }
+                    return voice;
                 case Holotape.Types.Program:
-                    return new HolotapeProgram()
+                    var prog = new HolotapeProgram();
+                    if (_dataContentLocation.HasValue)
                     {
-                        File = StringBinaryTranslation.Instance.Parse(dataMem, _package.MetaData.Encodings.NonTranslated)
-                    };
+                        prog.File = StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonTranslated);
+                    }
+                    return prog;
                 case Holotape.Types.Terminal:
-                    return new HolotapeTerminal()
+                    var term = new HolotapeTerminal();
+                    if (_dataContentLocation.HasValue)
                     {
-                        Terminal = FormKeyBinaryTranslation.Instance.Parse(dataMem, _package.MetaData.MasterReferences).AsLink<ITerminalGetter>()
-                    };
+                        term.Terminal.SetTo(
+                            FormKeyBinaryTranslation.Instance.Parse(
+                                HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), 
+                                _package.MetaData.MasterReferences));
+                    }
+                    return term;
                 default:
                     throw SubrecordException.Enrich(
                         new MalformedDataException($"Unknown Holotape type: {type}"),
@@ -212,13 +216,13 @@ partial class HolotapeBinaryOverlay
 
     public partial ParseResult TypeParseCustomParse(OverlayStream stream, int offset)
     {
-        _DataTypeLocation = (stream.Position - offset);
+        _dataTypeLocation = (stream.Position - offset);
         return (int)Holotape_FieldIndex.Data;
     }
 
     public partial ParseResult DataParseCustomParse(OverlayStream stream, int offset)
     {
-        _DataContentLocation = (stream.Position - offset);
+        _dataContentLocation = (stream.Position - offset);
         return (int)Holotape_FieldIndex.PickUpSound;
     }
 }

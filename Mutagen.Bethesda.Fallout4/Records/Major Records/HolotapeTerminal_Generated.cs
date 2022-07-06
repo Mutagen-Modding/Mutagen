@@ -53,14 +53,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Terminal
-        private readonly IFormLink<ITerminalGetter> _Terminal = new FormLink<ITerminalGetter>();
-        public IFormLink<ITerminalGetter> Terminal
+        private readonly IFormLinkNullable<ITerminalGetter> _Terminal = new FormLinkNullable<ITerminalGetter>();
+        public IFormLinkNullable<ITerminalGetter> Terminal
         {
             get => _Terminal;
             set => _Terminal.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ITerminalGetter> IHolotapeTerminalGetter.Terminal => this.Terminal;
+        IFormLinkNullableGetter<ITerminalGetter> IHolotapeTerminalGetter.Terminal => this.Terminal;
         #endregion
 
         #region To String
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Fallout4
         IHolotapeTerminalGetter,
         ILoquiObjectSetter<IHolotapeTerminal>
     {
-        new IFormLink<ITerminalGetter> Terminal { get; set; }
+        new IFormLinkNullable<ITerminalGetter> Terminal { get; set; }
     }
 
     public partial interface IHolotapeTerminalGetter :
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IHolotapeTerminalGetter>
     {
         static new ILoquiRegistration StaticRegistration => HolotapeTerminal_Registration.Instance;
-        IFormLinkGetter<ITerminalGetter> Terminal { get; }
+        IFormLinkNullableGetter<ITerminalGetter> Terminal { get; }
 
     }
 
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Fallout4
                 printMask: printMask);
             if (printMask?.Terminal ?? true)
             {
-                sb.AppendItem(item.Terminal.FormKey, "Terminal");
+                sb.AppendItem(item.Terminal.FormKeyNullable, "Terminal");
             }
         }
         
@@ -839,7 +839,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.Terminal);
+            if (FormLinkInformation.TryFactory(obj.Terminal, out var TerminalInfo))
+            {
+                yield return TerminalInfo;
+            }
             yield break;
         }
         
@@ -866,7 +869,7 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)HolotapeTerminal_FieldIndex.Terminal) ?? true))
             {
-                item.Terminal.SetTo(rhs.Terminal.FormKey);
+                item.Terminal.SetTo(rhs.Terminal.FormKeyNullable);
             }
         }
         
@@ -976,7 +979,7 @@ namespace Mutagen.Bethesda.Fallout4
             IHolotapeTerminalGetter item,
             MutagenWriter writer)
         {
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Terminal);
         }
@@ -1023,6 +1026,7 @@ namespace Mutagen.Bethesda.Fallout4
             IHolotapeTerminal item,
             MutagenFrame frame)
         {
+            if (frame.Complete) return;
             item.Terminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
@@ -1071,7 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ITerminalGetter> Terminal => new FormLink<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkNullableGetter<ITerminalGetter> Terminal => new FormLinkNullable<ITerminalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

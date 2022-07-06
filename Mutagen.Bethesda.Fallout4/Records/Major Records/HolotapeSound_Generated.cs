@@ -53,14 +53,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Sound
-        private readonly IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
-        public IFormLink<ISoundDescriptorGetter> Sound
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> Sound
         {
             get => _Sound;
             set => _Sound.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISoundDescriptorGetter> IHolotapeSoundGetter.Sound => this.Sound;
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IHolotapeSoundGetter.Sound => this.Sound;
         #endregion
 
         #region To String
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Fallout4
         IHolotapeSoundGetter,
         ILoquiObjectSetter<IHolotapeSound>
     {
-        new IFormLink<ISoundDescriptorGetter> Sound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
     }
 
     public partial interface IHolotapeSoundGetter :
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IHolotapeSoundGetter>
     {
         static new ILoquiRegistration StaticRegistration => HolotapeSound_Registration.Instance;
-        IFormLinkGetter<ISoundDescriptorGetter> Sound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
 
     }
 
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Fallout4
                 printMask: printMask);
             if (printMask?.Sound ?? true)
             {
-                sb.AppendItem(item.Sound.FormKey, "Sound");
+                sb.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
         }
         
@@ -839,7 +839,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.Sound);
+            if (FormLinkInformation.TryFactory(obj.Sound, out var SoundInfo))
+            {
+                yield return SoundInfo;
+            }
             yield break;
         }
         
@@ -866,7 +869,7 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)HolotapeSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetTo(rhs.Sound.FormKey);
+                item.Sound.SetTo(rhs.Sound.FormKeyNullable);
             }
         }
         
@@ -976,7 +979,7 @@ namespace Mutagen.Bethesda.Fallout4
             IHolotapeSoundGetter item,
             MutagenWriter writer)
         {
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Sound);
         }
@@ -1023,6 +1026,7 @@ namespace Mutagen.Bethesda.Fallout4
             IHolotapeSound item,
             MutagenFrame frame)
         {
+            if (frame.Complete) return;
             item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
@@ -1071,7 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
