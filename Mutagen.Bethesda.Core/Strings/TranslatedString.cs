@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Mutagen.Bethesda.Strings;
@@ -7,6 +8,7 @@ namespace Mutagen.Bethesda.Strings;
 /// A string that can be represented in multiple different languages.<br/>
 /// Threadsafe.
 /// </summary>
+[DebuggerDisplay("{String}")]
 public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>, IOptionalStringsKeyGetter
 {
     /// <summary>
