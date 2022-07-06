@@ -135,6 +135,7 @@ public class MutagenEncodingProvider : IMutagenEncodingProvider
             case Language.Russian:
                 return _utf8_1251;
             case Language.English:
+                return _1252;
             case Language.French:
             case Language.German:
             case Language.Italian:
