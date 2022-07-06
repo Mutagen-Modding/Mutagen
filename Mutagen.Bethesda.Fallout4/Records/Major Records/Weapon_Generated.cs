@@ -6358,7 +6358,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
+                source: StringsSource.DL);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InstanceNaming,
@@ -6781,7 +6781,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.Normal,
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Weapon_FieldIndex.Description;
                 }
@@ -7086,7 +7086,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region InstanceNaming
         private int? _InstanceNamingLocation;

@@ -37,7 +37,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-      <String name="Description" recordType="DESC" translated="Normal" />
+      <String name="Description" recordType="DESC" translated="DL" />
       <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRules" />
       <RefList name="Armatures" refName="ArmorAddonModel" />
       <Data>
