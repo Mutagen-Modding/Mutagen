@@ -15,6 +15,7 @@ namespace Mutagen.Bethesda.Tests;
 public class SkyrimProcessor : Processor
 {
     public override GameRelease GameRelease { get; }
+    public override bool StrictStrings => true;
     
     protected override Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys()
     {

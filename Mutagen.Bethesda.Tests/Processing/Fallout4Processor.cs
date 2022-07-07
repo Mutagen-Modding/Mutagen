@@ -15,6 +15,8 @@ namespace Mutagen.Bethesda.Tests;
 
 public class Fallout4Processor : Processor
 {
+    public override bool StrictStrings => true;
+    
     public Fallout4Processor(bool multithread) : base(multithread)
     {
     }

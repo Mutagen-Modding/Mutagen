@@ -13,6 +13,8 @@ namespace Mutagen.Bethesda.Tests;
 
 public class OblivionProcessor : Processor
 {
+    public override bool StrictStrings => true;
+    
     public OblivionProcessor(bool multithread) : base(multithread)
     {
     }
@@ -23,6 +25,7 @@ public class OblivionProcessor : Processor
     /*
      * Some records that seem older have an odd record order.  Rather than accommodating, dynamically mark as exceptions
      */
+
     protected override void AddDynamicProcessorInstructions()
     {
         base.AddDynamicProcessorInstructions();

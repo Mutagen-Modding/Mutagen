@@ -39,6 +39,7 @@ public abstract class Processor
     protected Dictionary<RecordType, List<DynamicStreamProcessor>> DynamicStreamProcessors = new();
     public readonly ParallelOptions ParallelOptions;
     protected Subject<string> Logging;
+    public abstract bool StrictStrings { get; }
 
     public Processor(bool multithread)
     {
@@ -517,7 +518,7 @@ public abstract class Processor
         span = span.Slice(0, len);
         var color = IBinaryStreamExt.ReadColor(span, type);
         var outBytes = new byte[len];
-        using (var writer = new MutagenWriter(new BinaryWriter(new MemoryStream(outBytes)), null!))
+        using (var writer = new MutagenWriter(new BinaryWriter(new MemoryStream(outBytes)), Meta))
         {
             writer.Write(color, type);
         }
@@ -757,7 +758,6 @@ public abstract class Processor
 
     public async Task RealignStrings(Func<IMutagenReadStream> streamGetter)
     {
-        bool strict = false;
         using var stream = streamGetter();
         var outFolder = Path.Combine(TempFolder, "Strings/Processed");
         var language = Language.English;
@@ -819,19 +819,22 @@ public abstract class Processor
             var bytes = new byte[4];
             BinaryPrimitives.WriteUInt32LittleEndian(bytes, regis);
             _instructions.SetSubstitution(entry.FileLocation, bytes);
+        }
 
-            if (strict)
+        if (StrictStrings)
+        {
+            foreach (var source in EnumExt<StringsSource>.Values)
             {
-                foreach (var item in dict.Item2)
+                var dict = overlays[source];
+                var langDict = dict.Item2[language];
+                if (langDict.Count > 0)
                 {
-                    if (item.Value.Count > 0)
+                    foreach (var overlayStr in langDict.First(100))
                     {
-                        foreach (var overlayStr in item.Value.First(100))
-                        {
-                            Logging.OnNext($"Unaccounted for string: {overlayStr.Key} {overlayStr.Value}");
-                        }
-                        throw new ArgumentException($"String unaccounted for: {item.Value.Keys.First()}");
+                        Logging.OnNext($"Unaccounted for string: {overlayStr.Key} {overlayStr.Value}");
                     }
+
+                    throw new ArgumentException($"String unaccounted for in {source}: {langDict.Keys.First()}");
                 }
             }
         }
