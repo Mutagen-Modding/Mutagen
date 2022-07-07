@@ -918,13 +918,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.PhaseLength = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IClimateData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IClimateData item,
@@ -1109,6 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ClimateData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IClimateDataGetter obj)
         {
@@ -1117,6 +1111,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class ClimateDataSetterTranslationCommon
     {

@@ -712,14 +712,6 @@ namespace Mutagen.Bethesda.Fallout4
             Clear(item: (ILeveledSpellInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(ILeveledSpell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILeveledSpellInternal item,
@@ -931,6 +923,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledSpellGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -940,6 +933,8 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public LeveledSpell Duplicate(
             ILeveledSpellGetter item,

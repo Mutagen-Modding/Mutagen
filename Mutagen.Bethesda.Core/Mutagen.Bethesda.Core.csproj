@@ -99,6 +99,10 @@
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Archives\IArchiveReader.cs" />
+    <Compile Include="Assets\AssetLink.cs" />
+    <Compile Include="Assets\IAssetLinkContainer.cs" />
+    <Compile Include="Assets\IAssetLink.cs" />
+    <Compile Include="Assets\IAssetType.cs" />
     <Compile Include="Environments\DI\GameEnvironmentProvider.cs" />
     <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -142,6 +146,11 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Extensions\ListsModsMixIn.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Extensions\AssetLinkRemappingMixIn.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
@@ -194,6 +203,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Binary\Translations\AssetLinkBinaryTranslation.cs" />
     <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
     <Compile Include="Plugins\Binary\Translations\RecordSpanExtensions.cs" />
     <Compile Include="Plugins\Binary\Translations\SubgroupsBinaryTranslation.cs" />
@@ -223,6 +233,11 @@
     <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
     <Compile Include="Plugins\Exceptions\ModPathException.cs" />
     <Compile Include="Plugins\Extensions\LinkCacheConstructionMixIn.cs" />
+    <Compile Include="Plugins\Extensions\IAssetLinkExt.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
     <Compile Include="Plugins\Extensions\ModContextExt.cs" />
     <Compile Include="Plugins\FormLinkInformation.cs">
@@ -413,12 +428,9 @@
     </Compile>
     <Compile Include="Plugins\Records\DI\ModActivator.cs" />
     <Compile Include="Plugins\Records\DI\ModImporter.cs" />
-    <Compile Include="Plugins\Records\GroupMergeGetter.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
+    <Compile Include="Plugins\Records\GroupMergeGetter.cs" />
     <Compile Include="Plugins\Records\IFormKeyGetter.cs" />
+    <Compile Include="Plugins\Records\IFormLinkContainerGetter.cs" />
     <Compile Include="Plugins\Records\IMajorRecordQueryableGetter.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -508,7 +520,7 @@
     <Compile Include="Extensions\GameCategoryExt.cs" />
     <Compile Include="Extensions\HasModsMixIn.cs" />
     <Compile Include="Extensions\ModKeyExt.cs" />
-    <Compile Include="Extensions\RemappingMixIn.cs" />
+    <Compile Include="Extensions\FormLinkRemappingMixIn.cs" />
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\GameReleaseExt.cs" />
@@ -661,7 +673,6 @@
     <Compile Include="Plugins\FormLink.cs" />
     <Compile Include="Plugins\IEDIDLink.cs" />
     <Compile Include="Plugins\ILink.cs" />
-    <Compile Include="Plugins\Records\IFormLinkContainerGetter.cs" />
     <Compile Include="Plugins\Binary\Processing\ModDecompressor.cs" />
     <Compile Include="Plugins\Order\ModListing.cs" />
     <Compile Include="Plugins\Binary\Processing\ModRecordSorter.cs" />

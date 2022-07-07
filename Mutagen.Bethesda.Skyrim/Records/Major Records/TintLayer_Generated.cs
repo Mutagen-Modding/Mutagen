@@ -818,13 +818,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Preset = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ITintLayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITintLayer item,
@@ -992,6 +985,7 @@ namespace Mutagen.Bethesda.Skyrim
             return TintLayer.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITintLayerGetter obj)
         {
@@ -1000,6 +994,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class TintLayerSetterTranslationCommon
     {

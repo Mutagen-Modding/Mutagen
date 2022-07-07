@@ -552,6 +552,7 @@ namespace Mutagen.Bethesda.Fallout4
             get => this._LinkedReferences;
             init => this._LinkedReferences = value;
         }
+<<<<<<< HEAD
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<ILinkedReferencesGetter> IPlacedObjectGetter.LinkedReferences => _LinkedReferences;
@@ -591,6 +592,14 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private PlacedObjectMapMarker? _MapMarker;
         public PlacedObjectMapMarker? MapMarker
+=======
+        
+        #region Binary Translation
+        public virtual void CopyInFromBinary(
+            IPlacedObjectInternal item,
+            MutagenFrame frame,
+            TypedParseParams? translationParams = null)
+>>>>>>> nog-assets
         {
             get => _MapMarker;
             set => _MapMarker = value;
@@ -7134,10 +7143,145 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Comments = rhs.Comments;
             }
+<<<<<<< HEAD
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+=======
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            IPlacedObjectGetter? lhs,
+            IPlacedObjectGetter? rhs,
+            TranslationCrystal? crystal)
+        {
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IFallout4MajorRecordGetter? lhs,
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
+        {
+            return Equals(
+                lhs: (IPlacedObjectGetter?)lhs,
+                rhs: rhs as IPlacedObjectGetter,
+                crystal: crystal);
+        }
+        
+        public override bool Equals(
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
+        {
+            return Equals(
+                lhs: (IPlacedObjectGetter?)lhs,
+                rhs: rhs as IPlacedObjectGetter,
+                crystal: crystal);
+        }
+        
+        public virtual int GetHashCode(IPlacedObjectGetter item)
+        {
+            var hash = new HashCode();
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
+        }
+        
+        public override int GetHashCode(IFallout4MajorRecordGetter item)
+        {
+            return GetHashCode(item: (IPlacedObjectGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordGetter item)
+        {
+            return GetHashCode(item: (IPlacedObjectGetter)item);
+        }
+        
+        #endregion
+        
+        
+        public override object GetNew()
+        {
+            return PlacedObject.GetNew();
+        }
+        
+        #region Mutagen
+        #region Duplicate
+        public PlacedObject Duplicate(
+            IPlacedObjectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            var newRec = new PlacedObject(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
+        }
+        
+        public override Fallout4MajorRecord Duplicate(
+            IFallout4MajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IPlacedObjectGetter)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IPlacedObjectGetter)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
+        
+        #endregion
+        
+    }
+    public partial class PlacedObjectSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    {
+        public new static readonly PlacedObjectSetterTranslationCommon Instance = new PlacedObjectSetterTranslationCommon();
+
+        #region DeepCopyIn
+        public void DeepCopyIn(
+            IPlacedObjectInternal item,
+            IPlacedObjectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            base.DeepCopyIn(
+                item,
+                rhs,
+                errorMask,
+                copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public void DeepCopyIn(
+            IPlacedObject item,
+            IPlacedObjectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            base.DeepCopyIn(
+                (IFallout4MajorRecord)item,
+                (IFallout4MajorRecordGetter)rhs,
+                errorMask,
+                copyMask,
+                deepCopy: deepCopy);
+>>>>>>> nog-assets
         }
         
         public override void DeepCopyIn(

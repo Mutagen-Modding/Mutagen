@@ -2,7 +2,10 @@ using FluentAssertions;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
+using System.Linq;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Testing;
 using Xunit;
 using Ammunition = Mutagen.Bethesda.Skyrim.Ammunition;
@@ -203,18 +206,16 @@ public abstract class AMajorRecordEnumerationTests
     {
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var light = mod.Lights.AddNew();
-        light.Icons = new Icons()
-        {
-            LargeIconFilename = "Hello",
-            SmallIconFilename = "World"
-        };
+        light.Icons = new Icons();
+        light.Icons.LargeIconFilename.RawPath = "Hello";
+        light.Icons.SmallIconFilename = new AssetLink<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, "World");
         var conv = ConvertMod(mod);
         Assert.Equal(Getter ? 0 : 1, RunTest<IHasIcons, IHasIcons>(conv).Count());
         Assert.Single(RunTest<IHasIcons, IHasIconsGetter>(conv));
         var item = RunTest<IHasIcons, IHasIconsGetter>(conv).First();
         item.Icons.Should().NotBeNull();
-        item.Icons!.LargeIconFilename.Should().Be("Hello");
-        item.Icons!.SmallIconFilename.Should().Be("World");
+        item.Icons!.LargeIconFilename.RawPath.Should().Be("Hello");
+        item.Icons!.SmallIconFilename!.RawPath.Should().Be("World");
     }
 
     [Fact]

@@ -733,13 +733,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Color = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IImageSpaceTint obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImageSpaceTint item,
@@ -874,6 +867,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ImageSpaceTint.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IImageSpaceTintGetter obj)
         {
@@ -882,6 +876,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class ImageSpaceTintSetterTranslationCommon
     {

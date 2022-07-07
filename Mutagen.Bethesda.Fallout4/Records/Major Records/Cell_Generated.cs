@@ -4722,6 +4722,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
+<<<<<<< HEAD
         public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             ICellGetter obj,
             ILinkCache linkCache,
@@ -5187,6 +5188,13 @@ namespace Mutagen.Bethesda.Fallout4
             ICellGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
+=======
+        #region Binary Translation
+        public virtual void CopyInFromBinary(
+            ICellInternal item,
+            MutagenFrame frame,
+            TypedParseParams? translationParams = null)
+>>>>>>> nog-assets
         {
             var newRec = new Cell(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
@@ -5702,6 +5710,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.TemporaryUnknownGroupData = rhs.TemporaryUnknownGroupData;
             }
+<<<<<<< HEAD
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
@@ -5724,6 +5733,140 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+=======
+        }
+        
+        #region Equals and Hash
+        public virtual bool Equals(
+            ICellGetter? lhs,
+            ICellGetter? rhs,
+            TranslationCrystal? crystal)
+        {
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            return true;
+        }
+        
+        public override bool Equals(
+            IFallout4MajorRecordGetter? lhs,
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
+        {
+            return Equals(
+                lhs: (ICellGetter?)lhs,
+                rhs: rhs as ICellGetter,
+                crystal: crystal);
+        }
+        
+        public override bool Equals(
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
+        {
+            return Equals(
+                lhs: (ICellGetter?)lhs,
+                rhs: rhs as ICellGetter,
+                crystal: crystal);
+        }
+        
+        public virtual int GetHashCode(ICellGetter item)
+        {
+            var hash = new HashCode();
+            hash.Add(base.GetHashCode());
+            return hash.ToHashCode();
+        }
+        
+        public override int GetHashCode(IFallout4MajorRecordGetter item)
+        {
+            return GetHashCode(item: (ICellGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordGetter item)
+        {
+            return GetHashCode(item: (ICellGetter)item);
+        }
+        
+        #endregion
+        
+        
+        public override object GetNew()
+        {
+            return Cell.GetNew();
+        }
+        
+        #region Mutagen
+        #region Duplicate
+        public Cell Duplicate(
+            ICellGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            var newRec = new Cell(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
+        }
+        
+        public override Fallout4MajorRecord Duplicate(
+            IFallout4MajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICellGetter)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICellGetter)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
+        
+        #endregion
+        
+    }
+    public partial class CellSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    {
+        public new static readonly CellSetterTranslationCommon Instance = new CellSetterTranslationCommon();
+
+        #region DeepCopyIn
+        public void DeepCopyIn(
+            ICellInternal item,
+            ICellGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            base.DeepCopyIn(
+                item,
+                rhs,
+                errorMask,
+                copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public void DeepCopyIn(
+            ICell item,
+            ICellGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            base.DeepCopyIn(
+                (IFallout4MajorRecord)item,
+                (IFallout4MajorRecordGetter)rhs,
+                errorMask,
+                copyMask,
+                deepCopy: deepCopy);
+>>>>>>> nog-assets
         }
         
         public override void DeepCopyIn(

@@ -1,4 +1,4 @@
-namespace Mutagen.Bethesda.Plugins.Records;
+﻿namespace Mutagen.Bethesda.Plugins.Records;
 
 /// <summary>
 /// An interface for classes that contain FormKeys and can enumerate them.

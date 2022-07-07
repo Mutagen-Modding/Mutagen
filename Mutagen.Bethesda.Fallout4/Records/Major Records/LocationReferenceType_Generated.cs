@@ -811,14 +811,6 @@ namespace Mutagen.Bethesda.Fallout4
             Clear(item: (ILocationReferenceTypeInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(ILocationReferenceType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationReferenceTypeInternal item,
@@ -1058,6 +1050,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationReferenceTypeGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1067,6 +1060,8 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public LocationReferenceType Duplicate(
             ILocationReferenceTypeGetter item,

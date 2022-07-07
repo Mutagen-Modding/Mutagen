@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -23,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -70,14 +72,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region SunTexture
-        public String? SunTexture { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? SunTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IClimateGetter.SunTexture => this.SunTexture;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IClimateGetter.SunTexture => this.SunTexture;
         #endregion
         #region SunGlareTexture
-        public String? SunGlareTexture { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? SunGlareTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IClimateGetter.SunGlareTexture => this.SunGlareTexture;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IClimateGetter.SunGlareTexture => this.SunGlareTexture;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -861,6 +863,9 @@ namespace Mutagen.Bethesda.Skyrim
         public enum TNAMDataType
         {
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => ClimateCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ClimateSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ClimateSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -940,6 +945,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IClimate :
+        IAssetLinkContainer,
         IClimateGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IClimateInternal>,
@@ -947,8 +953,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new ExtendedList<WeatherType>? WeatherTypes { get; set; }
-        new String? SunTexture { get; set; }
-        new String? SunGlareTexture { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? SunTexture { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? SunGlareTexture { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -973,6 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.CLMT)]
     public partial interface IClimateGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IClimateGetter>,
@@ -981,8 +988,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; }
-        String? SunTexture { get; }
-        String? SunGlareTexture { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? SunTexture { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? SunGlareTexture { get; }
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1305,6 +1312,38 @@ namespace Mutagen.Bethesda.Skyrim
             base.RemapLinks(obj, mapping);
             obj.WeatherTypes?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IClimate obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.SunTexture != null)
+            {
+                yield return obj.SunTexture;
+            }
+            if (obj.SunGlareTexture != null)
+            {
+                yield return obj.SunGlareTexture;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IClimate obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.SunTexture?.Relink(mapping);
+            obj.SunGlareTexture?.Relink(mapping);
+            obj.Model?.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -1697,6 +1736,30 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IClimateGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            if (obj.SunTexture != null)
+            {
+                yield return obj.SunTexture;
+            }
+            if (obj.SunGlareTexture != null)
+            {
+                yield return obj.SunGlareTexture;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public Climate Duplicate(
             IClimateGetter item,
@@ -1800,14 +1863,8 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
-            {
-                item.SunTexture = rhs.SunTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunGlareTexture) ?? true))
-            {
-                item.SunGlareTexture = rhs.SunGlareTexture;
-            }
+            item.SunTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.SunTexture, rhs.SunTexture);
+            item.SunGlareTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.SunGlareTexture, rhs.SunGlareTexture);
             if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.Model);
@@ -2046,12 +2103,12 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SunTexture,
+                item: item.SunTexture?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SunGlareTexture,
+                item: item.SunGlareTexture?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model is {} ModelItem)
@@ -2192,17 +2249,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SunTexture = StringBinaryTranslation.Instance.Parse(
+                    item.SunTexture = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Climate_FieldIndex.SunTexture;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SunGlareTexture = StringBinaryTranslation.Instance.Parse(
+                    item.SunGlareTexture = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Climate_FieldIndex.SunGlareTexture;
                 }
                 case RecordTypeInts.MODL:
@@ -2274,7 +2333,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ClimateCommon.Instance.EnumerateFormLinks(this);
+=======
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ClimateCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => ClimateCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+>>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2292,11 +2356,19 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         #region SunTexture
         private int? _SunTextureLocation;
+<<<<<<< HEAD
         public String? SunTexture => _SunTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region SunGlareTexture
         private int? _SunGlareTextureLocation;
         public String? SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+=======
+        public IAssetLinkGetter<SkyrimTextureAssetType>? SunTexture => _SunTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        #endregion
+        #region SunGlareTexture
+        private int? _SunGlareTextureLocation;
+        public IAssetLinkGetter<SkyrimTextureAssetType>? SunGlareTexture => _SunGlareTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+>>>>>>> nog-assets
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _TNAMLocation;

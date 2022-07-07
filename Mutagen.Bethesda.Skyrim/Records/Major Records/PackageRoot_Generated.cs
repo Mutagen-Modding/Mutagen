@@ -725,13 +725,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Flags = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IPackageRoot obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPackageRoot item,
@@ -862,6 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
             return PackageRoot.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageRootGetter obj)
         {
@@ -870,6 +864,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class PackageRootSetterTranslationCommon
     {

@@ -645,14 +645,6 @@ namespace Mutagen.Bethesda.Fallout4
             Clear(item: (ILocationObjectType)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(ILocationObjectType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationObjectType item,
@@ -816,6 +808,7 @@ namespace Mutagen.Bethesda.Fallout4
             return LocationObjectType.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationObjectTypeGetter obj)
         {
@@ -828,6 +821,8 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class LocationObjectTypeSetterTranslationCommon : ALocationTargetSetterTranslationCommon
     {

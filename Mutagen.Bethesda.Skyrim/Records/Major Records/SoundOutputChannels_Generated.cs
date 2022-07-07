@@ -791,13 +791,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Channel2.Clear();
         }
         
-        #region Mutagen
-        public void RemapLinks(ISoundOutputChannels obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundOutputChannels item,
@@ -954,6 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
             return SoundOutputChannels.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundOutputChannelsGetter obj)
         {
@@ -962,6 +956,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class SoundOutputChannelsSetterTranslationCommon
     {

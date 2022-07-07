@@ -735,13 +735,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Rotation = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IPlacement obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPlacement item,
@@ -876,6 +869,7 @@ namespace Mutagen.Bethesda.Skyrim
             return Placement.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacementGetter obj)
         {
@@ -884,6 +878,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class PlacementSetterTranslationCommon
     {

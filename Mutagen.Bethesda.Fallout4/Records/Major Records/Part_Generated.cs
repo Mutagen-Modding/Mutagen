@@ -737,13 +737,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.FileName = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IPart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPart item,
@@ -883,6 +876,7 @@ namespace Mutagen.Bethesda.Fallout4
             return Part.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPartGetter obj)
         {
@@ -891,6 +885,8 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class PartSetterTranslationCommon
     {

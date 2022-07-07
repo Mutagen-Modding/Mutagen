@@ -618,14 +618,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IRegionLand)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IRegionLand obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRegionLand item,
@@ -784,6 +776,7 @@ namespace Mutagen.Bethesda.Skyrim
             return RegionLand.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionLandGetter obj)
         {
@@ -796,6 +789,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class RegionLandSetterTranslationCommon : RegionDataSetterTranslationCommon
     {

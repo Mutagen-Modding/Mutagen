@@ -840,13 +840,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Fragments.Clear();
         }
         
-        #region Mutagen
-        public void RemapLinks(IPerkScriptFragments obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkScriptFragments item,
@@ -1000,6 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
             return PerkScriptFragments.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkScriptFragmentsGetter obj)
         {
@@ -1008,6 +1002,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class PerkScriptFragmentsSetterTranslationCommon
     {

@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
@@ -146,6 +147,9 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<T, TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<T, TMajor>(records, throwIfUnknown);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => OblivionListGroupCommon<T>.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => OblivionListGroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => OblivionListGroupSetterCommon<T>.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -207,6 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IOblivionListGroup<T> :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IOblivionListGroup<T>>,
         IMajorRecordEnumerable,
@@ -220,6 +225,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IOblivionListGroupGetter<out T> :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IOblivionListGroupGetter<T>>,
@@ -848,6 +854,21 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IOblivionListGroup<T> obj)
+        {
+            foreach (var item in obj.Records.WhereCastable<T, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IOblivionListGroup<T> obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.Records.ForEach(x => x.RemapListedAssetLinks(mapping));
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1078,6 +1099,16 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     yield break;
             }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IOblivionListGroupGetter<T> obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in obj.Records.WhereCastable<T, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(linkCache, includeImplicit)))
+            {
+                yield return item;
+            }
+            yield break;
         }
         
         #endregion
@@ -1407,7 +1438,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OblivionListGroupCommon<T>.Instance.EnumerateFormLinks(this);
+=======
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionListGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => OblivionListGroupCommon<T>.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+>>>>>>> nog-assets
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

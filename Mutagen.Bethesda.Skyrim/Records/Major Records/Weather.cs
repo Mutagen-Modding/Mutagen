@@ -5,7 +5,14 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.Buffers.Binary;
+<<<<<<< HEAD
 using Mutagen.Bethesda.Skyrim.Internals;
+=======
+using System.Collections.Generic;
+using System.Linq;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Skyrim.Assets;
+>>>>>>> nog-assets
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -114,6 +121,7 @@ partial class WeatherBinaryCreateTranslation
         FillBinaryCloudYSpeeds(frame, item.Clouds);
     }
 
+<<<<<<< HEAD
     public static void FillBinaryCloudYSpeeds(MutagenFrame frame, CloudLayer[] clouds)
     {
         frame.ReadSubrecordHeader();
@@ -122,6 +130,20 @@ partial class WeatherBinaryCreateTranslation
             clouds[i].YSpeed = ConvertToSpeed(frame.ReadUInt8());
         }
     }
+=======
+            public static void FillCloudTexture(MutagenFrame stream, RecordType nextRecordType, IAssetLink<SkyrimTextureAssetType>?[] textures)
+            {
+                int layer = nextRecordType.TypeInt - TextureIntBase;
+                if (layer > 29 || layer < 0)
+                {
+                    throw new ArgumentException();
+                }
+                var subRec = stream.ReadSubrecordFrame();
+                textures[layer] = new AssetLink<SkyrimTextureAssetType>(
+                    SkyrimTextureAssetType.Instance,
+                    BinaryStringUtility.ProcessWholeToZString(subRec.Content, stream.MetaData.Encodings.NonTranslated));
+            }
+>>>>>>> nog-assets
 
     public static partial ParseResult FillBinaryCloudXSpeedsCustom(MutagenFrame frame, IWeatherInternal item)
     {
@@ -274,7 +296,15 @@ partial class WeatherBinaryWriteTranslation
             {
                 for (int i = 0; i < xSpeeds.Length; i++)
                 {
+<<<<<<< HEAD
                     writer.Write(ConvertFromSpeed(xSpeeds[i] ?? default(byte)));
+=======
+                    if (cloudTex[i] is not {} tex) continue;
+                    using (HeaderExport.Subrecord(writer, new RecordType(WeatherBinaryCreateTranslation.TextureIntBase + i)))
+                    {
+                        writer.Write(tex.RawPath, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
+                    }
+>>>>>>> nog-assets
                 }
             }
         }
@@ -392,10 +422,15 @@ partial class WeatherBinaryWriteTranslation
         }
         using (HeaderExport.Subrecord(writer, RecordTypes.DALC))
         {
+<<<<<<< HEAD
             colors.Night.WriteToBinary(writer);
         }
     }
 }
+=======
+            private readonly IAssetLink<SkyrimTextureAssetType>?[] _cloudTextures = new IAssetLink<SkyrimTextureAssetType>?[29];
+            public ReadOnlyMemorySlice<IAssetLinkGetter<SkyrimTextureAssetType>?> CloudTextures => _cloudTextures;
+>>>>>>> nog-assets
 
 partial class WeatherBinaryOverlay
 {

@@ -1473,6 +1473,7 @@ namespace Mutagen.Bethesda.Fallout4
             Clear(item: (ISoundDescriptorInternal)item);
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public void RemapLinks(ISoundDescriptor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
@@ -1487,6 +1488,8 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
+=======
+>>>>>>> nog-assets
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundDescriptorInternal item,
@@ -1879,6 +1882,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundDescriptorGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1916,6 +1920,8 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public SoundDescriptor Duplicate(
             ISoundDescriptorGetter item,

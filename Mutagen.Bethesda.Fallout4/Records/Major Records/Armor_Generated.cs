@@ -2612,6 +2612,7 @@ namespace Mutagen.Bethesda.Fallout4
             Clear(item: (IArmorInternal)item);
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public void RemapLinks(IArmor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
@@ -2638,6 +2639,8 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
+=======
+>>>>>>> nog-assets
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IArmorInternal item,
@@ -3284,6 +3287,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -3386,6 +3390,8 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public Armor Duplicate(
             IArmorGetter item,

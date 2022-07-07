@@ -843,13 +843,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.UseValueSecond = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISkillData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISkillData item,
@@ -1014,6 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
             return SkillData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISkillDataGetter obj)
         {
@@ -1022,6 +1016,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class SkillDataSetterTranslationCommon
     {

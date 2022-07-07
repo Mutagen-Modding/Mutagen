@@ -735,13 +735,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.Weight = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IClothingData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IClothingData item,
@@ -876,6 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ClothingData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IClothingDataGetter obj)
         {
@@ -884,6 +878,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class ClothingDataSetterTranslationCommon
     {

@@ -2051,13 +2051,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.RushingAttackDistanceMult = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ICombatStyleData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICombatStyleData item,
@@ -2542,6 +2535,7 @@ namespace Mutagen.Bethesda.Oblivion
             return CombatStyleData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICombatStyleDataGetter obj)
         {
@@ -2550,6 +2544,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class CombatStyleDataSetterTranslationCommon
     {

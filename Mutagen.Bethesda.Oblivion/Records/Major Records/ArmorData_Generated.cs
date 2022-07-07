@@ -809,13 +809,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.Weight = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IArmorData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IArmorData item,
@@ -970,6 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ArmorData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorDataGetter obj)
         {
@@ -978,6 +972,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class ArmorDataSetterTranslationCommon
     {

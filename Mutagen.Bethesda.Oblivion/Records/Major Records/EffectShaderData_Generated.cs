@@ -2776,13 +2776,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.ColorKey3ColorKeyTime = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IEffectShaderData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEffectShaderData item,
@@ -3467,6 +3460,7 @@ namespace Mutagen.Bethesda.Oblivion
             return EffectShaderData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEffectShaderDataGetter obj)
         {
@@ -3475,6 +3469,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class EffectShaderDataSetterTranslationCommon
     {

@@ -725,13 +725,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Value = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IKeyFrame obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IKeyFrame item,
@@ -862,6 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
             return KeyFrame.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IKeyFrameGetter obj)
         {
@@ -870,6 +864,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class KeyFrameSetterTranslationCommon
     {

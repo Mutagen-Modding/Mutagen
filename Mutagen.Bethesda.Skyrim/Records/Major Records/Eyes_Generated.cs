@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -14,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -22,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -81,7 +84,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Icon
-        public String Icon { get; set; } = string.Empty;
+        public IAssetLink<SkyrimTextureAssetType> Icon { get; set; } = new AssetLink<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance);
+        IAssetLinkGetter<SkyrimTextureAssetType> IEyesGetter.Icon => this.Icon;
         #endregion
         #region Flags
         public Eyes.Flag Flags { get; set; } = default;
@@ -484,6 +488,9 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => EyesCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => EyesSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => EyesSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -563,6 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IEyes :
+        IAssetLinkContainer,
         IEyesGetter,
         ILoquiObjectSetter<IEyesInternal>,
         INamedRequired,
@@ -573,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: INamedRequired, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString Name { get; set; }
-        new String Icon { get; set; }
+        new IAssetLink<SkyrimTextureAssetType> Icon { get; set; }
         new Eyes.Flag Flags { get; set; }
         #region Mutagen
         new Eyes.MajorFlag MajorFlags { get; set; }
@@ -591,6 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.EYES)]
     public partial interface IEyesGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IEyesGetter>,
         IMapsToGetter<IEyesGetter>,
@@ -604,7 +613,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         ITranslatedStringGetter Name { get; }
         #endregion
-        String Icon { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType> Icon { get; }
         Eyes.Flag Flags { get; }
 
         #region Mutagen
@@ -877,7 +886,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Name.Clear();
-            item.Icon = string.Empty;
+            item.Icon.SetToNull();
             item.Flags = default;
             base.Clear(item);
         }
@@ -893,9 +902,20 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public void RemapLinks(IEyes obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IEyes obj)
         {
-            base.RemapLinks(obj, mapping);
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            yield return obj.Icon;
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IEyes obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Icon.Relink(mapping);
         }
         
         #endregion
@@ -1141,12 +1161,19 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEyesGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
+=======
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IEyesGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+>>>>>>> nog-assets
             {
                 yield return item;
             }
+            yield return obj.Icon;
             yield break;
         }
         
@@ -1225,10 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Name = rhs.Name.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Eyes_FieldIndex.Icon) ?? true))
-            {
-                item.Icon = rhs.Icon;
-            }
+            item.Icon.RawPath = rhs.Icon.RawPath;
             if ((copyMask?.GetShouldTranslate((int)Eyes_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
@@ -1398,7 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Icon,
+                item: item.Icon.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             EnumBinaryTranslation<Eyes.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1512,7 +1536,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon = StringBinaryTranslation.Instance.Parse(
+                    item.Icon.RawPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Eyes_FieldIndex.Icon;
@@ -1569,6 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => EyesCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EyesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1594,7 +1619,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Icon
         private int? _IconLocation;
+<<<<<<< HEAD
         public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+=======
+        public IAssetLinkGetter<SkyrimTextureAssetType> Icon => _IconLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance);
+>>>>>>> nog-assets
         #endregion
         #region Flags
         private int? _FlagsLocation;

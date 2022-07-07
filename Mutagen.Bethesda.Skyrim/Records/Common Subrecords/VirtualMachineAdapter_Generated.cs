@@ -622,14 +622,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IVirtualMachineAdapter)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IVirtualMachineAdapter obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IVirtualMachineAdapter item,
@@ -793,6 +785,7 @@ namespace Mutagen.Bethesda.Skyrim
             return VirtualMachineAdapter.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVirtualMachineAdapterGetter obj)
         {
@@ -805,6 +798,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class VirtualMachineAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {

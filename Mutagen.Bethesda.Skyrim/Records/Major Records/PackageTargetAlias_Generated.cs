@@ -654,14 +654,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IPackageTargetAlias)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IPackageTargetAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPackageTargetAlias item,
@@ -827,6 +819,7 @@ namespace Mutagen.Bethesda.Skyrim
             return PackageTargetAlias.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageTargetAliasGetter obj)
         {
@@ -839,6 +832,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class PackageTargetAliasSetterTranslationCommon : APackageTargetSetterTranslationCommon
     {

@@ -7,17 +7,23 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+<<<<<<< HEAD
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+=======
+using Mutagen.Bethesda.Skyrim.Assets;
+>>>>>>> nog-assets
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -55,9 +61,9 @@ namespace Mutagen.Bethesda.Skyrim
         Part.PartTypeEnum? IPartGetter.PartType => this.PartType;
         #endregion
         #region FileName
-        public String? FileName { get; set; }
+        public IAssetLink<SkyrimDeformedModelAssetType>? FileName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IPartGetter.FileName => this.FileName;
+        IAssetLinkGetter<SkyrimDeformedModelAssetType>? IPartGetter.FileName => this.FileName;
         #endregion
 
         #region To String
@@ -387,6 +393,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => PartCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => PartSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => PartSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PartBinaryWriteTranslation.Instance;
@@ -446,15 +458,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPart :
+        IAssetLinkContainer,
         ILoquiObjectSetter<IPart>,
         IPartGetter
     {
         new Part.PartTypeEnum? PartType { get; set; }
-        new String? FileName { get; set; }
+        new IAssetLink<SkyrimDeformedModelAssetType>? FileName { get; set; }
     }
 
     public partial interface IPartGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IPartGetter>
     {
@@ -466,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Part_Registration.Instance;
         Part.PartTypeEnum? PartType { get; }
-        String? FileName { get; }
+        IAssetLinkGetter<SkyrimDeformedModelAssetType>? FileName { get; }
 
     }
 
@@ -738,8 +752,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public void RemapLinks(IPart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPart obj)
         {
+            if (obj.FileName != null)
+            {
+                yield return obj.FileName;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IPart obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.FileName?.Relink(mapping);
         }
         
         #endregion
@@ -884,8 +908,16 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPartGetter obj)
+=======
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IPartGetter obj, ILinkCache? linkCache, bool includeImplicit)
+>>>>>>> nog-assets
         {
+            if (obj.FileName != null)
+            {
+                yield return obj.FileName;
+            }
             yield break;
         }
         
@@ -908,10 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.PartType = rhs.PartType;
             }
-            if ((copyMask?.GetShouldTranslate((int)Part_FieldIndex.FileName) ?? true))
-            {
-                item.FileName = rhs.FileName;
-            }
+            item.FileName = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.FileName, rhs.FileName);
         }
         
         #endregion
@@ -1016,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.NAM0));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FileName,
+                item: item.FileName?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -1080,9 +1109,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)Part_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileName = StringBinaryTranslation.Instance.Parse(
+                    item.FileName = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimDeformedModelAssetType.Instance);
                     return (int)Part_FieldIndex.FileName;
                 }
                 default:
@@ -1139,6 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => PartCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PartBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1159,7 +1190,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FileName
         private int? _FileNameLocation;
+<<<<<<< HEAD
         public String? FileName => _FileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+=======
+        public IAssetLinkGetter<SkyrimDeformedModelAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimDeformedModelAssetType>(SkyrimDeformedModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+>>>>>>> nog-assets
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -847,13 +847,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Unknown = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ILandscapeVertexHeightMap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILandscapeVertexHeightMap item,
@@ -1011,6 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
             return LandscapeVertexHeightMap.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILandscapeVertexHeightMapGetter obj)
         {
@@ -1019,6 +1013,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class LandscapeVertexHeightMapSetterTranslationCommon
     {

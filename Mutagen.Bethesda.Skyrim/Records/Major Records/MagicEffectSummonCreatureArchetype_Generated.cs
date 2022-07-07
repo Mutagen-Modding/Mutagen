@@ -609,13 +609,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IMagicEffectSummonCreatureArchetypeInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IMagicEffectSummonCreatureArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectSummonCreatureArchetypeInternal item,
@@ -775,6 +768,7 @@ namespace Mutagen.Bethesda.Skyrim
             return MagicEffectSummonCreatureArchetype.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectSummonCreatureArchetypeGetter obj)
         {
@@ -783,6 +777,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class MagicEffectSummonCreatureArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {

@@ -689,13 +689,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.FirstPersonFlags = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IBipedBodyTemplate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBipedBodyTemplate item,
@@ -820,6 +813,7 @@ namespace Mutagen.Bethesda.Fallout4
             return BipedBodyTemplate.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBipedBodyTemplateGetter obj)
         {
@@ -828,6 +822,8 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class BipedBodyTemplateSetterTranslationCommon
     {

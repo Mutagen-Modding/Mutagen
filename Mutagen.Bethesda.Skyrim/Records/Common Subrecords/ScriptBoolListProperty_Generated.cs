@@ -739,14 +739,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IScriptBoolListProperty)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IScriptBoolListProperty obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScriptBoolListProperty item,
@@ -927,6 +919,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ScriptBoolListProperty.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptBoolListPropertyGetter obj)
         {
@@ -939,6 +932,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class ScriptBoolListPropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon
     {

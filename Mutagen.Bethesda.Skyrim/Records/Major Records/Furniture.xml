@@ -18,7 +18,7 @@
       <FormLink name="AssociatedSpell" refName="Spell" recordType="NAM1" />
       <CustomLogic name="DisabledMarkers" recordType="ENAM" />
       <RefList name="Markers" refName="FurnitureMarker" recordType="FNPR" binary="Custom" />
-      <String name="ModelFilename" recordType="XMRK" />
+      <AssetLink name="ModelFilename" recordType="XMRK" assetType="SkyrimModel" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>

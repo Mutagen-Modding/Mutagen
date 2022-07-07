@@ -807,13 +807,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.Icon = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IFacePart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFacePart item,
@@ -975,6 +968,7 @@ namespace Mutagen.Bethesda.Oblivion
             return FacePart.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFacePartGetter obj)
         {
@@ -983,6 +977,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class FacePartSetterTranslationCommon
     {

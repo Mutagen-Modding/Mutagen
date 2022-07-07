@@ -1065,13 +1065,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Attack = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IAIData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAIData item,
@@ -1296,6 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim
             return AIData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAIDataGetter obj)
         {
@@ -1304,6 +1298,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class AIDataSetterTranslationCommon
     {

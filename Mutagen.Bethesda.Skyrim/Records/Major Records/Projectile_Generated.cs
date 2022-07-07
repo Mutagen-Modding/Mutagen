@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -23,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -277,7 +279,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ICollisionLayerGetter> IProjectileGetter.CollisionLayer => this.CollisionLayer;
         #endregion
         #region MuzzleFlashModel
-        public String MuzzleFlashModel { get; set; } = string.Empty;
+        public IAssetLink<SkyrimModelAssetType> MuzzleFlashModel { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        IAssetLinkGetter<SkyrimModelAssetType> IProjectileGetter.MuzzleFlashModel => this.MuzzleFlashModel;
         #endregion
         #region TextureFilesHashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1582,6 +1585,9 @@ namespace Mutagen.Bethesda.Skyrim
             Break0 = 1,
             Break1 = 2
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => ProjectileCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ProjectileSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ProjectileSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1661,7 +1667,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IProjectile :
+<<<<<<< HEAD
         IExplodeSpawn,
+=======
+        IAssetLinkContainer,
+>>>>>>> nog-assets
         IFormLinkContainer,
         ILoquiObjectSetter<IProjectileInternal>,
         IModeled,
@@ -1712,7 +1722,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single RelaunchInterval { get; set; }
         new IFormLink<ITextureSetGetter> DecalData { get; set; }
         new IFormLink<ICollisionLayerGetter> CollisionLayer { get; set; }
-        new String MuzzleFlashModel { get; set; }
+        new IAssetLink<SkyrimModelAssetType> MuzzleFlashModel { get; set; }
         new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new UInt32 SoundLevel { get; set; }
         new Projectile.DATADataType DATADataTypeState { get; set; }
@@ -1728,6 +1738,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.PROJ)]
     public partial interface IProjectileGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
@@ -1786,7 +1797,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single RelaunchInterval { get; }
         IFormLinkGetter<ITextureSetGetter> DecalData { get; }
         IFormLinkGetter<ICollisionLayerGetter> CollisionLayer { get; }
-        String MuzzleFlashModel { get; }
+        IAssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel { get; }
         ReadOnlyMemorySlice<Byte>? TextureFilesHashes { get; }
         UInt32 SoundLevel { get; }
         Projectile.DATADataType DATADataTypeState { get; }
@@ -2120,7 +2131,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.RelaunchInterval = default;
             item.DecalData.Clear();
             item.CollisionLayer.Clear();
-            item.MuzzleFlashModel = string.Empty;
+            item.MuzzleFlashModel.SetToNull();
             item.TextureFilesHashes = default;
             item.SoundLevel = default;
             item.DATADataTypeState = default;
@@ -2152,6 +2163,38 @@ namespace Mutagen.Bethesda.Skyrim
             obj.DefaultWeaponSource.Relink(mapping);
             obj.DecalData.Relink(mapping);
             obj.CollisionLayer.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IProjectile obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield return obj.MuzzleFlashModel;
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IProjectile obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Model?.RemapListedAssetLinks(mapping);
+            obj.Destructible?.RemapListedAssetLinks(mapping);
+            obj.MuzzleFlashModel.Relink(mapping);
         }
         
         #endregion
@@ -2755,6 +2798,30 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IProjectileGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                {
+                    yield return item;
+                }
+            }
+            yield return obj.MuzzleFlashModel;
+            yield break;
+        }
+        
         #region Duplicate
         public Projectile Duplicate(
             IProjectileGetter item,
@@ -3000,10 +3067,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.CollisionLayer.SetTo(rhs.CollisionLayer.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
-            {
-                item.MuzzleFlashModel = rhs.MuzzleFlashModel;
-            }
+            item.MuzzleFlashModel.RawPath = rhs.MuzzleFlashModel.RawPath;
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
             {
                 if(rhs.TextureFilesHashes is {} TextureFilesHashesrhs)
@@ -3299,7 +3363,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MuzzleFlashModel,
+                item: item.MuzzleFlashModel.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -3481,7 +3545,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MuzzleFlashModel = StringBinaryTranslation.Instance.Parse(
+                    item.MuzzleFlashModel.RawPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Projectile_FieldIndex.MuzzleFlashModel;
@@ -3542,7 +3606,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProjectileCommon.Instance.EnumerateFormLinks(this);
+=======
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ProjectileCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => ProjectileCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+>>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3700,7 +3769,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;
+<<<<<<< HEAD
         public String MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+=======
+        public IAssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+>>>>>>> nog-assets
         #endregion
         #region TextureFilesHashes
         private int? _TextureFilesHashesLocation;

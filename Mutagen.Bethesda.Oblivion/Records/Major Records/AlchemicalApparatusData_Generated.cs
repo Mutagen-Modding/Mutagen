@@ -810,13 +810,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.Quality = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IAlchemicalApparatusData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAlchemicalApparatusData item,
@@ -971,6 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
             return AlchemicalApparatusData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAlchemicalApparatusDataGetter obj)
         {
@@ -979,6 +973,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class AlchemicalApparatusDataSetterTranslationCommon
     {

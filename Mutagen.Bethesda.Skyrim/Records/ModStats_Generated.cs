@@ -770,13 +770,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.NextFormID = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IModStats obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IModStats item,
@@ -921,6 +914,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ModStats.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IModStatsGetter obj)
         {
@@ -929,6 +923,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class ModStatsSetterTranslationCommon
     {

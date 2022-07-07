@@ -769,13 +769,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Duration = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IEffectData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEffectData item,
@@ -920,6 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
             return EffectData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEffectDataGetter obj)
         {
@@ -928,6 +922,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class EffectDataSetterTranslationCommon
     {

@@ -671,14 +671,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IPackageDataFloat)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IPackageDataFloat obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPackageDataFloat item,
@@ -847,6 +839,7 @@ namespace Mutagen.Bethesda.Skyrim
             return PackageDataFloat.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageDataFloatGetter obj)
         {
@@ -859,6 +852,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class PackageDataFloatSetterTranslationCommon : APackageDataSetterTranslationCommon
     {

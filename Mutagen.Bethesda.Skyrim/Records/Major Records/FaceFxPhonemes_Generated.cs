@@ -1489,13 +1489,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.W = null;
         }
         
-        #region Mutagen
-        public void RemapLinks(IFaceFxPhonemes obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFaceFxPhonemes item,
@@ -1968,6 +1961,7 @@ namespace Mutagen.Bethesda.Skyrim
             return FaceFxPhonemes.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFaceFxPhonemesGetter obj)
         {
@@ -1976,6 +1970,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class FaceFxPhonemesSetterTranslationCommon
     {

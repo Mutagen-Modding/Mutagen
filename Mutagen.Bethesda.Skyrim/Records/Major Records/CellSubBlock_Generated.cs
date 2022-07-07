@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -598,6 +599,9 @@ namespace Mutagen.Bethesda.Skyrim
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => CellSubBlockCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => CellSubBlockSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => CellSubBlockSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -659,6 +663,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ICellSubBlock :
+        IAssetLinkContainer,
         ICellSubBlockGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<ICellSubBlock>,
@@ -673,6 +678,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICellSubBlockGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ICellSubBlockGetter>,
@@ -1381,6 +1387,21 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ICellSubBlock obj)
+        {
+            foreach (var item in obj.Cells.WhereCastable<ICellGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(ICellSubBlock obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.Cells.ForEach(x => x.RemapListedAssetLinks(mapping));
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1728,6 +1749,16 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ICellSubBlockGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in obj.Cells.WhereCastable<ICellGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(linkCache, includeImplicit)))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -2037,7 +2068,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellSubBlockCommon.Instance.EnumerateFormLinks(this);
+=======
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CellSubBlockCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => CellSubBlockCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+>>>>>>> nog-assets
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

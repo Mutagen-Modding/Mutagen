@@ -732,13 +732,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.Height = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IDimensions obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDimensions item,
@@ -873,6 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
             return Dimensions.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDimensionsGetter obj)
         {
@@ -881,6 +875,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class DimensionsSetterTranslationCommon
     {

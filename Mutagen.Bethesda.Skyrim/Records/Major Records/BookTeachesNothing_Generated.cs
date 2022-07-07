@@ -645,14 +645,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IBookTeachesNothing)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IBookTeachesNothing obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBookTeachesNothing item,
@@ -816,6 +808,7 @@ namespace Mutagen.Bethesda.Skyrim
             return BookTeachesNothing.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBookTeachesNothingGetter obj)
         {
@@ -828,6 +821,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class BookTeachesNothingSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
     {

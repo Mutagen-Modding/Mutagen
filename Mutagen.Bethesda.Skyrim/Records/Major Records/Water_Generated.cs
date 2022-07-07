@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -23,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -377,24 +379,24 @@ namespace Mutagen.Bethesda.Skyrim
         P3Float? IWaterGetter.AngularVelocity => this.AngularVelocity;
         #endregion
         #region NoiseLayerOneTexture
-        public String? NoiseLayerOneTexture { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? NoiseLayerOneTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWaterGetter.NoiseLayerOneTexture => this.NoiseLayerOneTexture;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.NoiseLayerOneTexture => this.NoiseLayerOneTexture;
         #endregion
         #region NoiseLayerTwoTexture
-        public String? NoiseLayerTwoTexture { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? NoiseLayerTwoTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWaterGetter.NoiseLayerTwoTexture => this.NoiseLayerTwoTexture;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.NoiseLayerTwoTexture => this.NoiseLayerTwoTexture;
         #endregion
         #region NoiseLayerThreeTexture
-        public String? NoiseLayerThreeTexture { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? NoiseLayerThreeTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWaterGetter.NoiseLayerThreeTexture => this.NoiseLayerThreeTexture;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.NoiseLayerThreeTexture => this.NoiseLayerThreeTexture;
         #endregion
         #region FlowNormalsNoiseTexture
-        public String? FlowNormalsNoiseTexture { get; set; }
+        public IAssetLink<SkyrimTextureAssetType>? FlowNormalsNoiseTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWaterGetter.FlowNormalsNoiseTexture => this.FlowNormalsNoiseTexture;
+        IAssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.FlowNormalsNoiseTexture => this.FlowNormalsNoiseTexture;
         #endregion
         #region DNAMDataTypeState
         public Water.DNAMDataType DNAMDataTypeState { get; set; } = default;
@@ -2816,6 +2818,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => WaterCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WaterSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WaterSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2895,6 +2900,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWater :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IWaterInternal>,
         INamed,
@@ -2970,10 +2976,10 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? GNAM { get; set; }
         new P3Float? LinearVelocity { get; set; }
         new P3Float? AngularVelocity { get; set; }
-        new String? NoiseLayerOneTexture { get; set; }
-        new String? NoiseLayerTwoTexture { get; set; }
-        new String? NoiseLayerThreeTexture { get; set; }
-        new String? FlowNormalsNoiseTexture { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? NoiseLayerOneTexture { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? NoiseLayerTwoTexture { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? NoiseLayerThreeTexture { get; set; }
+        new IAssetLink<SkyrimTextureAssetType>? FlowNormalsNoiseTexture { get; set; }
         new Water.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
@@ -2987,6 +2993,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.WATR)]
     public partial interface IWaterGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IWaterGetter>,
@@ -3065,10 +3072,10 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? GNAM { get; }
         P3Float? LinearVelocity { get; }
         P3Float? AngularVelocity { get; }
-        String? NoiseLayerOneTexture { get; }
-        String? NoiseLayerTwoTexture { get; }
-        String? NoiseLayerThreeTexture { get; }
-        String? FlowNormalsNoiseTexture { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerOneTexture { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerTwoTexture { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerThreeTexture { get; }
+        IAssetLinkGetter<SkyrimTextureAssetType>? FlowNormalsNoiseTexture { get; }
         Water.DNAMDataType DNAMDataTypeState { get; }
 
     }
@@ -3505,6 +3512,40 @@ namespace Mutagen.Bethesda.Skyrim
             obj.OpenSound.Relink(mapping);
             obj.Spell.Relink(mapping);
             obj.ImageSpace.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWater obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.NoiseLayerOneTexture != null)
+            {
+                yield return obj.NoiseLayerOneTexture;
+            }
+            if (obj.NoiseLayerTwoTexture != null)
+            {
+                yield return obj.NoiseLayerTwoTexture;
+            }
+            if (obj.NoiseLayerThreeTexture != null)
+            {
+                yield return obj.NoiseLayerThreeTexture;
+            }
+            if (obj.FlowNormalsNoiseTexture != null)
+            {
+                yield return obj.FlowNormalsNoiseTexture;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IWater obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.NoiseLayerOneTexture?.Relink(mapping);
+            obj.NoiseLayerTwoTexture?.Relink(mapping);
+            obj.NoiseLayerThreeTexture?.Relink(mapping);
+            obj.FlowNormalsNoiseTexture?.Relink(mapping);
         }
         
         #endregion
@@ -4482,6 +4523,31 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWaterGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            if (obj.NoiseLayerOneTexture != null)
+            {
+                yield return obj.NoiseLayerOneTexture;
+            }
+            if (obj.NoiseLayerTwoTexture != null)
+            {
+                yield return obj.NoiseLayerTwoTexture;
+            }
+            if (obj.NoiseLayerThreeTexture != null)
+            {
+                yield return obj.NoiseLayerThreeTexture;
+            }
+            if (obj.FlowNormalsNoiseTexture != null)
+            {
+                yield return obj.FlowNormalsNoiseTexture;
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public Water Duplicate(
             IWaterGetter item,
@@ -4832,22 +4898,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.AngularVelocity = rhs.AngularVelocity;
             }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneTexture) ?? true))
-            {
-                item.NoiseLayerOneTexture = rhs.NoiseLayerOneTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoTexture) ?? true))
-            {
-                item.NoiseLayerTwoTexture = rhs.NoiseLayerTwoTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeTexture) ?? true))
-            {
-                item.NoiseLayerThreeTexture = rhs.NoiseLayerThreeTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FlowNormalsNoiseTexture) ?? true))
-            {
-                item.FlowNormalsNoiseTexture = rhs.FlowNormalsNoiseTexture;
-            }
+            item.NoiseLayerOneTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture);
+            item.NoiseLayerTwoTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture);
+            item.NoiseLayerThreeTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture);
+            item.FlowNormalsNoiseTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture);
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 item.DNAMDataTypeState = rhs.DNAMDataTypeState;
@@ -5224,22 +5278,22 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NoiseLayerOneTexture,
+                item: item.NoiseLayerOneTexture?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM2),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NoiseLayerTwoTexture,
+                item: item.NoiseLayerTwoTexture?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM3),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NoiseLayerThreeTexture,
+                item: item.NoiseLayerThreeTexture?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FlowNormalsNoiseTexture,
+                item: item.FlowNormalsNoiseTexture?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM5),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -5486,33 +5540,37 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NoiseLayerOneTexture = StringBinaryTranslation.Instance.Parse(
+                    item.NoiseLayerOneTexture = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Water_FieldIndex.NoiseLayerOneTexture;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NoiseLayerTwoTexture = StringBinaryTranslation.Instance.Parse(
+                    item.NoiseLayerTwoTexture = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Water_FieldIndex.NoiseLayerTwoTexture;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NoiseLayerThreeTexture = StringBinaryTranslation.Instance.Parse(
+                    item.NoiseLayerThreeTexture = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Water_FieldIndex.NoiseLayerThreeTexture;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FlowNormalsNoiseTexture = StringBinaryTranslation.Instance.Parse(
+                    item.FlowNormalsNoiseTexture = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimTextureAssetType.Instance);
                     return (int)Water_FieldIndex.FlowNormalsNoiseTexture;
                 }
                 default:
@@ -5559,7 +5617,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterCommon.Instance.EnumerateFormLinks(this);
+=======
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => WaterCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+>>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -5885,6 +5948,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NoiseLayerOneTexture
         private int? _NoiseLayerOneTextureLocation;
+<<<<<<< HEAD
         public String? NoiseLayerOneTexture => _NoiseLayerOneTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseLayerOneTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region NoiseLayerTwoTexture
@@ -5898,6 +5962,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region FlowNormalsNoiseTexture
         private int? _FlowNormalsNoiseTextureLocation;
         public String? FlowNormalsNoiseTexture => _FlowNormalsNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlowNormalsNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+=======
+        public IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerOneTexture => _NoiseLayerOneTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerOneTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        #endregion
+        #region NoiseLayerTwoTexture
+        private int? _NoiseLayerTwoTextureLocation;
+        public IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerTwoTexture => _NoiseLayerTwoTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerTwoTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        #endregion
+        #region NoiseLayerThreeTexture
+        private int? _NoiseLayerThreeTextureLocation;
+        public IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerThreeTexture => _NoiseLayerThreeTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerThreeTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        #endregion
+        #region FlowNormalsNoiseTexture
+        private int? _FlowNormalsNoiseTextureLocation;
+        public IAssetLinkGetter<SkyrimTextureAssetType>? FlowNormalsNoiseTexture => _FlowNormalsNoiseTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FlowNormalsNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+>>>>>>> nog-assets
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

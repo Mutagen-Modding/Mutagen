@@ -666,14 +666,6 @@ namespace Mutagen.Bethesda.Oblivion
             Clear(item: (IRegionMap)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IRegionMap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRegionMap item,
@@ -844,6 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
             return RegionMap.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionMapGetter obj)
         {
@@ -856,6 +849,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class RegionMapSetterTranslationCommon : RegionDataSetterTranslationCommon
     {

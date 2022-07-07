@@ -734,13 +734,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.UsesSkill = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IWorkbenchData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWorkbenchData item,
@@ -879,6 +872,7 @@ namespace Mutagen.Bethesda.Skyrim
             return WorkbenchData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorkbenchDataGetter obj)
         {
@@ -887,6 +881,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class WorkbenchDataSetterTranslationCommon
     {

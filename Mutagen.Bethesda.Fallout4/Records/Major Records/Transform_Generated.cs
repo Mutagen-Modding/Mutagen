@@ -986,14 +986,6 @@ namespace Mutagen.Bethesda.Fallout4
             Clear(item: (ITransformInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(ITransform obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITransformInternal item,
@@ -1265,6 +1257,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITransformGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1274,6 +1267,8 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public Transform Duplicate(
             ITransformGetter item,

@@ -811,14 +811,6 @@ namespace Mutagen.Bethesda.Oblivion
             Clear(item: (ICombatStyleInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(ICombatStyle obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICombatStyleInternal item,
@@ -1072,6 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICombatStyleGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1081,6 +1074,8 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public CombatStyle Duplicate(
             ICombatStyleGetter item,

@@ -2,9 +2,12 @@ using System.Collections;
 using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
@@ -125,4 +128,9 @@ internal class SkyrimGroupWrapper<TMajor> : ISkyrimGroupGetter<TMajor>
     IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
 
     public ILoquiRegistration ContainedRecordRegistration => _groupMerge.ContainedRecordRegistration;
+    
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache = null, bool includeImplicit = true)
+    {
+        return _groupMerge.EnumerateAssetLinks(linkCache, includeImplicit);
+    }
 }

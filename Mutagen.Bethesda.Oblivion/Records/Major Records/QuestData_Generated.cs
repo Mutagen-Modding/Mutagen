@@ -732,13 +732,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.Priority = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IQuestData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IQuestData item,
@@ -873,6 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
             return QuestData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestDataGetter obj)
         {
@@ -881,6 +875,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class QuestDataSetterTranslationCommon
     {

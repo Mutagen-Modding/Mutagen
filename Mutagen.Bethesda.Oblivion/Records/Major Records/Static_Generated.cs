@@ -778,14 +778,6 @@ namespace Mutagen.Bethesda.Oblivion
             Clear(item: (IStaticInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IStatic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IStaticInternal item,
@@ -1017,6 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IStaticGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1026,6 +1019,8 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public Static Duplicate(
             IStaticGetter item,

@@ -855,14 +855,6 @@ namespace Mutagen.Bethesda.Oblivion
             Clear(item: (IEyeInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IEye obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEyeInternal item,
@@ -1114,6 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEyeGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1123,6 +1116,8 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public Eye Duplicate(
             IEyeGetter item,

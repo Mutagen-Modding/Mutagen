@@ -724,14 +724,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IPerkEntryPointAddRangeToValue)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IPerkEntryPointAddRangeToValue obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkEntryPointAddRangeToValue item,
@@ -962,6 +954,7 @@ namespace Mutagen.Bethesda.Skyrim
             return PerkEntryPointAddRangeToValue.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkEntryPointAddRangeToValueGetter obj)
         {
@@ -974,6 +967,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class PerkEntryPointAddRangeToValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {

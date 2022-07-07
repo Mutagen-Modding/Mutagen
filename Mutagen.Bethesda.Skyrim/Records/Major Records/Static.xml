@@ -22,13 +22,13 @@
   </Object>
   <Object name="Lod" objType="Subrecord" recordType="MNAM" GUID="a708745a-1c62-4a97-afcc-345a6c66ad64" ID="185">
     <Fields>
-      <String name="Level0" binary="Custom" binaryOverlay="NoGeneration" maxLength="259" />
+      <AssetLink name="Level0" binary="Custom" binaryOverlay="NoGeneration" maxLength="259" assetType="SkyrimModel" />
       <ByteArray name="Level0Extra" binary="NoGeneration" nullable="True" />
-      <String name="Level1" binary="NoGeneration" maxLength="259" />
+      <AssetLink name="Level1" binary="NoGeneration" maxLength="259" assetType="SkyrimModel" />
       <ByteArray name="Level1Extra" binary="NoGeneration" nullable="True" />
-      <String name="Level2" binary="NoGeneration" maxLength="259" />
+      <AssetLink name="Level2" binary="NoGeneration" maxLength="259" assetType="SkyrimModel" />
       <ByteArray name="Level2Extra" binary="NoGeneration" nullable="True" />
-      <String name="Level3" binary="NoGeneration" maxLength="259" />
+      <AssetLink name="Level3" binary="NoGeneration" maxLength="259" assetType="SkyrimModel" />
       <ByteArray name="Level3Extra" binary="NoGeneration" nullable="True" />
     </Fields>
   </Object>

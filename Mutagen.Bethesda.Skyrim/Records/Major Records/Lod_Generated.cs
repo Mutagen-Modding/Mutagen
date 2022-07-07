@@ -7,17 +7,23 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+<<<<<<< HEAD
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+=======
+using Mutagen.Bethesda.Skyrim.Assets;
+>>>>>>> nog-assets
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -50,7 +56,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Level0
-        public String Level0 { get; set; } = string.Empty;
+        public IAssetLink<SkyrimModelAssetType> Level0 { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level0 => this.Level0;
         #endregion
         #region Level0Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -64,7 +71,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ILodGetter.Level0Extra => this.Level0Extra;
         #endregion
         #region Level1
-        public String Level1 { get; set; } = string.Empty;
+        public IAssetLink<SkyrimModelAssetType> Level1 { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level1 => this.Level1;
         #endregion
         #region Level1Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -78,7 +86,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ILodGetter.Level1Extra => this.Level1Extra;
         #endregion
         #region Level2
-        public String Level2 { get; set; } = string.Empty;
+        public IAssetLink<SkyrimModelAssetType> Level2 { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level2 => this.Level2;
         #endregion
         #region Level2Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -92,7 +101,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ILodGetter.Level2Extra => this.Level2Extra;
         #endregion
         #region Level3
-        public String Level3 { get; set; } = string.Empty;
+        public IAssetLink<SkyrimModelAssetType> Level3 { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level3 => this.Level3;
         #endregion
         #region Level3Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -613,6 +623,16 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+<<<<<<< HEAD
+=======
+        #region Mutagen
+        public static readonly RecordType GrupRecordType = Lod_Registration.TriggeringRecordType;
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => LodCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LodSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LodSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        #endregion
+
+>>>>>>> nog-assets
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LodBinaryWriteTranslation.Instance;
@@ -672,21 +692,23 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILod :
+        IAssetLinkContainer,
         ILodGetter,
         ILoquiObjectSetter<ILod>
     {
-        new String Level0 { get; set; }
+        new IAssetLink<SkyrimModelAssetType> Level0 { get; set; }
         new MemorySlice<Byte>? Level0Extra { get; set; }
-        new String Level1 { get; set; }
+        new IAssetLink<SkyrimModelAssetType> Level1 { get; set; }
         new MemorySlice<Byte>? Level1Extra { get; set; }
-        new String Level2 { get; set; }
+        new IAssetLink<SkyrimModelAssetType> Level2 { get; set; }
         new MemorySlice<Byte>? Level2Extra { get; set; }
-        new String Level3 { get; set; }
+        new IAssetLink<SkyrimModelAssetType> Level3 { get; set; }
         new MemorySlice<Byte>? Level3Extra { get; set; }
     }
 
     public partial interface ILodGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<ILodGetter>
     {
@@ -697,13 +719,13 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Lod_Registration.Instance;
-        String Level0 { get; }
+        IAssetLinkGetter<SkyrimModelAssetType> Level0 { get; }
         ReadOnlyMemorySlice<Byte>? Level0Extra { get; }
-        String Level1 { get; }
+        IAssetLinkGetter<SkyrimModelAssetType> Level1 { get; }
         ReadOnlyMemorySlice<Byte>? Level1Extra { get; }
-        String Level2 { get; }
+        IAssetLinkGetter<SkyrimModelAssetType> Level2 { get; }
         ReadOnlyMemorySlice<Byte>? Level2Extra { get; }
-        String Level3 { get; }
+        IAssetLinkGetter<SkyrimModelAssetType> Level3 { get; }
         ReadOnlyMemorySlice<Byte>? Level3Extra { get; }
 
     }
@@ -976,19 +998,32 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILod item)
         {
             ClearPartial();
-            item.Level0 = string.Empty;
+            item.Level0.SetToNull();
             item.Level0Extra = default;
-            item.Level1 = string.Empty;
+            item.Level1.SetToNull();
             item.Level1Extra = default;
-            item.Level2 = string.Empty;
+            item.Level2.SetToNull();
             item.Level2Extra = default;
-            item.Level3 = string.Empty;
+            item.Level3.SetToNull();
             item.Level3Extra = default;
         }
         
         #region Mutagen
-        public void RemapLinks(ILod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILod obj)
         {
+            yield return obj.Level0;
+            yield return obj.Level1;
+            yield return obj.Level2;
+            yield return obj.Level3;
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(ILod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.Level0.Relink(mapping);
+            obj.Level1.Relink(mapping);
+            obj.Level2.Relink(mapping);
+            obj.Level3.Relink(mapping);
         }
         
         #endregion
@@ -1204,8 +1239,16 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILodGetter obj)
+=======
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILodGetter obj, ILinkCache? linkCache, bool includeImplicit)
+>>>>>>> nog-assets
         {
+            yield return obj.Level0;
+            yield return obj.Level1;
+            yield return obj.Level2;
+            yield return obj.Level3;
             yield break;
         }
         
@@ -1224,10 +1267,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level0) ?? true))
-            {
-                item.Level0 = rhs.Level0;
-            }
+            item.Level0.RawPath = rhs.Level0.RawPath;
             if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level0Extra) ?? true))
             {
                 if(rhs.Level0Extra is {} Level0Extrarhs)
@@ -1239,10 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Level0Extra = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level1) ?? true))
-            {
-                item.Level1 = rhs.Level1;
-            }
+            item.Level1.RawPath = rhs.Level1.RawPath;
             if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level1Extra) ?? true))
             {
                 if(rhs.Level1Extra is {} Level1Extrarhs)
@@ -1254,10 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Level1Extra = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level2) ?? true))
-            {
-                item.Level2 = rhs.Level2;
-            }
+            item.Level2.RawPath = rhs.Level2.RawPath;
             if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level2Extra) ?? true))
             {
                 if(rhs.Level2Extra is {} Level2Extrarhs)
@@ -1269,10 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Level2Extra = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level3) ?? true))
-            {
-                item.Level3 = rhs.Level3;
-            }
+            item.Level3.RawPath = rhs.Level3.RawPath;
             if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level3Extra) ?? true))
             {
                 if(rhs.Level3Extra is {} Level3Extrarhs)
@@ -1494,6 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => LodCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LodBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

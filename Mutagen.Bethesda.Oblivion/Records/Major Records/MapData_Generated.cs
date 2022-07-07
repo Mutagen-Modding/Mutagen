@@ -769,13 +769,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.CellCoordinatesSECell = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IMapData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMapData item,
@@ -920,6 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
             return MapData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMapDataGetter obj)
         {
@@ -928,6 +922,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class MapDataSetterTranslationCommon
     {

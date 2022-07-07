@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -23,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -243,9 +245,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region ModelFilename
-        public String? ModelFilename { get; set; }
+        public IAssetLink<SkyrimModelAssetType>? ModelFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFurnitureGetter.ModelFilename => this.ModelFilename;
+        IAssetLinkGetter<SkyrimModelAssetType>? IFurnitureGetter.ModelFilename => this.ModelFilename;
         #endregion
 
         #region To String
@@ -1104,6 +1106,9 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => FurnitureCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => FurnitureSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => FurnitureSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1183,7 +1188,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IFurniture :
+<<<<<<< HEAD
         IExplodeSpawn,
+=======
+        IAssetLinkContainer,
+>>>>>>> nog-assets
         IFormLinkContainer,
         IFurnitureGetter,
         IKeyworded<IKeywordGetter>,
@@ -1226,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
         new WorkbenchData? WorkbenchData { get; set; }
         new IFormLinkNullable<ISpellGetter> AssociatedSpell { get; set; }
         new ExtendedList<FurnitureMarker>? Markers { get; set; }
-        new String? ModelFilename { get; set; }
+        new IAssetLink<SkyrimModelAssetType>? ModelFilename { get; set; }
         #region Mutagen
         new Furniture.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1243,6 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.FURN)]
     public partial interface IFurnitureGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
@@ -1298,7 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorkbenchDataGetter? WorkbenchData { get; }
         IFormLinkNullableGetter<ISpellGetter> AssociatedSpell { get; }
         IReadOnlyList<IFurnitureMarkerGetter>? Markers { get; }
-        String? ModelFilename { get; }
+        IAssetLinkGetter<SkyrimModelAssetType>? ModelFilename { get; }
 
         #region Mutagen
         Furniture.MajorFlag MajorFlags { get; }
@@ -1632,6 +1642,41 @@ namespace Mutagen.Bethesda.Skyrim
             obj.InteractionKeyword.Relink(mapping);
             obj.AssociatedSpell.Relink(mapping);
             obj.Markers?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFurniture obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ModelFilename != null)
+            {
+                yield return obj.ModelFilename;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IFurniture obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Model?.RemapListedAssetLinks(mapping);
+            obj.Destructible?.RemapListedAssetLinks(mapping);
+            obj.ModelFilename?.Relink(mapping);
         }
         
         #endregion
@@ -2125,6 +2170,33 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFurnitureGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ModelFilename != null)
+            {
+                yield return obj.ModelFilename;
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public Furniture Duplicate(
             IFurnitureGetter item,
@@ -2408,10 +2480,7 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ModelFilename) ?? true))
-            {
-                item.ModelFilename = rhs.ModelFilename;
-            }
+            item.ModelFilename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.ModelFilename, rhs.ModelFilename);
         }
         
         public override void DeepCopyIn(
@@ -2646,7 +2715,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ModelFilename,
+                item: item.ModelFilename?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.XMRK),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -2895,9 +2964,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XMRK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ModelFilename = StringBinaryTranslation.Instance.Parse(
+                    item.ModelFilename = AssetLinkBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        assetType: SkyrimModelAssetType.Instance);
                     return (int)Furniture_FieldIndex.ModelFilename;
                 }
                 default:
@@ -2960,7 +3030,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FurnitureCommon.Instance.EnumerateFormLinks(this);
+=======
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FurnitureCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => FurnitureCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+>>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FurnitureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3048,7 +3123,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ModelFilename
         private int? _ModelFilenameLocation;
+<<<<<<< HEAD
         public String? ModelFilename => _ModelFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+=======
+        public IAssetLinkGetter<SkyrimModelAssetType>? ModelFilename => _ModelFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+>>>>>>> nog-assets
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

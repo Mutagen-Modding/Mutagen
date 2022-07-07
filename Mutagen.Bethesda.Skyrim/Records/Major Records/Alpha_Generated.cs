@@ -732,13 +732,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Base = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IAlpha obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAlpha item,
@@ -873,6 +866,7 @@ namespace Mutagen.Bethesda.Skyrim
             return Alpha.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAlphaGetter obj)
         {
@@ -881,6 +875,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class AlphaSetterTranslationCommon
     {

@@ -767,14 +767,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IVoiceTypeInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IVoiceType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IVoiceTypeInternal item,
@@ -996,6 +988,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVoiceTypeGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1005,6 +998,8 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public VoiceType Duplicate(
             IVoiceTypeGetter item,

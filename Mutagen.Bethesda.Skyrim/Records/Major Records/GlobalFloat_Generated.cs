@@ -774,14 +774,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IGlobalFloatInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IGlobalFloat obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IGlobalFloatInternal item,
@@ -1055,6 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGlobalFloatGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1064,6 +1057,8 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public GlobalFloat Duplicate(
             IGlobalFloatGetter item,

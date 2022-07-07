@@ -763,13 +763,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.Unknown = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IClassTraining obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IClassTraining item,
@@ -910,6 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ClassTraining.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IClassTrainingGetter obj)
         {
@@ -918,6 +912,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class ClassTrainingSetterTranslationCommon
     {

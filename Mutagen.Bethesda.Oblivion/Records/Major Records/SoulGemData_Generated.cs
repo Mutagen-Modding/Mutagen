@@ -735,13 +735,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.Weight = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISoulGemData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoulGemData item,
@@ -876,6 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
             return SoulGemData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoulGemDataGetter obj)
         {
@@ -884,6 +878,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class SoulGemDataSetterTranslationCommon
     {

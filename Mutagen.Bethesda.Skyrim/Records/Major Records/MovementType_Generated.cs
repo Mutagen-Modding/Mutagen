@@ -1306,14 +1306,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IMovementTypeInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IMovementType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMovementTypeInternal item,
@@ -1681,6 +1673,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMovementTypeGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1690,6 +1683,8 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public MovementType Duplicate(
             IMovementTypeGetter item,

@@ -879,13 +879,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.Types = null;
         }
         
-        #region Mutagen
-        public void RemapLinks(IMapMarker obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMapMarker item,
@@ -1049,6 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
             return MapMarker.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMapMarkerGetter obj)
         {
@@ -1057,6 +1051,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class MapMarkerSetterTranslationCommon
     {

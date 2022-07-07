@@ -780,13 +780,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.Priority = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IRegionDataHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRegionDataHeaderInternal item,
@@ -931,6 +924,7 @@ namespace Mutagen.Bethesda.Oblivion
             return RegionDataHeader.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionDataHeaderGetter obj)
         {
@@ -939,6 +933,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class RegionDataHeaderSetterTranslationCommon
     {

@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
@@ -6647,7 +6648,14 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerStepThrough]
         IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordQueryableGetter, TMajor>());
         [DebuggerStepThrough]
+<<<<<<< HEAD
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, type: type, throwIfUnknown: throwIfUnknown);
+=======
+        IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => Fallout4ModCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => Fallout4ModSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout4ModSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+>>>>>>> nog-assets
         #endregion
 
         #region Binary Translation
@@ -6839,6 +6847,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFallout4Mod :
+        IAssetLinkContainer,
         IContextMod<IFallout4Mod, IFallout4ModGetter>,
         IFallout4ModGetter,
         IFormLinkContainer,
@@ -6977,6 +6986,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IFallout4ModGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IContextGetterMod<IFallout4Mod, IFallout4ModGetter>,
         IFormLinkContainerGetter,
         ILoquiObject<IFallout4ModGetter>,
@@ -8425,10 +8435,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IDamageTypeGetter":
                 case "IDamageType":
                 case "IDamageTypeInternal":
-                case "DamageTypeIndexed":
-                case "IDamageTypeIndexedGetter":
-                case "IDamageTypeIndexed":
-                case "IDamageTypeIndexedInternal":
                     obj.DamageTypes.Remove(
                         type: type,
                         keys: keys);
@@ -9025,6 +9031,7 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
+<<<<<<< HEAD
                 case "DefaultObject":
                 case "IDefaultObjectGetter":
                 case "IDefaultObject":
@@ -9876,6 +9883,8 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IStaticCollectionGetter), throwIfUnknown: throwIfUnknown);
                     break;
+=======
+>>>>>>> nog-assets
                 default:
                     if (throwIfUnknown)
                     {
@@ -9888,6 +9897,18 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
+<<<<<<< HEAD
+=======
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout4Mod obj)
+        {
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IFallout4Mod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+        }
+        
+>>>>>>> nog-assets
         #endregion
         
         #region Binary Translation
@@ -9907,7 +9928,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
+<<<<<<< HEAD
     internal partial class Fallout4ModCommon
+=======
+    public partial class Fallout4ModCommon
+>>>>>>> nog-assets
     {
         public static readonly Fallout4ModCommon Instance = new Fallout4ModCommon();
 
@@ -9923,6 +9948,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret: ret,
                 include: include);
             return ret;
+<<<<<<< HEAD
         }
         
         public void FillEqualsMask(
@@ -20634,6 +20660,8 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
             return ret;
+=======
+>>>>>>> nog-assets
         }
         
         public Fallout4Mod DeepCopy(
@@ -22908,9 +22936,39 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         frame.Position += contentLength;
                     }
+<<<<<<< HEAD
                     return (int)Fallout4Mod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
+=======
+            }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout4ModGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
+    }
+    public partial class Fallout4ModSetterTranslationCommon
+    {
+        public static readonly Fallout4ModSetterTranslationCommon Instance = new Fallout4ModSetterTranslationCommon();
+
+        #region DeepCopyIn
+        public void DeepCopyIn(
+            IFallout4Mod item,
+            IFallout4ModGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ModHeader) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.ModHeader);
+                try
+>>>>>>> nog-assets
                 {
                     if (importMask?.Florae ?? true)
                     {
@@ -24346,7 +24404,12 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModCommon.Instance.EnumerateFormLinks(this);
+=======
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4ModCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => Fallout4ModCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+>>>>>>> nog-assets
         [DebuggerStepThrough]
         IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]

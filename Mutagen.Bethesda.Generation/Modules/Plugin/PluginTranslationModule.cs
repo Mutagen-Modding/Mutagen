@@ -78,6 +78,10 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             PreferDirectTranslation = false
         };
+        this._typeGenerations[typeof(AssetLinkType)] = new AssetLinkBinaryTranslationGeneration()
+        {
+            PreferDirectTranslation = false
+        };
         this._typeGenerations[typeof(FilePathType)] = new FilePathBinaryTranslationGeneration();
         this._typeGenerations[typeof(UInt8Type)] = new ByteBinaryTranslationGeneration();
         this._typeGenerations[typeof(UInt16Type)] = new PrimitiveBinaryTranslationGeneration<ushort>(expectedLen: 2);
@@ -2104,6 +2108,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                 || (await LinkModule.HasLinks(obj, includeBaseClass: false) != Case.No))
             {
                 await LinkModule.GenerateInterfaceImplementation(obj, sb, getter: true);
+            }
+
+            if (obj.GetObjectType() == ObjectType.Mod
+                || (await ContainedAssetLinksModule.HasLinks(obj, includeBaseClass: false) != Case.No))
+            {
+                await ContainedAssetLinksModule.GenerateInterfaceImplementation(obj, fg, getter: true);
             }
 
             if (obj.GetObjectType() == ObjectType.Mod)

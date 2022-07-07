@@ -895,14 +895,6 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IColorRecordInternal)item);
         }
         
-        #region Mutagen
-        public void RemapLinks(IColorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-            base.RemapLinks(obj, mapping);
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IColorRecordInternal item,
@@ -1148,6 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IColorRecordGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1157,6 +1150,8 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+=======
+>>>>>>> nog-assets
         #region Duplicate
         public ColorRecord Duplicate(
             IColorRecordGetter item,

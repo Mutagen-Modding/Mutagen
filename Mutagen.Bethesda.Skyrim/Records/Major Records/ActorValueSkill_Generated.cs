@@ -806,13 +806,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.ImproveOffset = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IActorValueSkill obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IActorValueSkill item,
@@ -967,6 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ActorValueSkill.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActorValueSkillGetter obj)
         {
@@ -975,6 +969,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class ActorValueSkillSetterTranslationCommon
     {

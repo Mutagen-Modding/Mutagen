@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -508,6 +509,9 @@ namespace Mutagen.Bethesda.Plugins.Records
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MajorRecordSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public virtual void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MajorRecordSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -566,6 +570,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord]
     /// </summary>
     public partial interface IMajorRecord :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IMajorRecordInternal>,
         IMajorRecordEnumerable,
@@ -587,6 +592,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// </summary>
     public partial interface IMajorRecordGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMajorRecordGetter>,
@@ -1158,6 +1164,15 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMajorRecord obj)
+        {
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IMajorRecord obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1360,6 +1375,11 @@ namespace Mutagen.Bethesda.Plugins.Records
                         yield break;
                     }
             }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMajorRecordGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            yield break;
         }
         
         #region Duplicate
@@ -1663,6 +1683,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MajorRecordCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

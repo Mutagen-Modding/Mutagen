@@ -888,13 +888,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Unknown = new byte[3];
         }
         
-        #region Mutagen
-        public void RemapLinks(IPackageFlagsOverride obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPackageFlagsOverride item,
@@ -1069,6 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
             return PackageFlagsOverride.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageFlagsOverrideGetter obj)
         {
@@ -1077,6 +1071,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class PackageFlagsOverrideSetterTranslationCommon
     {

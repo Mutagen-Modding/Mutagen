@@ -732,13 +732,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Second = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IObjectBounds obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IObjectBounds item,
@@ -873,6 +866,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ObjectBounds.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectBoundsGetter obj)
         {
@@ -881,6 +875,8 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class ObjectBoundsSetterTranslationCommon
     {

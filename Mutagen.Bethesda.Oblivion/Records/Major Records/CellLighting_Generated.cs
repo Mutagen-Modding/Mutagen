@@ -992,13 +992,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.FogClipDistance = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ICellLighting obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICellLighting item,
@@ -1203,6 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion
             return CellLighting.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellLightingGetter obj)
         {
@@ -1211,6 +1205,8 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class CellLightingSetterTranslationCommon
     {

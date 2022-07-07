@@ -814,13 +814,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Unknown2 = new byte[0];
         }
         
-        #region Mutagen
-        public void RemapLinks(ICellWaterVelocity obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICellWaterVelocity item,
@@ -975,6 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
             return CellWaterVelocity.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellWaterVelocityGetter obj)
         {
@@ -983,6 +977,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class CellWaterVelocitySetterTranslationCommon
     {

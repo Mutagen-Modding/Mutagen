@@ -725,13 +725,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Max = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(IInt16MinMax obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IInt16MinMax item,
@@ -862,6 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
             return Int16MinMax.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInt16MinMaxGetter obj)
         {
@@ -870,6 +864,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class Int16MinMaxSetterTranslationCommon
     {

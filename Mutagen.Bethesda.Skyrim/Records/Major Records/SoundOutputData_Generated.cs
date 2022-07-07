@@ -769,13 +769,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.ReverbSendPercent = default;
         }
         
-        #region Mutagen
-        public void RemapLinks(ISoundOutputData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundOutputData item,
@@ -920,6 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
             return SoundOutputData.GetNew();
         }
         
+<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundOutputDataGetter obj)
         {
@@ -928,6 +922,8 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
+=======
+>>>>>>> nog-assets
     }
     internal partial class SoundOutputDataSetterTranslationCommon
     {
