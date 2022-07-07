@@ -7,7 +7,7 @@ public interface ICreationClubEnabledProvider
     bool Used { get; }
 }
 
-public class CreationClubEnabledProvider : ICreationClubEnabledProvider
+public sealed class CreationClubEnabledProvider : ICreationClubEnabledProvider
 {
     private readonly IGameCategoryContext _category;
 

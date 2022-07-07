@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 /// Modification of the target Mod is not safe.  Internal caches can become incorrect if 
 /// modifications occur on content already cached.
 /// </summary>
-public class ImmutableModLinkCache : ILinkCache
+public sealed class ImmutableModLinkCache : ILinkCache
 {
     private readonly IModGetter _sourceMod;
     private readonly InternalImmutableModLinkCache _cache;
@@ -600,7 +600,7 @@ public class ImmutableModLinkCache : ILinkCache
 /// Modification of the target Mod is not safe.  Internal caches can become incorrect if 
 /// modifications occur on content already cached.
 /// </summary>
-public class ImmutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
+public sealed class ImmutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
     where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TMod, TModGetter>
 {

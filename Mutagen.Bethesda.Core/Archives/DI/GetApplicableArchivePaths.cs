@@ -49,7 +49,7 @@ public interface IGetApplicableArchivePaths
     IEnumerable<FilePath> Get(ModKey modKey, IComparer<FileName>? archiveOrdering);
 }
 
-public class GetApplicableArchivePaths : IGetApplicableArchivePaths
+public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
 {
     private readonly IFileSystem _fileSystem;
     private readonly IGetArchiveIniListings _iniListings;

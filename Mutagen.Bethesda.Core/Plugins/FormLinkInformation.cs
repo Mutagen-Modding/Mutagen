@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins;
 
-public record FormLinkInformation(FormKey FormKey, Type Type) : IFormLinkGetter
+public sealed record FormLinkInformation(FormKey FormKey, Type Type) : IFormLinkGetter
 {
     public FormKey? FormKeyNullable => FormKey;
 

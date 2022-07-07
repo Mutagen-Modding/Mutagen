@@ -7,7 +7,7 @@ public interface IHasEnabledMarkersProvider
     bool HasEnabledMarkers { get; }
 }
 
-public class HasEnabledMarkersProvider : IHasEnabledMarkersProvider
+public sealed class HasEnabledMarkersProvider : IHasEnabledMarkersProvider
 {
     private readonly IGameReleaseContext _gameReleaseContext;
 
@@ -35,4 +35,4 @@ public class HasEnabledMarkersProvider : IHasEnabledMarkersProvider
     }
 }
 
-public record HasEnabledMarkersInjection(bool HasEnabledMarkers) : IHasEnabledMarkersProvider;
+public sealed record HasEnabledMarkersInjection(bool HasEnabledMarkers) : IHasEnabledMarkersProvider;

@@ -20,7 +20,7 @@ public interface IFindImplicitlyIncludedMods
         bool skipMissingMods = false);
 }
 
-public class FindImplicitlyIncludedMods : IFindImplicitlyIncludedMods
+public sealed class FindImplicitlyIncludedMods : IFindImplicitlyIncludedMods
 {
     public IDataDirectoryProvider DirectoryProvider { get; }
     private readonly IFileSystem _fileSystem;

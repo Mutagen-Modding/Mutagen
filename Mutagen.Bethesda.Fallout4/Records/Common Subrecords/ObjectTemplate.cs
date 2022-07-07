@@ -25,7 +25,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
         item.LevelMax = frame.ReadUInt8();
         frame.Position += 1;
         item.AddonIndex = frame.ReadInt16();
-        item.Default = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame, 1);
+        item.Default = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(frame, 1);
         item.Keywords.SetTo(
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>
                 .Instance.Parse(
@@ -147,7 +147,7 @@ partial class ObjectTemplateBinaryWriteTranslation
         writer.Write(item.LevelMax);
         writer.Write((byte)0);
         writer.Write(item.AddonIndex);
-        BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, item.Default);
+        BooleanBinaryTranslation<MutagenFrame>.Instance.Write(writer, item.Default);
         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
             writer: writer,
             items: item.Keywords,
@@ -193,8 +193,8 @@ partial class ObjectTemplateBinaryWriteTranslation
                 break;
             case IObjectModBoolPropertyGetter<T> boolProp:
                 WritePropertyFields(writer, property, ObjectModProperty.ValueType.Bool, boolProp.FunctionType);
-                BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, boolProp.Value, 4);
-                BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, boolProp.Value2, 4);
+                BooleanBinaryTranslation<MutagenFrame>.Instance.Write(writer, boolProp.Value, 4);
+                BooleanBinaryTranslation<MutagenFrame>.Instance.Write(writer, boolProp.Value2, 4);
                 break;
             case IObjectModStringPropertyGetter<T> stringProp:
                 WritePropertyFields(writer, property, ObjectModProperty.ValueType.String, stringProp.FunctionType);

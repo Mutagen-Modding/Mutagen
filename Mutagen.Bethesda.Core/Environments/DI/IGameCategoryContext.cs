@@ -5,7 +5,7 @@ public interface IGameCategoryContext
     GameCategory Category { get; }
 }
 
-public class GameCategoryContext : IGameCategoryContext
+public sealed class GameCategoryContext : IGameCategoryContext
 {
     private readonly IGameReleaseContext _releaseContext;
 

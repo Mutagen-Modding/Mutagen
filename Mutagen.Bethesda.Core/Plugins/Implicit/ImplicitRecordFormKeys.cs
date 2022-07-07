@@ -1,8 +1,8 @@
 namespace Mutagen.Bethesda.Plugins.Implicit;
 
-public class ImplicitRecordFormKeys
+public sealed class ImplicitRecordFormKeys
 {
-    public static readonly ImplicitRecordFormKeys Instance = new ImplicitRecordFormKeys();
+    public static readonly ImplicitRecordFormKeys Instance = new();
 
     private ImplicitRecordFormKeys()
     {

@@ -6,7 +6,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing;
 
-public class ModGroupMerger
+public static class ModGroupMerger
 {
     public static void MergeGroups(
         Func<IMutagenReadStream> streamCreator,

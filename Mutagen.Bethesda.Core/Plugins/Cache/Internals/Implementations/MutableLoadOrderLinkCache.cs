@@ -5,7 +5,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 
-public class MutableLoadOrderLinkCache : ILinkCache
+public sealed class MutableLoadOrderLinkCache : ILinkCache
 {
     public ImmutableLoadOrderLinkCache? WrappedImmutableCache { get; }
     private readonly List<MutableModLinkCache> _mutableMods;
@@ -867,7 +867,7 @@ public class MutableLoadOrderLinkCache : ILinkCache
 /// invalidating the cache.  This comes at a performance cost of needing to query those mods
 /// for every request.
 /// </summary>
-public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
+public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
     where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TMod, TModGetter>
 {

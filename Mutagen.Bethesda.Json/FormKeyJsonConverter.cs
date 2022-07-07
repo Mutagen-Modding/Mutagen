@@ -6,7 +6,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Json;
 
-public class FormKeyJsonConverter : JsonConverter
+public sealed class FormKeyJsonConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
     {

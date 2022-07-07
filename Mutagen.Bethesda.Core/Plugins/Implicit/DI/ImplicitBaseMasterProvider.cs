@@ -7,7 +7,7 @@ public interface IImplicitBaseMasterProvider
     IReadOnlyList<ModKey> BaseMasters { get; }
 }
 
-public class ImplicitBaseMasterProvider : IImplicitBaseMasterProvider
+public sealed class ImplicitBaseMasterProvider : IImplicitBaseMasterProvider
 {
     private readonly IGameReleaseContext _gameRelease;
 

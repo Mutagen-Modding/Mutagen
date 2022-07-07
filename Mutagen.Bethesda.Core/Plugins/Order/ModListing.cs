@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Plugins.Order;
 
 /// <inheritdoc cref="IModListingGetter" />
 [DebuggerDisplay("{ToString()}")]
-public record ModListing : IModListingGetter
+public sealed record ModListing : IModListingGetter
 {
     /// <inheritdoc />
     public ModKey ModKey { get; init; }
@@ -51,7 +51,7 @@ public record ModListing : IModListingGetter
 
 /// <inheritdoc cref="IModListingGetter{TMod}" />
 [DebuggerDisplay("{ToString()}")]
-public record ModListing<TMod> : IModListing<TMod>
+public sealed record ModListing<TMod> : IModListing<TMod>
     where TMod : class, IModGetter
 {
     /// <inheritdoc />

@@ -1,6 +1,6 @@
 namespace Mutagen.Bethesda.Installs;
 
-record GameMetaData(
+sealed record GameMetaData(
     GameRelease Game, 
     string NexusName,
     long NexusGameId,

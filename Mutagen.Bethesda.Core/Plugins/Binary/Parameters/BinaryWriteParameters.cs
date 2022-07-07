@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
 /// <summary>
 /// Parameter object for customizing binary export job instructions
 /// </summary>
-public class BinaryWriteParameters
+public sealed class BinaryWriteParameters
 {
     public static readonly BinaryWriteParameters Default = new();
 

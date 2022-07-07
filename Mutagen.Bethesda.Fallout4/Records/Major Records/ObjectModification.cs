@@ -53,8 +53,8 @@ partial class AObjectModificationBinaryCreateTranslation
         frame.ReadSubrecordHeader(RecordTypes.DATA);
         var includeCount = frame.ReadInt32();
         var propertyCount = frame.ReadInt32();
-        item.Unknown = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame, 1);
-        item.Unknown2 = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame, 1);
+        item.Unknown = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(frame, 1);
+        item.Unknown2 = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(frame, 1);
         // FormType already parsed
         frame.Position += 4;
         item.MaxRank = frame.ReadUInt8();

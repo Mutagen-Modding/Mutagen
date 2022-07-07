@@ -18,7 +18,7 @@ public interface IModImporter<TMod>
     TMod Import(ModPath modPath, StringsReadParameters? stringsParam = null);
 }
 
-public class ModImporter : IModImporter, IModImporter<IModGetter>
+public sealed class ModImporter : IModImporter, IModImporter<IModGetter>
 {
     private readonly IFileSystem _fileSystem;
     private readonly IGameReleaseContext _gameRelease;
@@ -43,7 +43,7 @@ public class ModImporter : IModImporter, IModImporter<IModGetter>
     }
 }
 
-public class ModImporter<TMod> : IModImporter<TMod>
+public sealed class ModImporter<TMod> : IModImporter<TMod>
     where TMod : IModGetter
 {
     private readonly IFileSystem _fileSystem;
@@ -63,7 +63,7 @@ public class ModImporter<TMod> : IModImporter<TMod>
     }
 }
 
-public class ModImporterWrapper<TMod> : IModImporter<TMod>
+public sealed class ModImporterWrapper<TMod> : IModImporter<TMod>
     where TMod : IModGetter
 {
     private readonly Func<ModPath, StringsReadParameters?, TMod> _factory;

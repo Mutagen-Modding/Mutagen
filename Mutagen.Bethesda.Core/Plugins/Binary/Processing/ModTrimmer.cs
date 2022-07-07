@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing;
 
-public class ModTrimmer
+public static class ModTrimmer
 {
     /// <summary>
     /// Trims mod stream of uninteresting record types

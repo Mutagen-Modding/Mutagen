@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 /// Track number of bytes written inside its using statement, and then 
 /// updates the header's length bytes appropriately when it is disposed.
 /// </summary>
-public struct HeaderExport : IDisposable
+public readonly struct HeaderExport : IDisposable
 {
     /// <summary>
     /// Writer being tracked

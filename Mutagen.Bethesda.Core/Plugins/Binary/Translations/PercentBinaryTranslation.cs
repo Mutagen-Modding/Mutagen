@@ -5,7 +5,7 @@ using System.Buffers.Binary;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class PercentBinaryTranslation
+public static class PercentBinaryTranslation
 {
     public static Percent GetPercent(ReadOnlySpan<byte> bytes, FloatIntegerType integerType)
     {

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TScopedTargetGetter : notnull;
     }
 
-    public class ModContext<T> : IModContext<T>
+    public sealed class ModContext<T> : IModContext<T>
     {
         public ModKey ModKey { get; set; }
 
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
     /// <typeparam name="TModGetter">The getter interface of the mod type to target</typeparam>
     /// <typeparam name="TTarget">The setter interface of the contained record</typeparam>
     /// <typeparam name="TTargetGetter">The getter interface of the contained record</typeparam>
-    public class ModContext<TMod, TModGetter, TTarget, TTargetGetter> : IModContext<TMod, TModGetter, TTarget, TTargetGetter>
+    public sealed class ModContext<TMod, TModGetter, TTarget, TTargetGetter> : IModContext<TMod, TModGetter, TTarget, TTargetGetter>
         where TModGetter : IModGetter
         where TMod : TModGetter, IMod
         where TTarget : TTargetGetter
@@ -185,140 +185,143 @@ namespace Mutagen.Bethesda.Plugins.Cache
             return _duplicateInto(mod, Record, editorID);
         }
     }
-    
-    namespace Internals
+
+    internal sealed class ModContextCaster<TMod, TModGetter, TTarget, TTargetGetter, RTarget, RTargetGetter> : IModContext<TMod, TModGetter, RTarget, RTargetGetter>
+        where TModGetter : IModGetter
+        where TMod : TModGetter, IMod
+        where TTarget : TTargetGetter
+        where RTarget : TTarget, RTargetGetter
+        where RTargetGetter : TTargetGetter
+        where TTargetGetter : notnull
     {
-        class ModContextCaster<TMod, TModGetter, TTarget, TTargetGetter, RTarget, RTargetGetter> : IModContext<TMod, TModGetter, RTarget, RTargetGetter>
-            where TModGetter : IModGetter
-            where TMod : TModGetter, IMod
-            where TTarget : TTargetGetter
-            where RTarget : TTarget, RTargetGetter
-            where RTargetGetter : TTargetGetter
-            where TTargetGetter : notnull
+        private readonly IModContext<TMod, TModGetter, TTarget, TTargetGetter> _context;
+
+        public ModKey ModKey => _context.ModKey;
+
+        public IModContext? Parent => _context.Parent;
+
+        object? IModContext.Record => _context.Record;
+
+        public RTargetGetter Record => (RTargetGetter)_context.Record;
+
+        public ModContextCaster(IModContext<TMod, TModGetter, TTarget, TTargetGetter> source)
         {
-            private readonly IModContext<TMod, TModGetter, TTarget, TTargetGetter> _context;
-
-            public ModKey ModKey => _context.ModKey;
-
-            public IModContext? Parent => _context.Parent;
-
-            object? IModContext.Record => _context.Record;
-
-            public RTargetGetter Record => (RTargetGetter)_context.Record;
-
-            public ModContextCaster(IModContext<TMod, TModGetter, TTarget, TTargetGetter> source)
-            {
-                _context = source;
-            }
-
-            public RTarget GetOrAddAsOverride(TMod mod)
-            {
-                return (RTarget)_context.GetOrAddAsOverride(mod);
-            }
-
-            public RTarget DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
-            {
-                return (RTarget)_context.DuplicateIntoAsNewRecord(mod, editorID);
-            }
-
-            public bool TryGetParentContext<TScoped, TScopedGetter>([MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TScoped, TScopedGetter> parent)
-                where TScoped : TScopedGetter
-                where TScopedGetter : notnull
-            {
-                return _context.TryGetParentContext(out parent);
-            }
-            
-            public bool TryGetParentSimpleContext<TScopedGetter>([MaybeNullWhen(false)] out IModContext<TScopedGetter> parent)
-            {
-                return _context.TryGetParentSimpleContext(out parent);
-            }
-        }
-        
-        class SimpleModContextCaster<TGetter, RGetter> : IModContext<RGetter>
-            where RGetter : TGetter
-            where TGetter : notnull
-        {
-            private readonly IModContext<TGetter> _context;
-
-            public ModKey ModKey => _context.ModKey;
-
-            public IModContext? Parent => _context.Parent;
-
-            object? IModContext.Record => _context.Record;
-
-            public RGetter Record => (RGetter)_context.Record;
-
-            public SimpleModContextCaster(IModContext<TGetter> source)
-            {
-                _context = source;
-            }
-            
-            public bool TryGetParentSimpleContext<TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TTargetMajorGetter> parent)
-            {
-                return _context.TryGetParentSimpleContext(out parent);
-            }
+            _context = source;
         }
 
-        public class GroupModContext<TMod, TModGetter, TMajor, TMajorGetter> : IModContext<TMod, TModGetter, TMajor, TMajorGetter>
-            where TModGetter : IModGetter
-            where TMod : TModGetter, IMod
-            where TMajor : class, IMajorRecordInternal, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter
+        public RTarget GetOrAddAsOverride(TMod mod)
         {
-            private readonly Func<TMod, IGroup<TMajor>> _group;
-            private readonly Func<TModGetter, IGroupGetter<TMajorGetter>> _groupGetter;
+            return (RTarget)_context.GetOrAddAsOverride(mod);
+        }
 
-            public TMajorGetter Record { get; }
+        public RTarget DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
+        {
+            return (RTarget)_context.DuplicateIntoAsNewRecord(mod, editorID);
+        }
 
-            public ModKey ModKey { get; }
+        public bool TryGetParentContext<TScoped, TScopedGetter>(
+            [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TScoped, TScopedGetter> parent)
+            where TScoped : TScopedGetter
+            where TScopedGetter : notnull
+        {
+            return _context.TryGetParentContext(out parent);
+        }
 
-            public IModContext? Parent => null;
+        public bool TryGetParentSimpleContext<TScopedGetter>(
+            [MaybeNullWhen(false)] out IModContext<TScopedGetter> parent)
+        {
+            return _context.TryGetParentSimpleContext(out parent);
+        }
+    }
 
-            object? IModContext.Record => Record;
+    internal sealed class SimpleModContextCaster<TGetter, RGetter> : IModContext<RGetter>
+        where RGetter : TGetter
+        where TGetter : notnull
+    {
+        private readonly IModContext<TGetter> _context;
 
-            public GroupModContext(
-                ModKey modKey,
-                TMajorGetter record,
-                Func<TMod, IGroup<TMajor>> group,
-                Func<TModGetter, IGroupGetter<TMajorGetter>> groupGetter)
-            {
-                ModKey = modKey;
-                Record = record;
-                _group = group;
-                _groupGetter = groupGetter;
-            }
+        public ModKey ModKey => _context.ModKey;
 
-            public TMajor DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
-            {
-                return _group(mod).DuplicateInAsNewRecord(Record, editorID);
-            }
+        public IModContext? Parent => _context.Parent;
 
-            public TMajor GetOrAddAsOverride(TMod mod)
-            {
-                return _group(mod).GetOrAddAsOverride(Record);
-            }
+        object? IModContext.Record => _context.Record;
 
-            public TMajor? TryRetrieve(TMod mod)
-            {
-                return _group(mod).TryGetValue(Record.FormKey);
-            }
+        public RGetter Record => (RGetter)_context.Record;
 
-            public TMajorGetter? TryRetrieveGetter(TModGetter mod)
-            {
-                return _groupGetter(mod).TryGetValue(Record.FormKey);
-            }
+        public SimpleModContextCaster(IModContext<TGetter> source)
+        {
+            _context = source;
+        }
 
-            bool IModContext<TMod, TModGetter, TMajor, TMajorGetter>.TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TTargetMajorSetter, TTargetMajorGetter> parent)
-            {
-                parent = default;
-                return false;
-            }
-            
-            public bool TryGetParentSimpleContext<TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TTargetMajorGetter> parent)
-            {
-                parent = default;
-                return false;
-            }
+        public bool TryGetParentSimpleContext<TTargetMajorGetter>(
+            [MaybeNullWhen(false)] out IModContext<TTargetMajorGetter> parent)
+        {
+            return _context.TryGetParentSimpleContext(out parent);
+        }
+    }
+
+    internal sealed class GroupModContext<TMod, TModGetter, TMajor, TMajorGetter> : IModContext<TMod, TModGetter, TMajor, TMajorGetter>
+        where TModGetter : IModGetter
+        where TMod : TModGetter, IMod
+        where TMajor : class, IMajorRecordInternal, TMajorGetter
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        private readonly Func<TMod, IGroup<TMajor>> _group;
+        private readonly Func<TModGetter, IGroupGetter<TMajorGetter>> _groupGetter;
+
+        public TMajorGetter Record { get; }
+
+        public ModKey ModKey { get; }
+
+        public IModContext? Parent => null;
+
+        object? IModContext.Record => Record;
+
+        public GroupModContext(
+            ModKey modKey,
+            TMajorGetter record,
+            Func<TMod, IGroup<TMajor>> group,
+            Func<TModGetter, IGroupGetter<TMajorGetter>> groupGetter)
+        {
+            ModKey = modKey;
+            Record = record;
+            _group = group;
+            _groupGetter = groupGetter;
+        }
+
+        public TMajor DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
+        {
+            return _group(mod).DuplicateInAsNewRecord(Record, editorID);
+        }
+
+        public TMajor GetOrAddAsOverride(TMod mod)
+        {
+            return _group(mod).GetOrAddAsOverride(Record);
+        }
+
+        public TMajor? TryRetrieve(TMod mod)
+        {
+            return _group(mod).TryGetValue(Record.FormKey);
+        }
+
+        public TMajorGetter? TryRetrieveGetter(TModGetter mod)
+        {
+            return _groupGetter(mod).TryGetValue(Record.FormKey);
+        }
+
+        bool IModContext<TMod, TModGetter, TMajor, TMajorGetter>.
+            TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>(
+                [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TTargetMajorSetter, TTargetMajorGetter> parent)
+        {
+            parent = default;
+            return false;
+        }
+
+        public bool TryGetParentSimpleContext<TTargetMajorGetter>(
+            [MaybeNullWhen(false)] out IModContext<TTargetMajorGetter> parent)
+        {
+            parent = default;
+            return false;
         }
     }
 }

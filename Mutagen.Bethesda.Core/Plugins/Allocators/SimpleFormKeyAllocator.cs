@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Plugins.Allocators;
 /// 
 /// This class is thread safe. 
 /// </summary> 
-public class SimpleFormKeyAllocator : IFormKeyAllocator
+public sealed class SimpleFormKeyAllocator : IFormKeyAllocator
 {
     /// <summary> 
     /// Attached Mod that will be used as reference when allocating new keys 

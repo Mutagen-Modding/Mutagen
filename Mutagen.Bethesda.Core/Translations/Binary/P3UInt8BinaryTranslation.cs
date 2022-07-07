@@ -2,7 +2,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 
-public class P3UInt8BinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<P3UInt8, TReader, TWriter>
+public sealed class P3UInt8BinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<P3UInt8, TReader, TWriter>
     where TReader : IBinaryReadStream
     where TWriter : IBinaryWriteStream
 {

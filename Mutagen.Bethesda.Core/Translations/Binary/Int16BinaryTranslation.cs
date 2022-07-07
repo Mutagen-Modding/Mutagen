@@ -2,11 +2,11 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 
-public class Int16BinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<short, TReader, TWriter>
+public sealed class Int16BinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<short, TReader, TWriter>
     where TReader : IBinaryReadStream
     where TWriter : IBinaryWriteStream
 {
-    public readonly static Int16BinaryTranslation<TReader, TWriter> Instance = new();
+    public static readonly Int16BinaryTranslation<TReader, TWriter> Instance = new();
     public override int ExpectedLength => 2;
 
     public override short Parse(TReader reader)

@@ -12,7 +12,7 @@ public interface ILiveLoadOrderProvider : ISomeLiveLoadOrderProvider
 {
 }
     
-public class LiveLoadOrderProvider : ILiveLoadOrderProvider
+public sealed class LiveLoadOrderProvider : ILiveLoadOrderProvider
 {
     public IPluginLiveLoadOrderProvider PluginLive { get; }
     public ICreationClubLiveLoadOrderProvider CccLive { get; }

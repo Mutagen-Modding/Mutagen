@@ -9,7 +9,7 @@ using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Plugins.Analysis;
 
-public class RecordLocator
+public sealed class RecordLocator
 {
     private readonly FileLocationConstructor _locs;
     private readonly RecordInterest? _interest;

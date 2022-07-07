@@ -11,7 +11,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Environments;
 
-public record GameEnvironmentBuilder<TMod, TModGetter>
+public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TMod, TModGetter>
 {
@@ -208,7 +208,7 @@ public record GameEnvironmentBuilder<TMod, TModGetter>
     }
 }
 
-public record GameEnvironmentBuilder
+public sealed record GameEnvironmentBuilder
 {
     private IGameReleaseContext Release { get; }
 

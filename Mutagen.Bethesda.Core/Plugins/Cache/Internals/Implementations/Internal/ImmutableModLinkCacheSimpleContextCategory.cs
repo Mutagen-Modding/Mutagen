@@ -17,7 +17,7 @@ internal interface IImmutableModLinkCacheSimpleContextCategory<TKey>
     bool TryResolveUntypedSimpleContext(TKey key, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec);
 }
 
-internal class ImmutableModLinkCacheSimpleContextCategory<TKey> : IImmutableModLinkCacheSimpleContextCategory<TKey>
+internal sealed class ImmutableModLinkCacheSimpleContextCategory<TKey> : IImmutableModLinkCacheSimpleContextCategory<TKey>
     where TKey : notnull
 {
     private readonly bool _simple;

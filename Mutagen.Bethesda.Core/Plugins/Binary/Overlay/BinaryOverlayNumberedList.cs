@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
-internal class BinaryOverlayNumberedList
+internal sealed class BinaryOverlayNumberedList
 {
     public static IReadOnlyList<T> FactoryForEnum<T>(
         ReadOnlyMemorySlice<byte> mem,
@@ -16,7 +16,7 @@ internal class BinaryOverlayNumberedList
     }
 }
 
-internal class NumberedEnumList<T> : IReadOnlyList<T>
+internal sealed class NumberedEnumList<T> : IReadOnlyList<T>
     where T : struct, Enum
 {
     public int Amount { get; }

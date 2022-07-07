@@ -38,7 +38,7 @@ public interface ILoadOrderListingGetter : IModKeyed
 
 /// <inheritdoc cref="ILoadOrderListingGetter" />
 [DebuggerDisplay("{ToString()}")]
-public record LoadOrderListing : ILoadOrderListingGetter
+public sealed record LoadOrderListing : ILoadOrderListingGetter
 {
     /// <inheritdoc />
     public ModKey ModKey { get; init; }

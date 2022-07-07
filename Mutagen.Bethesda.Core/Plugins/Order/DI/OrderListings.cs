@@ -30,7 +30,7 @@ public interface IOrderListings
         Func<T, ModKey> selector);
 }
 
-public class OrderListings : IOrderListings
+public sealed class OrderListings : IOrderListings
 {
     /// <inheritdoc />
     public IEnumerable<T> Order<T>(IEnumerable<T> e, Func<T, ModKey> selector)

@@ -7,7 +7,7 @@ public interface IDataDirectoryProvider
     DirectoryPath Path { get; }
 }
 
-public class DataDirectoryProvider : IDataDirectoryProvider
+public sealed class DataDirectoryProvider : IDataDirectoryProvider
 {
     private readonly IGameReleaseContext _release;
     private readonly IDataDirectoryLookup _locator;

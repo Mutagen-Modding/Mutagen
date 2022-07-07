@@ -5,11 +5,11 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.IO.Abstractions;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Records.Loqui;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
@@ -30,6 +30,7 @@ public class ModModule : GenerationModule
             yield return "System.IO";
             yield return "System.IO.Abstractions";
             yield return "Mutagen.Bethesda.Plugins.Masters";
+            yield return "Mutagen.Bethesda.Plugins.Records.Loqui";
             yield return "Mutagen.Bethesda.Strings.DI";
         }
     }

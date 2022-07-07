@@ -9,7 +9,7 @@ public interface IImplicitListingsProvider : IListingsProvider
     new IEnumerable<IModListingGetter> Get();
 }
 
-public class ImplicitListingsProvider : IImplicitListingsProvider
+public sealed class ImplicitListingsProvider : IImplicitListingsProvider
 {
     private readonly IFileSystem _fileSystem;
     public IDataDirectoryProvider DataFolder { get; }

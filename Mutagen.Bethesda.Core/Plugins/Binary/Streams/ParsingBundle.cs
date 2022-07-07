@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 /// <summary>
 /// Class containing all the extra meta bits for parsing
 /// </summary>
-public class ParsingBundle
+public sealed class ParsingBundle
 {
     /// <summary>
     /// Game constants meta object to reference for header length measurements

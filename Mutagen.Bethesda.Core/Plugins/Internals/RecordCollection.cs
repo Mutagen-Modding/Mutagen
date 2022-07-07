@@ -14,7 +14,7 @@ public interface IRecordCollection : IReadOnlyRecordCollection
     bool Add(RecordType recordType);
 }
 
-internal class ReadOnlyRecordCollection : IReadOnlyRecordCollection
+internal sealed class ReadOnlyRecordCollection : IReadOnlyRecordCollection
 {
     private readonly IReadOnlyList<RecordType> _ordered;
     private readonly IReadOnlySet<RecordType> _set;
@@ -39,7 +39,7 @@ internal class ReadOnlyRecordCollection : IReadOnlyRecordCollection
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
-public class RecordCollection : IRecordCollection
+public sealed class RecordCollection : IRecordCollection
 {
     private readonly List<RecordType> _ordered;
     private readonly HashSet<RecordType> _set;
@@ -116,7 +116,7 @@ public class RecordCollection : IRecordCollection
     }
 }
 
-public class SingleRecordCollection : IReadOnlyRecordCollection
+public sealed class SingleRecordCollection : IReadOnlyRecordCollection
 {
     private readonly RecordType _type;
 
@@ -139,7 +139,7 @@ public class SingleRecordCollection : IReadOnlyRecordCollection
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
-public class EmptyRecordCollection : IReadOnlyRecordCollection
+public sealed class EmptyRecordCollection : IReadOnlyRecordCollection
 {
     public static readonly EmptyRecordCollection Instance = new();
 

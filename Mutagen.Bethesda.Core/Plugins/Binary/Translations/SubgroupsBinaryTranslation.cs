@@ -13,7 +13,7 @@ using Noggog.Utility;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-internal class SubgroupsBinaryTranslation<T>
+internal sealed class SubgroupsBinaryTranslation<T>
     where T : IMajorRecordGetter
 {
     public static readonly SubgroupsBinaryTranslation<T> Instance = new();

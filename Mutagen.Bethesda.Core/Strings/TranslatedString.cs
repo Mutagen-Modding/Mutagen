@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Strings;
 /// Threadsafe.
 /// </summary>
 [DebuggerDisplay("{String}")]
-public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>, IOptionalStringsKeyGetter
+public sealed class TranslatedString : ITranslatedString, IEquatable<TranslatedString>, IOptionalStringsKeyGetter
 {
     /// <summary>
     /// Whether to only consider the DefaultLanguage in equality/hash comparisons.
@@ -333,7 +333,7 @@ public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>,
     }
 }
 
-class TranslatedStringOnlyDefaultComparer : IEqualityComparer<ITranslatedStringGetter>
+internal sealed class TranslatedStringOnlyDefaultComparer : IEqualityComparer<ITranslatedStringGetter>
 {
     public bool Equals(ITranslatedStringGetter? x, ITranslatedStringGetter? y)
     {
@@ -351,7 +351,7 @@ class TranslatedStringOnlyDefaultComparer : IEqualityComparer<ITranslatedStringG
     }
 }
 
-class TranslatedStringComparer : IEqualityComparer<ITranslatedStringGetter>
+internal sealed class TranslatedStringComparer : IEqualityComparer<ITranslatedStringGetter>
 {
     public bool Equals(ITranslatedStringGetter? x, ITranslatedStringGetter? y)
     {

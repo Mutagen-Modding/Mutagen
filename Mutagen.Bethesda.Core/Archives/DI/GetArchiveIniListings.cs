@@ -31,7 +31,7 @@ public interface IGetArchiveIniListings
     IEnumerable<FileName> Get(Stream iniStream);
 }
 
-public class GetArchiveIniListings : IGetArchiveIniListings
+public sealed class GetArchiveIniListings : IGetArchiveIniListings
 {
     private static readonly IniParserConfiguration Config = new()
     {

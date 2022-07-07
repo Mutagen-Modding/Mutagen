@@ -3,7 +3,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 /// <summary>
 /// Tracks custom mappings of one record type to another.
 /// </summary>
-public class RecordTypeConverter
+public sealed class RecordTypeConverter
 {
     /// <summary>
     /// Tracks standard record types to their custom record type counterparts

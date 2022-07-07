@@ -11,7 +11,7 @@ public interface IMasterReferenceReaderFactory
     IReadOnlyMasterReferenceCollection FromStream(IMutagenReadStream stream);
 }
 
-public class MasterReferenceReaderFactory : IMasterReferenceReaderFactory
+public sealed class MasterReferenceReaderFactory : IMasterReferenceReaderFactory
 {
     private readonly IFileSystem _fileSystem;
     private readonly IGameReleaseContext _gameReleaseContext;

@@ -7,7 +7,7 @@ using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings;
 
-public class StringsFolderLookupOverlay : IStringsFolderLookup
+public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
 {
     private readonly Lazy<DictionaryBundle> _dictionaries;
 

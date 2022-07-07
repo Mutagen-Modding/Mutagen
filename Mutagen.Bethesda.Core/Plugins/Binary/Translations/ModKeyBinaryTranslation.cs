@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class ModKeyBinaryTranslation
+public sealed class ModKeyBinaryTranslation
 {
     public static readonly ModKeyBinaryTranslation Instance = new();
 

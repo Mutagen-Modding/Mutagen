@@ -4,9 +4,9 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Analysis;
 
-public record RecordLocationMarker(FormKey FormKey, RangeInt64 Location, RecordType Record);
+public sealed record RecordLocationMarker(FormKey FormKey, RangeInt64 Location, RecordType Record);
 
-public class GroupLocationMarker
+public sealed class GroupLocationMarker
 {
     public ImmutableStack<GroupLocationMarker> Parents { get; }
     internal bool Registered { get; set; }

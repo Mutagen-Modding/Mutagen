@@ -25,7 +25,7 @@ public interface ILoadOrderImporter<TMod>
     ILoadOrder<IModListing<TMod>> Import(StringsReadParameters? stringsParam = null);
 }
 
-public class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
+public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
     where TMod : class, IModGetter
 {
     private readonly IFileSystem _fileSystem;
@@ -98,7 +98,7 @@ public class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
     }
 }
 
-public class LoadOrderImporter : ILoadOrderImporter
+public sealed class LoadOrderImporter : ILoadOrderImporter
 {
     private readonly IFileSystem _fileSystem;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;

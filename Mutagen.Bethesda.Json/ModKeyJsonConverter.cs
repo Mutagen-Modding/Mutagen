@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Mutagen.Bethesda.Json;
 
-public class ModKeyJsonConverter : JsonConverter
+public sealed class ModKeyJsonConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
     {

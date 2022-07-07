@@ -8,7 +8,7 @@ record SQLiteFormKeyAllocatorFormIDRecord(string EditorID, uint FormID, uint Pat
 
 record SQLiteFormKeyAllocatorPatcherRecord(uint PatcherID, string PatcherName);
 
-internal class SQLiteFormKeyAllocatorDbContext : DbContext
+internal sealed class SQLiteFormKeyAllocatorDbContext : DbContext
 {
     private readonly string _connectionString;
 
@@ -52,7 +52,7 @@ internal class SQLiteFormKeyAllocatorDbContext : DbContext
 
 }
 
-public class SQLiteFormKeyAllocator : BaseSharedFormKeyAllocator
+public sealed class SQLiteFormKeyAllocator : BaseSharedFormKeyAllocator
 {
     public static readonly string DefaultPatcherName = "default";
 

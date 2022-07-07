@@ -2,9 +2,9 @@
 using Loqui;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals;
+namespace Mutagen.Bethesda.Plugins.Records;
 
-internal class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyCache<TMajor, FormKey>
+internal sealed class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyCache<TMajor, FormKey>
     where TGroup : class, IGroupGetter<TMajor>
     where TMajor : class, IMajorRecordGetter
 {

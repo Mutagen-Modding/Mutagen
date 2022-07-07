@@ -7,7 +7,7 @@ using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class FormKeyBinaryTranslation
+public sealed class FormKeyBinaryTranslation
 {
     public static readonly FormKeyBinaryTranslation Instance = new();
 

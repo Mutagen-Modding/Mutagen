@@ -5,7 +5,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 
-public record AlignmentRepeatedSubrule(RecordType RecordType, bool Single)
+public sealed record AlignmentRepeatedSubrule(RecordType RecordType, bool Single)
 {
     public bool Ender { get; init; }
 }
@@ -14,7 +14,7 @@ public record AlignmentRepeatedSubrule(RecordType RecordType, bool Single)
 /// For use when a set of records is repeated. 
 /// Does not currently enforce order within sub-group, but could be upgraded in the future 
 /// </summary> 
-public class AlignmentRepeatedRule : AlignmentRule 
+public sealed class AlignmentRepeatedRule : AlignmentRule 
 { 
     public Dictionary<RecordType, AlignmentRepeatedSubrule> SubTypes;
     public bool SortContents;

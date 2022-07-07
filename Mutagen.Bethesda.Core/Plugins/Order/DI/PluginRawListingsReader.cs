@@ -8,7 +8,7 @@ public interface IPluginRawListingsReader
     IEnumerable<ILoadOrderListingGetter> Read(FilePath pluginPath);
 }
 
-public class PluginRawListingsReader : IPluginRawListingsReader
+public sealed class PluginRawListingsReader : IPluginRawListingsReader
 {
     private readonly IFileSystem _fileSystem;
     public IPluginListingsParser Parser { get; }

@@ -11,7 +11,7 @@ public interface ICreationClubLiveLoadOrderFolderWatcher
     IObservable<IChangeSet<ModKey, ModKey>> Get();
 }
 
-public class CreationClubLiveLoadOrderFolderWatcher : ICreationClubLiveLoadOrderFolderWatcher
+public sealed class CreationClubLiveLoadOrderFolderWatcher : ICreationClubLiveLoadOrderFolderWatcher
 {
     private readonly IFileSystem _fileSystem;
     public IDataDirectoryProvider DataDirectory { get; }

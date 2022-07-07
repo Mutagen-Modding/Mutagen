@@ -2,4 +2,4 @@
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 
-public record EncodingBundle(IMutagenEncoding NonTranslated, IMutagenEncoding NonLocalized);
+public sealed record EncodingBundle(IMutagenEncoding NonTranslated, IMutagenEncoding NonLocalized);

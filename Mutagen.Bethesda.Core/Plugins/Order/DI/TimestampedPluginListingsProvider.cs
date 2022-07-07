@@ -6,7 +6,7 @@ public interface ITimestampedPluginListingsProvider : IListingsProvider
 {
 }
 
-public class TimestampedPluginListingsProvider : ITimestampedPluginListingsProvider
+public sealed class TimestampedPluginListingsProvider : ITimestampedPluginListingsProvider
 {
     public ITimestampAligner Aligner { get; }
     public ITimestampedPluginListingsPreferences Prefs { get; }

@@ -2,4 +2,4 @@
 
 namespace Mutagen.Bethesda.Plugins.Records.Mapping;
 
-public record InterfaceMappingResult(bool Setter, IReadOnlyList<ILoquiRegistration> Registrations);
+public sealed record InterfaceMappingResult(bool Setter, IReadOnlyList<ILoquiRegistration> Registrations);

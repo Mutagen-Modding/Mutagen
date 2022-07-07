@@ -1,8 +1,8 @@
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Order.Internals;
+namespace Mutagen.Bethesda.Plugins.Order;
 
-public class LoadOrderTimestampComparer : IComparer<(ModKey ModKey, DateTime Write)>
+internal sealed class LoadOrderTimestampComparer : IComparer<(ModKey ModKey, DateTime Write)>
 {
     private readonly IReadOnlyList<ModKey> _modKeys;
 

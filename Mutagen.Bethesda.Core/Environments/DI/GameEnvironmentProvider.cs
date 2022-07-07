@@ -22,7 +22,7 @@ public interface IGameEnvironmentProvider
     IGameEnvironment Construct(LinkCachePreferences? linkCachePrefs = null);
 }
 
-public class GameEnvironmentProvider : IGameEnvironmentProvider
+public sealed class GameEnvironmentProvider : IGameEnvironmentProvider
 {
     private readonly IGameReleaseContext _gameReleaseContext;
     private readonly ILoadOrderImporter _loadOrderImporter;
@@ -59,7 +59,7 @@ public class GameEnvironmentProvider : IGameEnvironmentProvider
     }
 }
 
-public class GameEnvironmentProvider<TMod> : IGameEnvironmentProvider<TMod>
+public sealed class GameEnvironmentProvider<TMod> : IGameEnvironmentProvider<TMod>
     where TMod : class, IModGetter
 {
     private readonly IGameReleaseContext _gameReleaseContext;
@@ -97,7 +97,7 @@ public class GameEnvironmentProvider<TMod> : IGameEnvironmentProvider<TMod>
     }
 }
 
-public class GameEnvironmentProvider<TModSetter, TModGetter> : IGameEnvironmentProvider<TModSetter, TModGetter>
+public sealed class GameEnvironmentProvider<TModSetter, TModGetter> : IGameEnvironmentProvider<TModSetter, TModGetter>
     where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
 {

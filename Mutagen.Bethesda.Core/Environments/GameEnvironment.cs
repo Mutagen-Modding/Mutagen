@@ -11,7 +11,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Environments;
 
-public class GameEnvironment
+public sealed class GameEnvironment
 {
     public static readonly GameEnvironment Typical = new();
 
@@ -104,7 +104,7 @@ public interface IGameEnvironment<TModSetter, TModGetter> : IGameEnvironment<TMo
 /// <summary>
 /// A class housing commonly used utilities when interacting with a game environment
 /// </summary>
-public class GameEnvironmentState :
+public sealed class GameEnvironmentState :
     IDataDirectoryProvider,
     IPluginListingsPathProvider,
     ICreationClubListingsPathProvider,
@@ -216,7 +216,7 @@ public class GameEnvironmentState :
 /// <summary>
 /// A class housing commonly used utilities when interacting with a game environment
 /// </summary>
-public class GameEnvironmentState<TMod> :
+public sealed class GameEnvironmentState<TMod> :
     IDataDirectoryProvider,
     IPluginListingsPathProvider,
     ICreationClubListingsPathProvider,
@@ -331,7 +331,7 @@ public class GameEnvironmentState<TMod> :
 /// <summary>
 /// A class housing commonly used utilities when interacting with a game environment
 /// </summary>
-public class GameEnvironmentState<TModSetter, TModGetter> : 
+public sealed class GameEnvironmentState<TModSetter, TModGetter> : 
     IDataDirectoryProvider, 
     IPluginListingsPathProvider,
     ICreationClubListingsPathProvider,

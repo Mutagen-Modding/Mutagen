@@ -6,7 +6,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal;
 
-internal class InternalImmutableModLinkCache
+internal sealed class InternalImmutableModLinkCache
 {
     internal readonly IModGetter _sourceMod;
     public GameCategory Category { get; }

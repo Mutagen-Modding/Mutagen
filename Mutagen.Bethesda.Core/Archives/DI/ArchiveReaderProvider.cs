@@ -16,7 +16,7 @@ public interface IArchiveReaderProvider
     IArchiveReader Create(FilePath path);
 }
 
-public class ArchiveReaderProvider : IArchiveReaderProvider
+public sealed class ArchiveReaderProvider : IArchiveReaderProvider
 {
     private readonly IFileSystem _fileSystem;
     private readonly IGameReleaseContext _gameRelease;

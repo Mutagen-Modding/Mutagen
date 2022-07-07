@@ -10,13 +10,13 @@ public static class Implicits
     public static readonly ImplicitListings Listings = ImplicitListings.Instance;
     public static readonly ImplicitRecordFormKeys RecordFormKeys = ImplicitRecordFormKeys.Instance;
 
-    private readonly static ImplicitRegistration Oblivion;
-    private readonly static ImplicitRegistration SkyrimLE;
-    private readonly static ImplicitRegistration EnderalLE;
-    private readonly static ImplicitRegistration SkyrimSE;
-    private readonly static ImplicitRegistration EnderalSE;
-    private readonly static ImplicitRegistration SkyrimVR;
-    private readonly static ImplicitRegistration Fallout4;
+    private static readonly ImplicitRegistration Oblivion;
+    private static readonly ImplicitRegistration SkyrimLE;
+    private static readonly ImplicitRegistration EnderalLE;
+    private static readonly ImplicitRegistration SkyrimSE;
+    private static readonly ImplicitRegistration EnderalSE;
+    private static readonly ImplicitRegistration SkyrimVR;
+    private static readonly ImplicitRegistration Fallout4;
 
     static Implicits()
     {

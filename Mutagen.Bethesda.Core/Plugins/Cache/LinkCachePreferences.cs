@@ -2,7 +2,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Plugins.Cache;
 
-public class LinkCachePreferences
+public sealed class LinkCachePreferences
 {
     public enum RetentionType
     {

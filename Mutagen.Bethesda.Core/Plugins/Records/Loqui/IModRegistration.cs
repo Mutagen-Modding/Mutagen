@@ -1,6 +1,6 @@
 ﻿using Loqui;
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals;
+namespace Mutagen.Bethesda.Plugins.Records.Loqui;
 
 public interface IModRegistration : ILoquiRegistration
 {

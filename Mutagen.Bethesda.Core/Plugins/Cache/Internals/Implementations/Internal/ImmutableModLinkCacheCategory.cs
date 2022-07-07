@@ -6,7 +6,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal;
 
-internal class ImmutableModLinkCacheCategory<TKey>
+internal sealed class ImmutableModLinkCacheCategory<TKey>
     where TKey : notnull
 {
     private readonly InternalImmutableModLinkCache _parent;

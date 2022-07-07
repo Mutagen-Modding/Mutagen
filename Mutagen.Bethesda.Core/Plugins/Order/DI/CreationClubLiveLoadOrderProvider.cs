@@ -9,7 +9,7 @@ public interface ICreationClubLiveLoadOrderProvider : ISomeLiveLoadOrderProvider
 {
 }
 
-public class CreationClubLiveLoadOrderProvider : ICreationClubLiveLoadOrderProvider
+public sealed class CreationClubLiveLoadOrderProvider : ICreationClubLiveLoadOrderProvider
 {
     public ICreationClubLiveListingsFileReader FileReader { get; }
     public ICreationClubLiveLoadOrderFolderWatcher FolderWatcher { get; }

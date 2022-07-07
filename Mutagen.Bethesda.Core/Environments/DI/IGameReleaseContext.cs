@@ -10,7 +10,7 @@ public interface IGameReleaseContext
 public record GameReleaseInjection(GameRelease Release)
     : IGameReleaseContext;
 
-public class GameReleasePlaceholder : IGameReleaseContext
+public sealed class GameReleasePlaceholder : IGameReleaseContext
 {
     public GameRelease Release => throw new IncompleteInitialization();
 }

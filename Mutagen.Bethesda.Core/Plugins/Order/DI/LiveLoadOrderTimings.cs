@@ -7,7 +7,7 @@ public interface ILiveLoadOrderTimings
     TimeSpan RetryIntervalMax { get; }
 }
 
-public class LiveLoadOrderTimings : ILiveLoadOrderTimings
+public sealed class LiveLoadOrderTimings : ILiveLoadOrderTimings
 {
     public TimeSpan Throttle { get; init; } = TimeSpan.FromMilliseconds(150);
     public TimeSpan RetryInterval { get; init; } = TimeSpan.FromMilliseconds(250);

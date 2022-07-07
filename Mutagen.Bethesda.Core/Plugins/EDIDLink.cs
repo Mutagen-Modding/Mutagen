@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins;
 /// This class stores the target EDID as RecordType, as that is a convenient 4 character struct
 /// </summary>
 /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
+public sealed class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
     where TMajor : class, IMajorRecordGetter
 {
     /// <summary>

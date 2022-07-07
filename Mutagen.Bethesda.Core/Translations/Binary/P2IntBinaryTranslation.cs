@@ -3,11 +3,11 @@ using System.Buffers.Binary;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 
-public class P2IntBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<P2Int, TReader, TWriter>
+public sealed class P2IntBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<P2Int, TReader, TWriter>
     where TReader : IBinaryReadStream
     where TWriter : IBinaryWriteStream
 {
-    public readonly static P2IntBinaryTranslation<TReader, TWriter> Instance = new();
+    public static readonly P2IntBinaryTranslation<TReader, TWriter> Instance = new();
     public override int ExpectedLength => 8;
 
     public override P2Int Parse(TReader reader)

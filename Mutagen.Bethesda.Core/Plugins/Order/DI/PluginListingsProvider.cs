@@ -6,7 +6,7 @@ public interface IPluginListingsProvider : IListingsProvider
 {
 }
     
-public class PluginListingsProvider : IPluginListingsProvider
+public sealed class PluginListingsProvider : IPluginListingsProvider
 {
     private readonly IGameReleaseContext _gameReleaseContext;
     private readonly ITimestampedPluginListingsProvider _timestampedPluginsProvider;

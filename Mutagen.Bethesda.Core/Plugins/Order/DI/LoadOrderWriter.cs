@@ -12,7 +12,7 @@ public interface ILoadOrderWriter
         bool removeImplicitMods = true);
 }
 
-public class LoadOrderWriter : ILoadOrderWriter
+public sealed class LoadOrderWriter : ILoadOrderWriter
 {
     private readonly IFileSystem _fileSystem;
     private readonly IHasEnabledMarkersProvider _hasEnabledMarkersProvider;

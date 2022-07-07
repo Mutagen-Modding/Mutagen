@@ -10,7 +10,7 @@ public interface IModListingToStringConverter
         where TMod : class, IModGetter;
 }
 
-public class ModListingToStringConverter : IModListingToStringConverter
+public sealed class ModListingToStringConverter : IModListingToStringConverter
 {
     public string Convert(IModListingGetter getter)
     {

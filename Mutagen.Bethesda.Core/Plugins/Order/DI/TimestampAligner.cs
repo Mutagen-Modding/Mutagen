@@ -1,6 +1,5 @@
 ﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Order.Internals;
 using Noggog;
 using Path = System.IO.Path;
 
@@ -55,7 +54,7 @@ public interface ITimestampAligner
         TimeSpan? interval = null);
 }
 
-public class TimestampAligner : ITimestampAligner
+public sealed class TimestampAligner : ITimestampAligner
 {
     private readonly IFileSystem _FileSystem;
 

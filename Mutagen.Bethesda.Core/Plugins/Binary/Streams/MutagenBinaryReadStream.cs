@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 /// <summary>
 /// A class that wraps a stream with Mutagen-specific binary reading functionality
 /// </summary>
-public class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStream
+public sealed class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStream
 {
     private readonly FilePath _path;
 

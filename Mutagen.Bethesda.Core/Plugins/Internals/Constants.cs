@@ -1,6 +1,6 @@
 namespace Mutagen.Bethesda.Plugins.Internals;
 
-internal class Constants
+internal static class Constants
 {
     public static readonly sbyte HeaderLength = 4;
     public const string TriggeringRecordTypeMember = "TriggeringRecordType";

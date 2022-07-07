@@ -11,7 +11,7 @@ public interface IArchiveExtensionProvider
     string Get();
 }
 
-public class ArchiveExtensionProvider : IArchiveExtensionProvider
+public sealed class ArchiveExtensionProvider : IArchiveExtensionProvider
 {
     private readonly IGameReleaseContext _gameReleaseContext;
 

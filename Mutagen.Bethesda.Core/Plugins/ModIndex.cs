@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Plugins;
 /// A struct representing a index of a master within a FormID.
 /// Mods can only reference a byte's worth of masters, so indices must be limited to a byte.
 /// </summary>
-public struct ModIndex
+public readonly struct ModIndex
 {
     /// <summary>
     /// A static readonly singleton ModID with value 0

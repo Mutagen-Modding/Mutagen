@@ -6,7 +6,7 @@ public interface IAspectInterfaceMapGetter : IInterfaceMapGetter
 {
 }
 
-internal class AspectInterfaceMapper : InterfaceMapGetter, IAspectInterfaceMapGetter
+internal sealed class AspectInterfaceMapper : InterfaceMapGetter, IAspectInterfaceMapGetter
 {
     public static AspectInterfaceMapper AutomaticFactory()
     {

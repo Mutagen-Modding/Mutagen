@@ -167,7 +167,7 @@ internal static class GroupRecordTypeGetter<T>
     }
 }
 
-internal class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
+internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
     where T : IMajorRecordGetter
 {
     private readonly IReadOnlyDictionary<FormKey, int> _locs;

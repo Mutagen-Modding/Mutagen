@@ -2,7 +2,7 @@
 
 namespace Mutagen.Bethesda.Plugins.Implicit;
 
-public class ImplicitModKeyCollection : IReadOnlyList<ModKey>
+public sealed class ImplicitModKeyCollection : IReadOnlyList<ModKey>
 {
     private readonly IReadOnlyList<ModKey> _keys;
     private readonly HashSet<ModKey> _set;

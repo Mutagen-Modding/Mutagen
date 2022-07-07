@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Strings;
 /// <summary>
 /// Class for compiling strings of various languages, and exporting them to a .strings file
 /// </summary>
-public class StringsWriter : IDisposable
+public sealed class StringsWriter : IDisposable
 {
     public DirectoryPath WriteDir { get; }
     private readonly GameRelease _release;
