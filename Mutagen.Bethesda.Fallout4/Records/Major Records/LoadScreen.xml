@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LoadScreen" recordType="LSCR" majorFlag="true" baseClass="Fallout4MajorRecord" objType="Record" GUID="16c96df6-c448-4de1-8141-3f79df8bcf64" ID="588">
     <Fields>
-      <String name="Description" recordType="DESC" translated="DL" nullable="False" />
+      <String name="Description" recordType="DESC" translated="Normal" nullable="False" />
       <RefList name="Conditions" refName="Condition" />
       <FormLink name="LoadingScreenNif" recordType="NNAM" nullable="False">
         <Interface>IStaticObject</Interface>

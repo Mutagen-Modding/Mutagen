@@ -559,9 +559,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region ShortName
-        public String? ShortName { get; set; }
+        public TranslatedString? ShortName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? INpcGetter.ShortName => this.ShortName;
+        ITranslatedStringGetter? INpcGetter.ShortName => this.ShortName;
         #endregion
         #region BaseHealth
         public UInt16 BaseHealth { get; set; } = default;
@@ -5070,7 +5070,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new String? ShortName { get; set; }
+        new TranslatedString? ShortName { get; set; }
         new UInt16 BaseHealth { get; set; }
         new UInt16 BaseActionPoints { get; set; }
         new UInt16 FarAwayModelDistance { get; set; }
@@ -5218,7 +5218,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        String? ShortName { get; }
+        ITranslatedStringGetter? ShortName { get; }
         UInt16 BaseHealth { get; }
         UInt16 BaseActionPoints { get; }
         UInt16 FarAwayModelDistance { get; }
@@ -6020,7 +6020,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Class = item.Class.Equals(rhs.Class);
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.ShortName = string.Equals(item.ShortName, rhs.ShortName);
+            ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
             ret.BaseHealth = item.BaseHealth == rhs.BaseHealth;
             ret.BaseActionPoints = item.BaseActionPoints == rhs.BaseActionPoints;
             ret.FarAwayModelDistance = item.FarAwayModelDistance == rhs.FarAwayModelDistance;
@@ -6953,7 +6953,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
             {
-                if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
+                if (!object.Equals(lhs.ShortName, rhs.ShortName)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BaseHealth) ?? true))
             {
@@ -8139,7 +8139,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
             {
-                item.ShortName = rhs.ShortName;
+                item.ShortName = rhs.ShortName?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseHealth) ?? true))
             {
@@ -8891,7 +8891,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.ShortName,
                 header: translationParams.ConvertToCustom(RecordTypes.SHRT),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             using (HeaderExport.Subrecord(writer, RecordTypes.DATA)) { }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
@@ -9523,6 +9524,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ShortName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Npc_FieldIndex.ShortName;
                 }
@@ -10034,7 +10036,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
-        public String? ShortName => _ShortNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         private RangeInt32? _DNAMLocation;
         public Npc.DNAMDataType DNAMDataTypeState { get; private set; }

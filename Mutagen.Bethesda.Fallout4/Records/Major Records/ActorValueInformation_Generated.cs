@@ -97,9 +97,9 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? IActorValueInformationGetter.Description => this.Description;
         #endregion
         #region Abbreviation
-        public String? Abbreviation { get; set; }
+        public TranslatedString? Abbreviation { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IActorValueInformationGetter.Abbreviation => this.Abbreviation;
+        ITranslatedStringGetter? IActorValueInformationGetter.Abbreviation => this.Abbreviation;
         #endregion
         #region DefaultValue
         public Single? DefaultValue { get; set; }
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         new TranslatedString? Name { get; set; }
         new TranslatedString? Description { get; set; }
-        new String? Abbreviation { get; set; }
+        new TranslatedString? Abbreviation { get; set; }
         new Single? DefaultValue { get; set; }
         new ActorValueInformation.Flag? Flags { get; set; }
         new ActorValueInformation.Types? Type { get; set; }
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? Name { get; }
         #endregion
         ITranslatedStringGetter? Description { get; }
-        String? Abbreviation { get; }
+        ITranslatedStringGetter? Abbreviation { get; }
         Single? DefaultValue { get; }
         ActorValueInformation.Flag? Flags { get; }
         ActorValueInformation.Types? Type { get; }
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
-            ret.Abbreviation = string.Equals(item.Abbreviation, rhs.Abbreviation);
+            ret.Abbreviation = object.Equals(item.Abbreviation, rhs.Abbreviation);
             ret.DefaultValue = item.DefaultValue.EqualsWithin(rhs.DefaultValue);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Type = item.Type == rhs.Type;
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
             {
-                if (!string.Equals(lhs.Abbreviation, rhs.Abbreviation)) return false;
+                if (!object.Equals(lhs.Abbreviation, rhs.Abbreviation)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.DefaultValue) ?? true))
             {
@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
             {
-                item.Abbreviation = rhs.Abbreviation;
+                item.Abbreviation = rhs.Abbreviation?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.DefaultValue) ?? true))
             {
@@ -1591,7 +1591,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.Abbreviation,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultValue,
@@ -1723,6 +1724,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Abbreviation = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)ActorValueInformation_FieldIndex.Abbreviation;
                 }
@@ -1824,7 +1826,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Abbreviation
         private int? _AbbreviationLocation;
-        public String? Abbreviation => _AbbreviationLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AbbreviationLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Abbreviation => _AbbreviationLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AbbreviationLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region DefaultValue
         private int? _DefaultValueLocation;

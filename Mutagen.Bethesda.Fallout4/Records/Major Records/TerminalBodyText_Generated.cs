@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item.Text,
                 header: translationParams.ConvertToCustom(RecordTypes.BTXT),
                 binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.DL);
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Text = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.DL,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TerminalBodyText_FieldIndex.Text;
                 }
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Text
         private int? _TextLocation;
-        public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(

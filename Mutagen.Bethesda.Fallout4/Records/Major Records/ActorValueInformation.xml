@@ -4,7 +4,7 @@
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" translated="DL" />
-      <String name="Abbreviation" recordType="ANAM" />
+      <String name="Abbreviation" recordType="ANAM" translated="Normal" />
       <Float name="DefaultValue" recordType="NAM0" />
       <Enum name="Flags" enumName="ActorValueInformation.Flag" recordType="AVFL" byteLength="4" />
       <Enum name="Type" enumName="ActorValueInformation.Types" recordType="NAM1" byteLength="4" />

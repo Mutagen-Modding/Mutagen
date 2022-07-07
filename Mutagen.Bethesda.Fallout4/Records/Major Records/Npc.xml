@@ -85,7 +85,7 @@
       </List>
       <FormLink name="Class" refName="Class" recordType="CNAM" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <String name="ShortName" recordType="SHRT" />
+      <String name="ShortName" recordType="SHRT" translated="Normal" />
       <Marker name="Marker" recordType="DATA" />
       <Data recordType="DNAM">
         <Fields>

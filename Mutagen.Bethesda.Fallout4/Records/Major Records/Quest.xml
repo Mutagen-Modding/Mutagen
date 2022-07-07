@@ -90,7 +90,7 @@
       <Enum name="Flags" enumName="QuestLogEntry.Flag" byteLength="1" recordType="QSDT" />
       <RefList name="Conditions" refName="Condition" />
       <String name="Note" recordType="NAM2" />
-      <String name="Entry" recordType="CNAM" translated="DL" />
+      <String name="Entry" recordType="CNAM" translated="Normal" />
       <FormLink name="NextQuest" refName="Quest" recordType="NAM0" />
     </Fields>
   </Object>
