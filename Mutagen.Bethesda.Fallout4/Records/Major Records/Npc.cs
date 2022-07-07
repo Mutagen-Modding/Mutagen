@@ -77,7 +77,7 @@ public partial class Npc
         Disgusted,
     }
 
-    public enum AssistenceType
+    public enum AssistanceType
     {
         HelpsNobody,
         HelpsAllies,

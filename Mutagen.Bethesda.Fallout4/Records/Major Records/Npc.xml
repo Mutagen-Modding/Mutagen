@@ -54,12 +54,12 @@
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
       <Data recordType="AIDT">
         <Fields>
-          <Enum name="Agression" enumName="Npc.AggressionType" byteLength="1" />
+          <Enum name="Aggression" enumName="Npc.AggressionType" byteLength="1" />
           <Enum name="Confidence" enumName="Npc.ConfidenceType" byteLength="1" />
           <UInt8 name="EnergyLevel" />
           <Enum name="Responsibility" enumName="Npc.ResponsibilityType" byteLength="1" />
           <Enum name="Mood" enumName="Npc.MoodType" byteLength="1" />
-          <Enum name="Assistence" enumName="Npc.AssistenceType" byteLength="1" />
+          <Enum name="Assistance" enumName="Npc.AssistanceType" byteLength="1" />
           <Bool name="AggroRadiusBehaviorEnabled" byteLength="2" importantByteLength="1" />
           <UInt32 name="AggroRadiusWarn" />
           <UInt32 name="AggroRadiusWarnOrAttack" />
@@ -85,7 +85,7 @@
       </List>
       <FormLink name="Class" refName="Class" recordType="CNAM" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <String name="ShortName" recordType="SHRT" />
+      <String name="ShortName" recordType="SHRT" translated="Normal" />
       <Marker name="Marker" recordType="DATA" />
       <Data recordType="DNAM">
         <Fields>

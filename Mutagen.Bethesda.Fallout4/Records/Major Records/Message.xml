@@ -2,14 +2,14 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Message" recordType="MESG" objType="Record" baseClass="Fallout4MajorRecord" GUID="8a368675-cfab-43a2-a05b-2d2532d538fd" ID="152">
     <Fields>
-      <String name="Description" recordType="DESC" translated="DL" nullable="False" />
+      <String name="Description" recordType="DESC" translated="Normal" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <Int32 name="INAM" recordType="INAM" nullable="False" />
       <FormLink name="OwnerQuest" recordType="QNAM" refName="Quest" />
       <Enum name="Flags" enumName="Message.Flag" byteLength="4" recordType="DNAM" nullable="False" />
       <UInt32 name="DisplayTime" recordType="TNAM" />
       <String name="Swf" recordType="SNAM" />
-      <String name="ShortTitle" recordType="NNAM" translated="DL" />
+      <String name="ShortTitle" recordType="NNAM" translated="Normal" />
       <RefList name="MenuButtons" refName="MessageButton" />
     </Fields>
   </Object>

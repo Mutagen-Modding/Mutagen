@@ -5,8 +5,8 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapterIndexed" recordType="VMAD" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
-      <String name="HeaderText" recordType="NAM0" translated="DL" />
-      <String name="WelcomeText" recordType="WNAM" translated="DL" />
+      <String name="HeaderText" recordType="NAM0" translated="Normal" />
+      <String name="WelcomeText" recordType="WNAM" translated="Normal" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
@@ -39,17 +39,17 @@
   </Object>
   <Object name="TerminalBodyText" objType="Subrecord" GUID="7d1bab97-5ccd-43fc-9e54-9602f1e5a3a8" ID="432">
     <Fields>
-      <String name="Text" translated="DL" recordType="BTXT" nullable="False" />
+      <String name="Text" translated="Normal" recordType="BTXT" nullable="False" />
       <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
   <Object name="TerminalMenuItem" objType="Subrecord" GUID="5c3241c0-0af2-47d2-9277-b4b3d314e700" ID="433">
     <Fields>
-      <String name="ItemText" translated="DL" recordType="ITXT" nullable="False" />
-      <String name="ResponseText" translated="DL" recordType="RNAM" />
+      <String name="ItemText" translated="Normal" recordType="ITXT" nullable="False" />
+      <String name="ResponseText" translated="Normal" recordType="RNAM" />
       <Enum name="Type" enumName="TerminalMenuItem.Types" recordType="ANAM" byteLength="1" nullable="False" />
       <UInt16 name="ItemId" recordType="ITID" nullable="False" />
-      <String name="DisplayText" translated="DL" recordType="UNAM" />
+      <String name="DisplayText" translated="Normal" recordType="UNAM" />
       <String name="ImageFile" recordType="VNAM" />
       <FormLink name="Submenu" recordType="TNAM" refName="Terminal" />
       <RefList name="Conditions" refName="Condition" />

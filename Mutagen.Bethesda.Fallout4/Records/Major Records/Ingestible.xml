@@ -3,7 +3,7 @@
   <Object name="Ingestible" recordType="ALCH" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" GUID="12503adc-e228-4b45-a88a-bee5aac320fd" ID="222">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-	  <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+	    <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
@@ -26,7 +26,7 @@
           <FormLink name="ConsumeSound" refName="SoundDescriptor" />
         </Fields>
       </Data>
-      <String name="AddictionName" recordType="DNAM" translated="DL" />
+      <String name="AddictionName" recordType="DNAM" translated="Normal" />
       <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>

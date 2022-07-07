@@ -416,8 +416,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region Agression
-        public Npc.AggressionType Agression { get; set; } = default;
+        #region Aggression
+        public Npc.AggressionType Aggression { get; set; } = default;
         #endregion
         #region Confidence
         public Npc.ConfidenceType Confidence { get; set; } = default;
@@ -431,8 +431,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mood
         public Npc.MoodType Mood { get; set; } = default;
         #endregion
-        #region Assistence
-        public Npc.AssistenceType Assistence { get; set; } = default;
+        #region Assistance
+        public Npc.AssistanceType Assistance { get; set; } = default;
         #endregion
         #region AggroRadiusBehaviorEnabled
         public Boolean AggroRadiusBehaviorEnabled { get; set; } = default;
@@ -559,9 +559,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region ShortName
-        public String? ShortName { get; set; }
+        public TranslatedString? ShortName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? INpcGetter.ShortName => this.ShortName;
+        ITranslatedStringGetter? INpcGetter.ShortName => this.ShortName;
         #endregion
         #region BaseHealth
         public UInt16 BaseHealth { get; set; } = default;
@@ -903,12 +903,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ForcedLocRefType = initialValue;
                 this.NativeTerminal = initialValue;
                 this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
-                this.Agression = initialValue;
+                this.Aggression = initialValue;
                 this.Confidence = initialValue;
                 this.EnergyLevel = initialValue;
                 this.Responsibility = initialValue;
                 this.Mood = initialValue;
-                this.Assistence = initialValue;
+                this.Assistance = initialValue;
                 this.AggroRadiusBehaviorEnabled = initialValue;
                 this.AggroRadiusWarn = initialValue;
                 this.AggroRadiusWarnOrAttack = initialValue;
@@ -1003,12 +1003,12 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ForcedLocRefType,
                 TItem NativeTerminal,
                 TItem Items,
-                TItem Agression,
+                TItem Aggression,
                 TItem Confidence,
                 TItem EnergyLevel,
                 TItem Responsibility,
                 TItem Mood,
-                TItem Assistence,
+                TItem Assistance,
                 TItem AggroRadiusBehaviorEnabled,
                 TItem AggroRadiusWarn,
                 TItem AggroRadiusWarnOrAttack,
@@ -1102,12 +1102,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ForcedLocRefType = ForcedLocRefType;
                 this.NativeTerminal = NativeTerminal;
                 this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
-                this.Agression = Agression;
+                this.Aggression = Aggression;
                 this.Confidence = Confidence;
                 this.EnergyLevel = EnergyLevel;
                 this.Responsibility = Responsibility;
                 this.Mood = Mood;
-                this.Assistence = Assistence;
+                this.Assistance = Assistance;
                 this.AggroRadiusBehaviorEnabled = AggroRadiusBehaviorEnabled;
                 this.AggroRadiusWarn = AggroRadiusWarn;
                 this.AggroRadiusWarnOrAttack = AggroRadiusWarnOrAttack;
@@ -1204,12 +1204,12 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem ForcedLocRefType;
             public TItem NativeTerminal;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>? Items;
-            public TItem Agression;
+            public TItem Aggression;
             public TItem Confidence;
             public TItem EnergyLevel;
             public TItem Responsibility;
             public TItem Mood;
-            public TItem Assistence;
+            public TItem Assistance;
             public TItem AggroRadiusBehaviorEnabled;
             public TItem AggroRadiusWarn;
             public TItem AggroRadiusWarnOrAttack;
@@ -1308,12 +1308,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ForcedLocRefType, rhs.ForcedLocRefType)) return false;
                 if (!object.Equals(this.NativeTerminal, rhs.NativeTerminal)) return false;
                 if (!object.Equals(this.Items, rhs.Items)) return false;
-                if (!object.Equals(this.Agression, rhs.Agression)) return false;
+                if (!object.Equals(this.Aggression, rhs.Aggression)) return false;
                 if (!object.Equals(this.Confidence, rhs.Confidence)) return false;
                 if (!object.Equals(this.EnergyLevel, rhs.EnergyLevel)) return false;
                 if (!object.Equals(this.Responsibility, rhs.Responsibility)) return false;
                 if (!object.Equals(this.Mood, rhs.Mood)) return false;
-                if (!object.Equals(this.Assistence, rhs.Assistence)) return false;
+                if (!object.Equals(this.Assistance, rhs.Assistance)) return false;
                 if (!object.Equals(this.AggroRadiusBehaviorEnabled, rhs.AggroRadiusBehaviorEnabled)) return false;
                 if (!object.Equals(this.AggroRadiusWarn, rhs.AggroRadiusWarn)) return false;
                 if (!object.Equals(this.AggroRadiusWarnOrAttack, rhs.AggroRadiusWarnOrAttack)) return false;
@@ -1404,12 +1404,12 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ForcedLocRefType);
                 hash.Add(this.NativeTerminal);
                 hash.Add(this.Items);
-                hash.Add(this.Agression);
+                hash.Add(this.Aggression);
                 hash.Add(this.Confidence);
                 hash.Add(this.EnergyLevel);
                 hash.Add(this.Responsibility);
                 hash.Add(this.Mood);
-                hash.Add(this.Assistence);
+                hash.Add(this.Assistance);
                 hash.Add(this.AggroRadiusBehaviorEnabled);
                 hash.Add(this.AggroRadiusWarn);
                 hash.Add(this.AggroRadiusWarnOrAttack);
@@ -1590,12 +1590,12 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.Agression)) return false;
+                if (!eval(this.Aggression)) return false;
                 if (!eval(this.Confidence)) return false;
                 if (!eval(this.EnergyLevel)) return false;
                 if (!eval(this.Responsibility)) return false;
                 if (!eval(this.Mood)) return false;
-                if (!eval(this.Assistence)) return false;
+                if (!eval(this.Assistance)) return false;
                 if (!eval(this.AggroRadiusBehaviorEnabled)) return false;
                 if (!eval(this.AggroRadiusWarn)) return false;
                 if (!eval(this.AggroRadiusWarnOrAttack)) return false;
@@ -1877,12 +1877,12 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.Agression)) return true;
+                if (eval(this.Aggression)) return true;
                 if (eval(this.Confidence)) return true;
                 if (eval(this.EnergyLevel)) return true;
                 if (eval(this.Responsibility)) return true;
                 if (eval(this.Mood)) return true;
-                if (eval(this.Assistence)) return true;
+                if (eval(this.Assistance)) return true;
                 if (eval(this.AggroRadiusBehaviorEnabled)) return true;
                 if (eval(this.AggroRadiusWarn)) return true;
                 if (eval(this.AggroRadiusWarnOrAttack)) return true;
@@ -2169,12 +2169,12 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.Agression = eval(this.Agression);
+                obj.Aggression = eval(this.Aggression);
                 obj.Confidence = eval(this.Confidence);
                 obj.EnergyLevel = eval(this.EnergyLevel);
                 obj.Responsibility = eval(this.Responsibility);
                 obj.Mood = eval(this.Mood);
-                obj.Assistence = eval(this.Assistence);
+                obj.Assistance = eval(this.Assistance);
                 obj.AggroRadiusBehaviorEnabled = eval(this.AggroRadiusBehaviorEnabled);
                 obj.AggroRadiusWarn = eval(this.AggroRadiusWarn);
                 obj.AggroRadiusWarnOrAttack = eval(this.AggroRadiusWarnOrAttack);
@@ -2606,9 +2606,9 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.Agression ?? true)
+                    if (printMask?.Aggression ?? true)
                     {
-                        sb.AppendItem(Agression, "Agression");
+                        sb.AppendItem(Aggression, "Aggression");
                     }
                     if (printMask?.Confidence ?? true)
                     {
@@ -2626,9 +2626,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Mood, "Mood");
                     }
-                    if (printMask?.Assistence ?? true)
+                    if (printMask?.Assistance ?? true)
                     {
-                        sb.AppendItem(Assistence, "Assistence");
+                        sb.AppendItem(Assistance, "Assistance");
                     }
                     if (printMask?.AggroRadiusBehaviorEnabled ?? true)
                     {
@@ -3010,12 +3010,12 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? ForcedLocRefType;
             public Exception? NativeTerminal;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>? Items;
-            public Exception? Agression;
+            public Exception? Aggression;
             public Exception? Confidence;
             public Exception? EnergyLevel;
             public Exception? Responsibility;
             public Exception? Mood;
-            public Exception? Assistence;
+            public Exception? Assistance;
             public Exception? AggroRadiusBehaviorEnabled;
             public Exception? AggroRadiusWarn;
             public Exception? AggroRadiusWarnOrAttack;
@@ -3147,8 +3147,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return NativeTerminal;
                     case Npc_FieldIndex.Items:
                         return Items;
-                    case Npc_FieldIndex.Agression:
-                        return Agression;
+                    case Npc_FieldIndex.Aggression:
+                        return Aggression;
                     case Npc_FieldIndex.Confidence:
                         return Confidence;
                     case Npc_FieldIndex.EnergyLevel:
@@ -3157,8 +3157,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Responsibility;
                     case Npc_FieldIndex.Mood:
                         return Mood;
-                    case Npc_FieldIndex.Assistence:
-                        return Assistence;
+                    case Npc_FieldIndex.Assistance:
+                        return Assistance;
                     case Npc_FieldIndex.AggroRadiusBehaviorEnabled:
                         return AggroRadiusBehaviorEnabled;
                     case Npc_FieldIndex.AggroRadiusWarn:
@@ -3377,8 +3377,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Npc_FieldIndex.Items:
                         this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ex, null);
                         break;
-                    case Npc_FieldIndex.Agression:
-                        this.Agression = ex;
+                    case Npc_FieldIndex.Aggression:
+                        this.Aggression = ex;
                         break;
                     case Npc_FieldIndex.Confidence:
                         this.Confidence = ex;
@@ -3392,8 +3392,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Npc_FieldIndex.Mood:
                         this.Mood = ex;
                         break;
-                    case Npc_FieldIndex.Assistence:
-                        this.Assistence = ex;
+                    case Npc_FieldIndex.Assistance:
+                        this.Assistance = ex;
                         break;
                     case Npc_FieldIndex.AggroRadiusBehaviorEnabled:
                         this.AggroRadiusBehaviorEnabled = ex;
@@ -3661,8 +3661,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Npc_FieldIndex.Items:
                         this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>)obj;
                         break;
-                    case Npc_FieldIndex.Agression:
-                        this.Agression = (Exception?)obj;
+                    case Npc_FieldIndex.Aggression:
+                        this.Aggression = (Exception?)obj;
                         break;
                     case Npc_FieldIndex.Confidence:
                         this.Confidence = (Exception?)obj;
@@ -3676,8 +3676,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Npc_FieldIndex.Mood:
                         this.Mood = (Exception?)obj;
                         break;
-                    case Npc_FieldIndex.Assistence:
-                        this.Assistence = (Exception?)obj;
+                    case Npc_FieldIndex.Assistance:
+                        this.Assistance = (Exception?)obj;
                         break;
                     case Npc_FieldIndex.AggroRadiusBehaviorEnabled:
                         this.AggroRadiusBehaviorEnabled = (Exception?)obj;
@@ -3867,12 +3867,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ForcedLocRefType != null) return true;
                 if (NativeTerminal != null) return true;
                 if (Items != null) return true;
-                if (Agression != null) return true;
+                if (Aggression != null) return true;
                 if (Confidence != null) return true;
                 if (EnergyLevel != null) return true;
                 if (Responsibility != null) return true;
                 if (Mood != null) return true;
-                if (Assistence != null) return true;
+                if (Assistance != null) return true;
                 if (AggroRadiusBehaviorEnabled != null) return true;
                 if (AggroRadiusWarn != null) return true;
                 if (AggroRadiusWarnOrAttack != null) return true;
@@ -4143,7 +4143,7 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 {
-                    sb.AppendItem(Agression, "Agression");
+                    sb.AppendItem(Aggression, "Aggression");
                 }
                 {
                     sb.AppendItem(Confidence, "Confidence");
@@ -4158,7 +4158,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Mood, "Mood");
                 }
                 {
-                    sb.AppendItem(Assistence, "Assistence");
+                    sb.AppendItem(Assistance, "Assistance");
                 }
                 {
                     sb.AppendItem(AggroRadiusBehaviorEnabled, "AggroRadiusBehaviorEnabled");
@@ -4486,12 +4486,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
                 ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-                ret.Agression = this.Agression.Combine(rhs.Agression);
+                ret.Aggression = this.Aggression.Combine(rhs.Aggression);
                 ret.Confidence = this.Confidence.Combine(rhs.Confidence);
                 ret.EnergyLevel = this.EnergyLevel.Combine(rhs.EnergyLevel);
                 ret.Responsibility = this.Responsibility.Combine(rhs.Responsibility);
                 ret.Mood = this.Mood.Combine(rhs.Mood);
-                ret.Assistence = this.Assistence.Combine(rhs.Assistence);
+                ret.Assistance = this.Assistance.Combine(rhs.Assistance);
                 ret.AggroRadiusBehaviorEnabled = this.AggroRadiusBehaviorEnabled.Combine(rhs.AggroRadiusBehaviorEnabled);
                 ret.AggroRadiusWarn = this.AggroRadiusWarn.Combine(rhs.AggroRadiusWarn);
                 ret.AggroRadiusWarnOrAttack = this.AggroRadiusWarnOrAttack.Combine(rhs.AggroRadiusWarnOrAttack);
@@ -4599,12 +4599,12 @@ namespace Mutagen.Bethesda.Fallout4
             public bool ForcedLocRefType;
             public bool NativeTerminal;
             public ContainerEntry.TranslationMask? Items;
-            public bool Agression;
+            public bool Aggression;
             public bool Confidence;
             public bool EnergyLevel;
             public bool Responsibility;
             public bool Mood;
-            public bool Assistence;
+            public bool Assistance;
             public bool AggroRadiusBehaviorEnabled;
             public bool AggroRadiusWarn;
             public bool AggroRadiusWarnOrAttack;
@@ -4688,12 +4688,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FollowerElevatorPackageList = defaultOn;
                 this.ForcedLocRefType = defaultOn;
                 this.NativeTerminal = defaultOn;
-                this.Agression = defaultOn;
+                this.Aggression = defaultOn;
                 this.Confidence = defaultOn;
                 this.EnergyLevel = defaultOn;
                 this.Responsibility = defaultOn;
                 this.Mood = defaultOn;
-                this.Assistence = defaultOn;
+                this.Assistance = defaultOn;
                 this.AggroRadiusBehaviorEnabled = defaultOn;
                 this.AggroRadiusWarn = defaultOn;
                 this.AggroRadiusWarnOrAttack = defaultOn;
@@ -4779,12 +4779,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ForcedLocRefType, null));
                 ret.Add((NativeTerminal, null));
                 ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
-                ret.Add((Agression, null));
+                ret.Add((Aggression, null));
                 ret.Add((Confidence, null));
                 ret.Add((EnergyLevel, null));
                 ret.Add((Responsibility, null));
                 ret.Add((Mood, null));
-                ret.Add((Assistence, null));
+                ret.Add((Assistance, null));
                 ret.Add((AggroRadiusBehaviorEnabled, null));
                 ret.Add((AggroRadiusWarn, null));
                 ret.Add((AggroRadiusWarnOrAttack, null));
@@ -5047,12 +5047,12 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ILocationReferenceTypeGetter> ForcedLocRefType { get; set; }
         new IFormLinkNullable<ITerminalGetter> NativeTerminal { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
-        new Npc.AggressionType Agression { get; set; }
+        new Npc.AggressionType Aggression { get; set; }
         new Npc.ConfidenceType Confidence { get; set; }
         new Byte EnergyLevel { get; set; }
         new Npc.ResponsibilityType Responsibility { get; set; }
         new Npc.MoodType Mood { get; set; }
-        new Npc.AssistenceType Assistence { get; set; }
+        new Npc.AssistanceType Assistance { get; set; }
         new Boolean AggroRadiusBehaviorEnabled { get; set; }
         new UInt32 AggroRadiusWarn { get; set; }
         new UInt32 AggroRadiusWarnOrAttack { get; set; }
@@ -5070,7 +5070,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new String? ShortName { get; set; }
+        new TranslatedString? ShortName { get; set; }
         new UInt16 BaseHealth { get; set; }
         new UInt16 BaseActionPoints { get; set; }
         new UInt16 FarAwayModelDistance { get; set; }
@@ -5191,12 +5191,12 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ILocationReferenceTypeGetter> ForcedLocRefType { get; }
         IFormLinkNullableGetter<ITerminalGetter> NativeTerminal { get; }
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
-        Npc.AggressionType Agression { get; }
+        Npc.AggressionType Aggression { get; }
         Npc.ConfidenceType Confidence { get; }
         Byte EnergyLevel { get; }
         Npc.ResponsibilityType Responsibility { get; }
         Npc.MoodType Mood { get; }
-        Npc.AssistenceType Assistence { get; }
+        Npc.AssistanceType Assistance { get; }
         Boolean AggroRadiusBehaviorEnabled { get; }
         UInt32 AggroRadiusWarn { get; }
         UInt32 AggroRadiusWarnOrAttack { get; }
@@ -5218,7 +5218,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        String? ShortName { get; }
+        ITranslatedStringGetter? ShortName { get; }
         UInt16 BaseHealth { get; }
         UInt16 BaseActionPoints { get; }
         UInt16 FarAwayModelDistance { get; }
@@ -5460,12 +5460,12 @@ namespace Mutagen.Bethesda.Fallout4
         ForcedLocRefType = 41,
         NativeTerminal = 42,
         Items = 43,
-        Agression = 44,
+        Aggression = 44,
         Confidence = 45,
         EnergyLevel = 46,
         Responsibility = 47,
         Mood = 48,
-        Assistence = 49,
+        Assistance = 49,
         AggroRadiusBehaviorEnabled = 50,
         AggroRadiusWarn = 51,
         AggroRadiusWarnOrAttack = 52,
@@ -5740,12 +5740,12 @@ namespace Mutagen.Bethesda.Fallout4
             item.ForcedLocRefType.Clear();
             item.NativeTerminal.Clear();
             item.Items = null;
-            item.Agression = default;
+            item.Aggression = default;
             item.Confidence = default;
             item.EnergyLevel = default;
             item.Responsibility = default;
             item.Mood = default;
-            item.Assistence = default;
+            item.Assistance = default;
             item.AggroRadiusBehaviorEnabled = default;
             item.AggroRadiusWarn = default;
             item.AggroRadiusWarnOrAttack = default;
@@ -5991,12 +5991,12 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Agression = item.Agression == rhs.Agression;
+            ret.Aggression = item.Aggression == rhs.Aggression;
             ret.Confidence = item.Confidence == rhs.Confidence;
             ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
             ret.Responsibility = item.Responsibility == rhs.Responsibility;
             ret.Mood = item.Mood == rhs.Mood;
-            ret.Assistence = item.Assistence == rhs.Assistence;
+            ret.Assistance = item.Assistance == rhs.Assistance;
             ret.AggroRadiusBehaviorEnabled = item.AggroRadiusBehaviorEnabled == rhs.AggroRadiusBehaviorEnabled;
             ret.AggroRadiusWarn = item.AggroRadiusWarn == rhs.AggroRadiusWarn;
             ret.AggroRadiusWarnOrAttack = item.AggroRadiusWarnOrAttack == rhs.AggroRadiusWarnOrAttack;
@@ -6020,7 +6020,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Class = item.Class.Equals(rhs.Class);
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.ShortName = string.Equals(item.ShortName, rhs.ShortName);
+            ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
             ret.BaseHealth = item.BaseHealth == rhs.BaseHealth;
             ret.BaseActionPoints = item.BaseActionPoints == rhs.BaseActionPoints;
             ret.FarAwayModelDistance = item.FarAwayModelDistance == rhs.FarAwayModelDistance;
@@ -6347,9 +6347,9 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.Agression ?? true)
+            if (printMask?.Aggression ?? true)
             {
-                sb.AppendItem(item.Agression, "Agression");
+                sb.AppendItem(item.Aggression, "Aggression");
             }
             if (printMask?.Confidence ?? true)
             {
@@ -6367,9 +6367,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Mood, "Mood");
             }
-            if (printMask?.Assistence ?? true)
+            if (printMask?.Assistance ?? true)
             {
-                sb.AppendItem(item.Assistence, "Assistence");
+                sb.AppendItem(item.Assistance, "Assistance");
             }
             if (printMask?.AggroRadiusBehaviorEnabled ?? true)
             {
@@ -6883,9 +6883,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Items)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Agression) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Aggression) ?? true))
             {
-                if (lhs.Agression != rhs.Agression) return false;
+                if (lhs.Aggression != rhs.Aggression) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Confidence) ?? true))
             {
@@ -6903,9 +6903,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.Mood != rhs.Mood) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Assistence) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Assistance) ?? true))
             {
-                if (lhs.Assistence != rhs.Assistence) return false;
+                if (lhs.Assistance != rhs.Assistance) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusBehaviorEnabled) ?? true))
             {
@@ -6953,7 +6953,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
             {
-                if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
+                if (!object.Equals(lhs.ShortName, rhs.ShortName)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BaseHealth) ?? true))
             {
@@ -7178,12 +7178,12 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.ForcedLocRefType);
             hash.Add(item.NativeTerminal);
             hash.Add(item.Items);
-            hash.Add(item.Agression);
+            hash.Add(item.Aggression);
             hash.Add(item.Confidence);
             hash.Add(item.EnergyLevel);
             hash.Add(item.Responsibility);
             hash.Add(item.Mood);
-            hash.Add(item.Assistence);
+            hash.Add(item.Assistance);
             hash.Add(item.AggroRadiusBehaviorEnabled);
             hash.Add(item.AggroRadiusWarn);
             hash.Add(item.AggroRadiusWarnOrAttack);
@@ -7980,9 +7980,9 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Agression) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Aggression) ?? true))
             {
-                item.Agression = rhs.Agression;
+                item.Aggression = rhs.Aggression;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Confidence) ?? true))
             {
@@ -8000,9 +8000,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Mood = rhs.Mood;
             }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Assistence) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Assistance) ?? true))
             {
-                item.Assistence = rhs.Assistence;
+                item.Assistance = rhs.Assistance;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusBehaviorEnabled) ?? true))
             {
@@ -8139,7 +8139,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
             {
-                item.ShortName = rhs.ShortName;
+                item.ShortName = rhs.ShortName?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseHealth) ?? true))
             {
@@ -8806,7 +8806,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 EnumBinaryTranslation<Npc.AggressionType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
-                    item.Agression,
+                    item.Aggression,
                     length: 1);
                 EnumBinaryTranslation<Npc.ConfidenceType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
@@ -8821,9 +8821,9 @@ namespace Mutagen.Bethesda.Fallout4
                     writer,
                     item.Mood,
                     length: 1);
-                EnumBinaryTranslation<Npc.AssistenceType, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<Npc.AssistanceType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
-                    item.Assistence,
+                    item.Assistance,
                     length: 1);
                 writer.Write(item.AggroRadiusBehaviorEnabled, length: 2);
                 writer.Write(item.AggroRadiusWarn);
@@ -8891,7 +8891,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.ShortName,
                 header: translationParams.ConvertToCustom(RecordTypes.SHRT),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             using (HeaderExport.Subrecord(writer, RecordTypes.DATA)) { }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
@@ -9429,7 +9430,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Agression = EnumBinaryTranslation<Npc.AggressionType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Aggression = EnumBinaryTranslation<Npc.AggressionType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
                     item.Confidence = EnumBinaryTranslation<Npc.ConfidenceType, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -9442,7 +9443,7 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Mood = EnumBinaryTranslation<Npc.MoodType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
-                    item.Assistence = EnumBinaryTranslation<Npc.AssistenceType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Assistance = EnumBinaryTranslation<Npc.AssistanceType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
                     item.AggroRadiusBehaviorEnabled = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -9523,6 +9524,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ShortName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Npc_FieldIndex.ShortName;
                 }
@@ -9954,10 +9956,10 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         private RangeInt32? _AIDTLocation;
         public Npc.AIDTDataType AIDTDataTypeState { get; private set; }
-        #region Agression
-        private int _AgressionLocation => _AIDTLocation!.Value.Min;
-        private bool _Agression_IsSet => _AIDTLocation.HasValue;
-        public Npc.AggressionType Agression => _Agression_IsSet ? (Npc.AggressionType)_recordData.Span.Slice(_AgressionLocation, 0x1)[0] : default;
+        #region Aggression
+        private int _AggressionLocation => _AIDTLocation!.Value.Min;
+        private bool _Aggression_IsSet => _AIDTLocation.HasValue;
+        public Npc.AggressionType Aggression => _Aggression_IsSet ? (Npc.AggressionType)_recordData.Span.Slice(_AggressionLocation, 0x1)[0] : default;
         #endregion
         #region Confidence
         private int _ConfidenceLocation => _AIDTLocation!.Value.Min + 0x1;
@@ -9979,10 +9981,10 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _Mood_IsSet => _AIDTLocation.HasValue;
         public Npc.MoodType Mood => _Mood_IsSet ? (Npc.MoodType)_recordData.Span.Slice(_MoodLocation, 0x1)[0] : default;
         #endregion
-        #region Assistence
-        private int _AssistenceLocation => _AIDTLocation!.Value.Min + 0x5;
-        private bool _Assistence_IsSet => _AIDTLocation.HasValue;
-        public Npc.AssistenceType Assistence => _Assistence_IsSet ? (Npc.AssistenceType)_recordData.Span.Slice(_AssistenceLocation, 0x1)[0] : default;
+        #region Assistance
+        private int _AssistanceLocation => _AIDTLocation!.Value.Min + 0x5;
+        private bool _Assistance_IsSet => _AIDTLocation.HasValue;
+        public Npc.AssistanceType Assistance => _Assistance_IsSet ? (Npc.AssistanceType)_recordData.Span.Slice(_AssistanceLocation, 0x1)[0] : default;
         #endregion
         #region AggroRadiusBehaviorEnabled
         private int _AggroRadiusBehaviorEnabledLocation => _AIDTLocation!.Value.Min + 0x6;
@@ -10034,7 +10036,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
-        public String? ShortName => _ShortNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         private RangeInt32? _DNAMLocation;
         public Npc.DNAMDataType DNAMDataTypeState { get; private set; }
