@@ -2035,24 +2035,36 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
                     item.DecayMilliseconds = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.HfReferenceHertz = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 1) return null;
                     item.RoomFilter = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.RoomHfFilter = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Reflections = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.ReverbAmp = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.DecayHfRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
                         multiplier: 0.01);
+                    if (dataFrame.Remaining < 1) return null;
                     item.ReflectDelayMS = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.ReverbDelayMS = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.DiffusionPercent = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.DensityPercent = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Unknown = dataFrame.ReadUInt8();
                     return (int)ReverbParameters_FieldIndex.Unknown;
                 }

@@ -2215,10 +2215,15 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.SunriseBeginRaw = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.SunriseEndRaw = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.SunsetBeginRaw = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.SunsetEndRaw = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Volatility = dataFrame.ReadUInt8();
                     ClimateBinaryCreateTranslation.FillBinaryMoonAndPhaseLengthCustom(
                         frame: dataFrame,

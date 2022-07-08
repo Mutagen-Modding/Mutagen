@@ -2191,12 +2191,17 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.LoopingSecondsMin = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.LoopingSecondsMax = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<IdleAnimation.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.AnimationGroupSection = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 2) return null;
                     item.ReplayDelay = dataFrame.ReadUInt16();
                     return (int)IdleAnimation_FieldIndex.ReplayDelay;
                 }

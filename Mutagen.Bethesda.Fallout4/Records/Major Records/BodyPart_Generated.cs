@@ -3979,56 +3979,91 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.DamageMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ExplodableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ExplodableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ExplodableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.SeverableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.SeverableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.SeverableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CutMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CutMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CutRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.GoreEffectsLocalRotateX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         multiplier: 57.2958f);
+                    if (dataFrame.Remaining < 4) return null;
                     item.GoreEffectsLocalRotateY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         multiplier: 57.2958f);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CutTesselation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.SeverableImpactData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ExplodableImpactData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ExplodableLimbReplacementScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<BodyPart.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Type = EnumBinaryTranslation<BodyPart.PartType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.HealthPercent = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 1) return null;
                     item.ToHitChance = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.ExplosionChance = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.NonLethalDismembermentChance = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.SeverableDebrisCount = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.ExplodableDebrisCount = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.SeverableDecalCount = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.ExplodableDecalCount = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.GeometrySegmentIndex = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
                     item.OnCrippleArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.OnCrippleDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.OnCrippleExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.OnCrippleImpactData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.OnCrippleDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
                     item.OnCrippleDebrisCount = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.OnCrippleDecalCount = dataFrame.ReadUInt8();
                     return (int)BodyPart_FieldIndex.OnCrippleDecalCount;
                 }

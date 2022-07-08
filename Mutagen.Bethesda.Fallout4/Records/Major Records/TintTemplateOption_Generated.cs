@@ -1964,9 +1964,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)TintTemplateOption_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Slot = EnumBinaryTranslation<TintTemplateOption.TintSlot, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 2);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Index = dataFrame.ReadUInt16();
                     return (int)TintTemplateOption_FieldIndex.Index;
                 }

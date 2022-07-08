@@ -9216,17 +9216,24 @@ namespace Mutagen.Bethesda.Fallout4
                     NpcBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: dataFrame,
                         item: item);
+                    if (dataFrame.Remaining < 2) return null;
                     item.XpValueOffset = dataFrame.ReadInt16();
                     NpcBinaryCreateTranslation.FillBinaryLevelCustom(
                         frame: dataFrame,
                         item: item);
+                    if (dataFrame.Remaining < 2) return null;
                     item.CalcMinLevel = dataFrame.ReadInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.CalcMaxLevel = dataFrame.ReadInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.DispositionBase = dataFrame.ReadInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.UseTemplateActors = EnumBinaryTranslation<Npc.TemplateActorType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 2);
+                    if (dataFrame.Remaining < 2) return null;
                     item.BleedoutOverride = dataFrame.ReadInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.Unknown = dataFrame.ReadInt16();
                     return (int)Npc_FieldIndex.Unknown;
                 }
@@ -9430,29 +9437,40 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Aggression = EnumBinaryTranslation<Npc.AggressionType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Confidence = EnumBinaryTranslation<Npc.ConfidenceType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.EnergyLevel = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Responsibility = EnumBinaryTranslation<Npc.ResponsibilityType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Mood = EnumBinaryTranslation<Npc.MoodType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Assistance = EnumBinaryTranslation<Npc.AssistanceType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 2) return null;
                     item.AggroRadiusBehaviorEnabled = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 2,
                         importantByteLength: 1);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AggroRadiusWarn = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.AggroRadiusWarnOrAttack = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.AggroRadiusAttack = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.NoSlowApproach = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 4,
@@ -9537,10 +9555,15 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
                     item.BaseHealth = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.BaseActionPoints = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.FarAwayModelDistance = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 1) return null;
                     item.GearedUpWeapons = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Unused = dataFrame.ReadUInt8();
                     return (int)Npc_FieldIndex.Unused;
                 }

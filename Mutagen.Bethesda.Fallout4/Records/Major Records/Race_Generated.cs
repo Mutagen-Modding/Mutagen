@@ -8748,9 +8748,11 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 8) return null;
                     item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                         frame: frame,
                         transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+                    if (dataFrame.Remaining < 24) return null;
                     if (frame.MetaData.FormVersion!.Value >= 109)
                     {
                         item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<RaceWeight>(
@@ -8760,81 +8762,116 @@ namespace Mutagen.Bethesda.Fallout4
                     RaceBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: dataFrame,
                         item: item);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AccelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.DecelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Size = EnumBinaryTranslation<Size, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(8));
+                    if (dataFrame.Remaining < 4) return null;
                     item.InjuredHealthPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ShieldBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     if (frame.MetaData.FormVersion!.Value >= 124)
                     {
                         item.BeardBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
                             reader: dataFrame,
                             length: 4);
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.BodyBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AimAngleTolerance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FlightRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AngularAccelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AngularTolerance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     RaceBinaryCreateTranslation.FillBinaryFlags2Custom(
                         frame: dataFrame,
                         item: item);
                     item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(36));
+                    if (dataFrame.Remaining < 4) return null;
                     item.PipboyBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 2) return null;
                     item.XPValue = dataFrame.ReadInt16();
+                    if (dataFrame.Remaining < 4) return null;
                     item.SeverableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
                     item.SeverableDebrisCount = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.SeverableDecalCount = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
                     item.ExplodableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
                     item.ExplodableDebrisCount = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.ExplodableDecalCount = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
                     item.SeverableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.SeverableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.SeverableImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ExplodableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ExplodableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ExplodableImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     if (frame.MetaData.FormVersion!.Value >= 96)
                     {
                         item.OnCrippleDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     }
+                    if (dataFrame.Remaining < 1) return null;
                     if (frame.MetaData.FormVersion!.Value >= 96)
                     {
                         item.OnCrippleDebrisCount = dataFrame.ReadUInt8();
                     }
+                    if (dataFrame.Remaining < 1) return null;
                     if (frame.MetaData.FormVersion!.Value >= 96)
                     {
                         item.OnCrippleDecalCount = dataFrame.ReadUInt8();
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     if (frame.MetaData.FormVersion!.Value >= 96)
                     {
                         item.OnCrippleExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     if (frame.MetaData.FormVersion!.Value >= 96)
                     {
                         item.OnCrippleDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     if (frame.MetaData.FormVersion!.Value >= 96)
                     {
                         item.OnCrippleImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     if (frame.MetaData.FormVersion!.Value >= 118)
                     {
                         item.ExplodableSubsegmentExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     if (frame.MetaData.FormVersion!.Value >= 98)
                     {
                         item.OrientationLimitsPitch = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     if (frame.MetaData.FormVersion!.Value >= 98)
                     {
                         item.OrientationLimitsRoll = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);

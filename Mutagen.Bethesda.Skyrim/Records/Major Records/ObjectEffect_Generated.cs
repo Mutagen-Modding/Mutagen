@@ -2287,27 +2287,36 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EnchantmentCost = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<ObjectEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CastType = EnumBinaryTranslation<CastType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EnchantmentAmount = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.TargetType = EnumBinaryTranslation<TargetType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ChargeTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.BaseEnchantment.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {
                         item.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
                         return (int)ObjectEffect_FieldIndex.BaseEnchantment;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.WornRestrictions.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ObjectEffect_FieldIndex.WornRestrictions;
                 }

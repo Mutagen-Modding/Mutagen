@@ -1379,7 +1379,9 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)QuestObjectiveTarget_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AliasID = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<Quest.TargetFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
@@ -1388,6 +1390,7 @@ namespace Mutagen.Bethesda.Fallout4
                         item.QSTADataTypeState |= QuestObjectiveTarget.QSTADataType.Break0;
                         return (int)QuestObjectiveTarget_FieldIndex.Flags;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestObjectiveTarget_FieldIndex.Keyword;
                 }

@@ -3108,14 +3108,18 @@ namespace Mutagen.Bethesda.Skyrim
                     BookBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: dataFrame,
                         item: item);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Type = EnumBinaryTranslation<Book.BookType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Unused = dataFrame.ReadUInt16();
                     BookBinaryCreateTranslation.FillBinaryTeachesCustom(
                         frame: dataFrame,
                         item: item);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Value = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)Book_FieldIndex.Weight;
                 }

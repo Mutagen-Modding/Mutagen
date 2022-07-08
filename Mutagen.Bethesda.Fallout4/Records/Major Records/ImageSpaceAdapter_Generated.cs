@@ -12099,23 +12099,31 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Animatable = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 192) return null;
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
                         frame: dataFrame,
                         item: item);
+                    if (dataFrame.Remaining < 4) return null;
                     item.RadialBlurUseTarget = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 4);
+                    if (dataFrame.Remaining < 8) return null;
                     item.RadialBlurCenter = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 12) return null;
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
                         frame: dataFrame,
                         item: item);
+                    if (dataFrame.Remaining < 4) return null;
                     item.DepthOfFieldFlags = EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 16) return null;
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts3Custom(
                         frame: dataFrame,
                         item: item);
@@ -12124,6 +12132,7 @@ namespace Mutagen.Bethesda.Fallout4
                         item.DNAMDataTypeState |= ImageSpaceAdapter.DNAMDataType.Break0;
                         return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags;
                     }
+                    if (dataFrame.Remaining < 8) return null;
                     item.Unknown = dataFrame.ReadUInt64();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown;
                 }

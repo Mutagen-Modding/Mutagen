@@ -1829,7 +1829,9 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.HavokFriction = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.HavokRestitution = dataFrame.ReadUInt8();
                     return (int)LandscapeTexture_FieldIndex.HavokRestitution;
                 }

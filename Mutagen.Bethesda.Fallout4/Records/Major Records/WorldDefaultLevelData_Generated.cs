@@ -1205,7 +1205,9 @@ namespace Mutagen.Bethesda.Fallout4
                         if (lastParsed.ShortCircuit((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, translationParams)) return ParseResult.Stop;
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         var dataFrame = frame.SpawnWithLength(contentLength);
+                        if (dataFrame.Remaining < 2) return null;
                         item.NorthwestCellCoords = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                        if (dataFrame.Remaining < 2) return null;
                         item.NorthwestCellSize = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                         return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, nextRecordType);
                     }
@@ -1223,7 +1225,9 @@ namespace Mutagen.Bethesda.Fallout4
                                 if (lastParsed.ShortCircuit((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, translationParams)) return ParseResult.Stop;
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                                 var dataFrame = frame.SpawnWithLength(contentLength);
+                                if (dataFrame.Remaining < 2) return null;
                                 item.NorthwestCellCoords = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                                if (dataFrame.Remaining < 2) return null;
                                 item.NorthwestCellSize = P2UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                                 return new ParseResult((int)WorldDefaultLevelData_FieldIndex.NorthwestCellSize, nextRecordType);
                             case 1:

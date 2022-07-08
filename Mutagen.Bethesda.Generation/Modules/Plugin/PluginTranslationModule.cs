@@ -1256,6 +1256,21 @@ public class PluginTranslationModule : BinaryTranslationModule
                     sb.Depth--;
                     sb.AppendLine("}");
                 }
+
+                var expLen = await subGenerator.ExpectedLength(obj, subField.Field);
+                if (expLen.HasValue
+                    && subField.Field.GetFieldData().Binary == BinaryGenerationType.Normal
+                    && subField.Field is not ByteArrayType)
+                {
+                    if (subField.Field is LoquiType)
+                    {
+                        sb.AppendLine($"if (dataFrame.Complete) return null;");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"if (dataFrame.Remaining < {expLen}) return null;");
+                    }
+                }
                 await GenerateFillSnippet(obj, sb, subField.Field, subGenerator, "dataFrame");
             }
             if (isInRange)

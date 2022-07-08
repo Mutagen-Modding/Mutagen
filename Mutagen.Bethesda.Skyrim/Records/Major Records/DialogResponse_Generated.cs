@@ -1787,14 +1787,20 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.Unknown3, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Emotion = EnumBinaryTranslation<Emotion, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EmotionValue = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Unknown = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 1) return null;
                     item.ResponseNumber = dataFrame.ReadUInt8();
                     item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    if (dataFrame.Remaining < 4) return null;
                     item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<DialogResponse.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);

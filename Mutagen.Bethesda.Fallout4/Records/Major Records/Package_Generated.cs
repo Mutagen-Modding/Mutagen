@@ -3640,22 +3640,29 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Type = EnumBinaryTranslation<Package.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.InterruptOverride = EnumBinaryTranslation<Package.Interrupt, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.PreferredSpeed = EnumBinaryTranslation<Package.Speed, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Unknown = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 2) return null;
                     item.InteruptFlags = EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 2);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Unknown2 = dataFrame.ReadUInt16();
                     return (int)Package_FieldIndex.Unknown2;
                 }
@@ -3663,14 +3670,20 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.ScheduleMonth = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.ScheduleDayOfWeek = EnumBinaryTranslation<Package.DayOfWeek, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.ScheduleDate = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.ScheduleHour = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.ScheduleMinute = dataFrame.ReadInt8();
                     item.Unknown3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ScheduleDurationInMinutes = dataFrame.ReadInt32();
                     return (int)Package_FieldIndex.ScheduleDurationInMinutes;
                 }
