@@ -5,6 +5,7 @@ using System.Buffers.Binary;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Headers;
 

@@ -8,7 +8,6 @@
       <CustomLogic name="DataParse" recordType="DATA" />
       <Bool name="Unknown" byteLength="1" binary="NoGeneration" />
       <Bool name="Unknown2" byteLength="1" binary="NoGeneration" />
-      <!--<Enum name="FormType" enumName="ObjectModification.ModType" binary="NoGeneration" byteLength="4" />-->
       <UInt8 name="MaxRank" binary="NoGeneration" />
       <UInt8 name="LevelTierScaledOffset" binary="NoGeneration" />
       <FormLink name="AttachPoint" refName="Keyword" binary="NoGeneration" />
