@@ -759,6 +759,8 @@ public abstract class Processor
     public async Task RealignStrings(Func<IMutagenReadStream> streamGetter)
     {
         using var stream = streamGetter();
+        var modHeader = stream.GetModHeader();
+        if (!EnumExt.HasFlag(modHeader.Flags, Constants.Localized)) return;
         var outFolder = Path.Combine(TempFolder, "Strings/Processed");
         var language = Language.English;
         using var writer = new StringsWriter(GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(SourcePath)), outFolder, MutagenEncodingProvider.Instance);
