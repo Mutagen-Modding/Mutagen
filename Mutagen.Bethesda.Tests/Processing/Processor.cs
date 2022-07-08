@@ -833,10 +833,10 @@ public abstract class Processor
                 {
                     foreach (var overlayStr in langDict.First(100))
                     {
-                        Logging.OnNext($"Unaccounted for string: {overlayStr.Key} {overlayStr.Value}");
+                        Logging.OnNext($"Unaccounted for string: 0x{overlayStr.Key:X} {overlayStr.Value}");
                     }
 
-                    throw new ArgumentException($"String unaccounted for in {source}: {langDict.Keys.First()}");
+                    throw new ArgumentException($"String unaccounted for in {source}: 0x{langDict.Keys.First():X}");
                 }
             }
         }
