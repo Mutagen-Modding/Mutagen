@@ -686,6 +686,12 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            PluginUtilityTranslation.MajorRecordParse<IGameSettingInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: GameSettingBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: GameSettingBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
