@@ -44,6 +44,8 @@ public abstract class PassthroughTest
     public abstract GameRelease GameRelease { get; }
     public readonly GameConstants Meta;
     protected abstract Processor? ProcessorFactory();
+    
+    public static DirectoryPath GetTestFolderPath(string nickname) => Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{nickname}");
 
     public PassthroughTest(PassthroughTestParams param)
     {
@@ -59,7 +61,7 @@ public abstract class PassthroughTest
 
     public (TempFolder TempFolder, Test Test) SetupProcessedFiles()
     {
-        var tmp = TempFolder.FactoryByPath(Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{Nickname}"), deleteAfter: Settings.DeleteCachesAfter);
+        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname), deleteAfter: Settings.DeleteCachesAfter);
 
         var test = new Test(
             $"Setup Processed Files",
