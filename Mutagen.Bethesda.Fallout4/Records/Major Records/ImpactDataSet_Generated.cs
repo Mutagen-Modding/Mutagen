@@ -1433,15 +1433,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ImpactDataSetBinaryCreateTranslation Instance = new ImpactDataSetBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IPDS;
-        public static void FillBinaryStructs(
-            IImpactDataSetInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IImpactDataSetInternal item,
             MutagenFrame frame,

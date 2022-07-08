@@ -808,7 +808,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: StoryManagerQuestBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: StoryManagerQuestBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1123,12 +1122,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class StoryManagerQuestBinaryCreateTranslation
     {
         public static readonly StoryManagerQuestBinaryCreateTranslation Instance = new StoryManagerQuestBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IStoryManagerQuest item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IStoryManagerQuest item,

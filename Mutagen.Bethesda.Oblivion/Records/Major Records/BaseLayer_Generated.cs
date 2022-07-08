@@ -739,7 +739,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: BaseLayerBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: BaseLayerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1049,12 +1048,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class BaseLayerBinaryCreateTranslation
     {
         public static readonly BaseLayerBinaryCreateTranslation Instance = new BaseLayerBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IBaseLayer item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IBaseLayer item,

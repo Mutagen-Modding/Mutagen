@@ -1885,15 +1885,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly BookBinaryCreateTranslation Instance = new BookBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BOOK;
-        public static void FillBinaryStructs(
-            IBookInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IBookInternal item,
             MutagenFrame frame,

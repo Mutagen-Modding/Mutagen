@@ -1615,15 +1615,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly EnchantmentBinaryCreateTranslation Instance = new EnchantmentBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ENCH;
-        public static void FillBinaryStructs(
-            IEnchantmentInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IEnchantmentInternal item,
             MutagenFrame frame,

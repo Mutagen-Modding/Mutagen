@@ -1864,15 +1864,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly SoundOutputModelBinaryCreateTranslation Instance = new SoundOutputModelBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SOPM;
-        public static void FillBinaryStructs(
-            ISoundOutputModelInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISoundOutputModelInternal item,
             MutagenFrame frame,

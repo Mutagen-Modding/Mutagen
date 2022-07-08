@@ -760,7 +760,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: SoundRateOfFireBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: SoundRateOfFireBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1055,12 +1054,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class SoundRateOfFireBinaryCreateTranslation
     {
         public static readonly SoundRateOfFireBinaryCreateTranslation Instance = new SoundRateOfFireBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ISoundRateOfFire item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ISoundRateOfFire item,

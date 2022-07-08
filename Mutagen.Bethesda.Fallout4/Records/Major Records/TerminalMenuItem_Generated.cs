@@ -1084,7 +1084,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: TerminalMenuItemBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: TerminalMenuItemBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1545,12 +1544,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class TerminalMenuItemBinaryCreateTranslation
     {
         public static readonly TerminalMenuItemBinaryCreateTranslation Instance = new TerminalMenuItemBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ITerminalMenuItem item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ITerminalMenuItem item,

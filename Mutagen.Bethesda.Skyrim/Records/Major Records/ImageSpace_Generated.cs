@@ -1757,15 +1757,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ImageSpaceBinaryCreateTranslation Instance = new ImageSpaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IMGS;
-        public static void FillBinaryStructs(
-            IImageSpaceInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IImageSpaceInternal item,
             MutagenFrame frame,

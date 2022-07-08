@@ -768,7 +768,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ExternalAliasLocationBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ExternalAliasLocationBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1060,12 +1059,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class ExternalAliasLocationBinaryCreateTranslation
     {
         public static readonly ExternalAliasLocationBinaryCreateTranslation Instance = new ExternalAliasLocationBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IExternalAliasLocation item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IExternalAliasLocation item,

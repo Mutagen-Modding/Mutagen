@@ -2137,15 +2137,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly LandscapeBinaryCreateTranslation Instance = new LandscapeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LAND;
-        public static void FillBinaryStructs(
-            ILandscapeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILandscapeInternal item,
             MutagenFrame frame,

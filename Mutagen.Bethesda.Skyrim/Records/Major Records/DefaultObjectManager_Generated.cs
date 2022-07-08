@@ -1453,15 +1453,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly DefaultObjectManagerBinaryCreateTranslation Instance = new DefaultObjectManagerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DOBJ;
-        public static void FillBinaryStructs(
-            IDefaultObjectManagerInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IDefaultObjectManagerInternal item,
             MutagenFrame frame,

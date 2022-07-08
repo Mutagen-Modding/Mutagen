@@ -1492,7 +1492,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: SceneActionBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: SceneActionBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -2189,12 +2188,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class SceneActionBinaryCreateTranslation
     {
         public static readonly SceneActionBinaryCreateTranslation Instance = new SceneActionBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ISceneAction item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ISceneAction item,

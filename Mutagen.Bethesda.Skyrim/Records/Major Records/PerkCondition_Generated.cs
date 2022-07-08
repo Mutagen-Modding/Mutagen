@@ -840,7 +840,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PerkConditionBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: PerkConditionBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1169,12 +1168,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class PerkConditionBinaryCreateTranslation
     {
         public static readonly PerkConditionBinaryCreateTranslation Instance = new PerkConditionBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IPerkCondition item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IPerkCondition item,

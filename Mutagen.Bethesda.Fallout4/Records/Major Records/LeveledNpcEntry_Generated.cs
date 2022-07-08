@@ -787,7 +787,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LeveledNpcEntryBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: LeveledNpcEntryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1159,12 +1158,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class LeveledNpcEntryBinaryCreateTranslation
     {
         public static readonly LeveledNpcEntryBinaryCreateTranslation Instance = new LeveledNpcEntryBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ILeveledNpcEntry item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ILeveledNpcEntry item,

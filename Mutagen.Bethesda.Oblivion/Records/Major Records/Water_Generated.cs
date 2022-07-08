@@ -1789,15 +1789,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WATR;
-        public static void FillBinaryStructs(
-            IWaterInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IWaterInternal item,
             MutagenFrame frame,

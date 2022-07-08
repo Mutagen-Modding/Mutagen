@@ -780,7 +780,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RaceMovementTypeBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RaceMovementTypeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1105,12 +1104,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class RaceMovementTypeBinaryCreateTranslation
     {
         public static readonly RaceMovementTypeBinaryCreateTranslation Instance = new RaceMovementTypeBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IRaceMovementType item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IRaceMovementType item,

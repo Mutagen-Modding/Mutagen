@@ -1115,7 +1115,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ScenePhaseBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ScenePhaseBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1624,12 +1623,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class ScenePhaseBinaryCreateTranslation
     {
         public static readonly ScenePhaseBinaryCreateTranslation Instance = new ScenePhaseBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IScenePhase item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IScenePhase item,

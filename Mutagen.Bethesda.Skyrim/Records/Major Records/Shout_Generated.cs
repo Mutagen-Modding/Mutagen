@@ -1702,15 +1702,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ShoutBinaryCreateTranslation Instance = new ShoutBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SHOU;
-        public static void FillBinaryStructs(
-            IShoutInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IShoutInternal item,
             MutagenFrame frame,

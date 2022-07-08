@@ -1485,15 +1485,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly AssociationTypeBinaryCreateTranslation Instance = new AssociationTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ASTP;
-        public static void FillBinaryStructs(
-            IAssociationTypeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAssociationTypeInternal item,
             MutagenFrame frame,

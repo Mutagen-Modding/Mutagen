@@ -1323,15 +1323,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ActionRecordBinaryCreateTranslation Instance = new ActionRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AACT;
-        public static void FillBinaryStructs(
-            IActionRecordInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IActionRecordInternal item,
             MutagenFrame frame,

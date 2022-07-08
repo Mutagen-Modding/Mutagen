@@ -1406,15 +1406,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly SoundBinaryCreateTranslation Instance = new SoundBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SOUN;
-        public static void FillBinaryStructs(
-            ISoundInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISoundInternal item,
             MutagenFrame frame,

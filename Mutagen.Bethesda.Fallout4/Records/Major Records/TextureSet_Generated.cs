@@ -2099,15 +2099,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly TextureSetBinaryCreateTranslation Instance = new TextureSetBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TXST;
-        public static void FillBinaryStructs(
-            ITextureSetInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ITextureSetInternal item,
             MutagenFrame frame,

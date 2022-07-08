@@ -1680,15 +1680,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ActorValueInformationBinaryCreateTranslation Instance = new ActorValueInformationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AVIF;
-        public static void FillBinaryStructs(
-            IActorValueInformationInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IActorValueInformationInternal item,
             MutagenFrame frame,

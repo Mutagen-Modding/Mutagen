@@ -776,7 +776,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RegionWeatherBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionWeatherBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1183,12 +1182,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class RegionWeatherBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new static readonly RegionWeatherBinaryCreateTranslation Instance = new RegionWeatherBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IRegionWeather item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IRegionWeather item,

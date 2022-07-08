@@ -175,9 +175,17 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
 
     protected IEnumerable<TypeGeneration> GetEmbeddedFields(ObjectGeneration obj)
     {
-        foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
+        foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
         {
-            if (!field.GetFieldData().HasTrigger)
+            if (field.GetFieldData().HasTrigger) continue;
+            if (!field.IntegrateField)
+            {
+                if (field is CustomLogic)
+                {
+                    yield return field;
+                }
+            }
+            else
             {
                 yield return field;
             }

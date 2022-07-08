@@ -904,7 +904,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RegionSoundsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionSoundsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1377,12 +1376,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class RegionSoundsBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new static readonly RegionSoundsBinaryCreateTranslation Instance = new RegionSoundsBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IRegionSounds item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IRegionSounds item,

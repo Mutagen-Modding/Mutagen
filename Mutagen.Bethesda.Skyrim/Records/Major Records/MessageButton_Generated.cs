@@ -844,7 +844,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MessageButtonBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: MessageButtonBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1179,12 +1178,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class MessageButtonBinaryCreateTranslation
     {
         public static readonly MessageButtonBinaryCreateTranslation Instance = new MessageButtonBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IMessageButton item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IMessageButton item,

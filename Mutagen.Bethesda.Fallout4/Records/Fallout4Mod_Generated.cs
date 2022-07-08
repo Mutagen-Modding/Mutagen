@@ -9884,7 +9884,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 importMask: importMask,
-                fillStructs: Fallout4ModBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: Fallout4ModBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -22407,12 +22406,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class Fallout4ModBinaryCreateTranslation
     {
         public static readonly Fallout4ModBinaryCreateTranslation Instance = new Fallout4ModBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IFallout4Mod item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IFallout4Mod item,

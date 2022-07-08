@@ -977,7 +977,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PatrolBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: PatrolBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1404,12 +1403,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class PatrolBinaryCreateTranslation
     {
         public static readonly PatrolBinaryCreateTranslation Instance = new PatrolBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IPatrol item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IPatrol item,

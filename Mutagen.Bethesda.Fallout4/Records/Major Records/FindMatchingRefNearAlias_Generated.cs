@@ -754,7 +754,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: FindMatchingRefNearAliasBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: FindMatchingRefNearAliasBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1059,12 +1058,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class FindMatchingRefNearAliasBinaryCreateTranslation
     {
         public static readonly FindMatchingRefNearAliasBinaryCreateTranslation Instance = new FindMatchingRefNearAliasBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IFindMatchingRefNearAlias item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IFindMatchingRefNearAlias item,

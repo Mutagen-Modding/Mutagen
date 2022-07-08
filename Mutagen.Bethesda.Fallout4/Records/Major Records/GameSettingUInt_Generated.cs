@@ -1418,15 +1418,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly GameSettingUIntBinaryCreateTranslation Instance = new GameSettingUIntBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GMST;
-        public static void FillBinaryStructs(
-            IGameSettingUIntInternal item,
-            MutagenFrame frame)
-        {
-            GameSettingBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IGameSettingUIntInternal item,
             MutagenFrame frame,

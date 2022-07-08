@@ -1858,15 +1858,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly IdleMarkerBinaryCreateTranslation Instance = new IdleMarkerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IDLM;
-        public static void FillBinaryStructs(
-            IIdleMarkerInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IIdleMarkerInternal item,
             MutagenFrame frame,

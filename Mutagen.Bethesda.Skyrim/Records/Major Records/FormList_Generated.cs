@@ -1442,15 +1442,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FLST;
-        public static void FillBinaryStructs(
-            IFormListInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IFormListInternal item,
             MutagenFrame frame,

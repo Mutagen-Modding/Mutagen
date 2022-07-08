@@ -1468,15 +1468,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EFSH;
-        public static void FillBinaryStructs(
-            IEffectShaderInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IEffectShaderInternal item,
             MutagenFrame frame,

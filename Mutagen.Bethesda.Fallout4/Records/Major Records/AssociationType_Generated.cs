@@ -1478,15 +1478,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly AssociationTypeBinaryCreateTranslation Instance = new AssociationTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ASTP;
-        public static void FillBinaryStructs(
-            IAssociationTypeInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAssociationTypeInternal item,
             MutagenFrame frame,

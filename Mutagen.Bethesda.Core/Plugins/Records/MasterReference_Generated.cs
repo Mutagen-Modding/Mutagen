@@ -751,7 +751,6 @@ namespace Mutagen.Bethesda.Plugins.Records
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MasterReferenceBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: MasterReferenceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1035,12 +1034,6 @@ namespace Mutagen.Bethesda.Plugins.Records
     internal partial class MasterReferenceBinaryCreateTranslation
     {
         public static readonly MasterReferenceBinaryCreateTranslation Instance = new MasterReferenceBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IMasterReference item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IMasterReference item,

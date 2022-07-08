@@ -1692,15 +1692,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly AlchemicalApparatusBinaryCreateTranslation Instance = new AlchemicalApparatusBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.APPA;
-        public static void FillBinaryStructs(
-            IAlchemicalApparatusInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAlchemicalApparatusInternal item,
             MutagenFrame frame,

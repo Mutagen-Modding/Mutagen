@@ -768,7 +768,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: SoundItemBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: SoundItemBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1060,12 +1059,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class SoundItemBinaryCreateTranslation
     {
         public static readonly SoundItemBinaryCreateTranslation Instance = new SoundItemBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ISoundItem item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ISoundItem item,

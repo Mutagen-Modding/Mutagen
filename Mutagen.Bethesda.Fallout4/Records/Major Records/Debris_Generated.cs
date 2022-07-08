@@ -1426,15 +1426,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly DebrisBinaryCreateTranslation Instance = new DebrisBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DEBR;
-        public static void FillBinaryStructs(
-            IDebrisInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IDebrisInternal item,
             MutagenFrame frame,

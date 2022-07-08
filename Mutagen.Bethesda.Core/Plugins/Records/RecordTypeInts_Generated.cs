@@ -61,7 +61,6 @@ public partial class RecordTypeInts
     public const int FLST = 0x54534C46;
     public const int FSTP = 0x50545346;
     public const int FSTS = 0x53545346;
-    public const int FULL = 0x4C4C5546;
     public const int FURN = 0x4E525546;
     public const int GDRY = 0x59524447;
     public const int GLOB = 0x424F4C47;

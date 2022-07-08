@@ -1485,15 +1485,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ColorRecordBinaryCreateTranslation Instance = new ColorRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLFM;
-        public static void FillBinaryStructs(
-            IColorRecordInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IColorRecordInternal item,
             MutagenFrame frame,

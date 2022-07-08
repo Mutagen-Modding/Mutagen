@@ -611,11 +611,6 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.SubrecordParse(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: SoundDescriptorCompoundDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -927,12 +922,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class SoundDescriptorCompoundDataBinaryCreateTranslation : ASoundDescriptorBinaryCreateTranslation
     {
         public new static readonly SoundDescriptorCompoundDataBinaryCreateTranslation Instance = new SoundDescriptorCompoundDataBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ISoundDescriptorCompoundData item,
-            MutagenFrame frame)
-        {
-        }
 
     }
 

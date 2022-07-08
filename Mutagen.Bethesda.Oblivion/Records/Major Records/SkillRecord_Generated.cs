@@ -1783,15 +1783,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly SkillRecordBinaryCreateTranslation Instance = new SkillRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SKIL;
-        public static void FillBinaryStructs(
-            ISkillRecordInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISkillRecordInternal item,
             MutagenFrame frame,

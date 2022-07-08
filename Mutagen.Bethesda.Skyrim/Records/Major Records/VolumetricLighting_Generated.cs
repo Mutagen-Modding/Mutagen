@@ -2006,15 +2006,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly VolumetricLightingBinaryCreateTranslation Instance = new VolumetricLightingBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.VOLI;
-        public static void FillBinaryStructs(
-            IVolumetricLightingInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IVolumetricLightingInternal item,
             MutagenFrame frame,

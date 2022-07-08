@@ -1488,15 +1488,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ReferenceGroupBinaryCreateTranslation Instance = new ReferenceGroupBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.RFGP;
-        public static void FillBinaryStructs(
-            IReferenceGroupInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IReferenceGroupInternal item,
             MutagenFrame frame,

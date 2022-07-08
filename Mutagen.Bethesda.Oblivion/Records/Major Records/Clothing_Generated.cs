@@ -2328,15 +2328,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly ClothingBinaryCreateTranslation Instance = new ClothingBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLOT;
-        public static void FillBinaryStructs(
-            IClothingInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IClothingInternal item,
             MutagenFrame frame,

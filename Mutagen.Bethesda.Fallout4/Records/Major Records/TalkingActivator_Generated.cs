@@ -2351,15 +2351,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly TalkingActivatorBinaryCreateTranslation Instance = new TalkingActivatorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TACT;
-        public static void FillBinaryStructs(
-            ITalkingActivatorInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ITalkingActivatorInternal item,
             MutagenFrame frame,

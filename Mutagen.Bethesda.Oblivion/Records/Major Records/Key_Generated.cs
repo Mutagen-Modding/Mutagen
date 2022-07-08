@@ -1692,15 +1692,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly KeyBinaryCreateTranslation Instance = new KeyBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.KEYM;
-        public static void FillBinaryStructs(
-            IKeyInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IKeyInternal item,
             MutagenFrame frame,

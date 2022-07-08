@@ -768,7 +768,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: NpcSoundBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: NpcSoundBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1060,12 +1059,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class NpcSoundBinaryCreateTranslation
     {
         public static readonly NpcSoundBinaryCreateTranslation Instance = new NpcSoundBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            INpcSound item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             INpcSound item,

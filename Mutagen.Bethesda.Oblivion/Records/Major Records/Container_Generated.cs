@@ -1940,15 +1940,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly ContainerBinaryCreateTranslation Instance = new ContainerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CONT;
-        public static void FillBinaryStructs(
-            IContainerInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IContainerInternal item,
             MutagenFrame frame,

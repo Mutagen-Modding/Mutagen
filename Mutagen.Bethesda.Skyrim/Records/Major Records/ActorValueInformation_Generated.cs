@@ -1868,15 +1868,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ActorValueInformationBinaryCreateTranslation Instance = new ActorValueInformationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AVIF;
-        public static void FillBinaryStructs(
-            IActorValueInformationInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IActorValueInformationInternal item,
             MutagenFrame frame,

@@ -776,7 +776,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RegionGrassesBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionGrassesBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1183,12 +1182,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class RegionGrassesBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new static readonly RegionGrassesBinaryCreateTranslation Instance = new RegionGrassesBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IRegionGrasses item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IRegionGrasses item,

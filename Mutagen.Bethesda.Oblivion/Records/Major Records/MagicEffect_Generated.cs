@@ -1870,15 +1870,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly MagicEffectBinaryCreateTranslation Instance = new MagicEffectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MGEF;
-        public static void FillBinaryStructs(
-            IMagicEffectInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMagicEffectInternal item,
             MutagenFrame frame,

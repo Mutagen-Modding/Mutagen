@@ -1428,15 +1428,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly GameSettingStringBinaryCreateTranslation Instance = new GameSettingStringBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GMST;
-        public static void FillBinaryStructs(
-            IGameSettingStringInternal item,
-            MutagenFrame frame)
-        {
-            GameSettingBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IGameSettingStringInternal item,
             MutagenFrame frame,

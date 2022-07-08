@@ -1769,15 +1769,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly SoundOutputModelBinaryCreateTranslation Instance = new SoundOutputModelBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SOPM;
-        public static void FillBinaryStructs(
-            ISoundOutputModelInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISoundOutputModelInternal item,
             MutagenFrame frame,

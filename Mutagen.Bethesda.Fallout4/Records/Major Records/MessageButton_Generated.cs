@@ -844,7 +844,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MessageButtonBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: MessageButtonBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1179,12 +1178,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class MessageButtonBinaryCreateTranslation
     {
         public static readonly MessageButtonBinaryCreateTranslation Instance = new MessageButtonBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IMessageButton item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IMessageButton item,

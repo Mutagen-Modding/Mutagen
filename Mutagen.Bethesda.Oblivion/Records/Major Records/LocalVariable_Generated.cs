@@ -792,7 +792,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LocalVariableBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: LocalVariableBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1118,12 +1117,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class LocalVariableBinaryCreateTranslation
     {
         public static readonly LocalVariableBinaryCreateTranslation Instance = new LocalVariableBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ILocalVariable item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ILocalVariable item,

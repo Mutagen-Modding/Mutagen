@@ -1822,15 +1822,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly WeaponBinaryCreateTranslation Instance = new WeaponBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WEAP;
-        public static void FillBinaryStructs(
-            IWeaponInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IWeaponInternal item,
             MutagenFrame frame,

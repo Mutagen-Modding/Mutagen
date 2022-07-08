@@ -1786,15 +1786,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly IdleAnimationBinaryCreateTranslation Instance = new IdleAnimationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IDLE;
-        public static void FillBinaryStructs(
-            IIdleAnimationInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IIdleAnimationInternal item,
             MutagenFrame frame,

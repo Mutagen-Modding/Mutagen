@@ -1448,15 +1448,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CSTY;
-        public static void FillBinaryStructs(
-            ICombatStyleInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ICombatStyleInternal item,
             MutagenFrame frame,

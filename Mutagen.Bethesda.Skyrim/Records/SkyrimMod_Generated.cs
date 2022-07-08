@@ -8974,7 +8974,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 importMask: importMask,
-                fillStructs: SkyrimModBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: SkyrimModBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -20235,12 +20234,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class SkyrimModBinaryCreateTranslation
     {
         public static readonly SkyrimModBinaryCreateTranslation Instance = new SkyrimModBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ISkyrimMod item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ISkyrimMod item,

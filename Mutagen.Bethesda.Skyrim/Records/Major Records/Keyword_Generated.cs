@@ -1335,15 +1335,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly KeywordBinaryCreateTranslation Instance = new KeywordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.KYWD;
-        public static void FillBinaryStructs(
-            IKeywordInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IKeywordInternal item,
             MutagenFrame frame,

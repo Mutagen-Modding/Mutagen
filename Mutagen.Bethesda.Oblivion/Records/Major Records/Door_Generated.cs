@@ -1961,15 +1961,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly DoorBinaryCreateTranslation Instance = new DoorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DOOR;
-        public static void FillBinaryStructs(
-            IDoorInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IDoorInternal item,
             MutagenFrame frame,

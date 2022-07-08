@@ -1544,15 +1544,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly LoadScreenBinaryCreateTranslation Instance = new LoadScreenBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LSCR;
-        public static void FillBinaryStructs(
-            ILoadScreenInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILoadScreenInternal item,
             MutagenFrame frame,

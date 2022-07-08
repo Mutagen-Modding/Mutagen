@@ -1403,6 +1403,18 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly MaterialSwapBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IMaterialSwapGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            MaterialSwapBinaryWriteTranslation.WriteBinaryFNAMParsing(
+                writer: writer,
+                item: item);
+        }
+
         public static void WriteRecordTypes(
             IMaterialSwapGetter item,
             MutagenWriter writer,
@@ -1470,7 +1482,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)

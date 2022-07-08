@@ -1692,15 +1692,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly MiscellaneousBinaryCreateTranslation Instance = new MiscellaneousBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MISC;
-        public static void FillBinaryStructs(
-            IMiscellaneousInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMiscellaneousInternal item,
             MutagenFrame frame,

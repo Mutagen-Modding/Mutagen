@@ -777,7 +777,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: SimpleModelBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: SimpleModelBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1073,12 +1072,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class SimpleModelBinaryCreateTranslation
     {
         public static readonly SimpleModelBinaryCreateTranslation Instance = new SimpleModelBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ISimpleModel item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ISimpleModel item,

@@ -2220,15 +2220,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly MusicTrackBinaryCreateTranslation Instance = new MusicTrackBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MUST;
-        public static void FillBinaryStructs(
-            IMusicTrackInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMusicTrackInternal item,
             MutagenFrame frame,

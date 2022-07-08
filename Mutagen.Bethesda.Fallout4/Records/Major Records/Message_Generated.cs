@@ -1979,15 +1979,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly MessageBinaryCreateTranslation Instance = new MessageBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MESG;
-        public static void FillBinaryStructs(
-            IMessageInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMessageInternal item,
             MutagenFrame frame,

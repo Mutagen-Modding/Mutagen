@@ -1582,15 +1582,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly BodyPartDataBinaryCreateTranslation Instance = new BodyPartDataBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BPTD;
-        public static void FillBinaryStructs(
-            IBodyPartDataInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IBodyPartDataInternal item,
             MutagenFrame frame,

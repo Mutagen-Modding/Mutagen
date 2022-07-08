@@ -1336,15 +1336,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly ScriptBinaryCreateTranslation Instance = new ScriptBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SCPT;
-        public static void FillBinaryStructs(
-            IScriptInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IScriptInternal item,
             MutagenFrame frame,

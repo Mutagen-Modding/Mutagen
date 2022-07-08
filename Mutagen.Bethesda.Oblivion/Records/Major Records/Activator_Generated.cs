@@ -1589,15 +1589,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly ActivatorBinaryCreateTranslation Instance = new ActivatorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ACTI;
-        public static void FillBinaryStructs(
-            IActivatorInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IActivatorInternal item,
             MutagenFrame frame,

@@ -1601,15 +1601,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly SoundMarkerBinaryCreateTranslation Instance = new SoundMarkerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SOUN;
-        public static void FillBinaryStructs(
-            ISoundMarkerInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISoundMarkerInternal item,
             MutagenFrame frame,

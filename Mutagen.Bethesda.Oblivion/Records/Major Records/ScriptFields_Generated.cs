@@ -1039,7 +1039,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ScriptFieldsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ScriptFieldsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1515,12 +1514,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class ScriptFieldsBinaryCreateTranslation
     {
         public static readonly ScriptFieldsBinaryCreateTranslation Instance = new ScriptFieldsBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IScriptFields item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IScriptFields item,

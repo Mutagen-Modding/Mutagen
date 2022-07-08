@@ -1787,15 +1787,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLMT;
-        public static void FillBinaryStructs(
-            IClimateInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IClimateInternal item,
             MutagenFrame frame,
