@@ -337,18 +337,6 @@
     <Compile Include="Records\Major Records\Global.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\GlobalBool.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GlobalFloat.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GlobalInt.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GlobalShort.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Grass.cs">
       <DependentUpon>Grass.xml</DependentUpon>
     </Compile>
@@ -833,15 +821,6 @@
     <Compile Include="Records\Major Records\Global_Generated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\GlobalInt_Generated.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GlobalShort_Generated.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GlobalFloat_Generated.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\LocationReferenceType_Generated.cs">
       <DependentUpon>LocationReferenceType.xml</DependentUpon>
     </Compile>
@@ -853,9 +832,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Transform_Generated.cs">
       <DependentUpon>Transform.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GlobalBool_Generated.cs">
-      <DependentUpon>Global.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ActorValueInformation_Generated.cs">
       <DependentUpon>ActorValueInformation.xml</DependentUpon>

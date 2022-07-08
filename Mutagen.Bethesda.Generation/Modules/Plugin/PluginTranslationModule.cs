@@ -54,7 +54,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         this.TranslationMaskParameter = false;
         this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(TranslationTerm);
         this._typeGenerations[typeof(BoolType)] = new BooleanBinaryTranslationGeneration();
-        this._typeGenerations[typeof(CharType)] = new PrimitiveBinaryTranslationGeneration<char>(expectedLen: 1);
+        this._typeGenerations[typeof(CharType)] = new CharBinaryTranslationGeneration();
         this._typeGenerations[typeof(DateTimeType)] = new PrimitiveBinaryTranslationGeneration<DateTime>(expectedLen: null);
         this._typeGenerations[typeof(DoubleType)] = new PrimitiveBinaryTranslationGeneration<double>(expectedLen: 8);
         this._typeGenerations[typeof(EnumType)] = new EnumBinaryTranslationGeneration();
