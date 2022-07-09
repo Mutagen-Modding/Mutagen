@@ -1566,7 +1566,8 @@ namespace Mutagen.Bethesda.Fallout4
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.FNAM:
+                case RecordTypeInts.FNAM
+                    when frame.MetaData.FormVersion >= 112:
                 {
                     MaterialSwapBinaryCreateTranslation.FillBinaryTreeFolderCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -1574,6 +1575,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)MaterialSwap_FieldIndex.TreeFolder;
                 }
                 case RecordTypeInts.BNAM:
+                case RecordTypeInts.SNAM:
+                case RecordTypeInts.FNAM:
+                case RecordTypeInts.CNAM:
                 {
                     MaterialSwapBinaryCreateTranslation.FillBinarySubstitutionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -1735,7 +1739,8 @@ namespace Mutagen.Bethesda.Fallout4
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.FNAM:
+                case RecordTypeInts.FNAM
+                    when stream.MetaData.FormVersion >= 112:
                 {
                     TreeFolderCustomParse(
                         stream: stream,
@@ -1744,6 +1749,9 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)MaterialSwap_FieldIndex.TreeFolder;
                 }
                 case RecordTypeInts.BNAM:
+                case RecordTypeInts.SNAM:
+                case RecordTypeInts.FNAM:
+                case RecordTypeInts.CNAM:
                 {
                     this.Substitutions = this.ParseRepeatedTypelessSubrecord<IMaterialSubstitutionGetter>(
                         stream: stream,
