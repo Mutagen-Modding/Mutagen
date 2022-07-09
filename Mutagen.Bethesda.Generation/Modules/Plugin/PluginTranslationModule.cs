@@ -677,7 +677,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         await base.GenerateInTranslationCreateClass(obj, sb);
     }
 
-    private Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>> DoubleUsages(
+    private Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>> DoubleSingleTriggerUsages(
         List<(int, int, TypeGeneration Field)> fields)
     {
         var doubleUsages = new Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>>();
@@ -715,6 +715,28 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
 
         return doubleUsages;
+    }
+
+    private HashSet<RecordType> DuplicateTriggers(List<(int, int, TypeGeneration Field)> fields)
+    {
+        var duplicated = new HashSet<RecordType>();
+        var passed = new HashSet<RecordType>();
+        foreach (var field in fields)
+        {
+            var fieldData = field.Field.GetFieldData();
+            foreach (var gen in fieldData.GenerationTypes)
+            {
+                foreach (var trigger in gen.Key)
+                {
+                    if (!passed.Add(trigger))
+                    {
+                        duplicated.Add(trigger);
+                    }
+                }
+            }
+        }
+
+        return duplicated;
     }
 
     private async Task GenerateCreateExtras(ObjectGeneration obj, StructuredStringBuilder sb)
@@ -844,7 +866,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fields.Add(field);
                     }
 
-                    var doubleUsages = DoubleUsages(fields);
+                    var doubleUsages = DoubleSingleTriggerUsages(fields);
+                    var duplicateTriggers = DuplicateTriggers(fields);
 
                     foreach (var field in fields)
                     {
@@ -855,7 +878,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         foreach (var gen in fieldData.GenerationTypes)
                         {
-                            LoquiType loqui = gen.Value as LoquiType;
+                            var loqui = gen.Value as LoquiType;
                             if (gen.Value.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.Custom 
                                 && (loqui?.TargetObjectGeneration?.Abstract ?? false)) continue;
 
@@ -869,9 +892,25 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
 
-                            foreach (var trigger in gen.Key)
+                            if (gen.Value.GetFieldData().HasVersioning
+                                && gen.Key.Any(x => duplicateTriggers.Contains(x)))
                             {
-                                sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                foreach (var trigger in gen.Key)
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}");
+                                    using (sb.IncreaseDepth())
+                                    {
+                                        sb.AppendLine(
+                                            $"when {VersioningModule.GetVersionIfCheck(gen.Value.GetFieldData(), "frame.MetaData.FormVersion")}:");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var trigger in gen.Key)
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                }
                             }
                             using (sb.CurlyBrace())
                             {
@@ -1503,7 +1542,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fields.Add(field);
                     }
 
-                    var doubleUsages = DoubleUsages(fields);
+                    var doubleUsages = DoubleSingleTriggerUsages(fields);
+                    var duplicateTriggers = DuplicateTriggers(fields);
 
                     foreach (var field in fields)
                     {
@@ -1528,9 +1568,25 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
 
-                            foreach (var trigger in gen.Key)
+                            if (gen.Value.GetFieldData().HasVersioning
+                                && gen.Key.Any(x => duplicateTriggers.Contains(x)))
                             {
-                                sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                foreach (var trigger in gen.Key)
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}");
+                                    using (sb.IncreaseDepth())
+                                    {
+                                        sb.AppendLine(
+                                            $"when {VersioningModule.GetVersionIfCheck(gen.Value.GetFieldData(), "stream.MetaData.FormVersion")}:");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var trigger in gen.Key)
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                }
                             }
                             using (sb.CurlyBrace())
                             {
