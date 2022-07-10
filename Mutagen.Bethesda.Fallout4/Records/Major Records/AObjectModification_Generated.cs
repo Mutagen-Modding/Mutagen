@@ -119,10 +119,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Unknown
-        public Boolean Unknown { get; set; } = default;
-        #endregion
-        #region Unknown2
-        public Boolean Unknown2 { get; set; } = default;
+        public UInt16 Unknown { get; set; } = default;
         #endregion
         #region MaxRank
         public Byte MaxRank { get; set; } = default;
@@ -259,7 +256,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Description = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Unknown = initialValue;
-                this.Unknown2 = initialValue;
                 this.MaxRank = initialValue;
                 this.LevelTierScaledOffset = initialValue;
                 this.AttachPoint = initialValue;
@@ -284,7 +280,6 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Description,
                 TItem Model,
                 TItem Unknown,
-                TItem Unknown2,
                 TItem MaxRank,
                 TItem LevelTierScaledOffset,
                 TItem AttachPoint,
@@ -308,7 +303,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Description = Description;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Unknown = Unknown;
-                this.Unknown2 = Unknown2;
                 this.MaxRank = MaxRank;
                 this.LevelTierScaledOffset = LevelTierScaledOffset;
                 this.AttachPoint = AttachPoint;
@@ -335,7 +329,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Description;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem Unknown;
-            public TItem Unknown2;
             public TItem MaxRank;
             public TItem LevelTierScaledOffset;
             public TItem AttachPoint;
@@ -364,7 +357,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 if (!object.Equals(this.MaxRank, rhs.MaxRank)) return false;
                 if (!object.Equals(this.LevelTierScaledOffset, rhs.LevelTierScaledOffset)) return false;
                 if (!object.Equals(this.AttachPoint, rhs.AttachPoint)) return false;
@@ -385,7 +377,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Description);
                 hash.Add(this.Model);
                 hash.Add(this.Unknown);
-                hash.Add(this.Unknown2);
                 hash.Add(this.MaxRank);
                 hash.Add(this.LevelTierScaledOffset);
                 hash.Add(this.AttachPoint);
@@ -415,7 +406,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.Unknown2)) return false;
                 if (!eval(this.MaxRank)) return false;
                 if (!eval(this.LevelTierScaledOffset)) return false;
                 if (!eval(this.AttachPoint)) return false;
@@ -495,7 +485,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Unknown)) return true;
-                if (eval(this.Unknown2)) return true;
                 if (eval(this.MaxRank)) return true;
                 if (eval(this.LevelTierScaledOffset)) return true;
                 if (eval(this.AttachPoint)) return true;
@@ -578,7 +567,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Description = eval(this.Description);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.Unknown = eval(this.Unknown);
-                obj.Unknown2 = eval(this.Unknown2);
                 obj.MaxRank = eval(this.MaxRank);
                 obj.LevelTierScaledOffset = eval(this.LevelTierScaledOffset);
                 obj.AttachPoint = eval(this.AttachPoint);
@@ -690,10 +678,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (printMask?.Unknown ?? true)
                     {
                         sb.AppendItem(Unknown, "Unknown");
-                    }
-                    if (printMask?.Unknown2 ?? true)
-                    {
-                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.MaxRank ?? true)
                     {
@@ -835,7 +819,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Description;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? Unknown;
-            public Exception? Unknown2;
             public Exception? MaxRank;
             public Exception? LevelTierScaledOffset;
             public Exception? AttachPoint;
@@ -863,8 +846,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Model;
                     case AObjectModification_FieldIndex.Unknown:
                         return Unknown;
-                    case AObjectModification_FieldIndex.Unknown2:
-                        return Unknown2;
                     case AObjectModification_FieldIndex.MaxRank:
                         return MaxRank;
                     case AObjectModification_FieldIndex.LevelTierScaledOffset:
@@ -908,9 +889,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case AObjectModification_FieldIndex.Unknown:
                         this.Unknown = ex;
-                        break;
-                    case AObjectModification_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
                         break;
                     case AObjectModification_FieldIndex.MaxRank:
                         this.MaxRank = ex;
@@ -968,9 +946,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case AObjectModification_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case AObjectModification_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
-                        break;
                     case AObjectModification_FieldIndex.MaxRank:
                         this.MaxRank = (Exception?)obj;
                         break;
@@ -1017,7 +992,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Description != null) return true;
                 if (Model != null) return true;
                 if (Unknown != null) return true;
-                if (Unknown2 != null) return true;
                 if (MaxRank != null) return true;
                 if (LevelTierScaledOffset != null) return true;
                 if (AttachPoint != null) return true;
@@ -1064,9 +1038,6 @@ namespace Mutagen.Bethesda.Fallout4
                 Model?.Print(sb);
                 {
                     sb.AppendItem(Unknown, "Unknown");
-                }
-                {
-                    sb.AppendItem(Unknown2, "Unknown2");
                 }
                 {
                     sb.AppendItem(MaxRank, "MaxRank");
@@ -1194,7 +1165,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.MaxRank = this.MaxRank.Combine(rhs.MaxRank);
                 ret.LevelTierScaledOffset = this.LevelTierScaledOffset.Combine(rhs.LevelTierScaledOffset);
                 ret.AttachPoint = this.AttachPoint.Combine(rhs.AttachPoint);
@@ -1232,7 +1202,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Description;
             public Model.TranslationMask? Model;
             public bool Unknown;
-            public bool Unknown2;
             public bool MaxRank;
             public bool LevelTierScaledOffset;
             public bool AttachPoint;
@@ -1255,7 +1224,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Name = defaultOn;
                 this.Description = defaultOn;
                 this.Unknown = defaultOn;
-                this.Unknown2 = defaultOn;
                 this.MaxRank = defaultOn;
                 this.LevelTierScaledOffset = defaultOn;
                 this.AttachPoint = defaultOn;
@@ -1276,7 +1244,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Description, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Unknown, null));
-                ret.Add((Unknown2, null));
                 ret.Add((MaxRank, null));
                 ret.Add((LevelTierScaledOffset, null));
                 ret.Add((AttachPoint, null));
@@ -1425,8 +1392,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new Boolean Unknown { get; set; }
-        new Boolean Unknown2 { get; set; }
+        new UInt16 Unknown { get; set; }
         new Byte MaxRank { get; set; }
         new Byte LevelTierScaledOffset { get; set; }
         new IFormLink<IKeywordGetter> AttachPoint { get; set; }
@@ -1482,8 +1448,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        Boolean Unknown { get; }
-        Boolean Unknown2 { get; }
+        UInt16 Unknown { get; }
         Byte MaxRank { get; }
         Byte LevelTierScaledOffset { get; }
         IFormLinkGetter<IKeywordGetter> AttachPoint { get; }
@@ -1667,18 +1632,17 @@ namespace Mutagen.Bethesda.Fallout4
         Description = 7,
         Model = 8,
         Unknown = 9,
-        Unknown2 = 10,
-        MaxRank = 11,
-        LevelTierScaledOffset = 12,
-        AttachPoint = 13,
-        AttachParentSlots = 14,
-        Items = 15,
-        Includes = 16,
-        TargetOmodKeywords = 17,
-        FilterKeywords = 18,
-        LooseMod = 19,
-        Priority = 20,
-        Filter = 21,
+        MaxRank = 10,
+        LevelTierScaledOffset = 11,
+        AttachPoint = 12,
+        AttachParentSlots = 13,
+        Items = 14,
+        Includes = 15,
+        TargetOmodKeywords = 16,
+        FilterKeywords = 17,
+        LooseMod = 18,
+        Priority = 19,
+        Filter = 20,
     }
     #endregion
 
@@ -1696,9 +1660,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "a0536c2f-a2a1-4faf-b038-9ebe8e076f1c";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(AObjectModification.Mask<>);
 
@@ -1792,7 +1756,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Description = default;
             item.Model = null;
             item.Unknown = default;
-            item.Unknown2 = default;
             item.MaxRank = default;
             item.LevelTierScaledOffset = default;
             item.AttachPoint.Clear();
@@ -1903,7 +1866,6 @@ namespace Mutagen.Bethesda.Fallout4
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
             ret.MaxRank = item.MaxRank == rhs.MaxRank;
             ret.LevelTierScaledOffset = item.LevelTierScaledOffset == rhs.LevelTierScaledOffset;
             ret.AttachPoint = item.AttachPoint.Equals(rhs.AttachPoint);
@@ -1997,10 +1959,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Unknown ?? true)
             {
                 sb.AppendItem(item.Unknown, "Unknown");
-            }
-            if (printMask?.Unknown2 ?? true)
-            {
-                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.MaxRank ?? true)
             {
@@ -2168,10 +2126,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown2) ?? true))
-            {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
-            }
             if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.MaxRank) ?? true))
             {
                 if (lhs.MaxRank != rhs.MaxRank) return false;
@@ -2257,7 +2211,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(Modelitem);
             }
             hash.Add(item.Unknown);
-            hash.Add(item.Unknown2);
             hash.Add(item.MaxRank);
             hash.Add(item.LevelTierScaledOffset);
             hash.Add(item.AttachPoint);
@@ -2447,10 +2400,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
-            }
-            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown2) ?? true))
-            {
-                item.Unknown2 = rhs.Unknown2;
             }
             if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.MaxRank) ?? true))
             {

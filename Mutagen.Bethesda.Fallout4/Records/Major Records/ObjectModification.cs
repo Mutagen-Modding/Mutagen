@@ -74,8 +74,7 @@ partial class AObjectModificationBinaryCreateTranslation
         frame.ReadSubrecordHeader(RecordTypes.DATA);
         var includeCount = frame.ReadInt32();
         var propertyCount = frame.ReadInt32();
-        item.Unknown = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(frame, 1);
-        item.Unknown2 = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(frame, 1);
+        item.Unknown = frame.ReadUInt16();
         // FormType already parsed
         frame.Position += 4;
         item.MaxRank = frame.ReadUInt8();
@@ -179,8 +178,7 @@ partial class AObjectModificationBinaryWriteTranslation
         }
         writer.Write(includes.Count);
         writer.Write(properties.Count);
-        writer.Write(item.Unknown, 1);
-        writer.Write(item.Unknown2, 1);
+        writer.Write(item.Unknown);
         writer.Write(type.TypeInt);
         writer.Write(item.MaxRank);
         writer.Write(item.LevelTierScaledOffset);
@@ -226,9 +224,7 @@ partial class AObjectModificationBinaryWriteTranslation
 partial class AObjectModificationBinaryOverlay
 {
     private ReadOnlyMemorySlice<byte> _dataBytes;
-    public bool Unknown => _dataBytes[0x8] >= 1;
-
-    public bool Unknown2 => _dataBytes[0x9] >= 1;
+    public ushort Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_dataBytes.Slice(0x8, 2));
 
     public byte MaxRank => _dataBytes[0xE];
 

@@ -108,7 +108,6 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Description,
                 TItem Model,
                 TItem Unknown,
-                TItem Unknown2,
                 TItem MaxRank,
                 TItem LevelTierScaledOffset,
                 TItem AttachPoint,
@@ -132,7 +131,6 @@ namespace Mutagen.Bethesda.Fallout4
                 Description: Description,
                 Model: Model,
                 Unknown: Unknown,
-                Unknown2: Unknown2,
                 MaxRank: MaxRank,
                 LevelTierScaledOffset: LevelTierScaledOffset,
                 AttachPoint: AttachPoint,
@@ -776,19 +774,18 @@ namespace Mutagen.Bethesda.Fallout4
         Description = 7,
         Model = 8,
         Unknown = 9,
-        Unknown2 = 10,
-        MaxRank = 11,
-        LevelTierScaledOffset = 12,
-        AttachPoint = 13,
-        AttachParentSlots = 14,
-        Items = 15,
-        Includes = 16,
-        TargetOmodKeywords = 17,
-        FilterKeywords = 18,
-        LooseMod = 19,
-        Priority = 20,
-        Filter = 21,
-        Properties = 22,
+        MaxRank = 10,
+        LevelTierScaledOffset = 11,
+        AttachPoint = 12,
+        AttachParentSlots = 13,
+        Items = 14,
+        Includes = 15,
+        TargetOmodKeywords = 16,
+        FilterKeywords = 17,
+        LooseMod = 18,
+        Priority = 19,
+        Filter = 20,
+        Properties = 21,
     }
     #endregion
 
@@ -808,7 +805,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(ObjectModification.Mask<>);
 
@@ -1077,8 +1074,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case AObjectModification_FieldIndex.Model:
                     return (ObjectModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Unknown:
-                    return (ObjectModification_FieldIndex)((int)index);
-                case AObjectModification_FieldIndex.Unknown2:
                     return (ObjectModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.MaxRank:
                     return (ObjectModification_FieldIndex)((int)index);
