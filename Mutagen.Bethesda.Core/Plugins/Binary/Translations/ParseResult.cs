@@ -1,6 +1,6 @@
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-internal struct ParseResult
+internal readonly struct ParseResult
 {
     public readonly bool KeepParsing;
     public readonly int? ParsedIndex;

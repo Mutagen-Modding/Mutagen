@@ -1323,15 +1323,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly LocationReferenceTypeBinaryCreateTranslation Instance = new LocationReferenceTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LCRT;
-        public static void FillBinaryStructs(
-            ILocationReferenceTypeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILocationReferenceTypeInternal item,
             MutagenFrame frame,

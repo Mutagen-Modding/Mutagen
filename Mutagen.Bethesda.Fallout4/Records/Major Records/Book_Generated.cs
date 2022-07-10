@@ -3329,7 +3329,9 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Value = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)Book_FieldIndex.Weight;
                 }
@@ -3343,7 +3345,9 @@ namespace Mutagen.Bethesda.Fallout4
                     BookBinaryCreateTranslation.FillBinaryTeachesCustom(
                         frame: dataFrame,
                         item: item);
+                    if (dataFrame.Remaining < 4) return null;
                     item.TextOffsetX = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.TextOffsetY = dataFrame.ReadUInt32();
                     return (int)Book_FieldIndex.TextOffsetY;
                 }

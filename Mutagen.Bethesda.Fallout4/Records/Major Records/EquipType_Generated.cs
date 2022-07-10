@@ -1572,15 +1572,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly EquipTypeBinaryCreateTranslation Instance = new EquipTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EQUP;
-        public static void FillBinaryStructs(
-            IEquipTypeInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IEquipTypeInternal item,
             MutagenFrame frame,

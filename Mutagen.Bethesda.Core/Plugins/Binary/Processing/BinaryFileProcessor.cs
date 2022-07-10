@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing;
 /// <summary>
 /// Processing stream that modifies input according to explicit instructions
 /// </summary>
-public class BinaryFileProcessor : Stream
+public sealed class BinaryFileProcessor : Stream
 {
     #region Config
     public class Config

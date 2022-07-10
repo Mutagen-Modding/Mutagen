@@ -3030,7 +3030,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Value = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)Ingredient_FieldIndex.Weight;
                 }
@@ -3038,7 +3040,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.IngredientValue = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<Ingredient.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);

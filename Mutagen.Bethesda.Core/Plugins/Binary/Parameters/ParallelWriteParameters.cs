@@ -1,6 +1,6 @@
 ﻿namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
 
-public class ParallelWriteParameters
+public sealed class ParallelWriteParameters
 {
     public static readonly ParallelWriteParameters Default = new();
 

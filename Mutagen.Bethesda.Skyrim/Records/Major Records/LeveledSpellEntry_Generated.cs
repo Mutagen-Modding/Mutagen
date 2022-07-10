@@ -787,7 +787,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LeveledSpellEntryBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: LeveledSpellEntryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1159,12 +1158,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class LeveledSpellEntryBinaryCreateTranslation
     {
         public static readonly LeveledSpellEntryBinaryCreateTranslation Instance = new LeveledSpellEntryBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ILeveledSpellEntry item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ILeveledSpellEntry item,

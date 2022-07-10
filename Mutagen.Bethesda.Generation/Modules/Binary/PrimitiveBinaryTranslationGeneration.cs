@@ -13,8 +13,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGeneration
 {
-    private int? _ExpectedLength;
-    private string typeName;
+    private readonly int? _expectedLength;
+    private readonly string _typeName;
     protected bool? nullable;
     public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
     public bool PreferDirectTranslation = true;
@@ -35,9 +35,9 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
 
     public PrimitiveBinaryTranslationGeneration(int? expectedLen, string? typeName = null, bool? nullable = null)
     {
-        this._ExpectedLength = expectedLen;
+        _expectedLength = expectedLen;
         this.nullable = nullable;
-        this.typeName = typeName ?? typeof(T).GetName().Replace("?", string.Empty);
+        _typeName = typeName ?? typeof(T).GetName().Replace("?", string.Empty);
     }
 
     protected virtual string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
@@ -45,7 +45,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         return $"{itemAccessor}";
     }
 
-    public virtual string Typename(TypeGeneration typeGen) => typeName;
+    public virtual string Typename(TypeGeneration typeGen) => _typeName;
 
     public override async Task GenerateWrite(
         StructuredStringBuilder sb,
@@ -136,7 +136,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         }
         if (PreferDirectTranslation && !hasCustom)
         {
-            sb.AppendLine($"{itemAccessor} = {frameAccessor}.Read{typeName}();");
+            sb.AppendLine($"{itemAccessor} = {frameAccessor}.Read{_typeName}();");
         }
         else
         {
@@ -299,6 +299,6 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
 
     public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
     {
-        return typeGen.GetFieldData().Length ?? this._ExpectedLength;
+        return typeGen.GetFieldData().Length ?? this._expectedLength;
     }
 }

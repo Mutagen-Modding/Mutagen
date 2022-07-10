@@ -1401,15 +1401,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly GameSettingIntBinaryCreateTranslation Instance = new GameSettingIntBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GMST;
-        public static void FillBinaryStructs(
-            IGameSettingIntInternal item,
-            MutagenFrame frame)
-        {
-            GameSettingBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IGameSettingIntInternal item,
             MutagenFrame frame,

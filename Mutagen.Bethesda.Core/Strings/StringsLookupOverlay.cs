@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Strings;
 /// <summary>
 /// Class that does minimal processing on string file data, exposing lookup queries in a lazy on-demand fashion.
 /// </summary>
-public class StringsLookupOverlay : IStringsLookup
+public sealed class StringsLookupOverlay : IStringsLookup
 {
     private readonly Dictionary<uint, int> _locations = new();
     private ReadOnlyMemorySlice<byte> _stringData;

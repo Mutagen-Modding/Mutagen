@@ -23,6 +23,7 @@ using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Loqui;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -8973,7 +8974,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 importMask: importMask,
-                fillStructs: SkyrimModBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: SkyrimModBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -20234,12 +20234,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class SkyrimModBinaryCreateTranslation
     {
         public static readonly SkyrimModBinaryCreateTranslation Instance = new SkyrimModBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ISkyrimMod item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ISkyrimMod item,

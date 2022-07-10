@@ -1752,15 +1752,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ComponentBinaryCreateTranslation Instance = new ComponentBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CMPO;
-        public static void FillBinaryStructs(
-            IComponentInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IComponentInternal item,
             MutagenFrame frame,

@@ -1673,7 +1673,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: HeadDataBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: HeadDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -2437,12 +2436,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class HeadDataBinaryCreateTranslation
     {
         public static readonly HeadDataBinaryCreateTranslation Instance = new HeadDataBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IHeadData item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IHeadData item,

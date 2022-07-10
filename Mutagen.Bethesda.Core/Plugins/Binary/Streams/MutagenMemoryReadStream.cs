@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 /// <summary>
 /// A class that wraps an array or span directly with Mutagen-specific binary reading functionality
 /// </summary>
-public class MutagenMemoryReadStream : BinaryMemoryReadStream, IMutagenReadStream
+public sealed class MutagenMemoryReadStream : BinaryMemoryReadStream, IMutagenReadStream
 {
     /// <inheritdoc/>
     public long OffsetReference { get; }

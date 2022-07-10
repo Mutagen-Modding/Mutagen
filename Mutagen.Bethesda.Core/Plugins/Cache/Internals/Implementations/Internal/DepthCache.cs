@@ -2,7 +2,7 @@
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal;
 
-internal class DepthCache<K, T>
+internal sealed class DepthCache<K, T>
     where K : notnull
 {
     private readonly Dictionary<K, T> _dictionary = new Dictionary<K, T>();

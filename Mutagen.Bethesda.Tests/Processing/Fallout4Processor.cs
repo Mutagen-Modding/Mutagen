@@ -1155,6 +1155,17 @@ public class Fallout4Processor : Processor
             }
         }
     }
+    
+    protected override Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys()
+    {
+        return new Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>
+        {
+            { ("DLCworkshop01.esm", StringsSource.Normal), new() { 0x29F90, 0x2B63B, 0x34577 } },
+            { ("DLCworkshop01.esm", StringsSource.IL), new() { 0x2B5ED, 0x2BA4A } },
+            { ("DLCworkshop02.esm", StringsSource.Normal), new() { 0x2, 0x7, 0x36736 } },
+            { ("DLCworkshop03.esm", StringsSource.Normal), new() { 0x371 } },
+        };
+    }
 
     public void PerkStringHandler(
         IMutagenReadStream stream,

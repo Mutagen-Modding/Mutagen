@@ -41,7 +41,7 @@ public interface ILoadOrderListingParser
     LoadOrderListing FromFileName(FileName fileName);
 }
 
-public class LoadOrderListingParser : ILoadOrderListingParser
+public sealed class LoadOrderListingParser : ILoadOrderListingParser
 {
     private readonly IHasEnabledMarkersProvider _hasEnabledMarkers;
 

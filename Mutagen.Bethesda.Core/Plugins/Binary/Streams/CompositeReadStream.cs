@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 /// Class for reading through several streams.
 /// Minimal implementation, but can be fleshed out eventually
 /// </summary>
-public class CompositeReadStream : Stream
+public sealed class CompositeReadStream : Stream
 {
     private readonly Stream[] _subStreams;
     private int _targetStreamIndex;

@@ -12,7 +12,7 @@ public interface ICreationClubListingsPathProvider
     FilePath? Path { get; }
 }
 
-public class CreationClubListingsPathProvider : ICreationClubListingsPathProvider
+public sealed class CreationClubListingsPathProvider : ICreationClubListingsPathProvider
 {
     public IGameCategoryContext CategoryContext { get; }
     public ICreationClubEnabledProvider IsUsed { get; }

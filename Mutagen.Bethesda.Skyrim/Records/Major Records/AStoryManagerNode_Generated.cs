@@ -944,6 +944,12 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            PluginUtilityTranslation.MajorRecordParse<IAStoryManagerNodeInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: AStoryManagerNodeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AStoryManagerNodeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(

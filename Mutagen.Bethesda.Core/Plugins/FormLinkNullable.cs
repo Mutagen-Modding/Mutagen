@@ -162,7 +162,7 @@ public class FormLinkNullableGetter<TMajorGetter> :
     }
 }
 
-public class FormLinkNullable<TMajorGetter> : FormLinkNullableGetter<TMajorGetter>, IFormLinkNullable<TMajorGetter>
+public sealed class FormLinkNullable<TMajorGetter> : FormLinkNullableGetter<TMajorGetter>, IFormLinkNullable<TMajorGetter>
     where TMajorGetter : class, IMajorRecordGetter
 {
     /// <summary>

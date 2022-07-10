@@ -12,7 +12,7 @@ public interface IPluginListingsPathProvider
     FilePath Path { get; }
 }
 
-public class PluginListingsPathProvider : IPluginListingsPathProvider
+public sealed class PluginListingsPathProvider : IPluginListingsPathProvider
 {
     private readonly IGameReleaseContext _gameReleaseContext;
 
@@ -42,4 +42,4 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
         GetRelativePluginsPath());
 }
 
-public record PluginListingsPathInjection(FilePath Path) : IPluginListingsPathProvider;
+public sealed record PluginListingsPathInjection(FilePath Path) : IPluginListingsPathProvider;

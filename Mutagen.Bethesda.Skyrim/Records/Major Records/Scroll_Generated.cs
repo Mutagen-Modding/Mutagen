@@ -3299,7 +3299,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Value = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)Scroll_FieldIndex.Weight;
                 }
@@ -3307,22 +3309,31 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.BaseCost = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<SpellDataFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Type = EnumBinaryTranslation<SpellType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ChargeTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CastType = EnumBinaryTranslation<CastType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.TargetType = EnumBinaryTranslation<TargetType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CastDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Range = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.HalfCostPerk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Scroll_FieldIndex.HalfCostPerk;
                 }

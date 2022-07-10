@@ -806,7 +806,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: DialogResponseBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: DialogResponseBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1155,12 +1154,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class DialogResponseBinaryCreateTranslation
     {
         public static readonly DialogResponseBinaryCreateTranslation Instance = new DialogResponseBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IDialogResponse item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IDialogResponse item,

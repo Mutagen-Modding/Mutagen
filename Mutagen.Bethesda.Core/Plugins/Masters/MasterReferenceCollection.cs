@@ -44,7 +44,7 @@ public interface IMasterReferenceCollection : IReadOnlyMasterReferenceCollection
 /// A registry of master listings.
 /// Generally used for reference when converting FormIDs to FormKeys
 /// </summary>
-public class MasterReferenceCollection : IMasterReferenceCollection
+public sealed class MasterReferenceCollection : IMasterReferenceCollection
 {
     private readonly Dictionary<ModKey, ModIndex> _masterIndices = new();
         

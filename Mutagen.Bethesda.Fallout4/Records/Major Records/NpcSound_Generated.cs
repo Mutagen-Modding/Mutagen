@@ -774,7 +774,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: NpcSoundBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: NpcSoundBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1066,12 +1065,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class NpcSoundBinaryCreateTranslation
     {
         public static readonly NpcSoundBinaryCreateTranslation Instance = new NpcSoundBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            INpcSound item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             INpcSound item,

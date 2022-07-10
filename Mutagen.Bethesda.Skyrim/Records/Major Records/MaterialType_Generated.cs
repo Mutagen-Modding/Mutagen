@@ -1677,15 +1677,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly MaterialTypeBinaryCreateTranslation Instance = new MaterialTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MATT;
-        public static void FillBinaryStructs(
-            IMaterialTypeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMaterialTypeInternal item,
             MutagenFrame frame,

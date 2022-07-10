@@ -2776,12 +2776,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 2);

@@ -780,7 +780,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MovementDataOverrideBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: MovementDataOverrideBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1108,12 +1107,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class MovementDataOverrideBinaryCreateTranslation
     {
         public static readonly MovementDataOverrideBinaryCreateTranslation Instance = new MovementDataOverrideBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IMovementDataOverride item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IMovementDataOverride item,

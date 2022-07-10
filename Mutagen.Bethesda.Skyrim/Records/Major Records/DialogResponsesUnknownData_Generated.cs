@@ -812,7 +812,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: DialogResponsesUnknownDataBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: DialogResponsesUnknownDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1096,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.QNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.QNAM));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.NEXT,
                 header: translationParams.ConvertToCustom(RecordTypes.NEXT));
@@ -1129,12 +1128,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class DialogResponsesUnknownDataBinaryCreateTranslation
     {
         public static readonly DialogResponsesUnknownDataBinaryCreateTranslation Instance = new DialogResponsesUnknownDataBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IDialogResponsesUnknownData item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IDialogResponsesUnknownData item,

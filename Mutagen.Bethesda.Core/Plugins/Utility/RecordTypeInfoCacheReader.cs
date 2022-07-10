@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Utility;
 /// <summary>
 /// A class that can query and cache record locations by record type
 /// </summary>
-public class RecordTypeInfoCacheReader
+public sealed class RecordTypeInfoCacheReader
 {
     private record CacheItem(IReadOnlyList<FormKey> List, HashSet<FormKey> Set);
     private readonly Func<IMutagenReadStream> _streamCreator;

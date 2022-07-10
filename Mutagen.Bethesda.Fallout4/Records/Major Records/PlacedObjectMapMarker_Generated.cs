@@ -1294,9 +1294,11 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Type = EnumBinaryTranslation<PlacedObjectMapMarker.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Unknown = dataFrame.ReadUInt8();
                     return (int)PlacedObjectMapMarker_FieldIndex.Unknown;
                 }

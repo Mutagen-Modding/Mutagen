@@ -1367,10 +1367,13 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Unknown, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Index = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<QuestStage.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Unknown = dataFrame.ReadUInt8();
                     return (int)QuestStage_FieldIndex.Unknown;
                 }

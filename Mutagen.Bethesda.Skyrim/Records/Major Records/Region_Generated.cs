@@ -2220,15 +2220,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REGN;
-        public static void FillBinaryStructs(
-            IRegionInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IRegionInternal item,
             MutagenFrame frame,

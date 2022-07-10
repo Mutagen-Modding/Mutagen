@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Plugins.Allocators;
 /// 
 /// This class is made thread safe by locking internally on the Mod object.
 /// </summary>
-public class TextFileSharedFormKeyAllocator : BaseSharedFormKeyAllocator
+public sealed class TextFileSharedFormKeyAllocator : BaseSharedFormKeyAllocator
 {
     private readonly object _lock = new();
     private readonly uint _initialNextFormID;

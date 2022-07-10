@@ -8,7 +8,7 @@ using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class ModHeaderWriteLogic
+public sealed class ModHeaderWriteLogic
 {
     private readonly List<Action<IMajorRecordGetter>> _recordIterationActions = new();
     private readonly List<Action<FormKey, IFormLinkGetter>> _formLinkIterationActions = new();

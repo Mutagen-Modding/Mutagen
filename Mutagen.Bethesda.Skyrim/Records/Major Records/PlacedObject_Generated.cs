@@ -6218,7 +6218,7 @@ namespace Mutagen.Bethesda.Skyrim
             PlacedObjectBinaryWriteTranslation.WriteBinaryBoundData(
                 writer: writer,
                 item: item);
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsMultiBoundPrimitive,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBP));
@@ -6379,7 +6379,7 @@ namespace Mutagen.Bethesda.Skyrim
                         writer: subWriter,
                         item: subItem);
                 });
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsIgnoredBySandbox,
                 header: translationParams.ConvertToCustom(RecordTypes.XIS2));
@@ -6441,7 +6441,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.FavorCost,
                 header: translationParams.ConvertToCustom(RecordTypes.XFVC));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsOpenByDefault,
                 header: translationParams.ConvertToCustom(RecordTypes.ONAM));

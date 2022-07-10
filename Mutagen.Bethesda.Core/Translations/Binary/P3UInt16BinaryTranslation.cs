@@ -3,7 +3,7 @@ using System.Buffers.Binary;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 
-public class P3UInt16BinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<P3UInt16, TReader, TWriter>
+public sealed class P3UInt16BinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<P3UInt16, TReader, TWriter>
     where TReader : IBinaryReadStream
     where TWriter : IBinaryWriteStream
 {

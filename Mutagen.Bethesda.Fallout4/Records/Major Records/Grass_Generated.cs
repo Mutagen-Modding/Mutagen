@@ -2312,19 +2312,31 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Density = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.MinSlope = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.MaxSlope = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Unknown = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 2) return null;
                     item.UnitsFromWater = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.Unknown2 = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 4) return null;
                     item.UnitsFromWaterType = EnumBinaryTranslation<Grass.UnitsFromWaterTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.PositionRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.HeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.WavePeriod = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<Grass.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);

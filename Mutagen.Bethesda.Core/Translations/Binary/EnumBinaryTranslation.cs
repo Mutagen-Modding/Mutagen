@@ -2,15 +2,15 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 
-public class EnumBinaryTranslation<TEnum, TReader, TWriter>
+public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
     where TEnum : struct, Enum, IConvertible
     where TReader : IBinaryReadStream
     where TWriter : IBinaryWriteStream
 {
-    public readonly static EnumBinaryTranslation<TEnum, TReader, TWriter> Instance = new();
-    public readonly static UnderlyingType Underlying;
-    public readonly static int EnumSize = EnumExt.GetSize<TEnum>();
-    public readonly static IReadOnlyList<TEnum> Values = EnumExt.GetValues<TEnum>().ToExtendedList();
+    public static readonly EnumBinaryTranslation<TEnum, TReader, TWriter> Instance = new();
+    public static readonly UnderlyingType Underlying;
+    public static readonly int EnumSize = EnumExt.GetSize<TEnum>();
+    public static readonly IReadOnlyList<TEnum> Values = EnumExt.GetValues<TEnum>().ToExtendedList();
 
     public enum UnderlyingType
     {

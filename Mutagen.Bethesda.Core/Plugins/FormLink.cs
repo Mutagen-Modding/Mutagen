@@ -149,7 +149,7 @@ public class FormLinkGetter<TMajorGetter> : IFormLinkGetter<TMajorGetter>,
 /// </summary>
 /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
 [DebuggerDisplay("{this.FormKey}")]
-public class FormLink<TMajorGetter> : FormLinkGetter<TMajorGetter>, IFormLink<TMajorGetter>
+public sealed class FormLink<TMajorGetter> : FormLinkGetter<TMajorGetter>, IFormLink<TMajorGetter>
     where TMajorGetter : class, IMajorRecordGetter
 {
     /// <summary>
@@ -233,44 +233,5 @@ public class FormLink<TMajorGetter> : FormLinkGetter<TMajorGetter>, IFormLink<TM
     public static implicit operator FormLink<TMajorGetter>(FormKey formKey)
     {
         return new FormLink<TMajorGetter>(formKey);
-    }
-}
-    
-[DebuggerDisplay("{this.FormKey}")]
-public struct FormLink<TMajor, TMajorGetter>
-    where TMajor : class, IMajorRecord, TMajorGetter
-    where TMajorGetter : class, IMajorRecordGetter
-{
-    /// <summary>
-    /// FormKey of the target record
-    /// </summary>
-    public FormKey FormKey { get; private set; }
-
-    /// <summary>
-    /// Default constructor that creates a link to the target FormKey
-    /// </summary>
-    public FormLink(FormKey formKey)
-    {
-        FormKey = formKey;
-    }
-
-    public static implicit operator FormLink<TMajor, TMajorGetter>(FormLink<TMajor> link)
-    {
-        return new FormLink<TMajor, TMajorGetter>(link.FormKey);
-    }
-
-    public static implicit operator FormLink<TMajor, TMajorGetter>(FormLink<TMajorGetter> link)
-    {
-        return new FormLink<TMajor, TMajorGetter>(link.FormKey);
-    }
-
-    public static implicit operator FormLink<TMajorGetter>(FormLink<TMajor, TMajorGetter> link)
-    {
-        return new FormLink<TMajorGetter>(link.FormKey);
-    }
-
-    public static FormLink<TMajor, TMajorGetter> Factory(FormLink<TMajorGetter> link)
-    {
-        return new FormLink<TMajor, TMajorGetter>(link.FormKey);
     }
 }

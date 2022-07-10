@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 /// <summary> 
 /// For use when a previously encountered record is seen again 
 /// </summary> 
-public class AlignmentSubRule : AlignmentRule 
+public sealed class AlignmentSubRule : AlignmentRule 
 { 
     public List<RecordType> SubTypes; 
  

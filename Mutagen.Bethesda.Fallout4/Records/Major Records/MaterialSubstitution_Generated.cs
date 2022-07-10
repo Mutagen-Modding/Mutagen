@@ -50,10 +50,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region OriginalMaterial
-        public String OriginalMaterial { get; set; } = string.Empty;
+        public String? OriginalMaterial { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMaterialSubstitutionGetter.OriginalMaterial => this.OriginalMaterial;
         #endregion
         #region ReplacementMaterial
-        public String ReplacementMaterial { get; set; } = string.Empty;
+        public String? ReplacementMaterial { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMaterialSubstitutionGetter.ReplacementMaterial => this.ReplacementMaterial;
         #endregion
         #region ColorRemappingIndex
         public Single? ColorRemappingIndex { get; set; }
@@ -480,8 +484,8 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IMaterialSubstitution>,
         IMaterialSubstitutionGetter
     {
-        new String OriginalMaterial { get; set; }
-        new String ReplacementMaterial { get; set; }
+        new String? OriginalMaterial { get; set; }
+        new String? ReplacementMaterial { get; set; }
         new Single? ColorRemappingIndex { get; set; }
     }
 
@@ -497,8 +501,8 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => MaterialSubstitution_Registration.Instance;
-        String OriginalMaterial { get; }
-        String ReplacementMaterial { get; }
+        String? OriginalMaterial { get; }
+        String? ReplacementMaterial { get; }
         Single? ColorRemappingIndex { get; }
 
     }
@@ -717,17 +721,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BNAM;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.BNAM);
             var all = RecordCollection.Factory(
                 RecordTypes.BNAM,
                 RecordTypes.SNAM,
                 RecordTypes.FNAM,
                 RecordTypes.CNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MaterialSubstitutionBinaryWriteTranslation);
         #region Interface
@@ -771,8 +773,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IMaterialSubstitution item)
         {
             ClearPartial();
-            item.OriginalMaterial = string.Empty;
-            item.ReplacementMaterial = string.Empty;
+            item.OriginalMaterial = default;
+            item.ReplacementMaterial = default;
             item.ColorRemappingIndex = default;
         }
         
@@ -793,7 +795,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MaterialSubstitutionBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: MaterialSubstitutionBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -871,13 +872,15 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             MaterialSubstitution.Mask<bool>? printMask = null)
         {
-            if (printMask?.OriginalMaterial ?? true)
+            if ((printMask?.OriginalMaterial ?? true)
+                && item.OriginalMaterial is {} OriginalMaterialItem)
             {
-                sb.AppendItem(item.OriginalMaterial, "OriginalMaterial");
+                sb.AppendItem(OriginalMaterialItem, "OriginalMaterial");
             }
-            if (printMask?.ReplacementMaterial ?? true)
+            if ((printMask?.ReplacementMaterial ?? true)
+                && item.ReplacementMaterial is {} ReplacementMaterialItem)
             {
-                sb.AppendItem(item.ReplacementMaterial, "ReplacementMaterial");
+                sb.AppendItem(ReplacementMaterialItem, "ReplacementMaterial");
             }
             if ((printMask?.ColorRemappingIndex ?? true)
                 && item.ColorRemappingIndex is {} ColorRemappingIndexItem)
@@ -911,8 +914,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IMaterialSubstitutionGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.OriginalMaterial);
-            hash.Add(item.ReplacementMaterial);
+            if (item.OriginalMaterial is {} OriginalMaterialitem)
+            {
+                hash.Add(OriginalMaterialitem);
+            }
+            if (item.ReplacementMaterial is {} ReplacementMaterialitem)
+            {
+                hash.Add(ReplacementMaterialitem);
+            }
             if (item.ColorRemappingIndex is {} ColorRemappingIndexitem)
             {
                 hash.Add(ColorRemappingIndexitem);
@@ -1058,12 +1067,12 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.OriginalMaterial,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ReplacementMaterial,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM),
@@ -1118,12 +1127,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static readonly MaterialSubstitutionBinaryCreateTranslation Instance = new MaterialSubstitutionBinaryCreateTranslation();
 
-        public static void FillBinaryStructs(
-            IMaterialSubstitution item,
-            MutagenFrame frame)
-        {
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMaterialSubstitution item,
             MutagenFrame frame,
@@ -1147,6 +1150,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
+                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ReplacementMaterial, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReplacementMaterial = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1155,6 +1159,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FNAM:
                 {
+                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
                     return MaterialSubstitutionBinaryCreateTranslation.FillBinaryFNAMParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -1162,6 +1167,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CNAM:
                 {
+                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ColorRemappingIndex = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)MaterialSubstitution_FieldIndex.ColorRemappingIndex;
@@ -1241,11 +1247,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region OriginalMaterial
         private int? _OriginalMaterialLocation;
-        public String OriginalMaterial => _OriginalMaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OriginalMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String? OriginalMaterial => _OriginalMaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OriginalMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region ReplacementMaterial
         private int? _ReplacementMaterialLocation;
-        public String ReplacementMaterial => _ReplacementMaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReplacementMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String? ReplacementMaterial => _ReplacementMaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReplacementMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region FNAMParsing
         public partial ParseResult FNAMParsingCustomParse(
@@ -1328,11 +1334,13 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
+                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ReplacementMaterial, translationParams)) return ParseResult.Stop;
                     _ReplacementMaterialLocation = (stream.Position - offset);
                     return (int)MaterialSubstitution_FieldIndex.ReplacementMaterial;
                 }
                 case RecordTypeInts.FNAM:
                 {
+                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
                     return FNAMParsingCustomParse(
                         stream,
                         offset,
@@ -1340,6 +1348,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CNAM:
                 {
+                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
                     _ColorRemappingIndexLocation = (stream.Position - offset);
                     return (int)MaterialSubstitution_FieldIndex.ColorRemappingIndex;
                 }

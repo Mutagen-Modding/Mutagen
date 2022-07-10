@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams translationParams)
             where T : struct, Enum
         {
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsEditorOnly,
                 header: translationParams.ConvertToCustom(RecordTypes.OBTF));

@@ -1560,15 +1560,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly LensFlareBinaryCreateTranslation Instance = new LensFlareBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LENS;
-        public static void FillBinaryStructs(
-            ILensFlareInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILensFlareInternal item,
             MutagenFrame frame,

@@ -7,7 +7,7 @@ public interface IMutagenEncodingProvider
     IMutagenEncoding GetEncoding(GameRelease release, Language language);
 }
 
-public class MutagenEncodingProvider : IMutagenEncodingProvider
+public sealed class MutagenEncodingProvider : IMutagenEncodingProvider
 {
     public static readonly MutagenEncodingProvider Instance = new();
     public static readonly IMutagenEncoding _932;

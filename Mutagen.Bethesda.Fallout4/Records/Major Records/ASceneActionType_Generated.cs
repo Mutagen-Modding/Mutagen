@@ -675,11 +675,6 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.SubrecordParse(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: ASceneActionTypeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -915,12 +910,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class ASceneActionTypeBinaryCreateTranslation
     {
         public static readonly ASceneActionTypeBinaryCreateTranslation Instance = new ASceneActionTypeBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IASceneActionType item,
-            MutagenFrame frame)
-        {
-        }
 
     }
 

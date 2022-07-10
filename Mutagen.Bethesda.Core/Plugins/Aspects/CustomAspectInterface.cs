@@ -4,7 +4,7 @@
 /// An attribute that marks an interface as one that should be considered by Source Generator systems
 /// to be a custom Aspect Interface defined by the user
 /// </summary>
-public class CustomAspectInterface : Attribute
+public sealed class CustomAspectInterface : Attribute
 {
     public Type[] KnownTypes;
         

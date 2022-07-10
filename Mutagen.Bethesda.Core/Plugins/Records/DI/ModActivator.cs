@@ -14,7 +14,7 @@ public interface IModActivator<TMod>
     TMod Activate(ModKey modKey);
 }
 
-public class ModActivator : IModActivator
+public sealed class ModActivator : IModActivator
 {
     private readonly IGameReleaseContext _gameRelease;
 
@@ -31,7 +31,7 @@ public class ModActivator : IModActivator
     }
 }
 
-public class ModActivator<TMod> : IModActivator<TMod>
+public sealed class ModActivator<TMod> : IModActivator<TMod>
     where TMod : IModGetter
 {
     private readonly IGameReleaseContext _gameRelease;

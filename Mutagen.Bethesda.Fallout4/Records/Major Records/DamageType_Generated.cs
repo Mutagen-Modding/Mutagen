@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    ADamageTypeBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1538,15 +1538,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly DamageTypeBinaryCreateTranslation Instance = new DamageTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DMGT;
-        public static void FillBinaryStructs(
-            IDamageTypeInternal item,
-            MutagenFrame frame)
-        {
-            ADamageTypeBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IDamageTypeInternal item,
             MutagenFrame frame,

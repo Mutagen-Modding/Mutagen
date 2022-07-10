@@ -754,7 +754,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: IconsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: IconsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1048,12 +1047,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class IconsBinaryCreateTranslation
     {
         public static readonly IconsBinaryCreateTranslation Instance = new IconsBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IIcons item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IIcons item,

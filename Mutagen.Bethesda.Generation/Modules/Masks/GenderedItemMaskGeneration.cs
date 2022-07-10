@@ -1,6 +1,6 @@
 using Loqui.Generation;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Plugins.Records;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 

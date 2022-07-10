@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-internal class RecordTypeBinaryTranslation : PrimitiveBinaryTranslation<RecordType, MutagenFrame, MutagenWriter>
+internal sealed class RecordTypeBinaryTranslation : PrimitiveBinaryTranslation<RecordType, MutagenFrame, MutagenWriter>
 {
     public static readonly RecordTypeBinaryTranslation Instance = new();
     public override int ExpectedLength => 4;

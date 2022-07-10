@@ -2316,15 +2316,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly LandscapeBinaryCreateTranslation Instance = new LandscapeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LAND;
-        public static void FillBinaryStructs(
-            ILandscapeInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILandscapeInternal item,
             MutagenFrame frame,

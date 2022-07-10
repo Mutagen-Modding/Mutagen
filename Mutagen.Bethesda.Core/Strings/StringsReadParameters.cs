@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Strings;
 /// <summary>
 /// Class to specify string reading behaviors when importing a mod
 /// </summary>
-public class StringsReadParameters
+public sealed class StringsReadParameters
 {
     /// <summary>
     /// If specified, normal string folder path locations will be ignored in favor of the path provided.

@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Mutagen.Bethesda.Plugins.Converters;
 
-public class FormKeyTypeConverter : TypeConverter
+public sealed class FormKeyTypeConverter : TypeConverter
 {
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
     {

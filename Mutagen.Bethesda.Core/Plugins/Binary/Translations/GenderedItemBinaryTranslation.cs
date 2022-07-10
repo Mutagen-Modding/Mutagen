@@ -7,7 +7,7 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-internal class GenderedItemBinaryTranslation
+internal sealed class GenderedItemBinaryTranslation
 {
     public static GenderedItem<TItem> Parse<TItem>(
         MutagenFrame frame,

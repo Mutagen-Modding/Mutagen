@@ -5,7 +5,7 @@ public interface ICreationClubRawListingsReader
     IEnumerable<ILoadOrderListingGetter> Read(Stream stream);
 }
 
-public class CreationClubRawListingsReader : ICreationClubRawListingsReader
+public sealed class CreationClubRawListingsReader : ICreationClubRawListingsReader
 {
     public IEnumerable<ILoadOrderListingGetter> Read(Stream stream)
     {

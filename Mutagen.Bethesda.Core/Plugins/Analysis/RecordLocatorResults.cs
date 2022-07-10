@@ -3,7 +3,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Analysis;
 
-public class RecordLocatorResults
+public sealed class RecordLocatorResults
 {
     private readonly Dictionary<FormKey, (RangeInt64 Range, IEnumerable<GroupLocationMarker> GroupPositions, RecordType Record)> _fromFormKeys;
 

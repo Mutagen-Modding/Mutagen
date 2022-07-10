@@ -5,7 +5,7 @@ public interface ITimestampedPluginListingsPreferences
     bool ThrowOnMissingMods { get; }
 }
 
-public class TimestampedPluginListingsPreferences : ITimestampedPluginListingsPreferences
+public sealed class TimestampedPluginListingsPreferences : ITimestampedPluginListingsPreferences
 {
     public bool ThrowOnMissingMods { get; init; }
 }

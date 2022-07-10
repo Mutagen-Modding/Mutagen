@@ -1880,15 +1880,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly MoveableStaticBinaryCreateTranslation Instance = new MoveableStaticBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MSTT;
-        public static void FillBinaryStructs(
-            IMoveableStaticInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMoveableStaticInternal item,
             MutagenFrame frame,

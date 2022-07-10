@@ -1259,7 +1259,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
                     item.AliasID = dataFrame.ReadInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.Create = EnumBinaryTranslation<CreateReferenceToObject.CreateEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 2);

@@ -4,7 +4,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 
-public class AlignmentStraightRecord : AlignmentRule 
+public sealed class AlignmentStraightRecord : AlignmentRule 
 { 
     private RecordType _recordType; 
  

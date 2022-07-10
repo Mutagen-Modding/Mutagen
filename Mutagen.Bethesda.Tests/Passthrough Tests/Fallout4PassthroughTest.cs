@@ -308,6 +308,7 @@ public class Fallout4PassthroughTest : PassthroughTest
             RecordTypes.XLOC,
             RecordTypes.XEZN,
             RecordTypes.XNDP,
+            RecordTypes.XLRL,
             AlignmentRepeatedRule.Basic(RecordTypes.XLRT),
             RecordTypes.XIS2,
             RecordTypes.XOWN,

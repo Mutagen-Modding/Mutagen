@@ -1,8 +1,8 @@
 namespace Mutagen.Bethesda.Plugins.Implicit;
 
-public class ImplicitBaseMasters
+public sealed class ImplicitBaseMasters
 {
-    public static readonly ImplicitBaseMasters Instance = new ImplicitBaseMasters();
+    public static readonly ImplicitBaseMasters Instance = new();
 
     private ImplicitBaseMasters()
     {

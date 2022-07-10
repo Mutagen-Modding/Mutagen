@@ -6,7 +6,7 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class Array2dBinaryTranslation<T>
+public sealed class Array2dBinaryTranslation<T>
 {
     public static readonly Array2dBinaryTranslation<T> Instance = new();
 

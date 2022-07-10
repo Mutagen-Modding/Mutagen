@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-internal class LoquiBinaryTranslation<T>
+internal sealed class LoquiBinaryTranslation<T>
     where T : class, ILoquiObjectGetter
 {
     public static readonly LoquiBinaryTranslation<T> Instance = new();
@@ -65,7 +65,7 @@ internal class LoquiBinaryTranslation<T>
     #endregion
 }
 
-internal class LoquiBinaryAsyncTranslation<T>
+internal sealed class LoquiBinaryAsyncTranslation<T>
     where T : class, ILoquiObjectGetter
 {
     public static readonly LoquiBinaryAsyncTranslation<T> Instance = new LoquiBinaryAsyncTranslation<T>();

@@ -1479,15 +1479,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly EyesBinaryCreateTranslation Instance = new EyesBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EYES;
-        public static void FillBinaryStructs(
-            IEyesInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IEyesInternal item,
             MutagenFrame frame,

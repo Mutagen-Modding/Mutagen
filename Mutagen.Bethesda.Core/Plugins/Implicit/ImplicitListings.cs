@@ -1,8 +1,8 @@
 namespace Mutagen.Bethesda.Plugins.Implicit;
 
-public class ImplicitListings
+public sealed class ImplicitListings
 {
-    public static readonly ImplicitListings Instance = new ImplicitListings();
+    public static readonly ImplicitListings Instance = new();
 
     private ImplicitListings()
     {

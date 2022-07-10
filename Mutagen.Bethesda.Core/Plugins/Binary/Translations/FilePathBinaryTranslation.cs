@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class FilePathBinaryTranslation
+public sealed class FilePathBinaryTranslation
 {
     public static readonly FilePathBinaryTranslation Instance = new();
 

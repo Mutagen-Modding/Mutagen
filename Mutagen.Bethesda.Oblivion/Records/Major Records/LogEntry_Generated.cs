@@ -931,7 +931,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LogEntryBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: LogEntryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1345,12 +1344,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class LogEntryBinaryCreateTranslation
     {
         public static readonly LogEntryBinaryCreateTranslation Instance = new LogEntryBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ILogEntry item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ILogEntry item,

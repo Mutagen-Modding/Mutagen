@@ -3,12 +3,12 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Meta;
 
-public record GroupCellConstants(int TopGroupType, int[] SubTypes);
-public record GroupWorldConstants(int TopGroupType, int[] CellGroupTypes, int[] CellSubGroupTypes);
-public record GroupTopicConstants(int TopGroupType);
-public record GroupQuestConstants(int TopGroupType);
+public sealed record GroupCellConstants(int TopGroupType, int[] SubTypes);
+public sealed record GroupWorldConstants(int TopGroupType, int[] CellGroupTypes, int[] CellSubGroupTypes);
+public sealed record GroupTopicConstants(int TopGroupType);
+public sealed record GroupQuestConstants(int TopGroupType);
 
-public record GroupNesting(int GroupType, params GroupNesting[] Underneath)
+public sealed record GroupNesting(int GroupType, params GroupNesting[] Underneath)
 {
     public bool HasTopLevelRecordType { get; init; }
 
@@ -19,7 +19,7 @@ public record GroupNesting(int GroupType, params GroupNesting[] Underneath)
     }
 }
 
-public record GroupConstants : RecordHeaderConstants
+public sealed record GroupConstants : RecordHeaderConstants
 {
     public GroupCellConstants Cell { get; init; }
     public GroupWorldConstants World { get; init; }

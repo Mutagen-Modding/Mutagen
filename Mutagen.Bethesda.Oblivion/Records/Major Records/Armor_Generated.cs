@@ -2328,15 +2328,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly ArmorBinaryCreateTranslation Instance = new ArmorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ARMO;
-        public static void FillBinaryStructs(
-            IArmorInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IArmorInternal item,
             MutagenFrame frame,

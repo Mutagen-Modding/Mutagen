@@ -11,7 +11,7 @@ public interface ICreationClubLiveListingsFileReader
     IObservable<IChangeSet<ILoadOrderListingGetter>> Get(out IObservable<ErrorResponse> state);
 }
 
-public class CreationClubLiveListingsFileReader : ICreationClubLiveListingsFileReader
+public sealed class CreationClubLiveListingsFileReader : ICreationClubLiveListingsFileReader
 {
     private readonly IFileSystem _fileSystem;
     public ICreationClubRawListingsReader ListingsReader { get; }

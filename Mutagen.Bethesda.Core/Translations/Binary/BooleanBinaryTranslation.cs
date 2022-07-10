@@ -3,11 +3,10 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 
-public class BooleanBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<bool, TReader, TWriter>
+public sealed class BooleanBinaryTranslation<TReader> : PrimitiveBinaryTranslation<bool, TReader, MutagenWriter>
     where TReader : IBinaryReadStream
-    where TWriter : MutagenWriter
 {
-    public readonly static BooleanBinaryTranslation<TReader, TWriter> Instance = new();
+    public static readonly BooleanBinaryTranslation<TReader> Instance = new();
     public override int ExpectedLength => 1;
 
     public override bool Parse(TReader reader)
@@ -15,12 +14,12 @@ public class BooleanBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTransla
         return reader.ReadBoolean();
     }
 
-    public override void Write(TWriter writer, bool item)
+    public override void Write(MutagenWriter writer, bool item)
     {
         writer.Write(item);
     }
 
-    public void Write(TWriter writer, bool item, byte byteLength)
+    public void Write(MutagenWriter writer, bool item, byte byteLength)
     {
         writer.Write(item, byteLength);
     }

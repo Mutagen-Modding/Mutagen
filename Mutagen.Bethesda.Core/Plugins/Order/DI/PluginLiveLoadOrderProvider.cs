@@ -11,7 +11,7 @@ public interface IPluginLiveLoadOrderProvider : ISomeLiveLoadOrderProvider
 {
 }
 
-public class PluginLiveLoadOrderProvider : IPluginLiveLoadOrderProvider
+public sealed class PluginLiveLoadOrderProvider : IPluginLiveLoadOrderProvider
 {
     private readonly IFileSystem _fileSystem;
     private readonly IPluginListingsProvider _listingsProvider;

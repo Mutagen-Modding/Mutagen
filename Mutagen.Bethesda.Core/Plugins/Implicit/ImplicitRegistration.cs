@@ -1,6 +1,6 @@
 ﻿namespace Mutagen.Bethesda.Plugins.Implicit;
 
-public record ImplicitRegistration(
+public sealed record ImplicitRegistration(
     GameRelease GameRelease,
     ImplicitModKeyCollection BaseMasters,
     ImplicitModKeyCollection Listings,

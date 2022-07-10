@@ -1312,7 +1312,9 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ShortCircuit((int)QuestObjectiveTarget_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AliasID = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<Quest.TargetFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);

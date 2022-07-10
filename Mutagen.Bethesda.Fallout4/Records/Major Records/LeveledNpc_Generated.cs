@@ -2129,15 +2129,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly LeveledNpcBinaryCreateTranslation Instance = new LeveledNpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVLN;
-        public static void FillBinaryStructs(
-            ILeveledNpcInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILeveledNpcInternal item,
             MutagenFrame frame,

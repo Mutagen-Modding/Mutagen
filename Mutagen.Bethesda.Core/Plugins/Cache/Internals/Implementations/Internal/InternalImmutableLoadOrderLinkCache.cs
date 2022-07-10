@@ -6,7 +6,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal;
 
-internal class InternalImmutableLoadOrderLinkCache
+internal sealed class InternalImmutableLoadOrderLinkCache
 {
     private readonly bool _simple;
     private readonly IReadOnlyList<IModGetter> _listedOrder;

@@ -9,7 +9,7 @@ using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
-internal class GroupListOverlay<T> : IReadOnlyList<T>
+internal sealed class GroupListOverlay<T> : IReadOnlyList<T>
 {
     private readonly IReadOnlyList<int> _locs;
     private readonly ReadOnlyMemorySlice<byte> _data;

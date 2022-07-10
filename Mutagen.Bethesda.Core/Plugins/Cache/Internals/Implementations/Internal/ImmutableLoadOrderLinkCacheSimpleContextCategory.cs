@@ -22,7 +22,7 @@ internal interface IImmutableLoadOrderLinkCacheSimpleContextCategory<TKey>
         Type type);
 }
 
-internal class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : IImmutableLoadOrderLinkCacheSimpleContextCategory<TKey>
+internal sealed class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : IImmutableLoadOrderLinkCacheSimpleContextCategory<TKey>
     where TKey : notnull
 {
     private readonly GameCategory _category;

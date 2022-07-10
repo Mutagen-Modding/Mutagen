@@ -1433,15 +1433,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly AnimationSoundTagSetBinaryCreateTranslation Instance = new AnimationSoundTagSetBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.STAG;
-        public static void FillBinaryStructs(
-            IAnimationSoundTagSetInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAnimationSoundTagSetInternal item,
             MutagenFrame frame,

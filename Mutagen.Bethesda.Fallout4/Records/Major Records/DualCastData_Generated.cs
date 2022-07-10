@@ -1224,15 +1224,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly DualCastDataBinaryCreateTranslation Instance = new DualCastDataBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DUAL;
-        public static void FillBinaryStructs(
-            IDualCastDataInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
     }
 
 }

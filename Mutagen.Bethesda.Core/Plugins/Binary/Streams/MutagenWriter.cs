@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 /// <summary>
 /// A wrapper around IBinaryWriter with extra Mutagen-specific reference data
 /// </summary>
-public class MutagenWriter : IBinaryWriteStream, IDisposable
+public sealed class MutagenWriter : IBinaryWriteStream, IDisposable
 {
     private readonly bool dispose = true;
     private const byte Zero = 0;

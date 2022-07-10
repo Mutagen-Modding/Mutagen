@@ -3,7 +3,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class ExtraLengthHeaderExport : IDisposable
+public sealed class ExtraLengthHeaderExport : IDisposable
 {
     private readonly MemoryTributary _tributary = new();
     private readonly MutagenWriter _writer;

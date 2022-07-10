@@ -1842,15 +1842,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ArtObjectBinaryCreateTranslation Instance = new ArtObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ARTO;
-        public static void FillBinaryStructs(
-            IArtObjectInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IArtObjectInternal item,
             MutagenFrame frame,

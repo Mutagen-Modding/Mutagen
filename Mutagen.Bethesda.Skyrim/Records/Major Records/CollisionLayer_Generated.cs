@@ -1753,15 +1753,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly CollisionLayerBinaryCreateTranslation Instance = new CollisionLayerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.COLL;
-        public static void FillBinaryStructs(
-            ICollisionLayerInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ICollisionLayerInternal item,
             MutagenFrame frame,

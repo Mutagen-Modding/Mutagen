@@ -5,7 +5,7 @@ using Noggog.Utility;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-internal class LoquiBinaryOverlayTranslation<T>
+internal sealed class LoquiBinaryOverlayTranslation<T>
 {
     public delegate T CreateFunc(
         OverlayStream stream,

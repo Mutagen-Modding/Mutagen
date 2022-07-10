@@ -6,7 +6,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class HeaderTranslation
+public static class HeaderTranslation
 {
     public static bool TryParse<TReader>(
         TReader reader,
@@ -203,7 +203,7 @@ public class HeaderTranslation
         return ret;
     }
 
-    protected static int ReadContentLength<TReader>(
+    private static int ReadContentLength<TReader>(
         TReader reader,
         int lengthLength)
         where TReader : IBinaryReadStream
@@ -221,7 +221,7 @@ public class HeaderTranslation
         }
     }
 
-    protected static int GetContentLength<TReader>(
+    private static int GetContentLength<TReader>(
         TReader reader,
         int lengthLength,
         int offset)

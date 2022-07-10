@@ -2099,15 +2099,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly QuestBinaryCreateTranslation Instance = new QuestBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.QUST;
-        public static void FillBinaryStructs(
-            IQuestInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IQuestInternal item,
             MutagenFrame frame,

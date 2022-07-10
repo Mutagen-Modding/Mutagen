@@ -759,6 +759,8 @@ public abstract class Processor
     public async Task RealignStrings(Func<IMutagenReadStream> streamGetter)
     {
         using var stream = streamGetter();
+        var modHeader = stream.GetModHeader();
+        if (!EnumExt.HasFlag(modHeader.Flags, Constants.Localized)) return;
         var outFolder = Path.Combine(TempFolder, "Strings/Processed");
         var language = Language.English;
         using var writer = new StringsWriter(GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(SourcePath)), outFolder, MutagenEncodingProvider.Instance);
@@ -831,10 +833,10 @@ public abstract class Processor
                 {
                     foreach (var overlayStr in langDict.First(100))
                     {
-                        Logging.OnNext($"Unaccounted for string: {overlayStr.Key} {overlayStr.Value}");
+                        Logging.OnNext($"Unaccounted for string: 0x{overlayStr.Key:X} {overlayStr.Value}");
                     }
 
-                    throw new ArgumentException($"String unaccounted for in {source}: {langDict.Keys.First()}");
+                    throw new ArgumentException($"String unaccounted for in {source}: 0x{langDict.Keys.First():X}");
                 }
             }
         }

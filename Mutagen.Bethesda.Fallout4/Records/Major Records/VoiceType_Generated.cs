@@ -1310,15 +1310,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly VoiceTypeBinaryCreateTranslation Instance = new VoiceTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.VTYP;
-        public static void FillBinaryStructs(
-            IVoiceTypeInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IVoiceTypeInternal item,
             MutagenFrame frame,

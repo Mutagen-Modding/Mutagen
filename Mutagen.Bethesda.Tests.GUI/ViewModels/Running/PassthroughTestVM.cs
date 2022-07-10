@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Windows.Input;
 using Noggog;
 
 namespace Mutagen.Bethesda.Tests.GUI;
@@ -16,7 +17,7 @@ public class PassthroughTestVM : ViewModel
     public GroupTestVM Group { get; }
     public PassthroughVM Settings { get; }
 
-    public SourceList<TestVM> Tests = new SourceList<TestVM>();
+    public SourceList<TestVM> Tests = new();
     private readonly IObservableCollection<TestVM> _testsDisplay;
     public IObservableCollection<TestVM> TestsDisplay => _testsDisplay;
 
@@ -36,6 +37,8 @@ public class PassthroughTestVM : ViewModel
 
     [Reactive]
     public TimeSpan? TimeSpent { get; private set; }
+    
+    public ICommand OpenFileLocationCommand { get; }
 
     public PassthroughTestVM(GroupTestVM group, PassthroughVM p)
     {
@@ -83,6 +86,20 @@ public class PassthroughTestVM : ViewModel
                 return notComplete ? TestState.Running : TestState.Complete;
             })
             .ToGuiProperty(this, nameof(State));
+        OpenFileLocationCommand = ReactiveCommand.Create(
+            () =>
+            {
+                try
+                {
+                    Process.Start(new ProcessStartInfo(PassthroughTest.GetTestFolderPath(Name))
+                    {
+                        UseShellExecute = true,
+                    });
+                }
+                catch (Exception)
+                {
+                }
+            });
     }
 
     public async Task Run()

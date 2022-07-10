@@ -1806,15 +1806,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TREE;
-        public static void FillBinaryStructs(
-            ITreeInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ITreeInternal item,
             MutagenFrame frame,

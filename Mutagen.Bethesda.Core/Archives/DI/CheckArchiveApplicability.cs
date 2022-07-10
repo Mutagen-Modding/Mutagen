@@ -18,7 +18,7 @@ public interface ICheckArchiveApplicability
     bool IsApplicable(ModKey modKey, FileName archiveFileName);
 }
 
-public class CheckArchiveApplicability : ICheckArchiveApplicability
+public sealed class CheckArchiveApplicability : ICheckArchiveApplicability
 {
     private readonly IArchiveExtensionProvider _archiveExtensionProvider;
 

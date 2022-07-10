@@ -3572,7 +3572,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.LocationReference,
                 header: translationParams.ConvertToCustom(RecordTypes.XLRL));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsIgnoredBySandbox,
                 header: translationParams.ConvertToCustom(RecordTypes.XIS2));
@@ -3621,7 +3621,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.MultiboundReference,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBR));
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.IsIgnoredBySandbox2,
                 header: translationParams.ConvertToCustom(RecordTypes.XIBS));
@@ -3709,15 +3709,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly PlacedNpcBinaryCreateTranslation Instance = new PlacedNpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ACHR;
-        public static void FillBinaryStructs(
-            IPlacedNpcInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IPlacedNpcInternal item,
             MutagenFrame frame,

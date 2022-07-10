@@ -3,9 +3,9 @@ using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class DateTimeBinaryTranslation : PrimitiveBinaryTranslation<DateTime, MutagenFrame, MutagenWriter>
+public sealed class DateTimeBinaryTranslation : PrimitiveBinaryTranslation<DateTime, MutagenFrame, MutagenWriter>
 {
-    public readonly static DateTimeBinaryTranslation Instance = new DateTimeBinaryTranslation();
+    public static readonly DateTimeBinaryTranslation Instance = new DateTimeBinaryTranslation();
     public override int ExpectedLength => 4;
 
     public override DateTime Parse(MutagenFrame reader)

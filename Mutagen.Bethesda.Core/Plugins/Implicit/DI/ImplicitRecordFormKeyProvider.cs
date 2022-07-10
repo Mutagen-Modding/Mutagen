@@ -7,7 +7,7 @@ public interface IImplicitRecordFormKeyProvider
     IReadOnlyCollection<FormKey> RecordFormKeys { get; }
 }
 
-public class ImplicitRecordFormKeyProvider : IImplicitRecordFormKeyProvider
+public sealed class ImplicitRecordFormKeyProvider : IImplicitRecordFormKeyProvider
 {
     private readonly IGameReleaseContext _gameRelease;
 

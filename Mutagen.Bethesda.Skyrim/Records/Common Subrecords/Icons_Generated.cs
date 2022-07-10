@@ -754,7 +754,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: IconsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: IconsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1044,12 +1043,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class IconsBinaryCreateTranslation
     {
         public static readonly IconsBinaryCreateTranslation Instance = new IconsBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IIcons item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IIcons item,

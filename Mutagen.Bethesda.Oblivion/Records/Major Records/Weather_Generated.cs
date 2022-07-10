@@ -2168,15 +2168,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly WeatherBinaryCreateTranslation Instance = new WeatherBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WTHR;
-        public static void FillBinaryStructs(
-            IWeatherInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IWeatherInternal item,
             MutagenFrame frame,

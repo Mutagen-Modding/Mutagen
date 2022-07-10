@@ -7,7 +7,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal;
 
-internal class ImmutableLoadOrderLinkCacheCategory<TKey>
+internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
     where TKey : notnull
 {
     private readonly GameCategory _gameCategory;

@@ -2,7 +2,7 @@
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
-public class ImmutableManyListWrapper<TValue> : IReadOnlyList<TValue>
+public sealed class ImmutableManyListWrapper<TValue> : IReadOnlyList<TValue>
 {
     private int _count;
     private readonly List<IReadOnlyList<TValue>> _listOfLists = new();

@@ -14,7 +14,7 @@ public interface ICreationClubListingsProvider : IListingsProvider
     public IEnumerable<IModListingGetter> Get(bool throwIfMissing);
 }
 
-public class CreationClubListingsProvider : ICreationClubListingsProvider
+public sealed class CreationClubListingsProvider : ICreationClubListingsProvider
 {
     private readonly IFileSystem _fileSystem;
     public IDataDirectoryProvider DirectoryProvider { get; }

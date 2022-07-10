@@ -1814,15 +1814,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly DialogViewBinaryCreateTranslation Instance = new DialogViewBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DLVW;
-        public static void FillBinaryStructs(
-            IDialogViewInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IDialogViewInternal item,
             MutagenFrame frame,

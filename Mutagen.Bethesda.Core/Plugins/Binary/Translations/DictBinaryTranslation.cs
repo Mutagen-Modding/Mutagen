@@ -4,7 +4,7 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class DictBinaryTranslation<TValue>
+public sealed class DictBinaryTranslation<TValue>
 {
     public static readonly DictBinaryTranslation<TValue> Instance = new();
 

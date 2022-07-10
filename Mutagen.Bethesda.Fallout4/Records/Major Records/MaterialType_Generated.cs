@@ -1808,15 +1808,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly MaterialTypeBinaryCreateTranslation Instance = new MaterialTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MATT;
-        public static void FillBinaryStructs(
-            IMaterialTypeInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMaterialTypeInternal item,
             MutagenFrame frame,

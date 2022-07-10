@@ -973,7 +973,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: QuestLogEntryBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: QuestLogEntryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1376,12 +1375,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class QuestLogEntryBinaryCreateTranslation
     {
         public static readonly QuestLogEntryBinaryCreateTranslation Instance = new QuestLogEntryBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IQuestLogEntry item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IQuestLogEntry item,

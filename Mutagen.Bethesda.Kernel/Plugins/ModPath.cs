@@ -3,7 +3,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins;
 
-public record ModPath : IModKeyed
+public sealed record ModPath : IModKeyed
 {
     public static readonly ModPath Empty = new ModPath(ModKey.Null, string.Empty);
         

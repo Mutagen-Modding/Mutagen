@@ -4,7 +4,7 @@ public interface ILoadOrderListingsProvider : IListingsProvider
 {
 }
 
-public class LoadOrderListingsProvider : ILoadOrderListingsProvider
+public sealed class LoadOrderListingsProvider : ILoadOrderListingsProvider
 {
     private readonly IOrderListings _orderListings;
     private readonly IImplicitListingsProvider _implicitListingsProvider;
@@ -35,7 +35,7 @@ public class LoadOrderListingsProvider : ILoadOrderListingsProvider
     }
 }
 
-public class LoadOrderListingsInjection : ILoadOrderListingsProvider
+public sealed class LoadOrderListingsInjection : ILoadOrderListingsProvider
 {
     private ILoadOrderListingGetter[] _listings;
         

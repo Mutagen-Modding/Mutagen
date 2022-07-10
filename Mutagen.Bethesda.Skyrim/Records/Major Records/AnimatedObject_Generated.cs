@@ -1458,15 +1458,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly AnimatedObjectBinaryCreateTranslation Instance = new AnimatedObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ANIO;
-        public static void FillBinaryStructs(
-            IAnimatedObjectInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAnimatedObjectInternal item,
             MutagenFrame frame,

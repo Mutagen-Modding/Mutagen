@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim
                 maleMarker: RecordTypes.MCHT,
                 femaleMarker: RecordTypes.FCHT,
                 transl: StringBinaryTranslation.Instance.WriteNullable);
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
                 writer: writer,
                 item: item.IsFamily,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA),
@@ -1485,15 +1485,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly AssociationTypeBinaryCreateTranslation Instance = new AssociationTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ASTP;
-        public static void FillBinaryStructs(
-            IAssociationTypeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAssociationTypeInternal item,
             MutagenFrame frame,
@@ -1531,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IsFamily = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.IsFamily = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         byteLength: 4);
                     return (int)AssociationType_FieldIndex.IsFamily;

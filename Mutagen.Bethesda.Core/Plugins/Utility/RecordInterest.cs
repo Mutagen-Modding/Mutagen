@@ -2,7 +2,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Utility;
 
-public class RecordInterest
+public sealed class RecordInterest
 {
     public ICollection<RecordType> InterestingTypes { get; }
     public ICollection<RecordType> UninterestingTypes { get; }

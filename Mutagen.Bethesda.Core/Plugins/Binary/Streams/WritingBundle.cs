@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 /// <summary>
 /// Class containing all the extra meta bits for writing
 /// </summary>
-public record WritingBundle(GameConstants Constants)
+public sealed record WritingBundle(GameConstants Constants)
 {
     /// <summary>
     /// Game constants meta object to reference for header length measurements

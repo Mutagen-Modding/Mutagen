@@ -3,7 +3,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
-internal class OverlayStream : IMutagenReadStream
+internal sealed class OverlayStream : IMutagenReadStream
 {
     private readonly BinaryMemoryReadStream _readStream;
     public ParsingBundle MetaData { get; }

@@ -2444,15 +2444,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly DialogItemBinaryCreateTranslation Instance = new DialogItemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.INFO;
-        public static void FillBinaryStructs(
-            IDialogItemInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IDialogItemInternal item,
             MutagenFrame frame,

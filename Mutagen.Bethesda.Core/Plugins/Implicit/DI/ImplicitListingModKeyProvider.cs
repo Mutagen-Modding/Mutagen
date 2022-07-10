@@ -7,7 +7,7 @@ public interface IImplicitListingModKeyProvider
     IReadOnlyCollection<ModKey> Listings { get; }
 }
 
-public class ImplicitListingModKeyProvider : IImplicitListingModKeyProvider
+public sealed class ImplicitListingModKeyProvider : IImplicitListingModKeyProvider
 {
     private readonly IGameReleaseContext _gameRelease;
 

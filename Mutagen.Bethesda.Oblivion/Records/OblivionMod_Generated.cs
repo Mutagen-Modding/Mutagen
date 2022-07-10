@@ -25,6 +25,7 @@ using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Loqui;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
@@ -5054,7 +5055,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 importMask: importMask,
-                fillStructs: OblivionModBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: OblivionModBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -11038,12 +11038,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class OblivionModBinaryCreateTranslation
     {
         public static readonly OblivionModBinaryCreateTranslation Instance = new OblivionModBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IOblivionMod item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IOblivionMod item,

@@ -29,7 +29,6 @@ public class TypeOptionSolidifier : GenerationModule
         sb.AppendLine("using System.Collections.Generic;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Cache;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
-        sb.AppendLine("using Mutagen.Bethesda.Plugins.Order.Internals;");
         sb.AppendLine();
         using (var n = sb.Namespace(proto.DefaultNamespace, fileScoped: false))
         {

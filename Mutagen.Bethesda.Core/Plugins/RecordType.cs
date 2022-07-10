@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Plugins;
 /// These are used commonly in the binary format to delineate records and subrecords.
 /// </summary>
 [DebuggerDisplay("{Type}")]
-public struct RecordType : IEquatable<RecordType>, IEquatable<string>
+public readonly struct RecordType : IEquatable<RecordType>, IEquatable<string>
 {
     /// <summary>
     /// The common length for all RecordTypes

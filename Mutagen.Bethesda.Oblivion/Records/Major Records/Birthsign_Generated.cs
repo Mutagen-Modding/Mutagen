@@ -1629,15 +1629,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly BirthsignBinaryCreateTranslation Instance = new BirthsignBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BSGN;
-        public static void FillBinaryStructs(
-            IBirthsignInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IBirthsignInternal item,
             MutagenFrame frame,

@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Skyrim
                         writer: subWriter,
                         item: subItem);
                 });
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
                 writer: writer,
                 item: item.UseAllParents,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA),
@@ -1511,15 +1511,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly EquipTypeBinaryCreateTranslation Instance = new EquipTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EQUP;
-        public static void FillBinaryStructs(
-            IEquipTypeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IEquipTypeInternal item,
             MutagenFrame frame,
@@ -1545,7 +1536,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseAllParents = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.UseAllParents = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         byteLength: 4);
                     return (int)EquipType_FieldIndex.UseAllParents;

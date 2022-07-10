@@ -931,7 +931,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PatrolBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: PatrolBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1322,12 +1321,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class PatrolBinaryCreateTranslation
     {
         public static readonly PatrolBinaryCreateTranslation Instance = new PatrolBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IPatrol item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IPatrol item,

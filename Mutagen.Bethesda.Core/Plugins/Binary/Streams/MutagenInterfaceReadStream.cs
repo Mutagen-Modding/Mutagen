@@ -2,7 +2,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 
-public class MutagenInterfaceReadStream : IMutagenReadStream
+public sealed class MutagenInterfaceReadStream : IMutagenReadStream
 {
     private readonly IBinaryReadStream _readStream;
 

@@ -1428,15 +1428,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly AudioEffectChainBinaryCreateTranslation Instance = new AudioEffectChainBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AECH;
-        public static void FillBinaryStructs(
-            IAudioEffectChainInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAudioEffectChainInternal item,
             MutagenFrame frame,

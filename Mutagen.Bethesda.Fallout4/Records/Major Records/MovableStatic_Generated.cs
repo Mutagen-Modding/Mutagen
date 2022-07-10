@@ -2400,7 +2400,7 @@ namespace Mutagen.Bethesda.Fallout4
                         writer: subWriter,
                         translationParams: conv);
                 });
-            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.Write(
                 writer: writer,
                 item: item.OnLocalMap,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA));
@@ -2481,15 +2481,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly MovableStaticBinaryCreateTranslation Instance = new MovableStaticBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MSTT;
-        public static void FillBinaryStructs(
-            IMovableStaticInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMovableStaticInternal item,
             MutagenFrame frame,

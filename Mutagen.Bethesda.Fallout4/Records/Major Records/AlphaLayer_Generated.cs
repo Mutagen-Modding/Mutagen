@@ -699,7 +699,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: AlphaLayerBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: AlphaLayerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         

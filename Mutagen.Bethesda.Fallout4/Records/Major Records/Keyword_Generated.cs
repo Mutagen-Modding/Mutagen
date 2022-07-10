@@ -1715,15 +1715,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly KeywordBinaryCreateTranslation Instance = new KeywordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.KYWD;
-        public static void FillBinaryStructs(
-            IKeywordInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IKeywordInternal item,
             MutagenFrame frame,

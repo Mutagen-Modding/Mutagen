@@ -24,7 +24,7 @@ internal interface IImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter,
         Type type);
 }
 
-internal class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, TKey> : IImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, TKey>
+internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, TKey> : IImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, TKey>
     where TKey : notnull
     where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TMod, TModGetter>

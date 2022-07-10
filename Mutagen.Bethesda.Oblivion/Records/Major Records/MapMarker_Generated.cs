@@ -896,7 +896,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MapMarkerBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: MapMarkerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1251,12 +1250,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class MapMarkerBinaryCreateTranslation
     {
         public static readonly MapMarkerBinaryCreateTranslation Instance = new MapMarkerBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IMapMarker item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IMapMarker item,

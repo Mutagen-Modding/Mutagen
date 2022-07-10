@@ -1229,15 +1229,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly LensFlareBinaryCreateTranslation Instance = new LensFlareBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LENS;
-        public static void FillBinaryStructs(
-            ILensFlareInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
     }
 
 }

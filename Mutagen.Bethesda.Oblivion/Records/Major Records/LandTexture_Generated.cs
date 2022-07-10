@@ -1645,15 +1645,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly LandTextureBinaryCreateTranslation Instance = new LandTextureBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LTEX;
-        public static void FillBinaryStructs(
-            ILandTextureInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILandTextureInternal item,
             MutagenFrame frame,

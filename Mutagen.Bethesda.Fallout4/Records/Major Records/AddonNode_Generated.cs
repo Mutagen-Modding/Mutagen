@@ -1931,7 +1931,9 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
                     item.MasterParticleSystemCap = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.Flags = EnumBinaryTranslation<AddonNode.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 2);

@@ -3,7 +3,7 @@ namespace Mutagen.Bethesda.Plugins.Meta;
 /// <summary>
 /// Reference for Major Record alignment and length constants
 /// </summary>
-public record MajorRecordConstants : RecordHeaderConstants
+public sealed record MajorRecordConstants : RecordHeaderConstants
 {
     /// <summary>
     /// Offset in the header where flags are located

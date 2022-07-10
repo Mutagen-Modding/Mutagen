@@ -4606,6 +4606,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.BenchType = EnumBinaryTranslation<Furniture.BenchTypes, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
@@ -4614,6 +4615,7 @@ namespace Mutagen.Bethesda.Fallout4
                         item.WBDTDataTypeState |= Furniture.WBDTDataType.Break0;
                         return (int)Furniture_FieldIndex.BenchType;
                     }
+                    if (dataFrame.Remaining < 1) return null;
                     item.UsesSkill = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);

@@ -7398,143 +7398,243 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Unknown = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.MembraneSourceBlendMode = EnumBinaryTranslation<EffectShader.BlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.MembraneBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.MembraneZTest = EnumBinaryTranslation<EffectShader.ZTest, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillColorKey1 = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillAlphaFadeInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillFullAlphaTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillFadeOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillPersistentAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillAlphaPulseAmplitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillAlphaPulseFrequency = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillTextureAnimationSpeedU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillTextureAnimationSpeedV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeEffectFallOff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeEffectColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeEffectAlphaFadeInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeEffectFullAlphaTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeEffectAlphaFadeOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeEffectPersistentAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeEffectAlphaPulseAmplitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeEffectAlphaPulseFrequency = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillFullAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeEffectFullAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.MembraneDestBlendMode = EnumBinaryTranslation<EffectShader.BlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleSourceBlendMode = EnumBinaryTranslation<EffectShader.BlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleZTest = EnumBinaryTranslation<EffectShader.ZTest, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleDestBlendMode = EnumBinaryTranslation<EffectShader.BlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleBirthRampUpTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleFullBirthTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleBirthRampDownTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleFullBirthRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticlePeristentCount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleLifetime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleLifetimePlusMinus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleInitialSpeedAlongNormal = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAccelerationAlongNormal = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleInitialVelocity1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleInitialVelocity2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleInitialVelocity3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAcceleration1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAcceleration2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAcceleration3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleScaleKey1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleScaleKey2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleScaleKey1Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleScaleKey2Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorKey1 = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorKey2 = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorKey3 = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorKey1Alpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorKey2Alpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorKey3Alpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorKey1Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorKey2Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorKey3Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleInitialSpeedAlongNormalPlusMinus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleInitialRotationDegree = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleInitialRotationDegreePlusMinus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleRotationSpeedDegreePerSec = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleRotationSpeedDegreePerSecPlusMinus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AddonModels.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.HolesStartTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.HolesEndTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.HolesStartValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.HolesEndValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeWidth = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.EdgeColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ExplosionWindSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.TextureCountU = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.TextureCountV = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.AddonModelsFadeInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AddonModelsFadeOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AddonModelsScaleStart = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AddonModelsScaleEnd = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AddonModelsScaleInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AddonModelsScaleOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break0;
                         return (int)EffectShader_FieldIndex.AddonModelsScaleOutTime;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.AmbientSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break1;
                         return (int)EffectShader_FieldIndex.AmbientSound;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillColorKey2 = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillColorKey3 = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillColorKey1Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillColorKey2Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillColorKey3Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillColorKey1Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillColorKey2Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillColorKey3Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break2;
                         return (int)EffectShader_FieldIndex.FillColorKey3Time;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.ColorScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.BirthPositionOffset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.BirthPositionOffsetRangePlusMinus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAnimatedStartFrame = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAnimatedStartFrameVariation = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAnimatedEndFrame = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAnimatedLoopStartFrame = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAnimatedLoopStartVariation = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAnimatedFrameCount = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleAnimatedFrameCountVariation = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<EffectShader.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillTextureScaleU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FillTextureScaleV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break3;
                         return (int)EffectShader_FieldIndex.FillTextureScaleV;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.SceneGraphEmitDepthLimit = dataFrame.ReadUInt32();
                     return (int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit;
                 }

@@ -1839,15 +1839,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly CameraPathBinaryCreateTranslation Instance = new CameraPathBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CPTH;
-        public static void FillBinaryStructs(
-            ICameraPathInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ICameraPathInternal item,
             MutagenFrame frame,

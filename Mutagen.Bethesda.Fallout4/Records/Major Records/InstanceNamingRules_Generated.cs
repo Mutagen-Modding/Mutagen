@@ -1501,15 +1501,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly InstanceNamingRulesBinaryCreateTranslation Instance = new InstanceNamingRulesBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.INNR;
-        public static void FillBinaryStructs(
-            IInstanceNamingRulesInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IInstanceNamingRulesInternal item,
             MutagenFrame frame,

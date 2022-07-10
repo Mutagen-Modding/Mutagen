@@ -814,7 +814,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LocationAliasReferenceBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: LocationAliasReferenceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1128,12 +1127,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class LocationAliasReferenceBinaryCreateTranslation
     {
         public static readonly LocationAliasReferenceBinaryCreateTranslation Instance = new LocationAliasReferenceBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ILocationAliasReference item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ILocationAliasReference item,

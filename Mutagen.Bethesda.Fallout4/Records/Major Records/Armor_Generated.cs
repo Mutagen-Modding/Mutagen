@@ -4374,8 +4374,11 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Value = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Health = dataFrame.ReadUInt32();
                     return (int)Armor_FieldIndex.Health;
                 }
@@ -4383,9 +4386,13 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
                     item.ArmorRating = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.BaseAddonIndex = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.StaggerRating = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.Unknown = dataFrame.ReadUInt16();
                     return (int)Armor_FieldIndex.Unknown;
                 }

@@ -14,7 +14,7 @@ public interface IPluginListingsParser
     IEnumerable<ILoadOrderListingGetter> Parse(Stream stream);
 }
 
-public class PluginListingsParser : IPluginListingsParser
+public sealed class PluginListingsParser : IPluginListingsParser
 {
     private readonly ILoadOrderListingParser _listingParser;
 

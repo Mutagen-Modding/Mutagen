@@ -686,6 +686,11 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            PluginUtilityTranslation.SubrecordParse(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: APackageTargetBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion

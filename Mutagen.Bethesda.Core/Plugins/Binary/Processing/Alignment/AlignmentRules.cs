@@ -2,7 +2,7 @@
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 
-public class AlignmentRules
+public sealed class AlignmentRules
 {
     public Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>> Alignments = new();
     public Dictionary<RecordType, IEnumerable<RecordType>> StartMarkers = new();

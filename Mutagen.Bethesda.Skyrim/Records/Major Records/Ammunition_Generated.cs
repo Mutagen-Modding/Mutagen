@@ -2809,17 +2809,22 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Projectile.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<Ammunition.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Damage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Value = dataFrame.ReadUInt32();
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Ammunition.DATADataType.Break0;
                         return (int)Ammunition_FieldIndex.Value;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     if (frame.MetaData.FormVersion!.Value >= 44)
                     {
                         item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);

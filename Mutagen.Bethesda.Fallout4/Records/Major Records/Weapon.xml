@@ -97,7 +97,7 @@
       <FormLink name="AimModel" refName="AimModel" recordType="WAMD" />
       <FormLink name="Zoom" refName="Zoom" recordType="WZMD" />
       <FormLink name="Template" refName="Weapon" recordType="CNAM" />
-      <RefDirect name="DamageType" refName="WeaponDamageType" />
+      <RefList name="DamageTypes" refName="WeaponDamageType" recordType="DAMA" />
       <String name="Filter" recordType="FLTR" />
       <Enum name="MeleeSpeed" recordType="MASE" enumName="Weapon.MeleeSpeeds" />
     </Fields>
@@ -110,7 +110,7 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
-  <Object name="WeaponDamageType" recordType="DAMA" objType="Subrecord" GUID="a188e5af-64a3-40af-8022-3898f4d59cdf" ID="337">
+  <Object name="WeaponDamageType" objType="Subrecord" GUID="a188e5af-64a3-40af-8022-3898f4d59cdf" ID="337">
     <Fields>
       <FormLink name="DamageType" refName="DamageType" />
       <UInt32 name="Amount" />

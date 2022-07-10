@@ -5,7 +5,7 @@ public interface IEnabledPluginListingsProvider
     IEnumerable<ILoadOrderListingGetter> Get();
 }
 
-public class EnabledPluginListingsProvider : IEnabledPluginListingsProvider, IListingsProvider
+public sealed class EnabledPluginListingsProvider : IEnabledPluginListingsProvider, IListingsProvider
 {
     public IPluginRawListingsReader Reader { get; }
     public IPluginListingsPathProvider PluginListingsPath { get; }

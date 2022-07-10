@@ -1315,15 +1315,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly VoiceTypeBinaryCreateTranslation Instance = new VoiceTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.VTYP;
-        public static void FillBinaryStructs(
-            IVoiceTypeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IVoiceTypeInternal item,
             MutagenFrame frame,

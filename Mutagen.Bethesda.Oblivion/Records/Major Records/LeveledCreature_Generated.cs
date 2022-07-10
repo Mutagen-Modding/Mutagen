@@ -1681,15 +1681,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly LeveledCreatureBinaryCreateTranslation Instance = new LeveledCreatureBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVLC;
-        public static void FillBinaryStructs(
-            ILeveledCreatureInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILeveledCreatureInternal item,
             MutagenFrame frame,

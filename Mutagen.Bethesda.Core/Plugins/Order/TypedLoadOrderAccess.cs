@@ -1,16 +1,16 @@
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Plugins.Order.Internals;
+namespace Mutagen.Bethesda.Plugins.Order;
 
-public struct TypedLoadOrderAccess<TMod, TModGetter, TMajor, TMajorGetter>
+public readonly struct TypedLoadOrderAccess<TMod, TModGetter, TMajor, TMajorGetter>
     where TModGetter : IModGetter
     where TMod : IMod, TModGetter
     where TMajor : class, IMajorRecord, TMajorGetter
     where TMajorGetter : class, IMajorRecordGetter
 {
-    private Func<bool, IEnumerable<TMajorGetter>> _winningOverrides;
-    private Func<ILinkCache, bool, IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>> _winningContextOverrides;
+    private readonly Func<bool, IEnumerable<TMajorGetter>> _winningOverrides;
+    private readonly Func<ILinkCache, bool, IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>> _winningContextOverrides;
 
     public TypedLoadOrderAccess(
         Func<bool, IEnumerable<TMajorGetter>> winningOverrides,
@@ -40,14 +40,14 @@ public struct TypedLoadOrderAccess<TMod, TModGetter, TMajor, TMajorGetter>
     public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> WinningContextOverrides(ILinkCache linkCache, bool includeDeletedRecords = false) => _winningContextOverrides(linkCache, includeDeletedRecords);
 }
 
-public struct TopLevelTypedLoadOrderAccess<TMod, TModGetter, TMajor, TMajorGetter>
+public readonly struct TopLevelTypedLoadOrderAccess<TMod, TModGetter, TMajor, TMajorGetter>
     where TModGetter : IModGetter
     where TMod : IMod, TModGetter
     where TMajor : class, IMajorRecord, TMajorGetter
     where TMajorGetter : class, IMajorRecordGetter
 {
-    private Func<bool, IEnumerable<TMajorGetter>> _winningOverrides;
-    private Func<ILinkCache, bool, IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>> _winningContextOverrides;
+    private readonly Func<bool, IEnumerable<TMajorGetter>> _winningOverrides;
+    private readonly Func<ILinkCache, bool, IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>> _winningContextOverrides;
 
     public TopLevelTypedLoadOrderAccess(
         Func<bool, IEnumerable<TMajorGetter>> winningOverrides,

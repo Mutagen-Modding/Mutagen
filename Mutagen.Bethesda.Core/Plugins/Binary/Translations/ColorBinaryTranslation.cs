@@ -71,7 +71,7 @@ public static class ColorBinaryTranslationExt
     }
 }
 
-public class ColorBinaryTranslation : PrimitiveBinaryTranslation<Color, MutagenFrame, MutagenWriter>
+public sealed class ColorBinaryTranslation : PrimitiveBinaryTranslation<Color, MutagenFrame, MutagenWriter>
 {
     public readonly static ColorBinaryTranslation Instance = new ColorBinaryTranslation();
     public override int ExpectedLength => 3;

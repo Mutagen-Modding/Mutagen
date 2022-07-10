@@ -2127,15 +2127,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly IdleMarkerBinaryCreateTranslation Instance = new IdleMarkerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IDLM;
-        public static void FillBinaryStructs(
-            IIdleMarkerInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IIdleMarkerInternal item,
             MutagenFrame frame,

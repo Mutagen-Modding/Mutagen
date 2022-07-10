@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Plugins;
 /// FormID should be used sparingly, as it's prone to Mod indexing errors if mishandled.
 /// FormKey is a more preferable struct for normal use.
 /// </summary>
-public struct FormID : IEquatable<FormID>
+public readonly struct FormID : IEquatable<FormID>
 {
     /// <summary>
     /// A static readonly singleton that represents a null FormID (all zeros).

@@ -6,7 +6,7 @@ public interface IIsolatedAbstractInterfaceMapGetter : IInterfaceMapGetter
 {
 }
 
-internal class IsolatedAbstractInterfaceMapper : InterfaceMapGetter, IIsolatedAbstractInterfaceMapGetter
+internal sealed class IsolatedAbstractInterfaceMapper : InterfaceMapGetter, IIsolatedAbstractInterfaceMapGetter
 {
     public static IsolatedAbstractInterfaceMapper AutomaticFactory()
     {

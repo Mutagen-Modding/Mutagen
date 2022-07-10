@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Meta;
 /// <summary> 
 /// Reference for all the alignment and length constants related to a specific game 
 /// </summary> 
-public record GameConstants
+public sealed record GameConstants
 {
     /// <summary> 
     /// Associated game type 

@@ -3717,15 +3717,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly CreatureBinaryCreateTranslation Instance = new CreatureBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CREA;
-        public static void FillBinaryStructs(
-            ICreatureInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ICreatureInternal item,
             MutagenFrame frame,

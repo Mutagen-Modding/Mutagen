@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 /// Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
 /// incorrect if modifications occur on content already cached.
 /// </summary>
-public class ImmutableLoadOrderLinkCache : ILinkCache
+public sealed class ImmutableLoadOrderLinkCache : ILinkCache
 {
     private readonly InternalImmutableLoadOrderLinkCache _cache;
     private readonly IImmutableLoadOrderLinkCacheSimpleContextCategory<FormKey> _formKeyContexts;
@@ -673,7 +673,7 @@ public class ImmutableLoadOrderLinkCache : ILinkCache
 /// </summary>
 /// <typeparam name="TMod">Mod setter type</typeparam>
 /// <typeparam name="TModGetter">Mod getter type</typeparam>
-public class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
+public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
     where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TMod, TModGetter>
 {

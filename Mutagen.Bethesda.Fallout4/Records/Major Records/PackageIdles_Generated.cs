@@ -920,7 +920,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PackageIdlesBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: PackageIdlesBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1317,12 +1316,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class PackageIdlesBinaryCreateTranslation
     {
         public static readonly PackageIdlesBinaryCreateTranslation Instance = new PackageIdlesBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IPackageIdles item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IPackageIdles item,

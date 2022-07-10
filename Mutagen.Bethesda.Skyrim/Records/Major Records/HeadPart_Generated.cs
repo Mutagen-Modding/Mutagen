@@ -2190,15 +2190,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly HeadPartBinaryCreateTranslation Instance = new HeadPartBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.HDPT;
-        public static void FillBinaryStructs(
-            IHeadPartInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IHeadPartInternal item,
             MutagenFrame frame,

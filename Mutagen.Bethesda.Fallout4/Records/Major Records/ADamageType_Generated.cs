@@ -704,6 +704,12 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            PluginUtilityTranslation.MajorRecordParse<IADamageTypeInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: ADamageTypeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ADamageTypeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1129,6 +1135,18 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ADamageTypeBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IADamageTypeGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            ADamageTypeBinaryWriteTranslation.WriteBinaryCustomLogic(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinaryCustomLogicCustom(
             MutagenWriter writer,
             IADamageTypeGetter item);
@@ -1153,7 +1171,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1211,6 +1229,18 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ADamageTypeBinaryCreateTranslation Instance = new ADamageTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
+        public static void FillBinaryStructs(
+            IADamageTypeInternal item,
+            MutagenFrame frame)
+        {
+            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+            ADamageTypeBinaryCreateTranslation.FillBinaryCustomLogicCustom(
+                frame: frame,
+                item: item);
+        }
+
         public static partial void FillBinaryCustomLogicCustom(
             MutagenFrame frame,
             IADamageTypeInternal item);

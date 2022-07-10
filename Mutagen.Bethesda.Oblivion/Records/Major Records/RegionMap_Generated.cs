@@ -684,7 +684,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RegionMapBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionMapBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1037,12 +1036,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class RegionMapBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new static readonly RegionMapBinaryCreateTranslation Instance = new RegionMapBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IRegionMap item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IRegionMap item,

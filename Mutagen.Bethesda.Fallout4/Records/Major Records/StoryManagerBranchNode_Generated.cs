@@ -1498,15 +1498,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly StoryManagerBranchNodeBinaryCreateTranslation Instance = new StoryManagerBranchNodeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SMBN;
-        public static void FillBinaryStructs(
-            IStoryManagerBranchNodeInternal item,
-            MutagenFrame frame)
-        {
-            AStoryManagerNodeBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IStoryManagerBranchNodeInternal item,
             MutagenFrame frame,

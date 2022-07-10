@@ -42,7 +42,7 @@ public class AFormKeyPicker : NoggogControl
         set => SetValue(ScopedTypesProperty, value);
     }
     public static readonly DependencyProperty ScopedTypesProperty = DependencyProperty.Register(nameof(ScopedTypes), typeof(IEnumerable), typeof(AFormKeyPicker),
-        new FrameworkPropertyMetadata(default(IEnumerable), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        new FrameworkPropertyMetadata(default(IEnumerable)));
 
     public bool Found
     {

@@ -571,7 +571,7 @@ public interface ILoadOrder<TListing> : ILoadOrderGetter<TListing>
 /// A container for objects with in a specific load order, that are associated with ModKeys.
 /// LoadOrder does not need to be disposed for proper use, but rather can optionally be disposed of which will dispose any contained items that implement IDisposable
 /// </summary>
-public class LoadOrder<TListing> : ILoadOrder<TListing>
+public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
     where TListing : IModKeyed
 {
     private readonly List<ItemContainer> _byLoadOrder = new();

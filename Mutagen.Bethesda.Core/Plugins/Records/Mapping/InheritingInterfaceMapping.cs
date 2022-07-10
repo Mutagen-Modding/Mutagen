@@ -6,7 +6,7 @@ public interface IInheritingInterfaceMapGetter : IInterfaceMapGetter
 {
 }
 
-internal class InheritingInterfaceMapper : InterfaceMapGetter, IInheritingInterfaceMapGetter
+internal sealed class InheritingInterfaceMapper : InterfaceMapGetter, IInheritingInterfaceMapGetter
 {
     public static InheritingInterfaceMapper AutomaticFactory()
     {

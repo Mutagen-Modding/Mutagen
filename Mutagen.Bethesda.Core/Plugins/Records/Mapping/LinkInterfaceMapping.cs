@@ -6,7 +6,7 @@ public interface ILinkInterfaceMapGetter : IInterfaceMapGetter
 {
 }
 
-internal class LinkInterfaceMapper : InterfaceMapGetter, ILinkInterfaceMapGetter
+internal sealed class LinkInterfaceMapper : InterfaceMapGetter, ILinkInterfaceMapGetter
 {
     public static LinkInterfaceMapper AutomaticFactory(string nickname)
     {

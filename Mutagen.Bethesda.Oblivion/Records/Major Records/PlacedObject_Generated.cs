@@ -3105,15 +3105,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REFR;
-        public static void FillBinaryStructs(
-            IPlacedObjectInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IPlacedObjectInternal item,
             MutagenFrame frame,

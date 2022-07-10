@@ -2063,15 +2063,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly PlacedNpcBinaryCreateTranslation Instance = new PlacedNpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ACHR;
-        public static void FillBinaryStructs(
-            IPlacedNpcInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IPlacedNpcInternal item,
             MutagenFrame frame,

@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 /// If being used in a multithreaded scenario,<br/>
 /// this cache must be locked alongside any mutations to the mod the cache wraps
 /// </summary>
-public class MutableModLinkCache : ILinkCache
+public sealed class MutableModLinkCache : ILinkCache
 {
     private readonly IModGetter _sourceMod;
     private bool _disposed;
@@ -890,7 +890,7 @@ public class MutableModLinkCache : ILinkCache
 /// If being used in a multithreaded scenario,<br/>
 /// this cache must be locked alongside any mutations to the mod the cache wraps
 /// </summary>
-public class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
+public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
     where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TMod, TModGetter>
 {

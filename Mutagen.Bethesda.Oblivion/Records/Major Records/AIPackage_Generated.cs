@@ -1846,15 +1846,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly AIPackageBinaryCreateTranslation Instance = new AIPackageBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PACK;
-        public static void FillBinaryStructs(
-            IAIPackageInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAIPackageInternal item,
             MutagenFrame frame,

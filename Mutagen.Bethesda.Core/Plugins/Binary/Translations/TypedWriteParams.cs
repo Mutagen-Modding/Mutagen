@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public struct TypedWriteParams
+public readonly struct TypedWriteParams
 {
     public readonly RecordTypeConverter? RecordTypeConverter;
     public readonly RecordType? OverflowRecordType;

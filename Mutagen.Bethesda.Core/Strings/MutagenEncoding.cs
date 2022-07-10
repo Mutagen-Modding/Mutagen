@@ -9,7 +9,7 @@ public interface IMutagenEncoding
     int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes);
 }
 
-public class MutagenEncodingWrapper : IMutagenEncoding
+public sealed class MutagenEncodingWrapper : IMutagenEncoding
 {
     private readonly Encoding _encoding;
 
@@ -34,7 +34,7 @@ public class MutagenEncodingWrapper : IMutagenEncoding
     }
 }
 
-public class MutagenEncodingFallbackWrapper : IMutagenEncoding
+public sealed class MutagenEncodingFallbackWrapper : IMutagenEncoding
 {
     private readonly IMutagenEncoding _primaryEncoding;
     private readonly IMutagenEncoding _secondaryEncoding;

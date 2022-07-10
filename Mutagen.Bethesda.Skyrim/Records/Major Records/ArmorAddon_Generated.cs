@@ -2649,15 +2649,20 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Priority = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Byte>(
                         frame: frame,
                         transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     ArmorAddonBinaryCreateTranslation.FillBinaryWeightSliderEnabledCustom(
                         frame: dataFrame,
                         item: item);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Unknown = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 1) return null;
                     item.DetectionSoundValue = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Unknown2 = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
                     item.WeaponAdjust = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)ArmorAddon_FieldIndex.WeaponAdjust;
                 }

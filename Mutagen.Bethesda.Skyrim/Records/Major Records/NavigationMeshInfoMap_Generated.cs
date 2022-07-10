@@ -1691,15 +1691,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly NavigationMeshInfoMapBinaryCreateTranslation Instance = new NavigationMeshInfoMapBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NAVI;
-        public static void FillBinaryStructs(
-            INavigationMeshInfoMapInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             INavigationMeshInfoMapInternal item,
             MutagenFrame frame,

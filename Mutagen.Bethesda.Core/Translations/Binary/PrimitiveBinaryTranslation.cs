@@ -33,7 +33,7 @@ public abstract class PrimitiveBinaryTranslation<TItem, TReader, TWriter> : IPri
     public void Write(
         TWriter writer,
         TItem item,
-        Action<TWriter, TItem>? write = null)
+        Action<TWriter, TItem>? write)
     {
         write ??= Write;
         write(writer, item);
@@ -42,7 +42,7 @@ public abstract class PrimitiveBinaryTranslation<TItem, TReader, TWriter> : IPri
     public void WriteNullable(
         TWriter writer,
         TItem? item,
-        Action<TWriter, TItem>? write = null)
+        Action<TWriter, TItem>? write)
     {
         if (!item.HasValue) return;
         write ??= Write;

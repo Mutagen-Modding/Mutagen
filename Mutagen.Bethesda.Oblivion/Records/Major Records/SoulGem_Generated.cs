@@ -1818,15 +1818,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly SoulGemBinaryCreateTranslation Instance = new SoulGemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SLGM;
-        public static void FillBinaryStructs(
-            ISoulGemInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISoulGemInternal item,
             MutagenFrame frame,

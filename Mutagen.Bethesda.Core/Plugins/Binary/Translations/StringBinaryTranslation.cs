@@ -7,11 +7,11 @@ using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class StringBinaryTranslation
+public sealed class StringBinaryTranslation
 {
     public static readonly StringBinaryTranslation Instance = new();
 
-    public virtual bool Parse<TReader>(
+    public bool Parse<TReader>(
         TReader reader,
         out string item)
         where TReader : IMutagenReadStream
@@ -52,6 +52,14 @@ public class StringBinaryTranslation
         switch (stringBinaryType)
         {
             case StringBinaryType.Plain:
+                if (parseWhole)
+                {
+                    return BinaryStringUtility.ToZString(reader.ReadMemory(checked((int)reader.Remaining)), encoding);
+                }
+                else
+                {
+                    return BinaryStringUtility.ParseUnknownLengthString(reader, encoding);
+                }
             case StringBinaryType.NullTerminate:
                 if (parseWhole)
                 {

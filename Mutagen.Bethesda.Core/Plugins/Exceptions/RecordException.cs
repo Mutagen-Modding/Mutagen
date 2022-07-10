@@ -56,7 +56,7 @@ public class RecordException : Exception
         return Enrich(ex, majorRec?.FormKey, majorRec?.Registration.ClassType, majorRec?.EditorID, modKey);
     }
 
-    public static RecordException Enrich(Exception ex, FormKey? formKey, Type? recordType, string? edid, ModKey? modKey = null)
+    public static RecordException Enrich(Exception ex, FormKey? formKey, Type? recordType, string? edid = null, ModKey? modKey = null)
     {
         if (ex is RecordException rec)
         {

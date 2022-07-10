@@ -1871,15 +1871,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly SigilStoneBinaryCreateTranslation Instance = new SigilStoneBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SGST;
-        public static void FillBinaryStructs(
-            ISigilStoneInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISigilStoneInternal item,
             MutagenFrame frame,

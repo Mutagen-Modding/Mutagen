@@ -678,6 +678,11 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            PluginUtilityTranslation.SubrecordParse(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: AAudioEffectBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -942,7 +947,7 @@ namespace Mutagen.Bethesda.Fallout4
             IAAudioEffect item,
             MutagenFrame frame)
         {
-            item.Enabled = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+            item.Enabled = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                 reader: frame,
                 byteLength: 4);
         }

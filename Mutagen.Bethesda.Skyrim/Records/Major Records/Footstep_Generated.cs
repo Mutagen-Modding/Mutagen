@@ -1385,15 +1385,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly FootstepBinaryCreateTranslation Instance = new FootstepBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FSTP;
-        public static void FillBinaryStructs(
-            IFootstepInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IFootstepInternal item,
             MutagenFrame frame,

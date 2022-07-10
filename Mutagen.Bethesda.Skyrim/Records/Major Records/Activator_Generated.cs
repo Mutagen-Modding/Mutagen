@@ -2553,15 +2553,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ActivatorBinaryCreateTranslation Instance = new ActivatorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ACTI;
-        public static void FillBinaryStructs(
-            IActivatorInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IActivatorInternal item,
             MutagenFrame frame,

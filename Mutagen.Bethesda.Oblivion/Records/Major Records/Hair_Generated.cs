@@ -1574,15 +1574,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly HairBinaryCreateTranslation Instance = new HairBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.HAIR;
-        public static void FillBinaryStructs(
-            IHairInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IHairInternal item,
             MutagenFrame frame,

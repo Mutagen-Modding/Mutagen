@@ -15,7 +15,7 @@ internal static class BinaryOverlayArray2d
         return new BinaryOverlayArray2dTypical<T>(mem, package, itemLength, size, getter);
     }
 
-    private class BinaryOverlayArray2dTypical<T> : IReadOnlyArray2d<T>
+    private sealed class BinaryOverlayArray2dTypical<T> : IReadOnlyArray2d<T>
     {
         private readonly ReadOnlyMemorySlice<byte> _mem;
         private readonly BinaryOverlayFactoryPackage _package;
