@@ -97,7 +97,7 @@ public class AFormKeyPicker : NoggogControl
         get => (bool)GetValue(MissingMeansNullProperty);
         set => SetValue(MissingMeansNullProperty, value);
     }
-    public static readonly DependencyProperty MissingMeansNullProperty = DependencyProperty.Register(nameof(MissingMeansNull), typeof(bool?), typeof(AFormKeyPicker),
+    public static readonly DependencyProperty MissingMeansNullProperty = DependencyProperty.Register(nameof(MissingMeansNull), typeof(bool), typeof(AFormKeyPicker),
         new FrameworkPropertyMetadata(default(bool)));
 
     public StatusIndicatorState Status
