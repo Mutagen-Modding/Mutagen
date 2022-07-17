@@ -2,6 +2,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class LeveledSpell
 {
+    [Flags]
     public enum Flag
     {
         CalculateFromAllLevelsLessThanOrEqualPlayer = 0x01,
