@@ -748,6 +748,11 @@
     <Compile Include="Plugins\Records\RecordTypes_Generated.cs" />
     <Compile Include="Plugins\Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Plugins\Extensions\GameCategoryHelper_Generated.cs" />
+    <Compile Include="WPF\Reflection\Attributes\FormLinkPickerCustomization.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="WPF\Reflection\Attributes\Ignore.cs" />
     <Compile Include="WPF\Reflection\Attributes\JsonDiskName.cs" />
     <Compile Include="WPF\Reflection\Attributes\MaintainOrder.cs" />
