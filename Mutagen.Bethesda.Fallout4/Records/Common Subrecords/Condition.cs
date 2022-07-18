@@ -18,8 +18,7 @@ public partial class Condition
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IConditionDataGetter IConditionGetter.Data => this.Data;
-        
-    // ToDo: (copied from Fallout4) Confirm correctness and completeness
+    
     [Flags]
     public enum Flag
     {

@@ -2,6 +2,7 @@
 
 public partial class AttackData
 {
+    [Flags]
     public enum Flag : uint
     {
         IgnoreWeapon = 0x0000_0001,

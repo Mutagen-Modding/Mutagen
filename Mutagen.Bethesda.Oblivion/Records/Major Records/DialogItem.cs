@@ -2,6 +2,7 @@ namespace Mutagen.Bethesda.Oblivion;
 
 public partial class DialogItem
 {
+    [Flags]
     public enum Flag
     {
         Goodbye = 0x001,
