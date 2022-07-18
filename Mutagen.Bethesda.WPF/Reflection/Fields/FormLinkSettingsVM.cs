@@ -14,11 +14,11 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields;
 public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
 {
     private readonly Type _targetType;
-    private readonly IObservable<ILinkCache?> _linkCache;
+    private readonly IObservable<ILinkCache?> _linkCacheInternal;
     private FormKey _defaultVal;
 
-    private readonly ObservableAsPropertyHelper<ILinkCache?> _LinkCache;
-    public ILinkCache? LinkCache => _LinkCache.Value;
+    private readonly ObservableAsPropertyHelper<ILinkCache?> _linkCache;
+    public ILinkCache? LinkCache => _linkCache.Value;
 
     [Reactive]
     public FormKey Value { get; set; }
@@ -30,8 +30,8 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
     [Reactive]
     public bool IsSelected { get; set; }
 
-    private readonly ObservableAsPropertyHelper<string> _DisplayName;
-    public string DisplayName => _DisplayName.Value;
+    private readonly ObservableAsPropertyHelper<string> _displayName;
+    public string DisplayName => _displayName.Value;
 
     public FormLinkSettingsVM(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type targetType, FormKey defaultVal) 
         : base(fieldMeta)
@@ -39,11 +39,11 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
         _targetType = targetType;
         _defaultVal = defaultVal;
         Value = defaultVal;
-        _linkCache = linkCache;
-        _LinkCache = linkCache
+        _linkCacheInternal = linkCache;
+        _linkCache = linkCache
             .ToGuiProperty(this, nameof(LinkCache), default);
         ScopedTypes = targetType.AsEnumerable();
-        _DisplayName = this.WhenAnyValue(x => x.Value)
+        _displayName = this.WhenAnyValue(x => x.Value)
             .CombineLatest(this.WhenAnyValue(x => x.LinkCache),
                 (key, cache) =>
                 {
@@ -60,7 +60,7 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
 
     public override SettingsNodeVM Duplicate()
     {
-        return new FormLinkSettingsVM(_linkCache, Meta, _targetType, _defaultVal);
+        return new FormLinkSettingsVM(_linkCacheInternal, Meta, _targetType, _defaultVal);
     }
 
     public override void Import(JsonElement property, Action<string> logger)
