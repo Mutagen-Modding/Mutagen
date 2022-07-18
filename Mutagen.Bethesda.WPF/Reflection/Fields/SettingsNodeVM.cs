@@ -250,11 +250,20 @@ public abstract class SettingsNodeVM : ViewModel
             }
             default:
             {
-                if (param.TargetType.Name.Contains("FormLink")
-                    && param.TargetType.IsGenericType
-                    && param.TargetType.GenericTypeArguments.Length == 1)
+                if (param.TargetType.Name.Contains("FormLink"))
                 {
-                    return FormLinkSettingsVM.Factory(param.LinkCache, meta, param.TargetType, param.DefaultVal);
+                    if (param.TargetType.IsGenericType
+                        && param.TargetType.GenericTypeArguments.Length == 1)
+                    {
+                        return FormLinkSettingsVM.Factory(param.LinkCache, meta, new []{ param.TargetType.GenericTypeArguments[0] }, param.DefaultVal);
+                    }
+                    else if (member != null 
+                             && member.TryGetCustomAttributeByName(nameof(FormLinkPickerCustomization), out var linkCustomization)
+                             && linkCustomization.GetType().GetProperty(nameof(FormLinkPickerCustomization.ScopedTypes)) is {} scopedTypesProp
+                             && scopedTypesProp.GetValue(linkCustomization) is Type[] types)
+                    {
+                        return FormLinkSettingsVM.Factory(param.LinkCache, meta, types, param.DefaultVal);
+                    }
                 }
                 var foundType = param.Assembly.GetType(param.TargetType.FullName!);
                 if (foundType == null)

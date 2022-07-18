@@ -39,7 +39,7 @@ internal sealed class MetaInterfaceMapper : IMetaInterfaceMapGetter
 
 public static class MetaInterfaceMapping
 {
-    private static Lazy<MetaInterfaceMapper> _mapper = new(() =>
+    private static readonly Lazy<MetaInterfaceMapper> _mapper = new(() =>
     {
         return new MetaInterfaceMapper(
             AspectInterfaceMapping.Instance,

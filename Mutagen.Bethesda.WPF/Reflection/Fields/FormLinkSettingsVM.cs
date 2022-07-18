@@ -8,12 +8,13 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive.Linq;
 using System.Text.Json;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.WPF.Reflection.Fields;
 
 public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
 {
-    private readonly Type _targetType;
+    private readonly Type[] _targetTypes;
     private readonly IObservable<ILinkCache?> _linkCacheInternal;
     private FormKey _defaultVal;
 
@@ -23,7 +24,7 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
     [Reactive]
     public FormKey Value { get; set; }
 
-    public IEnumerable<Type> ScopedTypes { get; } = Enumerable.Empty<Type>();
+    public IEnumerable<Type> ScopedTypes { get; }
 
     object IBasicSettingsNodeVM.Value => Value;
 
@@ -33,16 +34,16 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
     private readonly ObservableAsPropertyHelper<string> _displayName;
     public string DisplayName => _displayName.Value;
 
-    public FormLinkSettingsVM(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type targetType, FormKey defaultVal) 
+    public FormLinkSettingsVM(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type[] targetTypes, FormKey defaultVal) 
         : base(fieldMeta)
     {
-        _targetType = targetType;
+        _targetTypes = targetTypes;
         _defaultVal = defaultVal;
         Value = defaultVal;
         _linkCacheInternal = linkCache;
         _linkCache = linkCache
             .ToGuiProperty(this, nameof(LinkCache), default);
-        ScopedTypes = targetType.AsEnumerable();
+        ScopedTypes = targetTypes;
         _displayName = this.WhenAnyValue(x => x.Value)
             .CombineLatest(this.WhenAnyValue(x => x.LinkCache),
                 (key, cache) =>
@@ -60,7 +61,7 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
 
     public override SettingsNodeVM Duplicate()
     {
-        return new FormLinkSettingsVM(_linkCacheInternal, Meta, _targetType, _defaultVal);
+        return new FormLinkSettingsVM(_linkCacheInternal, Meta, _targetTypes, _defaultVal);
     }
 
     public override void Import(JsonElement property, Action<string> logger)
@@ -80,7 +81,7 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
         base.WrapUp();
     }
 
-    public static FormLinkSettingsVM Factory(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type targetType, object? defaultVal)
+    public static FormLinkSettingsVM Factory(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type[] targetTypes, object? defaultVal)
     {
         FormKey formKey = FormKey.Null;
         if (defaultVal != null)
@@ -88,10 +89,6 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
             formKey = FormKey.Factory(
                 defaultVal.GetType().GetPublicProperties().FirstOrDefault(m => m.Name == "FormKey")!.GetValue(defaultVal)!.ToString());
         }
-        if (!LoquiRegistration.TryGetRegisterByFullName(targetType.GenericTypeArguments[0].FullName!, out var regis))
-        {
-            throw new ArgumentException($"Can't create a formlink control for type: {targetType}");
-        }
-        return new FormLinkSettingsVM(linkCache, fieldMeta, regis.GetterType, formKey);
+        return new FormLinkSettingsVM(linkCache, fieldMeta, targetTypes, formKey);
     }
 }
