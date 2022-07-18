@@ -1862,6 +1862,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeapon :
         IBindableEquipment,
         IConstructible,
+        IEnchantable,
         IExplodeSpawn,
         IFormLinkContainer,
         IHasIcons,
@@ -1948,6 +1949,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IBindableEquipmentGetter,
         IConstructibleGetter,
+        IEnchantableGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasIconsGetter,

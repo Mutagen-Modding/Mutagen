@@ -44,6 +44,7 @@
       <Enum name="DetectionSoundLevel" recordType="VNAM" byteLength="4" enumName="SoundLevel" />
       <FormLink name="Template" refName="Weapon" recordType="CNAM" />
     </Fields>
+    <Interface>IEnchantable</Interface>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>

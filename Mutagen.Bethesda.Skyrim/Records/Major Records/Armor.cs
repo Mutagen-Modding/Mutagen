@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 
@@ -11,6 +12,8 @@ public partial class Armor
         NonPlayable = 0x0000_0004,
         Shield = 0x0000_0040
     }
+    
+    IFormLinkNullableGetter<IEffectRecordGetter> IEnchantableGetter.ObjectEffect => this.ObjectEffect;
 }
 
 partial class ArmorBinaryCreateTranslation
