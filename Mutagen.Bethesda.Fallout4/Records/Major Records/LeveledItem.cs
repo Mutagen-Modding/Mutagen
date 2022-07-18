@@ -2,7 +2,7 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class LeveledItem
 {
-    [Flags]1
+    [Flags]
     public enum Flag
     {
         CalculateFromAllLevelsLessThanOrEqualPlayer = 0x01,
