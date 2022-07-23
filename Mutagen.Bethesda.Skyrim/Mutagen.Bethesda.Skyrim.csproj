@@ -61,6 +61,7 @@
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\IPlacedExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
+    <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

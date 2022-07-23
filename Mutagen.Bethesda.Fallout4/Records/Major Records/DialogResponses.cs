@@ -13,7 +13,7 @@ partial class DialogResponses
     [Flags]
     public enum Flag
     {
-        StartSceneonEnd = 0x1,
+        StartSceneOnEnd = 0x1,
         Random = 0x2,
         SayOnce = 0x4,
         RequiresPlayerActivation = 0x8,
@@ -24,7 +24,7 @@ partial class DialogResponses
         ForceSubtitle = 0x200,
         CanMoveWhileGreeting = 0x400,
         NoLIPFile = 0x800,
-        Requirespostprocessing = 0x1000,
+        RequiresPostProcessing = 0x1000,
         AudioOutputOverride = 0x2000,
         HasCapture = 0x4000,
     }

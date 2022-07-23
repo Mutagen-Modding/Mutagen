@@ -5,7 +5,7 @@ public partial class Race
     [Flags]
     public enum Flag
     {
-        Playable = 1,
+        Playable = 0x01,
     }
 
     public enum FaceIndex

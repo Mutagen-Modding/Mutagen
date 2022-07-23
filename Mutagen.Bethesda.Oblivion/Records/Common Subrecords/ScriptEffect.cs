@@ -5,6 +5,6 @@ public partial class ScriptEffect
     [Flags]
     public enum Flag
     {
-        Hostile = 1
+        Hostile = 0x01
     }
 }

@@ -5,6 +5,7 @@ namespace Mutagen.Bethesda.Oblivion;
 
 public partial class Water
 {
+    [Flags]
     public enum Flag
     {
         CausesDamage = 0x01,

@@ -20,6 +20,12 @@ namespace Mutagen.Bethesda.Skyrim
         public SkyrimAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IEnchantable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Armor_Registration.Instance,
+                Weapon_Registration.Instance,
+            });
+            dict[typeof(IEnchantableGetter)] = dict[typeof(IEnchantable)] with { Setter = false };
             dict[typeof(IHarvestable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Tree_Registration.Instance,

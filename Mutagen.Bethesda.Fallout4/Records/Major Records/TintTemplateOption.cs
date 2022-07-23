@@ -2,6 +2,7 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class TintTemplateOption
 {
+    [Flags]
     public enum Flag
     {
         OnOffOnly = 0x01,

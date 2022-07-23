@@ -13,6 +13,6 @@ public partial class Enchantment
     [Flags]
     public enum Flag
     {
-        ManualEnchantCost = 1
+        ManualEnchantCost = 0x01
     }
 }
