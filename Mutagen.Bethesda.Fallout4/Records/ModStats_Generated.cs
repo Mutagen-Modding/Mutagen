@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Version
-        public readonly static Single _Version_Default = 1.7f;
+        public readonly static Single _Version_Default = 1f;
         public Single Version { get; set; } = _Version_Default;
         #endregion
         #region NumRecords
