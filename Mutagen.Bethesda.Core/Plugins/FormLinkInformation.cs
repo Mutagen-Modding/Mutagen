@@ -6,6 +6,8 @@ namespace Mutagen.Bethesda.Plugins;
 
 public sealed record FormLinkInformation(FormKey FormKey, Type Type) : IFormLinkGetter
 {
+    public readonly static FormLinkInformation Null = new(FormKey.Null, typeof(IMajorRecordGetter));
+
     public FormKey? FormKeyNullable => FormKey;
 
     public bool IsNull => FormKey.IsNull;
