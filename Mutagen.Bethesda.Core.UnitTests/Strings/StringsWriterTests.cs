@@ -90,6 +90,14 @@ public class StringsWriterTests
 
     [Theory]
     [MutagenAutoData]
+    public void FirstRegistrationIsNotZero(StringsWriter sut)
+    {
+        var str = new TranslatedString(Language.English, "Hello");
+        sut.Register(StringsSource.Normal, str).Should().Be(1);
+    }
+
+    [Theory]
+    [MutagenAutoData]
     public void RegisterNullsReturnZero(StringsWriter sut)
     {
         var str = new TranslatedString(Language.English, default(string?));
@@ -98,9 +106,9 @@ public class StringsWriterTests
 
     [Theory]
     [MutagenAutoData]
-    public void RegisterEmptyReturnZero(StringsWriter sut)
+    public void RegisterEmptyReturnsValidIndex(StringsWriter sut)
     {
         var str = new TranslatedString(Language.English, string.Empty);
-        sut.Register(StringsSource.Normal, str).Should().Be(0);
+        sut.Register(StringsSource.Normal, str).Should().NotBe(0);
     }
 }
