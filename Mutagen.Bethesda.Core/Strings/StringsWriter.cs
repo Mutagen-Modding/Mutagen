@@ -57,6 +57,10 @@ public sealed class StringsWriter : IDisposable
 
     public uint Register(StringsSource source, IEnumerable<KeyValuePair<Language, string>> strs)
     {
+        var strsArray = strs
+            .Where(x => !x.Value.IsNullOrEmpty())
+            .ToArray();
+        if (strsArray.Length == 0) return 0;
         List<ValueTuple<Language, string, uint>[]> strsList = source switch
         {
             StringsSource.Normal => _strings,
@@ -73,7 +77,7 @@ public sealed class StringsWriter : IDisposable
             }
             lock (strsList)
             {
-                strsList.Add(strs.Select(x => new ValueTuple<Language, string, uint>(x.Key, x.Value, nextIndex)).ToArray());
+                strsList.Add(strsArray.Select(x => new ValueTuple<Language, string, uint>(x.Key, x.Value, nextIndex)).ToArray());
                 return nextIndex;
             }
         }

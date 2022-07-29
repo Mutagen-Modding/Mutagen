@@ -87,4 +87,20 @@ public class StringsWriterTests
             sut.FileSystem.File.Exists(GetStringPath(sut, Language.English, source)).Should().BeTrue();
         }
     }
+
+    [Theory]
+    [MutagenAutoData]
+    public void RegisterNullsReturnZero(StringsWriter sut)
+    {
+        var str = new TranslatedString(Language.English, default(string?));
+        sut.Register(StringsSource.Normal, str).Should().Be(0);
+    }
+
+    [Theory]
+    [MutagenAutoData]
+    public void RegisterEmptyReturnZero(StringsWriter sut)
+    {
+        var str = new TranslatedString(Language.English, string.Empty);
+        sut.Register(StringsSource.Normal, str).Should().Be(0);
+    }
 }

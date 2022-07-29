@@ -239,17 +239,16 @@ public sealed class TranslatedString : ITranslatedString, IEquatable<TranslatedS
             ResolveAllStringSources();
             if (_localization == null)
             {
-                if (_directString != null)
+                if (!string.IsNullOrEmpty(_directString))
                 {
                     yield return new KeyValuePair<Language, string>(TargetLanguage, _directString);
                 }
-                yield break;
             }
             else
             {
                 foreach (var item in _localization)
                 {
-                    if (item.Value == null) continue;
+                    if (string.IsNullOrEmpty(item.Value)) continue;
                     yield return new KeyValuePair<Language, string>(item.Key, item.Value);
                 }
             }
