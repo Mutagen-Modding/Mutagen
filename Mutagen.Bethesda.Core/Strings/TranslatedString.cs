@@ -243,7 +243,6 @@ public sealed class TranslatedString : ITranslatedString, IEquatable<TranslatedS
                 {
                     yield return new KeyValuePair<Language, string>(TargetLanguage, _directString);
                 }
-                yield break;
             }
             else
             {

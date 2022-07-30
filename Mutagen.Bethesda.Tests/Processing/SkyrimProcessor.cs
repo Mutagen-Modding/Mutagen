@@ -839,7 +839,7 @@ public class SkyrimProcessor : Processor
             {
                 case RecordTypeInts.FULL:
                 case RecordTypeInts.EPF2:
-                    AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
+                    AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
                     break;
                 case RecordTypeInts.EPFT:
                     lastepft = stream.Position;
@@ -851,7 +851,7 @@ public class SkyrimProcessor : Processor
                     if (epftFrame.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
                     {
                         stream.Position = pos;
-                        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
+                        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
                     }
 
                     stream.Position = pos;
@@ -876,7 +876,7 @@ public class SkyrimProcessor : Processor
         if (edidRec.Content[0] != (byte)'s') return;
         if (!majorRec.TryFindSubrecord("DATA", out var dataRec)) throw new ArgumentException();
         stream.Position += dataRec.Location;
-        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
+        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(

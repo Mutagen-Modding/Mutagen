@@ -57,6 +57,7 @@ public sealed class StringsWriter : IDisposable
 
     public uint Register(StringsSource source, IEnumerable<KeyValuePair<Language, string>> strs)
     {
+        if (!strs.Any()) return 0;
         List<ValueTuple<Language, string, uint>[]> strsList = source switch
         {
             StringsSource.Normal => _strings,
