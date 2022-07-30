@@ -1341,7 +1341,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item.Entry,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
+                source: StringsSource.DL);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NextQuest,
@@ -1423,7 +1423,7 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Entry = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.Normal,
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)QuestLogEntry_FieldIndex.Entry;
                 }
@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Entry
         private int? _EntryLocation;
-        public ITranslatedStringGetter? Entry => _EntryLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EntryLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Entry => _EntryLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EntryLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region NextQuest
         private int? _NextQuestLocation;
