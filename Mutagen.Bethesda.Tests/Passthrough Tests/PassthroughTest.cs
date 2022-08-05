@@ -8,13 +8,13 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using Noggog.Streams.Binary;
-using Noggog.Utility;
 using System.Reactive.Subjects;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings.DI;
+using Noggog.IO;
 
 namespace Mutagen.Bethesda.Tests;
 
