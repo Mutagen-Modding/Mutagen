@@ -85,4 +85,9 @@ public class AssetLinkType : StringType
     {
         sb.AppendLine($".Select(r => r{NullChar}.AsSetter())");
     }
+
+    public override string GetDuplicate(Accessor accessor)
+    {
+        return $"{accessor}{NullChar}.AsSetter()";
+    }
 }

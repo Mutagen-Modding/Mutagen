@@ -609,6 +609,13 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IMagicEffectSpawnHazardArchetypeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IMagicEffectSpawnHazardArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectSpawnHazardArchetypeInternal item,
@@ -768,7 +775,6 @@ namespace Mutagen.Bethesda.Skyrim
             return MagicEffectSpawnHazardArchetype.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectSpawnHazardArchetypeGetter obj)
         {
@@ -777,8 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class MagicEffectSpawnHazardArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {

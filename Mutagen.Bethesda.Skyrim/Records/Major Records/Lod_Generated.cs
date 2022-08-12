@@ -19,11 +19,8 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-<<<<<<< HEAD
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-=======
 using Mutagen.Bethesda.Skyrim.Assets;
->>>>>>> nog-assets
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -623,16 +620,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-<<<<<<< HEAD
-=======
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Lod_Registration.TriggeringRecordType;
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => LodCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LodSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LodSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
->>>>>>> nog-assets
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LodBinaryWriteTranslation.Instance;
@@ -1009,6 +1002,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+        public void RemapLinks(ILod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILod obj)
         {
             yield return obj.Level0;
@@ -1239,11 +1236,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILodGetter obj)
-=======
+        {
+            yield break;
+        }
+        
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILodGetter obj, ILinkCache? linkCache, bool includeImplicit)
->>>>>>> nog-assets
         {
             yield return obj.Level0;
             yield return obj.Level1;

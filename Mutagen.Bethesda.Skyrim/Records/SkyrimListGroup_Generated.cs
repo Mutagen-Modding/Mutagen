@@ -1461,12 +1461,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimListGroupCommon<T>.Instance.EnumerateFormLinks(this);
-=======
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimListGroupCommon<T>.Instance.GetContainedFormLinks(this);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => SkyrimListGroupCommon<T>.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

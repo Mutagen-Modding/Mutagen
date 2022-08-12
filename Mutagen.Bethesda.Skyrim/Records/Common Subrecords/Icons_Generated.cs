@@ -19,11 +19,8 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-<<<<<<< HEAD
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-=======
 using Mutagen.Bethesda.Skyrim.Assets;
->>>>>>> nog-assets
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -392,16 +389,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-<<<<<<< HEAD
-=======
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Icons_Registration.TriggeringRecordType;
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => IconsCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => IconsSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => IconsSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
->>>>>>> nog-assets
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => IconsBinaryWriteTranslation.Instance;
@@ -757,6 +750,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+        public void RemapLinks(IIcons obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IIcons obj)
         {
             yield return obj.LargeIconFilename;
@@ -911,11 +908,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIconsGetter obj)
-=======
+        {
+            yield break;
+        }
+        
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IIconsGetter obj, ILinkCache? linkCache, bool includeImplicit)
->>>>>>> nog-assets
         {
             yield return obj.LargeIconFilename;
             if (obj.SmallIconFilename != null)
@@ -1186,19 +1184,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region LargeIconFilename
         private int? _LargeIconFilenameLocation;
-<<<<<<< HEAD
-        public String LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public IAssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename => _LargeIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance);
         #endregion
         #region SmallIconFilename
         private int? _SmallIconFilenameLocation;
-        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-=======
-        public IAssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename => _LargeIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance);
-        #endregion
-        #region SmallIconFilename
-        private int? _SmallIconFilenameLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
->>>>>>> nog-assets
+        public IAssetLinkGetter<SkyrimTextureAssetType>? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

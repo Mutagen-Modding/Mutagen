@@ -19,11 +19,8 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-<<<<<<< HEAD
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-=======
 using Mutagen.Bethesda.Skyrim.Assets;
->>>>>>> nog-assets
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -752,6 +749,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+        public void RemapLinks(IPart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPart obj)
         {
             if (obj.FileName != null)
@@ -908,11 +909,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPartGetter obj)
-=======
+        {
+            yield break;
+        }
+        
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IPartGetter obj, ILinkCache? linkCache, bool includeImplicit)
->>>>>>> nog-assets
         {
             if (obj.FileName != null)
             {
@@ -1190,11 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FileName
         private int? _FileNameLocation;
-<<<<<<< HEAD
-        public String? FileName => _FileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-=======
-        public IAssetLinkGetter<SkyrimDeformedModelAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimDeformedModelAssetType>(SkyrimDeformedModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
->>>>>>> nog-assets
+        public IAssetLinkGetter<SkyrimDeformedModelAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimDeformedModelAssetType>(SkyrimDeformedModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

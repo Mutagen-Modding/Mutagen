@@ -810,6 +810,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.HeightMap.SetAllTo(default);
         }
         
+        #region Mutagen
+        public void RemapLinks(ICellMaxHeightData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICellMaxHeightData item,
@@ -957,7 +964,6 @@ namespace Mutagen.Bethesda.Skyrim
             return CellMaxHeightData.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellMaxHeightDataGetter obj)
         {
@@ -966,8 +972,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class CellMaxHeightDataSetterTranslationCommon
     {

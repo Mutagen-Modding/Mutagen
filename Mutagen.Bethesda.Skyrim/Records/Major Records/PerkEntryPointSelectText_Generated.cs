@@ -352,11 +352,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkEntryPointSelectTextCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointSelectTextSetterCommon.Instance.RemapLinks(this, mapping);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkEntryPointSelectTextBinaryWriteTranslation.Instance;
@@ -687,6 +682,14 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IPerkEntryPointSelectText)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IPerkEntryPointSelectText obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkEntryPointSelectText item,
@@ -907,7 +910,6 @@ namespace Mutagen.Bethesda.Skyrim
             return PerkEntryPointSelectText.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkEntryPointSelectTextGetter obj)
         {
@@ -920,8 +922,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class PerkEntryPointSelectTextSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {

@@ -1188,11 +1188,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IFurniture :
-<<<<<<< HEAD
-        IExplodeSpawn,
-=======
         IAssetLinkContainer,
->>>>>>> nog-assets
+        IExplodeSpawn,
         IFormLinkContainer,
         IFurnitureGetter,
         IKeyworded<IKeywordGetter>,
@@ -3030,12 +3027,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FurnitureCommon.Instance.EnumerateFormLinks(this);
-=======
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FurnitureCommon.Instance.GetContainedFormLinks(this);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => FurnitureCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FurnitureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3123,11 +3116,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ModelFilename
         private int? _ModelFilenameLocation;
-<<<<<<< HEAD
-        public String? ModelFilename => _ModelFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-=======
-        public IAssetLinkGetter<SkyrimModelAssetType>? ModelFilename => _ModelFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
->>>>>>> nog-assets
+        public IAssetLinkGetter<SkyrimModelAssetType>? ModelFilename => _ModelFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

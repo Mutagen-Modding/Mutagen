@@ -991,11 +991,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITalkingActivator :
-<<<<<<< HEAD
-        IExplodeSpawn,
-=======
         IAssetLinkContainer,
->>>>>>> nog-assets
+        IExplodeSpawn,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ITalkingActivatorInternal>,
@@ -2548,12 +2545,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TalkingActivatorCommon.Instance.EnumerateFormLinks(this);
-=======
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => TalkingActivatorCommon.Instance.GetContainedFormLinks(this);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => TalkingActivatorCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TalkingActivatorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

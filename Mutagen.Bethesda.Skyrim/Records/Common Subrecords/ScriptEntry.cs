@@ -1,12 +1,8 @@
-using Mutagen.Bethesda.Plugins.Aspects;
 using System.Diagnostics;
-<<<<<<< HEAD
-=======
-using System.Text;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim.Assets;
->>>>>>> nog-assets
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -21,30 +17,21 @@ public partial class ScriptEntry
     }
 }
 
-<<<<<<< HEAD
+partial class ScriptEntryCommon
+{
+    public static IEnumerable<IAssetLink> GetAdditionalAssetLinks(IScriptEntryGetter obj, ILinkCache linkCache)
+    {
+        if (string.IsNullOrWhiteSpace(obj.Name)) yield break;
+
+        yield return new AssetLink<SkyrimScriptCompiledAssetType>(SkyrimScriptCompiledAssetType.Instance, obj.Name);
+        yield return new AssetLink<SkyrimScriptSourceAssetType>(SkyrimScriptSourceAssetType.Instance, obj.Name);
+    }
+}
+
 partial class ScriptEntryBinaryOverlay
 {
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     string INamedRequiredGetter.Name => this.Name ?? string.Empty;
-=======
-    namespace Internals
-    {
-        public partial class ScriptEntryCommon
-        {
-            public static IEnumerable<IAssetLink> GetAdditionalAssetLinks(IScriptEntryGetter obj, ILinkCache linkCache)
-            {
-                if (string.IsNullOrWhiteSpace(obj.Name)) yield break;
-
-                yield return new AssetLink<SkyrimScriptCompiledAssetType>(SkyrimScriptCompiledAssetType.Instance, obj.Name);
-                yield return new AssetLink<SkyrimScriptSourceAssetType>(SkyrimScriptSourceAssetType.Instance, obj.Name);
-            }
-        }
-        
-        public partial class ScriptEntryBinaryOverlay
-        {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            string INamedRequiredGetter.Name => this.Name ?? string.Empty;
->>>>>>> nog-assets
 
     public IReadOnlyList<IScriptPropertyGetter> Properties => throw new NotImplementedException();
 

@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
@@ -2552,6 +2553,9 @@ namespace Mutagen.Bethesda.Fallout4
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => CellCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => CellSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => CellSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2631,6 +2635,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ICell :
+        IAssetLinkContainer,
         ICellGetter,
         IComplexLocation,
         IFallout4MajorRecordInternal,
@@ -2703,6 +2708,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.CELL)]
     public partial interface ICellGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IComplexLocationGetter,
         IFormLinkContainerGetter,
@@ -3571,6 +3577,32 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     }
             }
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ICell obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(ICell obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Persistent.ForEach(x => x.RemapListedAssetLinks(mapping));
+            obj.Temporary.ForEach(x => x.RemapListedAssetLinks(mapping));
         }
         
         #endregion
@@ -4722,7 +4754,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
-<<<<<<< HEAD
         public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
             ICellGetter obj,
             ILinkCache linkCache,
@@ -5183,18 +5214,30 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ICellGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(linkCache, includeImplicit)))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(linkCache, includeImplicit)))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public Cell Duplicate(
             ICellGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
-=======
-        #region Binary Translation
-        public virtual void CopyInFromBinary(
-            ICellInternal item,
-            MutagenFrame frame,
-            TypedParseParams? translationParams = null)
->>>>>>> nog-assets
         {
             var newRec = new Cell(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
@@ -5710,7 +5753,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.TemporaryUnknownGroupData = rhs.TemporaryUnknownGroupData;
             }
-<<<<<<< HEAD
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
@@ -5733,140 +5775,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-=======
-        }
-        
-        #region Equals and Hash
-        public virtual bool Equals(
-            ICellGetter? lhs,
-            ICellGetter? rhs,
-            TranslationCrystal? crystal)
-        {
-            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            return true;
-        }
-        
-        public override bool Equals(
-            IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
-        {
-            return Equals(
-                lhs: (ICellGetter?)lhs,
-                rhs: rhs as ICellGetter,
-                crystal: crystal);
-        }
-        
-        public override bool Equals(
-            IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
-        {
-            return Equals(
-                lhs: (ICellGetter?)lhs,
-                rhs: rhs as ICellGetter,
-                crystal: crystal);
-        }
-        
-        public virtual int GetHashCode(ICellGetter item)
-        {
-            var hash = new HashCode();
-            hash.Add(base.GetHashCode());
-            return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IFallout4MajorRecordGetter item)
-        {
-            return GetHashCode(item: (ICellGetter)item);
-        }
-        
-        public override int GetHashCode(IMajorRecordGetter item)
-        {
-            return GetHashCode(item: (ICellGetter)item);
-        }
-        
-        #endregion
-        
-        
-        public override object GetNew()
-        {
-            return Cell.GetNew();
-        }
-        
-        #region Mutagen
-        #region Duplicate
-        public Cell Duplicate(
-            ICellGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            var newRec = new Cell(formKey);
-            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
-            return newRec;
-        }
-        
-        public override Fallout4MajorRecord Duplicate(
-            IFallout4MajorRecordGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ICellGetter)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override MajorRecord Duplicate(
-            IMajorRecordGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ICellGetter)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        #endregion
-        
-        #endregion
-        
-    }
-    public partial class CellSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
-    {
-        public new static readonly CellSetterTranslationCommon Instance = new CellSetterTranslationCommon();
-
-        #region DeepCopyIn
-        public void DeepCopyIn(
-            ICellInternal item,
-            ICellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            base.DeepCopyIn(
-                item,
-                rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public void DeepCopyIn(
-            ICell item,
-            ICellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            base.DeepCopyIn(
-                (IFallout4MajorRecord)item,
-                (IFallout4MajorRecordGetter)rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
->>>>>>> nog-assets
         }
         
         public override void DeepCopyIn(
@@ -6566,6 +6474,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => CellCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

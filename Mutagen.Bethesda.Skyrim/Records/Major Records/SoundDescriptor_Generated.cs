@@ -2576,12 +2576,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundDescriptorCommon.Instance.EnumerateFormLinks(this);
-=======
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SoundDescriptorCommon.Instance.GetContainedFormLinks(this);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => SoundDescriptorCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundDescriptorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2608,11 +2604,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _AlternateSoundForLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => _AlternateSoundForLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AlternateSoundForLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
-<<<<<<< HEAD
-        public IReadOnlyList<String> SoundFiles { get; private set; } = Array.Empty<String>();
-=======
-        public IReadOnlyList<IAssetLinkGetter<SkyrimSoundAssetType>> SoundFiles { get; private set; } = ListExt.Empty<IAssetLinkGetter<SkyrimSoundAssetType>>();
->>>>>>> nog-assets
+        public IReadOnlyList<IAssetLinkGetter<SkyrimSoundAssetType>> SoundFiles { get; private set; } = Array.Empty<IAssetLinkGetter<SkyrimSoundAssetType>>();
         #region OutputModel
         private int? _OutputModelLocation;
         public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => _OutputModelLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OutputModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
@@ -2742,11 +2734,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.SoundFiles = BinaryOverlayList.FactoryByArray<IAssetLinkGetter<SkyrimSoundAssetType>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-<<<<<<< HEAD
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
-=======
-                        getter: (s, p) => new AssetLinkGetter<SkyrimSoundAssetType>(SkyrimSoundAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content, encoding: p.MetaData.Encodings.NonTranslated)),
->>>>>>> nog-assets
+                        getter: (s, p) => new AssetLinkGetter<SkyrimSoundAssetType>(SkyrimSoundAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated)),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

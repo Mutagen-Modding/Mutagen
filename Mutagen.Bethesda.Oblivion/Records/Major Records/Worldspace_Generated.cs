@@ -1161,12 +1161,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts.WRLD)]
     public partial interface IWorldspaceGetter :
-<<<<<<< HEAD
         IOblivionMajorRecordGetter,
-=======
-        IPlaceGetter,
         IAssetLinkContainerGetter,
->>>>>>> nog-assets
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IWorldspaceGetter>,
@@ -3902,12 +3898,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceCommon.Instance.EnumerateFormLinks(this);
-=======
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => WorldspaceCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

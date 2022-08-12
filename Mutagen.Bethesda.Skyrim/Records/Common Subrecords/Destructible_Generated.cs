@@ -1342,12 +1342,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DestructibleCommon.Instance.EnumerateFormLinks(this);
-=======
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DestructibleCommon.Instance.GetContainedFormLinks(this);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => DestructibleCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructibleBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -1025,11 +1025,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGrass :
-<<<<<<< HEAD
-        IExplodeSpawn,
-=======
         IAssetLinkContainer,
->>>>>>> nog-assets
+        IExplodeSpawn,
         IFormLinkContainer,
         IGrassGetter,
         ILoquiObjectSetter<IGrassInternal>,
@@ -2423,12 +2420,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GrassCommon.Instance.EnumerateFormLinks(this);
-=======
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => GrassCommon.Instance.GetContainedFormLinks(this);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => GrassCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -1667,11 +1667,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IProjectile :
-<<<<<<< HEAD
-        IExplodeSpawn,
-=======
         IAssetLinkContainer,
->>>>>>> nog-assets
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IProjectileInternal>,
         IModeled,
@@ -3606,12 +3603,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProjectileCommon.Instance.EnumerateFormLinks(this);
-=======
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ProjectileCommon.Instance.GetContainedFormLinks(this);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => ProjectileCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3769,11 +3762,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;
-<<<<<<< HEAD
-        public String MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
-=======
-        public IAssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
->>>>>>> nog-assets
+        public IAssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
         #endregion
         #region TextureFilesHashes
         private int? _TextureFilesHashesLocation;

@@ -1002,6 +1002,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.FlyingAttackChance = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICombatStyleFlight obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICombatStyleFlight item,
@@ -1206,7 +1213,6 @@ namespace Mutagen.Bethesda.Skyrim
             return CombatStyleFlight.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICombatStyleFlightGetter obj)
         {
@@ -1215,8 +1221,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class CombatStyleFlightSetterTranslationCommon
     {

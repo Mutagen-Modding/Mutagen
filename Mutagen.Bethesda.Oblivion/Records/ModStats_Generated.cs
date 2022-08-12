@@ -769,6 +769,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.NextFormID = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IModStats obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IModStats item,
@@ -913,7 +920,6 @@ namespace Mutagen.Bethesda.Oblivion
             return ModStats.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IModStatsGetter obj)
         {
@@ -922,8 +928,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class ModStatsSetterTranslationCommon
     {

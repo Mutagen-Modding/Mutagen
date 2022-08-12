@@ -848,6 +848,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Connections.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IRoadPoint obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRoadPoint item,
@@ -1001,7 +1008,6 @@ namespace Mutagen.Bethesda.Oblivion
             return RoadPoint.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRoadPointGetter obj)
         {
@@ -1010,8 +1016,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class RoadPointSetterTranslationCommon
     {

@@ -652,6 +652,14 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (ITopicReferenceSubtype)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ITopicReferenceSubtype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITopicReferenceSubtype item,
@@ -815,7 +823,6 @@ namespace Mutagen.Bethesda.Skyrim
             return TopicReferenceSubtype.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITopicReferenceSubtypeGetter obj)
         {
@@ -828,8 +835,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class TopicReferenceSubtypeSetterTranslationCommon : ATopicReferenceSetterTranslationCommon
     {

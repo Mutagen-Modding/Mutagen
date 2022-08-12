@@ -910,6 +910,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.RotationQ4 = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IBounding obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBounding item,
@@ -1090,7 +1097,6 @@ namespace Mutagen.Bethesda.Skyrim
             return Bounding.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBoundingGetter obj)
         {
@@ -1099,8 +1105,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class BoundingSetterTranslationCommon
     {

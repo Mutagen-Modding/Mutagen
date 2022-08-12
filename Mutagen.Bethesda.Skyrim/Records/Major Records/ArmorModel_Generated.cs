@@ -1325,12 +1325,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorModelCommon.Instance.EnumerateFormLinks(this);
-=======
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ArmorModelCommon.Instance.GetContainedFormLinks(this);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => ArmorModelCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ArmorModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -342,7 +342,7 @@ public class LinkModule : GenerationModule
                     else if (field is FormKeyType formKey
                              && obj.Name != "MajorRecord")
                     {
-                        sb.AppendLine($"obj.{field.Name} = {nameof(RemappingMixIn)}.Remap(obj.{field.Name}, mapping);");
+                        sb.AppendLine($"obj.{field.Name} = {nameof(FormLinkRemappingMixIn)}.Remap(obj.{field.Name}, mapping);");
                     }
                     else if (field is LoquiType loqui)
                     {

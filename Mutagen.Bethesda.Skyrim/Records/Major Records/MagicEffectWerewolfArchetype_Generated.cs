@@ -609,6 +609,13 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IMagicEffectWerewolfArchetypeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IMagicEffectWerewolfArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectWerewolfArchetypeInternal item,
@@ -768,7 +775,6 @@ namespace Mutagen.Bethesda.Skyrim
             return MagicEffectWerewolfArchetype.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectWerewolfArchetypeGetter obj)
         {
@@ -777,8 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class MagicEffectWerewolfArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {

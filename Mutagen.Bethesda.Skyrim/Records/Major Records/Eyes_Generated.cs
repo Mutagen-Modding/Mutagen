@@ -902,6 +902,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+        public void RemapLinks(IEyes obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IEyes obj)
         {
             foreach (var item in base.EnumerateListedAssetLinks(obj))
@@ -1161,15 +1166,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEyesGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
-=======
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IEyesGetter obj, ILinkCache? linkCache, bool includeImplicit)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
->>>>>>> nog-assets
             {
                 yield return item;
             }
@@ -1619,11 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Icon
         private int? _IconLocation;
-<<<<<<< HEAD
-        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
-=======
-        public IAssetLinkGetter<SkyrimTextureAssetType> Icon => _IconLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance);
->>>>>>> nog-assets
+        public IAssetLinkGetter<SkyrimTextureAssetType> Icon => _IconLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance);
         #endregion
         #region Flags
         private int? _FlagsLocation;

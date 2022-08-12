@@ -19,11 +19,8 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-<<<<<<< HEAD
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-=======
 using Mutagen.Bethesda.Skyrim.Assets;
->>>>>>> nog-assets
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -885,6 +882,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+        public void RemapLinks(IDebrisModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDebrisModel obj)
         {
             yield return obj.ModelFilename;
@@ -1064,11 +1065,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDebrisModelGetter obj)
-=======
+        {
+            yield break;
+        }
+        
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDebrisModelGetter obj, ILinkCache? linkCache, bool includeImplicit)
->>>>>>> nog-assets
         {
             yield return obj.ModelFilename;
             yield break;
@@ -1438,13 +1440,8 @@ namespace Mutagen.Bethesda.Skyrim
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-<<<<<<< HEAD
-            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
-            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.Length + 1;
-=======
-            ret.ModelFilename = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(ret._DATALocation!.Value + 0x1), package.MetaData.Encodings.NonTranslated));
-            ret.ModelFilenameEndingPos = ret._DATALocation!.Value + 0x1 + ret.ModelFilename.RawPath.Length + 1;
->>>>>>> nog-assets
+            ret.ModelFilename = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated));
+            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.RawPath.Length + 1;
             return ret;
         }
 

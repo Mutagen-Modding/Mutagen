@@ -732,6 +732,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.DefaultWaterHeight = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWorldspaceLandDefaults obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWorldspaceLandDefaults item,
@@ -866,7 +873,6 @@ namespace Mutagen.Bethesda.Skyrim
             return WorldspaceLandDefaults.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceLandDefaultsGetter obj)
         {
@@ -875,8 +881,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class WorldspaceLandDefaultsSetterTranslationCommon
     {

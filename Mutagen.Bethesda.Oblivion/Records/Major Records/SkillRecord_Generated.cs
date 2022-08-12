@@ -1040,6 +1040,14 @@ namespace Mutagen.Bethesda.Oblivion
             Clear(item: (ISkillRecordInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISkillRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISkillRecordInternal item,
@@ -1369,7 +1377,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISkillRecordGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1379,8 +1386,6 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
         
-=======
->>>>>>> nog-assets
         #region Duplicate
         public SkillRecord Duplicate(
             ISkillRecordGetter item,

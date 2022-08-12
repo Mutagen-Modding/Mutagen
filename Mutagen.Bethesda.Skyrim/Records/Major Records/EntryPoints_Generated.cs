@@ -725,6 +725,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Points = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IEntryPoints obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEntryPoints item,
@@ -855,7 +862,6 @@ namespace Mutagen.Bethesda.Skyrim
             return EntryPoints.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEntryPointsGetter obj)
         {
@@ -864,8 +870,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class EntryPointsSetterTranslationCommon
     {

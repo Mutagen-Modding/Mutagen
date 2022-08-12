@@ -359,11 +359,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponsesAdapterCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesAdapterSetterCommon.Instance.RemapLinks(this, mapping);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogResponsesAdapterBinaryWriteTranslation.Instance;
@@ -686,6 +681,14 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IDialogResponsesAdapter)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IDialogResponsesAdapter obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDialogResponsesAdapter item,
@@ -871,7 +874,6 @@ namespace Mutagen.Bethesda.Skyrim
             return DialogResponsesAdapter.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDialogResponsesAdapterGetter obj)
         {
@@ -884,8 +886,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class DialogResponsesAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {

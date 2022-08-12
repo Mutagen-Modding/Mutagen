@@ -13,7 +13,7 @@ public abstract class AContainedLinksModule<TLinkType> : GenerationModule
             foreach (var target in specifications.Specifications.Values)
             {
                 if (!ObjectNamedKey.TryFactory(target, out var key)) continue;
-                var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
+                if (!loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey.TryGetValue(key, out var specObj)) continue;
                 return await HasLinks(specObj, includeBaseClass);
             }
         }
@@ -29,11 +29,17 @@ public abstract class AContainedLinksModule<TLinkType> : GenerationModule
     
     public virtual async Task<Case> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
     {
+        if (obj.Name == "ObjectTemplate")
+        {
+            int wer = 23;
+            wer++;
+        }
         if (obj.Name == "MajorRecord") return Case.Yes;
         if (obj.IterateFields(includeBaseClass: includeBaseClass).Any((f) => f is TLinkType)) return Case.Yes;
         Case bestCase = Case.No;
         foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
         {
+            if (field.GetFieldData().Circular) continue;
             if (field is LoquiType loqui)
             {
                 var subCase = await HasLinks(loqui, includeBaseClass: true, specifications);

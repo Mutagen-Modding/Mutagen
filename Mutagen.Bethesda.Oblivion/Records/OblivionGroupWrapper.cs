@@ -1,18 +1,13 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
-<<<<<<< HEAD
-=======
 using Mutagen.Bethesda.Assets;
-using Mutagen.Bethesda.Oblivion.Internals;
->>>>>>> nog-assets
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using Noggog.StructuredStrings;
 

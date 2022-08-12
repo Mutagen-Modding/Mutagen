@@ -732,6 +732,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.FragmentIndex = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IPerkScriptFlag obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkScriptFlag item,
@@ -866,7 +873,6 @@ namespace Mutagen.Bethesda.Skyrim
             return PerkScriptFlag.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkScriptFlagGetter obj)
         {
@@ -875,8 +881,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class PerkScriptFlagSetterTranslationCommon
     {

@@ -1036,6 +1036,14 @@ namespace Mutagen.Bethesda.Oblivion
             Clear(item: (ITreeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ITree obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITreeInternal item,
@@ -1349,7 +1357,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITreeGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1359,8 +1366,6 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
         
-=======
->>>>>>> nog-assets
         #region Duplicate
         public Tree Duplicate(
             ITreeGetter item,

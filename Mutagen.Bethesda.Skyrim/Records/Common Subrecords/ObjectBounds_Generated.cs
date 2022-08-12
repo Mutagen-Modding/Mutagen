@@ -732,6 +732,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Second = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IObjectBounds obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IObjectBounds item,
@@ -866,7 +873,6 @@ namespace Mutagen.Bethesda.Skyrim
             return ObjectBounds.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectBoundsGetter obj)
         {
@@ -875,8 +881,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class ObjectBoundsSetterTranslationCommon
     {

@@ -813,6 +813,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.RegionPointListData = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IRegionArea obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRegionArea item,
@@ -962,7 +969,6 @@ namespace Mutagen.Bethesda.Skyrim
             return RegionArea.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionAreaGetter obj)
         {
@@ -971,8 +977,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class RegionAreaSetterTranslationCommon
     {

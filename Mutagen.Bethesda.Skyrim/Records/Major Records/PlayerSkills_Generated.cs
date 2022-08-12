@@ -1215,6 +1215,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Unused2 = new byte[3];
         }
         
+        #region Mutagen
+        public void RemapLinks(IPlayerSkills obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPlayerSkills item,
@@ -1447,7 +1454,6 @@ namespace Mutagen.Bethesda.Skyrim
             return PlayerSkills.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlayerSkillsGetter obj)
         {
@@ -1456,8 +1462,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class PlayerSkillsSetterTranslationCommon
     {

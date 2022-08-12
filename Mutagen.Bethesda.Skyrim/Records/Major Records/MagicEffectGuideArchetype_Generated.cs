@@ -609,6 +609,13 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IMagicEffectGuideArchetypeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IMagicEffectGuideArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectGuideArchetypeInternal item,
@@ -768,7 +775,6 @@ namespace Mutagen.Bethesda.Skyrim
             return MagicEffectGuideArchetype.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectGuideArchetypeGetter obj)
         {
@@ -777,8 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class MagicEffectGuideArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
     {

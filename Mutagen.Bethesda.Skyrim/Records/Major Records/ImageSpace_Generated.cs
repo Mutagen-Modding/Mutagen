@@ -979,6 +979,14 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IImageSpaceInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IImageSpace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImageSpaceInternal item,
@@ -1292,7 +1300,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IImageSpaceGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1302,8 +1309,6 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-=======
->>>>>>> nog-assets
         #region Duplicate
         public ImageSpace Duplicate(
             IImageSpaceGetter item,

@@ -769,6 +769,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.RotationSpeed = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IAnimationChangeThresholds obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAnimationChangeThresholds item,
@@ -913,7 +920,6 @@ namespace Mutagen.Bethesda.Skyrim
             return AnimationChangeThresholds.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAnimationChangeThresholdsGetter obj)
         {
@@ -922,8 +928,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class AnimationChangeThresholdsSetterTranslationCommon
     {

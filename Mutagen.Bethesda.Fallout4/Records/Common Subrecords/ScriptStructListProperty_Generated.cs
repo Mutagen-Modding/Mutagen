@@ -422,11 +422,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptStructListPropertyCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptStructListPropertySetterCommon.Instance.RemapLinks(this, mapping);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptStructListPropertyBinaryWriteTranslation.Instance;
@@ -484,7 +479,6 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IScriptStructListProperty :
-        IFormLinkContainer,
         ILoquiObjectSetter<IScriptStructListProperty>,
         INamedRequired,
         IScriptProperty,
@@ -496,7 +490,6 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IScriptStructListPropertyGetter :
         IScriptPropertyGetter,
         IBinaryItem,
-        IFormLinkContainerGetter,
         ILoquiObject<IScriptStructListPropertyGetter>,
         INamedRequiredGetter
     {
@@ -749,7 +742,6 @@ namespace Mutagen.Bethesda.Fallout4
         public void RemapLinks(IScriptStructListProperty obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Structs.RemapLinks(mapping);
         }
         
         #endregion
@@ -940,11 +932,6 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
-            }
-            foreach (var item in obj.Structs.WhereCastable<IScriptEntryStructsGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
-            {
-                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }

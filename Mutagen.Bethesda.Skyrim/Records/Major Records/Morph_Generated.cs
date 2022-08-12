@@ -690,6 +690,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Data = new byte[32];
         }
         
+        #region Mutagen
+        public void RemapLinks(IMorph obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMorph item,
@@ -810,7 +817,6 @@ namespace Mutagen.Bethesda.Skyrim
             return Morph.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMorphGetter obj)
         {
@@ -819,8 +825,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class MorphSetterTranslationCommon
     {

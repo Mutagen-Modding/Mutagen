@@ -806,6 +806,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Flag = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ISpellData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISpellData item,
@@ -960,7 +967,6 @@ namespace Mutagen.Bethesda.Oblivion
             return SpellData.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISpellDataGetter obj)
         {
@@ -969,8 +975,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class SpellDataSetterTranslationCommon
     {

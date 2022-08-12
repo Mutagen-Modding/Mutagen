@@ -1,11 +1,11 @@
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Generation.Fields;
-using Mutagen.Bethesda.Plugins.Cache;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -50,7 +50,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         }
     }
 
-    public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
+    public override async Task GenerateInCommon(ObjectGeneration obj, StructuredStringBuilder fg, MaskTypeSet maskTypes)
     {
         if (!await ShouldGenerate(obj)) return;
         if (maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class))
@@ -61,14 +61,14 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
             }
             
             fg.AppendLine($"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, ILinkCache? linkCache, bool includeImplicit)");
-            using (new BraceWrapper(fg))
+            using (fg.CurlyBrace())
             {
                 foreach (var baseClass in obj.BaseClassTrail())
                 {
                     if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                     {
                         fg.AppendLine("foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))");
-                        using (new BraceWrapper(fg))
+                        using (fg.CurlyBrace())
                         {
                             fg.AppendLine("yield return item;");
                         }
@@ -79,10 +79,10 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 if (obj.GetObjectData().HasMetaAssets)
                 {
                     fg.AppendLine("if (includeImplicit && linkCache != null)");
-                    using (new BraceWrapper(fg))
+                    using (fg.CurlyBrace())
                     {
                         fg.AppendLine($"foreach (var additional in GetAdditionalAssetLinks(obj, linkCache))");
-                        using (new BraceWrapper(fg))
+                        using (fg.CurlyBrace())
                         {
                             fg.AppendLine("yield return additional;");
                         }
@@ -97,7 +97,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         if (field.Nullable)
                         {
                             fg.AppendLine($"if (obj.{field.Name} != null)");
-                            using (new BraceWrapper(fg))
+                            using (fg.CurlyBrace())
                             {
                                 fg.AppendLine($"yield return obj.{field.Name};");
                             }
@@ -135,10 +135,10 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         {
                             doBrace = false;
                         }
-                        using (new BraceWrapper(fg, doIt: doBrace))
+                        using (fg.CurlyBrace(doIt: doBrace))
                         {
                             fg.AppendLine($"foreach (var item in {access}.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(linkCache, includeImplicit: includeImplicit))");
-                            using (new BraceWrapper(fg))
+                            using (fg.CurlyBrace())
                             {
                                 fg.AppendLine($"yield return item;");
                             }
@@ -152,7 +152,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                             access = $"{field.Name}Item";
                         }
 
-                        FileGeneration subFg = new FileGeneration();
+                        var subFg = new StructuredStringBuilder();
                         if (cont.SubTypeGeneration is LoquiType contLoqui
                             && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
                         {
@@ -167,7 +167,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                                         break;
                                     case Case.Maybe:
                                         subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IAssetLinkContainerGetter)}>()");
-                                        using (new DepthWrapper(subFg))
+                                        using (subFg.IncreaseDepth())
                                         {
                                             subFg.AppendLine($".SelectMany((f) => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(linkCache, includeImplicit)))");
                                         }
@@ -191,10 +191,10 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         {
                             fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
                         }
-                        using (new BraceWrapper(fg, doIt: field.Nullable))
+                        using (fg.CurlyBrace(doIt: field.Nullable))
                         {
                             fg.AppendLines(subFg);
-                            using (new BraceWrapper(fg))
+                            using (fg.CurlyBrace())
                             {
                                 fg.AppendLine($"yield return item;");
                             }
@@ -214,7 +214,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                                     break;
                                 case Case.Maybe:
                                     fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IAssetLinkContainerGetter)}>()");
-                                    using (new DepthWrapper(fg))
+                                    using (fg.IncreaseDepth())
                                     {
                                         fg.AppendLine($".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateAssetLinks)}(linkCache, includeImplicit: includeImplicit)))");
                                     }
@@ -231,7 +231,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         {
                             continue;
                         }
-                        using (new BraceWrapper(fg))
+                        using (fg.CurlyBrace())
                         {
                             fg.AppendLine($"yield return item;");
                         }
@@ -264,14 +264,14 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         if (maskTypes.Applicable(LoquiInterfaceType.ISetter, CommonGenerics.Class))
         {
             fg.AppendLine($"public IEnumerable<{nameof(IAssetLink)}> EnumerateListedAssetLinks({obj.Interface(getter: false)} obj)");
-            using (new BraceWrapper(fg))
+            using (fg.CurlyBrace())
             {
                 foreach (var baseClass in obj.BaseClassTrail())
                 {
                     if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                     {
                         fg.AppendLine("foreach (var item in base.EnumerateListedAssetLinks(obj))");
-                        using (new BraceWrapper(fg))
+                        using (fg.CurlyBrace())
                         {
                             fg.AppendLine("yield return item;");
                         }
@@ -286,7 +286,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         if (field.Nullable)
                         {
                             fg.AppendLine($"if (obj.{field.Name} != null)");
-                            using (new BraceWrapper(fg))
+                            using (fg.CurlyBrace())
                             {
                                 fg.AppendLine($"yield return obj.{field.Name};");
                             }
@@ -324,10 +324,10 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         {
                             doBrace = false;
                         }
-                        using (new BraceWrapper(fg, doIt: doBrace))
+                        using (fg.CurlyBrace())
                         {
                             fg.AppendLine($"foreach (var item in {access}.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}())");
-                            using (new BraceWrapper(fg))
+                            using (fg.CurlyBrace())
                             {
                                 fg.AppendLine($"yield return item;");
                             }
@@ -341,7 +341,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                             access = $"{field.Name}Item";
                         }
 
-                        FileGeneration subFg = new FileGeneration();
+                        var subFg = new StructuredStringBuilder();
                         if (cont.SubTypeGeneration is LoquiType contLoqui
                             && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
                         {
@@ -356,7 +356,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                                         break;
                                     case Case.Maybe:
                                         subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IAssetLinkContainer)}>()");
-                                        using (new DepthWrapper(subFg))
+                                        using (subFg.IncreaseDepth())
                                         {
                                             subFg.AppendLine($".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}()))");
                                         }
@@ -380,10 +380,10 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         {
                             fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
                         }
-                        using (new BraceWrapper(fg, doIt: field.Nullable))
+                        using (fg.CurlyBrace(doIt: field.Nullable))
                         {
                             fg.AppendLines(subFg);
-                            using (new BraceWrapper(fg))
+                            using (fg.CurlyBrace())
                             {
                                 fg.AppendLine($"yield return item;");
                             }
@@ -403,7 +403,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                                     break;
                                 case Case.Maybe:
                                     fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IAssetLinkContainer)}>()");
-                                    using (new DepthWrapper(fg))
+                                    using (fg.IncreaseDepth())
                                     {
                                         fg.AppendLine($".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}()))");
                                     }
@@ -420,7 +420,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         {
                             continue;
                         }
-                        using (new BraceWrapper(fg))
+                        using (fg.CurlyBrace())
                         {
                             fg.AppendLine($"yield return item;");
                         }
@@ -453,7 +453,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         if (maskTypes.Applicable(LoquiInterfaceType.ISetter, CommonGenerics.Class))
         {
             fg.AppendLine($"public void {nameof(IAssetLinkContainer.RemapListedAssetLinks)}({obj.Interface(getter: false)} obj, IReadOnlyDictionary<{nameof(IAssetLinkGetter)}, string> mapping)");
-            using (new BraceWrapper(fg))
+            using (fg.CurlyBrace())
             {
                 foreach (var baseClass in obj.BaseClassTrail())
                 {
@@ -534,7 +534,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         }
     }
 
-    public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+    public override async Task GenerateInClass(ObjectGeneration obj, StructuredStringBuilder fg)
     {
         await base.GenerateInClass(obj, fg);
         if (!await ShouldGenerate(obj)) return;
@@ -553,7 +553,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         return true;
     }
 
-    public async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
+    public async Task GenerateInterfaceImplementation(ObjectGeneration obj, StructuredStringBuilder fg, bool getter)
     {
         var shouldAlwaysOverride = obj.IsTopLevelGroup();
         fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLinkGetter)}> {nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(ILinkCache? linkCache, bool includeImplicit) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);");

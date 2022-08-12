@@ -852,6 +852,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+        public void RemapLinks(IDebris obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDebris obj)
         {
             foreach (var item in base.EnumerateListedAssetLinks(obj))
@@ -1107,11 +1112,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDebrisGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
-=======
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDebrisGetter obj, ILinkCache? linkCache, bool includeImplicit)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
@@ -1119,7 +1128,6 @@ namespace Mutagen.Bethesda.Skyrim
                 yield return item;
             }
             foreach (var item in obj.Models.SelectMany(f => f.EnumerateAssetLinks(linkCache, includeImplicit)))
->>>>>>> nog-assets
             {
                 yield return item;
             }

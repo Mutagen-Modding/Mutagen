@@ -1844,7 +1844,6 @@ namespace Mutagen.Bethesda.Fallout4
             Clear(item: (IMiscItemInternal)item);
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public void RemapLinks(IMiscItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
@@ -1862,8 +1861,6 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-=======
->>>>>>> nog-assets
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMiscItemInternal item,
@@ -2333,7 +2330,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMiscItemGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -2394,8 +2390,6 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
-=======
->>>>>>> nog-assets
         #region Duplicate
         public MiscItem Duplicate(
             IMiscItemGetter item,
@@ -2434,11 +2428,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-<<<<<<< HEAD
     internal partial class MiscItemSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
-=======
-    public partial class MiscItemSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
->>>>>>> nog-assets
     {
         public new static readonly MiscItemSetterTranslationCommon Instance = new MiscItemSetterTranslationCommon();
 
@@ -2471,7 +2461,6 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-<<<<<<< HEAD
             if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 errorMask?.PushIndex((int)MiscItem_FieldIndex.VirtualMachineAdapter);
@@ -2715,8 +2704,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
-=======
->>>>>>> nog-assets
         }
         
         public override void DeepCopyIn(

@@ -1473,6 +1473,14 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (ILightingTemplateInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ILightingTemplate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILightingTemplateInternal item,
@@ -1880,7 +1888,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILightingTemplateGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1890,8 +1897,6 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-=======
->>>>>>> nog-assets
         #region Duplicate
         public LightingTemplate Duplicate(
             ILightingTemplateGetter item,

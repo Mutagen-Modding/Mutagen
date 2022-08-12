@@ -781,6 +781,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Hashes = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IModel item,
@@ -926,7 +933,6 @@ namespace Mutagen.Bethesda.Oblivion
             return Model.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IModelGetter obj)
         {
@@ -935,8 +941,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class ModelSetterTranslationCommon
     {

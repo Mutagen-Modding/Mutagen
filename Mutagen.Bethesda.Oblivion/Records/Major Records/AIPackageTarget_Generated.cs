@@ -769,6 +769,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Count = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IAIPackageTarget obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAIPackageTarget item,
@@ -913,7 +920,6 @@ namespace Mutagen.Bethesda.Oblivion
             return AIPackageTarget.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAIPackageTargetGetter obj)
         {
@@ -922,8 +928,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class AIPackageTargetSetterTranslationCommon
     {

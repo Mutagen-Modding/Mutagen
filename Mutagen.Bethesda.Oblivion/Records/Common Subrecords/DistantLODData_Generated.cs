@@ -769,6 +769,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Unknown2 = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IDistantLODData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDistantLODData item,
@@ -913,7 +920,6 @@ namespace Mutagen.Bethesda.Oblivion
             return DistantLODData.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDistantLODDataGetter obj)
         {
@@ -922,8 +928,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class DistantLODDataSetterTranslationCommon
     {

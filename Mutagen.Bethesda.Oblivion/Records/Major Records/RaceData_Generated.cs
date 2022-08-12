@@ -1121,6 +1121,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Flags = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IRaceData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRaceData item,
@@ -1377,7 +1384,6 @@ namespace Mutagen.Bethesda.Oblivion
             return RaceData.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceDataGetter obj)
         {
@@ -1386,8 +1392,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class RaceDataSetterTranslationCommon
     {

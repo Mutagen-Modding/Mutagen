@@ -869,6 +869,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Alphas = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICloudLayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICloudLayer item,
@@ -1065,7 +1072,6 @@ namespace Mutagen.Bethesda.Skyrim
             return CloudLayer.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICloudLayerGetter obj)
         {
@@ -1074,8 +1080,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class CloudLayerSetterTranslationCommon
     {

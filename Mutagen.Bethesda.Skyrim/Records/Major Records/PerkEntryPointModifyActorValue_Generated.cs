@@ -418,11 +418,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkEntryPointModifyActorValueCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointModifyActorValueSetterCommon.Instance.RemapLinks(this, mapping);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkEntryPointModifyActorValueBinaryWriteTranslation.Instance;
@@ -761,6 +756,14 @@ namespace Mutagen.Bethesda.Skyrim
             Clear(item: (IPerkEntryPointModifyActorValue)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IPerkEntryPointModifyActorValue obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkEntryPointModifyActorValue item,
@@ -1001,7 +1004,6 @@ namespace Mutagen.Bethesda.Skyrim
             return PerkEntryPointModifyActorValue.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkEntryPointModifyActorValueGetter obj)
         {
@@ -1014,8 +1016,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class PerkEntryPointModifyActorValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {

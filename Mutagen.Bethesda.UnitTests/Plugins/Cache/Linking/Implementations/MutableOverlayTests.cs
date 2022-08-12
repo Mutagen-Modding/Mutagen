@@ -7,7 +7,7 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
-using Noggog.Utility;
+using Noggog.IO;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Implementations;
 

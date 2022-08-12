@@ -728,6 +728,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Rotation = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocation item,
@@ -858,7 +865,6 @@ namespace Mutagen.Bethesda.Oblivion
             return Location.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationGetter obj)
         {
@@ -867,8 +873,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class LocationSetterTranslationCommon
     {

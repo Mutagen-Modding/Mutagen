@@ -3785,7 +3785,7 @@ namespace Mutagen.Bethesda.Skyrim
             Weather.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.CloudTextures = EqualsMaskHelper.SpanEqualsHelper<String?>(
+            ret.CloudTextures = EqualsMaskHelper.SpanEqualsHelper<IAssetLinkGetter<SkyrimTextureAssetType>?>(
                 item.CloudTextures,
                 rhs.CloudTextures,
                 (l, r) => string.Equals(l, r),
@@ -4281,11 +4281,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-<<<<<<< HEAD
-                if (!MemoryExtensions.SequenceEqual<String>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
-=======
                 if (!MemoryExtensions.SequenceEqual<IAssetLinkGetter<SkyrimTextureAssetType>>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
->>>>>>> nog-assets
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
@@ -4909,13 +4905,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-<<<<<<< HEAD
-                rhs.CloudTextures.Span.CopyTo(item.CloudTextures.AsSpan());
-=======
-                item.CloudTextures.SetTo(
-                    rhs.CloudTextures
-                    .Select(r => r?.AsSetter()));
->>>>>>> nog-assets
+                item.CloudTextures.SetTo(rhs.CloudTextures.Select(x => x?.AsSetter()));
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
@@ -6627,12 +6617,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherCommon.Instance.EnumerateFormLinks(this);
-=======
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => WeatherCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

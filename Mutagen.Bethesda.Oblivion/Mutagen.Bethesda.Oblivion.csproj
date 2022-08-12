@@ -899,15 +899,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-<<<<<<< HEAD
-    <PackageReference Include="Loqui" Version="2.49.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.49.0" />
+    <PackageReference Include="Loqui" Version="2.50.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.50.1" />
     <PackageReference Include="NuGetizer" Version="0.8.0">
-=======
-    <PackageReference Include="Loqui" Version="2.40.0.1-dev" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.40.0" />
-    <PackageReference Include="NuGetizer" Version="0.7.5">
->>>>>>> nog-assets
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -737,6 +737,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Type = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IFindMatchingRefNearAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFindMatchingRefNearAlias item,
@@ -876,7 +883,6 @@ namespace Mutagen.Bethesda.Skyrim
             return FindMatchingRefNearAlias.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFindMatchingRefNearAliasGetter obj)
         {
@@ -885,8 +891,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class FindMatchingRefNearAliasSetterTranslationCommon
     {

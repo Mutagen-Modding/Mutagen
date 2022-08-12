@@ -1067,6 +1067,13 @@ namespace Mutagen.Bethesda.Fallout4
             item.Color = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IDecal obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDecal item,
@@ -1291,7 +1298,6 @@ namespace Mutagen.Bethesda.Fallout4
             return Decal.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDecalGetter obj)
         {
@@ -1300,8 +1306,6 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class DecalSetterTranslationCommon
     {

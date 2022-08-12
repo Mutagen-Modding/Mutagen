@@ -63,7 +63,6 @@ public partial class RecordTypes
     public static readonly RecordType FLST = new(0x54534C46);
     public static readonly RecordType FSTP = new(0x50545346);
     public static readonly RecordType FSTS = new(0x53545346);
-    public static readonly RecordType FULL = new(0x4C4C5546);
     public static readonly RecordType FURN = new(0x4E525546);
     public static readonly RecordType GDRY = new(0x59524447);
     public static readonly RecordType GLOB = new(0x424F4C47);

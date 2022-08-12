@@ -863,11 +863,17 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout4Group<T> obj)
         {
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
             yield break;
         }
         
         public void RemapListedAssetLinks(IFallout4Group<T> obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
         {
+            obj.RecordCache.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -1124,6 +1130,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout4GroupGetter<T> obj, ILinkCache? linkCache, bool includeImplicit)
         {
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit)))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -1433,12 +1444,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-<<<<<<< HEAD
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4GroupCommon<T>.Instance.EnumerateFormLinks(this);
-=======
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4GroupCommon<T>.Instance.GetContainedFormLinks(this);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => Fallout4GroupCommon<T>.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
->>>>>>> nog-assets
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

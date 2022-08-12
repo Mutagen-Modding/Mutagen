@@ -7,6 +7,8 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
@@ -39,7 +41,7 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
     }
 
     public override async Task GenerateCopyIn(
-        FileGeneration fg,
+        StructuredStringBuilder fg,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
         Accessor frameAccessor,
@@ -98,37 +100,37 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
                 SkipErrorMask = !this.DoErrorMasks
             });
     }
- 
-    public override async Task GenerateWrapperFields( 
-        FileGeneration fg, 
-        ObjectGeneration objGen,  
-        TypeGeneration typeGen,  
-        Accessor dataAccessor,  
-        int? currentPosition,  
-        string passedLengthAccessor,  
-        DataType dataType = null) 
-    { 
+
+    public override async Task GenerateWrapperFields(
+        StructuredStringBuilder sb, 
+        ObjectGeneration objGen,
+        TypeGeneration typeGen,
+        Accessor structDataAccessor,
+        Accessor recordDataAccessor,
+        int? currentPosition,
+        string passedLengthAccessor,
+        DataType? dataType = null)
+    {
         AssetLinkType asset = typeGen as AssetLinkType; 
         var data = asset.GetFieldData(); 
         if (data.HasTrigger) 
         { 
-            await base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType); 
+            await base.GenerateWrapperFields(sb, objGen, typeGen, structDataAccessor, recordDataAccessor, currentPosition, passedLengthAccessor, dataType); 
             return; 
         } 
         switch (asset.BinaryType) 
         { 
             case StringBinaryType.NullTerminate: 
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{asset.NullChar} {typeGen.Name} {{ get; private set; }} = null!;"); 
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{asset.NullChar} {typeGen.Name} {{ get; private set; }} = null!;"); 
                 break; 
             default: 
-                await base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType); 
+                await base.GenerateWrapperFields(sb, objGen, typeGen, structDataAccessor, recordDataAccessor, currentPosition, passedLengthAccessor, dataType); 
                 return; 
         } 
- 
     } 
  
     public override void GenerateCopyInRet( 
-        FileGeneration fg, 
+        StructuredStringBuilder fg, 
         ObjectGeneration objGen, 
         TypeGeneration targetGen, 
         TypeGeneration typeGen, 
@@ -149,7 +151,7 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
         if (asyncMode != AsyncMode.Off) throw new NotImplementedException(); 
         var assetType = typeGen as AssetLinkType; 
         var data = typeGen.GetFieldData(); 
-        using (var args = new ArgsWrapper(fg, 
+        using (var args = fg.Call( 
                    $"{retAccessor}{this.NamespacePrefix}AssetLinkBinaryTranslation.Instance.Parse")) 
         { 
             args.Add(nodeAccessor.Access); 
@@ -173,23 +175,24 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
     }
 
     public override async Task GenerateWrapperUnknownLengthParse(
-        FileGeneration fg,
+        StructuredStringBuilder sb,
         ObjectGeneration objGen,
         TypeGeneration typeGen,
-        int? passedLength,
-        string passedLengthAccessor)
+        Accessor dataAccessor,
+        int? passedLength, 
+        string? passedLengthAccessor)
     {
         AssetLinkType asset = typeGen as AssetLinkType;
         switch (asset.BinaryType)
         {
             case StringBinaryType.NullTerminate:
-                fg.AppendLine(
-                    $"ret.{typeGen.Name} = new AssetLink<{asset.AssetTypeString}>({asset.AssetTypeString}.Instance, {nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret._data.Slice({passedLengthAccessor}), package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)}));");
-                fg.AppendLine(
+                sb.AppendLine(
+                    $"ret.{typeGen.Name} = new AssetLink<{asset.AssetTypeString}>({asset.AssetTypeString}.Instance, {nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret.{dataAccessor}.Slice({passedLengthAccessor}), package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)}));");
+                sb.AppendLine(
                     $"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(asset.Translated == null ? $"ret.{AccessorTransform(typeGen, typeGen.Name)}.Length + 1" : "5")};");
                 break;
             default:
-                await base.GenerateWrapperUnknownLengthParse(fg, objGen, typeGen, passedLength, passedLengthAccessor);
+                await base.GenerateWrapperUnknownLengthParse(sb, objGen, typeGen, dataAccessor, passedLength, passedLengthAccessor);
                 break;
         }
     } 

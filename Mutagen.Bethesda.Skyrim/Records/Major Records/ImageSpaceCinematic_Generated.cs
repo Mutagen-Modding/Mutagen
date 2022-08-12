@@ -769,6 +769,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Contrast = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IImageSpaceCinematic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImageSpaceCinematic item,
@@ -913,7 +920,6 @@ namespace Mutagen.Bethesda.Skyrim
             return ImageSpaceCinematic.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IImageSpaceCinematicGetter obj)
         {
@@ -922,8 +928,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class ImageSpaceCinematicSetterTranslationCommon
     {

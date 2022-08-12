@@ -993,6 +993,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Scale = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IAmbientColors obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAmbientColors item,
@@ -1193,7 +1200,6 @@ namespace Mutagen.Bethesda.Skyrim
             return AmbientColors.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAmbientColorsGetter obj)
         {
@@ -1202,8 +1208,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class AmbientColorsSetterTranslationCommon
     {

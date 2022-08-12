@@ -1,19 +1,11 @@
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Noggog;
-<<<<<<< HEAD
-using Mutagen.Bethesda.Skyrim.Internals;
-=======
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim.Assets;
->>>>>>> nog-assets
+using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -52,6 +44,14 @@ public partial class Quest
     }
 }
 
+partial class QuestCommon
+{
+    public static IEnumerable<IAssetLink> GetAdditionalAssetLinks(IQuestGetter obj, ILinkCache linkCache)
+    {
+        if ((obj.Flags & Quest.Flag.StartGameEnabled) != 0) yield return new AssetLink<SkyrimSeqAssetType>(SkyrimSeqAssetType.Instance, Path.Combine($"{obj.FormKey.ModKey.Name}.seq"));
+    }
+}
+
 partial class QuestBinaryCreateTranslation
 {
     public static partial void FillBinaryDialogConditionsCustom(MutagenFrame frame, IQuestInternal item)
@@ -73,28 +73,11 @@ partial class QuestBinaryCreateTranslation
 
     public static partial ParseResult FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item)
     {
-<<<<<<< HEAD
         // Skip
         frame.ReadSubrecord();
         return null;
     }
 }
-=======
-        public partial class QuestCommon
-        {
-            public static IEnumerable<IAssetLink> GetAdditionalAssetLinks(IQuestGetter obj, ILinkCache linkCache)
-            {
-                if ((obj.Flags & Quest.Flag.StartGameEnabled) != 0) yield return new AssetLink<SkyrimSeqAssetType>(SkyrimSeqAssetType.Instance, Path.Combine($"{obj.FormKey.ModKey.Name}.seq"));
-            }
-        }
-    
-        public partial class QuestBinaryCreateTranslation
-        {
-            public static partial void FillBinaryDialogConditionsCustom(MutagenFrame frame, IQuestInternal item)
-            {
-                ConditionBinaryCreateTranslation.FillConditionsList(item.DialogConditions, frame);
-            }
->>>>>>> nog-assets
 
 partial class QuestBinaryWriteTranslation
 {

@@ -1285,6 +1285,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
+        public void RemapLinks(IShaderParticleGeometry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IShaderParticleGeometry obj)
         {
             foreach (var item in base.EnumerateListedAssetLinks(obj))
@@ -1661,15 +1666,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IShaderParticleGeometryGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
-=======
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IShaderParticleGeometryGetter obj, ILinkCache? linkCache, bool includeImplicit)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
->>>>>>> nog-assets
             {
                 yield return item;
             }
@@ -2263,11 +2271,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ParticleTexture
         private int? _ParticleTextureLocation;
-<<<<<<< HEAD
-        public String? ParticleTexture => _ParticleTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-=======
-        public IAssetLinkGetter<SkyrimTextureAssetType>? ParticleTexture => _ParticleTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
->>>>>>> nog-assets
+        public IAssetLinkGetter<SkyrimTextureAssetType>? ParticleTexture => _ParticleTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

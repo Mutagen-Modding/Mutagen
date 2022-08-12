@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -447,6 +448,9 @@ namespace Mutagen.Bethesda.Fallout4
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => Fallout4MajorRecordCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => Fallout4MajorRecordSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout4MajorRecordSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -503,6 +507,7 @@ namespace Mutagen.Bethesda.Fallout4
     /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AimModel, Ammunition, AnimatedObject, AnimationSoundTagSet, Armor, ArmorAddon, ArtObject, AssociationType, AttractionRule, AudioCategorySnapshot, AudioEffectChain, BendableSpline, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, Component, ConstructibleObject, Container, ADamageType, Debris, DefaultObject, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, GodRays, Grass, Hazard, HeadPart, Holotape, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, InstanceNamingRules, Key, Keyword, Landscape, LandscapeTexture, Layer, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialSwap, MaterialType, Message, MiscItem, MovableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, NavigationMeshObstacleManager, Npc, ObjectEffect, AObjectModification, ObjectVisibilityManager, Outfit, Package, PackIn, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, ReferenceGroup, Region, Relationship, ReverbParameters, Scene, SceneCollection, ShaderParticleGeometry, SoundCategory, SoundDescriptor, SoundKeywordMapping, SoundMarker, SoundOutputModel, Spell, Static, StaticCollection, AStoryManagerNode, TalkingActivator, Terminal, TextureSet, Transform, Tree, VisualEffect, VoiceType, Water, Weapon, Weather, Worldspace, Zoom]
     /// </summary>
     public partial interface IFallout4MajorRecord :
+        IAssetLinkContainer,
         IFallout4MajorRecordGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IFallout4MajorRecordInternal>,
@@ -525,6 +530,7 @@ namespace Mutagen.Bethesda.Fallout4
     /// </summary>
     public partial interface IFallout4MajorRecordGetter :
         IMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IFallout4MajorRecordGetter>,
@@ -1075,6 +1081,20 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout4MajorRecord obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IFallout4MajorRecord obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1319,6 +1339,15 @@ namespace Mutagen.Bethesda.Fallout4
                         yield break;
                     }
             }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout4MajorRecordGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            {
+                yield return item;
+            }
+            yield break;
         }
         
         #region Duplicate
@@ -1613,6 +1642,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4MajorRecordCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => Fallout4MajorRecordCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

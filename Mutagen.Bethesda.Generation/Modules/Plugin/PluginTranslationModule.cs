@@ -673,6 +673,11 @@ public class PluginTranslationModule : BinaryTranslationModule
             yield return "Mutagen.Bethesda.Plugins.Cache";
             yield return "Mutagen.Bethesda.Plugins.Internals";
         }
+
+        await foreach (var item in ContainedAssetLinksModule.Instance.RequiredUsingStatements(obj))
+        {
+            yield return item;
+        }
     }
 
     public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, StructuredStringBuilder sb)
@@ -2111,9 +2116,9 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
 
             if (obj.GetObjectType() == ObjectType.Mod
-                || (await ContainedAssetLinksModule.HasLinks(obj, includeBaseClass: false) != Case.No))
+                || (await ContainedAssetLinksModule.Instance.HasLinks(obj, includeBaseClass: false) != Case.No))
             {
-                await ContainedAssetLinksModule.GenerateInterfaceImplementation(obj, fg, getter: true);
+                await ContainedAssetLinksModule.Instance.GenerateInterfaceImplementation(obj, sb, getter: true);
             }
 
             if (obj.GetObjectType() == ObjectType.Mod)

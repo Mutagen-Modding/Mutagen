@@ -749,6 +749,14 @@ namespace Mutagen.Bethesda.Oblivion
             Clear(item: (ISubspaceInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISubspace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISubspaceInternal item,
@@ -972,7 +980,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISubspaceGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -982,8 +989,6 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
         
-=======
->>>>>>> nog-assets
         #region Duplicate
         public Subspace Duplicate(
             ISubspaceGetter item,

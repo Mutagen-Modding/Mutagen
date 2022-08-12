@@ -5998,7 +5998,7 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                rhs.CloudTextures.Span.CopyTo(item.CloudTextures.AsSpan());
+                item.CloudTextures.SetTo(rhs.CloudTextures.Select(x => x));
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {

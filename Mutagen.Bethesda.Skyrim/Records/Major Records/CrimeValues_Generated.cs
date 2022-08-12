@@ -1074,6 +1074,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Werewolf = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICrimeValues obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICrimeValues item,
@@ -1298,7 +1305,6 @@ namespace Mutagen.Bethesda.Skyrim
             return CrimeValues.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICrimeValuesGetter obj)
         {
@@ -1307,8 +1313,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class CrimeValuesSetterTranslationCommon
     {

@@ -769,6 +769,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Restitution = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IHavokData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IHavokData item,
@@ -913,7 +920,6 @@ namespace Mutagen.Bethesda.Oblivion
             return HavokData.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHavokDataGetter obj)
         {
@@ -922,8 +928,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class HavokDataSetterTranslationCommon
     {

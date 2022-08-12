@@ -955,6 +955,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Vertices.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IIslandData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IIslandData item,
@@ -1131,7 +1138,6 @@ namespace Mutagen.Bethesda.Skyrim
             return IslandData.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIslandDataGetter obj)
         {
@@ -1140,8 +1146,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class IslandDataSetterTranslationCommon
     {

@@ -769,6 +769,13 @@ namespace Mutagen.Bethesda.Skyrim
             item.Count = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IMusicTrackLoopData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMusicTrackLoopData item,
@@ -913,7 +920,6 @@ namespace Mutagen.Bethesda.Skyrim
             return MusicTrackLoopData.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMusicTrackLoopDataGetter obj)
         {
@@ -922,8 +928,6 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class MusicTrackLoopDataSetterTranslationCommon
     {

@@ -806,6 +806,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Flags = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IEnchantmentData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEnchantmentData item,
@@ -960,7 +967,6 @@ namespace Mutagen.Bethesda.Oblivion
             return EnchantmentData.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEnchantmentDataGetter obj)
         {
@@ -969,8 +975,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class EnchantmentDataSetterTranslationCommon
     {

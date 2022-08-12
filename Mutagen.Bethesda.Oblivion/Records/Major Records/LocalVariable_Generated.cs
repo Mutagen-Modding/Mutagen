@@ -775,6 +775,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Name = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocalVariable obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocalVariable item,
@@ -922,7 +929,6 @@ namespace Mutagen.Bethesda.Oblivion
             return LocalVariable.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocalVariableGetter obj)
         {
@@ -931,8 +937,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class LocalVariableSetterTranslationCommon
     {

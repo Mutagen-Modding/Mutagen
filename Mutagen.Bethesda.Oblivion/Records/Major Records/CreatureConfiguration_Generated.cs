@@ -917,6 +917,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.CalcMax = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICreatureConfiguration obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICreatureConfiguration item,
@@ -1101,7 +1108,6 @@ namespace Mutagen.Bethesda.Oblivion
             return CreatureConfiguration.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICreatureConfigurationGetter obj)
         {
@@ -1110,8 +1116,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class CreatureConfigurationSetterTranslationCommon
     {

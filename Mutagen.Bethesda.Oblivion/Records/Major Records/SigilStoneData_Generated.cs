@@ -772,6 +772,13 @@ namespace Mutagen.Bethesda.Oblivion
             item.Weight = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ISigilStoneData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISigilStoneData item,
@@ -916,7 +923,6 @@ namespace Mutagen.Bethesda.Oblivion
             return SigilStoneData.GetNew();
         }
         
-<<<<<<< HEAD
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISigilStoneDataGetter obj)
         {
@@ -925,8 +931,6 @@ namespace Mutagen.Bethesda.Oblivion
         
         #endregion
         
-=======
->>>>>>> nog-assets
     }
     internal partial class SigilStoneDataSetterTranslationCommon
     {

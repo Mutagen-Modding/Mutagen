@@ -801,6 +801,14 @@ namespace Mutagen.Bethesda.Oblivion
             Clear(item: (ISoundInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISound obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundInternal item,
@@ -1046,7 +1054,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1056,8 +1063,6 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
         
-=======
->>>>>>> nog-assets
         #region Duplicate
         public Sound Duplicate(
             ISoundGetter item,

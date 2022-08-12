@@ -777,6 +777,14 @@ namespace Mutagen.Bethesda.Oblivion
             Clear(item: (ISpellLeveledInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISpellLeveled obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISpellLeveledInternal item,
@@ -1000,7 +1008,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-<<<<<<< HEAD
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISpellLeveledGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
@@ -1010,8 +1017,6 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
         
-=======
->>>>>>> nog-assets
         #region Duplicate
         public SpellLeveled Duplicate(
             ISpellLeveledGetter item,
