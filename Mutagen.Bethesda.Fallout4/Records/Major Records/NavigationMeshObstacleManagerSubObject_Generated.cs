@@ -916,7 +916,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: NavigationMeshObstacleManagerSubObjectBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: NavigationMeshObstacleManagerSubObjectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1283,12 +1282,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class NavigationMeshObstacleManagerSubObjectBinaryCreateTranslation
     {
         public static readonly NavigationMeshObstacleManagerSubObjectBinaryCreateTranslation Instance = new NavigationMeshObstacleManagerSubObjectBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            INavigationMeshObstacleManagerSubObject item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             INavigationMeshObstacleManagerSubObject item,

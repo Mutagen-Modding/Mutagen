@@ -11,7 +11,7 @@ public partial class Ammunition
     [Flags]
     public enum Flag
     {
-        IgnoresNormalWeaponResistence = 0x01,
+        IgnoresNormalWeaponResistance = 0x01,
         NonPlayable = 0x02,
         HasCountBased3d = 0x04
     }

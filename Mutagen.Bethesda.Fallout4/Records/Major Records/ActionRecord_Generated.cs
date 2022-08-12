@@ -1617,15 +1617,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ActionRecordBinaryCreateTranslation Instance = new ActionRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AACT;
-        public static void FillBinaryStructs(
-            IActionRecordInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IActionRecordInternal item,
             MutagenFrame frame,

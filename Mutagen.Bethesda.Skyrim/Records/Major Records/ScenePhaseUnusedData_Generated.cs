@@ -904,7 +904,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ScenePhaseUnusedDataBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ScenePhaseUnusedDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1297,12 +1296,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class ScenePhaseUnusedDataBinaryCreateTranslation
     {
         public static readonly ScenePhaseUnusedDataBinaryCreateTranslation Instance = new ScenePhaseUnusedDataBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IScenePhaseUnusedData item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IScenePhaseUnusedData item,

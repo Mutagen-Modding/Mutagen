@@ -1430,15 +1430,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly WordOfPowerBinaryCreateTranslation Instance = new WordOfPowerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WOOP;
-        public static void FillBinaryStructs(
-            IWordOfPowerInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IWordOfPowerInternal item,
             MutagenFrame frame,

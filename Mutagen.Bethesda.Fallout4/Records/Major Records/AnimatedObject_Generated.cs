@@ -1454,15 +1454,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly AnimatedObjectBinaryCreateTranslation Instance = new AnimatedObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ANIO;
-        public static void FillBinaryStructs(
-            IAnimatedObjectInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAnimatedObjectInternal item,
             MutagenFrame frame,

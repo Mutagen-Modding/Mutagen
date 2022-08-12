@@ -1372,9 +1372,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)NpcFaceTintingLayer_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
                     item.DataType = EnumBinaryTranslation<NpcFaceTintingLayer.Type, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 2);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Index = dataFrame.ReadUInt16();
                     return (int)NpcFaceTintingLayer_FieldIndex.Index;
                 }
@@ -1382,6 +1384,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
@@ -1391,7 +1394,9 @@ namespace Mutagen.Bethesda.Fallout4
                         item.TENDDataTypeState |= NpcFaceTintingLayer.TENDDataType.Break0;
                         return (int)NpcFaceTintingLayer_FieldIndex.Value;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.Color = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Remaining < 2) return null;
                     item.TemplateColorIndex = dataFrame.ReadInt16();
                     return (int)NpcFaceTintingLayer_FieldIndex.TemplateColorIndex;
                 }

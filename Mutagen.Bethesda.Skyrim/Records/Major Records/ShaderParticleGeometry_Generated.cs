@@ -2118,15 +2118,25 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.GravityVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.RotationVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleSizeX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleSizeY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CenterOffsetMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CenterOffsetMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.InitialRotationRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.NumSubtexturesX = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.NumSubtexturesY = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Type = EnumBinaryTranslation<ShaderParticleGeometry.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
@@ -2135,7 +2145,9 @@ namespace Mutagen.Bethesda.Skyrim
                         item.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
                         return (int)ShaderParticleGeometry_FieldIndex.Type;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.BoxSize = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.ParticleDensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)ShaderParticleGeometry_FieldIndex.ParticleDensity;
                 }

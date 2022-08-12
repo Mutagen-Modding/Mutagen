@@ -1448,15 +1448,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly OutfitBinaryCreateTranslation Instance = new OutfitBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.OTFT;
-        public static void FillBinaryStructs(
-            IOutfitInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IOutfitInternal item,
             MutagenFrame frame,

@@ -1293,6 +1293,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Percentage = dataFrame.ReadUInt8();
                     item.ModelFilename.RawPath = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
@@ -1303,6 +1304,7 @@ namespace Mutagen.Bethesda.Skyrim
                         item.DATADataTypeState |= DebrisModel.DATADataType.Break0;
                         return (int)DebrisModel_FieldIndex.ModelFilename;
                     }
+                    if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);

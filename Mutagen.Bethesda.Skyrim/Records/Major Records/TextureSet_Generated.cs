@@ -2128,15 +2128,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly TextureSetBinaryCreateTranslation Instance = new TextureSetBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TXST;
-        public static void FillBinaryStructs(
-            ITextureSetInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ITextureSetInternal item,
             MutagenFrame frame,

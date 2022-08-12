@@ -5034,15 +5034,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly LocationBinaryCreateTranslation Instance = new LocationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LCTN;
-        public static void FillBinaryStructs(
-            ILocationInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILocationInternal item,
             MutagenFrame frame,

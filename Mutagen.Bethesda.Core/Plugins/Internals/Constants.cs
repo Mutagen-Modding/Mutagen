@@ -12,6 +12,7 @@ internal static class Constants
     public const int LightMasterLimit = 2048;
     public const int MasterFlag = 0x0000_0001;
     public const int CompressedFlag = 0x0004_0000;
+    public const int Localized = 0x0000_0080;
     public const int PartialFormFlag = 0x0000_4000;
     public const int DeletedFlag = 0x0000_0020;
     public const int InitiallyDisabled = 0x0000_0800;

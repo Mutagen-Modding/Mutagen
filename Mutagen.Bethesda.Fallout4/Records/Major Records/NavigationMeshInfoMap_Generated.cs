@@ -1684,15 +1684,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly NavigationMeshInfoMapBinaryCreateTranslation Instance = new NavigationMeshInfoMapBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NAVI;
-        public static void FillBinaryStructs(
-            INavigationMeshInfoMapInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             INavigationMeshInfoMapInternal item,
             MutagenFrame frame,

@@ -1327,15 +1327,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly SpellLeveledBinaryCreateTranslation Instance = new SpellLeveledBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVSP;
-        public static void FillBinaryStructs(
-            ISpellLeveledInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISpellLeveledInternal item,
             MutagenFrame frame,

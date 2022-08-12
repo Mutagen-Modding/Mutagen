@@ -760,7 +760,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: FindMatchingRefFromEventBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: FindMatchingRefFromEventBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1059,12 +1058,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class FindMatchingRefFromEventBinaryCreateTranslation
     {
         public static readonly FindMatchingRefFromEventBinaryCreateTranslation Instance = new FindMatchingRefFromEventBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IFindMatchingRefFromEvent item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IFindMatchingRefFromEvent item,

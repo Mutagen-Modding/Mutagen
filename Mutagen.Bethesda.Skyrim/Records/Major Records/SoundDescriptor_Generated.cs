@@ -2518,14 +2518,19 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.PercentFrequencyShift = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.PercentFrequencyVariance = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Priority = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Variance = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 2) return null;
                     item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.UShort,

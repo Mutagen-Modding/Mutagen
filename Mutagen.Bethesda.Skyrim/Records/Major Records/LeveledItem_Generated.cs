@@ -1758,15 +1758,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly LeveledItemBinaryCreateTranslation Instance = new LeveledItemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVLI;
-        public static void FillBinaryStructs(
-            ILeveledItemInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILeveledItemInternal item,
             MutagenFrame frame,

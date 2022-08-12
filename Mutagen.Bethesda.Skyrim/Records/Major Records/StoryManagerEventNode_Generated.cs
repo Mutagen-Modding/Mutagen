@@ -1609,15 +1609,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly StoryManagerEventNodeBinaryCreateTranslation Instance = new StoryManagerEventNodeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SMEN;
-        public static void FillBinaryStructs(
-            IStoryManagerEventNodeInternal item,
-            MutagenFrame frame)
-        {
-            AStoryManagerNodeBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IStoryManagerEventNodeInternal item,
             MutagenFrame frame,

@@ -2269,21 +2269,29 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Unknown = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Teaches = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.MaxTrainingLevel = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 18) return null;
                     Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                         reader: frame,
                         item: item.SkillWeights,
                         transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+                    if (dataFrame.Remaining < 4) return null;
                     item.BleedoutDefault = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.VoicePoints = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 3) return null;
                     Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
                         reader: frame,
                         item: item.StatWeights,
                         transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Unknown2 = dataFrame.ReadUInt8();
                     return (int)Class_FieldIndex.Unknown2;
                 }

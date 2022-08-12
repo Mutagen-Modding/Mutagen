@@ -869,7 +869,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: DestructionStageBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: DestructionStageBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1265,12 +1264,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class DestructionStageBinaryCreateTranslation
     {
         public static readonly DestructionStageBinaryCreateTranslation Instance = new DestructionStageBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IDestructionStage item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IDestructionStage item,

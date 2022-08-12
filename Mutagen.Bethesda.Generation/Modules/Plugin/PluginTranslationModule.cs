@@ -54,7 +54,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         this.TranslationMaskParameter = false;
         this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(TranslationTerm);
         this._typeGenerations[typeof(BoolType)] = new BooleanBinaryTranslationGeneration();
-        this._typeGenerations[typeof(CharType)] = new PrimitiveBinaryTranslationGeneration<char>(expectedLen: 1);
+        this._typeGenerations[typeof(CharType)] = new CharBinaryTranslationGeneration();
         this._typeGenerations[typeof(DateTimeType)] = new PrimitiveBinaryTranslationGeneration<DateTime>(expectedLen: null);
         this._typeGenerations[typeof(DoubleType)] = new PrimitiveBinaryTranslationGeneration<double>(expectedLen: 8);
         this._typeGenerations[typeof(EnumType)] = new EnumBinaryTranslationGeneration();
@@ -686,7 +686,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         await base.GenerateInTranslationCreateClass(obj, sb);
     }
 
-    private Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>> DoubleUsages(
+    private Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>> DoubleSingleTriggerUsages(
         List<(int, int, TypeGeneration Field)> fields)
     {
         var doubleUsages = new Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>>();
@@ -726,6 +726,28 @@ public class PluginTranslationModule : BinaryTranslationModule
         return doubleUsages;
     }
 
+    private HashSet<RecordType> DuplicateTriggers(List<(int, int, TypeGeneration Field)> fields)
+    {
+        var duplicated = new HashSet<RecordType>();
+        var passed = new HashSet<RecordType>();
+        foreach (var field in fields)
+        {
+            var fieldData = field.Field.GetFieldData();
+            foreach (var gen in fieldData.GenerationTypes)
+            {
+                foreach (var trigger in gen.Key)
+                {
+                    if (!passed.Add(trigger))
+                    {
+                        duplicated.Add(trigger);
+                    }
+                }
+            }
+        }
+
+        return duplicated;
+    }
+
     private async Task GenerateCreateExtras(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var data = obj.GetObjectData();
@@ -746,59 +768,62 @@ public class PluginTranslationModule : BinaryTranslationModule
         if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
         {
             var async = HasAsyncStructs(obj, self: true);
-            using (var args = sb.Function(
-                       $"public static {Loqui.Generation.Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
+            if (HasEmbeddedFields(obj))
             {
-                args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-                args.Add($"{ReaderClass} {ReaderMemberName}");
-            }
-            using (sb.CurlyBrace())
-            {
-                if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
+                using (var args = sb.Function(
+                           $"public static {Loqui.Generation.Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
                 {
-                    using (var args = sb.Call(
-                               $"{Loqui.Generation.Utility.Await(async)}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}Structs"))
-                    {
-                        args.AddPassArg("item");
-                        args.AddPassArg(ReaderMemberName);
-                    }
+                    args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
+                    args.Add($"{ReaderClass} {ReaderMemberName}");
                 }
-                int breakIndex = 0;
-                foreach (var field in obj.IterateFields(
-                             nonIntegrated: true,
-                             expandSets: SetMarkerType.ExpandSets.False))
+                using (sb.CurlyBrace())
                 {
-                    if (field is SetMarkerType) continue;
-                    if (field is CustomLogic logic && logic.IsRecordType) continue;
-                    var fieldData = field.GetFieldData();
-                    if (fieldData.HasTrigger) continue;
-                    if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
-                    if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
-                    if (!field.Enabled) continue;
-                    if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                    if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
                     {
-                        if (!field.IntegrateField) continue;
-                        throw new ArgumentException("Unsupported type generator: " + field);
-                    }
-                    if (field.Nullable)
-                    {
-                        sb.AppendLine($"if (frame.Complete) return;");
-                    }
-
-                    if (field is BreakType)
-                    {
-                        sb.AppendLine("if (frame.Complete)");
-                        using (sb.CurlyBrace())
+                        using (var args = sb.Call(
+                                   $"{Loqui.Generation.Utility.Await(async)}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}Structs"))
                         {
-                            sb.AppendLine($"item.{VersioningModule.VersioningFieldName} |= {obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
-                            sb.AppendLine("return;");
+                            args.AddPassArg("item");
+                            args.AddPassArg(ReaderMemberName);
                         }
-                        continue;
                     }
-                    await GenerateFillSnippet(obj, sb, field, generator, "frame");
+                    int breakIndex = 0;
+                    foreach (var field in obj.IterateFields(
+                                 nonIntegrated: true,
+                                 expandSets: SetMarkerType.ExpandSets.False))
+                    {
+                        if (field is SetMarkerType) continue;
+                        if (field is CustomLogic logic && logic.IsRecordType) continue;
+                        var fieldData = field.GetFieldData();
+                        if (fieldData.HasTrigger) continue;
+                        if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+                        if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
+                        if (!field.Enabled) continue;
+                        if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                        {
+                            if (!field.IntegrateField) continue;
+                            throw new ArgumentException("Unsupported type generator: " + field);
+                        }
+                        if (field.Nullable)
+                        {
+                            sb.AppendLine($"if (frame.Complete) return;");
+                        }
+
+                        if (field is BreakType)
+                        {
+                            sb.AppendLine("if (frame.Complete)");
+                            using (sb.CurlyBrace())
+                            {
+                                sb.AppendLine($"item.{VersioningModule.VersioningFieldName} |= {obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
+                                sb.AppendLine("return;");
+                            }
+                            continue;
+                        }
+                        await GenerateFillSnippet(obj, sb, field, generator, "frame");
+                    }
                 }
+                sb.AppendLine();
             }
-            sb.AppendLine();
         }
 
         if (HasRecordTypeFields(obj) && !obj.IsTopLevelGroup())
@@ -850,7 +875,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fields.Add(field);
                     }
 
-                    var doubleUsages = DoubleUsages(fields);
+                    var doubleUsages = DoubleSingleTriggerUsages(fields);
+                    var duplicateTriggers = DuplicateTriggers(fields);
 
                     foreach (var field in fields)
                     {
@@ -861,7 +887,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         }
                         foreach (var gen in fieldData.GenerationTypes)
                         {
-                            LoquiType loqui = gen.Value as LoquiType;
+                            var loqui = gen.Value as LoquiType;
                             if (gen.Value.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.Custom 
                                 && (loqui?.TargetObjectGeneration?.Abstract ?? false)) continue;
 
@@ -875,9 +901,25 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
 
-                            foreach (var trigger in gen.Key)
+                            if (gen.Value.GetFieldData().HasVersioning
+                                && gen.Key.Any(x => duplicateTriggers.Contains(x)))
                             {
-                                sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                foreach (var trigger in gen.Key)
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}");
+                                    using (sb.IncreaseDepth())
+                                    {
+                                        sb.AppendLine(
+                                            $"when {VersioningModule.GetVersionIfCheck(gen.Value.GetFieldData(), "frame.MetaData.FormVersion")}:");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var trigger in gen.Key)
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                }
                             }
                             using (sb.CurlyBrace())
                             {
@@ -1262,6 +1304,21 @@ public class PluginTranslationModule : BinaryTranslationModule
                     sb.Depth--;
                     sb.AppendLine("}");
                 }
+
+                var expLen = await subGenerator.ExpectedLength(obj, subField.Field);
+                if (expLen.HasValue
+                    && subField.Field.GetFieldData().Binary == BinaryGenerationType.Normal
+                    && subField.Field is not ByteArrayType)
+                {
+                    if (subField.Field is LoquiType)
+                    {
+                        sb.AppendLine($"if (dataFrame.Complete) return null;");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"if (dataFrame.Remaining < {expLen}) return null;");
+                    }
+                }
                 await GenerateFillSnippet(obj, sb, subField.Field, subGenerator, "dataFrame");
             }
             if (isInRange)
@@ -1494,7 +1551,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fields.Add(field);
                     }
 
-                    var doubleUsages = DoubleUsages(fields);
+                    var doubleUsages = DoubleSingleTriggerUsages(fields);
+                    var duplicateTriggers = DuplicateTriggers(fields);
 
                     foreach (var field in fields)
                     {
@@ -1519,9 +1577,25 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
 
-                            foreach (var trigger in gen.Key)
+                            if (gen.Value.GetFieldData().HasVersioning
+                                && gen.Key.Any(x => duplicateTriggers.Contains(x)))
                             {
-                                sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                foreach (var trigger in gen.Key)
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}");
+                                    using (sb.IncreaseDepth())
+                                    {
+                                        sb.AppendLine(
+                                            $"when {VersioningModule.GetVersionIfCheck(gen.Value.GetFieldData(), "stream.MetaData.FormVersion")}:");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var trigger in gen.Key)
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                }
                             }
                             using (sb.CurlyBrace())
                             {
@@ -1903,18 +1977,25 @@ public class PluginTranslationModule : BinaryTranslationModule
             switch (objType)
             {
                 case ObjectType.Subrecord:
-                    using (var args = sb.Call(
-                               $"{utilityTranslation}.SubrecordParse",
-                               suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
+                    var hasEmbedded = HasEmbeddedFields(obj) || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(HasEmbeddedFields));
+                    var hasRecord = HasRecordTypeFields(obj) || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(HasRecordTypeFields));
+                    if (hasEmbedded || hasRecord)
                     {
-                        args.Add($"record: {accessor}");
-                        args.AddPassArg("frame");
-                        args.AddPassArg("translationParams");
-                        args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
-                        if (HasRecordTypeFields(obj)
-                            || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
+                        using (var args = sb.Call(
+                                   $"{utilityTranslation}.SubrecordParse",
+                                   suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                         {
-                            args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
+                            args.Add($"record: {accessor}");
+                            args.AddPassArg("frame");
+                            args.AddPassArg("translationParams");
+                            if (hasEmbedded)
+                            {
+                                args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
+                            }
+                            if (hasRecord)
+                            {
+                                args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
+                            }
                         }
                     }
                     break;
@@ -1974,11 +2055,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         args.Add($"record: {accessor}");
                         args.AddPassArg(ReaderMemberName);
                         args.AddPassArg("importMask");
-                        args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
-                        if (HasRecordTypeFields(obj))
-                        {
-                            args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
-                        }
+                        args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
                     }
                     break;
                 default:
@@ -3029,7 +3106,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 else
                 {
-                    var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
+                    var firstBase = obj.BaseClassTrail().FirstOrDefault(HasEmbeddedFields);
                     if (firstBase != null)
                     {
                         using (var args = sb.Call(

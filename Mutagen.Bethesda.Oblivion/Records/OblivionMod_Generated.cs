@@ -5086,7 +5086,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 importMask: importMask,
-                fillStructs: OblivionModBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: OblivionModBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -11089,12 +11088,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class OblivionModBinaryCreateTranslation
     {
         public static readonly OblivionModBinaryCreateTranslation Instance = new OblivionModBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IOblivionMod item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IOblivionMod item,

@@ -2779,15 +2779,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly FloraBinaryCreateTranslation Instance = new FloraBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FLOR;
-        public static void FillBinaryStructs(
-            IFloraInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IFloraInternal item,
             MutagenFrame frame,

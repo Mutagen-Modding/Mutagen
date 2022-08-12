@@ -1073,7 +1073,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: QuestLogEntryBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: QuestLogEntryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1540,12 +1539,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class QuestLogEntryBinaryCreateTranslation
     {
         public static readonly QuestLogEntryBinaryCreateTranslation Instance = new QuestLogEntryBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IQuestLogEntry item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IQuestLogEntry item,

@@ -806,7 +806,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LensFlareSpriteBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: LensFlareSpriteBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1155,12 +1154,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class LensFlareSpriteBinaryCreateTranslation
     {
         public static readonly LensFlareSpriteBinaryCreateTranslation Instance = new LensFlareSpriteBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ILensFlareSprite item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ILensFlareSprite item,

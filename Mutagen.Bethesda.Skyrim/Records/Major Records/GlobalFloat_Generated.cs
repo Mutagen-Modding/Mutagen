@@ -1425,15 +1425,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly GlobalFloatBinaryCreateTranslation Instance = new GlobalFloatBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GLOB;
-        public static void FillBinaryStructs(
-            IGlobalFloatInternal item,
-            MutagenFrame frame)
-        {
-            GlobalBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IGlobalFloatInternal item,
             MutagenFrame frame,

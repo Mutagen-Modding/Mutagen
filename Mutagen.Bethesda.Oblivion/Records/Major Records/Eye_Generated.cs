@@ -1451,15 +1451,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly EyeBinaryCreateTranslation Instance = new EyeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EYES;
-        public static void FillBinaryStructs(
-            IEyeInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IEyeInternal item,
             MutagenFrame frame,

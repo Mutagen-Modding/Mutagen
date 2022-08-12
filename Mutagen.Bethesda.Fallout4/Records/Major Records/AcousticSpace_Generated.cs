@@ -1702,15 +1702,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly AcousticSpaceBinaryCreateTranslation Instance = new AcousticSpaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ASPC;
-        public static void FillBinaryStructs(
-            IAcousticSpaceInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAcousticSpaceInternal item,
             MutagenFrame frame,

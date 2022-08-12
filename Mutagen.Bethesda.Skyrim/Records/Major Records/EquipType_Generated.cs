@@ -1511,15 +1511,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly EquipTypeBinaryCreateTranslation Instance = new EquipTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EQUP;
-        public static void FillBinaryStructs(
-            IEquipTypeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IEquipTypeInternal item,
             MutagenFrame frame,

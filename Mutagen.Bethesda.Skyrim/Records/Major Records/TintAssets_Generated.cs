@@ -987,7 +987,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: TintAssetsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: TintAssetsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1393,12 +1392,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class TintAssetsBinaryCreateTranslation
     {
         public static readonly TintAssetsBinaryCreateTranslation Instance = new TintAssetsBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ITintAssets item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ITintAssets item,

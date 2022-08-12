@@ -825,7 +825,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ArmorModelBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ArmorModelBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1190,12 +1189,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class ArmorModelBinaryCreateTranslation
     {
         public static readonly ArmorModelBinaryCreateTranslation Instance = new ArmorModelBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IArmorModel item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IArmorModel item,

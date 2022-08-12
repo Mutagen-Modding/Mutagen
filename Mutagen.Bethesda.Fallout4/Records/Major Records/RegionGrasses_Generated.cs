@@ -858,7 +858,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RegionGrassesBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionGrassesBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1309,12 +1308,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class RegionGrassesBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new static readonly RegionGrassesBinaryCreateTranslation Instance = new RegionGrassesBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IRegionGrasses item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IRegionGrasses item,

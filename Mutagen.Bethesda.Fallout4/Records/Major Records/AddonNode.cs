@@ -2,7 +2,6 @@ namespace Mutagen.Bethesda.Fallout4;
 
 partial class AddonNode
 {
-    [Flags]
     public enum Flag
     {
         NoMasterParticleSystem = 0,

@@ -2269,15 +2269,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly MusicTrackBinaryCreateTranslation Instance = new MusicTrackBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MUST;
-        public static void FillBinaryStructs(
-            IMusicTrackInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMusicTrackInternal item,
             MutagenFrame frame,

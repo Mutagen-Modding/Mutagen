@@ -1714,15 +1714,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ColorRecordBinaryCreateTranslation Instance = new ColorRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLFM;
-        public static void FillBinaryStructs(
-            IColorRecordInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IColorRecordInternal item,
             MutagenFrame frame,

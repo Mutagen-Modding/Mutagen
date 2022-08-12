@@ -10,6 +10,11 @@ using System.Buffers.Binary;
 
 namespace Mutagen.Bethesda.Fallout4;
 
+internal class DeletedObjectModification : AObjectModification
+{
+    protected override Type LinkType => typeof(IAObjectModification);
+}
+
 partial class AObjectModification
 {
     [Flags]
@@ -28,19 +33,35 @@ partial class AObjectModification
         TypedParseParams translationParams)
     {
         var majorMeta = frame.GetMajorRecord();
-        if (!majorMeta.TryFindSubrecord(RecordTypes.DATA, out var data))
+        try
         {
-            throw new MalformedDataException($"Could not find DATA subrecord");
+            if (!majorMeta.TryFindSubrecord(RecordTypes.DATA, out var data))
+            {
+                if (majorMeta.IsDeleted)
+                {
+                    var ret = new DeletedObjectModification();
+                    ret.CopyInFromBinary(frame);
+                    return ret;
+                }
+                throw new MalformedDataException($"Could not find DATA subrecord");
+            }
+            var type = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(data.Content.Slice(10)));
+            return type.TypeInt switch
+            {
+                RecordTypeInts.ARMO => ArmorModification.CreateFromBinary(frame),
+                RecordTypeInts.NPC_ => NpcModification.CreateFromBinary(frame),
+                RecordTypeInts.WEAP => WeaponModification.CreateFromBinary(frame),
+                RecordTypeInts.NONE => ObjectModification.CreateFromBinary(frame),
+                _ => throw new MalformedDataException($"Unknown object modification type: {type}"),
+            };
         }
-        var type = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(data.Content.Slice(10)));
-        return type.TypeInt switch
+        catch (Exception e)
         {
-            RecordTypeInts.ARMO => ArmorModification.CreateFromBinary(frame),
-            RecordTypeInts.NPC_ => NpcModification.CreateFromBinary(frame),
-            RecordTypeInts.WEAP => WeaponModification.CreateFromBinary(frame),
-            RecordTypeInts.NONE => ObjectModification.CreateFromBinary(frame),
-            _ => throw new MalformedDataException($"Unknown object modification type: {type}"),
-        };
+            throw RecordException.Enrich(
+                e,
+                FormKey.Factory(frame.MetaData.MasterReferences, majorMeta.FormID.ID),
+                typeof(AObjectModification));
+        }
     }
 }
 
@@ -53,8 +74,7 @@ partial class AObjectModificationBinaryCreateTranslation
         frame.ReadSubrecordHeader(RecordTypes.DATA);
         var includeCount = frame.ReadInt32();
         var propertyCount = frame.ReadInt32();
-        item.Unknown = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(frame, 1);
-        item.Unknown2 = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(frame, 1);
+        item.Unknown = frame.ReadUInt16();
         // FormType already parsed
         frame.Position += 4;
         item.MaxRank = frame.ReadUInt8();
@@ -92,6 +112,14 @@ partial class AObjectModificationBinaryCreateTranslation
             case IObjectModificationInternal objMod:
                 objMod.Properties.SetTo(
                     ObjectTemplateBinaryCreateTranslation<AObjectModification.NoneProperty>.ReadProperties(frame, propertyCount));
+                break;
+            case DeletedObjectModification del:
+                if (!del.IsDeleted)
+                {
+                    throw new MalformedDataException(
+                        "Do not mark a DeletedObjectModification as no longer deleted.  Instead, make a new" +
+                        "ObjectModification record");
+                }
                 break;
             default:
                 throw new NotImplementedException();
@@ -150,8 +178,7 @@ partial class AObjectModificationBinaryWriteTranslation
         }
         writer.Write(includes.Count);
         writer.Write(properties.Count);
-        writer.Write(item.Unknown, 1);
-        writer.Write(item.Unknown2, 1);
+        writer.Write(item.Unknown);
         writer.Write(type.TypeInt);
         writer.Write(item.MaxRank);
         writer.Write(item.LevelTierScaledOffset);
@@ -197,9 +224,7 @@ partial class AObjectModificationBinaryWriteTranslation
 partial class AObjectModificationBinaryOverlay
 {
     private ReadOnlyMemorySlice<byte> _dataBytes;
-    public bool Unknown => _dataBytes[0x8] >= 1;
-
-    public bool Unknown2 => _dataBytes[0x9] >= 1;
+    public ushort Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_dataBytes.Slice(0x8, 2));
 
     public byte MaxRank => _dataBytes[0xE];
 

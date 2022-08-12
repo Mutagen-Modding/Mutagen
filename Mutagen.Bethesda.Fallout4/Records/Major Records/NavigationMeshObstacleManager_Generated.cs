@@ -1426,15 +1426,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly NavigationMeshObstacleManagerBinaryCreateTranslation Instance = new NavigationMeshObstacleManagerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NOCM;
-        public static void FillBinaryStructs(
-            INavigationMeshObstacleManagerInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             INavigationMeshObstacleManagerInternal item,
             MutagenFrame frame,

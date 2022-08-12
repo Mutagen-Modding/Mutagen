@@ -3297,15 +3297,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly SceneBinaryCreateTranslation Instance = new SceneBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SCEN;
-        public static void FillBinaryStructs(
-            ISceneInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISceneInternal item,
             MutagenFrame frame,

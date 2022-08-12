@@ -922,7 +922,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: QuestObjectiveBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: QuestObjectiveBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1297,12 +1296,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class QuestObjectiveBinaryCreateTranslation
     {
         public static readonly QuestObjectiveBinaryCreateTranslation Instance = new QuestObjectiveBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IQuestObjective item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IQuestObjective item,

@@ -1615,15 +1615,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ArtObjectBinaryCreateTranslation Instance = new ArtObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ARTO;
-        public static void FillBinaryStructs(
-            IArtObjectInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IArtObjectInternal item,
             MutagenFrame frame,

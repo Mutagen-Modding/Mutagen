@@ -230,7 +230,21 @@ internal static class PluginUtilityTranslation
         M record,
         MutagenFrame frame,
         TypedParseParams translationParams,
-        RecordStructFill<M> fillStructs,
+        SubrecordFill<M> fillTyped)
+    {
+        return SubrecordParse(
+            record,
+            frame,
+            translationParams,
+            fillStructs: null,
+            fillTyped: fillTyped);
+    }
+
+    internal static M SubrecordParse<M>(
+        M record,
+        MutagenFrame frame,
+        TypedParseParams translationParams,
+        RecordStructFill<M>? fillStructs,
         SubrecordFill<M> fillTyped)
     {
         fillStructs?.Invoke(
@@ -363,7 +377,6 @@ internal static class PluginUtilityTranslation
         TMod record,
         MutagenFrame frame,
         TImportMask importMask,
-        RecordStructFill<TMod> fillStructs,
         ModRecordTypeFill<TMod, TImportMask> fillTyped)
         where TMod : IMod, IClearable
     {

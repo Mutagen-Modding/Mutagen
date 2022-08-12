@@ -366,6 +366,11 @@ public readonly struct MutagenFrame : IMutagenReadStream
         return Reader.ReadDouble();
     }
 
+    public char ReadChar()
+    {
+        return (char)Reader.ReadUInt8();
+    }
+
     /// <inheritdoc/>
     public string ReadStringUTF8(int amount)
     {
@@ -532,6 +537,11 @@ public readonly struct MutagenFrame : IMutagenReadStream
     public double GetDouble()
     {
         return Reader.GetDouble();
+    }
+
+    public char GetChar()
+    {
+        return (char)Reader.GetUInt8();
     }
 
     /// <inheritdoc/>

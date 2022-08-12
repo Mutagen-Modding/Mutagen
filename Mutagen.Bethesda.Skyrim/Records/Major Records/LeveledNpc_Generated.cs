@@ -1929,15 +1929,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly LeveledNpcBinaryCreateTranslation Instance = new LeveledNpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVLN;
-        public static void FillBinaryStructs(
-            ILeveledNpcInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILeveledNpcInternal item,
             MutagenFrame frame,

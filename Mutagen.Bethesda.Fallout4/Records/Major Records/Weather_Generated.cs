@@ -7581,34 +7581,53 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Complete) return null;
                     item.SkyUpperColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.FogNearColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.UnknownColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.AmbientColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.SunlightColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.SunColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.StarsColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.SkyLowerColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.HorizonColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.NAM0DataTypeState |= Weather.NAM0DataType.Break0;
                         return (int)Weather_FieldIndex.HorizonColor;
                     }
+                    if (dataFrame.Complete) return null;
                     item.EffectLightingColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.CloudLodDiffuseColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.CloudLodAmbientColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.FogFarColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.SkyStaticsColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.WaterMultiplierColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.SunGlareColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.MoonGlareColor = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.NAM0DataTypeState |= Weather.NAM0DataType.Break1;
                         return (int)Weather_FieldIndex.MoonGlareColor;
                     }
+                    if (dataFrame.Complete) return null;
                     item.FogNearHigh = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
                     item.FogFarHigh = Mutagen.Bethesda.Fallout4.WeatherColor.CreateFromBinary(frame: dataFrame);
                     return (int)Weather_FieldIndex.FogFarHigh;
                 }
@@ -7622,33 +7641,51 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.FNAMDataTypeState |= Weather.FNAMDataType.Break0;
                         return (int)Weather_FieldIndex.FogDistanceNightMax;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayNearHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayNearHeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightNearHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightNearHeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayHighDensityScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightHighDensityScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.FNAMDataTypeState |= Weather.FNAMDataType.Break1;
                         return (int)Weather_FieldIndex.FogDistanceNightHighDensityScale;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayFarHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayFarHeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightFarHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightFarHeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)Weather_FieldIndex.FogDistanceNightFarHeightRange;
                 }
@@ -7656,49 +7693,65 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.WindSpeed = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Unknown = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 1) return null;
                     item.TransDelta = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
                         multiplier: 4);
+                    if (dataFrame.Remaining < 1) return null;
                     item.SunGlare = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.SunDamage = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.PrecipitationBeginFadeIn = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.PrecipitationEndFadeOut = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.ThunderLightningBeginFadeIn = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.ThunderLightningEndFadeOut = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.ThunderLightningFrequency = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<Weather.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 3) return null;
                     item.LightningColor = dataFrame.ReadColor(ColorBinaryType.NoAlpha);
+                    if (dataFrame.Remaining < 1) return null;
                     item.VisualEffectBegin = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.VisualEffectEnd = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
                     item.WindDirection = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
                         multiplier: 0.002777777777777778);
+                    if (dataFrame.Remaining < 1) return null;
                     item.WindDirectionRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
@@ -7708,6 +7761,7 @@ namespace Mutagen.Bethesda.Fallout4
                         item.DATADataTypeState |= Weather.DATADataType.Break0;
                         return (int)Weather_FieldIndex.WindDirectionRange;
                     }
+                    if (dataFrame.Remaining < 1) return null;
                     item.WindTurbulance = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
@@ -7742,18 +7796,26 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ImageSpaceSunrise.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ImageSpaceDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ImageSpaceSunset.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ImageSpaceNight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {
                         item.IMSPDataTypeState |= Weather.IMSPDataType.Break0;
                         return (int)Weather_FieldIndex.ImageSpaceNight;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.ImageSpaceEarlySunrise.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ImageSpaceLateSunrise.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ImageSpaceEarlySunset.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.ImageSpaceLateSunset.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weather_FieldIndex.ImageSpaceLateSunset;
                 }

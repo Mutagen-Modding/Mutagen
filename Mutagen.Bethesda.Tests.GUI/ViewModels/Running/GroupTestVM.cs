@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using DynamicData;
 using DynamicData.Binding;
 using Noggog.WPF;
@@ -11,17 +12,17 @@ public class GroupTestVM : ViewModel
 {
     public RunningTestsVM Parent { get; }
 
-    public SourceList<PassthroughTestVM> Passthroughs = new SourceList<PassthroughTestVM>();
-    private ObservableCollectionExtended<PassthroughTestVM> _passthroughDisplay { get; } = new ObservableCollectionExtended<PassthroughTestVM>();
+    public SourceList<PassthroughTestVM> Passthroughs = new();
+    private readonly ObservableCollectionExtended<PassthroughTestVM> _passthroughDisplay = new();
     public IObservableCollection<PassthroughTestVM> PassthroughDisplay => _passthroughDisplay;
 
-    private readonly ObservableAsPropertyHelper<string> _Name;
-    public string Name => _Name.Value;
+    private readonly ObservableAsPropertyHelper<string> _name;
+    public string Name => _name.Value;
 
     public PassthroughGroupVM Settings { get; }
 
-    private readonly ObservableAsPropertyHelper<TestState> _State;
-    public TestState State => _State.Value;
+    private readonly ObservableAsPropertyHelper<TestState> _state;
+    public TestState State => _state.Value;
 
     public GroupTestVM(RunningTestsVM parent, PassthroughGroupVM group)
     {
@@ -35,10 +36,10 @@ public class GroupTestVM : ViewModel
             .Bind(_passthroughDisplay)
             .Subscribe()
             .DisposeWith(this);
-        _Name = this.WhenAnyValue(x => x.Settings.GameRelease)
+        _name = this.WhenAnyValue(x => x.Settings.GameRelease)
             .Select(g => g.ToString())
             .ToGuiProperty(this, nameof(Name), string.Empty);
-        _State = Passthroughs.Connect()
+        _state = Passthroughs.Connect()
             .TransformMany(x => x.Tests)
             .AutoRefresh(x => x.State)
             .Transform(p => p.State, transformOnRefresh: true)

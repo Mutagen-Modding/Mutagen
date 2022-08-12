@@ -1834,14 +1834,23 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 12) return null;
                     item.BackColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    if (dataFrame.Remaining < 12) return null;
                     item.ForwardColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Intensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AirColorScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.BackColorScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ForwardColorScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.BackPhase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 12) return null;
                     item.AirColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ForwardPhase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)GodRays_FieldIndex.ForwardPhase;
                 }

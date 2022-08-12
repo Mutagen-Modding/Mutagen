@@ -42,7 +42,7 @@ public class AFormKeyPicker : NoggogControl
         set => SetValue(ScopedTypesProperty, value);
     }
     public static readonly DependencyProperty ScopedTypesProperty = DependencyProperty.Register(nameof(ScopedTypes), typeof(IEnumerable), typeof(AFormKeyPicker),
-        new FrameworkPropertyMetadata(default(IEnumerable), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        new FrameworkPropertyMetadata(default(IEnumerable)));
 
     public bool Found
     {
@@ -92,13 +92,13 @@ public class AFormKeyPicker : NoggogControl
     public static readonly DependencyProperty MissingMeansErrorProperty = DependencyProperty.Register(nameof(MissingMeansError), typeof(bool), typeof(AFormKeyPicker),
         new FrameworkPropertyMetadata(true));
 
-    public bool? MissingMeansNull
+    public bool MissingMeansNull
     {
-        get => (bool?)GetValue(MissingMeansNullProperty);
+        get => (bool)GetValue(MissingMeansNullProperty);
         set => SetValue(MissingMeansNullProperty, value);
     }
-    public static readonly DependencyProperty MissingMeansNullProperty = DependencyProperty.Register(nameof(MissingMeansNull), typeof(bool?), typeof(AFormKeyPicker),
-        new FrameworkPropertyMetadata(default(bool?), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+    public static readonly DependencyProperty MissingMeansNullProperty = DependencyProperty.Register(nameof(MissingMeansNull), typeof(bool), typeof(AFormKeyPicker),
+        new FrameworkPropertyMetadata(default(bool)));
 
     public StatusIndicatorState Status
     {
@@ -495,7 +495,7 @@ public class AFormKeyPicker : NoggogControl
                         else
                         {
                             FormKey formKeyToUse;
-                            if (x.MissingMeansNull ?? x.MissingMeansError)
+                            if (x.MissingMeansNull)
                             {
                                 formKeyToUse = FormKey.Null;
                             }

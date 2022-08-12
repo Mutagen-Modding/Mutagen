@@ -961,7 +961,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MorphGroupBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: MorphGroupBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1366,12 +1365,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class MorphGroupBinaryCreateTranslation
     {
         public static readonly MorphGroupBinaryCreateTranslation Instance = new MorphGroupBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IMorphGroup item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IMorphGroup item,

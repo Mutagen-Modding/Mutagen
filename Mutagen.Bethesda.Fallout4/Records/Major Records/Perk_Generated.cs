@@ -2588,10 +2588,15 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
                     item.Trait = dataFrame.ReadBoolean();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Level = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.NumRanks = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Playable = dataFrame.ReadBoolean();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Hidden = dataFrame.ReadBoolean();
                     return (int)Perk_FieldIndex.Hidden;
                 }

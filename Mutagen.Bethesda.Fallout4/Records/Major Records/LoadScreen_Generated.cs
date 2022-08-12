@@ -1923,15 +1923,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly LoadScreenBinaryCreateTranslation Instance = new LoadScreenBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LSCR;
-        public static void FillBinaryStructs(
-            ILoadScreenInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILoadScreenInternal item,
             MutagenFrame frame,

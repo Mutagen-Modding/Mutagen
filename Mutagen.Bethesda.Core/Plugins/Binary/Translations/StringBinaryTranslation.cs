@@ -52,6 +52,14 @@ public sealed class StringBinaryTranslation
         switch (stringBinaryType)
         {
             case StringBinaryType.Plain:
+                if (parseWhole)
+                {
+                    return BinaryStringUtility.ToZString(reader.ReadMemory(checked((int)reader.Remaining)), encoding);
+                }
+                else
+                {
+                    return BinaryStringUtility.ParseUnknownLengthString(reader, encoding);
+                }
             case StringBinaryType.NullTerminate:
                 if (parseWhole)
                 {

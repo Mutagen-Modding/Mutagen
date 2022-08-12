@@ -1298,15 +1298,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly SubspaceBinaryCreateTranslation Instance = new SubspaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SBSP;
-        public static void FillBinaryStructs(
-            ISubspaceInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISubspaceInternal item,
             MutagenFrame frame,

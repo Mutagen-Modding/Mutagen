@@ -1378,15 +1378,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly FootstepBinaryCreateTranslation Instance = new FootstepBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FSTP;
-        public static void FillBinaryStructs(
-            IFootstepInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IFootstepInternal item,
             MutagenFrame frame,

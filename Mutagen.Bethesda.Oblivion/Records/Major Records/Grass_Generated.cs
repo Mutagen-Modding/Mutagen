@@ -1466,15 +1466,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly GrassBinaryCreateTranslation Instance = new GrassBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GRAS;
-        public static void FillBinaryStructs(
-            IGrassInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IGrassInternal item,
             MutagenFrame frame,

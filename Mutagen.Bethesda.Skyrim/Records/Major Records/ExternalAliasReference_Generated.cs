@@ -768,7 +768,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ExternalAliasReferenceBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ExternalAliasReferenceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1060,12 +1059,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class ExternalAliasReferenceBinaryCreateTranslation
     {
         public static readonly ExternalAliasReferenceBinaryCreateTranslation Instance = new ExternalAliasReferenceBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IExternalAliasReference item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IExternalAliasReference item,

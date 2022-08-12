@@ -1785,15 +1785,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly SceneCollectionBinaryCreateTranslation Instance = new SceneCollectionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SCCO;
-        public static void FillBinaryStructs(
-            ISceneCollectionInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISceneCollectionInternal item,
             MutagenFrame frame,

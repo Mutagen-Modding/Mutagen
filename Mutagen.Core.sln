@@ -6,8 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Autofac", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Core.UnitTests", "Mutagen.Bethesda.Core.UnitTests\Mutagen.Bethesda.Core.UnitTests.csproj", "{159FA529-5326-4283-B27C-5933962AF866}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Core.Windows", "Mutagen.Bethesda.Core.Windows\Mutagen.Bethesda.Core.Windows.csproj", "{96CFD748-AF84-4505-B400-B9CA83ADF900}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Json", "Mutagen.Bethesda.Json\Mutagen.Bethesda.Json.csproj", "{6E4B580A-A801-41F0-8953-73975811EA9E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Kernel", "Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj", "{F27C075C-0631-4A05-BD43-024B2F3D2E16}"
@@ -42,10 +40,6 @@ Global
 		{159FA529-5326-4283-B27C-5933962AF866}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{159FA529-5326-4283-B27C-5933962AF866}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{159FA529-5326-4283-B27C-5933962AF866}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96CFD748-AF84-4505-B400-B9CA83ADF900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96CFD748-AF84-4505-B400-B9CA83ADF900}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96CFD748-AF84-4505-B400-B9CA83ADF900}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96CFD748-AF84-4505-B400-B9CA83ADF900}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E4B580A-A801-41F0-8953-73975811EA9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E4B580A-A801-41F0-8953-73975811EA9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E4B580A-A801-41F0-8953-73975811EA9E}.Release|Any CPU.ActiveCfg = Release|Any CPU

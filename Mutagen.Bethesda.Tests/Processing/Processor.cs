@@ -596,7 +596,6 @@ public abstract class Processor
         if (loc >= pin.ContentLength) return false;
         long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
         ProcessBool(pin.Content.Slice(loc, length), longLoc, importantBytes);
-        loc += length;
         return true;
     }
 
@@ -689,7 +688,8 @@ public abstract class Processor
         public static void ProcessStringLink(
             IMutagenReadStream stream,
             List<StringEntry> processedStrings,
-            IStringsLookup overlay)
+            IStringsLookup overlay,
+            MajorRecordHeader majorRecordHeader)
         {
             var loc = stream.Position;
             var sub = stream.ReadSubrecordHeader();
@@ -700,11 +700,21 @@ public abstract class Processor
             var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
             if (!overlay.TryLookup(curIndex, out var str))
             {
-                processedStrings.Add(new StringEntry(curIndex, loc + sub.HeaderLength, false));
+                processedStrings.Add(
+                    new StringEntry(
+                        OrigIndex: curIndex, 
+                        FileLocation: loc + sub.HeaderLength, 
+                        Fill: false, 
+                        IsInDeletedRecord: majorRecordHeader.IsDeleted));
             }
             else if (curIndex != 0)
             {
-                processedStrings.Add(new StringEntry(curIndex, loc + sub.HeaderLength, true));
+                processedStrings.Add(
+                    new StringEntry(
+                        OrigIndex: curIndex, 
+                        FileLocation: loc + sub.HeaderLength, 
+                        Fill: true,
+                        IsInDeletedRecord: majorRecordHeader.IsDeleted));
             }
             stream.Position -= sub.HeaderLength;
         }
@@ -744,14 +754,14 @@ public abstract class Processor
                 var sub = stream.GetSubrecordHeader();
                 if (StringTypes.Contains(sub.RecordType))
                 {
-                    ProcessStringLink(stream, processedStrings, overlay);
+                    ProcessStringLink(stream, processedStrings, overlay, major);
                 }
                 stream.Position += sub.TotalLength;
             }
         }
     }
 
-    public record StringEntry(uint OrigIndex, long FileLocation, bool Fill)
+    public record StringEntry(uint OrigIndex, long FileLocation, bool Fill, bool IsInDeletedRecord)
     {
         public StringsSource Source { get; set; }
     }
@@ -759,6 +769,8 @@ public abstract class Processor
     public async Task RealignStrings(Func<IMutagenReadStream> streamGetter)
     {
         using var stream = streamGetter();
+        var modHeader = stream.GetModHeader();
+        if (!EnumExt.HasFlag(modHeader.Flags, Constants.Localized)) return;
         var outFolder = Path.Combine(TempFolder, "Strings/Processed");
         var language = Language.English;
         using var writer = new StringsWriter(GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(SourcePath)), outFolder, MutagenEncodingProvider.Instance);
@@ -789,13 +801,10 @@ public abstract class Processor
         foreach (var entry in stringEntries.OrderBy(x => x.FileLocation))
         {
             var knownDeadKeys = deadKeys?.GetOrDefault((ModKey, entry.Source));
-            List<KeyValuePair<Language, string>> toWrite = new();
             var dict = overlays[entry.Source];
-            foreach (var lang in dict.Item1)
+            if (dict.Item1.TryGetValue(language, out var overlay))
             {
-                if (lang.Key != language) continue;
-                var overlay = lang.Value.Value;
-                var overlayDict = dict.Item2[lang.Key];
+                var overlayDict = dict.Item2[language];
                 if (knownDeadKeys != null)
                 {
                     overlayDict.Remove(knownDeadKeys);
@@ -803,22 +812,22 @@ public abstract class Processor
                 overlayDict.Remove(entry.OrigIndex);
                 if (entry.Fill)
                 {
-                    if (!overlay.TryLookup(entry.OrigIndex, out var str))
+                    if (!overlay.Value.TryLookup(entry.OrigIndex, out var str))
                     {
                         throw new ArgumentException();
                     }
-                    toWrite.Add(new KeyValuePair<Language, string>(lang.Key, str));
-                }
-                else
-                {
-                    _instructions.SetSubstitution(entry.FileLocation, new byte[4]);
+
+                    var bytes = new byte[4];
+                    if (!entry.IsInDeletedRecord)
+                    {
+                        var regis = writer.Register(entry.Source, new KeyValuePair<Language, string>(language, str));
+                        BinaryPrimitives.WriteUInt32LittleEndian(bytes, regis);
+                    }
+                    _instructions.SetSubstitution(entry.FileLocation, bytes);
+                    continue;
                 }
             }
-
-            var regis = writer.Register(entry.Source, toWrite);
-            var bytes = new byte[4];
-            BinaryPrimitives.WriteUInt32LittleEndian(bytes, regis);
-            _instructions.SetSubstitution(entry.FileLocation, bytes);
+            _instructions.SetSubstitution(entry.FileLocation, new byte[4]);
         }
 
         if (StrictStrings)
@@ -831,10 +840,10 @@ public abstract class Processor
                 {
                     foreach (var overlayStr in langDict.First(100))
                     {
-                        Logging.OnNext($"Unaccounted for string: {overlayStr.Key} {overlayStr.Value}");
+                        Logging.OnNext($"Unaccounted for string: 0x{overlayStr.Key:X} {overlayStr.Value}");
                     }
 
-                    throw new ArgumentException($"String unaccounted for in {source}: {langDict.Keys.First()}");
+                    throw new ArgumentException($"String unaccounted for in {source}: 0x{langDict.Keys.First():X}");
                 }
             }
         }
@@ -869,7 +878,6 @@ public abstract class Processor
         {
             stream.Position = rec.Key;
             var major = stream.ReadMajorRecordHeader();
-            if (major.IsDeleted) continue;
             if (!dict.TryGetValue(major.RecordType, out var instructions))
             {
                 continue;

@@ -843,7 +843,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ObjectVisibilityManagerItemBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ObjectVisibilityManagerItemBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1181,12 +1180,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class ObjectVisibilityManagerItemBinaryCreateTranslation
     {
         public static readonly ObjectVisibilityManagerItemBinaryCreateTranslation Instance = new ObjectVisibilityManagerItemBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IObjectVisibilityManagerItem item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IObjectVisibilityManagerItem item,

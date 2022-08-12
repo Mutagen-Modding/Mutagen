@@ -838,7 +838,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ActivateParentsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ActivateParentsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1167,12 +1166,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class ActivateParentsBinaryCreateTranslation
     {
         public static readonly ActivateParentsBinaryCreateTranslation Instance = new ActivateParentsBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IActivateParents item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IActivateParents item,

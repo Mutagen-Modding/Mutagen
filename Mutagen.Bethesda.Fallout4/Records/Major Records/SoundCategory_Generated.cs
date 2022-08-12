@@ -1814,15 +1814,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly SoundCategoryBinaryCreateTranslation Instance = new SoundCategoryBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SNCT;
-        public static void FillBinaryStructs(
-            ISoundCategoryInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISoundCategoryInternal item,
             MutagenFrame frame,

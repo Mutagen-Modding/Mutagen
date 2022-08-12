@@ -2,7 +2,6 @@
 
 public partial class CellGrid
 {
-    [Flags]
     public enum Flag
     {
         Quad1,

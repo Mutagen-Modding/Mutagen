@@ -1933,15 +1933,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly PotionBinaryCreateTranslation Instance = new PotionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ALCH;
-        public static void FillBinaryStructs(
-            IPotionInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IPotionInternal item,
             MutagenFrame frame,

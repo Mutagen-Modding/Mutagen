@@ -1324,15 +1324,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly LayerBinaryCreateTranslation Instance = new LayerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LAYR;
-        public static void FillBinaryStructs(
-            ILayerInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILayerInternal item,
             MutagenFrame frame,

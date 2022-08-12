@@ -1912,6 +1912,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
                     item.MasterParticleSystemCap = dataFrame.ReadUInt16();
                     AddonNodeBinaryCreateTranslation.FillBinaryAlwaysLoadedCustom(
                         frame: dataFrame,

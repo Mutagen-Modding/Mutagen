@@ -1413,15 +1413,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly GlobalShortBinaryCreateTranslation Instance = new GlobalShortBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GLOB;
-        public static void FillBinaryStructs(
-            IGlobalShortInternal item,
-            MutagenFrame frame)
-        {
-            GlobalBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IGlobalShortInternal item,
             MutagenFrame frame,

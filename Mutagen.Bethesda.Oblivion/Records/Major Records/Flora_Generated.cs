@@ -1695,15 +1695,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly FloraBinaryCreateTranslation Instance = new FloraBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FLOR;
-        public static void FillBinaryStructs(
-            IFloraInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IFloraInternal item,
             MutagenFrame frame,

@@ -841,7 +841,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MapMarkerBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: MapMarkerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1151,12 +1150,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class MapMarkerBinaryCreateTranslation
     {
         public static readonly MapMarkerBinaryCreateTranslation Instance = new MapMarkerBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IMapMarker item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IMapMarker item,

@@ -968,15 +968,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly VirtualMachineAdapterBinaryCreateTranslation Instance = new VirtualMachineAdapterBinaryCreateTranslation();
 
-        public static void FillBinaryStructs(
-            IVirtualMachineAdapter item,
-            MutagenFrame frame)
-        {
-            AVirtualMachineAdapterBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
     }
 
 }

@@ -844,7 +844,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: DestructionStageBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: DestructionStageBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1229,12 +1228,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class DestructionStageBinaryCreateTranslation
     {
         public static readonly DestructionStageBinaryCreateTranslation Instance = new DestructionStageBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IDestructionStage item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IDestructionStage item,

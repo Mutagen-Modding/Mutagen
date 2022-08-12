@@ -1858,15 +1858,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly PathGridBinaryCreateTranslation Instance = new PathGridBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PGRD;
-        public static void FillBinaryStructs(
-            IPathGridInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IPathGridInternal item,
             MutagenFrame frame,

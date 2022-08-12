@@ -2076,15 +2076,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly StaticCollectionBinaryCreateTranslation Instance = new StaticCollectionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SCOL;
-        public static void FillBinaryStructs(
-            IStaticCollectionInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IStaticCollectionInternal item,
             MutagenFrame frame,

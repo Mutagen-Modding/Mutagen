@@ -275,7 +275,7 @@ public class Fallout4Processor : Processor
         if (edidRec.Content[0] != (byte)'s') return;
         if (!majorRec.TryFindSubrecord("DATA", out var dataRec)) throw new ArgumentException();
         stream.Position += dataRec.Location;
-        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
+        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
     }
 
     private void ProcessRegions(
@@ -1155,6 +1155,17 @@ public class Fallout4Processor : Processor
             }
         }
     }
+    
+    protected override Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys()
+    {
+        return new Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>
+        {
+            { ("DLCworkshop01.esm", StringsSource.Normal), new() { 0x29F90, 0x2B63B, 0x34577 } },
+            { ("DLCworkshop01.esm", StringsSource.IL), new() { 0x2B5ED, 0x2BA4A } },
+            { ("DLCworkshop02.esm", StringsSource.Normal), new() { 0x2, 0x7, 0x36736 } },
+            { ("DLCworkshop03.esm", StringsSource.Normal), new() { 0x371 } },
+        };
+    }
 
     public void PerkStringHandler(
         IMutagenReadStream stream,
@@ -1171,7 +1182,7 @@ public class Fallout4Processor : Processor
             {
                 case RecordTypeInts.FULL:
                 case RecordTypeInts.EPF2:
-                    AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
+                    AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
                     break;
                 case RecordTypeInts.EPFT:
                     lastepft = stream.Position;
@@ -1183,7 +1194,7 @@ public class Fallout4Processor : Processor
                     if (epftFrame.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
                     {
                         stream.Position = pos;
-                        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay);
+                        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
                     }
 
                     stream.Position = pos;

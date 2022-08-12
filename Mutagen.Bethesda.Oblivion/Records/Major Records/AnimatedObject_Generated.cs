@@ -1433,15 +1433,6 @@ namespace Mutagen.Bethesda.Oblivion
         public new static readonly AnimatedObjectBinaryCreateTranslation Instance = new AnimatedObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ANIO;
-        public static void FillBinaryStructs(
-            IAnimatedObjectInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAnimatedObjectInternal item,
             MutagenFrame frame,

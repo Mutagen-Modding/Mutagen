@@ -1746,15 +1746,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly CollisionLayerBinaryCreateTranslation Instance = new CollisionLayerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.COLL;
-        public static void FillBinaryStructs(
-            ICollisionLayerInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ICollisionLayerInternal item,
             MutagenFrame frame,

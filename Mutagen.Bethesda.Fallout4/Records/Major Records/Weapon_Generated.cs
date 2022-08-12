@@ -615,16 +615,19 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWeaponGetter> IWeaponGetter.Template => this.Template;
         #endregion
-        #region DamageType
+        #region DamageTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private WeaponDamageType? _DamageType;
-        public WeaponDamageType? DamageType
+        private ExtendedList<WeaponDamageType>? _DamageTypes;
+        public ExtendedList<WeaponDamageType>? DamageTypes
         {
-            get => _DamageType;
-            set => _DamageType = value;
+            get => this._DamageTypes;
+            set => this._DamageTypes = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWeaponDamageTypeGetter? IWeaponGetter.DamageType => this.DamageType;
+        IReadOnlyList<IWeaponDamageTypeGetter>? IWeaponGetter.DamageTypes => _DamageTypes;
+        #endregion
+
         #endregion
         #region Filter
         public String? Filter { get; set; }
@@ -735,7 +738,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AimModel = initialValue;
                 this.Zoom = initialValue;
                 this.Template = initialValue;
-                this.DamageType = new MaskItem<TItem, WeaponDamageType.Mask<TItem>?>(initialValue, new WeaponDamageType.Mask<TItem>(initialValue));
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>());
                 this.Filter = initialValue;
                 this.MeleeSpeed = initialValue;
                 this.DNAMDataTypeState = initialValue;
@@ -817,7 +820,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem AimModel,
                 TItem Zoom,
                 TItem Template,
-                TItem DamageType,
+                TItem DamageTypes,
                 TItem Filter,
                 TItem MeleeSpeed,
                 TItem DNAMDataTypeState,
@@ -898,7 +901,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AimModel = AimModel;
                 this.Zoom = Zoom;
                 this.Template = Template;
-                this.DamageType = new MaskItem<TItem, WeaponDamageType.Mask<TItem>?>(DamageType, new WeaponDamageType.Mask<TItem>(DamageType));
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>(DamageTypes, Enumerable.Empty<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>());
                 this.Filter = Filter;
                 this.MeleeSpeed = MeleeSpeed;
                 this.DNAMDataTypeState = DNAMDataTypeState;
@@ -982,7 +985,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem AimModel;
             public TItem Zoom;
             public TItem Template;
-            public MaskItem<TItem, WeaponDamageType.Mask<TItem>?>? DamageType { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>? DamageTypes;
             public TItem Filter;
             public TItem MeleeSpeed;
             public TItem DNAMDataTypeState;
@@ -1068,7 +1071,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.AimModel, rhs.AimModel)) return false;
                 if (!object.Equals(this.Zoom, rhs.Zoom)) return false;
                 if (!object.Equals(this.Template, rhs.Template)) return false;
-                if (!object.Equals(this.DamageType, rhs.DamageType)) return false;
+                if (!object.Equals(this.DamageTypes, rhs.DamageTypes)) return false;
                 if (!object.Equals(this.Filter, rhs.Filter)) return false;
                 if (!object.Equals(this.MeleeSpeed, rhs.MeleeSpeed)) return false;
                 if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
@@ -1146,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.AimModel);
                 hash.Add(this.Zoom);
                 hash.Add(this.Template);
-                hash.Add(this.DamageType);
+                hash.Add(this.DamageTypes);
                 hash.Add(this.Filter);
                 hash.Add(this.MeleeSpeed);
                 hash.Add(this.DNAMDataTypeState);
@@ -1288,10 +1291,17 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.AimModel)) return false;
                 if (!eval(this.Zoom)) return false;
                 if (!eval(this.Template)) return false;
-                if (DamageType != null)
+                if (this.DamageTypes != null)
                 {
-                    if (!eval(this.DamageType.Overall)) return false;
-                    if (this.DamageType.Specific != null && !this.DamageType.Specific.All(eval)) return false;
+                    if (!eval(this.DamageTypes.Overall)) return false;
+                    if (this.DamageTypes.Specific != null)
+                    {
+                        foreach (var item in this.DamageTypes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
                 }
                 if (!eval(this.Filter)) return false;
                 if (!eval(this.MeleeSpeed)) return false;
@@ -1432,10 +1442,17 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.AimModel)) return true;
                 if (eval(this.Zoom)) return true;
                 if (eval(this.Template)) return true;
-                if (DamageType != null)
+                if (this.DamageTypes != null)
                 {
-                    if (eval(this.DamageType.Overall)) return true;
-                    if (this.DamageType.Specific != null && this.DamageType.Specific.Any(eval)) return true;
+                    if (eval(this.DamageTypes.Overall)) return true;
+                    if (this.DamageTypes.Specific != null)
+                    {
+                        foreach (var item in this.DamageTypes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
                 }
                 if (eval(this.Filter)) return true;
                 if (eval(this.MeleeSpeed)) return true;
@@ -1564,7 +1581,21 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AimModel = eval(this.AimModel);
                 obj.Zoom = eval(this.Zoom);
                 obj.Template = eval(this.Template);
-                obj.DamageType = this.DamageType == null ? null : new MaskItem<R, WeaponDamageType.Mask<R>?>(eval(this.DamageType.Overall), this.DamageType.Specific?.Translate(eval));
+                if (DamageTypes != null)
+                {
+                    obj.DamageTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeaponDamageType.Mask<R>?>>?>(eval(this.DamageTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, WeaponDamageType.Mask<R>?>>());
+                    if (DamageTypes.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, WeaponDamageType.Mask<R>?>>();
+                        obj.DamageTypes.Specific = l;
+                        foreach (var item in DamageTypes.Specific)
+                        {
+                            MaskItemIndexed<R, WeaponDamageType.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WeaponDamageType.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.Filter = eval(this.Filter);
                 obj.MeleeSpeed = eval(this.MeleeSpeed);
                 obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
@@ -1908,9 +1939,24 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Template, "Template");
                     }
-                    if (printMask?.DamageType?.Overall ?? true)
+                    if ((printMask?.DamageTypes?.Overall ?? true)
+                        && DamageTypes is {} DamageTypesItem)
                     {
-                        DamageType?.Print(sb);
+                        sb.AppendLine("DamageTypes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DamageTypesItem.Overall);
+                            if (DamageTypesItem.Specific != null)
+                            {
+                                foreach (var subItem in DamageTypesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.Filter ?? true)
                     {
@@ -2007,7 +2053,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? AimModel;
             public Exception? Zoom;
             public Exception? Template;
-            public MaskItem<Exception?, WeaponDamageType.ErrorMask?>? DamageType;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>? DamageTypes;
             public Exception? Filter;
             public Exception? MeleeSpeed;
             public Exception? DNAMDataTypeState;
@@ -2156,8 +2202,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Zoom;
                     case Weapon_FieldIndex.Template:
                         return Template;
-                    case Weapon_FieldIndex.DamageType:
-                        return DamageType;
+                    case Weapon_FieldIndex.DamageTypes:
+                        return DamageTypes;
                     case Weapon_FieldIndex.Filter:
                         return Filter;
                     case Weapon_FieldIndex.MeleeSpeed:
@@ -2380,8 +2426,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Weapon_FieldIndex.Template:
                         this.Template = ex;
                         break;
-                    case Weapon_FieldIndex.DamageType:
-                        this.DamageType = new MaskItem<Exception?, WeaponDamageType.ErrorMask?>(ex, null);
+                    case Weapon_FieldIndex.DamageTypes:
+                        this.DamageTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>(ex, null);
                         break;
                     case Weapon_FieldIndex.Filter:
                         this.Filter = ex;
@@ -2610,8 +2656,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Weapon_FieldIndex.Template:
                         this.Template = (Exception?)obj;
                         break;
-                    case Weapon_FieldIndex.DamageType:
-                        this.DamageType = (MaskItem<Exception?, WeaponDamageType.ErrorMask?>?)obj;
+                    case Weapon_FieldIndex.DamageTypes:
+                        this.DamageTypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>)obj;
                         break;
                     case Weapon_FieldIndex.Filter:
                         this.Filter = (Exception?)obj;
@@ -2702,7 +2748,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (AimModel != null) return true;
                 if (Zoom != null) return true;
                 if (Template != null) return true;
-                if (DamageType != null) return true;
+                if (DamageTypes != null) return true;
                 if (Filter != null) return true;
                 if (MeleeSpeed != null) return true;
                 if (DNAMDataTypeState != null) return true;
@@ -2972,7 +3018,24 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Template, "Template");
                 }
-                DamageType?.Print(sb);
+                if (DamageTypes is {} DamageTypesItem)
+                {
+                    sb.AppendLine("DamageTypes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DamageTypesItem.Overall);
+                        if (DamageTypesItem.Specific != null)
+                        {
+                            foreach (var subItem in DamageTypesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 {
                     sb.AppendItem(Filter, "Filter");
                 }
@@ -3061,7 +3124,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AimModel = this.AimModel.Combine(rhs.AimModel);
                 ret.Zoom = this.Zoom.Combine(rhs.Zoom);
                 ret.Template = this.Template.Combine(rhs.Template);
-                ret.DamageType = this.DamageType.Combine(rhs.DamageType, (l, r) => l.Combine(r));
+                ret.DamageTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>(ExceptionExt.Combine(this.DamageTypes?.Overall, rhs.DamageTypes?.Overall), ExceptionExt.Combine(this.DamageTypes?.Specific, rhs.DamageTypes?.Specific));
                 ret.Filter = this.Filter.Combine(rhs.Filter);
                 ret.MeleeSpeed = this.MeleeSpeed.Combine(rhs.MeleeSpeed);
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
@@ -3156,7 +3219,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool AimModel;
             public bool Zoom;
             public bool Template;
-            public WeaponDamageType.TranslationMask? DamageType;
+            public WeaponDamageType.TranslationMask? DamageTypes;
             public bool Filter;
             public bool MeleeSpeed;
             public bool DNAMDataTypeState;
@@ -3308,7 +3371,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((AimModel, null));
                 ret.Add((Zoom, null));
                 ret.Add((Template, null));
-                ret.Add((DamageType != null ? DamageType.OnOverall : DefaultOn, DamageType?.GetCrystal()));
+                ret.Add((DamageTypes == null ? DefaultOn : !DamageTypes.GetCrystal().CopyNothing, DamageTypes?.GetCrystal()));
                 ret.Add((Filter, null));
                 ret.Add((MeleeSpeed, null));
                 ret.Add((DNAMDataTypeState, null));
@@ -3570,7 +3633,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IAimModelGetter> AimModel { get; set; }
         new IFormLinkNullable<IZoomGetter> Zoom { get; set; }
         new IFormLinkNullable<IWeaponGetter> Template { get; set; }
-        new WeaponDamageType? DamageType { get; set; }
+        new ExtendedList<WeaponDamageType>? DamageTypes { get; set; }
         new String? Filter { get; set; }
         new Weapon.MeleeSpeeds? MeleeSpeed { get; set; }
         new Weapon.DNAMDataType DNAMDataTypeState { get; set; }
@@ -3714,7 +3777,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IAimModelGetter> AimModel { get; }
         IFormLinkNullableGetter<IZoomGetter> Zoom { get; }
         IFormLinkNullableGetter<IWeaponGetter> Template { get; }
-        IWeaponDamageTypeGetter? DamageType { get; }
+        IReadOnlyList<IWeaponDamageTypeGetter>? DamageTypes { get; }
         String? Filter { get; }
         Weapon.MeleeSpeeds? MeleeSpeed { get; }
         Weapon.DNAMDataType DNAMDataTypeState { get; }
@@ -3955,7 +4018,7 @@ namespace Mutagen.Bethesda.Fallout4
         AimModel = 71,
         Zoom = 72,
         Template = 73,
-        DamageType = 74,
+        DamageTypes = 74,
         Filter = 75,
         MeleeSpeed = 76,
         DNAMDataTypeState = 77,
@@ -4190,7 +4253,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.AimModel.Clear();
             item.Zoom.Clear();
             item.Template.Clear();
-            item.DamageType = null;
+            item.DamageTypes = null;
             item.Filter = default;
             item.MeleeSpeed = default;
             item.DNAMDataTypeState = default;
@@ -4247,7 +4310,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.AimModel.Relink(mapping);
             obj.Zoom.Relink(mapping);
             obj.Template.Relink(mapping);
-            obj.DamageType?.RemapLinks(mapping);
+            obj.DamageTypes?.RemapLinks(mapping);
         }
         
         #endregion
@@ -4416,10 +4479,9 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AimModel = item.AimModel.Equals(rhs.AimModel);
             ret.Zoom = item.Zoom.Equals(rhs.Zoom);
             ret.Template = item.Template.Equals(rhs.Template);
-            ret.DamageType = EqualsMaskHelper.EqualsHelper(
-                item.DamageType,
-                rhs.DamageType,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+            ret.DamageTypes = item.DamageTypes.CollectionEqualsHelper(
+                rhs.DamageTypes,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Filter = string.Equals(item.Filter, rhs.Filter);
             ret.MeleeSpeed = item.MeleeSpeed == rhs.MeleeSpeed;
@@ -4789,10 +4851,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Template.FormKeyNullable, "Template");
             }
-            if ((printMask?.DamageType?.Overall ?? true)
-                && item.DamageType is {} DamageTypeItem)
+            if ((printMask?.DamageTypes?.Overall ?? true)
+                && item.DamageTypes is {} DamageTypesItem)
             {
-                DamageTypeItem?.Print(sb, "DamageType");
+                sb.AppendLine("DamageTypes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in DamageTypesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if ((printMask?.Filter ?? true)
                 && item.Filter is {} FilterItem)
@@ -5160,13 +5232,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Template.Equals(rhs.Template)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.DamageType) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.DamageTypes) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.DamageType, rhs.DamageType, out var lhsDamageType, out var rhsDamageType, out var isDamageTypeEqual))
-                {
-                    if (!((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)lhsDamageType).CommonInstance()!).Equals(lhsDamageType, rhsDamageType, crystal?.GetSubCrystal((int)Weapon_FieldIndex.DamageType))) return false;
-                }
-                else if (!isDamageTypeEqual) return false;
+                if (!lhs.DamageTypes.SequenceEqualNullable(rhs.DamageTypes, (l, r) => ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Weapon_FieldIndex.DamageTypes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Filter) ?? true))
             {
@@ -5310,10 +5378,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.AimModel);
             hash.Add(item.Zoom);
             hash.Add(item.Template);
-            if (item.DamageType is {} DamageTypeitem)
-            {
-                hash.Add(DamageTypeitem);
-            }
+            hash.Add(item.DamageTypes);
             if (item.Filter is {} Filteritem)
             {
                 hash.Add(Filteritem);
@@ -5481,11 +5546,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return TemplateInfo;
             }
-            if (obj.DamageType is {} DamageTypeItems)
+            if (obj.DamageTypes is {} DamageTypesItem)
             {
-                foreach (var item in DamageTypeItems.EnumerateFormLinks())
+                foreach (var item in DamageTypesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             yield break;
@@ -6058,20 +6123,26 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Template.SetTo(rhs.Template.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.DamageType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.DamageTypes) ?? true))
             {
-                errorMask?.PushIndex((int)Weapon_FieldIndex.DamageType);
+                errorMask?.PushIndex((int)Weapon_FieldIndex.DamageTypes);
                 try
                 {
-                    if(rhs.DamageType is {} rhsDamageType)
+                    if ((rhs.DamageTypes != null))
                     {
-                        item.DamageType = rhsDamageType.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Weapon_FieldIndex.DamageType));
+                        item.DamageTypes = 
+                            rhs.DamageTypes
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<WeaponDamageType>();
                     }
                     else
                     {
-                        item.DamageType = default;
+                        item.DamageTypes = null;
                     }
                 }
                 catch (Exception ex)
@@ -6545,13 +6616,18 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.Template,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            if (item.DamageType is {} DamageTypeItem)
-            {
-                ((WeaponDamageTypeBinaryWriteTranslation)((IBinaryItem)DamageTypeItem).BinaryWriteTranslator).Write(
-                    item: DamageTypeItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWeaponDamageTypeGetter>.Instance.Write(
+                writer: writer,
+                items: item.DamageTypes,
+                recordType: translationParams.ConvertToCustom(RecordTypes.DAMA),
+                transl: (MutagenWriter subWriter, IWeaponDamageTypeGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((WeaponDamageTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Filter,
@@ -6840,51 +6916,87 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Ammo.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.Speed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.ReloadSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Reach = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.MinRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.MaxRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AttackDelay = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Unknown = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.DamageOutOfRangeMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.OnHit = EnumBinaryTranslation<Weapon.HitBehavior, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Skill.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.Resist.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<Weapon.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Capacity = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 1) return null;
                     item.AnimationType = EnumBinaryTranslation<Weapon.AnimationTypes, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 4) return null;
                     item.SecondaryDamage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Value = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 2) return null;
                     item.BaseDamage = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 4) return null;
                     item.SoundLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.AttackSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.Attack2dSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.AttackLoopSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.AttackFailSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.IdleSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.EquipSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.UnequipSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.FastEquipSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 1) return null;
                     item.AccuracyBonus = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
                     item.AnimationAttackSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 2) return null;
                     item.Unknown2 = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 4) return null;
                     item.ActionPointCost = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.FullPowerSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.MinPowerPerShot = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Stagger = EnumBinaryTranslation<Stagger, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Unknown3 = dataFrame.ReadInt32();
                     return (int)Weapon_FieldIndex.Unknown3;
                 }
@@ -6897,8 +7009,11 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CritDamageMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CritChargeBonus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.CritEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.CritEffect;
                 }
@@ -6934,8 +7049,13 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DAMA:
                 {
-                    item.DamageType = Mutagen.Bethesda.Fallout4.WeaponDamageType.CreateFromBinary(frame: frame);
-                    return (int)Weapon_FieldIndex.DamageType;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DamageTypes = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WeaponDamageType>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: WeaponDamageType.TryCreateFromBinary)
+                        .CastExtendedList<WeaponDamageType>();
+                    return (int)Weapon_FieldIndex.DamageTypes;
                 }
                 case RecordTypeInts.FLTR:
                 {
@@ -7326,10 +7446,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _TemplateLocation;
         public IFormLinkNullableGetter<IWeaponGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
         #endregion
-        #region DamageType
-        private RangeInt32? _DamageTypeLocation;
-        public IWeaponDamageTypeGetter? DamageType => _DamageTypeLocation.HasValue ? WeaponDamageTypeBinaryOverlay.WeaponDamageTypeFactory(_recordData.Slice(_DamageTypeLocation!.Value.Min), _package) : default;
-        #endregion
+        public IReadOnlyList<IWeaponDamageTypeGetter>? DamageTypes { get; private set; }
         #region Filter
         private int? _FilterLocation;
         public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -7618,8 +7735,15 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DAMA:
                 {
-                    _DamageTypeLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Weapon_FieldIndex.DamageType;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.DamageTypes = BinaryOverlayList.FactoryByStartIndex<IWeaponDamageTypeGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => WeaponDamageTypeBinaryOverlay.WeaponDamageTypeFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)Weapon_FieldIndex.DamageTypes;
                 }
                 case RecordTypeInts.FLTR:
                 {

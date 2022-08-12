@@ -1324,15 +1324,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly DefaultObjectBinaryCreateTranslation Instance = new DefaultObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DFOB;
-        public static void FillBinaryStructs(
-            IDefaultObjectInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IDefaultObjectInternal item,
             MutagenFrame frame,

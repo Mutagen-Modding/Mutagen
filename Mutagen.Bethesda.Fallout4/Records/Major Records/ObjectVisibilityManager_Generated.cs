@@ -1434,15 +1434,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ObjectVisibilityManagerBinaryCreateTranslation Instance = new ObjectVisibilityManagerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.OVIS;
-        public static void FillBinaryStructs(
-            IObjectVisibilityManagerInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IObjectVisibilityManagerInternal item,
             MutagenFrame frame,

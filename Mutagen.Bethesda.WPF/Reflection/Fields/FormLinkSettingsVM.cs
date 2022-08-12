@@ -13,37 +13,37 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields;
 
 public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
 {
-    private readonly Type _targetType;
-    private readonly IObservable<ILinkCache?> _linkCache;
+    private readonly Type[] _targetTypes;
+    private readonly IObservable<ILinkCache?> _linkCacheInternal;
     private FormKey _defaultVal;
 
-    private readonly ObservableAsPropertyHelper<ILinkCache?> _LinkCache;
-    public ILinkCache? LinkCache => _LinkCache.Value;
+    private readonly ObservableAsPropertyHelper<ILinkCache?> _linkCache;
+    public ILinkCache? LinkCache => _linkCache.Value;
 
     [Reactive]
     public FormKey Value { get; set; }
 
-    public IEnumerable<Type> ScopedTypes { get; } = Enumerable.Empty<Type>();
+    public IEnumerable<Type> ScopedTypes { get; }
 
     object IBasicSettingsNodeVM.Value => Value;
 
     [Reactive]
     public bool IsSelected { get; set; }
 
-    private readonly ObservableAsPropertyHelper<string> _DisplayName;
-    public string DisplayName => _DisplayName.Value;
+    private readonly ObservableAsPropertyHelper<string> _displayName;
+    public string DisplayName => _displayName.Value;
 
-    public FormLinkSettingsVM(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type targetType, FormKey defaultVal) 
+    public FormLinkSettingsVM(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type[] targetTypes, FormKey defaultVal) 
         : base(fieldMeta)
     {
-        _targetType = targetType;
+        _targetTypes = targetTypes;
         _defaultVal = defaultVal;
         Value = defaultVal;
-        _linkCache = linkCache;
-        _LinkCache = linkCache
+        _linkCacheInternal = linkCache;
+        _linkCache = linkCache
             .ToGuiProperty(this, nameof(LinkCache), default);
-        ScopedTypes = targetType.AsEnumerable();
-        _DisplayName = this.WhenAnyValue(x => x.Value)
+        ScopedTypes = targetTypes;
+        _displayName = this.WhenAnyValue(x => x.Value)
             .CombineLatest(this.WhenAnyValue(x => x.LinkCache),
                 (key, cache) =>
                 {
@@ -60,7 +60,7 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
 
     public override SettingsNodeVM Duplicate()
     {
-        return new FormLinkSettingsVM(_linkCache, Meta, _targetType, _defaultVal);
+        return new FormLinkSettingsVM(_linkCacheInternal, Meta, _targetTypes, _defaultVal);
     }
 
     public override void Import(JsonElement property, Action<string> logger)
@@ -80,7 +80,7 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
         base.WrapUp();
     }
 
-    public static FormLinkSettingsVM Factory(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type targetType, object? defaultVal)
+    public static FormLinkSettingsVM Factory(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type[] targetTypes, object? defaultVal)
     {
         FormKey formKey = FormKey.Null;
         if (defaultVal != null)
@@ -88,10 +88,19 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
             formKey = FormKey.Factory(
                 defaultVal.GetType().GetPublicProperties().FirstOrDefault(m => m.Name == "FormKey")!.GetValue(defaultVal)!.ToString());
         }
-        if (!LoquiRegistration.TryGetRegisterByFullName(targetType.GenericTypeArguments[0].FullName!, out var regis))
+        return new FormLinkSettingsVM(linkCache, fieldMeta, StripTypes(targetTypes), formKey);
+    }
+
+    private static Type[] StripTypes(Type[] types)
+    {
+        return types.Select(type =>
         {
-            throw new ArgumentException($"Can't create a formlink control for type: {targetType}");
-        }
-        return new FormLinkSettingsVM(linkCache, fieldMeta, regis.GetterType, formKey);
+            if (!LoquiRegistration.TryGetRegisterByFullName(type.FullName!, out var regis))
+            {
+                throw new ArgumentException($"Can't create a formlink control for type: {type}");
+            }
+
+            return regis.GetterType;
+        }).ToArray();
     }
 }

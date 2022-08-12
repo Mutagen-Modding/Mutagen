@@ -480,6 +480,16 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INavigationDoorLinkGetter? IPlacedObjectGetter.NavigationDoorLink => this.NavigationDoorLink;
         #endregion
+        #region LocationReference
+        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
+        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        {
+            get => _LocationReference;
+            set => _LocationReference.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationRecordGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
+        #endregion
         #region LocationRefType
         private readonly IFormLinkNullable<ILocationReferenceTypeGetter> _LocationRefType = new FormLinkNullable<ILocationReferenceTypeGetter>();
         public IFormLinkNullable<ILocationReferenceTypeGetter> LocationRefType
@@ -791,6 +801,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(initialValue, new LockData.Mask<TItem>(initialValue));
                 this.EncounterZone = initialValue;
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(initialValue, new NavigationDoorLink.Mask<TItem>(initialValue));
+                this.LocationReference = initialValue;
                 this.LocationRefType = initialValue;
                 this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.IsIgnoredBySandbox = initialValue;
@@ -873,6 +884,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Lock,
                 TItem EncounterZone,
                 TItem NavigationDoorLink,
+                TItem LocationReference,
                 TItem LocationRefType,
                 TItem LocationRefTypes,
                 TItem IsIgnoredBySandbox,
@@ -954,6 +966,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(Lock, new LockData.Mask<TItem>(Lock));
                 this.EncounterZone = EncounterZone;
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(NavigationDoorLink, new NavigationDoorLink.Mask<TItem>(NavigationDoorLink));
+                this.LocationReference = LocationReference;
                 this.LocationRefType = LocationRefType;
                 this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.IsIgnoredBySandbox = IsIgnoredBySandbox;
@@ -1038,6 +1051,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, LockData.Mask<TItem>?>? Lock { get; set; }
             public TItem EncounterZone;
             public MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>? NavigationDoorLink { get; set; }
+            public TItem LocationReference;
             public TItem LocationRefType;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationRefTypes;
             public TItem IsIgnoredBySandbox;
@@ -1124,6 +1138,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Lock, rhs.Lock)) return false;
                 if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
                 if (!object.Equals(this.NavigationDoorLink, rhs.NavigationDoorLink)) return false;
+                if (!object.Equals(this.LocationReference, rhs.LocationReference)) return false;
                 if (!object.Equals(this.LocationRefType, rhs.LocationRefType)) return false;
                 if (!object.Equals(this.LocationRefTypes, rhs.LocationRefTypes)) return false;
                 if (!object.Equals(this.IsIgnoredBySandbox, rhs.IsIgnoredBySandbox)) return false;
@@ -1202,6 +1217,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Lock);
                 hash.Add(this.EncounterZone);
                 hash.Add(this.NavigationDoorLink);
+                hash.Add(this.LocationReference);
                 hash.Add(this.LocationRefType);
                 hash.Add(this.LocationRefTypes);
                 hash.Add(this.IsIgnoredBySandbox);
@@ -1372,6 +1388,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.NavigationDoorLink.Overall)) return false;
                     if (this.NavigationDoorLink.Specific != null && !this.NavigationDoorLink.Specific.All(eval)) return false;
                 }
+                if (!eval(this.LocationReference)) return false;
                 if (!eval(this.LocationRefType)) return false;
                 if (this.LocationRefTypes != null)
                 {
@@ -1609,6 +1626,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.NavigationDoorLink.Overall)) return true;
                     if (this.NavigationDoorLink.Specific != null && this.NavigationDoorLink.Specific.Any(eval)) return true;
                 }
+                if (eval(this.LocationReference)) return true;
                 if (eval(this.LocationRefType)) return true;
                 if (this.LocationRefTypes != null)
                 {
@@ -1806,6 +1824,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Lock = this.Lock == null ? null : new MaskItem<R, LockData.Mask<R>?>(eval(this.Lock.Overall), this.Lock.Specific?.Translate(eval));
                 obj.EncounterZone = eval(this.EncounterZone);
                 obj.NavigationDoorLink = this.NavigationDoorLink == null ? null : new MaskItem<R, NavigationDoorLink.Mask<R>?>(eval(this.NavigationDoorLink.Overall), this.NavigationDoorLink.Specific?.Translate(eval));
+                obj.LocationReference = eval(this.LocationReference);
                 obj.LocationRefType = eval(this.LocationRefType);
                 if (LocationRefTypes != null)
                 {
@@ -2146,6 +2165,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         NavigationDoorLink?.Print(sb);
                     }
+                    if (printMask?.LocationReference ?? true)
+                    {
+                        sb.AppendItem(LocationReference, "LocationReference");
+                    }
                     if (printMask?.LocationRefType ?? true)
                     {
                         sb.AppendItem(LocationRefType, "LocationRefType");
@@ -2396,6 +2419,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, LockData.ErrorMask?>? Lock;
             public Exception? EncounterZone;
             public MaskItem<Exception?, NavigationDoorLink.ErrorMask?>? NavigationDoorLink;
+            public Exception? LocationReference;
             public Exception? LocationRefType;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationRefTypes;
             public Exception? IsIgnoredBySandbox;
@@ -2521,6 +2545,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return EncounterZone;
                     case PlacedObject_FieldIndex.NavigationDoorLink:
                         return NavigationDoorLink;
+                    case PlacedObject_FieldIndex.LocationReference:
+                        return LocationReference;
                     case PlacedObject_FieldIndex.LocationRefType:
                         return LocationRefType;
                     case PlacedObject_FieldIndex.LocationRefTypes:
@@ -2720,6 +2746,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case PlacedObject_FieldIndex.NavigationDoorLink:
                         this.NavigationDoorLink = new MaskItem<Exception?, NavigationDoorLink.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LocationReference:
+                        this.LocationReference = ex;
                         break;
                     case PlacedObject_FieldIndex.LocationRefType:
                         this.LocationRefType = ex;
@@ -2951,6 +2980,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case PlacedObject_FieldIndex.NavigationDoorLink:
                         this.NavigationDoorLink = (MaskItem<Exception?, NavigationDoorLink.ErrorMask?>?)obj;
                         break;
+                    case PlacedObject_FieldIndex.LocationReference:
+                        this.LocationReference = (Exception?)obj;
+                        break;
                     case PlacedObject_FieldIndex.LocationRefType:
                         this.LocationRefType = (Exception?)obj;
                         break;
@@ -3091,6 +3123,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Lock != null) return true;
                 if (EncounterZone != null) return true;
                 if (NavigationDoorLink != null) return true;
+                if (LocationReference != null) return true;
                 if (LocationRefType != null) return true;
                 if (LocationRefTypes != null) return true;
                 if (IsIgnoredBySandbox != null) return true;
@@ -3299,6 +3332,9 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(EncounterZone, "EncounterZone");
                 }
                 NavigationDoorLink?.Print(sb);
+                {
+                    sb.AppendItem(LocationReference, "LocationReference");
+                }
                 {
                     sb.AppendItem(LocationRefType, "LocationRefType");
                 }
@@ -3509,6 +3545,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Lock = this.Lock.Combine(rhs.Lock, (l, r) => l.Combine(r));
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
                 ret.NavigationDoorLink = this.NavigationDoorLink.Combine(rhs.NavigationDoorLink, (l, r) => l.Combine(r));
+                ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
                 ret.LocationRefType = this.LocationRefType.Combine(rhs.LocationRefType);
                 ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
@@ -3604,6 +3641,7 @@ namespace Mutagen.Bethesda.Fallout4
             public LockData.TranslationMask? Lock;
             public bool EncounterZone;
             public NavigationDoorLink.TranslationMask? NavigationDoorLink;
+            public bool LocationReference;
             public bool LocationRefType;
             public bool LocationRefTypes;
             public bool IsIgnoredBySandbox;
@@ -3670,6 +3708,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PersistentLocation = defaultOn;
                 this.CollisionLayer = defaultOn;
                 this.EncounterZone = defaultOn;
+                this.LocationReference = defaultOn;
                 this.LocationRefType = defaultOn;
                 this.LocationRefTypes = defaultOn;
                 this.IsIgnoredBySandbox = defaultOn;
@@ -3743,6 +3782,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Lock != null ? Lock.OnOverall : DefaultOn, Lock?.GetCrystal()));
                 ret.Add((EncounterZone, null));
                 ret.Add((NavigationDoorLink != null ? NavigationDoorLink.OnOverall : DefaultOn, NavigationDoorLink?.GetCrystal()));
+                ret.Add((LocationReference, null));
                 ret.Add((LocationRefType, null));
                 ret.Add((LocationRefTypes, null));
                 ret.Add((IsIgnoredBySandbox, null));
@@ -3972,6 +4012,7 @@ namespace Mutagen.Bethesda.Fallout4
         new LockData? Lock { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new NavigationDoorLink? NavigationDoorLink { get; set; }
+        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
         new IFormLinkNullable<ILocationReferenceTypeGetter> LocationRefType { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Boolean IsIgnoredBySandbox { get; set; }
@@ -4078,6 +4119,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILockDataGetter? Lock { get; }
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
         INavigationDoorLinkGetter? NavigationDoorLink { get; }
+        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
         IFormLinkNullableGetter<ILocationReferenceTypeGetter> LocationRefType { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         Boolean IsIgnoredBySandbox { get; }
@@ -4315,35 +4357,36 @@ namespace Mutagen.Bethesda.Fallout4
         Lock = 47,
         EncounterZone = 48,
         NavigationDoorLink = 49,
-        LocationRefType = 50,
-        LocationRefTypes = 51,
-        IsIgnoredBySandbox = 52,
-        Ownership = 53,
-        FactionRank = 54,
-        ItemCount = 55,
-        HealthPercent = 56,
-        EnableParent = 57,
-        LinkedReferences = 58,
-        Patrol = 59,
-        Action = 60,
-        HeadTrackingWeight = 61,
-        FavorCost = 62,
-        OpenByDefault = 63,
-        MapMarker = 64,
-        AttachRef = 65,
-        SplineConnections = 66,
-        PowerGridConnections = 67,
-        XCVR = 68,
-        XCVL = 69,
-        CurrentZoneReference = 70,
-        XCZA = 71,
-        CurrentZoneCell = 72,
-        Scale = 73,
-        DistantLodData = 74,
-        Position = 75,
-        Rotation = 76,
-        Comments = 77,
-        DATADataTypeState = 78,
+        LocationReference = 50,
+        LocationRefType = 51,
+        LocationRefTypes = 52,
+        IsIgnoredBySandbox = 53,
+        Ownership = 54,
+        FactionRank = 55,
+        ItemCount = 56,
+        HealthPercent = 57,
+        EnableParent = 58,
+        LinkedReferences = 59,
+        Patrol = 60,
+        Action = 61,
+        HeadTrackingWeight = 62,
+        FavorCost = 63,
+        OpenByDefault = 64,
+        MapMarker = 65,
+        AttachRef = 66,
+        SplineConnections = 67,
+        PowerGridConnections = 68,
+        XCVR = 69,
+        XCVL = 70,
+        CurrentZoneReference = 71,
+        XCZA = 72,
+        CurrentZoneCell = 73,
+        Scale = 74,
+        DistantLodData = 75,
+        Position = 76,
+        Rotation = 77,
+        Comments = 78,
+        DATADataTypeState = 79,
     }
     #endregion
 
@@ -4361,9 +4404,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9f17225a-a9f1-4e82-a287-6e1b20a495ed";
 
-        public const ushort AdditionalFieldCount = 73;
+        public const ushort AdditionalFieldCount = 74;
 
-        public const ushort FieldCount = 79;
+        public const ushort FieldCount = 80;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -4441,6 +4484,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.XLOC,
                 RecordTypes.XEZN,
                 RecordTypes.XNDP,
+                RecordTypes.XLRL,
                 RecordTypes.XLRT,
                 RecordTypes.XIS2,
                 RecordTypes.XOWN,
@@ -4556,6 +4600,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Lock = null;
             item.EncounterZone.Clear();
             item.NavigationDoorLink = null;
+            item.LocationReference.Clear();
             item.LocationRefType.Clear();
             item.LocationRefTypes = null;
             item.IsIgnoredBySandbox = default;
@@ -4624,6 +4669,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Lock?.RemapLinks(mapping);
             obj.EncounterZone.Relink(mapping);
             obj.NavigationDoorLink?.RemapLinks(mapping);
+            obj.LocationReference.Relink(mapping);
             obj.LocationRefType.Relink(mapping);
             obj.LocationRefTypes?.RemapLinks(mapping);
             obj.Ownership?.RemapLinks(mapping);
@@ -4812,6 +4858,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.NavigationDoorLink,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
             ret.LocationRefType = item.LocationRefType.Equals(rhs.LocationRefType);
             ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
                 rhs.LocationRefTypes,
@@ -5150,6 +5197,10 @@ namespace Mutagen.Bethesda.Fallout4
                 && item.NavigationDoorLink is {} NavigationDoorLinkItem)
             {
                 NavigationDoorLinkItem?.Print(sb, "NavigationDoorLink");
+            }
+            if (printMask?.LocationReference ?? true)
+            {
+                sb.AppendItem(item.LocationReference.FormKeyNullable, "LocationReference");
             }
             if (printMask?.LocationRefType ?? true)
             {
@@ -5615,6 +5666,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isNavigationDoorLinkEqual) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationReference) ?? true))
+            {
+                if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationRefType) ?? true))
             {
                 if (!lhs.LocationRefType.Equals(rhs.LocationRefType)) return false;
@@ -5888,6 +5943,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(NavigationDoorLinkitem);
             }
+            hash.Add(item.LocationReference);
             hash.Add(item.LocationRefType);
             hash.Add(item.LocationRefTypes);
             hash.Add(item.IsIgnoredBySandbox);
@@ -6096,6 +6152,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     yield return item;
                 }
+            }
+            if (FormLinkInformation.TryFactory(obj.LocationReference, out var LocationReferenceInfo))
+            {
+                yield return LocationReferenceInfo;
             }
             if (FormLinkInformation.TryFactory(obj.LocationRefType, out var LocationRefTypeInfo))
             {
@@ -6799,6 +6859,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationReference) ?? true))
+            {
+                item.LocationReference.SetTo(rhs.LocationReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationRefType) ?? true))
             {
@@ -7532,6 +7596,10 @@ namespace Mutagen.Bethesda.Fallout4
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
+                item: item.LocationReference,
+                header: translationParams.ConvertToCustom(RecordTypes.XLRL));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
                 item: item.LocationRefType,
                 header: translationParams.ConvertToCustom(RecordTypes.XLIB));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
@@ -8007,7 +8075,7 @@ namespace Mutagen.Bethesda.Fallout4
                         item.LeveledItemBaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                         return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, nextRecordType);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.NavigationDoorLink)
+                    else if (lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.LocationReference)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -8065,6 +8133,12 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.NavigationDoorLink = Mutagen.Bethesda.Fallout4.NavigationDoorLink.CreateFromBinary(frame: frame);
                     return (int)PlacedObject_FieldIndex.NavigationDoorLink;
+                }
+                case RecordTypeInts.XLRL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.LocationReference;
                 }
                 case RecordTypeInts.XLRT:
                 {
@@ -8240,7 +8314,9 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 12) return null;
                     item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 12) return null;
                     item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)PlacedObject_FieldIndex.Rotation;
                 }
@@ -8471,6 +8547,10 @@ namespace Mutagen.Bethesda.Fallout4
         #region NavigationDoorLink
         private RangeInt32? _NavigationDoorLinkLocation;
         public INavigationDoorLinkGetter? NavigationDoorLink => _NavigationDoorLinkLocation.HasValue ? NavigationDoorLinkBinaryOverlay.NavigationDoorLinkFactory(_recordData.Slice(_NavigationDoorLinkLocation!.Value.Min), _package) : default;
+        #endregion
+        #region LocationReference
+        private int? _LocationReferenceLocation;
+        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => _LocationReferenceLocation.HasValue ? new FormLinkNullable<ILocationRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationRecordGetter>.Null;
         #endregion
         #region LocationRefType
         private int? _LocationRefTypeLocation;
@@ -8847,7 +8927,7 @@ namespace Mutagen.Bethesda.Fallout4
                         _LeveledItemBaseObjectLocation = (stream.Position - offset);
                         return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, type);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.NavigationDoorLink)
+                    else if (lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.LocationReference)
                     {
                         _LocationRefTypeLocation = (stream.Position - offset);
                         return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, type);
@@ -8896,6 +8976,11 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     _NavigationDoorLinkLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.NavigationDoorLink;
+                }
+                case RecordTypeInts.XLRL:
+                {
+                    _LocationReferenceLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.LocationReference;
                 }
                 case RecordTypeInts.XLRT:
                 {

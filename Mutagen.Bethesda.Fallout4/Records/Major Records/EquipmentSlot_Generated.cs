@@ -768,7 +768,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: EquipmentSlotBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: EquipmentSlotBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1061,12 +1060,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class EquipmentSlotBinaryCreateTranslation
     {
         public static readonly EquipmentSlotBinaryCreateTranslation Instance = new EquipmentSlotBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IEquipmentSlot item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IEquipmentSlot item,

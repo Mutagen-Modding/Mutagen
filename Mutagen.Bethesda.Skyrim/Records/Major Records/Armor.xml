@@ -51,6 +51,7 @@
       <Float name="ArmorRating" recordType="DNAM" integerType="UInt" divisor="100" nullable="False" />
       <FormLink name="TemplateArmor" recordType="TNAM" refName="Armor" />
     </Fields>
+    <Interface>IEnchantable</Interface>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IOutfitTarget</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>

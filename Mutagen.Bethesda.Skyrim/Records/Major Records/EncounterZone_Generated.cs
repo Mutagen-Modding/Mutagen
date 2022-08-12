@@ -1737,18 +1737,24 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
                     item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EncounterZone.DATADataType.Break0;
                         return (int)EncounterZone_FieldIndex.Location;
                     }
+                    if (dataFrame.Remaining < 1) return null;
                     item.Rank = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.MinLevel = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<EncounterZone.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
+                    if (dataFrame.Remaining < 1) return null;
                     item.MaxLevel = dataFrame.ReadInt8();
                     return (int)EncounterZone_FieldIndex.MaxLevel;
                 }

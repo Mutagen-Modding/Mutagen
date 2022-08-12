@@ -907,7 +907,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: AttackBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: AttackBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1307,12 +1306,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class AttackBinaryCreateTranslation
     {
         public static readonly AttackBinaryCreateTranslation Instance = new AttackBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IAttack item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IAttack item,

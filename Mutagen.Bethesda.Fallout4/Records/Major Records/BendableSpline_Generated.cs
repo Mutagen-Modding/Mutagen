@@ -1886,18 +1886,24 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.DefaultNumberOfTiles = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 2) return null;
                     item.DefaultNumberOfSlices = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
                     item.DefaultNumberOfTilesIsRelativeToLength = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 2);
+                    if (dataFrame.Remaining < 16) return null;
                     item.DefaultColor = dataFrame.ReadColor(ColorBinaryType.AlphaFloat);
+                    if (dataFrame.Remaining < 4) return null;
                     item.WindSensibility = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DNAMDataTypeState |= BendableSpline.DNAMDataType.Break0;
                         return (int)BendableSpline_FieldIndex.WindSensibility;
                     }
+                    if (dataFrame.Remaining < 4) return null;
                     item.WindFlexibility = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)BendableSpline_FieldIndex.WindFlexibility;
                 }

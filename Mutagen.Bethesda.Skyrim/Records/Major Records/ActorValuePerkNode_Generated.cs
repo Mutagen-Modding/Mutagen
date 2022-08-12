@@ -1138,7 +1138,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ActorValuePerkNodeBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ActorValuePerkNodeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1611,12 +1610,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class ActorValuePerkNodeBinaryCreateTranslation
     {
         public static readonly ActorValuePerkNodeBinaryCreateTranslation Instance = new ActorValuePerkNodeBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IActorValuePerkNode item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IActorValuePerkNode item,

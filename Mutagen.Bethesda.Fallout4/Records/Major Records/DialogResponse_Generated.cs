@@ -1993,12 +1993,19 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.CameraLocationAlias, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Emotion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 1) return null;
                     item.ResponseNumber = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 1) return null;
                     item.Unknown = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 2) return null;
                     item.InterruptPercentage = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 4) return null;
                     item.CameraTargetAlias = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.CameraLocationAlias = dataFrame.ReadInt32();
                     return (int)DialogResponse_FieldIndex.CameraLocationAlias;
                 }

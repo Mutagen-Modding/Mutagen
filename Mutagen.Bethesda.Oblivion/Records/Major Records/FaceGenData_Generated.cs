@@ -812,7 +812,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: FaceGenDataBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: FaceGenDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1147,12 +1146,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class FaceGenDataBinaryCreateTranslation
     {
         public static readonly FaceGenDataBinaryCreateTranslation Instance = new FaceGenDataBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IFaceGenData item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IFaceGenData item,

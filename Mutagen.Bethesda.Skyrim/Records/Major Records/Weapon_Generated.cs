@@ -1867,6 +1867,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAssetLinkContainer,
         IBindableEquipment,
         IConstructible,
+        IEnchantable,
         IExplodeSpawn,
         IFormLinkContainer,
         IHasIcons,
@@ -1954,6 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IBindableEquipmentGetter,
         IConstructibleGetter,
+        IEnchantableGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasIconsGetter,
@@ -4113,15 +4115,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly WeaponBinaryCreateTranslation Instance = new WeaponBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WEAP;
-        public static void FillBinaryStructs(
-            IWeaponInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IWeaponInternal item,
             MutagenFrame frame,

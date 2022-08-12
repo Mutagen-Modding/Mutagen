@@ -1470,15 +1470,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly DebrisBinaryCreateTranslation Instance = new DebrisBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DEBR;
-        public static void FillBinaryStructs(
-            IDebrisInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IDebrisInternal item,
             MutagenFrame frame,

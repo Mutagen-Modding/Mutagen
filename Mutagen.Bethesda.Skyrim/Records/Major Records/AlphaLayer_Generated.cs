@@ -694,7 +694,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: AlphaLayerBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: AlphaLayerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         

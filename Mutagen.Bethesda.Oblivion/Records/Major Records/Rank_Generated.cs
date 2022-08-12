@@ -801,7 +801,6 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RankBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RankBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1128,12 +1127,6 @@ namespace Mutagen.Bethesda.Oblivion
     internal partial class RankBinaryCreateTranslation
     {
         public static readonly RankBinaryCreateTranslation Instance = new RankBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IRank item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IRank item,

@@ -34,6 +34,8 @@ public partial class PassthroughTestView : PassthroughTestViewBase
                 })
                 .BindTo(this, x => x.TimeSpent.Text)
                 .DisposeWith(disposable);
+            this.OneWayBind(this.ViewModel, vm => vm.OpenFileLocationCommand, view => view.OpenFileLocationButton.Command)
+                .DisposeWith(disposable);
         });
     }
 }

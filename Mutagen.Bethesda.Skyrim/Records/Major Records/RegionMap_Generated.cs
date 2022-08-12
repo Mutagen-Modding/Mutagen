@@ -741,7 +741,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RegionMapBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionMapBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1097,12 +1096,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class RegionMapBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new static readonly RegionMapBinaryCreateTranslation Instance = new RegionMapBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IRegionMap item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IRegionMap item,

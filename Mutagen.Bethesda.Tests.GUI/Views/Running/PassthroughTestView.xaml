@@ -39,13 +39,19 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
                     x:Name="Name"
                     Margin="6,3,15,3" />
                 <TextBlock Grid.Column="1"
-                    x:Name="TimeSpent"
-                    Margin="0,3,8,3" />
+                           x:Name="TimeSpent"
+                           Margin="0,3,8,3" />
+                <Button Grid.Column="2"
+                    x:Name="OpenFileLocationButton"
+                    Margin="0,3,8,3" >
+                    <icon:PackIconMaterial Kind="OpenInApp" />
+                </Button>
             </Grid>
         </Border>
     </Grid>
