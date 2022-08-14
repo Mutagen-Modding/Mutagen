@@ -46,9 +46,13 @@ public partial class Quest
 
 partial class QuestCommon
 {
-    public static IEnumerable<IAssetLink> GetAdditionalAssetLinks(IQuestGetter obj, ILinkCache linkCache)
+    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IQuestGetter obj, Type? assetType)
     {
-        if ((obj.Flags & Quest.Flag.StartGameEnabled) != 0) yield return new AssetLink<SkyrimSeqAssetType>(SkyrimSeqAssetType.Instance, Path.Combine($"{obj.FormKey.ModKey.Name}.seq"));
+        if (obj.Flags.HasFlag(Quest.Flag.StartGameEnabled))
+        {
+            yield return new AssetLink<SkyrimSeqAssetType>(SkyrimSeqAssetType.Instance,
+                Path.Combine($"{obj.FormKey.ModKey.Name}.seq"));
+        }
     }
 }
 

@@ -1527,6 +1527,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
+            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            {
+                foreach (var item in VirtualMachineAdapterItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Icons is {} IconsItems)
             {
                 foreach (var item in IconsItems.EnumerateListedAssetLinks())
@@ -1540,6 +1547,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapListedAssetLinks(IPerk obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
         {
             base.RemapListedAssetLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapListedAssetLinks(mapping);
             obj.Icons?.RemapListedAssetLinks(mapping);
         }
         
@@ -1975,6 +1983,13 @@ namespace Mutagen.Bethesda.Skyrim
             foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            {
+                foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             if (obj.Icons is {} IconsItems)
             {

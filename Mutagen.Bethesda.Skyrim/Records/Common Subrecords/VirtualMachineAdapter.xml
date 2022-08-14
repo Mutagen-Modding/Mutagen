@@ -8,7 +8,7 @@
     </Fields>
   </Object>
   <Object name="VirtualMachineAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="4780aba9-4c81-4f2d-9508-6373ee5a87ec" ID="355" />
-  <Object name="ScriptEntry" objType="Subrecord" GUID="8c87188a-56aa-441d-a648-ebe0bd9b2aa0" ID="92">
+  <Object name="ScriptEntry" objType="Subrecord" inferredAssets="true" GUID="8c87188a-56aa-441d-a648-ebe0bd9b2aa0" ID="92">
     <Fields>
       <String name="Name" binaryType="PrependLengthUShort" binary="NoGeneration" />
       <Enum name="Flags" byteLength="1" enumName="ScriptEntry.Flag" binary="NoGeneration" />

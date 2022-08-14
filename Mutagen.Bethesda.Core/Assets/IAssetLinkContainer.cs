@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Plugins.Cache;
+using Noggog;
 
 namespace Mutagen.Bethesda.Assets;
 
@@ -38,6 +39,6 @@ public static class AssetLinkContainerGetterExt
         where TAsset : IAssetLinkGetter
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(queryCategories, linkCache, typeof(TAsset))
-            .Select(x => (TAsset)x);
+            .WhereCastable<IAssetLinkGetter, TAsset>();
     }
 }

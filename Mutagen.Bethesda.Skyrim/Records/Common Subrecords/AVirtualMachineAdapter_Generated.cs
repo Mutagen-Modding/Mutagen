@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -502,6 +503,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AVirtualMachineAdapterCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterSetterCommon.Instance.RemapLinks(this, mapping);
+        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => AVirtualMachineAdapterCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AVirtualMachineAdapterSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public virtual void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AVirtualMachineAdapterSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -540,6 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [VirtualMachineAdapter, DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter]
     /// </summary>
     public partial interface IAVirtualMachineAdapter :
+        IAssetLinkContainer,
         IAVirtualMachineAdapterGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IAVirtualMachineAdapter>
@@ -554,6 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAVirtualMachineAdapterGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAVirtualMachineAdapterGetter>
@@ -845,6 +851,20 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Scripts.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAVirtualMachineAdapter obj)
+        {
+            foreach (var item in obj.Scripts.SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IAVirtualMachineAdapter obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.Scripts.ForEach(x => x.RemapListedAssetLinks(mapping));
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1011,6 +1031,15 @@ namespace Mutagen.Bethesda.Skyrim
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IAVirtualMachineAdapterGetter obj, AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in obj.Scripts.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            {
+                yield return item;
             }
             yield break;
         }
@@ -1277,6 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AVirtualMachineAdapterCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => AVirtualMachineAdapterCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => AVirtualMachineAdapterBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

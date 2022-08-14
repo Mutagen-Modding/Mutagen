@@ -3578,6 +3578,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
+            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            {
+                foreach (var item in VirtualMachineAdapterItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Destructible is {} DestructibleItems)
             {
                 foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
@@ -3591,6 +3598,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapListedAssetLinks(INpc obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
         {
             base.RemapListedAssetLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapListedAssetLinks(mapping);
             obj.Destructible?.RemapListedAssetLinks(mapping);
         }
         
@@ -4623,11 +4631,27 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(INpcGetter obj, ILinkCache linkCache, Type? assetType);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(INpcGetter obj, AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
             {
                 yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Resolved))
+            {
+                if (linkCache == null) throw new ArgumentNullException("No link cache was given on a query interested in resolved assets");
+                foreach (var additional in GetResolvedAssetLinks(obj, linkCache, assetType))
+                {
+                    yield return additional;
+                }
+            }
+            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            {
+                foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             if (obj.Destructible is {} DestructibleItems)
             {

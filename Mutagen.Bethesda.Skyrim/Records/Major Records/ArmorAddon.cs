@@ -54,7 +54,7 @@ internal class ArmorAddonWeightSliderContainer : IGenderedItem<bool>
 
 partial class ArmorAddonCommon
 {
-    public static IEnumerable<IAssetLink> GetAdditionalAssetLinks(IArmorAddonGetter obj, ILinkCache linkCache)
+    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType)
     {
         IEnumerable<IAssetLink> TryToAddWeightModel(string path)
         {

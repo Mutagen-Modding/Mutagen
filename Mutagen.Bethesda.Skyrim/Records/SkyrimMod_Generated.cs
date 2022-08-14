@@ -8988,6 +8988,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             {
+                foreach (var item in obj.MagicEffects.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
                 foreach (var item in obj.Scrolls.EnumerateListedAssetLinks())
                 {
                     yield return item;
@@ -9187,7 +9193,25 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             {
+                foreach (var item in obj.DialogTopics.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Quests.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
                 foreach (var item in obj.IdleAnimations.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Packages.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -9259,7 +9283,19 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             {
+                foreach (var item in obj.ArmorAddons.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
                 foreach (var item in obj.MusicTracks.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Scenes.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -9290,6 +9326,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.TextureSets.RemapListedAssetLinks(mapping);
             obj.HeadParts.RemapListedAssetLinks(mapping);
             obj.Eyes.RemapListedAssetLinks(mapping);
+            obj.MagicEffects.RemapListedAssetLinks(mapping);
             obj.Scrolls.RemapListedAssetLinks(mapping);
             obj.Activators.RemapListedAssetLinks(mapping);
             obj.TalkingActivators.RemapListedAssetLinks(mapping);
@@ -9323,7 +9360,10 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Regions.RemapListedAssetLinks(mapping);
             obj.Cells.RemapListedAssetLinks(mapping);
             obj.Worldspaces.RemapListedAssetLinks(mapping);
+            obj.DialogTopics.RemapListedAssetLinks(mapping);
+            obj.Quests.RemapListedAssetLinks(mapping);
             obj.IdleAnimations.RemapListedAssetLinks(mapping);
+            obj.Packages.RemapListedAssetLinks(mapping);
             obj.LoadScreens.RemapListedAssetLinks(mapping);
             obj.AnimatedObjects.RemapListedAssetLinks(mapping);
             obj.Waters.RemapListedAssetLinks(mapping);
@@ -9335,7 +9375,9 @@ namespace Mutagen.Bethesda.Skyrim
             obj.AddonNodes.RemapListedAssetLinks(mapping);
             obj.CameraShots.RemapListedAssetLinks(mapping);
             obj.Impacts.RemapListedAssetLinks(mapping);
+            obj.ArmorAddons.RemapListedAssetLinks(mapping);
             obj.MusicTracks.RemapListedAssetLinks(mapping);
+            obj.Scenes.RemapListedAssetLinks(mapping);
             obj.ArtObjects.RemapListedAssetLinks(mapping);
             obj.MaterialObjects.RemapListedAssetLinks(mapping);
             obj.SoundDescriptors.RemapListedAssetLinks(mapping);
@@ -16657,6 +16699,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
+            foreach (var item in obj.MagicEffects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
             foreach (var item in obj.Scrolls.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
                 yield return item;
@@ -16792,7 +16838,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
+            foreach (var item in obj.DialogTopics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Quests.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
             foreach (var item in obj.IdleAnimations.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Packages.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
                 yield return item;
             }
@@ -16840,7 +16898,15 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
+            foreach (var item in obj.ArmorAddons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
             foreach (var item in obj.MusicTracks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Scenes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
                 yield return item;
             }

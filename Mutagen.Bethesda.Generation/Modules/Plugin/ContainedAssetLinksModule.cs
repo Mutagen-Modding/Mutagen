@@ -59,11 +59,11 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         {
             if (obj.GetObjectData().HasInferredAssets)
             {
-                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetInferredAssetLinks({obj.Interface(getter: true)} obj, ILinkCache linkCache, Type? assetType);");
+                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetInferredAssetLinks({obj.Interface(getter: true)} obj, Type? assetType);");
             }
             if (obj.GetObjectData().HasResolvedAssets)
             {
-                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks({obj.Interface(getter: true)} obj, Type? assetType);");
+                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks({obj.Interface(getter: true)} obj, ILinkCache linkCache, Type? assetType);");
             }
             
             fg.AppendLine($"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, {nameof(AssetLinkQuery)} queryCategories, ILinkCache? linkCache, Type? assetType)");
@@ -100,7 +100,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                     fg.AppendLine($"if (queryCategories.HasFlag({nameof(AssetLinkQuery)}.{nameof(AssetLinkQuery.Resolved)}))");
                     using (fg.CurlyBrace())
                     {
-                        fg.AppendLine($"if (linkCache == null) throw new ArgumentNullException(\"No link cache was given on a query interested in resolved assets\")");
+                        fg.AppendLine($"if (linkCache == null) throw new ArgumentNullException(\"No link cache was given on a query interested in resolved assets\");");
                         fg.AppendLine($"foreach (var additional in GetResolvedAssetLinks(obj, linkCache, assetType))");
                         using (fg.CurlyBrace())
                         {

@@ -19,7 +19,7 @@ public partial class ScriptEntry
 
 partial class ScriptEntryCommon
 {
-    public static IEnumerable<IAssetLink> GetAdditionalAssetLinks(IScriptEntryGetter obj, ILinkCache linkCache)
+    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IScriptEntryGetter obj, Type? assetType)
     {
         if (string.IsNullOrWhiteSpace(obj.Name)) yield break;
 
