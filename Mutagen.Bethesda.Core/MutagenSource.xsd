@@ -109,6 +109,20 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="inferredAssets" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>
+                Whether a record has Inferred Assets
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="resolvedAssets" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>
+                Whether a record has Resolved Assets
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -847,5 +861,5 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-  
+
 </xs:schema>
