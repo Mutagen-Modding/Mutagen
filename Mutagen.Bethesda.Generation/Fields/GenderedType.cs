@@ -112,8 +112,8 @@ public class GenderedType : WrapperType
                 }
                 else
                 {
-                    args.Add($"male: {this.SubTypeGeneration.GetDuplicate($"{rhs}.Male")}");
-                    args.Add($"female: {this.SubTypeGeneration.GetDuplicate($"{rhs}.Female")}");
+                    args.Add($"male: {this.SubTypeGeneration.GetDuplicate($"{rhs}.Male") ?? $"{rhs}.Male"}");
+                    args.Add($"female: {this.SubTypeGeneration.GetDuplicate($"{rhs}.Female") ?? $"{rhs}.Female"}");
                 }
             }
         }
