@@ -129,8 +129,11 @@ internal class SkyrimGroupWrapper<TMajor> : ISkyrimGroupGetter<TMajor>
 
     public ILoquiRegistration ContainedRecordRegistration => _groupMerge.ContainedRecordRegistration;
     
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache = null, bool includeImplicit = true)
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed, 
+        ILinkCache? linkCache = null, 
+        Type? assetType = null)
     {
-        return _groupMerge.EnumerateAssetLinks(linkCache, includeImplicit);
+        return _groupMerge.EnumerateAssetLinks(queryCategories, linkCache, assetType);
     }
 }

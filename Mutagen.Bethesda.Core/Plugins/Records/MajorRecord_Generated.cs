@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
-        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MajorRecordSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public virtual void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MajorRecordSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMajorRecordGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMajorRecordGetter obj, AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType)
         {
             yield break;
         }
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MajorRecordCommon.Instance.EnumerateFormLinks(this);
-        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

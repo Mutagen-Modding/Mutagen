@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Mutagen.Bethesda.Plugins.Cache;
+﻿using Mutagen.Bethesda.Plugins.Cache;
 
 namespace Mutagen.Bethesda.Assets;
 
@@ -16,7 +15,7 @@ public interface IAssetLinkContainer : IAssetLinkContainerGetter
     /// <summary>
     /// Enumerates only AssetLinks that are explicitly listed in the record and can be modified directly.
     /// </summary>
-    IEnumerable<IAssetLink> EnumerateListedAssetLinks();
+    new IEnumerable<IAssetLink> EnumerateListedAssetLinks();
 }
 
 /// <summary>
@@ -24,10 +23,21 @@ public interface IAssetLinkContainer : IAssetLinkContainerGetter
 /// </summary>
 public interface IAssetLinkContainerGetter
 {
-    /// <summary>
-    /// Enumerates AssetLinks that are explicitly or implicitly defined
-    /// </summary>
-    /// <param name="linkCache">Link cache to provide meta assets related to the interaction of multiple major records</param>
-    /// <param name="includeImplicit">Whether to include assets with paths that are derivative from other fields on a record</param>
-    IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache = null, bool includeImplicit = true);
+    IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed, 
+        ILinkCache? linkCache = null, 
+        Type? assetType = null);
+}
+
+public static class AssetLinkContainerGetterExt
+{
+    public static IEnumerable<TAsset> EnumerateAssetLinks<TAsset>(
+        this IAssetLinkContainerGetter assetLinkContainerGetter,
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
+        ILinkCache? linkCache = null)
+        where TAsset : IAssetLinkGetter
+    {
+        return assetLinkContainerGetter.EnumerateAssetLinks(queryCategories, linkCache, typeof(TAsset))
+            .Select(x => (TAsset)x);
+    }
 }

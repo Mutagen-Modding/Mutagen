@@ -154,13 +154,15 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
         
     /// <inheritdoc />
-    public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit);
+    public abstract IEnumerable<IAssetLink> EnumerateListedAssetLinks();
 
     /// <inheritdoc />
     public abstract void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping);
 
-    /// <inheritdoc />
-    public abstract IEnumerable<IAssetLink> EnumerateListedAssetLinks();
+    public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
+        ILinkCache? linkCache = null,
+        Type? assetType = null);
 }
 
 internal static class GroupRecordTypeGetter<T>
@@ -346,7 +348,11 @@ internal abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGrou
     public Type ContainedRecordType => typeof(TMajor);
 
     public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
-    public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit);
+
+    public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
+        ILinkCache? linkCache = null,
+        Type? assetType = null);
 
     public bool ContainsKey(FormKey key)
     {

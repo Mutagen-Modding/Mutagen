@@ -62,7 +62,9 @@ public class MutagenObjData
 
     public List<int> Subgroups = new();
 
-    public bool HasMetaAssets;
+    public bool HasInferredAssets;
+
+    public bool HasResolvedAssets;
 
     public MutagenObjData(ObjectGeneration objGen)
     {

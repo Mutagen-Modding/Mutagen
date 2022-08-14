@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelSetterCommon.Instance.RemapLinks(this, mapping);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => SimpleModelCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => SimpleModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SimpleModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SimpleModelSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISimpleModelGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISimpleModelGetter obj, AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType)
         {
             yield return obj.File;
             yield break;
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => SimpleModelCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => SimpleModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => SimpleModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

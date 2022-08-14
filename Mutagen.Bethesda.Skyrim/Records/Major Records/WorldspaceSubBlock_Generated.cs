@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => WorldspaceSubBlockCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => WorldspaceSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WorldspaceSubBlockSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WorldspaceSubBlockSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
@@ -1796,10 +1796,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWorldspaceSubBlockGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWorldspaceSubBlockGetter obj, AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType)
         {
             foreach (var item in obj.Items.WhereCastable<ICellGetter, IAssetLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateAssetLinks(linkCache, includeImplicit)))
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }
@@ -2122,7 +2122,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceSubBlockCommon.Instance.EnumerateFormLinks(this);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => WorldspaceSubBlockCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => WorldspaceSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

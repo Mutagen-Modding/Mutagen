@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IBodyPartData);
 
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => BodyPartDataCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => BodyPartDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BodyPartDataSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BodyPartDataSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
@@ -1239,15 +1239,15 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBodyPartDataGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBodyPartDataGetter obj, AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType)
         {
-            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -1698,7 +1698,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartDataCommon.Instance.EnumerateFormLinks(this);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => BodyPartDataCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => BodyPartDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BodyPartDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

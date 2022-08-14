@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => Fallout4MajorRecordCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => Fallout4MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => Fallout4MajorRecordSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout4MajorRecordSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
@@ -1347,9 +1347,9 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout4MajorRecordGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout4MajorRecordGetter obj, AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType)
         {
-            foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
             {
                 yield return item;
             }
@@ -1648,7 +1648,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4MajorRecordCommon.Instance.EnumerateFormLinks(this);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => Fallout4MajorRecordCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => Fallout4MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

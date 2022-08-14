@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TintAssetsCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsSetterCommon.Instance.RemapLinks(this, mapping);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => TintAssetsCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => TintAssetsCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => TintAssetsSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TintAssetsSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ITintAssetsGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ITintAssetsGetter obj, AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType)
         {
             if (obj.FileName != null)
             {
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TintAssetsCommon.Instance.EnumerateFormLinks(this);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => TintAssetsCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => TintAssetsCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintAssetsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

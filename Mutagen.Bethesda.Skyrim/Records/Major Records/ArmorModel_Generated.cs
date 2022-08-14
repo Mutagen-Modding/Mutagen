@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorModelCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorModelSetterCommon.Instance.RemapLinks(this, mapping);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => ArmorModelCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => ArmorModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ArmorModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ArmorModelSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
@@ -1009,18 +1009,18 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IArmorModelGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IArmorModelGetter obj, AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType)
         {
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
             }
             if (obj.Icons is {} IconsItems)
             {
-                foreach (var item in IconsItems.EnumerateAssetLinks(linkCache, includeImplicit: includeImplicit))
+                foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorModelCommon.Instance.EnumerateFormLinks(this);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => ArmorModelCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => ArmorModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ArmorModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

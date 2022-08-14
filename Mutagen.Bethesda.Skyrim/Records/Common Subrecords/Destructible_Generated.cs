@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DestructibleCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleSetterCommon.Instance.RemapLinks(this, mapping);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => DestructibleCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => DestructibleCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DestructibleSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DestructibleSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
@@ -1032,9 +1032,9 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDestructibleGetter obj, ILinkCache? linkCache, bool includeImplicit)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDestructibleGetter obj, AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType)
         {
-            foreach (var item in obj.Stages.SelectMany(f => f.EnumerateAssetLinks(linkCache, includeImplicit)))
+            foreach (var item in obj.Stages.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DestructibleCommon.Instance.EnumerateFormLinks(this);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache, bool includeImplicit) => DestructibleCommon.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => DestructibleCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructibleBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

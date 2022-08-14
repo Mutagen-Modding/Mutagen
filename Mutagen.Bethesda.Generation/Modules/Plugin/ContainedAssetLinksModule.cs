@@ -15,7 +15,8 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
 
     public override async Task<Case> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
     {
-        if (obj.GetObjectData().HasMetaAssets) return Case.Yes;
+        if (obj.GetObjectData().HasInferredAssets) return Case.Yes;
+        if (obj.GetObjectData().HasResolvedAssets) return Case.Yes;
         return await base.HasLinks(obj, includeBaseClass, specifications);
     }
 
@@ -37,7 +38,8 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
     public override async Task PostLoad(ObjectGeneration obj)
     {
         await base.PostLoad(obj);
-        obj.GetObjectData().HasMetaAssets = obj.Node.GetAttribute("metaAssets", false);
+        obj.GetObjectData().HasInferredAssets = obj.Node.GetAttribute("inferredAssets", false);
+        obj.GetObjectData().HasResolvedAssets = obj.Node.GetAttribute("resolvedAssets", false);
     }
 
     public override async IAsyncEnumerable<(LoquiInterfaceType Location, string Interface)> Interfaces(
@@ -55,19 +57,23 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         if (!await ShouldGenerate(obj)) return;
         if (maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class))
         {
-            if (obj.GetObjectData().HasMetaAssets)
+            if (obj.GetObjectData().HasInferredAssets)
             {
-                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetAdditionalAssetLinks({obj.Interface(getter: true)} obj, ILinkCache linkCache);");
+                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetInferredAssetLinks({obj.Interface(getter: true)} obj, ILinkCache linkCache, Type? assetType);");
+            }
+            if (obj.GetObjectData().HasResolvedAssets)
+            {
+                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks({obj.Interface(getter: true)} obj, Type? assetType);");
             }
             
-            fg.AppendLine($"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, ILinkCache? linkCache, bool includeImplicit)");
+            fg.AppendLine($"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, {nameof(AssetLinkQuery)} queryCategories, ILinkCache? linkCache, Type? assetType)");
             using (fg.CurlyBrace())
             {
                 foreach (var baseClass in obj.BaseClassTrail())
                 {
                     if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                     {
-                        fg.AppendLine("foreach (var item in base.EnumerateAssetLinks(obj, linkCache, includeImplicit))");
+                        fg.AppendLine("foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))");
                         using (fg.CurlyBrace())
                         {
                             fg.AppendLine("yield return item;");
@@ -76,12 +82,26 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                     }
                 }
                 
-                if (obj.GetObjectData().HasMetaAssets)
+                if (obj.GetObjectData().HasInferredAssets)
                 {
-                    fg.AppendLine("if (includeImplicit && linkCache != null)");
+                    fg.AppendLine($"if (queryCategories.HasFlag({nameof(AssetLinkQuery)}.{nameof(AssetLinkQuery.Inferred)}))");
                     using (fg.CurlyBrace())
                     {
-                        fg.AppendLine($"foreach (var additional in GetAdditionalAssetLinks(obj, linkCache))");
+                        fg.AppendLine($"foreach (var additional in GetInferredAssetLinks(obj, assetType))");
+                        using (fg.CurlyBrace())
+                        {
+                            fg.AppendLine("yield return additional;");
+                        }
+                    }
+                }
+                
+                if (obj.GetObjectData().HasResolvedAssets)
+                {
+                    fg.AppendLine($"if (queryCategories.HasFlag({nameof(AssetLinkQuery)}.{nameof(AssetLinkQuery.Resolved)}))");
+                    using (fg.CurlyBrace())
+                    {
+                        fg.AppendLine($"if (linkCache == null) throw new ArgumentNullException(\"No link cache was given on a query interested in resolved assets\")");
+                        fg.AppendLine($"foreach (var additional in GetResolvedAssetLinks(obj, linkCache, assetType))");
                         using (fg.CurlyBrace())
                         {
                             fg.AppendLine("yield return additional;");
@@ -137,7 +157,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         }
                         using (fg.CurlyBrace(doIt: doBrace))
                         {
-                            fg.AppendLine($"foreach (var item in {access}.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(linkCache, includeImplicit: includeImplicit))");
+                            fg.AppendLine($"foreach (var item in {access}.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))");
                             using (fg.CurlyBrace())
                             {
                                 fg.AppendLine($"yield return item;");
@@ -163,13 +183,13 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                                 switch (linktype)
                                 {
                                     case Case.Yes:
-                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(linkCache, includeImplicit)))");
+                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
                                         break;
                                     case Case.Maybe:
                                         subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IAssetLinkContainerGetter)}>()");
                                         using (subFg.IncreaseDepth())
                                         {
-                                            subFg.AppendLine($".SelectMany((f) => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(linkCache, includeImplicit)))");
+                                            subFg.AppendLine($".SelectMany((f) => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
                                         }
                                         break;
                                     default:
@@ -216,7 +236,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                                     fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IAssetLinkContainerGetter)}>()");
                                     using (fg.IncreaseDepth())
                                     {
-                                        fg.AppendLine($".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateAssetLinks)}(linkCache, includeImplicit: includeImplicit)))");
+                                        fg.AppendLine($".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
                                     }
                                     break;
                                 default:
@@ -556,7 +576,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
     public async Task GenerateInterfaceImplementation(ObjectGeneration obj, StructuredStringBuilder fg, bool getter)
     {
         var shouldAlwaysOverride = obj.IsTopLevelGroup();
-        fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLinkGetter)}> {nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(ILinkCache? linkCache, bool includeImplicit) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateAssetLinks(this, linkCache, includeImplicit);");
+        fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLinkGetter)}> {nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
 
         if (!getter)
         {

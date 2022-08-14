@@ -161,11 +161,6 @@ public class TestMajorRecord : ITestMajorRecord
         return EnumerateMajorRecords(type, throwIfUnknown);
     }
 
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache = null, bool includeImplicit = true)
-    {
-        throw new NotImplementedException();
-    }
-
     public Type Type => throw new NotImplementedException();
     
     public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
@@ -179,6 +174,12 @@ public class TestMajorRecord : ITestMajorRecord
     }
 
     public void Clear()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, ILinkCache? linkCache = null,
+        Type? assetType = null)
     {
         throw new NotImplementedException();
     }

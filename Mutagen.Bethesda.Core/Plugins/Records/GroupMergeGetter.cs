@@ -41,10 +41,13 @@ internal sealed class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, I
     IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => this;
 
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SubGroups.SelectMany(x => x.EnumerateFormLinks());
-    
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache = null, bool includeImplicit = true)
+
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
+        ILinkCache? linkCache = null,
+        Type? assetType = null)
     {
-        return SubGroups.SelectMany(x => x.EnumerateAssetLinks(linkCache, includeImplicit));
+        return SubGroups.SelectMany(x => x.EnumerateAssetLinks(queryCategories, linkCache, assetType));
     }
 
     private TMajor Get(FormKey key)

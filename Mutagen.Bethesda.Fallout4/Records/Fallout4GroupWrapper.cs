@@ -128,8 +128,12 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
     IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
 
     public ILoquiRegistration ContainedRecordRegistration => _groupMerge.ContainedRecordRegistration;
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILinkCache? linkCache = null, bool includeImplicit = true)
+
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed, 
+        ILinkCache? linkCache = null, 
+        Type? assetType = null)
     {
-        return _groupMerge.EnumerateAssetLinks(linkCache, includeImplicit);
+        return _groupMerge.EnumerateAssetLinks(queryCategories, linkCache, assetType);
     }
 }
