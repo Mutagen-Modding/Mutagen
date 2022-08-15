@@ -19,7 +19,7 @@ public partial class Npc
     
 partial class NpcCommon
 {
-    public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(INpcGetter obj, ILinkCache linkCache, Type? assetType)
+    public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(INpcGetter obj, IAssetLinkCache linkCache, Type? assetType)
     {
         if (assetType != null 
             && assetType != typeof(SkyrimTextureAssetType)
@@ -28,7 +28,7 @@ partial class NpcCommon
             yield break;
         }
         
-        var npcRace = obj.Race.TryResolve(linkCache);
+        var npcRace = obj.Race.TryResolve(linkCache.FormLinkCache);
                 
         //Valid race, npc has face gen head flag set and npc doesn't use template face data
         if (npcRace != null

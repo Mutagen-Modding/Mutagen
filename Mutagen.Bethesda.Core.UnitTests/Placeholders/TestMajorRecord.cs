@@ -178,7 +178,7 @@ public class TestMajorRecord : ITestMajorRecord
         throw new NotImplementedException();
     }
 
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, ILinkCache? linkCache = null,
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null,
         Type? assetType = null)
     {
         throw new NotImplementedException();

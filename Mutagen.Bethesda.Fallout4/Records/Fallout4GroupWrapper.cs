@@ -131,7 +131,7 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
 
     public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed, 
-        ILinkCache? linkCache = null, 
+        IAssetLinkCache? linkCache = null, 
         Type? assetType = null)
     {
         return _groupMerge.EnumerateAssetLinks(queryCategories, linkCache, assetType);

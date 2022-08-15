@@ -6,11 +6,11 @@ public class AssetLinkCache : IAssetLinkCache
 {
     private readonly Dictionary<Type, object> _componentCache = new();
 
-    public ILinkCache LinkCache { get; }
+    public ILinkCache FormLinkCache { get; }
     
     public AssetLinkCache(ILinkCache linkCache)
     {
-        LinkCache = linkCache;
+        FormLinkCache = linkCache;
     }
     
     public TComponent GetComponent<TComponent>() where TComponent : IAssetCacheComponent

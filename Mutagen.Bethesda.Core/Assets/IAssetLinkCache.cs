@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Assets;
 
 public interface IAssetLinkCache
 {
-    ILinkCache LinkCache { get; }
+    ILinkCache FormLinkCache { get; }
     TComponent GetComponent<TComponent>()
         where TComponent : IAssetCacheComponent;
 }
