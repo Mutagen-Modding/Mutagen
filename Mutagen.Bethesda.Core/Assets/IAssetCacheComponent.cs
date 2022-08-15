@@ -5,4 +5,5 @@
 /// </summary>
 public interface IAssetCacheComponent
 {
+    void Prep(IAssetLinkCache assetLinkCache);
 }

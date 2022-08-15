@@ -13,15 +13,20 @@ public class AssetLinkCache : IAssetLinkCache
         FormLinkCache = linkCache;
     }
     
-    public TComponent GetComponent<TComponent>() where TComponent : IAssetCacheComponent
+    public TComponent GetComponent<TComponent>() 
+        where TComponent : class, IAssetCacheComponent, new()
     {
         lock (_componentCache)
         {
             if (_componentCache.TryGetValue(typeof(TComponent), out var component)) return (TComponent)component;
-            
-            // ToDo
-            // Use reflection to instantiate component
-            throw new NotImplementedException();
+            var newComponent = new TComponent();
+            newComponent.Prep(this);
+            _componentCache[typeof(TComponent)] = newComponent;
+            return newComponent;
         }
+    }
+
+    public void Dispose()
+    {
     }
 }

@@ -4,12 +4,9 @@ namespace Mutagen.Bethesda.Skyrim.Assets;
 
 public class VoiceTypeAssetLookup : IAssetCacheComponent
 {
-    private readonly IAssetLinkCache _assetLinkCache;
-
-    public VoiceTypeAssetLookup(IAssetLinkCache assetLinkCache)
+    public void Prep(IAssetLinkCache assetLinkCache)
     {
-        _assetLinkCache = assetLinkCache;
-        // Do setup
+        throw new NotImplementedException();
     }
     
     // Expose whatever
