@@ -6,8 +6,11 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Skyrim.Assets;
 using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 
 namespace Mutagen.Bethesda.Skyrim;
@@ -136,6 +139,16 @@ public partial class DialogTopic
         OutOfBreath = 100,
         CombatGrunt = 101,
         LeaveWaterBreath = 102,
+    }
+}
+
+partial class DialogTopicCommon
+{
+    public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(IDialogTopicGetter obj, IAssetLinkCache linkCache, Type? assetType)
+    {
+        var voiceTypeLookup = linkCache.GetComponent<VoiceTypeAssetLookup>();
+        // use it
+        throw new NotImplementedException();
     }
 }
 

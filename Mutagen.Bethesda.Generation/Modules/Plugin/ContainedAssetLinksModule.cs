@@ -63,10 +63,10 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
             }
             if (obj.GetObjectData().HasResolvedAssets)
             {
-                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks({obj.Interface(getter: true)} obj, ILinkCache linkCache, Type? assetType);");
+                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks({obj.Interface(getter: true)} obj, {nameof(IAssetLinkCache)} linkCache, Type? assetType);");
             }
             
-            fg.AppendLine($"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, {nameof(AssetLinkQuery)} queryCategories, ILinkCache? linkCache, Type? assetType)");
+            fg.AppendLine($"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, {nameof(AssetLinkQuery)} queryCategories, {nameof(IAssetLinkCache)}? linkCache, Type? assetType)");
             using (fg.CurlyBrace())
             {
                 foreach (var baseClass in obj.BaseClassTrail())
@@ -576,7 +576,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
     public async Task GenerateInterfaceImplementation(ObjectGeneration obj, StructuredStringBuilder fg, bool getter)
     {
         var shouldAlwaysOverride = obj.IsTopLevelGroup();
-        fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLinkGetter)}> {nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(AssetLinkQuery queryCategories, ILinkCache? linkCache, Type? assetType) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
+        fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLinkGetter)}> {nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(AssetLinkQuery queryCategories, {nameof(IAssetLinkCache)}? linkCache, Type? assetType) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
 
         if (!getter)
         {

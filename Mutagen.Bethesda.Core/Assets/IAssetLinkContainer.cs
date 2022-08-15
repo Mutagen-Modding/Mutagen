@@ -26,7 +26,7 @@ public interface IAssetLinkContainerGetter
 {
     IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed, 
-        ILinkCache? linkCache = null, 
+        IAssetLinkCache? linkCache = null, 
         Type? assetType = null);
 }
 
@@ -35,7 +35,7 @@ public static class AssetLinkContainerGetterExt
     public static IEnumerable<TAsset> EnumerateAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
-        ILinkCache? linkCache = null)
+        IAssetLinkCache? linkCache = null)
         where TAsset : IAssetLinkGetter
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(queryCategories, linkCache, typeof(TAsset))

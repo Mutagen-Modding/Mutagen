@@ -44,7 +44,7 @@ internal sealed class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, I
 
     public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
-        ILinkCache? linkCache = null,
+        IAssetLinkCache? linkCache = null,
         Type? assetType = null)
     {
         return SubGroups.SelectMany(x => x.EnumerateAssetLinks(queryCategories, linkCache, assetType));

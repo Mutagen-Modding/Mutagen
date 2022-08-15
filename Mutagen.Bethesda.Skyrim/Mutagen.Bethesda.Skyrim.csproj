@@ -51,6 +51,7 @@
     </Compile>
     <Compile Include="Assets\SkyrimSoundAssetType.cs" />
     <Compile Include="Assets\SkyrimTextureAssetType.cs" />
+    <Compile Include="Assets\VoiceTypeAssetLookup.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Agression.cs" />

@@ -100,7 +100,10 @@
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Archives\IArchiveReader.cs" />
     <Compile Include="Assets\AssetLink.cs" />
+    <Compile Include="Assets\AssetLinkCache.cs" />
     <Compile Include="Assets\AssetLinkQuery.cs" />
+    <Compile Include="Assets\IAssetCacheComponent.cs" />
+    <Compile Include="Assets\IAssetLinkCache.cs" />
     <Compile Include="Assets\IAssetLinkContainer.cs" />
     <Compile Include="Assets\IAssetLink.cs" />
     <Compile Include="Assets\IAssetType.cs" />

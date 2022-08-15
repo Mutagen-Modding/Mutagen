@@ -161,7 +161,7 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
 
     public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
-        ILinkCache? linkCache = null,
+        IAssetLinkCache? linkCache = null,
         Type? assetType = null);
 }
 
@@ -351,7 +351,7 @@ internal abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGrou
 
     public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
-        ILinkCache? linkCache = null,
+        IAssetLinkCache? linkCache = null,
         Type? assetType = null);
 
     public bool ContainsKey(FormKey key)
