@@ -61,10 +61,10 @@ public class ModModule : GenerationModule
         }
 
         // Interfaces
-        sb.AppendLine($"IGroupGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
-        sb.AppendLine($"IGroupGetter {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
-        sb.AppendLine($"IGroup<T> {nameof(IMod)}.{nameof(IMod.GetTopLevelGroup)}<T>() => this.{nameof(IMod.GetTopLevelGroup)}<T>();");
-        sb.AppendLine($"IGroup {nameof(IMod)}.{nameof(IMod.GetTopLevelGroup)}(Type type) => this.{nameof(IMod.GetTopLevelGroup)}(type);");
+        sb.AppendLine($"IGroupGetter<T>? {nameof(IModGetter)}.{nameof(IModGetter.TryGetTopLevelGroup)}<T>() => this.{nameof(IModGetter.TryGetTopLevelGroup)}<T>();");
+        sb.AppendLine($"IGroupGetter? {nameof(IModGetter)}.{nameof(IModGetter.TryGetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.TryGetTopLevelGroup)}(type);");
+        sb.AppendLine($"IGroup<T>? {nameof(IMod)}.{nameof(IMod.TryGetTopLevelGroup)}<T>() => this.{nameof(IMod.TryGetTopLevelGroup)}<T>();");
+        sb.AppendLine($"IGroup? {nameof(IMod)}.{nameof(IMod.TryGetTopLevelGroup)}(Type type) => this.{nameof(IMod.TryGetTopLevelGroup)}(type);");
         sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
         sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);");
         sb.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
@@ -372,7 +372,7 @@ public class ModModule : GenerationModule
 
         if (obj.GetObjectType() != ObjectType.Mod) return;
         using (var args = sb.Function(
-                   $"public static IGroupGetter<T> {nameof(IModGetter.GetTopLevelGroup)}<T>"))
+                   $"public static IGroupGetter<T>? {nameof(IModGetter.TryGetTopLevelGroup)}<T>"))
         {
             args.Wheres.Add($"where T : {nameof(IMajorRecordGetter)}");
             args.Add($"this {obj.Interface(getter: true)} obj");
@@ -380,7 +380,7 @@ public class ModModule : GenerationModule
         using (sb.CurlyBrace())
         {
             using (var args = sb.Call(
-                       $"return (IGroupGetter<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                       $"return (IGroupGetter<T>?){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
                 args.Add("type: typeof(T)");
@@ -389,7 +389,7 @@ public class ModModule : GenerationModule
         sb.AppendLine();
             
         using (var args = sb.Function(
-                   $"public static IGroupGetter {nameof(IModGetter.GetTopLevelGroup)}"))
+                   $"public static IGroupGetter? {nameof(IModGetter.TryGetTopLevelGroup)}"))
         {
             args.Add($"this {obj.Interface(getter: true)} obj");
             args.Add("Type type");
@@ -397,7 +397,7 @@ public class ModModule : GenerationModule
         using (sb.CurlyBrace())
         {
             using (var args = sb.Call(
-                       $"return (IGroupGetter){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                       $"return (IGroupGetter?){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
                 args.AddPassArg("type");
@@ -406,7 +406,7 @@ public class ModModule : GenerationModule
         sb.AppendLine();
 
         using (var args = sb.Function(
-                   $"public static IGroup<T> {nameof(IMod.GetTopLevelGroup)}<T>"))
+                   $"public static IGroup<T>? {nameof(IMod.TryGetTopLevelGroup)}<T>"))
         {
             args.Wheres.Add($"where T : {nameof(IMajorRecord)}");
             args.Add($"this {obj.Interface(getter: false)} obj");
@@ -414,7 +414,7 @@ public class ModModule : GenerationModule
         using (sb.CurlyBrace())
         {
             using (var args = sb.Call(
-                       $"return (IGroup<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                       $"return (IGroup<T>?){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
                 args.Add("type: typeof(T)");
@@ -423,7 +423,7 @@ public class ModModule : GenerationModule
         sb.AppendLine();
             
         using (var args = sb.Function(
-                   $"public static IGroup {nameof(IModGetter.GetTopLevelGroup)}"))
+                   $"public static IGroup? {nameof(IModGetter.TryGetTopLevelGroup)}"))
         {
             args.Add($"this {obj.Interface(getter: false)} obj");
             args.Add("Type type");
@@ -431,7 +431,7 @@ public class ModModule : GenerationModule
         using (sb.CurlyBrace())
         {
             using (var args = sb.Call(
-                       $"return (IGroup){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                       $"return (IGroup?){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
             {
                 args.AddPassArg("obj");
                 args.AddPassArg("type");
@@ -523,7 +523,7 @@ public class ModModule : GenerationModule
     private void GenerateGetGroup(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         using (var args = sb.Function(
-                   "public object GetGroup"))
+                   "public object? GetGroup"))
         {
             args.Add($"{obj.Interface(getter: true)} obj");
             args.Add("Type type");
@@ -567,7 +567,7 @@ public class ModModule : GenerationModule
                 sb.AppendLine("default:");
                 using (sb.IncreaseDepth())
                 {
-                    sb.AppendLine("throw new ArgumentException($\"Unknown major record type: {type}\");");
+                    sb.AppendLine("return null;");
                 }
             }
         }

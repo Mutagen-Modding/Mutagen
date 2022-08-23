@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order;
 
 public class LiveLoadOrderIntegrationTests
 {
-    [Theory, MutagenAutoData(false)]
+    [Theory, MutagenAutoData(ConfigureMembers: false)]
     public void LiveLoadOrder(
         [Frozen]IScheduler scheduler,
         [Frozen]MockFileSystemWatcher watcher,
@@ -137,7 +137,7 @@ public class LiveLoadOrderIntegrationTests
         });
     }
 
-    [Theory, MutagenAutoData(true)]
+    [Theory, MutagenAutoData(ConfigureMembers: true)]
     public void LiveLoadOrder_EnsureReaddRetainsOrder(
         [Frozen]IScheduler scheduler,
         [Frozen]MockFileSystemWatcher watcher,
@@ -225,7 +225,7 @@ public class LiveLoadOrderIntegrationTests
 
     // Vortex puts CC mods on the plugins file, as unactivated.  Seemingly to drive load order?
     // This ensures that is respected
-    [Theory, MutagenAutoData(false)]
+    [Theory, MutagenAutoData(ConfigureMembers: false)]
     public void LiveLoadOrder_PluginsCCListingReorders(
         [Frozen]IScheduler scheduler,
         [Frozen]MockFileSystemWatcher watcher,
@@ -312,7 +312,7 @@ public class LiveLoadOrderIntegrationTests
                 }));
     }
 
-    [Theory, MutagenAutoData(false)]
+    [Theory, MutagenAutoData(ConfigureMembers: false)]
     public void LiveLoadOrder_DontReorderPluginsFile(
         [Frozen]IScheduler scheduler,
         [Frozen]MockFileSystem fs,
