@@ -13,7 +13,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private readonly Dictionary<ModKey, HashSet<string>> _defaultVoiceTypes = new();
     private readonly Dictionary<FormKey, HashSet<string>> _speakerVoices = new();
 
-    private readonly Dictionary<FormKey, string> _voiceTypeEditorID = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
@@ -138,7 +137,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             {
                 if (voiceType.EditorID != null)
                 {
-                    _voiceTypeEditorID.Add(voiceType.FormKey, voiceType.EditorID);
                     if ((voiceType.Flags & Skyrim.VoiceType.Flag.AllowDefaultDialog) != 0)
                     {
                         defaultVoiceTypes.Add(voiceType.EditorID);
@@ -412,17 +410,21 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case Condition.Function.GetIsVoiceType:
-                if (_voiceTypeEditorID.ContainsKey(functionConditionData.ParameterOneRecord.FormKey))
+                if (_formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(functionConditionData.ParameterOneRecord.FormKey, out var voiceTypeEditorId))
                 {
                     //One voice type
-                    voices = new VoiceContainer(_voiceTypeEditorID[functionConditionData.ParameterOneRecord.FormKey]);
+                    voices = new VoiceContainer(voiceTypeEditorId!);
                 } else
                 {
                     //Multiple voice types
                     var formList = functionConditionData.ParameterOneRecord.TryResolve<IFormListGetter>(_formLinkCache);
                     if (formList != null)
                     {
-                        voices = new VoiceContainer(formList.Items.Where(link => _voiceTypeEditorID.ContainsKey(link.FormKey)).Select(link => _voiceTypeEditorID[link.FormKey]).ToHashSet());
+                        voices = new VoiceContainer(formList.Items.SelectWhere(link =>
+                        {
+                            _formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(link.FormKey, out var linkVoiceTypeEditorId);
+                            return linkVoiceTypeEditorId == null ? TryGet<string>.Failure : TryGet<string>.Succeed(linkVoiceTypeEditorId);
+                        }).ToHashSet());
                     }
                 }
 
@@ -664,11 +666,13 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var item in formList.Items)
         {
-            if (_voiceTypeEditorID.ContainsKey(item.FormKey))
+            if (_formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(item.FormKey, out var voiceTypeEditorId))
             {
-                voices.Add(new VoiceContainer(new HashSet<string> { _voiceTypeEditorID[item.FormKey] }));
+                //FormList entry is VoiceType
+                voices.Add(new VoiceContainer(voiceTypeEditorId!));
             } else if (_speakerVoices.ContainsKey(item.FormKey))
             {
+                //FormList entry is Npc
                 voices.Add(GetVoices(item.FormKey));
             }
         }
