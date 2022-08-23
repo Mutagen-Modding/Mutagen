@@ -1801,12 +1801,6 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IAObjectModificationInternal>(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: AObjectModificationBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: AObjectModificationBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(

@@ -707,12 +707,6 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-            PluginUtilityTranslation.SubrecordParse(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillTyped: RegionDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion

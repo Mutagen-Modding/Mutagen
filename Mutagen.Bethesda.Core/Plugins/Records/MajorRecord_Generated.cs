@@ -1181,12 +1181,6 @@ namespace Mutagen.Bethesda.Plugins.Records
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IMajorRecordInternal>(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: MajorRecordBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion

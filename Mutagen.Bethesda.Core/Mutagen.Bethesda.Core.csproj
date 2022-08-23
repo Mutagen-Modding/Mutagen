@@ -237,6 +237,7 @@
     <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
     <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
     <Compile Include="Plugins\Exceptions\ModPathException.cs" />
+    <Compile Include="Plugins\Extensions\IModExt.cs" />
     <Compile Include="Plugins\Extensions\LinkCacheConstructionMixIn.cs" />
     <Compile Include="Plugins\Extensions\IAssetLinkExt.cs">
       <CodeLanguage>cs</CodeLanguage>

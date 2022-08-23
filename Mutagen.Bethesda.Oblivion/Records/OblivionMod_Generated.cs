@@ -2784,10 +2784,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public override GameRelease GameRelease => GameRelease.Oblivion;
-        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
-        IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroup IMod.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
+        IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
+        IGroup<T>? IMod.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
+        IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
@@ -3676,36 +3676,36 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public static IGroupGetter<T> GetTopLevelGroup<T>(this IOblivionModGetter obj)
+        public static IGroupGetter<T>? TryGetTopLevelGroup<T>(this IOblivionModGetter obj)
             where T : IMajorRecordGetter
         {
-            return (IGroupGetter<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<T>?)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroupGetter GetTopLevelGroup(
+        public static IGroupGetter? TryGetTopLevelGroup(
             this IOblivionModGetter obj,
             Type type)
         {
-            return (IGroupGetter)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter?)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
 
-        public static IGroup<T> GetTopLevelGroup<T>(this IOblivionMod obj)
+        public static IGroup<T>? TryGetTopLevelGroup<T>(this IOblivionMod obj)
             where T : IMajorRecord
         {
-            return (IGroup<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup<T>?)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroup GetTopLevelGroup(
+        public static IGroup? TryGetTopLevelGroup(
             this IOblivionMod obj,
             Type type)
         {
-            return (IGroup)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup?)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
@@ -5985,7 +5985,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public object GetGroup(
+        public object? GetGroup(
             IOblivionModGetter obj,
             Type type)
         {
@@ -6271,7 +6271,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IEffectShaderInternal":
                     return obj.EffectShaders;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {type}");
+                    return null;
             }
         }
         
@@ -12011,8 +12011,8 @@ namespace Mutagen.Bethesda.Oblivion
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public GameRelease GameRelease => GameRelease.Oblivion;
-        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
+        IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;

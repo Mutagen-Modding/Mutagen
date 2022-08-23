@@ -39,7 +39,7 @@ public interface IModGetter :
     ///   - Nested types, where there is not just one top level group that contains given type (Placed Objects) <br />
     ///   - A setter type is requested from a getter only object. <br />
     /// </exception>
-    IGroupGetter<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecordGetter;
+    IGroupGetter<TMajor>? TryGetTopLevelGroup<TMajor>() where TMajor : IMajorRecordGetter;
 
     /// <summary>
     /// Returns the top-level Group getter object associated with the given Major Record Type.
@@ -53,7 +53,7 @@ public interface IModGetter :
     ///   - Nested types, where there is not just one top level group that contains given type (Placed Objects) <br />
     ///   - A setter type is requested from a getter only object. <br />
     /// </exception>
-    IGroupGetter GetTopLevelGroup(Type type);
+    IGroupGetter? TryGetTopLevelGroup(Type type);
 
     /// <summary>
     /// Exports to disk in Bethesda binary format.
@@ -113,7 +113,7 @@ public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator, I
     ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
     ///   - A setter type is requested from a getter only object.
     /// </exception>
-    new IGroup<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecord;
+    new IGroup<TMajor>? TryGetTopLevelGroup<TMajor>() where TMajor : IMajorRecord;
 
     /// <summary>
     /// Returns the top-level Group getter object associated with the given Major Record Type.
@@ -127,7 +127,7 @@ public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator, I
     ///   - Nested types, where there is not just one top level group that contains given type (Placed Objects) <br />
     ///   - A setter type is requested from a getter only object. <br />
     /// </exception>
-    new IGroup GetTopLevelGroup(Type type);
+    new IGroup? TryGetTopLevelGroup(Type type);
 
     /// <summary>
     /// The next FormID to be allocated
