@@ -208,7 +208,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 var responseContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responseKey);
                 if (responseContext is not { Parent.Record: {} }) continue;
 
-                var currentTopic = (IDialogTopicGetter) responseContext.Parent.Record;
+                if (!responseContext.TryGetParent<IDialogTopicGetter>(out var currentTopic)) continue;
                 var currentQuest = currentTopic.Quest.TryResolve(_formLinkCache);
                 if (currentQuest == null) continue;
 
@@ -286,7 +286,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                     var responseContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responseKey);
                     if (responseContext is not { Parent.Record: {} }) continue;
 
-                    var currentTopic = (IDialogTopicGetter) responseContext.Parent.Record;
+                    if (!responseContext.TryGetParent<IDialogTopicGetter>(out var currentTopic)) continue;
                     var currentQuest = currentTopic.Quest.TryResolve(_formLinkCache);
                     if (currentQuest == null) continue;
 
