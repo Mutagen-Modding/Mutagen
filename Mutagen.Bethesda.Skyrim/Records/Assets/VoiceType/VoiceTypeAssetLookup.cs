@@ -298,7 +298,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
 
             var responseFormID = responses.FormKey.ID.ToString("X8");
-            if (voices.IsEmpty()) Console.WriteLine($"WARNING: {responseFormID} has no valid voice types {topic.EditorID}");
 
             foreach (var response in responses.Responses)
             {
