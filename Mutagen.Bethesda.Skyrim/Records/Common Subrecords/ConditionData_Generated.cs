@@ -775,11 +775,6 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.SubrecordParse(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: ConditionDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion

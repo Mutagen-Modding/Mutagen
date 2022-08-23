@@ -853,15 +853,6 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.VMAD),
-                translationParams.LengthOverride));
-            PluginUtilityTranslation.SubrecordParse(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: AVirtualMachineAdapterBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion

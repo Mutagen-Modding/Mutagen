@@ -48,11 +48,11 @@ public abstract class AMod : IMod
     public abstract bool CanUseLocalization { get; }
     public abstract bool UsingLocalization { get; set; }
     bool IModGetter.UsingLocalization => throw new NotImplementedException();
-    IGroup<T> IMod.GetTopLevelGroup<T>() => throw new NotImplementedException();
-    IGroup IMod.GetTopLevelGroup(Type t) => throw new NotImplementedException();
+    IGroup<T>? IMod.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
+    IGroup? IMod.TryGetTopLevelGroup(Type t) => throw new NotImplementedException();
     public abstract void SyncRecordCount();
-    IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => throw new NotImplementedException();
-    IGroupGetter IModGetter.GetTopLevelGroup(Type type) => throw new NotImplementedException();
+    IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
+    IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => throw new NotImplementedException();
     void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => throw new NotImplementedException();
     void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParameters) => throw new NotImplementedException();
     IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();

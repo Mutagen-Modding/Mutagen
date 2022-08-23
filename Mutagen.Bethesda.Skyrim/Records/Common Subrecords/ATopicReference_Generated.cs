@@ -656,10 +656,6 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.PDTO),
-                translationParams.LengthOverride));
         }
         
         #endregion

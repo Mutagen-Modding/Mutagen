@@ -74,12 +74,17 @@ public sealed class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<T
     {
         if (EDID == Null)
         {
-            item = default!;
+            item = default;
             return false;
         }
         // ToDo
         // Improve to not be a forloop
-        var group = mod.GetTopLevelGroup<TMajor>();
+        var group = mod.TryGetTopLevelGroup<TMajor>();
+        if (group == null)
+        {
+            item = default;
+            return false;
+        }
         foreach (var rec in group)
         {
             if (EDID.Type.Equals(rec.EditorID))
@@ -88,7 +93,7 @@ public sealed class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<T
                 return true;
             }
         }
-        item = default!;
+        item = default;
         return false;
     }
 
