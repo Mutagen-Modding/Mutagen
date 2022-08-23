@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Skyrim.Assets;
+using Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 
 namespace Mutagen.Bethesda.Skyrim;
@@ -147,8 +148,11 @@ partial class DialogTopicCommon
     public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(IDialogTopicGetter obj, IAssetLinkCache linkCache, Type? assetType)
     {
         var voiceTypeLookup = linkCache.GetComponent<VoiceTypeAssetLookup>();
-        // use it
-        throw new NotImplementedException();
+        voiceTypeLookup.Prep(linkCache);
+        foreach (var voiceTypePath in voiceTypeLookup.GetVoiceTypePaths(obj))
+        {
+            yield return new AssetLink<SkyrimSoundAssetType>(SkyrimSoundAssetType.Instance, voiceTypePath);
+        }
     }
 }
 
