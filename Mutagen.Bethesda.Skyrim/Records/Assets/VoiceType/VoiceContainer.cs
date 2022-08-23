@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Mutagen.Bethesda.Plugins;
+using Noggog;
 namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 
 public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
@@ -30,13 +31,9 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         {
             foreach (var voiceType in voiceTypes)
             {
-                if (_voices.TryGetValue(voiceType, out var npcs))
-                {
-                    npcs.Add(npc);
-                } else
-                {
-                    _voices.Add(voiceType, new HashSet<FormKey> { npc });
-                }
+                _voices
+                    .GetOrAdd(voiceType)
+                    .Add(npc);
             }
         }
     }
@@ -47,13 +44,10 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         {
             foreach (var voiceType in voiceTypes)
             {
-                if (_voices.TryGetValue(voiceType, out var npcs))
-                {
-                    npcs.Add(npc);
-                } else
-                {
-                    _voices.Add(voiceType, new HashSet<FormKey> { npc });
-                }
+                
+                _voices
+                    .GetOrAdd(voiceType)
+                    .Add(npc);
             }
         }
     }

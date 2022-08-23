@@ -42,46 +42,30 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 foreach (var factionKey in GetFactions(npc))
                 {
-                    if (_factionNPCs.TryGetValue(factionKey, out var npcFormKeys))
-                    {
-                        npcFormKeys.Add(npc.FormKey);
-                    } else
-                    {
-                        _factionNPCs.Add(factionKey, new HashSet<FormKey> { npc.FormKey });
-                    }
+                    _factionNPCs
+                        .GetOrAdd(factionKey)
+                        .Add(npc.FormKey);
                 }
 
                 foreach (var classKey in GetClasses(npc))
                 {
-                    if (_classNPCs.TryGetValue(classKey, out var npcFormKeys))
-                    {
-                        npcFormKeys.Add(npc.FormKey);
-                    } else
-                    {
-                        _classNPCs.Add(classKey, new HashSet<FormKey> { npc.FormKey });
-                    }
+                    _classNPCs
+                        .GetOrAdd(classKey)
+                        .Add(npc.FormKey);
                 }
 
                 foreach (var gender in GetGenders(npc))
                 {
-                    if (_genderNPCs.TryGetValue(gender, out var npcFormKeys))
-                    {
-                        npcFormKeys.Add(npc.FormKey);
-                    } else
-                    {
-                        _genderNPCs.Add(gender, new HashSet<FormKey> { npc.FormKey });
-                    }
+                    _genderNPCs
+                        .GetOrAdd(gender)
+                        .Add(npc.FormKey);
                 }
 
                 foreach (var raceKey in GetRaces(npc))
                 {
-                    if (_raceNPCs.TryGetValue(raceKey, out var npcFormKeys))
-                    {
-                        npcFormKeys.Add(npc.FormKey);
-                    } else
-                    {
-                        _raceNPCs.Add(raceKey, new HashSet<FormKey> { npc.FormKey });
-                    }
+                    _raceNPCs
+                        .GetOrAdd(raceKey)
+                        .Add(npc.FormKey);
                 }
             }
 
@@ -89,13 +73,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             {
                 if (!response.ResponseData.IsNull)
                 {
-                    if (_sharedInfosCache.TryGetValue(response.ResponseData.FormKey, out var responseFormKeys))
-                    {
-                        responseFormKeys.Add(response.FormKey);
-                    } else
-                    {
-                        _sharedInfosCache.Add(response.ResponseData.FormKey, new HashSet<FormKey> { response.FormKey });
-                    }
+                    _sharedInfosCache
+                        .GetOrAdd(response.ResponseData.FormKey)
+                        .Add(response.FormKey);
                 }
             }
 
