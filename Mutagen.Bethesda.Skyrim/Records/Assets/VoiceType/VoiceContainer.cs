@@ -16,11 +16,28 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         IsDefault = isDefault;
     }
 
-    public VoiceContainer(FormKey npc, HashSet<string> voiceTypes)
+    public VoiceContainer(FormKey npc, IEnumerable<string> voiceTypes)
     {
         foreach (var voiceType in voiceTypes)
         {
             _voices.Add(voiceType, new HashSet<FormKey> { npc });
+        }
+    }
+
+    public VoiceContainer(Dictionary<FormKey, IEnumerable<string>> npcVoices)
+    {
+        foreach (var (npc, voiceTypes) in npcVoices)
+        {
+            foreach (var voiceType in voiceTypes)
+            {
+                if (_voices.ContainsKey(voiceType))
+                {
+                    _voices[voiceType].Add(npc);
+                } else
+                {
+                    _voices.Add(voiceType, new HashSet<FormKey> { npc });
+                }
+            }
         }
     }
 
@@ -46,7 +63,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         _voices.Add(voiceType, new HashSet<FormKey>());
     }
 
-    public VoiceContainer(HashSet<string> voiceTypes)
+    public VoiceContainer(IEnumerable<string> voiceTypes)
     {
         foreach (var voiceType in voiceTypes)
         {

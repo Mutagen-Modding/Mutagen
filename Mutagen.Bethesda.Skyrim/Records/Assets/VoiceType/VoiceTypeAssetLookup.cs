@@ -707,9 +707,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return baseVoices;
     }
 
-    private HashSet<string> GetVoiceTypes(FormKey speaker)
+    private IEnumerable<string> GetVoiceTypes(FormKey speaker)
     {
-        return _speakerVoices.ContainsKey(speaker) ? _speakerVoices[speaker] : new HashSet<string>();
+        return _speakerVoices.ContainsKey(speaker) ? _speakerVoices[speaker] : Array.Empty<string>();
     }
 
     #region Voice Parser
