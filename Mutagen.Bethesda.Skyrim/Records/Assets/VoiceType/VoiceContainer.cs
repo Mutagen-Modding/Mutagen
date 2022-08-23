@@ -30,9 +30,9 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         {
             foreach (var voiceType in voiceTypes)
             {
-                if (_voices.ContainsKey(voiceType))
+                if (_voices.TryGetValue(voiceType, out var npcs))
                 {
-                    _voices[voiceType].Add(npc);
+                    npcs.Add(npc);
                 } else
                 {
                     _voices.Add(voiceType, new HashSet<FormKey> { npc });
@@ -47,9 +47,9 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         {
             foreach (var voiceType in voiceTypes)
             {
-                if (_voices.ContainsKey(voiceType))
+                if (_voices.TryGetValue(voiceType, out var npcs))
                 {
-                    _voices[voiceType].Add(npc);
+                    npcs.Add(npc);
                 } else
                 {
                     _voices.Add(voiceType, new HashSet<FormKey> { npc });
@@ -93,20 +93,20 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
         foreach (var (voiceType, npcs) in _voices)
         {
-            if (other._voices.ContainsKey(voiceType))
+            if (other._voices.TryGetValue(voiceType, out var otherNpcs))
             {
                 if (npcs.Any())
                 {
                     //We don't have all NPCs of this voice type
-                    if (other._voices[voiceType].Any())
+                    if (otherNpcs.Any())
                     {
                         //Only intersect if other doesn't have all NPCs, otherwise it stays the same
-                        npcs.IntersectWith(other._voices[voiceType]);
+                        npcs.IntersectWith(otherNpcs);
                     }
                 } else
                 {
                     //We have all NPCs of this voice type => limit with other voice type
-                    foreach (var npc in other._voices[voiceType]) npcs.Add(npc);
+                    foreach (var otherNpc in otherNpcs) npcs.Add(otherNpc);
                 }
             } else
             {
@@ -129,22 +129,22 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
         foreach (var (voiceType, npcs) in other._voices)
         {
-            if (_voices.ContainsKey(voiceType))
+            if (_voices.TryGetValue(voiceType, out var otherNpcs))
             {
                 //Don't add anything when we have all NPCs of this voice type
-                if (!_voices[voiceType].Any()) continue;
+                if (!otherNpcs.Any()) continue;
 
                 if (npcs.Any())
                 {
                     //Insert as usual
                     foreach (var npc in npcs)
                     {
-                        _voices[voiceType].Add(npc);
+                        otherNpcs.Add(npc);
                     }
                 } else
                 {
                     //We have all NPCs of this voice type
-                    _voices[voiceType].Clear();
+                    otherNpcs.Clear();
                 }
             } else
             {
@@ -167,18 +167,18 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
         foreach (var (voiceType, npcs) in _voices)
         {
-            if (other._voices.ContainsKey(voiceType))
+            if (other._voices.TryGetValue(voiceType, out var otherNpcs))
             {
-                if (other._voices[voiceType].Count == 0)
+                if (otherNpcs.Count == 0)
                 {
                     //Other covers whole voice type => remove it
                     removeVoiceTypes.Add(voiceType);
                 } else
                 {
                     //Remove all npcs
-                    foreach (var npc in other._voices[voiceType])
+                    foreach (var otherNpc in otherNpcs)
                     {
-                        npcs.Remove(npc);
+                        npcs.Remove(otherNpc);
                     }
 
                     //If all npcs are gone, remove the voice type

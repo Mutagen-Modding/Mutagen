@@ -47,9 +47,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 foreach (var factionKey in GetFactions(npc))
                 {
-                    if (_factionNPCs.ContainsKey(factionKey))
+                    if (_factionNPCs.TryGetValue(factionKey, out var npcFormKeys))
                     {
-                        _factionNPCs[factionKey].Add(npc.FormKey);
+                        npcFormKeys.Add(npc.FormKey);
                     } else
                     {
                         _factionNPCs.Add(factionKey, new HashSet<FormKey> { npc.FormKey });
@@ -58,9 +58,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 foreach (var classKey in GetClasses(npc))
                 {
-                    if (_classNPCs.ContainsKey(classKey))
+                    if (_classNPCs.TryGetValue(classKey, out var npcFormKeys))
                     {
-                        _classNPCs[classKey].Add(npc.FormKey);
+                        npcFormKeys.Add(npc.FormKey);
                     } else
                     {
                         _classNPCs.Add(classKey, new HashSet<FormKey> { npc.FormKey });
@@ -69,9 +69,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 foreach (var gender in GetGenders(npc))
                 {
-                    if (_genderNPCs.ContainsKey(gender))
+                    if (_genderNPCs.TryGetValue(gender, out var npcFormKeys))
                     {
-                        _genderNPCs[gender].Add(npc.FormKey);
+                        npcFormKeys.Add(npc.FormKey);
                     } else
                     {
                         _genderNPCs.Add(gender, new HashSet<FormKey> { npc.FormKey });
@@ -80,9 +80,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 foreach (var raceKey in GetRaces(npc))
                 {
-                    if (_raceNPCs.ContainsKey(raceKey))
+                    if (_raceNPCs.TryGetValue(raceKey, out var npcFormKeys))
                     {
-                        _raceNPCs[raceKey].Add(npc.FormKey);
+                        npcFormKeys.Add(npc.FormKey);
                     } else
                     {
                         _raceNPCs.Add(raceKey, new HashSet<FormKey> { npc.FormKey });
@@ -94,9 +94,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             {
                 if (!response.ResponseData.IsNull)
                 {
-                    if (_sharedInfosCache.ContainsKey(response.ResponseData.FormKey))
+                    if (_sharedInfosCache.TryGetValue(response.ResponseData.FormKey, out var responseFormKeys))
                     {
-                        _sharedInfosCache[response.ResponseData.FormKey].Add(response.FormKey);
+                        responseFormKeys.Add(response.FormKey);
                     } else
                     {
                         _sharedInfosCache.Add(response.ResponseData.FormKey, new HashSet<FormKey> { response.FormKey });
@@ -147,8 +147,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         //Build child cache
         _childNPCs = childRaces
-            .Where(r => _raceNPCs.ContainsKey(r))
-            .SelectMany(r => _raceNPCs[r])
+            .SelectWhere(r => _raceNPCs.TryGetValue(r, out var raceNpcFormKeys) ? TryGet<HashSet<FormKey>>.Succeed(raceNpcFormKeys) : TryGet<HashSet<FormKey>>.Failure)
+            .SelectMany(x => x)
             .ToHashSet();
 
         //Add master voice types
@@ -157,9 +157,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         {
             foreach (var master in mod.MasterReferences)
             {
-                if (!defaultVoicesCopy.ContainsKey(master.Master)) continue;
+                if (!defaultVoicesCopy.TryGetValue(master.Master, out var defaultVoiceTypes)) continue;
 
-                foreach (var voiceType in defaultVoicesCopy[master.Master])
+                foreach (var voiceType in defaultVoiceTypes)
                 {
                     _defaultVoiceTypes[mod.ModKey].Add(voiceType);
                 }
@@ -184,9 +184,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         //Get quest voices
         VoiceContainer questVoices;
-        if (_questCache.ContainsKey(quest.FormKey))
+        if (_questCache.TryGetValue(quest.FormKey, out var questVoiceContainer))
         {
-            questVoices = _questCache[quest.FormKey];
+            questVoices = questVoiceContainer;
         } else
         {
             questVoices = GetVoices(quest);
@@ -209,10 +209,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             }
         }
 
-        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfosCache.ContainsKey(response.FormKey))
+        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfosCache.TryGetValue(response.FormKey, out var responseFormKeys))
         {
             var userConditions = new VoiceContainer(true);
-            foreach (var responseKey in _sharedInfosCache[response.FormKey])
+            foreach (var responseKey in responseFormKeys)
             {
                 var responseContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responseKey);
                 if (responseContext is not { Parent.Record: {} }) continue;
@@ -242,9 +242,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         //Get quest voices
         VoiceContainer questVoices;
-        if (_questCache.ContainsKey(quest.FormKey))
+        if (_questCache.TryGetValue(quest.FormKey, out var questVoiceContainer))
         {
-            questVoices = _questCache[quest.FormKey];
+            questVoices = questVoiceContainer;
         } else
         {
             questVoices = GetVoices(quest);
@@ -292,10 +292,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 }
             }
 
-            if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfosCache.ContainsKey(responses.FormKey))
+            if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfosCache.TryGetValue(responses.FormKey, out var responseFormKeys))
             {
                 var userConditions = new VoiceContainer(true);
-                foreach (var responseKey in _sharedInfosCache[responses.FormKey])
+                foreach (var responseKey in responseFormKeys)
                 {
                     var responseContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responseKey);
                     if (responseContext is not { Parent.Record: {} }) continue;
@@ -342,9 +342,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (!response.Speaker.IsNull) return GetVoices(response.Speaker.FormKey);
 
         //Check scene
-        if (topic.Category == DialogTopic.CategoryEnum.Scene && _dialogueSceneAliasIndex.ContainsKey(topic.FormKey))
+        if (topic.Category == DialogTopic.CategoryEnum.Scene && _dialogueSceneAliasIndex.TryGetValue(topic.FormKey, out var aliasIndex))
         {
-            voices.Merge(GetVoices(_currentQuest, _dialogueSceneAliasIndex[topic.FormKey]));
+            voices.Merge(GetVoices(_currentQuest, aliasIndex));
         }
 
         //Search conditions
@@ -434,31 +434,31 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case Condition.Function.GetInFaction:
-                if (_factionNPCs.ContainsKey(functionConditionData.ParameterOneRecord.FormKey))
+                if (_factionNPCs.TryGetValue(functionConditionData.ParameterOneRecord.FormKey, out var factionNpcFormKeys))
                 {
-                    voices = new VoiceContainer(_factionNPCs[functionConditionData.ParameterOneRecord.FormKey].ToDictionary(npc => npc, GetVoiceTypes));
+                    voices = new VoiceContainer(factionNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case Condition.Function.GetIsClass:
-                if (_classNPCs.ContainsKey(functionConditionData.ParameterOneRecord.FormKey))
+                if (_classNPCs.TryGetValue(functionConditionData.ParameterOneRecord.FormKey, out var classNpcFormKeys))
                 {
-                    voices = new VoiceContainer(_classNPCs[functionConditionData.ParameterOneRecord.FormKey].ToDictionary(npc => npc, GetVoiceTypes));
+                    voices = new VoiceContainer(classNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case Condition.Function.GetIsRace:
-                if (_raceNPCs.ContainsKey(functionConditionData.ParameterOneRecord.FormKey))
+                if (_raceNPCs.TryGetValue(functionConditionData.ParameterOneRecord.FormKey, out var raceNpcFormKeys))
                 {
-                    voices = new VoiceContainer(_raceNPCs[functionConditionData.ParameterOneRecord.FormKey].ToDictionary(npc => npc, GetVoiceTypes));
+                    voices = new VoiceContainer(raceNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case Condition.Function.GetIsSex:
                 var isFemale = functionConditionData.ParameterOneNumber == 1;
-                if (_genderNPCs.ContainsKey(isFemale))
+                if (_genderNPCs.TryGetValue(isFemale, out var genderNpcFormKeys))
                 {
-                    voices = new VoiceContainer(_genderNPCs[isFemale].ToDictionary(npc => npc, GetVoiceTypes));
+                    voices = new VoiceContainer(genderNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
@@ -684,7 +684,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private VoiceContainer GetDefaultVoices(ModKey mod)
     {
-        if (_defaultSpeakerVoices.ContainsKey(mod)) return _defaultSpeakerVoices[mod];
+        if (_defaultSpeakerVoices.TryGetValue(mod, out var defaultVoiceTypes)) return defaultVoiceTypes;
 
         var vc = new VoiceContainer(_speakerVoices);
         vc.InvertVoiceTypes(_defaultVoiceTypes[mod]);
@@ -709,13 +709,13 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private IEnumerable<string> GetVoiceTypes(FormKey speaker)
     {
-        return _speakerVoices.ContainsKey(speaker) ? _speakerVoices[speaker] : Array.Empty<string>();
+        return _speakerVoices.TryGetValue(speaker, out var speakerVoiceTypes) ? speakerVoiceTypes : Array.Empty<string>();
     }
 
     #region Voice Parser
     private HashSet<string> GetVoiceTypes(INpcGetter npc)
     {
-        if (_speakerVoices.ContainsKey(npc.FormKey)) return _speakerVoices[npc.FormKey];
+        if (_speakerVoices.TryGetValue(npc.FormKey, out var speakerVoiceTypes)) return speakerVoiceTypes;
 
         //Check voice type
         if (!npc.Voice.IsNull)
@@ -761,7 +761,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private HashSet<string> GetVoiceTypes(ITalkingActivatorGetter talkingActivator)
     {
-        if (_speakerVoices.ContainsKey(talkingActivator.FormKey)) return _speakerVoices[talkingActivator.FormKey];
+        if (_speakerVoices.TryGetValue(talkingActivator.FormKey, out var speakerVoiceTypes)) return speakerVoiceTypes;
 
         if (!talkingActivator.VoiceType.IsNull)
         {
