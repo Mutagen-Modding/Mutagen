@@ -27,7 +27,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
 
     //Global variables
-    private IQuestGetter _currentQuest = new Quest(FormKey.Null, SkyrimRelease.SkyrimSE);
     private ModKey _currentMod = ModKey.Null;
 
     public void Prep(IAssetLinkCache linkCache)
@@ -179,7 +178,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (quest == null) return null;
 
         //Assign global variables
-        _currentQuest = quest;
         _currentMod = topic.FormKey.ModKey;
 
         //Get quest voices
@@ -197,7 +195,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && !_sharedInfosCache.ContainsKey(response.FormKey)) return new VoiceContainer();
 
         //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voices
-        var voices = GetVoices(topic, response);
+        var voices = GetVoices(topic, response, quest);
         if (!questVoices.IsDefault)
         {
             if (voices.IsDefault)
@@ -221,8 +219,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 var currentQuest = currentTopic.Quest.TryResolve(_formLinkCache);
                 if (currentQuest == null) continue;
 
-                _currentQuest = currentQuest;
-                userConditions.Insert(GetVoices(responseContext.Record.Conditions));
+                userConditions.Insert(GetVoices(responseContext.Record.Conditions, quest));
             }
 
             voices.Merge(userConditions);
@@ -237,7 +234,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (quest == null) yield break;
 
         //Assign global variables
-        _currentQuest = quest;
         _currentMod = topic.FormKey.ModKey;
 
         //Get quest voices
@@ -278,7 +274,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             if (!responses.ResponseData.IsNull) continue;
 
             //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voices
-            var voices = GetVoices(topic, responses);
+            var voices = GetVoices(topic, responses, quest);
 
             if (!questVoices.IsDefault)
             {
@@ -304,8 +300,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                     var currentQuest = currentTopic.Quest.TryResolve(_formLinkCache);
                     if (currentQuest == null) continue;
 
-                    _currentQuest = currentQuest;
-                    userConditions.Insert(GetVoices(responseContext.Record.Conditions));
+                    userConditions.Insert(GetVoices(responseContext.Record.Conditions, quest));
                 }
 
                 voices.Merge(userConditions);
@@ -334,7 +329,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
-    private VoiceContainer GetVoices(IDialogTopicGetter topic, IDialogResponsesGetter response)
+    private VoiceContainer GetVoices(IDialogTopicGetter topic, IDialogResponsesGetter response, IQuestGetter quest)
     {
         var voices = new VoiceContainer(true);
 
@@ -344,16 +339,16 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         //Check scene
         if (topic.Category == DialogTopic.CategoryEnum.Scene && _dialogueSceneAliasIndex.TryGetValue(topic.FormKey, out var aliasIndex))
         {
-            voices.Merge(GetVoices(_currentQuest, aliasIndex));
+            voices.Merge(GetVoices(quest, aliasIndex));
         }
 
         //Search conditions
-        if (response.Conditions.Any()) voices.Merge(GetVoices(response.Conditions));
+        if (response.Conditions.Any()) voices.Merge(GetVoices(response.Conditions, quest));
 
         return voices;
     }
 
-    private VoiceContainer GetVoices(IEnumerable<IConditionGetter> conditions)
+    private VoiceContainer GetVoices(IEnumerable<IConditionGetter> conditions, IQuestGetter quest)
     {
         var voiceTypesOrBlock = new List<VoiceContainer>();
         var currentConditions = new List<IConditionGetter>();
@@ -368,7 +363,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             //At every new AND or at the end of the conditions, finish the current block
             if ((condition.Flags & Condition.Flag.OR) == 0 || i == conditionsList.Count - 1)
             {
-                var voices = GetVoiceTypesOrBlock(currentConditions);
+                var voices = GetVoiceTypesOrBlock(currentConditions, quest);
                 if (!voices.IsDefault) voiceTypesOrBlock.Add(voices);
 
                 currentConditions.Clear();
@@ -379,13 +374,13 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voiceTypesOrBlock.Any() ? voiceTypesOrBlock.MergeAll() : new VoiceContainer(true);
     }
 
-    private VoiceContainer GetVoiceTypesOrBlock(IEnumerable<IConditionGetter> conditions)
+    private VoiceContainer GetVoiceTypesOrBlock(IEnumerable<IConditionGetter> conditions, IQuestGetter quest)
     {
         var voices = new VoiceContainer(true);
 
         foreach (var condition in conditions)
         {
-            var conditionVoices = GetVoices(condition);
+            var conditionVoices = GetVoices(condition, quest);
             if (conditionVoices.IsDefault) continue;
 
             voices.Insert(conditionVoices);
@@ -394,7 +389,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voices;
     }
 
-    private VoiceContainer GetVoices(IConditionGetter condition)
+    private VoiceContainer GetVoices(IConditionGetter condition, IQuestGetter quest)
     {
         var voices = new VoiceContainer();
 
@@ -430,7 +425,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case Condition.Function.GetIsAliasRef:
-                voices = GetVoices(_currentQuest, functionConditionData.ParameterOneNumber);
+                voices = GetVoices(quest, functionConditionData.ParameterOneNumber);
 
                 break;
             case Condition.Function.GetInFaction:
@@ -542,20 +537,16 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private VoiceContainer GetVoices(IQuestGetter quest, int aliasIndex)
     {
         var alias = quest.Aliases.FirstOrDefault(a => a.ID == aliasIndex);
-        return alias == null ? new VoiceContainer(true) : GetVoices(alias);
+        return alias == null ? new VoiceContainer(true) : GetVoices(alias, quest);
     }
 
-    private VoiceContainer GetVoices(IQuestAliasGetter alias)
+    private VoiceContainer GetVoices(IQuestAliasGetter alias, IQuestGetter quest)
     {
         //External Alias
-        if (alias.External != null)
+        var aliasIndex = alias.External?.AliasID;
+        if (aliasIndex != null)
         {
-            var quest = alias.External.Quest.TryResolve(_formLinkCache);
-            var aliasIndex = alias.External.AliasID;
-            if (quest != null && aliasIndex != null)
-            {
-                return GetVoices(quest, aliasIndex.Value);
-            }
+            return GetVoices(quest, aliasIndex.Value);
         }
 
         //Additional voice types
@@ -597,7 +588,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         //Conditions
         if (alias.Conditions.Any())
         {
-            var voices = GetVoices(alias.Conditions);
+            var voices = GetVoices(alias.Conditions, quest);
             if (additionalVoices != null) voices.Insert(additionalVoices);
             return voices;
         }
@@ -619,7 +610,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         //Location alias
         if (alias.Location is { AliasID: {} })
         {
-            var locationAlias = _currentQuest.Aliases.FirstOrDefault(a => a.ID == alias.Location.AliasID.Value);
+            var locationAlias = quest.Aliases.FirstOrDefault(a => a.ID == alias.Location.AliasID.Value);
             if (locationAlias != null)
             {
                 if (!locationAlias.SpecificLocation.IsNull)
@@ -680,7 +671,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voices.MergeInsert();
     }
 
-    private VoiceContainer GetVoices(IQuestGetter quest) => GetVoices(quest.DialogConditions);
+    private VoiceContainer GetVoices(IQuestGetter quest) => GetVoices(quest.DialogConditions, quest);
 
     private VoiceContainer GetDefaultVoices(ModKey mod)
     {
