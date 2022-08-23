@@ -28,7 +28,7 @@ public class LiveLoadOrderProviderTests
         sut.CccLive.DidNotReceive().Get(out _);
     }
 
-    [Theory, MutagenAutoData(false)]
+    [Theory, MutagenAutoData(ConfigureMembers: false)]
     public void GetsListingsInitially(
         IScheduler scheduler,
         LiveLoadOrderProvider sut)
@@ -52,7 +52,7 @@ public class LiveLoadOrderProviderTests
         err.Messages.Select(x => x.Value.Value.Succeeded).Should().AllBeEquivalentTo(true);
     }
 
-    [Theory, MutagenAutoData(false)]
+    [Theory, MutagenAutoData(ConfigureMembers: false)]
     public void Throttles(
         TestScheduler scheduler,
         LiveLoadOrderProvider sut)
@@ -70,7 +70,7 @@ public class LiveLoadOrderProviderTests
         var c = sut.PluginLive.Received(1).Changed;
     }
 
-    [Theory, MutagenAutoData(false)]
+    [Theory, MutagenAutoData(ConfigureMembers: false)]
     public void EitherChangedRequeries(
         IScheduler scheduler,
         LiveLoadOrderProvider sut)

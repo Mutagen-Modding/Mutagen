@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.IO.Abstractions;
 using System.Linq.Expressions;
@@ -14,7 +13,9 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// </summary>
     public static class ModInstantiator
     {
-        private static Dictionary<GameCategory, ModInstantiator<IModGetter>.ImporterDelegate> _dict = new();
+        record Delegates(ModInstantiator<IModGetter>.ImporterDelegate Importer, ModInstantiator<IMod>.ActivatorDelegate Activator);
+        
+        private static Dictionary<GameCategory, Delegates> _dict = new();
 
         static ModInstantiator()
         {
@@ -23,17 +24,24 @@ namespace Mutagen.Bethesda.Plugins.Records
                 var t = Type.GetType(
                     $"Mutagen.Bethesda.{category}.{category}Mod_Registration, Mutagen.Bethesda.{category}");
                 if (t == null) continue;
-                var obj = Activator.CreateInstance(t);
+                var obj = System.Activator.CreateInstance(t);
                 var modRegistration = obj as IModRegistration;
                 if (modRegistration == null) continue;
-                _dict[modRegistration.GameCategory] = ModInstantiatorReflection.GetOverlay<IModGetter>(modRegistration);
+                _dict[modRegistration.GameCategory] = new Delegates(
+                    ModInstantiatorReflection.GetOverlay<IModGetter>(modRegistration),
+                    ModInstantiatorReflection.GetActivator<IMod>(modRegistration));
 
             }
         }
 
         public static IModGetter Importer(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
         {
-            return _dict[release.ToCategory()](path, release, fileSystem, stringsParam);
+            return _dict[release.ToCategory()].Importer(path, release, fileSystem, stringsParam);
+        }
+
+        public static IMod Activator(ModKey modKey, GameRelease release)
+        {
+            return _dict[release.ToCategory()].Activator(modKey, release);
         }
     }
     

@@ -7,8 +7,8 @@ namespace Mutagen.Bethesda.UnitTests.AutoData;
 public class MutagenAutoDataAttribute : AutoDataAttribute
 {
     public MutagenAutoDataAttribute(
-        bool ConfigureMembers = false, 
         GameRelease Release = GameRelease.SkyrimSE,
+        bool ConfigureMembers = false, 
         bool UseMockFileSystem = true)
         : base(() =>
         {
