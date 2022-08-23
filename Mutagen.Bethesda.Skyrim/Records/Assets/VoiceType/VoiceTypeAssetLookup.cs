@@ -18,7 +18,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
     private readonly Dictionary<bool, HashSet<FormKey>> _genderNPCs = new();
-    private HashSet<FormKey> _childNPCs = new();
+    private HashSet<FormKey> _childNPCs = null!;
     private readonly Dictionary<FormKey, int> _dialogueSceneAliasIndex = new();
 
 
