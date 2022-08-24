@@ -2304,19 +2304,17 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TrackFilename = AssetLinkBinaryTranslation.Instance.Parse(
+                    item.TrackFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimMusicAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        assetType: SkyrimMusicAssetType.Instance);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)MusicTrack_FieldIndex.TrackFilename;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FinaleFilename = AssetLinkBinaryTranslation.Instance.Parse(
+                    item.FinaleFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimMusicAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        assetType: SkyrimMusicAssetType.Instance);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)MusicTrack_FieldIndex.FinaleFilename;
                 }
                 case RecordTypeInts.LNAM:
@@ -2432,11 +2430,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TrackFilename
         private int? _TrackFilenameLocation;
-        public IAssetLinkGetter<SkyrimMusicAssetType>? TrackFilename => _TrackFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(SkyrimMusicAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public IAssetLinkGetter<SkyrimMusicAssetType>? TrackFilename => _TrackFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region FinaleFilename
         private int? _FinaleFilenameLocation;
-        public IAssetLinkGetter<SkyrimMusicAssetType>? FinaleFilename => _FinaleFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(SkyrimMusicAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public IAssetLinkGetter<SkyrimMusicAssetType>? FinaleFilename => _FinaleFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region LoopData
         private RangeInt32? _LoopDataLocation;

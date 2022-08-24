@@ -542,7 +542,7 @@ internal static class PluginUtilityTranslation
         if (rhs == null) return null;
         if (lhs == null)
         {
-            return new AssetLink<TAssetType>(rhs.AssetType, rhs.RawPath);
+            return new AssetLink<TAssetType>(rhs.RawPath);
         }
 
         lhs.RawPath = rhs.RawPath;

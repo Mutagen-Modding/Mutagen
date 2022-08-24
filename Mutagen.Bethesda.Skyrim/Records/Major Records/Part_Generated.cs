@@ -1104,10 +1104,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)Part_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileName = AssetLinkBinaryTranslation.Instance.Parse(
+                    item.FileName = AssetLinkBinaryTranslation.Instance.Parse<SkyrimDeformedModelAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        assetType: SkyrimDeformedModelAssetType.Instance);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Part_FieldIndex.FileName;
                 }
                 default:
@@ -1185,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FileName
         private int? _FileNameLocation;
-        public IAssetLinkGetter<SkyrimDeformedModelAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimDeformedModelAssetType>(SkyrimDeformedModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public IAssetLinkGetter<SkyrimDeformedModelAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimDeformedModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

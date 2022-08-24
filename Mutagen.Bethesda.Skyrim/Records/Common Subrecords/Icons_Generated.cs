@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LargeIconFilename
-        public IAssetLink<SkyrimTextureAssetType> LargeIconFilename { get; set; } = new AssetLink<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance);
+        public IAssetLink<SkyrimTextureAssetType> LargeIconFilename { get; set; } = new AssetLink<SkyrimTextureAssetType>();
         IAssetLinkGetter<SkyrimTextureAssetType> IIconsGetter.LargeIconFilename => this.LargeIconFilename;
         #endregion
         #region SmallIconFilename
@@ -1100,10 +1100,9 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.MICO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SmallIconFilename = AssetLinkBinaryTranslation.Instance.Parse(
+                    item.SmallIconFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        assetType: SkyrimTextureAssetType.Instance);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Icons_FieldIndex.SmallIconFilename;
                 }
                 default:
@@ -1177,11 +1176,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region LargeIconFilename
         private int? _LargeIconFilenameLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename => _LargeIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance);
+        public IAssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename => _LargeIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>();
         #endregion
         #region SmallIconFilename
         private int? _SmallIconFilenameLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public IAssetLinkGetter<SkyrimTextureAssetType>? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

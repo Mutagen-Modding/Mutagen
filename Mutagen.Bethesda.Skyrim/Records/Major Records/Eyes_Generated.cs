@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Icon
-        public IAssetLink<SkyrimTextureAssetType> Icon { get; set; } = new AssetLink<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance);
+        public IAssetLink<SkyrimTextureAssetType> Icon { get; set; } = new AssetLink<SkyrimTextureAssetType>();
         IAssetLinkGetter<SkyrimTextureAssetType> IEyesGetter.Icon => this.Icon;
         #endregion
         #region Flags
@@ -1618,7 +1618,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Icon
         private int? _IconLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType> Icon => _IconLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance);
+        public IAssetLinkGetter<SkyrimTextureAssetType> Icon => _IconLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>();
         #endregion
         #region Flags
         private int? _FlagsLocation;

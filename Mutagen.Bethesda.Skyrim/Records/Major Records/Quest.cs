@@ -50,7 +50,7 @@ partial class QuestCommon
     {
         if (obj.Flags.HasFlag(Quest.Flag.StartGameEnabled))
         {
-            yield return new AssetLink<SkyrimSeqAssetType>(SkyrimSeqAssetType.Instance,
+            yield return new AssetLink<SkyrimSeqAssetType>(
                 Path.Combine($"{obj.FormKey.ModKey.Name}.seq"));
         }
     }

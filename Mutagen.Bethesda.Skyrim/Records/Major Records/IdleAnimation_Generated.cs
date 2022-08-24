@@ -2145,10 +2145,9 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Filename = AssetLinkBinaryTranslation.Instance.Parse(
+                    item.Filename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimBehaviorAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        assetType: SkyrimBehaviorAssetType.Instance);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)IdleAnimation_FieldIndex.Filename;
                 }
                 case RecordTypeInts.ENAM:
@@ -2249,7 +2248,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Filename
         private int? _FilenameLocation;
-        public IAssetLinkGetter<SkyrimBehaviorAssetType>? Filename => _FilenameLocation.HasValue ? new AssetLinkGetter<SkyrimBehaviorAssetType>(SkyrimBehaviorAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public IAssetLinkGetter<SkyrimBehaviorAssetType>? Filename => _FilenameLocation.HasValue ? new AssetLinkGetter<SkyrimBehaviorAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region AnimationEvent
         private int? _AnimationEventLocation;

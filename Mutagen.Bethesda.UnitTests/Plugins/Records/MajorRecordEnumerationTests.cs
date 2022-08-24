@@ -208,7 +208,7 @@ public abstract class AMajorRecordEnumerationTests
         var light = mod.Lights.AddNew();
         light.Icons = new Icons();
         light.Icons.LargeIconFilename.RawPath = "Hello";
-        light.Icons.SmallIconFilename = new AssetLink<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, "World");
+        light.Icons.SmallIconFilename = new AssetLink<SkyrimTextureAssetType>("World");
         var conv = ConvertMod(mod);
         Assert.Equal(Getter ? 0 : 1, RunTest<IHasIcons, IHasIcons>(conv).Count());
         Assert.Single(RunTest<IHasIcons, IHasIconsGetter>(conv));

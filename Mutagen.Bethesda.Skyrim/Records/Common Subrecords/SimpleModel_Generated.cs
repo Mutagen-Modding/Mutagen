@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region File
-        public IAssetLink<SkyrimModelAssetType> File { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        public IAssetLink<SkyrimModelAssetType> File { get; set; } = new AssetLink<SkyrimModelAssetType>();
         IAssetLinkGetter<SkyrimModelAssetType> ISimpleModelGetter.File => this.File;
         #endregion
         #region Data
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region File
         private int? _FileLocation;
-        public IAssetLinkGetter<SkyrimModelAssetType> File => _FileLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        public IAssetLinkGetter<SkyrimModelAssetType> File => _FileLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimModelAssetType>();
         #endregion
         #region Data
         private int? _DataLocation;

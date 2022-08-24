@@ -2154,10 +2154,9 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParticleTexture = AssetLinkBinaryTranslation.Instance.Parse(
+                    item.ParticleTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        assetType: SkyrimTextureAssetType.Instance);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
                 }
                 default:
@@ -2283,7 +2282,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ParticleTexture
         private int? _ParticleTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? ParticleTexture => _ParticleTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public IAssetLinkGetter<SkyrimTextureAssetType>? ParticleTexture => _ParticleTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

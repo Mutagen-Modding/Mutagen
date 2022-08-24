@@ -656,6 +656,10 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                translationParams.ConvertToCustom(RecordTypes.PDTO),
+                translationParams.LengthOverride));
         }
         
         #endregion

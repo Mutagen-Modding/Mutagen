@@ -1416,10 +1416,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileName = AssetLinkBinaryTranslation.Instance.Parse(
+                    item.FileName = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        assetType: SkyrimTextureAssetType.Instance);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TintAssets_FieldIndex.FileName;
                 }
                 case RecordTypeInts.TINP:
@@ -1527,7 +1526,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FileName
         private int? _FileNameLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public IAssetLinkGetter<SkyrimTextureAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region MaskType
         private int? _MaskTypeLocation;

@@ -151,7 +151,7 @@ partial class DialogTopicCommon
         voiceTypeLookup.Prep(linkCache);
         foreach (var voiceTypePath in voiceTypeLookup.GetVoiceTypePaths(obj))
         {
-            yield return new AssetLink<SkyrimSoundAssetType>(SkyrimSoundAssetType.Instance, voiceTypePath);
+            yield return new AssetLink<SkyrimSoundAssetType>(voiceTypePath);
         }
     }
 }

@@ -1909,6 +1909,12 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            PluginUtilityTranslation.MajorRecordParse<IAPlacedTrapInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: APlacedTrapBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: APlacedTrapBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(

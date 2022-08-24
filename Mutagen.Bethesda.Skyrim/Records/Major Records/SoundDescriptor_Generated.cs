@@ -2476,10 +2476,9 @@ namespace Mutagen.Bethesda.Skyrim
                             triggeringRecord: translationParams.ConvertToCustom(RecordTypes.ANAM),
                             transl: (MutagenFrame r, [MaybeNullWhen(false)] out IAssetLink<SkyrimSoundAssetType> listSubItem) =>
                             {
-                                return AssetLinkBinaryTranslation.Instance.Parse(
+                                return AssetLinkBinaryTranslation.Instance.Parse<SkyrimSoundAssetType>(
                                     r,
                                     item: out listSubItem,
-                                    assetType: SkyrimSoundAssetType.Instance,
                                     parseWhole: true,
                                     binaryType: StringBinaryType.NullTerminate);
                             }));
@@ -2739,7 +2738,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.SoundFiles = BinaryOverlayList.FactoryByArray<IAssetLinkGetter<SkyrimSoundAssetType>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new AssetLinkGetter<SkyrimSoundAssetType>(SkyrimSoundAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated)),
+                        getter: (s, p) => new AssetLinkGetter<SkyrimSoundAssetType>(BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated)),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

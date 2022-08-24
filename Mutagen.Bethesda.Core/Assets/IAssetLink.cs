@@ -3,7 +3,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Assets;
 
-public interface IAssetPath
+public interface IAssetLinkGetter
 {
     protected static readonly StringComparison PathComparison = StringComparison.OrdinalIgnoreCase;
     protected static readonly StringComparer PathComparer = StringComparer.FromComparison(PathComparison);
@@ -28,18 +28,6 @@ public interface IAssetPath
 public interface IAssetLinkGetter<out TAssetType> : IAssetLinkGetter
     where TAssetType : IAssetType
 {
-    /// <summary>
-    /// Type of asset
-    /// </summary>
-    new TAssetType AssetType { get; }
-}
-
-public interface IAssetLinkGetter : IAssetPath
-{
-    /// <summary>
-    /// Type of asset
-    /// </summary>
-    IAssetType AssetType { get; }
 }
 
 public interface IAssetLink<out TAssetType> : IAssetLink<IAssetLink<TAssetType>, TAssetType>

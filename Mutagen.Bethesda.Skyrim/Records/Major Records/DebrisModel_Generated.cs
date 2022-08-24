@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte Percentage { get; set; } = default;
         #endregion
         #region ModelFilename
-        public IAssetLink<SkyrimModelAssetType> ModelFilename { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        public IAssetLink<SkyrimModelAssetType> ModelFilename { get; set; } = new AssetLink<SkyrimModelAssetType>();
         IAssetLinkGetter<SkyrimModelAssetType> IDebrisModelGetter.ModelFilename => this.ModelFilename;
         #endregion
         #region Flags
@@ -1442,7 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.ModelFilename = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated));
+            ret.ModelFilename = new AssetLink<SkyrimModelAssetType>(BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated));
             ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.RawPath.Length + 1;
             return ret;
         }

@@ -37,8 +37,8 @@ partial class NpcCommon
             && (obj.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Traits) == 0)
         {
             var formID = obj.FormKey.ID.ToString("X8");
-            yield return new AssetLink<SkyrimTextureAssetType>(SkyrimTextureAssetType.Instance, Path.Combine("actors", "character", "facegendata", "facetint", obj.FormKey.ModKey.FileName.String, $"{formID}.dds"));
-            yield return new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, Path.Combine("actors", "character", "facegendata", "facegeom", obj.FormKey.ModKey.FileName.String, $"{formID}.nif"));
+            yield return new AssetLink<SkyrimTextureAssetType>(Path.Combine("actors", "character", "facegendata", "facetint", obj.FormKey.ModKey.FileName.String, $"{formID}.dds"));
+            yield return new AssetLink<SkyrimModelAssetType>(Path.Combine("actors", "character", "facegendata", "facegeom", obj.FormKey.ModKey.FileName.String, $"{formID}.nif"));
         }
     }
 }

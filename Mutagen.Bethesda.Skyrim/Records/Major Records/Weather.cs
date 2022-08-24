@@ -65,7 +65,6 @@ partial class WeatherBinaryCreateTranslation
         }
         var subRec = stream.ReadSubrecord();
         textures[layer] = new AssetLink<SkyrimTextureAssetType>(
-            SkyrimTextureAssetType.Instance,
             BinaryStringUtility.ProcessWholeToZString(subRec.Content, stream.MetaData.Encodings.NonTranslated));
     }
 

@@ -66,12 +66,12 @@ partial class ArmorAddonCommon
 
             if (Path.GetFileNameWithoutExtension(path).EndsWith("_1"))
             {
-                yield return new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance,
+                yield return new AssetLink<SkyrimModelAssetType>(
                     $"{dir}{nameWithoutEnding}_0.{SkyrimModelAssetType.Instance.FileExtensions.First()}");
             }
             else if (Path.GetFileNameWithoutExtension(path).EndsWith("_0"))
             {
-                yield return new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance,
+                yield return new AssetLink<SkyrimModelAssetType>(
                     $"{dir}{nameWithoutEnding}_1.{SkyrimModelAssetType.Instance.FileExtensions.First()}");
             }
         }

@@ -37,7 +37,7 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
     {
         AssetLinkType at = typeGen as AssetLinkType;
         return
-            $"new AssetLinkGetter<{at.AssetTypeString}>({at.AssetTypeString}.Instance, {base.GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, packageAccessor)})";
+            $"new AssetLinkGetter<{at.AssetTypeString}>({base.GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, packageAccessor)})";
     }
 
     public override async Task GenerateCopyIn(
@@ -83,8 +83,6 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
             default:
                 break;
         }
-        
-        extraArgs.Add($"assetType: {asset.AssetTypeString}.Instance");
 
         TranslationGeneration.WrapParseCall(
             new TranslationWrapParseArgs()
@@ -97,7 +95,8 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
                 TranslationMaskAccessor = null,
                 IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                 ExtraArgs = extraArgs.ToArray(),
-                SkipErrorMask = !this.DoErrorMasks
+                SkipErrorMask = !this.DoErrorMasks,
+                Generic = asset.AssetTypeString
             });
     }
 
@@ -152,7 +151,7 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
         var assetType = typeGen as AssetLinkType; 
         var data = typeGen.GetFieldData(); 
         using (var args = fg.Call( 
-                   $"{retAccessor}{this.NamespacePrefix}AssetLinkBinaryTranslation.Instance.Parse")) 
+                   $"{retAccessor}{this.NamespacePrefix}AssetLinkBinaryTranslation.Instance.Parse<{assetType.AssetTypeString}>")) 
         { 
             args.Add(nodeAccessor.Access); 
             if (this.DoErrorMasks) 
@@ -160,7 +159,6 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
                 args.Add($"errorMask: {errorMaskAccessor}"); 
             } 
             args.Add($"item: out {outItemAccessor}"); 
-            args.Add($"assetType: {assetType.AssetTypeString}.Instance");
             args.Add($"parseWhole: {(data.HasTrigger ? "true" : "false")}"); 
             if (data.Length.HasValue) 
             { 
@@ -187,7 +185,7 @@ public class AssetLinkBinaryTranslationGeneration : StringBinaryTranslationGener
         {
             case StringBinaryType.NullTerminate:
                 sb.AppendLine(
-                    $"ret.{typeGen.Name} = new AssetLink<{asset.AssetTypeString}>({asset.AssetTypeString}.Instance, {nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret.{dataAccessor}.Slice({passedLengthAccessor}), package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)}));");
+                    $"ret.{typeGen.Name} = new AssetLink<{asset.AssetTypeString}>({nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret.{dataAccessor}.Slice({passedLengthAccessor}), package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)}));");
                 sb.AppendLine(
                     $"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(asset.Translated == null ? $"ret.{AccessorTransform(typeGen, typeGen.Name)}.Length + 1" : "5")};");
                 break;

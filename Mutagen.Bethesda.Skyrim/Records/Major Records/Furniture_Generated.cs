@@ -2967,10 +2967,9 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XMRK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ModelFilename = AssetLinkBinaryTranslation.Instance.Parse(
+                    item.ModelFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimModelAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        assetType: SkyrimModelAssetType.Instance);
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Furniture_FieldIndex.ModelFilename;
                 }
                 default:
@@ -3122,7 +3121,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ModelFilename
         private int? _ModelFilenameLocation;
-        public IAssetLinkGetter<SkyrimModelAssetType>? ModelFilename => _ModelFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(SkyrimModelAssetType.Instance, BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public IAssetLinkGetter<SkyrimModelAssetType>? ModelFilename => _ModelFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

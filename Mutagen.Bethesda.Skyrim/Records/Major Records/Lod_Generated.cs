@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Level0
-        public IAssetLink<SkyrimModelAssetType> Level0 { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        public IAssetLink<SkyrimModelAssetType> Level0 { get; set; } = new AssetLink<SkyrimModelAssetType>();
         IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level0 => this.Level0;
         #endregion
         #region Level0Extra
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ILodGetter.Level0Extra => this.Level0Extra;
         #endregion
         #region Level1
-        public IAssetLink<SkyrimModelAssetType> Level1 { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        public IAssetLink<SkyrimModelAssetType> Level1 { get; set; } = new AssetLink<SkyrimModelAssetType>();
         IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level1 => this.Level1;
         #endregion
         #region Level1Extra
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ILodGetter.Level1Extra => this.Level1Extra;
         #endregion
         #region Level2
-        public IAssetLink<SkyrimModelAssetType> Level2 { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        public IAssetLink<SkyrimModelAssetType> Level2 { get; set; } = new AssetLink<SkyrimModelAssetType>();
         IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level2 => this.Level2;
         #endregion
         #region Level2Extra
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ILodGetter.Level2Extra => this.Level2Extra;
         #endregion
         #region Level3
-        public IAssetLink<SkyrimModelAssetType> Level3 { get; set; } = new AssetLink<SkyrimModelAssetType>(SkyrimModelAssetType.Instance);
+        public IAssetLink<SkyrimModelAssetType> Level3 { get; set; } = new AssetLink<SkyrimModelAssetType>();
         IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level3 => this.Level3;
         #endregion
         #region Level3Extra
