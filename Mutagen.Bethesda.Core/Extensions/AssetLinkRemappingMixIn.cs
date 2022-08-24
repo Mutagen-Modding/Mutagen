@@ -18,12 +18,12 @@ public static class AssetLinkRemappingMixIn
     }
 
     private static TLinkType RelinkToNew<TLinkType, TAssetType>(this TLinkType link, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
-        where TLinkType : IAssetLink<TLinkType, TAssetType>
+        where TLinkType : IAssetLink<TLinkType, TAssetType>, new()
         where TAssetType : IAssetType
     {
         if (mapping.TryGetValue(link, out var replacement))
         {
-            var clone = link.ShallowClone();
+            var clone = new TLinkType();
             clone.RawPath = replacement;
             return clone;
         }
@@ -31,7 +31,7 @@ public static class AssetLinkRemappingMixIn
     }
     
     public static void RemapListedAssetLinks<TLinkType, TAssetType>(this IList<TLinkType> linkList, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
-        where TLinkType : IAssetLink<TLinkType, TAssetType>
+        where TLinkType : IAssetLink<TLinkType, TAssetType>, new()
         where TAssetType : IAssetType
     {
         for (int i = 0; i < linkList.Count; i++)
@@ -56,7 +56,7 @@ public static class AssetLinkRemappingMixIn
     }
 
     public static void RemapListedAssetLinks<TLinkType, TAssetType>(this IGenderedItem<TLinkType> gendered, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
-        where TLinkType : IAssetLink<TLinkType, TAssetType>
+        where TLinkType : IAssetLink<TLinkType, TAssetType>, new()
         where TAssetType : IAssetType
     {
         gendered.Male = gendered.Male.RelinkToNew<TLinkType, TAssetType>(mapping);

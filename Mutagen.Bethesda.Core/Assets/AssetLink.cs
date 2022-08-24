@@ -104,11 +104,6 @@ public class AssetLink<TAssetType> :
         set => _rawPath = value;
     }
 
-    IAssetLink<TAssetType> IAssetLink<IAssetLink<TAssetType>, TAssetType>.ShallowClone()
-    {
-        return ShallowClone();
-    }
-
     public AssetLink<TAssetType> ShallowClone()
     {
         return new AssetLink<TAssetType>(RawPath);

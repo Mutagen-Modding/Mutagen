@@ -49,8 +49,6 @@ public interface IAssetLink<out TLinkType, out TAssetType> :
     /// Raw path pointing to the asset
     /// </summary>
     new string RawPath { get; set; }
-
-    TLinkType ShallowClone();
     
     void SetToNull();
 }
