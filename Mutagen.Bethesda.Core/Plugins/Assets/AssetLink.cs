@@ -11,6 +11,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 {
     protected string _rawPath;
     protected static readonly TAssetType AssetInstance;
+    public static readonly AssetLinkGetter<TAssetType> Null = new();
 
     static AssetLinkGetter()
     {

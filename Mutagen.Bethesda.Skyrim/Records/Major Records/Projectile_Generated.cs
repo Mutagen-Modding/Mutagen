@@ -3787,7 +3787,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;
-        public IAssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimModelAssetType>();
+        public IAssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimModelAssetType>.Null;
         #endregion
         #region TextureFilesHashes
         private int? _TextureFilesHashesLocation;

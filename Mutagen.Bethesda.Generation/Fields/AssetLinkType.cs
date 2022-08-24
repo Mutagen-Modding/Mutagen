@@ -27,7 +27,15 @@ public class AssetLinkType : StringType
 
     public override string GetDefault(bool getter)
     {
-        return this.Nullable ? "null" : $"new AssetLink{(getter ? "Getter" : null)}<{AssetTypeString}>()";
+        if (Nullable) return "null";
+        if (getter)
+        {
+            return $"AssetLinkGetter<{AssetTypeString}>.Null";
+        }
+        else
+        {
+            return $"new AssetLink<{AssetTypeString}>()";
+        }
     }
 
     public override async Task Load(XElement node, bool requireName = true)

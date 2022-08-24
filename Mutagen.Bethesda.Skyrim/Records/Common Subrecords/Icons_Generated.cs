@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region LargeIconFilename
         private int? _LargeIconFilenameLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename => _LargeIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>();
+        public IAssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename => _LargeIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimTextureAssetType>.Null;
         #endregion
         #region SmallIconFilename
         private int? _SmallIconFilenameLocation;

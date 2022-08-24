@@ -1619,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Icon
         private int? _IconLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType> Icon => _IconLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : new AssetLinkGetter<SkyrimTextureAssetType>();
+        public IAssetLinkGetter<SkyrimTextureAssetType> Icon => _IconLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimTextureAssetType>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;
