@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
+using Mutagen.Bethesda.Assets;
 
-namespace Mutagen.Bethesda.Assets;
+namespace Mutagen.Bethesda.Plugins.Assets;
 
 /// <summary>
 /// Asset referenced by a record

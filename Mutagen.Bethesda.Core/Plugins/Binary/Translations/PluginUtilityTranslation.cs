@@ -9,6 +9,7 @@ using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 

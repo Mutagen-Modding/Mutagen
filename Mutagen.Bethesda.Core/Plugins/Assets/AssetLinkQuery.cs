@@ -1,4 +1,4 @@
-﻿namespace Mutagen.Bethesda.Assets;
+﻿namespace Mutagen.Bethesda.Plugins.Assets;
 
 [Flags]
 public enum AssetLinkQuery

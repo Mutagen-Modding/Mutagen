@@ -1,6 +1,6 @@
 ﻿using Noggog;
 
-namespace Mutagen.Bethesda.Assets;
+namespace Mutagen.Bethesda.Plugins.Assets;
 
 /// <summary>
 /// An interface for classes that contain AssetLinks and can enumerate them.

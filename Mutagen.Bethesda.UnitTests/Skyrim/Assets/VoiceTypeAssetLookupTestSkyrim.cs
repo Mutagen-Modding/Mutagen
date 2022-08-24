@@ -1,6 +1,7 @@
 ﻿using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;

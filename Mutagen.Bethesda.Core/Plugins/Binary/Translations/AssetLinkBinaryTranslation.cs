@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;

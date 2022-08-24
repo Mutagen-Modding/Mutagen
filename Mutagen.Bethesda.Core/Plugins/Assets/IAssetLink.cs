@@ -1,7 +1,6 @@
-﻿using System;
-using Noggog;
+﻿using Mutagen.Bethesda.Assets;
 
-namespace Mutagen.Bethesda.Assets;
+namespace Mutagen.Bethesda.Plugins.Assets;
 
 public interface IAssetLinkGetter
 {

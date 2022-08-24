@@ -2,6 +2,7 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;

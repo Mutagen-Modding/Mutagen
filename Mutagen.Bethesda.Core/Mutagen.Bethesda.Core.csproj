@@ -99,14 +99,6 @@
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Archives\IArchiveReader.cs" />
-    <Compile Include="Assets\AssetLink.cs" />
-    <Compile Include="Assets\AssetLinkCache.cs" />
-    <Compile Include="Assets\AssetLinkCacheConstructionMixIn.cs" />
-    <Compile Include="Assets\AssetLinkQuery.cs" />
-    <Compile Include="Assets\IAssetCacheComponent.cs" />
-    <Compile Include="Assets\IAssetLinkCache.cs" />
-    <Compile Include="Assets\IAssetLinkContainer.cs" />
-    <Compile Include="Assets\IAssetLink.cs" />
     <Compile Include="Assets\IAssetType.cs" />
     <Compile Include="Environments\DI\GameEnvironmentProvider.cs" />
     <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
@@ -172,6 +164,46 @@
     </Compile>
     <Compile Include="Plugins\Analysis\RecordLocatorResults.cs" />
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
+    <Compile Include="Plugins\Assets\AssetLink.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Assets\AssetLinkCache.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Assets\AssetLinkCacheConstructionMixIn.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Assets\AssetLinkQuery.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Assets\IAssetCacheComponent.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Assets\IAssetLink.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Assets\IAssetLinkCache.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Assets\IAssetLinkContainer.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Binary\Headers\HeaderConstructionMixIns.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

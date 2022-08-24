@@ -1,4 +1,4 @@
-﻿namespace Mutagen.Bethesda.Assets;
+﻿namespace Mutagen.Bethesda.Plugins.Assets;
 
 /// <summary>
 /// Marker interface for classes that are involved in caching and resolving assets for an AssetLinkCache

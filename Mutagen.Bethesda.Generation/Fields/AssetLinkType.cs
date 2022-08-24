@@ -2,6 +2,7 @@ using System.Xml.Linq;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using Noggog.StructuredStrings;

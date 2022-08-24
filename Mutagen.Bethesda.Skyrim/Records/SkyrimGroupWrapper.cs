@@ -5,6 +5,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;

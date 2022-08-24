@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Skyrim.Assets;
 
 namespace Mutagen.Bethesda.Skyrim;

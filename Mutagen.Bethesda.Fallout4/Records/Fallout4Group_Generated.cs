@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Fallout4.Records;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;

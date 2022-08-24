@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim.Assets;
 

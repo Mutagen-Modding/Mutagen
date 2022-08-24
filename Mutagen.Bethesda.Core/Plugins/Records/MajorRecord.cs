@@ -1,6 +1,7 @@
 using Noggog;
 using System.Diagnostics;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Records;

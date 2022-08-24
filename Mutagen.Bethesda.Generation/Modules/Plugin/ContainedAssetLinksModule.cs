@@ -1,6 +1,7 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Plugins.Assets;
 using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
@@ -32,6 +33,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
             yield break;
         }
         yield return "Mutagen.Bethesda.Assets";
+        yield return "Mutagen.Bethesda.Plugins.Assets";
         yield return "Mutagen.Bethesda.Plugins.Cache";
     }
 

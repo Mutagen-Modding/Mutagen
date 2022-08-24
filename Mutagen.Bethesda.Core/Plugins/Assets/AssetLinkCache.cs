@@ -1,6 +1,6 @@
 ﻿using Mutagen.Bethesda.Plugins.Cache;
 
-namespace Mutagen.Bethesda.Assets;
+namespace Mutagen.Bethesda.Plugins.Assets;
 
 public class AssetLinkCache : IAssetLinkCache
 {

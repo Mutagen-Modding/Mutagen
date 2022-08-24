@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.Collections;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim.Assets;
 using Noggog.StructuredStrings;

@@ -5,6 +5,7 @@ using Noggog;
 using System.Linq;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Testing;
 using Xunit;

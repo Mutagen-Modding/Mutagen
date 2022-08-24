@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 

@@ -1,6 +1,7 @@
 using Noggog;
 using Loqui;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 
 namespace Mutagen.Bethesda.Plugins.Records;
 
