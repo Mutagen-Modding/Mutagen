@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Xunit;
 namespace Mutagen.Bethesda.UnitTests.Skyrim.Assets;
 
@@ -17,19 +18,61 @@ public class VoiceTypeAssetLookupTestSkyrim
         _searcher.Prep(LinkCache.CreateImmutableAssetLinkCache());
     }
 
-    [Fact]
-    public void TestAliasAdditionalVoicesNPCList()
+    [Theory]
+    [MutagenModAutoData]
+    public void TestAliasAdditionalVoicesNPCList(
+        SkyrimMod mod,
+        Scene scene,
+        DialogTopic topic,
+        Quest quest,
+        DialogResponses dialogResponses,
+        VoiceType voiceType,
+        VoiceType voiceType2,
+        Npc npc,
+        Npc npc2,
+        FormList formList,
+        string edid1,
+        string edid2,
+        uint aliasId)
     {
-        Assert.True(LinkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("0A3E66:Skyrim.esm"), out var responses), "Response not resolved");
-        Assert.True(LinkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("0A3E2B:Skyrim.esm"), out var topic), "Topic not resolved");
-
+        topic.Responses.Add(dialogResponses);
+        topic.Category = DialogTopic.CategoryEnum.Scene;
+        topic.Quest.SetTo(quest);
+        
+        scene.Actions.Add(new SceneAction()
+        {
+            Type = SceneAction.TypeEnum.Dialog,
+            Topic = topic.ToNullableLink<IDialogTopicGetter>(),
+            ActorID = (int)aliasId,
+        });
+        
+        voiceType.EditorID = edid1;
+        npc.Voice.SetTo(voiceType);
+        
+        voiceType2.EditorID = edid2;
+        npc2.Voice.SetTo(voiceType2);
+        
+        formList.Items.Add(npc);
+        formList.Items.Add(npc2);
+        
+        var alias = new QuestAlias()
+        {
+            ID = aliasId
+        };
+        alias.VoiceTypes.SetTo(formList);
+        quest.Aliases.Add(alias);
+        
+        var linkCache = mod.ToImmutableLinkCache();
+        var sut = new VoiceTypeAssetLookup();
+        sut.Prep(linkCache.CreateImmutableAssetLinkCache());
+        
         Assert.Equal(
             new VoiceContainer(new HashSet<string>
             {
-                "FemaleCommander",
-                "MaleBrute"
+                edid1,
+                edid2
             }),
-            _searcher.GetVoicesWithQuest(topic!, responses!)
+            sut.GetVoicesWithQuest(topic, dialogResponses)
         );
     }
 
