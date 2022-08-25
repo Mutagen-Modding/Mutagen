@@ -288,7 +288,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 {
                     yield return Path.Combine
                     (
-                        "Data",
                         "Sound",
                         "Voice",
                         topic.FormKey.ModKey.FileName,
