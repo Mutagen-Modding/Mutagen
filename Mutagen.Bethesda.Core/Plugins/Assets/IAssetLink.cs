@@ -14,7 +14,11 @@ public interface IAssetLinkGetter
     string RawPath { get; }
 
     /// <summary>
-    /// Raw path relative to the game's data directory
+    /// Raw path relative to the game's data directory, as it is commonly known in the Skyrim modding community.
+    /// Example:
+    ///     \Data\Meshes\Clutter\MyMesh.nif => Meshes\Clutter\MyMesh.nif
+    ///     Data\Meshes\Clutter\MyMesh.nif  => Meshes\Clutter\MyMesh.nif
+    ///     Clutter\MyMesh.nif              => Meshes\Clutter\MyMesh.nif
     /// </summary>
     string DataRelativePath { get; }
 
