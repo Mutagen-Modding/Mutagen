@@ -148,6 +148,8 @@ partial class DialogTopicCommon
 {
     public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(IDialogTopicGetter obj, IAssetLinkCache linkCache, Type? assetType)
     {
+        if (assetType != null && assetType != typeof(SkyrimSoundAssetType)) yield break;
+        
         var voiceTypeLookup = linkCache.GetComponent<VoiceTypeAssetLookup>();
         voiceTypeLookup.Prep(linkCache);
         foreach (var voiceTypePath in voiceTypeLookup.GetVoiceTypePaths(obj))

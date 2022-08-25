@@ -27,6 +27,7 @@ partial class SkyrimModCommon
 {
     public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(ISkyrimModGetter obj, Type? assetType)
     {
+        if (assetType != null && assetType != typeof(SkyrimTranslationAssetType)) yield break;
         if ((obj.ModHeader.Flags & SkyrimModHeader.HeaderFlag.Localized) == 0) yield break;
 
         var modName = obj.ModKey.Name;

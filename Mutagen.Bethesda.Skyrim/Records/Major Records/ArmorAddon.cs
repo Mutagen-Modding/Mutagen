@@ -57,6 +57,8 @@ partial class ArmorAddonCommon
 {
     public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType)
     {
+        if (assetType != null && assetType != typeof(SkyrimModelAssetType)) yield break;
+        
         IEnumerable<IAssetLink> TryToAddWeightModel(string path)
         {
             var name = Path.GetFileNameWithoutExtension(path);

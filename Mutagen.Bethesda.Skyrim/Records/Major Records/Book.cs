@@ -154,6 +154,8 @@ partial class BookCommon
     
     public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IBookGetter obj, Type? assetType)
     {
+        if (assetType != null && assetType != typeof(SkyrimTextureAssetType)) yield break;
+        
         var text = obj.BookText.String;
         if (string.IsNullOrWhiteSpace(text)) yield break;
 
