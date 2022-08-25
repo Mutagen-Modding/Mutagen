@@ -30,7 +30,7 @@ partial class SkyrimModCommon
         if ((obj.ModHeader.Flags & SkyrimModHeader.HeaderFlag.Localized) == 0) yield break;
 
         var modName = obj.ModKey.Name;
-        foreach (var language in SkyrimTranslationAssetType.Instance.Languages)
+        foreach (var language in SkyrimTranslationAssetType.Languages)
         {
             foreach (var translationExtension in SkyrimTranslationAssetType.Instance.FileExtensions)
             {
