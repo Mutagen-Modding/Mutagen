@@ -31,6 +31,11 @@ public interface IAssetLinkGetter
     /// Extension of the asset
     /// </summary>
     IAssetType Type { get; }
+
+    /// <summary>
+    /// Extension of the asset
+    /// </summary>
+    public bool IsNull { get; }
 }
 
 public interface IAssetLinkGetter<out TAssetType> : IAssetLinkGetter
