@@ -8,5 +8,5 @@ public class SkyrimScriptSourceAssetType : IAssetType
 {
     public static readonly SkyrimScriptSourceAssetType Instance = new();
     public string BaseFolder => Path.Combine("Scripts", "Source");
-    public IEnumerable<string> FileExtensions => new []{ "wav", "xwm" };
+    public IEnumerable<string> FileExtensions => new []{ "psc" };
 }
