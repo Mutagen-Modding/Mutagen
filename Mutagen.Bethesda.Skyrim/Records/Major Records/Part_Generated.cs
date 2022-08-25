@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.PartType = item.PartType == rhs.PartType;
-            ret.FileName = string.Equals(item.FileName, rhs.FileName);
+            ret.FileName = object.Equals(item.FileName, rhs.FileName);
         }
         
         public string Print(
@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Part_FieldIndex.FileName) ?? true))
             {
-                if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
+                if (!object.Equals(lhs.FileName, rhs.FileName)) return false;
             }
             return true;
         }

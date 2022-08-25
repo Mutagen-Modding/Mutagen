@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Type = item.Type == rhs.Type;
             ret.BoxSize = item.BoxSize == rhs.BoxSize;
             ret.ParticleDensity = item.ParticleDensity.EqualsWithin(rhs.ParticleDensity);
-            ret.ParticleTexture = string.Equals(item.ParticleTexture, rhs.ParticleTexture);
+            ret.ParticleTexture = object.Equals(item.ParticleTexture, rhs.ParticleTexture);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1593,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
             {
-                if (!string.Equals(lhs.ParticleTexture, rhs.ParticleTexture)) return false;
+                if (!object.Equals(lhs.ParticleTexture, rhs.ParticleTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
             {

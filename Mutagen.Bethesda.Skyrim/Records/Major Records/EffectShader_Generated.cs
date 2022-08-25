@@ -5080,11 +5080,11 @@ namespace Mutagen.Bethesda.Skyrim
             EffectShader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FillTexture = string.Equals(item.FillTexture, rhs.FillTexture);
-            ret.ParticleShaderTexture = string.Equals(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
-            ret.HolesTexture = string.Equals(item.HolesTexture, rhs.HolesTexture);
-            ret.MembranePaletteTexture = string.Equals(item.MembranePaletteTexture, rhs.MembranePaletteTexture);
-            ret.ParticlePaletteTexture = string.Equals(item.ParticlePaletteTexture, rhs.ParticlePaletteTexture);
+            ret.FillTexture = object.Equals(item.FillTexture, rhs.FillTexture);
+            ret.ParticleShaderTexture = object.Equals(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
+            ret.HolesTexture = object.Equals(item.HolesTexture, rhs.HolesTexture);
+            ret.MembranePaletteTexture = object.Equals(item.MembranePaletteTexture, rhs.MembranePaletteTexture);
+            ret.ParticlePaletteTexture = object.Equals(item.ParticlePaletteTexture, rhs.ParticlePaletteTexture);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.MembraneSourceBlendMode = item.MembraneSourceBlendMode == rhs.MembraneSourceBlendMode;
             ret.MembraneBlendOperation = item.MembraneBlendOperation == rhs.MembraneBlendOperation;
@@ -5714,23 +5714,23 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
             {
-                if (!string.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
+                if (!object.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
             {
-                if (!string.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
+                if (!object.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
             {
-                if (!string.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;
+                if (!object.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembranePaletteTexture) ?? true))
             {
-                if (!string.Equals(lhs.MembranePaletteTexture, rhs.MembranePaletteTexture)) return false;
+                if (!object.Equals(lhs.MembranePaletteTexture, rhs.MembranePaletteTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePaletteTexture) ?? true))
             {
-                if (!string.Equals(lhs.ParticlePaletteTexture, rhs.ParticlePaletteTexture)) return false;
+                if (!object.Equals(lhs.ParticlePaletteTexture, rhs.ParticlePaletteTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown) ?? true))
             {

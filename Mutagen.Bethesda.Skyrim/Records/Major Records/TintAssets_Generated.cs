@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Index = item.Index == rhs.Index;
-            ret.FileName = string.Equals(item.FileName, rhs.FileName);
+            ret.FileName = object.Equals(item.FileName, rhs.FileName);
             ret.MaskType = item.MaskType == rhs.MaskType;
             ret.PresetDefault = item.PresetDefault.Equals(rhs.PresetDefault);
             ret.Presets = item.Presets.CollectionEqualsHelper(
@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.FileName) ?? true))
             {
-                if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
+                if (!object.Equals(lhs.FileName, rhs.FileName)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.MaskType) ?? true))
             {

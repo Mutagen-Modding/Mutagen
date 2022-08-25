@@ -3256,7 +3256,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.LandDefaults,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.MapImage = string.Equals(item.MapImage, rhs.MapImage);
+            ret.MapImage = object.Equals(item.MapImage, rhs.MapImage);
             ret.CloudModel = EqualsMaskHelper.EqualsHelper(
                 item.CloudModel,
                 rhs.CloudModel,
@@ -3274,11 +3274,11 @@ namespace Mutagen.Bethesda.Skyrim
             ret.ObjectBoundsMin = item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
             ret.ObjectBoundsMax = item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
             ret.Music = item.Music.Equals(rhs.Music);
-            ret.CanopyShadow = string.Equals(item.CanopyShadow, rhs.CanopyShadow);
-            ret.WaterNoiseTexture = string.Equals(item.WaterNoiseTexture, rhs.WaterNoiseTexture);
-            ret.HdLodDiffuseTexture = string.Equals(item.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture);
-            ret.HdLodNormalTexture = string.Equals(item.HdLodNormalTexture, rhs.HdLodNormalTexture);
-            ret.WaterEnvironmentMap = string.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
+            ret.CanopyShadow = object.Equals(item.CanopyShadow, rhs.CanopyShadow);
+            ret.WaterNoiseTexture = object.Equals(item.WaterNoiseTexture, rhs.WaterNoiseTexture);
+            ret.HdLodDiffuseTexture = object.Equals(item.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture);
+            ret.HdLodNormalTexture = object.Equals(item.HdLodNormalTexture, rhs.HdLodNormalTexture);
+            ret.WaterEnvironmentMap = object.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
             ret.OffsetData = MemorySliceExt.Equal(item.OffsetData, rhs.OffsetData);
             ret.TopCell = EqualsMaskHelper.EqualsHelper(
                 item.TopCell,
@@ -3638,7 +3638,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapImage) ?? true))
             {
-                if (!string.Equals(lhs.MapImage, rhs.MapImage)) return false;
+                if (!object.Equals(lhs.MapImage, rhs.MapImage)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.CloudModel) ?? true))
             {
@@ -3686,23 +3686,23 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.CanopyShadow) ?? true))
             {
-                if (!string.Equals(lhs.CanopyShadow, rhs.CanopyShadow)) return false;
+                if (!object.Equals(lhs.CanopyShadow, rhs.CanopyShadow)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterNoiseTexture) ?? true))
             {
-                if (!string.Equals(lhs.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
+                if (!object.Equals(lhs.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodDiffuseTexture) ?? true))
             {
-                if (!string.Equals(lhs.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture)) return false;
+                if (!object.Equals(lhs.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodNormalTexture) ?? true))
             {
-                if (!string.Equals(lhs.HdLodNormalTexture, rhs.HdLodNormalTexture)) return false;
+                if (!object.Equals(lhs.HdLodNormalTexture, rhs.HdLodNormalTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterEnvironmentMap) ?? true))
             {
-                if (!string.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
+                if (!object.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {

@@ -813,8 +813,8 @@ namespace Mutagen.Bethesda.Skyrim
             Icons.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
-            ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
+            ret.LargeIconFilename = object.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
+            ret.SmallIconFilename = object.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
         }
         
         public string Print(
@@ -879,11 +879,11 @@ namespace Mutagen.Bethesda.Skyrim
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Icons_FieldIndex.LargeIconFilename) ?? true))
             {
-                if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
+                if (!object.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Icons_FieldIndex.SmallIconFilename) ?? true))
             {
-                if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+                if (!object.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
             }
             return true;
         }

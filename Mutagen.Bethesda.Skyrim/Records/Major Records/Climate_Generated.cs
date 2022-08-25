@@ -1416,8 +1416,8 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.WeatherTypes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SunTexture = string.Equals(item.SunTexture, rhs.SunTexture);
-            ret.SunGlareTexture = string.Equals(item.SunGlareTexture, rhs.SunGlareTexture);
+            ret.SunTexture = object.Equals(item.SunTexture, rhs.SunTexture);
+            ret.SunGlareTexture = object.Equals(item.SunGlareTexture, rhs.SunGlareTexture);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1596,11 +1596,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
             {
-                if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
+                if (!object.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunGlareTexture) ?? true))
             {
-                if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
+                if (!object.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Model) ?? true))
             {

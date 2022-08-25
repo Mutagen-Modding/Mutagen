@@ -1440,8 +1440,8 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Type = item.Type == rhs.Type;
             ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
             ret.FadeOut = item.FadeOut.EqualsWithin(rhs.FadeOut);
-            ret.TrackFilename = string.Equals(item.TrackFilename, rhs.TrackFilename);
-            ret.FinaleFilename = string.Equals(item.FinaleFilename, rhs.FinaleFilename);
+            ret.TrackFilename = object.Equals(item.TrackFilename, rhs.TrackFilename);
+            ret.FinaleFilename = object.Equals(item.FinaleFilename, rhs.FinaleFilename);
             ret.LoopData = EqualsMaskHelper.EqualsHelper(
                 item.LoopData,
                 rhs.LoopData,
@@ -1644,11 +1644,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.TrackFilename) ?? true))
             {
-                if (!string.Equals(lhs.TrackFilename, rhs.TrackFilename)) return false;
+                if (!object.Equals(lhs.TrackFilename, rhs.TrackFilename)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.FinaleFilename) ?? true))
             {
-                if (!string.Equals(lhs.FinaleFilename, rhs.FinaleFilename)) return false;
+                if (!object.Equals(lhs.FinaleFilename, rhs.FinaleFilename)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
             {

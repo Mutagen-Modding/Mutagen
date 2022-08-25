@@ -3789,7 +3789,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.CloudTextures = EqualsMaskHelper.SpanEqualsHelper<IAssetLinkGetter<SkyrimTextureAssetType>?>(
                 item.CloudTextures,
                 rhs.CloudTextures,
-                (l, r) => string.Equals(l, r),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.DNAM = MemorySliceExt.Equal(item.DNAM, rhs.DNAM);
             ret.CNAM = MemorySliceExt.Equal(item.CNAM, rhs.CNAM);

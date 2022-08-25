@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.Icon = string.Equals(item.Icon, rhs.Icon);
+            ret.Icon = object.Equals(item.Icon, rhs.Icon);
             ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Eyes_FieldIndex.Icon) ?? true))
             {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+                if (!object.Equals(lhs.Icon, rhs.Icon)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Eyes_FieldIndex.Flags) ?? true))
             {

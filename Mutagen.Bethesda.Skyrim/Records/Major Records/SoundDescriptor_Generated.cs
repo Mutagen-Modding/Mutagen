@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.AlternateSoundFor = item.AlternateSoundFor.Equals(rhs.AlternateSoundFor);
             ret.SoundFiles = item.SoundFiles.CollectionEqualsHelper(
                 rhs.SoundFiles,
-                (l, r) => string.Equals(l, r),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.OutputModel = item.OutputModel.Equals(rhs.OutputModel);
             ret.String = string.Equals(item.String, rhs.String);

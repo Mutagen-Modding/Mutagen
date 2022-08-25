@@ -2296,7 +2296,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.RelaunchInterval = item.RelaunchInterval.EqualsWithin(rhs.RelaunchInterval);
             ret.DecalData = item.DecalData.Equals(rhs.DecalData);
             ret.CollisionLayer = item.CollisionLayer.Equals(rhs.CollisionLayer);
-            ret.MuzzleFlashModel = string.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
+            ret.MuzzleFlashModel = object.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
             ret.TextureFilesHashes = MemorySliceExt.Equal(item.TextureFilesHashes, rhs.TextureFilesHashes);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
@@ -2655,7 +2655,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
             {
-                if (!string.Equals(lhs.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
+                if (!object.Equals(lhs.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
             {

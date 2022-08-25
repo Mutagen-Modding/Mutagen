@@ -3680,10 +3680,10 @@ namespace Mutagen.Bethesda.Skyrim
             ret.GNAM = MemorySliceExt.Equal(item.GNAM, rhs.GNAM);
             ret.LinearVelocity = item.LinearVelocity.Equals(rhs.LinearVelocity);
             ret.AngularVelocity = item.AngularVelocity.Equals(rhs.AngularVelocity);
-            ret.NoiseLayerOneTexture = string.Equals(item.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture);
-            ret.NoiseLayerTwoTexture = string.Equals(item.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture);
-            ret.NoiseLayerThreeTexture = string.Equals(item.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture);
-            ret.FlowNormalsNoiseTexture = string.Equals(item.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture);
+            ret.NoiseLayerOneTexture = object.Equals(item.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture);
+            ret.NoiseLayerTwoTexture = object.Equals(item.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture);
+            ret.NoiseLayerThreeTexture = object.Equals(item.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture);
+            ret.FlowNormalsNoiseTexture = object.Equals(item.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture);
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -4329,19 +4329,19 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneTexture) ?? true))
             {
-                if (!string.Equals(lhs.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture)) return false;
+                if (!object.Equals(lhs.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoTexture) ?? true))
             {
-                if (!string.Equals(lhs.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture)) return false;
+                if (!object.Equals(lhs.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeTexture) ?? true))
             {
-                if (!string.Equals(lhs.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture)) return false;
+                if (!object.Equals(lhs.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FlowNormalsNoiseTexture) ?? true))
             {
-                if (!string.Equals(lhs.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture)) return false;
+                if (!object.Equals(lhs.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
             {

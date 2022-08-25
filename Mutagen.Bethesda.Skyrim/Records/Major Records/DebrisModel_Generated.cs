@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Percentage = item.Percentage == rhs.Percentage;
-            ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
+            ret.ModelFilename = object.Equals(item.ModelFilename, rhs.ModelFilename);
             ret.Flags = item.Flags == rhs.Flags;
             ret.TextureFileHashes = MemorySliceExt.Equal(item.TextureFileHashes, rhs.TextureFileHashes);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
             {
-                if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
+                if (!object.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
             {

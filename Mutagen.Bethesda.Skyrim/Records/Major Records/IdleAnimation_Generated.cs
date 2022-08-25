@@ -1379,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Filename = string.Equals(item.Filename, rhs.Filename);
+            ret.Filename = object.Equals(item.Filename, rhs.Filename);
             ret.AnimationEvent = string.Equals(item.AnimationEvent, rhs.AnimationEvent);
             ret.RelatedIdles = item.RelatedIdles.CollectionEqualsHelper(
                 rhs.RelatedIdles,
@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Filename) ?? true))
             {
-                if (!string.Equals(lhs.Filename, rhs.Filename)) return false;
+                if (!object.Equals(lhs.Filename, rhs.Filename)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
             {

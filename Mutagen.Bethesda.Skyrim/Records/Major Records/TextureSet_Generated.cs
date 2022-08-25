@@ -1352,14 +1352,14 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Diffuse = string.Equals(item.Diffuse, rhs.Diffuse);
-            ret.NormalOrGloss = string.Equals(item.NormalOrGloss, rhs.NormalOrGloss);
-            ret.EnvironmentMaskOrSubsurfaceTint = string.Equals(item.EnvironmentMaskOrSubsurfaceTint, rhs.EnvironmentMaskOrSubsurfaceTint);
-            ret.GlowOrDetailMap = string.Equals(item.GlowOrDetailMap, rhs.GlowOrDetailMap);
-            ret.Height = string.Equals(item.Height, rhs.Height);
-            ret.Environment = string.Equals(item.Environment, rhs.Environment);
-            ret.Multilayer = string.Equals(item.Multilayer, rhs.Multilayer);
-            ret.BacklightMaskOrSpecular = string.Equals(item.BacklightMaskOrSpecular, rhs.BacklightMaskOrSpecular);
+            ret.Diffuse = object.Equals(item.Diffuse, rhs.Diffuse);
+            ret.NormalOrGloss = object.Equals(item.NormalOrGloss, rhs.NormalOrGloss);
+            ret.EnvironmentMaskOrSubsurfaceTint = object.Equals(item.EnvironmentMaskOrSubsurfaceTint, rhs.EnvironmentMaskOrSubsurfaceTint);
+            ret.GlowOrDetailMap = object.Equals(item.GlowOrDetailMap, rhs.GlowOrDetailMap);
+            ret.Height = object.Equals(item.Height, rhs.Height);
+            ret.Environment = object.Equals(item.Environment, rhs.Environment);
+            ret.Multilayer = object.Equals(item.Multilayer, rhs.Multilayer);
+            ret.BacklightMaskOrSpecular = object.Equals(item.BacklightMaskOrSpecular, rhs.BacklightMaskOrSpecular);
             ret.Decal = EqualsMaskHelper.EqualsHelper(
                 item.Decal,
                 rhs.Decal,
@@ -1527,35 +1527,35 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Diffuse) ?? true))
             {
-                if (!string.Equals(lhs.Diffuse, rhs.Diffuse)) return false;
+                if (!object.Equals(lhs.Diffuse, rhs.Diffuse)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.NormalOrGloss) ?? true))
             {
-                if (!string.Equals(lhs.NormalOrGloss, rhs.NormalOrGloss)) return false;
+                if (!object.Equals(lhs.NormalOrGloss, rhs.NormalOrGloss)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint) ?? true))
             {
-                if (!string.Equals(lhs.EnvironmentMaskOrSubsurfaceTint, rhs.EnvironmentMaskOrSubsurfaceTint)) return false;
+                if (!object.Equals(lhs.EnvironmentMaskOrSubsurfaceTint, rhs.EnvironmentMaskOrSubsurfaceTint)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.GlowOrDetailMap) ?? true))
             {
-                if (!string.Equals(lhs.GlowOrDetailMap, rhs.GlowOrDetailMap)) return false;
+                if (!object.Equals(lhs.GlowOrDetailMap, rhs.GlowOrDetailMap)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Height) ?? true))
             {
-                if (!string.Equals(lhs.Height, rhs.Height)) return false;
+                if (!object.Equals(lhs.Height, rhs.Height)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Environment) ?? true))
             {
-                if (!string.Equals(lhs.Environment, rhs.Environment)) return false;
+                if (!object.Equals(lhs.Environment, rhs.Environment)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Multilayer) ?? true))
             {
-                if (!string.Equals(lhs.Multilayer, rhs.Multilayer)) return false;
+                if (!object.Equals(lhs.Multilayer, rhs.Multilayer)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.BacklightMaskOrSpecular) ?? true))
             {
-                if (!string.Equals(lhs.BacklightMaskOrSpecular, rhs.BacklightMaskOrSpecular)) return false;
+                if (!object.Equals(lhs.BacklightMaskOrSpecular, rhs.BacklightMaskOrSpecular)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
             {

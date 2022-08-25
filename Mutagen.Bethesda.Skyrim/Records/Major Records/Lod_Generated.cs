@@ -1070,13 +1070,13 @@ namespace Mutagen.Bethesda.Skyrim
             Lod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Level0 = string.Equals(item.Level0, rhs.Level0);
+            ret.Level0 = object.Equals(item.Level0, rhs.Level0);
             ret.Level0Extra = MemorySliceExt.Equal(item.Level0Extra, rhs.Level0Extra);
-            ret.Level1 = string.Equals(item.Level1, rhs.Level1);
+            ret.Level1 = object.Equals(item.Level1, rhs.Level1);
             ret.Level1Extra = MemorySliceExt.Equal(item.Level1Extra, rhs.Level1Extra);
-            ret.Level2 = string.Equals(item.Level2, rhs.Level2);
+            ret.Level2 = object.Equals(item.Level2, rhs.Level2);
             ret.Level2Extra = MemorySliceExt.Equal(item.Level2Extra, rhs.Level2Extra);
-            ret.Level3 = string.Equals(item.Level3, rhs.Level3);
+            ret.Level3 = object.Equals(item.Level3, rhs.Level3);
             ret.Level3Extra = MemorySliceExt.Equal(item.Level3Extra, rhs.Level3Extra);
         }
         
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level0) ?? true))
             {
-                if (!string.Equals(lhs.Level0, rhs.Level0)) return false;
+                if (!object.Equals(lhs.Level0, rhs.Level0)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level0Extra) ?? true))
             {
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level1) ?? true))
             {
-                if (!string.Equals(lhs.Level1, rhs.Level1)) return false;
+                if (!object.Equals(lhs.Level1, rhs.Level1)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level1Extra) ?? true))
             {
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level2) ?? true))
             {
-                if (!string.Equals(lhs.Level2, rhs.Level2)) return false;
+                if (!object.Equals(lhs.Level2, rhs.Level2)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level2Extra) ?? true))
             {
@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level3) ?? true))
             {
-                if (!string.Equals(lhs.Level3, rhs.Level3)) return false;
+                if (!object.Equals(lhs.Level3, rhs.Level3)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level3Extra) ?? true))
             {

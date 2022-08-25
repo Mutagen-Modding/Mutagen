@@ -78,6 +78,11 @@ public class AssetLinkType : StringType
         }
     }
 
+    public override string GenerateEqualsSnippet(Accessor accessor, Accessor rhsAccessor, bool negate)
+    {
+        return $"{(negate ? "!" : null)}object.Equals({accessor.Access}, {rhsAccessor.Access})";
+    }
+
     public override void GenerateForCopy(StructuredStringBuilder sb, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
     {
         if (this.Nullable)

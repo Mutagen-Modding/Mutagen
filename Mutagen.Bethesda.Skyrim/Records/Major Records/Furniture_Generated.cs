@@ -1784,7 +1784,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Markers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
+            ret.ModelFilename = object.Equals(item.ModelFilename, rhs.ModelFilename);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2034,7 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ModelFilename) ?? true))
             {
-                if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
+                if (!object.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
             }
             return true;
         }
