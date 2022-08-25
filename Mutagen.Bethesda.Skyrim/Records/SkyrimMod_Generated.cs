@@ -16686,8 +16686,16 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
+        public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(ISkyrimModGetter obj, Type? assetType);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISkyrimModGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
+            if (queryCategories.HasFlag(AssetLinkQuery.Inferred))
+            {
+                foreach (var additional in GetInferredAssetLinks(obj, assetType))
+                {
+                    yield return additional;
+                }
+            }
             foreach (var item in obj.TextureSets.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
                 yield return item;
