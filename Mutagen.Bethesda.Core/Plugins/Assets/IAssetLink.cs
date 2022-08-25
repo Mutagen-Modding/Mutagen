@@ -22,6 +22,11 @@ public interface IAssetLinkGetter
     /// Extension of the asset
     /// </summary>
     string Extension { get; }
+
+    /// <summary>
+    /// Extension of the asset
+    /// </summary>
+    IAssetType Type { get; }
 }
 
 public interface IAssetLinkGetter<out TAssetType> : IAssetLinkGetter
