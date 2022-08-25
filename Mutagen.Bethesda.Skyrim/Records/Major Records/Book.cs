@@ -149,7 +149,7 @@ partial class BookBinaryWriteTranslation
 
 partial class BookCommon
 {
-    private const string Pattern = @"<img [\w\s='/,.:]*src='img:\/\/([\w\s='/,.:]*)'>";
+    private const string Pattern = @"<img[\w\s='/,.:]*src='img:\/\/([\w\s=/,.:]*)'[\w\s='/,.:]*>";
     private static readonly Regex Regex = new(Pattern);
     
     public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IBookGetter obj, Type? assetType)
@@ -158,7 +158,7 @@ partial class BookCommon
         if (string.IsNullOrWhiteSpace(text)) yield break;
 
         var match = Regex.Match(text);
-        foreach (Match matchGroup in match.Groups)
+        foreach (Group matchGroup in match.Groups)
         {
             yield return new AssetLink<SkyrimTextureAssetType>(matchGroup.Value);
         }
