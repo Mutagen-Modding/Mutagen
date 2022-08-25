@@ -160,9 +160,9 @@ partial class BookCommon
         if (string.IsNullOrWhiteSpace(text)) yield break;
 
         var match = Regex.Match(text);
-        foreach (Group matchGroup in match.Groups)
+        if (match.Success)
         {
-            yield return new AssetLink<SkyrimTextureAssetType>(matchGroup.Value);
+            yield return new AssetLink<SkyrimTextureAssetType>(match.Groups[1].Value);
         }
     }
 }
