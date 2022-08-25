@@ -1,5 +1,6 @@
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -7,6 +8,7 @@ using Mutagen.Bethesda.Plugins.Meta;
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Skyrim.Assets;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -23,6 +25,20 @@ public partial class SkyrimMod : AMod
 
 partial class SkyrimModCommon
 {
+    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(ISkyrimModGetter obj, Type? assetType)
+    {
+        if ((obj.ModHeader.Flags & SkyrimModHeader.HeaderFlag.Localized) == 0) yield break;
+
+        var modName = obj.ModKey.Name;
+        foreach (var language in SkyrimTranslationAssetType.Instance.Languages)
+        {
+            foreach (var translationExtension in SkyrimTranslationAssetType.Instance.FileExtensions)
+            {
+                yield return new AssetLink<SkyrimTranslationAssetType>($"{modName}_{language}{translationExtension}");
+            }
+        }
+    }
+    
     public static void WriteCellsParallel(
         ISkyrimListGroupGetter<ICellBlockGetter> group,
         int targetIndex,
