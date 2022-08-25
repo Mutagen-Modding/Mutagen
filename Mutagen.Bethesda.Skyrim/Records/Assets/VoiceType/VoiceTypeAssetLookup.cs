@@ -514,10 +514,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private VoiceContainer GetVoices(IQuestAliasGetter alias, IQuestGetter quest, ModKey currentMod)
     {
         //External Alias
-        var aliasIndex = alias.External?.AliasID;
-        if (aliasIndex != null)
+        if (alias.External != null)
         {
-            return GetVoices(quest, aliasIndex.Value, currentMod);
+            var externalQuest = alias.External.Quest.TryResolve(_formLinkCache);
+            var aliasIndex = alias.External.AliasID;
+            if (externalQuest != null && aliasIndex != null) 
+            {
+                return GetVoices(externalQuest, aliasIndex.Value, currentMod);
+            }
         }
 
         //Additional voice types
