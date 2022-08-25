@@ -73,14 +73,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region SunTexture
-        public IAssetLink<SkyrimTextureAssetType>? SunTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? SunTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IClimateGetter.SunTexture => this.SunTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IClimateGetter.SunTexture => this.SunTexture;
         #endregion
         #region SunGlareTexture
-        public IAssetLink<SkyrimTextureAssetType>? SunGlareTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? SunGlareTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IClimateGetter.SunGlareTexture => this.SunGlareTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IClimateGetter.SunGlareTexture => this.SunGlareTexture;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -954,8 +954,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new ExtendedList<WeatherType>? WeatherTypes { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? SunTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? SunGlareTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? SunTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? SunGlareTexture { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -989,8 +989,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? SunTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? SunGlareTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? SunTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? SunGlareTexture { get; }
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -2356,11 +2356,11 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         #region SunTexture
         private int? _SunTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? SunTexture => _SunTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? SunTexture => _SunTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region SunGlareTexture
         private int? _SunGlareTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? SunGlareTexture => _SunGlareTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? SunGlareTexture => _SunGlareTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _TNAMLocation;

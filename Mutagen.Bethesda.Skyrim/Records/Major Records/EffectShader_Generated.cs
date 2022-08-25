@@ -59,29 +59,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FillTexture
-        public IAssetLink<SkyrimTextureAssetType>? FillTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? FillTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IEffectShaderGetter.FillTexture => this.FillTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IEffectShaderGetter.FillTexture => this.FillTexture;
         #endregion
         #region ParticleShaderTexture
-        public IAssetLink<SkyrimTextureAssetType>? ParticleShaderTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? ParticleShaderTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IEffectShaderGetter.ParticleShaderTexture => this.ParticleShaderTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IEffectShaderGetter.ParticleShaderTexture => this.ParticleShaderTexture;
         #endregion
         #region HolesTexture
-        public IAssetLink<SkyrimTextureAssetType>? HolesTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? HolesTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IEffectShaderGetter.HolesTexture => this.HolesTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IEffectShaderGetter.HolesTexture => this.HolesTexture;
         #endregion
         #region MembranePaletteTexture
-        public IAssetLink<SkyrimTextureAssetType>? MembranePaletteTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? MembranePaletteTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IEffectShaderGetter.MembranePaletteTexture => this.MembranePaletteTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IEffectShaderGetter.MembranePaletteTexture => this.MembranePaletteTexture;
         #endregion
         #region ParticlePaletteTexture
-        public IAssetLink<SkyrimTextureAssetType>? ParticlePaletteTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? ParticlePaletteTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IEffectShaderGetter.ParticlePaletteTexture => this.ParticlePaletteTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IEffectShaderGetter.ParticlePaletteTexture => this.ParticlePaletteTexture;
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default;
@@ -4246,11 +4246,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEffectShaderInternal>,
         ISkyrimMajorRecordInternal
     {
-        new IAssetLink<SkyrimTextureAssetType>? FillTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? ParticleShaderTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? HolesTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? MembranePaletteTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? ParticlePaletteTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? FillTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? ParticleShaderTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? HolesTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? MembranePaletteTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? ParticlePaletteTexture { get; set; }
         new Int32 Unknown { get; set; }
         new EffectShader.BlendMode MembraneSourceBlendMode { get; set; }
         new EffectShader.BlendOperation MembraneBlendOperation { get; set; }
@@ -4371,11 +4371,11 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IEffectShaderGetter>
     {
         static new ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
-        IAssetLinkGetter<SkyrimTextureAssetType>? FillTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? ParticleShaderTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? HolesTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? MembranePaletteTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? ParticlePaletteTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? FillTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? ParticleShaderTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? HolesTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? MembranePaletteTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? ParticlePaletteTexture { get; }
         Int32 Unknown { get; }
         EffectShader.BlendMode MembraneSourceBlendMode { get; }
         EffectShader.BlendOperation MembraneBlendOperation { get; }
@@ -7761,23 +7761,23 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region FillTexture
         private int? _FillTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? FillTexture => _FillTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FillTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? FillTexture => _FillTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FillTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region ParticleShaderTexture
         private int? _ParticleShaderTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region HolesTexture
         private int? _HolesTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? HolesTexture => _HolesTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HolesTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? HolesTexture => _HolesTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HolesTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region MembranePaletteTexture
         private int? _MembranePaletteTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? MembranePaletteTexture => _MembranePaletteTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MembranePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? MembranePaletteTexture => _MembranePaletteTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MembranePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region ParticlePaletteTexture
         private int? _ParticlePaletteTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? ParticlePaletteTexture => _ParticlePaletteTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticlePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? ParticlePaletteTexture => _ParticlePaletteTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticlePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         private RangeInt32? _DATALocation;
         public EffectShader.DATADataType DATADataTypeState { get; private set; }

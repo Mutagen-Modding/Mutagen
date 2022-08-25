@@ -59,9 +59,9 @@ namespace Mutagen.Bethesda.Skyrim
         Part.PartTypeEnum? IPartGetter.PartType => this.PartType;
         #endregion
         #region FileName
-        public IAssetLink<SkyrimDeformedModelAssetType>? FileName { get; set; }
+        public AssetLink<SkyrimDeformedModelAssetType>? FileName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimDeformedModelAssetType>? IPartGetter.FileName => this.FileName;
+        AssetLinkGetter<SkyrimDeformedModelAssetType>? IPartGetter.FileName => this.FileName;
         #endregion
 
         #region To String
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPartGetter
     {
         new Part.PartTypeEnum? PartType { get; set; }
-        new IAssetLink<SkyrimDeformedModelAssetType>? FileName { get; set; }
+        new AssetLink<SkyrimDeformedModelAssetType>? FileName { get; set; }
     }
 
     public partial interface IPartGetter :
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Part_Registration.Instance;
         Part.PartTypeEnum? PartType { get; }
-        IAssetLinkGetter<SkyrimDeformedModelAssetType>? FileName { get; }
+        AssetLinkGetter<SkyrimDeformedModelAssetType>? FileName { get; }
 
     }
 
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FileName
         private int? _FileNameLocation;
-        public IAssetLinkGetter<SkyrimDeformedModelAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimDeformedModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimDeformedModelAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimDeformedModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

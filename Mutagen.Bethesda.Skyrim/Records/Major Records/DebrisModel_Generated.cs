@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte Percentage { get; set; } = default;
         #endregion
         #region ModelFilename
-        public IAssetLink<SkyrimModelAssetType> ModelFilename { get; set; } = new AssetLink<SkyrimModelAssetType>();
-        IAssetLinkGetter<SkyrimModelAssetType> IDebrisModelGetter.ModelFilename => this.ModelFilename;
+        public AssetLink<SkyrimModelAssetType> ModelFilename { get; set; } = new AssetLink<SkyrimModelAssetType>();
+        AssetLinkGetter<SkyrimModelAssetType> IDebrisModelGetter.ModelFilename => this.ModelFilename;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDebrisModel>
     {
         new Byte Percentage { get; set; }
-        new IAssetLink<SkyrimModelAssetType> ModelFilename { get; set; }
+        new AssetLink<SkyrimModelAssetType> ModelFilename { get; set; }
         new DebrisModel.Flag Flags { get; set; }
         new MemorySlice<Byte>? TextureFileHashes { get; set; }
         new DebrisModel.DATADataType DATADataTypeState { get; set; }
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DebrisModel_Registration.Instance;
         Byte Percentage { get; }
-        IAssetLinkGetter<SkyrimModelAssetType> ModelFilename { get; }
+        AssetLinkGetter<SkyrimModelAssetType> ModelFilename { get; }
         DebrisModel.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte>? TextureFileHashes { get; }
         DebrisModel.DATADataType DATADataTypeState { get; }
@@ -1394,7 +1394,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte Percentage => _Percentage_IsSet ? _recordData.Span[_PercentageLocation] : default;
         #endregion
         #region ModelFilename
-        public IAssetLinkGetter<SkyrimModelAssetType> ModelFilename { get; private set; } = null!;
+        public AssetLinkGetter<SkyrimModelAssetType> ModelFilename { get; private set; } = null!;
         protected int ModelFilenameEndingPos;
         #endregion
         #region Flags

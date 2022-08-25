@@ -9,7 +9,7 @@ public class AssetLinkBinaryTranslation
 {
     public static readonly AssetLinkBinaryTranslation Instance = new();
 
-    public IAssetLink<TAssetType> Parse<TAssetType>(
+    public AssetLink<TAssetType> Parse<TAssetType>(
         MutagenFrame reader,
         bool parseWhole = true,
         StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)

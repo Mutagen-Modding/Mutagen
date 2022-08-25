@@ -60,9 +60,9 @@ namespace Mutagen.Bethesda.Skyrim
         UInt16? ITintAssetsGetter.Index => this.Index;
         #endregion
         #region FileName
-        public IAssetLink<SkyrimTextureAssetType>? FileName { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? FileName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? ITintAssetsGetter.FileName => this.FileName;
+        AssetLinkGetter<SkyrimTextureAssetType>? ITintAssetsGetter.FileName => this.FileName;
         #endregion
         #region MaskType
         public TintAssets.TintMaskType? MaskType { get; set; }
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITintAssetsGetter
     {
         new UInt16? Index { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? FileName { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
         new IFormLinkNullable<IColorRecordGetter> PresetDefault { get; set; }
         new ExtendedList<TintPreset> Presets { get; }
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => TintAssets_Registration.Instance;
         UInt16? Index { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? FileName { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? FileName { get; }
         TintAssets.TintMaskType? MaskType { get; }
         IFormLinkNullableGetter<IColorRecordGetter> PresetDefault { get; }
         IReadOnlyList<ITintPresetGetter> Presets { get; }
@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FileName
         private int? _FileNameLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region MaskType
         private int? _MaskTypeLocation;

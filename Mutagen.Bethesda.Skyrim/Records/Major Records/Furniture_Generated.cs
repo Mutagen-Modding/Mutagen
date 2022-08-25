@@ -246,9 +246,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region ModelFilename
-        public IAssetLink<SkyrimModelAssetType>? ModelFilename { get; set; }
+        public AssetLink<SkyrimModelAssetType>? ModelFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimModelAssetType>? IFurnitureGetter.ModelFilename => this.ModelFilename;
+        AssetLinkGetter<SkyrimModelAssetType>? IFurnitureGetter.ModelFilename => this.ModelFilename;
         #endregion
 
         #region To String
@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim
         new WorkbenchData? WorkbenchData { get; set; }
         new IFormLinkNullable<ISpellGetter> AssociatedSpell { get; set; }
         new ExtendedList<FurnitureMarker>? Markers { get; set; }
-        new IAssetLink<SkyrimModelAssetType>? ModelFilename { get; set; }
+        new AssetLink<SkyrimModelAssetType>? ModelFilename { get; set; }
         #region Mutagen
         new Furniture.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorkbenchDataGetter? WorkbenchData { get; }
         IFormLinkNullableGetter<ISpellGetter> AssociatedSpell { get; }
         IReadOnlyList<IFurnitureMarkerGetter>? Markers { get; }
-        IAssetLinkGetter<SkyrimModelAssetType>? ModelFilename { get; }
+        AssetLinkGetter<SkyrimModelAssetType>? ModelFilename { get; }
 
         #region Mutagen
         Furniture.MajorFlag MajorFlags { get; }
@@ -3122,7 +3122,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ModelFilename
         private int? _ModelFilenameLocation;
-        public IAssetLinkGetter<SkyrimModelAssetType>? ModelFilename => _ModelFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimModelAssetType>? ModelFilename => _ModelFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

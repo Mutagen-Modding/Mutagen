@@ -60,7 +60,7 @@ partial class LodBinaryWriteTranslation
 
 partial class LodBinaryOverlay
 {
-    public IAssetLinkGetter<SkyrimModelAssetType> Level0 =>
+    public AssetLinkGetter<SkyrimModelAssetType> Level0 =>
         new AssetLink<SkyrimModelAssetType>(
             LodBinaryCreateTranslation.ReadString(
                 new MutagenFrame(new MutagenMemoryReadStream(_structData, _package.MetaData)), out var _));
@@ -75,7 +75,7 @@ partial class LodBinaryOverlay
         }
     }
 
-    public IAssetLinkGetter<SkyrimModelAssetType> Level1 =>
+    public AssetLinkGetter<SkyrimModelAssetType> Level1 =>
         new AssetLink<SkyrimModelAssetType>(
             LodBinaryCreateTranslation.ReadString(
                 new MutagenFrame(new MutagenMemoryReadStream(_structData.Slice(LodBinaryCreateTranslation.TotalLen),
@@ -92,7 +92,7 @@ partial class LodBinaryOverlay
         }
     }
 
-    public IAssetLinkGetter<SkyrimModelAssetType> Level2 =>
+    public AssetLinkGetter<SkyrimModelAssetType> Level2 =>
         new AssetLink<SkyrimModelAssetType>(
             LodBinaryCreateTranslation.ReadString(
                 new MutagenFrame(new MutagenMemoryReadStream(_structData.Slice(LodBinaryCreateTranslation.TotalLen * 2),
@@ -109,7 +109,7 @@ partial class LodBinaryOverlay
         }
     }
 
-    public IAssetLinkGetter<SkyrimModelAssetType> Level3 =>
+    public AssetLinkGetter<SkyrimModelAssetType> Level3 =>
         new AssetLink<SkyrimModelAssetType>(
             LodBinaryCreateTranslation.ReadString(
                 new MutagenFrame(new MutagenMemoryReadStream(_structData.Slice(LodBinaryCreateTranslation.TotalLen * 3),

@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region File
-        public IAssetLink<SkyrimModelAssetType> File { get; set; } = new AssetLink<SkyrimModelAssetType>();
-        IAssetLinkGetter<SkyrimModelAssetType> ISimpleModelGetter.File => this.File;
+        public AssetLink<SkyrimModelAssetType> File { get; set; } = new AssetLink<SkyrimModelAssetType>();
+        AssetLinkGetter<SkyrimModelAssetType> ISimpleModelGetter.File => this.File;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ISimpleModel>,
         ISimpleModelGetter
     {
-        new IAssetLink<SkyrimModelAssetType> File { get; set; }
+        new AssetLink<SkyrimModelAssetType> File { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
     }
 
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
-        IAssetLinkGetter<SkyrimModelAssetType> File { get; }
+        AssetLinkGetter<SkyrimModelAssetType> File { get; }
         ReadOnlyMemorySlice<Byte>? Data { get; }
 
     }
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region File
         private int? _FileLocation;
-        public IAssetLinkGetter<SkyrimModelAssetType> File => _FileLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimModelAssetType>.Null;
+        public AssetLinkGetter<SkyrimModelAssetType> File => _FileLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimModelAssetType>.Null;
         #endregion
         #region Data
         private int? _DataLocation;

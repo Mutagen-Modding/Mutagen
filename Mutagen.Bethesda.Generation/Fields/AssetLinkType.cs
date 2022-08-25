@@ -1,7 +1,5 @@
 using System.Xml.Linq;
-using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
@@ -56,13 +54,27 @@ public class AssetLinkType : StringType
 
     public override string TypeName(bool getter, bool needsCovariance = false)
     {
-        if (getter)
+        if (needsCovariance)
         {
-            return $"{nameof(IAssetLinkGetter)}<{AssetTypeString}>";
+            if (getter)
+            {
+                return $"{nameof(IAssetLinkGetter)}<{AssetTypeString}>";
+            }
+            else
+            {
+                return $"{nameof(IAssetLink)}<{AssetTypeString}>";
+            }
         }
         else
         {
-            return $"{nameof(IAssetLink)}<{AssetTypeString}>";
+            if (getter)
+            {
+                return $"AssetLinkGetter<{AssetTypeString}>";
+            }
+            else
+            {
+                return $"AssetLink<{AssetTypeString}>";
+            }
         }
     }
 

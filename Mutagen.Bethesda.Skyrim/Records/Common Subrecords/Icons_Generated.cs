@@ -54,13 +54,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LargeIconFilename
-        public IAssetLink<SkyrimTextureAssetType> LargeIconFilename { get; set; } = new AssetLink<SkyrimTextureAssetType>();
-        IAssetLinkGetter<SkyrimTextureAssetType> IIconsGetter.LargeIconFilename => this.LargeIconFilename;
+        public AssetLink<SkyrimTextureAssetType> LargeIconFilename { get; set; } = new AssetLink<SkyrimTextureAssetType>();
+        AssetLinkGetter<SkyrimTextureAssetType> IIconsGetter.LargeIconFilename => this.LargeIconFilename;
         #endregion
         #region SmallIconFilename
-        public IAssetLink<SkyrimTextureAssetType>? SmallIconFilename { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? SmallIconFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IIconsGetter.SmallIconFilename => this.SmallIconFilename;
+        AssetLinkGetter<SkyrimTextureAssetType>? IIconsGetter.SmallIconFilename => this.SmallIconFilename;
         #endregion
 
         #region To String
@@ -459,8 +459,8 @@ namespace Mutagen.Bethesda.Skyrim
         IIconsGetter,
         ILoquiObjectSetter<IIcons>
     {
-        new IAssetLink<SkyrimTextureAssetType> LargeIconFilename { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? SmallIconFilename { get; set; }
+        new AssetLink<SkyrimTextureAssetType> LargeIconFilename { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? SmallIconFilename { get; set; }
     }
 
     public partial interface IIconsGetter :
@@ -476,8 +476,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Icons_Registration.Instance;
-        IAssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? SmallIconFilename { get; }
+        AssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? SmallIconFilename { get; }
 
     }
 
@@ -1177,11 +1177,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region LargeIconFilename
         private int? _LargeIconFilenameLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename => _LargeIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimTextureAssetType>.Null;
+        public AssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename => _LargeIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimTextureAssetType>.Null;
         #endregion
         #region SmallIconFilename
         private int? _SmallIconFilenameLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

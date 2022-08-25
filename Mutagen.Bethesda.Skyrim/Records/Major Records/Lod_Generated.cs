@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Level0
-        public IAssetLink<SkyrimModelAssetType> Level0 { get; set; } = new AssetLink<SkyrimModelAssetType>();
-        IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level0 => this.Level0;
+        public AssetLink<SkyrimModelAssetType> Level0 { get; set; } = new AssetLink<SkyrimModelAssetType>();
+        AssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level0 => this.Level0;
         #endregion
         #region Level0Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,8 +69,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ILodGetter.Level0Extra => this.Level0Extra;
         #endregion
         #region Level1
-        public IAssetLink<SkyrimModelAssetType> Level1 { get; set; } = new AssetLink<SkyrimModelAssetType>();
-        IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level1 => this.Level1;
+        public AssetLink<SkyrimModelAssetType> Level1 { get; set; } = new AssetLink<SkyrimModelAssetType>();
+        AssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level1 => this.Level1;
         #endregion
         #region Level1Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ILodGetter.Level1Extra => this.Level1Extra;
         #endregion
         #region Level2
-        public IAssetLink<SkyrimModelAssetType> Level2 { get; set; } = new AssetLink<SkyrimModelAssetType>();
-        IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level2 => this.Level2;
+        public AssetLink<SkyrimModelAssetType> Level2 { get; set; } = new AssetLink<SkyrimModelAssetType>();
+        AssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level2 => this.Level2;
         #endregion
         #region Level2Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ILodGetter.Level2Extra => this.Level2Extra;
         #endregion
         #region Level3
-        public IAssetLink<SkyrimModelAssetType> Level3 { get; set; } = new AssetLink<SkyrimModelAssetType>();
-        IAssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level3 => this.Level3;
+        public AssetLink<SkyrimModelAssetType> Level3 { get; set; } = new AssetLink<SkyrimModelAssetType>();
+        AssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level3 => this.Level3;
         #endregion
         #region Level3Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -690,13 +690,13 @@ namespace Mutagen.Bethesda.Skyrim
         ILodGetter,
         ILoquiObjectSetter<ILod>
     {
-        new IAssetLink<SkyrimModelAssetType> Level0 { get; set; }
+        new AssetLink<SkyrimModelAssetType> Level0 { get; set; }
         new MemorySlice<Byte>? Level0Extra { get; set; }
-        new IAssetLink<SkyrimModelAssetType> Level1 { get; set; }
+        new AssetLink<SkyrimModelAssetType> Level1 { get; set; }
         new MemorySlice<Byte>? Level1Extra { get; set; }
-        new IAssetLink<SkyrimModelAssetType> Level2 { get; set; }
+        new AssetLink<SkyrimModelAssetType> Level2 { get; set; }
         new MemorySlice<Byte>? Level2Extra { get; set; }
-        new IAssetLink<SkyrimModelAssetType> Level3 { get; set; }
+        new AssetLink<SkyrimModelAssetType> Level3 { get; set; }
         new MemorySlice<Byte>? Level3Extra { get; set; }
     }
 
@@ -713,13 +713,13 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Lod_Registration.Instance;
-        IAssetLinkGetter<SkyrimModelAssetType> Level0 { get; }
+        AssetLinkGetter<SkyrimModelAssetType> Level0 { get; }
         ReadOnlyMemorySlice<Byte>? Level0Extra { get; }
-        IAssetLinkGetter<SkyrimModelAssetType> Level1 { get; }
+        AssetLinkGetter<SkyrimModelAssetType> Level1 { get; }
         ReadOnlyMemorySlice<Byte>? Level1Extra { get; }
-        IAssetLinkGetter<SkyrimModelAssetType> Level2 { get; }
+        AssetLinkGetter<SkyrimModelAssetType> Level2 { get; }
         ReadOnlyMemorySlice<Byte>? Level2Extra { get; }
-        IAssetLinkGetter<SkyrimModelAssetType> Level3 { get; }
+        AssetLinkGetter<SkyrimModelAssetType> Level3 { get; }
         ReadOnlyMemorySlice<Byte>? Level3Extra { get; }
 
     }

@@ -213,9 +213,9 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceLandDefaultsGetter? IWorldspaceGetter.LandDefaults => this.LandDefaults;
         #endregion
         #region MapImage
-        public IAssetLink<SkyrimTextureAssetType>? MapImage { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? MapImage { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.MapImage => this.MapImage;
+        AssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.MapImage => this.MapImage;
         #endregion
         #region CloudModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -270,29 +270,29 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IMusicTypeGetter> IWorldspaceGetter.Music => this.Music;
         #endregion
         #region CanopyShadow
-        public IAssetLink<SkyrimTextureAssetType>? CanopyShadow { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? CanopyShadow { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.CanopyShadow => this.CanopyShadow;
+        AssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.CanopyShadow => this.CanopyShadow;
         #endregion
         #region WaterNoiseTexture
-        public IAssetLink<SkyrimTextureAssetType>? WaterNoiseTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? WaterNoiseTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.WaterNoiseTexture => this.WaterNoiseTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.WaterNoiseTexture => this.WaterNoiseTexture;
         #endregion
         #region HdLodDiffuseTexture
-        public IAssetLink<SkyrimTextureAssetType>? HdLodDiffuseTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? HdLodDiffuseTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.HdLodDiffuseTexture => this.HdLodDiffuseTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.HdLodDiffuseTexture => this.HdLodDiffuseTexture;
         #endregion
         #region HdLodNormalTexture
-        public IAssetLink<SkyrimTextureAssetType>? HdLodNormalTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? HdLodNormalTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.HdLodNormalTexture => this.HdLodNormalTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.HdLodNormalTexture => this.HdLodNormalTexture;
         #endregion
         #region WaterEnvironmentMap
-        public IAssetLink<SkyrimTextureAssetType>? WaterEnvironmentMap { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? WaterEnvironmentMap { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
+        AssetLinkGetter<SkyrimTextureAssetType>? IWorldspaceGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
         #endregion
         #region OffsetData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2051,7 +2051,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IWaterGetter> LodWater { get; set; }
         new Single? LodWaterHeight { get; set; }
         new WorldspaceLandDefaults? LandDefaults { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? MapImage { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? MapImage { get; set; }
         new Model? CloudModel { get; set; }
         new WorldspaceMap? MapData { get; set; }
         new Single WorldMapOffsetScale { get; set; }
@@ -2061,11 +2061,11 @@ namespace Mutagen.Bethesda.Skyrim
         new P2Float ObjectBoundsMin { get; set; }
         new P2Float ObjectBoundsMax { get; set; }
         new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? CanopyShadow { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? WaterNoiseTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? HdLodDiffuseTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? HdLodNormalTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? WaterEnvironmentMap { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? CanopyShadow { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? WaterNoiseTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? HdLodDiffuseTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? HdLodNormalTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? WaterEnvironmentMap { get; set; }
         new MemorySlice<Byte>? OffsetData { get; set; }
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
@@ -2121,7 +2121,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IWaterGetter> LodWater { get; }
         Single? LodWaterHeight { get; }
         IWorldspaceLandDefaultsGetter? LandDefaults { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? MapImage { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? MapImage { get; }
         IModelGetter? CloudModel { get; }
         IWorldspaceMapGetter? MapData { get; }
         Single WorldMapOffsetScale { get; }
@@ -2131,11 +2131,11 @@ namespace Mutagen.Bethesda.Skyrim
         P2Float ObjectBoundsMin { get; }
         P2Float ObjectBoundsMax { get; }
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? CanopyShadow { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? WaterNoiseTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? HdLodDiffuseTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? HdLodNormalTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? WaterEnvironmentMap { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? CanopyShadow { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? WaterNoiseTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? HdLodDiffuseTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? HdLodNormalTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? WaterEnvironmentMap { get; }
         ReadOnlyMemorySlice<Byte>? OffsetData { get; }
         ICellGetter? TopCell { get; }
         Int32 SubCellsTimestamp { get; }
@@ -5851,7 +5851,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MapImage
         private int? _MapImageLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? MapImage => _MapImageLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapImageLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? MapImage => _MapImageLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapImageLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         public IModelGetter? CloudModel { get; private set; }
         #region MapData
@@ -5900,23 +5900,23 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CanopyShadow
         private int? _CanopyShadowLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? CanopyShadow => _CanopyShadowLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CanopyShadowLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? CanopyShadow => _CanopyShadowLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CanopyShadowLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region WaterNoiseTexture
         private int? _WaterNoiseTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region HdLodDiffuseTexture
         private int? _HdLodDiffuseTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? HdLodDiffuseTexture => _HdLodDiffuseTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HdLodDiffuseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? HdLodDiffuseTexture => _HdLodDiffuseTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HdLodDiffuseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region HdLodNormalTexture
         private int? _HdLodNormalTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? HdLodNormalTexture => _HdLodNormalTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HdLodNormalTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? HdLodNormalTexture => _HdLodNormalTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HdLodNormalTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region WaterEnvironmentMap
         private int? _WaterEnvironmentMapLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region OffsetData
         private int? _OffsetDataLocation;

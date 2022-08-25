@@ -380,24 +380,24 @@ namespace Mutagen.Bethesda.Skyrim
         P3Float? IWaterGetter.AngularVelocity => this.AngularVelocity;
         #endregion
         #region NoiseLayerOneTexture
-        public IAssetLink<SkyrimTextureAssetType>? NoiseLayerOneTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? NoiseLayerOneTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.NoiseLayerOneTexture => this.NoiseLayerOneTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.NoiseLayerOneTexture => this.NoiseLayerOneTexture;
         #endregion
         #region NoiseLayerTwoTexture
-        public IAssetLink<SkyrimTextureAssetType>? NoiseLayerTwoTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? NoiseLayerTwoTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.NoiseLayerTwoTexture => this.NoiseLayerTwoTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.NoiseLayerTwoTexture => this.NoiseLayerTwoTexture;
         #endregion
         #region NoiseLayerThreeTexture
-        public IAssetLink<SkyrimTextureAssetType>? NoiseLayerThreeTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? NoiseLayerThreeTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.NoiseLayerThreeTexture => this.NoiseLayerThreeTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.NoiseLayerThreeTexture => this.NoiseLayerThreeTexture;
         #endregion
         #region FlowNormalsNoiseTexture
-        public IAssetLink<SkyrimTextureAssetType>? FlowNormalsNoiseTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? FlowNormalsNoiseTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.FlowNormalsNoiseTexture => this.FlowNormalsNoiseTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IWaterGetter.FlowNormalsNoiseTexture => this.FlowNormalsNoiseTexture;
         #endregion
         #region DNAMDataTypeState
         public Water.DNAMDataType DNAMDataTypeState { get; set; } = default;
@@ -2977,10 +2977,10 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? GNAM { get; set; }
         new P3Float? LinearVelocity { get; set; }
         new P3Float? AngularVelocity { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? NoiseLayerOneTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? NoiseLayerTwoTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? NoiseLayerThreeTexture { get; set; }
-        new IAssetLink<SkyrimTextureAssetType>? FlowNormalsNoiseTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? NoiseLayerOneTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? NoiseLayerTwoTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? NoiseLayerThreeTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? FlowNormalsNoiseTexture { get; set; }
         new Water.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
@@ -3073,10 +3073,10 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? GNAM { get; }
         P3Float? LinearVelocity { get; }
         P3Float? AngularVelocity { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerOneTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerTwoTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerThreeTexture { get; }
-        IAssetLinkGetter<SkyrimTextureAssetType>? FlowNormalsNoiseTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerOneTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerTwoTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerThreeTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? FlowNormalsNoiseTexture { get; }
         Water.DNAMDataType DNAMDataTypeState { get; }
 
     }
@@ -5988,19 +5988,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NoiseLayerOneTexture
         private int? _NoiseLayerOneTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerOneTexture => _NoiseLayerOneTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseLayerOneTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerOneTexture => _NoiseLayerOneTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseLayerOneTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region NoiseLayerTwoTexture
         private int? _NoiseLayerTwoTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerTwoTexture => _NoiseLayerTwoTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseLayerTwoTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerTwoTexture => _NoiseLayerTwoTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseLayerTwoTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region NoiseLayerThreeTexture
         private int? _NoiseLayerThreeTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerThreeTexture => _NoiseLayerThreeTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseLayerThreeTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? NoiseLayerThreeTexture => _NoiseLayerThreeTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseLayerThreeTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region FlowNormalsNoiseTexture
         private int? _FlowNormalsNoiseTextureLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType>? FlowNormalsNoiseTexture => _FlowNormalsNoiseTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlowNormalsNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimTextureAssetType>? FlowNormalsNoiseTexture => _FlowNormalsNoiseTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlowNormalsNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

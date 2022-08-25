@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Icon
-        public IAssetLink<SkyrimTextureAssetType> Icon { get; set; } = new AssetLink<SkyrimTextureAssetType>();
-        IAssetLinkGetter<SkyrimTextureAssetType> IEyesGetter.Icon => this.Icon;
+        public AssetLink<SkyrimTextureAssetType> Icon { get; set; } = new AssetLink<SkyrimTextureAssetType>();
+        AssetLinkGetter<SkyrimTextureAssetType> IEyesGetter.Icon => this.Icon;
         #endregion
         #region Flags
         public Eyes.Flag Flags { get; set; } = default;
@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: INamedRequired, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString Name { get; set; }
-        new IAssetLink<SkyrimTextureAssetType> Icon { get; set; }
+        new AssetLink<SkyrimTextureAssetType> Icon { get; set; }
         new Eyes.Flag Flags { get; set; }
         #region Mutagen
         new Eyes.MajorFlag MajorFlags { get; set; }
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         ITranslatedStringGetter Name { get; }
         #endregion
-        IAssetLinkGetter<SkyrimTextureAssetType> Icon { get; }
+        AssetLinkGetter<SkyrimTextureAssetType> Icon { get; }
         Eyes.Flag Flags { get; }
 
         #region Mutagen
@@ -1619,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Icon
         private int? _IconLocation;
-        public IAssetLinkGetter<SkyrimTextureAssetType> Icon => _IconLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimTextureAssetType>.Null;
+        public AssetLinkGetter<SkyrimTextureAssetType> Icon => _IconLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimTextureAssetType>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;

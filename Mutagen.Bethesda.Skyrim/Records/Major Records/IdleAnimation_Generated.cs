@@ -72,9 +72,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Filename
-        public IAssetLink<SkyrimBehaviorAssetType>? Filename { get; set; }
+        public AssetLink<SkyrimBehaviorAssetType>? Filename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimBehaviorAssetType>? IIdleAnimationGetter.Filename => this.Filename;
+        AssetLinkGetter<SkyrimBehaviorAssetType>? IIdleAnimationGetter.Filename => this.Filename;
         #endregion
         #region AnimationEvent
         public String? AnimationEvent { get; set; }
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new ExtendedList<Condition> Conditions { get; }
-        new IAssetLink<SkyrimBehaviorAssetType>? Filename { get; set; }
+        new AssetLink<SkyrimBehaviorAssetType>? Filename { get; set; }
         new String? AnimationEvent { get; set; }
         new ExtendedList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
         new Byte LoopingSecondsMin { get; set; }
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration StaticRegistration => IdleAnimation_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IAssetLinkGetter<SkyrimBehaviorAssetType>? Filename { get; }
+        AssetLinkGetter<SkyrimBehaviorAssetType>? Filename { get; }
         String? AnimationEvent { get; }
         IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
         Byte LoopingSecondsMin { get; }
@@ -2249,7 +2249,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Filename
         private int? _FilenameLocation;
-        public IAssetLinkGetter<SkyrimBehaviorAssetType>? Filename => _FilenameLocation.HasValue ? new AssetLinkGetter<SkyrimBehaviorAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimBehaviorAssetType>? Filename => _FilenameLocation.HasValue ? new AssetLinkGetter<SkyrimBehaviorAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region AnimationEvent
         private int? _AnimationEventLocation;

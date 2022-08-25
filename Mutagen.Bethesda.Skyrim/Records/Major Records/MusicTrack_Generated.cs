@@ -71,14 +71,14 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IMusicTrackGetter.FadeOut => this.FadeOut;
         #endregion
         #region TrackFilename
-        public IAssetLink<SkyrimMusicAssetType>? TrackFilename { get; set; }
+        public AssetLink<SkyrimMusicAssetType>? TrackFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimMusicAssetType>? IMusicTrackGetter.TrackFilename => this.TrackFilename;
+        AssetLinkGetter<SkyrimMusicAssetType>? IMusicTrackGetter.TrackFilename => this.TrackFilename;
         #endregion
         #region FinaleFilename
-        public IAssetLink<SkyrimMusicAssetType>? FinaleFilename { get; set; }
+        public AssetLink<SkyrimMusicAssetType>? FinaleFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAssetLinkGetter<SkyrimMusicAssetType>? IMusicTrackGetter.FinaleFilename => this.FinaleFilename;
+        AssetLinkGetter<SkyrimMusicAssetType>? IMusicTrackGetter.FinaleFilename => this.FinaleFilename;
         #endregion
         #region LoopData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1003,8 +1003,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MusicTrack.TypeEnum Type { get; set; }
         new Single? Duration { get; set; }
         new Single? FadeOut { get; set; }
-        new IAssetLink<SkyrimMusicAssetType>? TrackFilename { get; set; }
-        new IAssetLink<SkyrimMusicAssetType>? FinaleFilename { get; set; }
+        new AssetLink<SkyrimMusicAssetType>? TrackFilename { get; set; }
+        new AssetLink<SkyrimMusicAssetType>? FinaleFilename { get; set; }
         new MusicTrackLoopData? LoopData { get; set; }
         new ExtendedList<Single>? CuePoints { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
@@ -1031,8 +1031,8 @@ namespace Mutagen.Bethesda.Skyrim
         MusicTrack.TypeEnum Type { get; }
         Single? Duration { get; }
         Single? FadeOut { get; }
-        IAssetLinkGetter<SkyrimMusicAssetType>? TrackFilename { get; }
-        IAssetLinkGetter<SkyrimMusicAssetType>? FinaleFilename { get; }
+        AssetLinkGetter<SkyrimMusicAssetType>? TrackFilename { get; }
+        AssetLinkGetter<SkyrimMusicAssetType>? FinaleFilename { get; }
         IMusicTrackLoopDataGetter? LoopData { get; }
         IReadOnlyList<Single>? CuePoints { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
@@ -2431,11 +2431,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TrackFilename
         private int? _TrackFilenameLocation;
-        public IAssetLinkGetter<SkyrimMusicAssetType>? TrackFilename => _TrackFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimMusicAssetType>? TrackFilename => _TrackFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region FinaleFilename
         private int? _FinaleFilenameLocation;
-        public IAssetLinkGetter<SkyrimMusicAssetType>? FinaleFilename => _FinaleFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        public AssetLinkGetter<SkyrimMusicAssetType>? FinaleFilename => _FinaleFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimMusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         #region LoopData
         private RangeInt32? _LoopDataLocation;

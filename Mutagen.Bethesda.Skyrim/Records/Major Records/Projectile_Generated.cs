@@ -280,8 +280,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ICollisionLayerGetter> IProjectileGetter.CollisionLayer => this.CollisionLayer;
         #endregion
         #region MuzzleFlashModel
-        public IAssetLink<SkyrimModelAssetType> MuzzleFlashModel { get; set; } = new AssetLink<SkyrimModelAssetType>();
-        IAssetLinkGetter<SkyrimModelAssetType> IProjectileGetter.MuzzleFlashModel => this.MuzzleFlashModel;
+        public AssetLink<SkyrimModelAssetType> MuzzleFlashModel { get; set; } = new AssetLink<SkyrimModelAssetType>();
+        AssetLinkGetter<SkyrimModelAssetType> IProjectileGetter.MuzzleFlashModel => this.MuzzleFlashModel;
         #endregion
         #region TextureFilesHashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single RelaunchInterval { get; set; }
         new IFormLink<ITextureSetGetter> DecalData { get; set; }
         new IFormLink<ICollisionLayerGetter> CollisionLayer { get; set; }
-        new IAssetLink<SkyrimModelAssetType> MuzzleFlashModel { get; set; }
+        new AssetLink<SkyrimModelAssetType> MuzzleFlashModel { get; set; }
         new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new UInt32 SoundLevel { get; set; }
         new Projectile.DATADataType DATADataTypeState { get; set; }
@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single RelaunchInterval { get; }
         IFormLinkGetter<ITextureSetGetter> DecalData { get; }
         IFormLinkGetter<ICollisionLayerGetter> CollisionLayer { get; }
-        IAssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel { get; }
+        AssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel { get; }
         ReadOnlyMemorySlice<Byte>? TextureFilesHashes { get; }
         UInt32 SoundLevel { get; }
         Projectile.DATADataType DATADataTypeState { get; }
@@ -3787,7 +3787,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;
-        public IAssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimModelAssetType>.Null;
+        public AssetLinkGetter<SkyrimModelAssetType> MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimModelAssetType>.Null;
         #endregion
         #region TextureFilesHashes
         private int? _TextureFilesHashesLocation;
