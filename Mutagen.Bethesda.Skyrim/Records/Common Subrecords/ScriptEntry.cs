@@ -24,8 +24,8 @@ partial class ScriptEntryCommon
     {
         if (string.IsNullOrWhiteSpace(obj.Name)) yield break;
 
-        yield return new AssetLink<SkyrimScriptCompiledAssetType>(obj.Name);
-        yield return new AssetLink<SkyrimScriptSourceAssetType>(obj.Name);
+        yield return new AssetLink<SkyrimScriptCompiledAssetType>($"{obj.Name}.{SkyrimScriptCompiledAssetType.Instance.FileExtensions.First()}");
+        yield return new AssetLink<SkyrimScriptSourceAssetType>($"{obj.Name}.{SkyrimScriptSourceAssetType.Instance.FileExtensions.First()}");
     }
 }
 
