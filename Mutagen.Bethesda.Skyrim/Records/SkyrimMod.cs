@@ -34,7 +34,7 @@ partial class SkyrimModCommon
         {
             foreach (var translationExtension in SkyrimTranslationAssetType.Instance.FileExtensions)
             {
-                yield return new AssetLink<SkyrimTranslationAssetType>($"{modName}_{language}{translationExtension}");
+                yield return new AssetLink<SkyrimTranslationAssetType>($"{modName}_{language}.{translationExtension}");
             }
         }
     }
