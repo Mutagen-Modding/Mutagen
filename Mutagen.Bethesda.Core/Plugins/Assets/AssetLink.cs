@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Mutagen.Bethesda.Assets;
 
 namespace Mutagen.Bethesda.Plugins.Assets;
@@ -61,6 +62,12 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
     }
     
     public bool IsNull => RawPath == IAssetLinkGetter.NullPath;
+
+    [return: NotNullIfNotNull("asset")]
+    public static implicit operator string? (AssetLinkGetter<TAssetType> asset) => asset?.RawPath;
+
+    [return: NotNullIfNotNull("path")]
+    public static implicit operator AssetLinkGetter<TAssetType>?(string? path) => path == null ? null : new(path);
 }
 
 /// <summary>
@@ -136,4 +143,10 @@ public class AssetLink<TAssetType> :
 
         return IAssetLinkGetter.PathComparer.Compare(RawPath, other.RawPath);
     }
+
+    [return: NotNullIfNotNull("asset")]
+    public static implicit operator string?(AssetLink<TAssetType>? asset) => asset?.RawPath!;
+
+    [return: NotNullIfNotNull("path")]
+    public static implicit operator AssetLink<TAssetType>?(string? path) => path == null ? null : new(path);
 }

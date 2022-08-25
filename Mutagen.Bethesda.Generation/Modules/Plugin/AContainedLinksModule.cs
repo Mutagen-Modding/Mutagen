@@ -1,4 +1,4 @@
-﻿using Loqui.Generation;
+using Loqui.Generation;
 using DictType = Loqui.Generation.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
@@ -29,11 +29,6 @@ public abstract class AContainedLinksModule<TLinkType> : GenerationModule
     
     public virtual async Task<Case> HasLinks(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
     {
-        if (obj.Name == "ObjectTemplate")
-        {
-            int wer = 23;
-            wer++;
-        }
         if (obj.Name == "MajorRecord") return Case.Yes;
         if (obj.IterateFields(includeBaseClass: includeBaseClass).Any((f) => f is TLinkType)) return Case.Yes;
         Case bestCase = Case.No;
