@@ -8989,6 +8989,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             {
+                foreach (var item in obj.Races.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
                 foreach (var item in obj.MagicEffects.EnumerateListedAssetLinks())
                 {
                     yield return item;
@@ -9327,6 +9333,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.TextureSets.RemapListedAssetLinks(mapping);
             obj.HeadParts.RemapListedAssetLinks(mapping);
             obj.Eyes.RemapListedAssetLinks(mapping);
+            obj.Races.RemapListedAssetLinks(mapping);
             obj.MagicEffects.RemapListedAssetLinks(mapping);
             obj.Scrolls.RemapListedAssetLinks(mapping);
             obj.Activators.RemapListedAssetLinks(mapping);
@@ -16705,6 +16712,10 @@ namespace Mutagen.Bethesda.Skyrim
                 yield return item;
             }
             foreach (var item in obj.Eyes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
                 yield return item;
             }

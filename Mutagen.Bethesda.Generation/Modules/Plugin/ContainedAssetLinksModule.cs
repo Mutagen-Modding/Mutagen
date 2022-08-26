@@ -511,7 +511,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         if ((cont.SubTypeGeneration is LoquiType contLoqui
                              && await HasLinks(contLoqui, includeBaseClass: true) != Case.No))
                         {
-                            fg.AppendLine($"obj.{field.Name}{field.NullChar}.ForEach(x => x{field.NullChar}.{nameof(IAssetLinkContainer.RemapListedAssetLinks)}(mapping));");
+                            fg.AppendLine($"obj.{field.Name}{field.NullChar}.ForEach(x => x{contLoqui.NullChar}.{nameof(IAssetLinkContainer.RemapListedAssetLinks)}(mapping));");
                         }
                         else if (cont.SubTypeGeneration is AssetLinkType subAsset)
                         {

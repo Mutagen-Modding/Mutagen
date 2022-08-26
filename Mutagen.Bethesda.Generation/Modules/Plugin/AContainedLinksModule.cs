@@ -43,7 +43,7 @@ public abstract class AContainedLinksModule<TLinkType> : GenerationModule
                     bestCase = subCase;
                 }
             }
-            else if (field is ContainerType cont)
+            else if (field is WrapperType cont)
             {
                 if (cont.SubTypeGeneration is LoquiType contLoqui)
                 {
