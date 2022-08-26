@@ -1,8 +1,6 @@
 using System.Diagnostics;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Assets;
-using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim.Assets;
 
 namespace Mutagen.Bethesda.Skyrim;
@@ -24,8 +22,8 @@ partial class ScriptEntryCommon
     {
         if (string.IsNullOrWhiteSpace(obj.Name)) yield break;
 
-        yield return new AssetLink<SkyrimScriptCompiledAssetType>($"{obj.Name}.{SkyrimScriptCompiledAssetType.Instance.FileExtensions.First()}");
-        yield return new AssetLink<SkyrimScriptSourceAssetType>($"{obj.Name}.{SkyrimScriptSourceAssetType.Instance.FileExtensions.First()}");
+        yield return new AssetLink<SkyrimScriptCompiledAssetType>($"{obj.Name}.{SkyrimScriptCompiledAssetType.PexExtension}");
+        yield return new AssetLink<SkyrimScriptSourceAssetType>($"{obj.Name}.{SkyrimScriptSourceAssetType.PscExtension}");
     }
 }
 
