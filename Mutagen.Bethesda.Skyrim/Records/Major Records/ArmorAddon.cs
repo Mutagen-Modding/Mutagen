@@ -57,23 +57,29 @@ partial class ArmorAddonCommon
 {
     public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType)
     {
+        if (assetType != null && assetType != typeof(SkyrimModelAssetType)) yield break;
+        
         IEnumerable<IAssetLink> TryToAddWeightModel(string path)
         {
             var name = Path.GetFileNameWithoutExtension(path);
             if (name.Length < 3) yield break;
 
-            var dir = Path.GetDirectoryName(path);
-            var nameWithoutEnding = Path.GetFileNameWithoutExtension(path)[..2];
-
-            if (Path.GetFileNameWithoutExtension(path).EndsWith("_1"))
+            IAssetLink ReplaceWeightSuffix(string newFileSuffix)
             {
-                yield return new AssetLink<SkyrimModelAssetType>(
-                    $"{dir}{nameWithoutEnding}_0.{SkyrimModelAssetType.Instance.FileExtensions.First()}");
+                var dir = Path.GetDirectoryName(path);
+                var newFile = $"{name[..^2]}{newFileSuffix}.{SkyrimModelAssetType.Instance.FileExtensions.First()}";
+                return dir == null ? new AssetLink<SkyrimModelAssetType>(newFile) : new AssetLink<SkyrimModelAssetType>(Path.Combine(dir, newFile));
             }
-            else if (Path.GetFileNameWithoutExtension(path).EndsWith("_0"))
+
+            const string zeroSuffix = "_0";
+            const string oneSuffix = "_1";
+            if (name.EndsWith(oneSuffix))
             {
-                yield return new AssetLink<SkyrimModelAssetType>(
-                    $"{dir}{nameWithoutEnding}_1.{SkyrimModelAssetType.Instance.FileExtensions.First()}");
+                yield return ReplaceWeightSuffix(zeroSuffix);
+            }
+            else if (name.EndsWith(zeroSuffix))
+            {
+                yield return ReplaceWeightSuffix(oneSuffix);
             }
         }
 

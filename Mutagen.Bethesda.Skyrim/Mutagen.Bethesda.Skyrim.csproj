@@ -30,7 +30,6 @@
   <ItemGroup>
     <Compile Include="Assets\SkyrimBehaviorAssetType.cs" />
     <Compile Include="Assets\SkyrimBodyTextureAssetType.cs" />
-    <Compile Include="Assets\SkyrimCameraModelType.cs" />
     <Compile Include="Assets\SkyrimDeformedModelAssetType.cs" />
     <Compile Include="Assets\SkyrimModelAssetType.cs" />
     <Compile Include="Assets\SkyrimMusicAssetType.cs" />
@@ -51,6 +50,11 @@
     </Compile>
     <Compile Include="Assets\SkyrimSoundAssetType.cs" />
     <Compile Include="Assets\SkyrimTextureAssetType.cs" />
+    <Compile Include="Assets\SkyrimTranslationAssetType.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Agression.cs" />
@@ -2115,7 +2119,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.50.0.1-dev" />
+    <PackageReference Include="Loqui" Version="2.50.1" />
     <PackageReference Include="Noggog.CSharpExt" Version="2.50.1" />
     <PackageReference Include="NuGetizer" Version="0.8.0">
       <PrivateAssets>all</PrivateAssets>

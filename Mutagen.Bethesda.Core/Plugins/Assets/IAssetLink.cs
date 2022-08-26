@@ -14,7 +14,11 @@ public interface IAssetLinkGetter
     string RawPath { get; }
 
     /// <summary>
-    /// Raw path relative to the game's data directory
+    /// Raw path relative to the game's data directory, as it is commonly known in the Skyrim modding community.
+    /// Example:
+    ///     \Data\Meshes\Clutter\MyMesh.nif => Meshes\Clutter\MyMesh.nif
+    ///     Data\Meshes\Clutter\MyMesh.nif  => Meshes\Clutter\MyMesh.nif
+    ///     Clutter\MyMesh.nif              => Meshes\Clutter\MyMesh.nif
     /// </summary>
     string DataRelativePath { get; }
 
@@ -22,6 +26,16 @@ public interface IAssetLinkGetter
     /// Extension of the asset
     /// </summary>
     string Extension { get; }
+
+    /// <summary>
+    /// Extension of the asset
+    /// </summary>
+    IAssetType Type { get; }
+
+    /// <summary>
+    /// Extension of the asset
+    /// </summary>
+    public bool IsNull { get; }
 }
 
 public interface IAssetLinkGetter<out TAssetType> : IAssetLinkGetter

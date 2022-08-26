@@ -28,6 +28,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     public void Prep(IAssetLinkCache linkCache)
     {
+        if (linkCache.FormLinkCache == _formLinkCache) return;
+
         _formLinkCache = linkCache.FormLinkCache;
 
         var childRaces = new HashSet<FormKey>();
@@ -286,7 +288,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 {
                     yield return Path.Combine
                     (
-                        "Data",
                         "Sound",
                         "Voice",
                         topic.FormKey.ModKey.FileName,
@@ -512,10 +513,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private VoiceContainer GetVoices(IQuestAliasGetter alias, IQuestGetter quest, ModKey currentMod)
     {
         //External Alias
-        var aliasIndex = alias.External?.AliasID;
-        if (aliasIndex != null)
+        if (alias.External != null)
         {
-            return GetVoices(quest, aliasIndex.Value, currentMod);
+            var externalQuest = alias.External.Quest.TryResolve(_formLinkCache);
+            var aliasIndex = alias.External.AliasID;
+            if (externalQuest != null && aliasIndex != null) 
+            {
+                return GetVoices(externalQuest, aliasIndex.Value, currentMod);
+            }
         }
 
         //Additional voice types

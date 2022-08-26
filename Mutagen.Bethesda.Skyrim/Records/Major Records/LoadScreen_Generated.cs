@@ -25,6 +25,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -131,9 +132,9 @@ namespace Mutagen.Bethesda.Skyrim
         P3Float? ILoadScreenGetter.InitialTranslationOffset => this.InitialTranslationOffset;
         #endregion
         #region CameraPath
-        public String? CameraPath { get; set; }
+        public AssetLink<SkyrimModelAssetType>? CameraPath { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILoadScreenGetter.CameraPath => this.CameraPath;
+        AssetLinkGetter<SkyrimModelAssetType>? ILoadScreenGetter.CameraPath => this.CameraPath;
         #endregion
 
         #region To String
@@ -890,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim
         new P3Int16? InitialRotation { get; set; }
         new Int16MinMax? RotationOffsetConstraints { get; set; }
         new P3Float? InitialTranslationOffset { get; set; }
-        new String? CameraPath { get; set; }
+        new AssetLink<SkyrimModelAssetType>? CameraPath { get; set; }
         #region Mutagen
         new LoadScreen.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -928,7 +929,7 @@ namespace Mutagen.Bethesda.Skyrim
         P3Int16? InitialRotation { get; }
         IInt16MinMaxGetter? RotationOffsetConstraints { get; }
         P3Float? InitialTranslationOffset { get; }
-        String? CameraPath { get; }
+        AssetLinkGetter<SkyrimModelAssetType>? CameraPath { get; }
 
         #region Mutagen
         LoadScreen.MajorFlag MajorFlags { get; }
@@ -1256,6 +1257,10 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return item;
                 }
             }
+            if (obj.CameraPath != null)
+            {
+                yield return obj.CameraPath;
+            }
             yield break;
         }
         
@@ -1263,6 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             base.RemapListedAssetLinks(obj, mapping);
             obj.Icons?.RemapListedAssetLinks(mapping);
+            obj.CameraPath?.Relink(mapping);
         }
         
         #endregion
@@ -1349,7 +1355,7 @@ namespace Mutagen.Bethesda.Skyrim
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.InitialTranslationOffset = item.InitialTranslationOffset.Equals(rhs.InitialTranslationOffset);
-            ret.CameraPath = string.Equals(item.CameraPath, rhs.CameraPath);
+            ret.CameraPath = object.Equals(item.CameraPath, rhs.CameraPath);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1541,7 +1547,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.CameraPath) ?? true))
             {
-                if (!string.Equals(lhs.CameraPath, rhs.CameraPath)) return false;
+                if (!object.Equals(lhs.CameraPath, rhs.CameraPath)) return false;
             }
             return true;
         }
@@ -1648,6 +1654,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     yield return item;
                 }
+            }
+            if (obj.CameraPath != null)
+            {
+                yield return obj.CameraPath;
             }
             yield break;
         }
@@ -1819,10 +1829,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.InitialTranslationOffset = rhs.InitialTranslationOffset;
             }
-            if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.CameraPath) ?? true))
-            {
-                item.CameraPath = rhs.CameraPath;
-            }
+            item.CameraPath = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.CameraPath, rhs.CameraPath);
         }
         
         public override void DeepCopyIn(
@@ -2032,7 +2039,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.XNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.CameraPath,
+                item: item.CameraPath?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MOD2),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -2179,7 +2186,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.MOD2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CameraPath = StringBinaryTranslation.Instance.Parse(
+                    item.CameraPath = AssetLinkBinaryTranslation.Instance.Parse<SkyrimModelAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)LoadScreen_FieldIndex.CameraPath;
@@ -2270,7 +2277,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CameraPath
         private int? _CameraPathLocation;
-        public String? CameraPath => _CameraPathLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<SkyrimModelAssetType>? CameraPath => _CameraPathLocation.HasValue ? new AssetLinkGetter<SkyrimModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

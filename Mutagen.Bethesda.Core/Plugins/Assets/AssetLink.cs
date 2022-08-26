@@ -10,6 +10,11 @@ namespace Mutagen.Bethesda.Plugins.Assets;
 public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetType>>, IAssetLinkGetter<TAssetType>
     where TAssetType : IAssetType
 {
+    protected const string DataDirectory = "Data";
+    protected static readonly string DataPrefix = DataDirectory + Path.DirectorySeparatorChar;
+    protected static readonly string DataPrefixAlt = DataDirectory + Path.AltDirectorySeparatorChar;
+    protected static readonly int DataPrefixLength = DataDirectory.Length + 1;
+
     protected string _rawPath;
     protected static readonly TAssetType AssetInstance;
     public static readonly AssetLinkGetter<TAssetType> Null = new();
@@ -31,9 +36,25 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     public string RawPath => _rawPath;
 
-    public string DataRelativePath => Path.Combine(AssetInstance.BaseFolder, RawPath);
+    public string DataRelativePath
+    {
+        get
+        {
+            var trimmedPath = RawPath
+                .TrimStart(Path.DirectorySeparatorChar)
+                .TrimStart(Path.AltDirectorySeparatorChar);
+            
+            //Can be replaced with a version of TrimStart that takes the string comparison into account
+            if (trimmedPath.StartsWith(DataPrefix, IAssetLinkGetter.PathComparison)) trimmedPath = trimmedPath[DataPrefixLength..];
+            else if (trimmedPath.StartsWith(DataPrefixAlt, IAssetLinkGetter.PathComparison)) trimmedPath = trimmedPath[DataPrefixLength..];
+
+            return trimmedPath.StartsWith(AssetInstance.BaseFolder, IAssetLinkGetter.PathComparison) ? trimmedPath : Path.Combine(AssetInstance.BaseFolder, trimmedPath);
+        }
+    }
 
     public string Extension => Path.GetExtension(RawPath).TrimStart('.');
+
+    public IAssetType Type => AssetInstance;
 
     public override string ToString()
     {
@@ -50,7 +71,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     public override int GetHashCode()
     {
-        return IAssetLinkGetter.PathComparer.GetHashCode(RawPath);
+        return IAssetLinkGetter.PathComparer.GetHashCode(DataRelativePath);
     }
 
     public int CompareTo(AssetLinkGetter<TAssetType>? other)
@@ -58,7 +79,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
         if (ReferenceEquals(this, other)) return 0;
         if (ReferenceEquals(null, other)) return 1;
 
-        return IAssetLinkGetter.PathComparer.Compare(RawPath, other.RawPath);
+        return IAssetLinkGetter.PathComparer.Compare(DataRelativePath, other.DataRelativePath);
     }
     
     public bool IsNull => RawPath == IAssetLinkGetter.NullPath;

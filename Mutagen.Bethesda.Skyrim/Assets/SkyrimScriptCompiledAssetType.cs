@@ -7,5 +7,5 @@ public class SkyrimScriptCompiledAssetType : IAssetType
 {
     public static readonly SkyrimScriptCompiledAssetType Instance = new();
     public string BaseFolder => "Scripts";
-    public IEnumerable<string> FileExtensions => new []{ "wav", "xwm" };
+    public IEnumerable<string> FileExtensions => new []{ "pex" };
 }

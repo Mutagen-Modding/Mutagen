@@ -3,7 +3,10 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.Buffers.Binary;
+using System.Text.RegularExpressions;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Skyrim.Assets;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -140,6 +143,26 @@ partial class BookBinaryWriteTranslation
             default:
                 writer.WriteZeros(4);
                 break;
+        }
+    }
+}
+
+partial class BookCommon
+{
+    private const string Pattern = @"<img[\w\s='/,.:]*src='img:\/\/([\w\s=/,.:]*)'[\w\s='/,.:]*>";
+    private static readonly Regex Regex = new(Pattern);
+    
+    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IBookGetter obj, Type? assetType)
+    {
+        if (assetType != null && assetType != typeof(SkyrimTextureAssetType)) yield break;
+        
+        var text = obj.BookText.String;
+        if (string.IsNullOrWhiteSpace(text)) yield break;
+
+        var match = Regex.Match(text);
+        if (match.Success)
+        {
+            yield return new AssetLink<SkyrimTextureAssetType>(match.Groups[1].Value);
         }
     }
 }
