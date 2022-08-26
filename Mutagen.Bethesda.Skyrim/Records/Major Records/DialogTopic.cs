@@ -151,7 +151,6 @@ partial class DialogTopicCommon
         if (assetType != null && assetType != typeof(SkyrimSoundAssetType)) yield break;
         
         var voiceTypeLookup = linkCache.GetComponent<VoiceTypeAssetLookup>();
-        voiceTypeLookup.Prep(linkCache);
         foreach (var voiceTypePath in voiceTypeLookup.GetVoiceTypePaths(obj))
         {
             yield return new AssetLink<SkyrimSoundAssetType>(voiceTypePath);

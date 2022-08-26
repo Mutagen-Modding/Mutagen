@@ -28,8 +28,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     public void Prep(IAssetLinkCache linkCache)
     {
-        if (linkCache.FormLinkCache == _formLinkCache) return;
-
         _formLinkCache = linkCache.FormLinkCache;
 
         var childRaces = new HashSet<FormKey>();
