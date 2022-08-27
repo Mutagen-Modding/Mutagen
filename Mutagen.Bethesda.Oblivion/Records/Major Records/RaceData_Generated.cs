@@ -1564,11 +1564,11 @@ namespace Mutagen.Bethesda.Oblivion
                 item.Unused = rhs.Unused;
             }
             item.Height = new GenderedItem<Single>(
-                male: rhs.Height.Male,
-                female: rhs.Height.Female);
+                male: ,
+                female: );
             item.Weight = new GenderedItem<Single>(
-                male: rhs.Weight.Male,
-                female: rhs.Weight.Female);
+                male: ,
+                female: );
             if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;

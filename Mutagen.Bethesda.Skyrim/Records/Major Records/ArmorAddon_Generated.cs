@@ -2152,11 +2152,11 @@ namespace Mutagen.Bethesda.Skyrim
                 item.Race.SetTo(rhs.Race.FormKeyNullable);
             }
             item.Priority = new GenderedItem<Byte>(
-                male: rhs.Priority.Male,
-                female: rhs.Priority.Female);
+                male: ,
+                female: );
             item.WeightSliderEnabled = new GenderedItem<Boolean>(
-                male: rhs.WeightSliderEnabled.Male,
-                female: rhs.WeightSliderEnabled.Female);
+                male: ,
+                female: );
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;

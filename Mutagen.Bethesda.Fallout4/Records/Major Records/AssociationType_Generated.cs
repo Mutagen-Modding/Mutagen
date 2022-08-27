@@ -1214,8 +1214,8 @@ namespace Mutagen.Bethesda.Fallout4
             else
             {
                 item.ParentTitle = new GenderedItem<String?>(
-                    male: rhsParentTitleitem.Male,
-                    female: rhsParentTitleitem.Female);
+                    male: ,
+                    female: );
             }
             if (rhs.Title is not {} rhsTitleitem)
             {
@@ -1224,8 +1224,8 @@ namespace Mutagen.Bethesda.Fallout4
             else
             {
                 item.Title = new GenderedItem<String?>(
-                    male: rhsTitleitem.Male,
-                    female: rhsTitleitem.Female);
+                    male: ,
+                    female: );
             }
             if ((copyMask?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
             {

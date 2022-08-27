@@ -7297,8 +7297,8 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             item.Height = new GenderedItem<Single>(
-                male: rhs.Height.Male,
-                female: rhs.Height.Female);
+                male: ,
+                female: );
             item.DefaultWeight = new GenderedItem<RaceWeight>(
                 male: rhs.DefaultWeight.Male.DeepCopy(
                     errorMask: errorMask,
