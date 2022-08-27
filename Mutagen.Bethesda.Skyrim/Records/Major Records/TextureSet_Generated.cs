@@ -1676,37 +1676,40 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            if (obj.Diffuse != null)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return obj.Diffuse;
-            }
-            if (obj.NormalOrGloss != null)
-            {
-                yield return obj.NormalOrGloss;
-            }
-            if (obj.EnvironmentMaskOrSubsurfaceTint != null)
-            {
-                yield return obj.EnvironmentMaskOrSubsurfaceTint;
-            }
-            if (obj.GlowOrDetailMap != null)
-            {
-                yield return obj.GlowOrDetailMap;
-            }
-            if (obj.Height != null)
-            {
-                yield return obj.Height;
-            }
-            if (obj.Environment != null)
-            {
-                yield return obj.Environment;
-            }
-            if (obj.Multilayer != null)
-            {
-                yield return obj.Multilayer;
-            }
-            if (obj.BacklightMaskOrSpecular != null)
-            {
-                yield return obj.BacklightMaskOrSpecular;
+                if (obj.Diffuse != null)
+                {
+                    yield return obj.Diffuse;
+                }
+                if (obj.NormalOrGloss != null)
+                {
+                    yield return obj.NormalOrGloss;
+                }
+                if (obj.EnvironmentMaskOrSubsurfaceTint != null)
+                {
+                    yield return obj.EnvironmentMaskOrSubsurfaceTint;
+                }
+                if (obj.GlowOrDetailMap != null)
+                {
+                    yield return obj.GlowOrDetailMap;
+                }
+                if (obj.Height != null)
+                {
+                    yield return obj.Height;
+                }
+                if (obj.Environment != null)
+                {
+                    yield return obj.Environment;
+                }
+                if (obj.Multilayer != null)
+                {
+                    yield return obj.Multilayer;
+                }
+                if (obj.BacklightMaskOrSpecular != null)
+                {
+                    yield return obj.BacklightMaskOrSpecular;
+                }
             }
             yield break;
         }

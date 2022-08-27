@@ -1892,25 +1892,28 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
                 {
-                    yield return item;
+                    foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
-            }
-            if (obj.Model is {} ModelItems)
-            {
-                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.Model is {} ModelItems)
                 {
-                    yield return item;
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
-            }
-            if (obj.Destructible is {} DestructibleItems)
-            {
-                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.Destructible is {} DestructibleItems)
                 {
-                    yield return item;
+                    foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;

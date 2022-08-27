@@ -2545,11 +2545,14 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return additional;
                 }
             }
-            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
                 {
-                    yield return item;
+                    foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;

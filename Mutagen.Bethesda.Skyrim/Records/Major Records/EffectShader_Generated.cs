@@ -6325,25 +6325,28 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            if (obj.FillTexture != null)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return obj.FillTexture;
-            }
-            if (obj.ParticleShaderTexture != null)
-            {
-                yield return obj.ParticleShaderTexture;
-            }
-            if (obj.HolesTexture != null)
-            {
-                yield return obj.HolesTexture;
-            }
-            if (obj.MembranePaletteTexture != null)
-            {
-                yield return obj.MembranePaletteTexture;
-            }
-            if (obj.ParticlePaletteTexture != null)
-            {
-                yield return obj.ParticlePaletteTexture;
+                if (obj.FillTexture != null)
+                {
+                    yield return obj.FillTexture;
+                }
+                if (obj.ParticleShaderTexture != null)
+                {
+                    yield return obj.ParticleShaderTexture;
+                }
+                if (obj.HolesTexture != null)
+                {
+                    yield return obj.HolesTexture;
+                }
+                if (obj.MembranePaletteTexture != null)
+                {
+                    yield return obj.MembranePaletteTexture;
+                }
+                if (obj.ParticlePaletteTexture != null)
+                {
+                    yield return obj.ParticlePaletteTexture;
+                }
             }
             yield break;
         }

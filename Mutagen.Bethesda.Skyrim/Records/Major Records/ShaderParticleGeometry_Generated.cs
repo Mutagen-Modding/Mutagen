@@ -1682,9 +1682,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            if (obj.ParticleTexture != null)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return obj.ParticleTexture;
+                if (obj.ParticleTexture != null)
+                {
+                    yield return obj.ParticleTexture;
+                }
             }
             yield break;
         }

@@ -9022,18 +9022,21 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IOblivionModGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
                 {
-                    yield return item;
+                    foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
-            }
-            if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
-            {
-                foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
                 {
-                    yield return item;
+                    foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;

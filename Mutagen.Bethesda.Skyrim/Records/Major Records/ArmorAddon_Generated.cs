@@ -2101,18 +2101,21 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return additional;
                 }
             }
-            if (obj.WorldModel is {} WorldModelItem)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                if (obj.WorldModel is {} WorldModelItem)
                 {
-                    yield return item;
+                    foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                    {
+                        yield return item;
+                    }
                 }
-            }
-            if (obj.FirstPersonModel is {} FirstPersonModelItem)
-            {
-                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                if (obj.FirstPersonModel is {} FirstPersonModelItem)
                 {
-                    yield return item;
+                    foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;

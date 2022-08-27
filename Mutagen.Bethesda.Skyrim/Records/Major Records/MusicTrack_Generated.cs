@@ -1775,13 +1775,16 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            if (obj.TrackFilename != null)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return obj.TrackFilename;
-            }
-            if (obj.FinaleFilename != null)
-            {
-                yield return obj.FinaleFilename;
+                if (obj.TrackFilename != null)
+                {
+                    yield return obj.TrackFilename;
+                }
+                if (obj.FinaleFilename != null)
+                {
+                    yield return obj.FinaleFilename;
+                }
             }
             yield break;
         }

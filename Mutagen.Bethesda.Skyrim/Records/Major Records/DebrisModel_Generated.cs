@@ -1073,7 +1073,10 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDebrisModelGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            yield return obj.ModelFilename;
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                yield return obj.ModelFilename;
+            }
             yield break;
         }
         

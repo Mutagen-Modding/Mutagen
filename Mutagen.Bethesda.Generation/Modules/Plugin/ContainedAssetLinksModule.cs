@@ -110,174 +110,18 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         }
                     }
                 }
+
+                var subFg = new StructuredStringBuilder();
+                await YieldReturnListedAssets(obj, subFg);
+                if (subFg.Count > 0)
+                {
+                    fg.AppendLine($"if (queryCategories.HasFlag({nameof(AssetLinkQuery)}.{nameof(AssetLinkQuery.Listed)}))");
+                    using (fg.CurlyBrace())
+                    {
+                        fg.AppendLines(subFg);
+                    }
+                }
                 
-                var startCount = fg.Count;
-                foreach (var field in obj.IterateFields(nonIntegrated: true))
-                {
-                    if (field is AssetLinkType link)
-                    {
-                        if (field.Nullable)
-                        {
-                            fg.AppendLine($"if (obj.{field.Name} != null)");
-                            using (fg.CurlyBrace())
-                            {
-                                fg.AppendLine($"yield return obj.{field.Name};");
-                            }
-                        }
-                        else
-                        {
-                            fg.AppendLine($"yield return obj.{field.Name};");
-                        }
-                    }
-                    else if (field is LoquiType loqui)
-                    {
-                        Case subLinkCase;
-                        if (loqui.TargetObjectGeneration != null)
-                        {
-                            subLinkCase = await HasLinks(loqui, includeBaseClass: true);
-                        }
-                        else
-                        {
-                            subLinkCase = Case.Maybe;
-                        }
-                        if (subLinkCase == Case.No) continue;
-                        var doBrace = true;
-                        var access = $"obj.{field.Name}";
-                        if (subLinkCase == Case.Maybe)
-                        {
-                            fg.AppendLine($"if (obj.{field.Name} is {nameof(IAssetLinkContainerGetter)} {field.Name}linkCont)");
-                            access = $"{field.Name}linkCont";
-                        }
-                        else if (loqui.Nullable)
-                        {
-                            fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Items)");
-                            access = $"{field.Name}Items";
-                        }
-                        else
-                        {
-                            doBrace = false;
-                        }
-                        using (fg.CurlyBrace(doIt: doBrace))
-                        {
-                            fg.AppendLine($"foreach (var item in {access}.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))");
-                            using (fg.CurlyBrace())
-                            {
-                                fg.AppendLine($"yield return item;");
-                            }
-                        }
-                    }
-                    else if (field is WrapperType cont)
-                    {
-                        var access = $"obj.{field.Name}";
-                        if (field.Nullable)
-                        {
-                            access = $"{field.Name}Item";
-                        }
-
-                        var subFg = new StructuredStringBuilder();
-                        if (cont.SubTypeGeneration is LoquiType contLoqui
-                            && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
-                        {
-                            string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
-                            var linktype = await HasLinks(contLoqui, includeBaseClass: true);
-                            if (linktype != Case.No)
-                            {
-                                switch (linktype)
-                                {
-                                    case Case.Yes:
-                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
-                                        break;
-                                    case Case.Maybe:
-                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IAssetLinkContainerGetter)}>()");
-                                        using (subFg.IncreaseDepth())
-                                        {
-                                            subFg.AppendLine($".SelectMany((f) => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
-                                        }
-                                        break;
-                                    default:
-                                        throw new NotImplementedException();
-                                }
-                            }
-                        }
-                        else if (cont.SubTypeGeneration is AssetLinkType assetLinkType)
-                        {
-                            string filterNulls = assetLinkType.IsNullable || (cont is GenderedType && ((GenderedType)cont).ItemNullable) ? ".NotNull()" : null;
-                            subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
-                        }
-                        else
-                        {
-                            continue;
-                        }
-
-                        if (field.Nullable)
-                        {
-                            fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
-                        }
-                        using (fg.CurlyBrace(doIt: field.Nullable))
-                        {
-                            fg.AppendLines(subFg);
-                            using (fg.CurlyBrace())
-                            {
-                                fg.AppendLine($"yield return item;");
-                            }
-                        }
-                    }
-                    else if (field is DictType dict)
-                    {
-                        if (dict.Mode == DictMode.KeyedValue
-                            && dict.ValueTypeGen is LoquiType dictLoqui
-                            && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
-                        {
-                            var linktype = await HasLinks(dictLoqui, includeBaseClass: true);
-                            switch (linktype)
-                            {
-                                case Case.Yes:
-                                    fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.SelectMany(f => f.{nameof(IAssetLinkContainer.EnumerateAssetLinks)}(linkCache, includeImplicit: includeImplicit))");
-                                    break;
-                                case Case.Maybe:
-                                    fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IAssetLinkContainerGetter)}>()");
-                                    using (fg.IncreaseDepth())
-                                    {
-                                        fg.AppendLine($".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        else if (dict.ValueTypeGen is AssetLinkType)
-                        {
-                            fg.AppendLine($"foreach (var item in obj.{field.Name}.Values)");
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                        using (fg.CurlyBrace())
-                        {
-                            fg.AppendLine($"yield return item;");
-                        }
-                    }
-                    else if (field is BreakType breakType)
-                    {
-                        if (fg.Count > startCount)
-                        {
-                            fg.AppendLine($"if (obj.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index})) yield break;");
-                        }
-                    }
-                }
-                // Remove trailing breaks
-                while (fg.Count > startCount)
-                {
-                    if (fg[fg.Count - 1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
-                    {
-                        fg.RemoveAt(fg.Count - 1);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
                 fg.AppendLine("yield break;");
             }
             fg.AppendLine();
@@ -553,6 +397,195 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 }
             }
             fg.AppendLine();
+        }
+    }
+
+    private async Task YieldReturnListedAssets(ObjectGeneration obj, StructuredStringBuilder fg)
+    {
+        var startCount = fg.Count;
+        foreach (var field in obj.IterateFields(nonIntegrated: true))
+        {
+            if (field is AssetLinkType link)
+            {
+                if (field.Nullable)
+                {
+                    fg.AppendLine($"if (obj.{field.Name} != null)");
+                    using (fg.CurlyBrace())
+                    {
+                        fg.AppendLine($"yield return obj.{field.Name};");
+                    }
+                }
+                else
+                {
+                    fg.AppendLine($"yield return obj.{field.Name};");
+                }
+            }
+            else if (field is LoquiType loqui)
+            {
+                Case subLinkCase;
+                if (loqui.TargetObjectGeneration != null)
+                {
+                    subLinkCase = await HasLinks(loqui, includeBaseClass: true);
+                }
+                else
+                {
+                    subLinkCase = Case.Maybe;
+                }
+
+                if (subLinkCase == Case.No) continue;
+                var doBrace = true;
+                var access = $"obj.{field.Name}";
+                if (subLinkCase == Case.Maybe)
+                {
+                    fg.AppendLine($"if (obj.{field.Name} is {nameof(IAssetLinkContainerGetter)} {field.Name}linkCont)");
+                    access = $"{field.Name}linkCont";
+                }
+                else if (loqui.Nullable)
+                {
+                    fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Items)");
+                    access = $"{field.Name}Items";
+                }
+                else
+                {
+                    doBrace = false;
+                }
+
+                using (fg.CurlyBrace(doIt: doBrace))
+                {
+                    fg.AppendLine(
+                        $"foreach (var item in {access}.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))");
+                    using (fg.CurlyBrace())
+                    {
+                        fg.AppendLine($"yield return item;");
+                    }
+                }
+            }
+            else if (field is WrapperType cont)
+            {
+                var access = $"obj.{field.Name}";
+                if (field.Nullable)
+                {
+                    access = $"{field.Name}Item";
+                }
+
+                var subFg = new StructuredStringBuilder();
+                if (cont.SubTypeGeneration is LoquiType contLoqui
+                    && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
+                {
+                    string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
+                    var linktype = await HasLinks(contLoqui, includeBaseClass: true);
+                    if (linktype != Case.No)
+                    {
+                        switch (linktype)
+                        {
+                            case Case.Yes:
+                                subFg.AppendLine(
+                                    $"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
+                                break;
+                            case Case.Maybe:
+                                subFg.AppendLine(
+                                    $"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IAssetLinkContainerGetter)}>()");
+                                using (subFg.IncreaseDepth())
+                                {
+                                    subFg.AppendLine(
+                                        $".SelectMany((f) => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
+                                }
+
+                                break;
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                else if (cont.SubTypeGeneration is AssetLinkType assetLinkType)
+                {
+                    string filterNulls =
+                        assetLinkType.IsNullable || (cont is GenderedType && ((GenderedType)cont).ItemNullable)
+                            ? ".NotNull()"
+                            : null;
+                    subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (field.Nullable)
+                {
+                    fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
+                }
+
+                using (fg.CurlyBrace(doIt: field.Nullable))
+                {
+                    fg.AppendLines(subFg);
+                    using (fg.CurlyBrace())
+                    {
+                        fg.AppendLine($"yield return item;");
+                    }
+                }
+            }
+            else if (field is DictType dict)
+            {
+                if (dict.Mode == DictMode.KeyedValue
+                    && dict.ValueTypeGen is LoquiType dictLoqui
+                    && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
+                {
+                    var linktype = await HasLinks(dictLoqui, includeBaseClass: true);
+                    switch (linktype)
+                    {
+                        case Case.Yes:
+                            fg.AppendLine(
+                                $"foreach (var item in obj.{field.Name}.Items.SelectMany(f => f.{nameof(IAssetLinkContainer.EnumerateAssetLinks)}(linkCache, includeImplicit: includeImplicit))");
+                            break;
+                        case Case.Maybe:
+                            fg.AppendLine(
+                                $"foreach (var item in obj.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IAssetLinkContainerGetter)}>()");
+                            using (fg.IncreaseDepth())
+                            {
+                                fg.AppendLine(
+                                    $".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
+                            }
+
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else if (dict.ValueTypeGen is AssetLinkType)
+                {
+                    fg.AppendLine($"foreach (var item in obj.{field.Name}.Values)");
+                }
+                else
+                {
+                    continue;
+                }
+
+                using (fg.CurlyBrace())
+                {
+                    fg.AppendLine($"yield return item;");
+                }
+            }
+            else if (field is BreakType breakType)
+            {
+                if (fg.Count > startCount)
+                {
+                    fg.AppendLine(
+                        $"if (obj.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index})) yield break;");
+                }
+            }
+        }
+
+        // Remove trailing breaks
+        while (fg.Count > startCount)
+        {
+            if (fg[fg.Count - 1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
+            {
+                fg.RemoveAt(fg.Count - 1);
+            }
+            else
+            {
+                break;
+            }
         }
     }
 

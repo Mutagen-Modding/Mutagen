@@ -1182,7 +1182,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            yield return obj.Icon;
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                yield return obj.Icon;
+            }
             yield break;
         }
         

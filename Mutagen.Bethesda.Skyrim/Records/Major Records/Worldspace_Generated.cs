@@ -4628,48 +4628,51 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            if (obj.MapImage != null)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return obj.MapImage;
-            }
-            if (obj.CloudModel is {} CloudModelItems)
-            {
-                foreach (var item in CloudModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.MapImage != null)
+                {
+                    yield return obj.MapImage;
+                }
+                if (obj.CloudModel is {} CloudModelItems)
+                {
+                    foreach (var item in CloudModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.CanopyShadow != null)
+                {
+                    yield return obj.CanopyShadow;
+                }
+                if (obj.WaterNoiseTexture != null)
+                {
+                    yield return obj.WaterNoiseTexture;
+                }
+                if (obj.HdLodDiffuseTexture != null)
+                {
+                    yield return obj.HdLodDiffuseTexture;
+                }
+                if (obj.HdLodNormalTexture != null)
+                {
+                    yield return obj.HdLodNormalTexture;
+                }
+                if (obj.WaterEnvironmentMap != null)
+                {
+                    yield return obj.WaterEnvironmentMap;
+                }
+                if (obj.TopCell is IAssetLinkContainerGetter TopCelllinkCont)
+                {
+                    foreach (var item in TopCelllinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
                 {
                     yield return item;
                 }
-            }
-            if (obj.CanopyShadow != null)
-            {
-                yield return obj.CanopyShadow;
-            }
-            if (obj.WaterNoiseTexture != null)
-            {
-                yield return obj.WaterNoiseTexture;
-            }
-            if (obj.HdLodDiffuseTexture != null)
-            {
-                yield return obj.HdLodDiffuseTexture;
-            }
-            if (obj.HdLodNormalTexture != null)
-            {
-                yield return obj.HdLodNormalTexture;
-            }
-            if (obj.WaterEnvironmentMap != null)
-            {
-                yield return obj.WaterEnvironmentMap;
-            }
-            if (obj.TopCell is IAssetLinkContainerGetter TopCelllinkCont)
-            {
-                foreach (var item in TopCelllinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-            }
-            foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-            {
-                yield return item;
             }
             yield break;
         }

@@ -1929,9 +1929,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            foreach (var item in obj.SoundFiles)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return item;
+                foreach (var item in obj.SoundFiles)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }

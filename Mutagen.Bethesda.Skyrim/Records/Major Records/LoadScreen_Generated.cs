@@ -1648,16 +1648,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            if (obj.Icons is {} IconsItems)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.Icons is {} IconsItems)
                 {
-                    yield return item;
+                    foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
-            }
-            if (obj.CameraPath != null)
-            {
-                yield return obj.CameraPath;
+                if (obj.CameraPath != null)
+                {
+                    yield return obj.CameraPath;
+                }
             }
             yield break;
         }

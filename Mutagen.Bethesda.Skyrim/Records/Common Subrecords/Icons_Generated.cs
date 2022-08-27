@@ -915,10 +915,13 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IIconsGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            yield return obj.LargeIconFilename;
-            if (obj.SmallIconFilename != null)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return obj.SmallIconFilename;
+                yield return obj.LargeIconFilename;
+                if (obj.SmallIconFilename != null)
+                {
+                    yield return obj.SmallIconFilename;
+                }
             }
             yield break;
         }

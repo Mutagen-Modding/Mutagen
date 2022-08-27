@@ -929,7 +929,10 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISimpleModelGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            yield return obj.File;
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                yield return obj.File;
+            }
             yield break;
         }
         

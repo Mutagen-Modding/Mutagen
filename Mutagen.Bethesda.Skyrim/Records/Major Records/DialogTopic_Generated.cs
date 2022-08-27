@@ -2317,9 +2317,12 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return additional;
                 }
             }
-            foreach (var item in obj.Responses.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return item;
+                foreach (var item in obj.Responses.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }

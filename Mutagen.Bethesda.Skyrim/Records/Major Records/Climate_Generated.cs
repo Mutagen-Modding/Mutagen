@@ -1743,19 +1743,22 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            if (obj.SunTexture != null)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return obj.SunTexture;
-            }
-            if (obj.SunGlareTexture != null)
-            {
-                yield return obj.SunGlareTexture;
-            }
-            if (obj.Model is {} ModelItems)
-            {
-                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.SunTexture != null)
                 {
-                    yield return item;
+                    yield return obj.SunTexture;
+                }
+                if (obj.SunGlareTexture != null)
+                {
+                    yield return obj.SunGlareTexture;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;

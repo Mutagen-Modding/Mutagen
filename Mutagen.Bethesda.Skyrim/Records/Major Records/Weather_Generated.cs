@@ -4819,15 +4819,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            foreach (var item in obj.CloudTextures.NotNull())
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return item;
-            }
-            if (obj.Aurora is {} AuroraItems)
-            {
-                foreach (var item in AuroraItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in obj.CloudTextures.NotNull())
                 {
                     yield return item;
+                }
+                if (obj.Aurora is {} AuroraItems)
+                {
+                    foreach (var item in AuroraItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;

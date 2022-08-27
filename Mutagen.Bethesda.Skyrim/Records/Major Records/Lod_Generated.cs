@@ -1244,10 +1244,13 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILodGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            yield return obj.Level0;
-            yield return obj.Level1;
-            yield return obj.Level2;
-            yield return obj.Level3;
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                yield return obj.Level0;
+                yield return obj.Level1;
+                yield return obj.Level2;
+                yield return obj.Level3;
+            }
             yield break;
         }
         
