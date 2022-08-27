@@ -16,7 +16,7 @@ public static class FormLinkMixIn
     [Obsolete("Use ToLink instead")]
     public static IFormLink<TGetter> AsLink<TSetter, TGetter>(this TSetter rec)
         where TGetter : class, IMajorRecordGetter
-        where TSetter : IMapsToGetter<TGetter>, TGetter
+        where TSetter : IMapsToGetter<TGetter>, TGetter, IMajorRecordGetter
     {
         return new FormLink<TGetter>(rec.FormKey);
     }
@@ -28,7 +28,7 @@ public static class FormLinkMixIn
     /// </summary>
     public static IFormLink<TGetter> ToLink<TSetter, TGetter>(this TSetter rec)
         where TGetter : class, IMajorRecordGetter
-        where TSetter : IMapsToGetter<TGetter>, TGetter
+        where TSetter : IMapsToGetter<TGetter>, TGetter, IMajorRecordGetter
     {
         return new FormLink<TGetter>(rec.FormKey);
     }
@@ -41,7 +41,7 @@ public static class FormLinkMixIn
     [Obsolete("Use ToLinkGetter instead")]
     public static IFormLinkGetter<TGetter> AsLinkGetter<TSetter, TGetter>(this TSetter rec)
         where TGetter : class, IMajorRecordGetter
-        where TSetter : IMapsToGetter<TGetter>, TGetter
+        where TSetter : IMapsToGetter<TGetter>, TGetter, IMajorRecordGetter
     {
         return new FormLink<TGetter>(rec.FormKey);
     }
@@ -53,7 +53,7 @@ public static class FormLinkMixIn
     /// </summary>
     public static IFormLinkGetter<TGetter> ToLinkGetter<TSetter, TGetter>(this TSetter rec)
         where TGetter : class, IMajorRecordGetter
-        where TSetter : IMapsToGetter<TGetter>, TGetter
+        where TSetter : IMapsToGetter<TGetter>, TGetter, IMajorRecordGetter
     {
         return new FormLink<TGetter>(rec.FormKey);
     }
@@ -168,7 +168,7 @@ public static class FormLinkMixIn
     [Obsolete("Use ToNullableLink instead")]
     public static IFormLinkNullable<TGetter> AsNullableLink<TSetter, TGetter>(this TSetter rec)
         where TGetter : class, IMajorRecordGetter
-        where TSetter : IMapsToGetter<TGetter>, TGetter
+        where TSetter : IMapsToGetter<TGetter>, TGetter, IMajorRecordGetter
     {
         return new FormLinkNullable<TGetter>(rec.FormKey);
     }
@@ -180,7 +180,7 @@ public static class FormLinkMixIn
     /// </summary>
     public static IFormLinkNullable<TGetter> ToNullableLink<TSetter, TGetter>(this TSetter rec)
         where TGetter : class, IMajorRecordGetter
-        where TSetter : IMapsToGetter<TGetter>, TGetter
+        where TSetter : IMapsToGetter<TGetter>, TGetter, IMajorRecordGetter
     {
         return new FormLinkNullable<TGetter>(rec.FormKey);
     }
@@ -193,7 +193,7 @@ public static class FormLinkMixIn
     [Obsolete("Use ToNullableLinkGetter instead")]
     public static IFormLinkNullableGetter<TGetter> AsNullableLinkGetter<TSetter, TGetter>(this TSetter rec)
         where TGetter : class, IMajorRecordGetter
-        where TSetter : IMapsToGetter<TGetter>, TGetter
+        where TSetter : IMapsToGetter<TGetter>, TGetter, IMajorRecordGetter
     {
         return new FormLinkNullable<TGetter>(rec.FormKey);
     }
@@ -205,7 +205,7 @@ public static class FormLinkMixIn
     /// </summary>
     public static IFormLinkNullableGetter<TGetter> ToNullableLinkGetter<TSetter, TGetter>(this TSetter rec)
         where TGetter : class, IMajorRecordGetter
-        where TSetter : IMapsToGetter<TGetter>, TGetter
+        where TSetter : IMapsToGetter<TGetter>, TGetter, IMajorRecordGetter
     {
         return new FormLinkNullable<TGetter>(rec.FormKey);
     }
