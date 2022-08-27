@@ -550,7 +550,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             DamageTypeItem_Registration.Instance,
             ANavigationMapInfoParent_Registration.Instance,
             NavigationMapInfoWorldspaceParent_Registration.Instance,
-            NavigationMapInfoCellParent_Registration.Instance
+            NavigationMapInfoCellParent_Registration.Instance,
+            UnknownObjectModification_Registration.Instance
         );
     }
 }

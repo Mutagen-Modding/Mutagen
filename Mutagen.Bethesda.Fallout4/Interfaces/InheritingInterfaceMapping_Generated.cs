@@ -109,6 +109,11 @@ internal class Fallout4InheritingInterfaceMapping : IInterfaceMapping
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(IPlacedTrapGetter)] = dict[typeof(IPlacedTrap)] with { Setter = false };
+        dict[typeof(IUnknownObjectModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IUnknownObjectModificationGetter)] = dict[typeof(IUnknownObjectModification)] with { Setter = false };
         dict[typeof(IWeaponModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             AObjectModification_Registration.Instance,

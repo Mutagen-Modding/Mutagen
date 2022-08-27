@@ -9253,6 +9253,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IObjectModificationGetter":
                 case "IObjectModification":
                 case "IObjectModificationInternal":
+                case "UnknownObjectModification":
+                case "IUnknownObjectModificationGetter":
+                case "IUnknownObjectModification":
+                case "IUnknownObjectModificationInternal":
                     obj.ObjectModifications.Remove(
                         type: type,
                         keys: keys);

@@ -46,7 +46,7 @@
   </Object>
   <Object name="ArmorModification" recordType="OMOD" objType="Record" baseClass="AObjectModification" GUID="c762d78b-2491-4f14-a1fd-e2373071b5e1" ID="656">
     <Fields>
-      <List name="Properties" binary="NoGeneration" >
+      <List name="Properties" binary="NoGeneration">
         <Ref>
           <Direct refName="AObjectModProperty">
             <GenericSpecification Definition="Armor.Property" TypeToSpecify="T" />
@@ -57,7 +57,7 @@
   </Object>
   <Object name="NpcModification" recordType="OMOD" objType="Record" baseClass="AObjectModification" GUID="03f6227f-e295-4869-bc28-e65a6001f00e" ID="657">
     <Fields>
-      <List name="Properties" binary="NoGeneration" >
+      <List name="Properties" binary="NoGeneration">
         <Ref>
           <Direct refName="AObjectModProperty">
             <GenericSpecification Definition="Npc.Property" TypeToSpecify="T" />
@@ -68,7 +68,7 @@
   </Object>
   <Object name="WeaponModification" recordType="OMOD" objType="Record" baseClass="AObjectModification" GUID="3a0bc5ec-32af-4381-9283-a444c89cfce2" ID="658">
     <Fields>
-      <List name="Properties" binary="NoGeneration" >
+      <List name="Properties" binary="NoGeneration">
         <Ref>
           <Direct refName="AObjectModProperty">
             <GenericSpecification Definition="Weapon.Property" TypeToSpecify="T" />
@@ -79,13 +79,25 @@
   </Object>
   <Object name="ObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification" GUID="ea6acf0a-4fa1-474f-bb0d-95dc4cf7bd97" ID="659">
     <Fields>
-      <List name="Properties" binary="NoGeneration" >
+      <List name="Properties" binary="NoGeneration">
         <Ref>
           <Direct refName="AObjectModProperty">
             <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
           </Direct>
         </Ref>
       </List>
+    </Fields>
+  </Object>
+  <Object name="UnknownObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification" GUID="dcb6dc31-9319-46f3-b97e-4f27251a3af4" ID="688">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <RecordType name="ModificationType" binary="NoGeneration" />
     </Fields>
   </Object>
 </Loqui>
