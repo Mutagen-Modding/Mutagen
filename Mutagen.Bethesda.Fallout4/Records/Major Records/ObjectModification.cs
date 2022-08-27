@@ -52,7 +52,7 @@ partial class AObjectModification
                 RecordTypeInts.NPC_ => NpcModification.CreateFromBinary(frame),
                 RecordTypeInts.WEAP => WeaponModification.CreateFromBinary(frame),
                 RecordTypeInts.NONE => ObjectModification.CreateFromBinary(frame),
-                _ => throw new MalformedDataException($"Unknown object modification type: {type}"),
+                _ => UnknownObjectModification.CreateFromBinary(frame),
             };
         }
         catch (Exception e)
@@ -75,8 +75,7 @@ partial class AObjectModificationBinaryCreateTranslation
         var includeCount = frame.ReadInt32();
         var propertyCount = frame.ReadInt32();
         item.Unknown = frame.ReadUInt16();
-        // FormType already parsed
-        frame.Position += 4;
+        var formType = new RecordType(frame.ReadInt32());
         item.MaxRank = frame.ReadUInt8();
         item.LevelTierScaledOffset = frame.ReadUInt8();
         item.AttachPoint.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -112,6 +111,11 @@ partial class AObjectModificationBinaryCreateTranslation
             case IObjectModificationInternal objMod:
                 objMod.Properties.SetTo(
                     ObjectTemplateBinaryCreateTranslation<AObjectModification.NoneProperty>.ReadProperties(frame, propertyCount));
+                break;
+            case IUnknownObjectModificationInternal unknown:
+                unknown.Properties.SetTo(
+                    ObjectTemplateBinaryCreateTranslation<AObjectModification.NoneProperty>.ReadProperties(frame, propertyCount));
+                unknown.ModificationType = formType;
                 break;
             case DeletedObjectModification del:
                 if (!del.IsDeleted)
@@ -168,6 +172,14 @@ partial class AObjectModificationBinaryWriteTranslation
             case IObjectModificationGetter objMod:
                 properties = objMod.Properties;
                 type = RecordTypes.NONE;
+                export = (subFrame, item, _) => 
+                    ObjectTemplateBinaryWriteTranslation.WriteProperty<AObjectModification.NoneProperty>(
+                        writer,
+                        (IAObjectModPropertyGetter<AObjectModification.NoneProperty>)item);
+                break;
+            case IUnknownObjectModificationGetter objMod:
+                properties = objMod.Properties;
+                type = objMod.ModificationType;
                 export = (subFrame, item, _) => 
                     ObjectTemplateBinaryWriteTranslation.WriteProperty<AObjectModification.NoneProperty>(
                         writer,
@@ -303,6 +315,14 @@ partial class AObjectModificationBinaryOverlay
                     count: propertyCount,
                     getter: (s, p) => ObjectTemplateBinaryCreateTranslation<AObjectModification.NoneProperty>.ReadProperty(stream.MetaData.MasterReferences, s));
                 break;
+            case UnknownObjectModificationBinaryOverlay obj:
+                obj.Properties = BinaryOverlayList.FactoryByCount(
+                    _dataBytes.Slice(includesEndingPos, checked((int)(24 * propertyCount))),
+                    _package,
+                    itemLength: 24,
+                    count: propertyCount,
+                    getter: (s, p) => ObjectTemplateBinaryCreateTranslation<AObjectModification.NoneProperty>.ReadProperty(stream.MetaData.MasterReferences, s));
+                break;
             default:
                 throw new NotImplementedException();
         }
@@ -321,14 +341,21 @@ partial class AObjectModificationBinaryOverlay
             throw new MalformedDataException($"Could not find DATA subrecord");
         }
         var type = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(data.Content.Slice(10)));
-        return type.TypeInt switch
+        switch (type.TypeInt)
         {
-            RecordTypeInts.ARMO => ArmorModificationBinaryOverlay.ArmorModificationFactory(stream, package),
-            RecordTypeInts.NPC_ => NpcModificationBinaryOverlay.NpcModificationFactory(stream, package),
-            RecordTypeInts.WEAP => WeaponModificationBinaryOverlay.WeaponModificationFactory(stream, package),
-            RecordTypeInts.NONE => ObjectModificationBinaryOverlay.ObjectModificationFactory(stream, package),
-            _ => throw new MalformedDataException($"Unknown object modification type: {type}"),
-        };
+            case RecordTypeInts.ARMO:
+                return ArmorModificationBinaryOverlay.ArmorModificationFactory(stream, package);
+            case RecordTypeInts.NPC_:
+                return NpcModificationBinaryOverlay.NpcModificationFactory(stream, package);
+            case RecordTypeInts.WEAP:
+                return WeaponModificationBinaryOverlay.WeaponModificationFactory(stream, package);
+            case RecordTypeInts.NONE:
+                return ObjectModificationBinaryOverlay.ObjectModificationFactory(stream, package);
+            default:
+                var unknown = (UnknownObjectModificationBinaryOverlay)UnknownObjectModificationBinaryOverlay.UnknownObjectModificationFactory(stream, package);
+                unknown.ModificationType = type;
+                return unknown;
+        }
     }
 }
 
@@ -350,4 +377,11 @@ partial class NpcModificationBinaryOverlay
 partial class ObjectModificationBinaryOverlay
 {
     public IReadOnlyList<IAObjectModPropertyGetter<AObjectModification.NoneProperty>> Properties { get; internal set; } = Array.Empty<IAObjectModPropertyGetter<AObjectModification.NoneProperty>>();
+}
+
+partial class UnknownObjectModificationBinaryOverlay
+{
+    public IReadOnlyList<IAObjectModPropertyGetter<AObjectModification.NoneProperty>> Properties { get; internal set; } = Array.Empty<IAObjectModPropertyGetter<AObjectModification.NoneProperty>>();
+    
+    public RecordType ModificationType { get; set; }
 }

@@ -2429,6 +2429,9 @@
     </Compile>
     <Compile Include="Interfaces\Link\IPreCutMapEntryReference_Generated.cs" />
     <Compile Include="Interfaces\Link\IConstructibleObjectTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\UnknownObjectModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.2.0">
