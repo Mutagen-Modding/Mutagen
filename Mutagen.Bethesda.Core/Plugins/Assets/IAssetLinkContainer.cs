@@ -92,7 +92,7 @@ public static class AssetLinkContainerGetterExt
         Type? assetType = null)
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(
-            AssetLinkQuery.Resolved | AssetLinkQuery.Inferred | AssetLinkQuery.Resolved, 
+            AssetLinkQuery.Resolved | AssetLinkQuery.Inferred | AssetLinkQuery.Listed, 
             linkCache: linkCache,
             assetType);
     }
@@ -103,7 +103,7 @@ public static class AssetLinkContainerGetterExt
         where TAsset : IAssetLinkGetter
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(
-                AssetLinkQuery.Resolved | AssetLinkQuery.Inferred | AssetLinkQuery.Resolved, 
+                AssetLinkQuery.Resolved | AssetLinkQuery.Inferred | AssetLinkQuery.Listed, 
                 linkCache: linkCache, 
                 typeof(TAsset))
             .WhereCastable<IAssetLinkGetter, TAsset>();
