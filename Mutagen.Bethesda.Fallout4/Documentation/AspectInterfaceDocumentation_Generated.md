@@ -133,6 +133,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TalkingActivator
 - Terminal
 - Tree
+- UnknownObjectModification
 - Weapon
 - WeaponModification
 ### INamed
@@ -229,6 +230,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TintGroup
 - TintTemplateOption
 - Tree
+- UnknownObjectModification
 - Water
 - Weapon
 - WeaponModification
@@ -773,6 +775,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 - IScripted
+### UnknownObjectModification
+- IModeled
+- INamed
 ### Water
 - INamed
 ### Weapon
