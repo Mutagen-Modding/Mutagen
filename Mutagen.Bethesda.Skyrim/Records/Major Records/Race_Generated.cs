@@ -6483,11 +6483,11 @@ namespace Mutagen.Bethesda.Skyrim
                 item.Unknown = rhs.Unknown;
             }
             item.Height = new GenderedItem<Single>(
-                male: ,
-                female: );
+                male: rhs.Height.Male,
+                female: rhs.Height.Female);
             item.Weight = new GenderedItem<Single>(
-                male: ,
-                female: );
+                male: rhs.Weight.Male,
+                female: rhs.Weight.Female);
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;

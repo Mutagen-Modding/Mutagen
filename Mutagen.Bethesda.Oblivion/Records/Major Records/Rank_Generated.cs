@@ -979,8 +979,8 @@ namespace Mutagen.Bethesda.Oblivion
             else
             {
                 item.Name = new GenderedItem<String?>(
-                    male: ,
-                    female: );
+                    male: rhsNameitem.Male,
+                    female: rhsNameitem.Female);
             }
             if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {

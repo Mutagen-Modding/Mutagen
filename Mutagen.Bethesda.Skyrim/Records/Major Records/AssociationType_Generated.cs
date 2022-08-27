@@ -1221,8 +1221,8 @@ namespace Mutagen.Bethesda.Skyrim
             else
             {
                 item.ParentTitle = new GenderedItem<String?>(
-                    male: ,
-                    female: );
+                    male: rhsParentTitleitem.Male,
+                    female: rhsParentTitleitem.Female);
             }
             if (rhs.Title is not {} rhsTitleitem)
             {
@@ -1231,8 +1231,8 @@ namespace Mutagen.Bethesda.Skyrim
             else
             {
                 item.Title = new GenderedItem<String?>(
-                    male: ,
-                    female: );
+                    male: rhsTitleitem.Male,
+                    female: rhsTitleitem.Female);
             }
             if ((copyMask?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
             {
