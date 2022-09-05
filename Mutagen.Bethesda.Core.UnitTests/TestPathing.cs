@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using Noggog.Utility;
+using Noggog.IO;
 
 namespace Mutagen.Bethesda.UnitTests;
 

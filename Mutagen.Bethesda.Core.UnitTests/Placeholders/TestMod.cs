@@ -32,7 +32,7 @@ public class TestMod : ITestMod, IDisposable
     public bool CanUseLocalization { get; }
     public bool UsingLocalization { get; set; }
 
-    IGroup IMod.GetTopLevelGroup(Type type)
+    IGroup? IMod.TryGetTopLevelGroup(Type type)
     {
         throw new NotImplementedException();
     }
@@ -150,12 +150,12 @@ public class TestMod : ITestMod, IDisposable
         throw new NotImplementedException();
     }
 
-    IGroupGetter<TMajor> IModGetter.GetTopLevelGroup<TMajor>()
+    IGroupGetter<TMajor>? IModGetter.TryGetTopLevelGroup<TMajor>()
     {
         throw new NotImplementedException();
     }
 
-    public IGroupGetter GetTopLevelGroup(Type type)
+    public IGroupGetter? TryGetTopLevelGroup(Type type)
     {
         throw new NotImplementedException();
     }
@@ -175,7 +175,7 @@ public class TestMod : ITestMod, IDisposable
         throw new NotImplementedException();
     }
 
-    public IGroup<TMajor> GetTopLevelGroup<TMajor>() where TMajor : IMajorRecord
+    public IGroup<TMajor>? TryGetTopLevelGroup<TMajor>() where TMajor : IMajorRecord
     {
         throw new NotImplementedException();
     }

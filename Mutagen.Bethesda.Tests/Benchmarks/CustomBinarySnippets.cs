@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Newtonsoft.Json;
 using Noggog;
-using Noggog.Utility;
+using Noggog.IO;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks;
 

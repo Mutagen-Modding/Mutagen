@@ -5235,10 +5235,10 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public SkyrimRelease SkyrimRelease { get; }
         public override GameRelease GameRelease => SkyrimRelease.ToGameRelease();
-        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
-        IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroup IMod.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
+        IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
+        IGroup<T>? IMod.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
+        IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => SkyrimModMixIn.GetEqualsMask(this, (ISkyrimModGetter)rhs, include);
@@ -6627,36 +6627,36 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Mutagen
-        public static IGroupGetter<T> GetTopLevelGroup<T>(this ISkyrimModGetter obj)
+        public static IGroupGetter<T>? TryGetTopLevelGroup<T>(this ISkyrimModGetter obj)
             where T : IMajorRecordGetter
         {
-            return (IGroupGetter<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<T>?)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroupGetter GetTopLevelGroup(
+        public static IGroupGetter? TryGetTopLevelGroup(
             this ISkyrimModGetter obj,
             Type type)
         {
-            return (IGroupGetter)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter?)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
 
-        public static IGroup<T> GetTopLevelGroup<T>(this ISkyrimMod obj)
+        public static IGroup<T>? TryGetTopLevelGroup<T>(this ISkyrimMod obj)
             where T : IMajorRecord
         {
-            return (IGroup<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup<T>?)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroup GetTopLevelGroup(
+        public static IGroup? TryGetTopLevelGroup(
             this ISkyrimMod obj,
             Type type)
         {
-            return (IGroup)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup?)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
@@ -10671,7 +10671,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public object GetGroup(
+        public object? GetGroup(
             ISkyrimModGetter obj,
             Type type)
         {
@@ -11242,7 +11242,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case "IVolumetricLightingInternal":
                     return obj.VolumetricLightings;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {type}");
+                    return null;
             }
         }
         
@@ -21963,8 +21963,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public SkyrimRelease SkyrimRelease { get; }
         public GameRelease GameRelease => SkyrimRelease.ToGameRelease();
-        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
+        IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;

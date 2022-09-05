@@ -5,9 +5,9 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
-using Noggog.Utility;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Testing;
+using Noggog.IO;
 
 namespace Mutagen.Bethesda.Tests;
 

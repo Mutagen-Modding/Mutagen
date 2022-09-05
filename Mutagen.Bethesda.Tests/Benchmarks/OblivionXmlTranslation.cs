@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
 using Newtonsoft.Json;
 using Noggog;
-using Noggog.Utility;
+using Noggog.IO;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks;
 

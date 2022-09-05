@@ -2,15 +2,17 @@
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.DI;
+using Noggog;
 using NSubstitute;
 
 namespace Mutagen.Bethesda.Testing.AutoData;
 
-public class ModBuilder : ISpecimenBuilder
+public class ModMocksBuilder : ISpecimenBuilder
 {
     private readonly GameRelease _release;
 
-    public ModBuilder(GameRelease release)
+    public ModMocksBuilder(GameRelease release)
     {
         _release = release;
     }
@@ -29,10 +31,9 @@ public class ModBuilder : ISpecimenBuilder
                 || t == typeof(IModGetter))
             {
                 var modKeys = context.Create<IEnumerable<ModKey>>();
-                return modKeys.Select(mk =>
-                {
-                    return GetMod(mk);
-                }).ToArray<object>();
+                return modKeys
+                    .Select(GetModMock)
+                    .ToArray<object>();
             }
         }
         else
@@ -46,19 +47,19 @@ public class ModBuilder : ISpecimenBuilder
             if (t == typeof(IMod)
                 || t == typeof(IModGetter))
             {
-                return GetMod(context.Create<ModKey>());
+                return GetModMock(context.Create<ModKey>());
             }
         }
             
         return new NoSpecimen();
     }
 
-    public IMod GetMod(ModKey modKey)
+    public IMod GetModMock(ModKey modKey)
     {
         var ret = Substitute.For<IMod>();
         ret.ModKey.Returns(modKey);
         ret.GameRelease.Returns(_release);
-        ret.NextFormID = 0x800;;
+        ret.NextFormID = 0x800;
         return ret;
     }
 }

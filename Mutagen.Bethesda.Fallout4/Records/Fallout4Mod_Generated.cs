@@ -5793,10 +5793,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public override GameRelease GameRelease => GameRelease.Fallout4;
-        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
-        IGroup<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroup IMod.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
+        IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
+        IGroup<T>? IMod.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
+        IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => Fallout4ModMixIn.GetEqualsMask(this, (IFallout4ModGetter)rhs, include);
@@ -7264,36 +7264,36 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Mutagen
-        public static IGroupGetter<T> GetTopLevelGroup<T>(this IFallout4ModGetter obj)
+        public static IGroupGetter<T>? TryGetTopLevelGroup<T>(this IFallout4ModGetter obj)
             where T : IMajorRecordGetter
         {
-            return (IGroupGetter<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter<T>?)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroupGetter GetTopLevelGroup(
+        public static IGroupGetter? TryGetTopLevelGroup(
             this IFallout4ModGetter obj,
             Type type)
         {
-            return (IGroupGetter)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroupGetter?)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
 
-        public static IGroup<T> GetTopLevelGroup<T>(this IFallout4Mod obj)
+        public static IGroup<T>? TryGetTopLevelGroup<T>(this IFallout4Mod obj)
             where T : IMajorRecord
         {
-            return (IGroup<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup<T>?)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: typeof(T));
         }
 
-        public static IGroup GetTopLevelGroup(
+        public static IGroup? TryGetTopLevelGroup(
             this IFallout4Mod obj,
             Type type)
         {
-            return (IGroup)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+            return (IGroup?)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
                 obj: obj,
                 type: type);
         }
@@ -9253,6 +9253,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IObjectModificationGetter":
                 case "IObjectModification":
                 case "IObjectModificationInternal":
+                case "UnknownObjectModification":
+                case "IUnknownObjectModificationGetter":
+                case "IUnknownObjectModification":
+                case "IUnknownObjectModificationInternal":
                     obj.ObjectModifications.Remove(
                         type: type,
                         keys: keys);
@@ -11763,7 +11767,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public object GetGroup(
+        public object? GetGroup(
             IFallout4ModGetter obj,
             Type type)
         {
@@ -12399,7 +12403,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IObjectVisibilityManagerInternal":
                     return obj.ObjectVisibilityManagers;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {type}");
+                    return null;
             }
         }
         
@@ -24316,8 +24320,8 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public GameRelease GameRelease => GameRelease.Fallout4;
-        IGroupGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
-        IGroupGetter IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
+        IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
