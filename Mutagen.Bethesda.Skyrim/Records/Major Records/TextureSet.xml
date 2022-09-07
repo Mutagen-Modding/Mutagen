@@ -3,14 +3,14 @@
   <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="SkyrimMajorRecord" GUID="7d698f54-6430-49c7-ab37-7649204e689b" ID="22">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <String name="Diffuse" recordType="TX00" />
-      <String name="NormalOrGloss" recordType="TX01" />
-      <String name="EnvironmentMaskOrSubsurfaceTint" recordType="TX02" />
-      <String name="GlowOrDetailMap" recordType="TX03" />
-      <String name="Height" recordType="TX04" />
-      <String name="Environment" recordType="TX05" />
-      <String name="Multilayer" recordType="TX06" />
-      <String name="BacklightMaskOrSpecular" recordType="TX07" />
+      <AssetLink name="Diffuse" recordType="TX00" assetType="SkyrimTexture" />
+      <AssetLink name="NormalOrGloss" recordType="TX01" assetType="SkyrimTexture" />
+      <AssetLink name="EnvironmentMaskOrSubsurfaceTint" recordType="TX02" assetType="SkyrimTexture" />
+      <AssetLink name="GlowOrDetailMap" recordType="TX03" assetType="SkyrimTexture" />
+      <AssetLink name="Height" recordType="TX04" assetType="SkyrimTexture" />
+      <AssetLink name="Environment" recordType="TX05" assetType="SkyrimTexture" />
+      <AssetLink name="Multilayer" recordType="TX06" assetType="SkyrimTexture" />
+      <AssetLink name="BacklightMaskOrSpecular" recordType="TX07" assetType="SkyrimTexture" />
       <RefDirect name="Decal" refName="Decal" />
       <Enum name="Flags" enumName="TextureSet.Flag" byteLength="2" recordType="DNAM" />
     </Fields>

@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -401,6 +403,9 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => OblivionMajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => OblivionMajorRecordSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => OblivionMajorRecordSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -457,6 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
     /// Implemented by: [Activator, AIPackage, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, Birthsign, Book, Cell, Class, Climate, Clothing, CombatStyle, Container, Creature, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Ingredient, Key, Landscape, LandTexture, LeveledCreature, LeveledItem, LeveledSpell, Light, LoadScreen, MagicEffect, Miscellaneous, Npc, PathGrid, PlacedCreature, PlacedNpc, PlacedObject, Potion, Quest, Race, Region, Road, Script, SigilStone, SkillRecord, SoulGem, Sound, Spell, SpellLeveled, Static, Subspace, Tree, Water, Weapon, Weather, Worldspace]
     /// </summary>
     public partial interface IOblivionMajorRecord :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IOblivionMajorRecordInternal>,
         IMajorRecordEnumerable,
@@ -478,6 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IOblivionMajorRecordGetter :
         IMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IOblivionMajorRecordGetter>,
@@ -1025,6 +1032,20 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IOblivionMajorRecord obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IOblivionMajorRecord obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1265,6 +1286,15 @@ namespace Mutagen.Bethesda.Oblivion
                         yield break;
                     }
             }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IOblivionMajorRecordGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            yield break;
         }
         
         #region Duplicate
@@ -1551,6 +1581,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OblivionMajorRecordCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => OblivionMajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

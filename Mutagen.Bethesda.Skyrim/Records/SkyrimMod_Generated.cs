@@ -7,8 +7,10 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -6015,6 +6017,9 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordQueryableGetter, TMajor>());
         [DebuggerStepThrough]
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, type: type, throwIfUnknown: throwIfUnknown);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkyrimModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkyrimModSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkyrimModSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -6224,6 +6229,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISkyrimMod :
+        IAssetLinkContainer,
         IContextMod<ISkyrimMod, ISkyrimModGetter>,
         IFormLinkContainer,
         ILoquiObjectSetter<ISkyrimMod>,
@@ -6349,6 +6355,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISkyrimModGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IContextGetterMod<ISkyrimMod, ISkyrimModGetter>,
         IFormLinkContainerGetter,
         ILoquiObject<ISkyrimModGetter>,
@@ -8959,6 +8966,429 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     }
             }
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISkyrimMod obj)
+        {
+            {
+                foreach (var item in obj.TextureSets.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.HeadParts.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Eyes.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Races.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MagicEffects.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Scrolls.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Activators.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.TalkingActivators.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Armors.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Books.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Containers.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Doors.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Ingredients.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Lights.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MiscItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.AlchemicalApparatuses.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Statics.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MoveableStatics.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Grasses.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Trees.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Florae.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Furniture.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Weapons.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Ammunitions.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Npcs.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.LeveledNpcs.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Keys.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Ingestibles.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.IdleMarkers.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Projectiles.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Hazards.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.SoulGems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Weathers.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Climates.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.ShaderParticleGeometries.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Regions.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Cells is IAssetLinkContainer CellslinkCont)
+            {
+                foreach (var item in CellslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Worldspaces.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.DialogTopics.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Quests.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.IdleAnimations.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Packages.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.LoadScreens.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.AnimatedObjects.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Waters.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.EffectShaders.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Explosions.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Debris.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Perks.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.BodyParts.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.AddonNodes.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.CameraShots.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Impacts.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.ArmorAddons.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MusicTracks.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Scenes.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.ArtObjects.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MaterialObjects.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.SoundDescriptors.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(ISkyrimMod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.TextureSets.RemapListedAssetLinks(mapping);
+            obj.HeadParts.RemapListedAssetLinks(mapping);
+            obj.Eyes.RemapListedAssetLinks(mapping);
+            obj.Races.RemapListedAssetLinks(mapping);
+            obj.MagicEffects.RemapListedAssetLinks(mapping);
+            obj.Scrolls.RemapListedAssetLinks(mapping);
+            obj.Activators.RemapListedAssetLinks(mapping);
+            obj.TalkingActivators.RemapListedAssetLinks(mapping);
+            obj.Armors.RemapListedAssetLinks(mapping);
+            obj.Books.RemapListedAssetLinks(mapping);
+            obj.Containers.RemapListedAssetLinks(mapping);
+            obj.Doors.RemapListedAssetLinks(mapping);
+            obj.Ingredients.RemapListedAssetLinks(mapping);
+            obj.Lights.RemapListedAssetLinks(mapping);
+            obj.MiscItems.RemapListedAssetLinks(mapping);
+            obj.AlchemicalApparatuses.RemapListedAssetLinks(mapping);
+            obj.Statics.RemapListedAssetLinks(mapping);
+            obj.MoveableStatics.RemapListedAssetLinks(mapping);
+            obj.Grasses.RemapListedAssetLinks(mapping);
+            obj.Trees.RemapListedAssetLinks(mapping);
+            obj.Florae.RemapListedAssetLinks(mapping);
+            obj.Furniture.RemapListedAssetLinks(mapping);
+            obj.Weapons.RemapListedAssetLinks(mapping);
+            obj.Ammunitions.RemapListedAssetLinks(mapping);
+            obj.Npcs.RemapListedAssetLinks(mapping);
+            obj.LeveledNpcs.RemapListedAssetLinks(mapping);
+            obj.Keys.RemapListedAssetLinks(mapping);
+            obj.Ingestibles.RemapListedAssetLinks(mapping);
+            obj.IdleMarkers.RemapListedAssetLinks(mapping);
+            obj.Projectiles.RemapListedAssetLinks(mapping);
+            obj.Hazards.RemapListedAssetLinks(mapping);
+            obj.SoulGems.RemapListedAssetLinks(mapping);
+            obj.Weathers.RemapListedAssetLinks(mapping);
+            obj.Climates.RemapListedAssetLinks(mapping);
+            obj.ShaderParticleGeometries.RemapListedAssetLinks(mapping);
+            obj.Regions.RemapListedAssetLinks(mapping);
+            obj.Cells.RemapListedAssetLinks(mapping);
+            obj.Worldspaces.RemapListedAssetLinks(mapping);
+            obj.DialogTopics.RemapListedAssetLinks(mapping);
+            obj.Quests.RemapListedAssetLinks(mapping);
+            obj.IdleAnimations.RemapListedAssetLinks(mapping);
+            obj.Packages.RemapListedAssetLinks(mapping);
+            obj.LoadScreens.RemapListedAssetLinks(mapping);
+            obj.AnimatedObjects.RemapListedAssetLinks(mapping);
+            obj.Waters.RemapListedAssetLinks(mapping);
+            obj.EffectShaders.RemapListedAssetLinks(mapping);
+            obj.Explosions.RemapListedAssetLinks(mapping);
+            obj.Debris.RemapListedAssetLinks(mapping);
+            obj.Perks.RemapListedAssetLinks(mapping);
+            obj.BodyParts.RemapListedAssetLinks(mapping);
+            obj.AddonNodes.RemapListedAssetLinks(mapping);
+            obj.CameraShots.RemapListedAssetLinks(mapping);
+            obj.Impacts.RemapListedAssetLinks(mapping);
+            obj.ArmorAddons.RemapListedAssetLinks(mapping);
+            obj.MusicTracks.RemapListedAssetLinks(mapping);
+            obj.Scenes.RemapListedAssetLinks(mapping);
+            obj.ArtObjects.RemapListedAssetLinks(mapping);
+            obj.MaterialObjects.RemapListedAssetLinks(mapping);
+            obj.SoundDescriptors.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -16263,6 +16693,261 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
+        public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(ISkyrimModGetter obj, Type? assetType);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISkyrimModGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Inferred))
+            {
+                foreach (var additional in GetInferredAssetLinks(obj, assetType))
+                {
+                    yield return additional;
+                }
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.TextureSets.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.HeadParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Eyes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.MagicEffects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Scrolls.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Activators.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.TalkingActivators.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Armors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Books.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Containers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Doors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Ingredients.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Lights.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.MiscItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.AlchemicalApparatuses.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Statics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.MoveableStatics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Grasses.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Trees.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Florae.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Furniture.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Weapons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Ammunitions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Npcs.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.LeveledNpcs.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Keys.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Ingestibles.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.IdleMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Projectiles.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Hazards.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.SoulGems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Climates.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.ShaderParticleGeometries.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Regions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+                {
+                    foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                foreach (var item in obj.Worldspaces.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.DialogTopics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Quests.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.IdleAnimations.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Packages.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.LoadScreens.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.AnimatedObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Waters.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.EffectShaders.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Explosions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.BodyParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.AddonNodes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.CameraShots.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Impacts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.ArmorAddons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.MusicTracks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.Scenes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.ArtObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.MaterialObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.SoundDescriptors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -21971,6 +22656,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Localized);
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimModCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkyrimModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]

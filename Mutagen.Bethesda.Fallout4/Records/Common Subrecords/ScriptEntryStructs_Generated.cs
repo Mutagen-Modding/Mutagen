@@ -422,11 +422,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptEntryStructsCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEntryStructsSetterCommon.Instance.RemapLinks(this, mapping);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptEntryStructsBinaryWriteTranslation.Instance;
@@ -486,7 +481,6 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IScriptEntryStructs :
-        IFormLinkContainer,
         ILoquiObjectSetter<IScriptEntryStructs>,
         IScriptEntryStructsGetter
     {
@@ -496,7 +490,6 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IScriptEntryStructsGetter :
         ILoquiObject,
         IBinaryItem,
-        IFormLinkContainerGetter,
         ILoquiObject<IScriptEntryStructsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

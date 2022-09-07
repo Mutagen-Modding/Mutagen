@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -2343,6 +2345,9 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MagicEffectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MagicEffectSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MagicEffectSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2422,6 +2427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMagicEffect :
+        IAssetLinkContainer,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IMagicEffectInternal>,
@@ -2499,6 +2505,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.MGEF)]
     public partial interface IMagicEffectGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
@@ -2972,6 +2979,28 @@ namespace Mutagen.Bethesda.Skyrim
             obj.CounterEffects.RemapLinks(mapping);
             obj.Sounds?.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMagicEffect obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            {
+                foreach (var item in VirtualMachineAdapterItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IMagicEffect obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -3769,6 +3798,25 @@ namespace Mutagen.Bethesda.Skyrim
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMagicEffectGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+                {
+                    foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -4870,6 +4918,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MagicEffectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SkyrimMod" objType="Mod" ctorPermission="protected" GUID="9dcb1a8f-db0a-44bd-9a30-9427a9350e7a" ID="66">
+  <Object name="SkyrimMod" objType="Mod" ctorPermission="protected" inferredAssets="true" GUID="9dcb1a8f-db0a-44bd-9a30-9427a9350e7a" ID="66">
     <Fields>
       <RefDirect name="ModHeader" refName="SkyrimModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />

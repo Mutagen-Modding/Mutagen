@@ -2,8 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Icons" objType="Subrecord" GUID="41d61c12-3813-4952-9eac-00eb6f924e5f" ID="234">
     <Fields>
-      <String name="LargeIconFilename" recordType="ICON" nullable="False" />
-      <String name="SmallIconFilename" recordType="MICO" />
+      <AssetLink name="LargeIconFilename" recordType="ICON" nullable="False" assetType="SkyrimTexture" />
+      <AssetLink name="SmallIconFilename" recordType="MICO" assetType="SkyrimTexture" />
     </Fields>
   </Object>
 </Loqui>

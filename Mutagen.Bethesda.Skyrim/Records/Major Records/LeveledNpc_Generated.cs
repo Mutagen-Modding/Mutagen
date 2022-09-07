@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -683,6 +685,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(ILeveledNpc);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LeveledNpcCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LeveledNpcSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LeveledNpcSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -762,6 +767,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledNpc :
+        IAssetLinkContainer,
         IExplodeSpawn,
         IFormLinkContainer,
         ILeveledNpcGetter,
@@ -795,6 +801,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.LVLN)]
     public partial interface ILeveledNpcGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
@@ -1123,6 +1130,28 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Model?.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILeveledNpc obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(ILeveledNpc obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Model?.RemapListedAssetLinks(mapping);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1449,6 +1478,25 @@ namespace Mutagen.Bethesda.Skyrim
                 foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILeveledNpcGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;
@@ -1989,6 +2037,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledNpcCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LeveledNpcCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

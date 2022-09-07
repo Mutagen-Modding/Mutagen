@@ -7,10 +7,12 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Oblivion.Records;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -144,6 +146,9 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<T, TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<T, TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => OblivionGroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => OblivionGroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => OblivionGroupSetterCommon<T>.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -205,6 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IOblivionGroup<T> :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IOblivionGroup<T>>,
         IMajorRecordEnumerable,
@@ -218,6 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IOblivionGroupGetter<out T> :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IOblivionGroupGetter<T>>,
@@ -848,6 +855,21 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IOblivionGroup<T> obj)
+        {
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IOblivionGroup<T> obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.RecordCache.RemapListedAssetLinks(mapping);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1088,6 +1110,19 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     yield break;
             }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IOblivionGroupGetter<T> obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
         }
         
         #endregion
@@ -1391,6 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OblivionGroupCommon<T>.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => OblivionGroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

@@ -10,7 +10,7 @@
       <P3Int16 name="InitialRotation" recordType="RNAM" />
       <RefDirect name="RotationOffsetConstraints" refName="Int16MinMax" recordType="ONAM" />
       <P3Float name="InitialTranslationOffset" recordType="XNAM" />
-      <String name="CameraPath" recordType="MOD2" />
+      <AssetLink name="CameraPath" recordType="MOD2" assetType="SkyrimModel" />
     </Fields>
   </Object>
   <Object name="Int16MinMax" objType="Subrecord" GUID="9995601d-590f-4c49-ab44-b7adcff80f3d" ID="400">

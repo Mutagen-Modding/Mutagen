@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -1243,6 +1245,9 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BookCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BookSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BookSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1322,6 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IBook :
+        IAssetLinkContainer,
         IBookGetter,
         IConstructible,
         IExplodeSpawn,
@@ -1391,6 +1397,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.BOOK)]
     public partial interface IBookGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IConstructibleGetter,
         IExplodeSpawnGetter,
@@ -1801,6 +1808,52 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Keywords?.RemapLinks(mapping);
             obj.Teaches?.RemapLinks(mapping);
             obj.InventoryArt.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IBook obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            {
+                foreach (var item in VirtualMachineAdapterItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IBook obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapListedAssetLinks(mapping);
+            obj.Model?.RemapListedAssetLinks(mapping);
+            obj.Icons?.RemapListedAssetLinks(mapping);
+            obj.Destructible?.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -2344,6 +2397,54 @@ namespace Mutagen.Bethesda.Skyrim
             if (FormLinkInformation.TryFactory(obj.InventoryArt, out var InventoryArtInfo))
             {
                 yield return InventoryArtInfo;
+            }
+            yield break;
+        }
+        
+        public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IBookGetter obj, Type? assetType);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBookGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Inferred))
+            {
+                foreach (var additional in GetInferredAssetLinks(obj, assetType))
+                {
+                    yield return additional;
+                }
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+                {
+                    foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Icons is {} IconsItems)
+                {
+                    foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Destructible is {} DestructibleItems)
+                {
+                    foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -3191,6 +3292,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BookCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BookCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BookBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

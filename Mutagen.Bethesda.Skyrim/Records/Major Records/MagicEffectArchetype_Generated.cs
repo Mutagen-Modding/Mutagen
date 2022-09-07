@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public void RemapLinks(IMagicEffectArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.AssociationKey = RemappingMixIn.Remap(obj.AssociationKey, mapping);
+            obj.AssociationKey = FormLinkRemappingMixIn.Remap(obj.AssociationKey, mapping);
         }
         
         #endregion

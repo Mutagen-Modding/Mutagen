@@ -7,10 +7,12 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -6648,6 +6650,9 @@ namespace Mutagen.Bethesda.Fallout4
         IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordQueryableGetter, TMajor>());
         [DebuggerStepThrough]
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, type: type, throwIfUnknown: throwIfUnknown);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout4ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => Fallout4ModSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout4ModSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -6839,6 +6844,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFallout4Mod :
+        IAssetLinkContainer,
         IContextMod<IFallout4Mod, IFallout4ModGetter>,
         IFallout4ModGetter,
         IFormLinkContainer,
@@ -6977,6 +6983,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IFallout4ModGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IContextGetterMod<IFallout4Mod, IFallout4ModGetter>,
         IFormLinkContainerGetter,
         ILoquiObject<IFallout4ModGetter>,
@@ -9874,6 +9881,31 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     }
             }
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout4Mod obj)
+        {
+            if (obj.Cells is IAssetLinkContainer CellslinkCont)
+            {
+                foreach (var item in CellslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Worldspaces is IAssetLinkContainer WorldspaceslinkCont)
+            {
+                foreach (var item in WorldspaceslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IFallout4Mod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.Cells.RemapListedAssetLinks(mapping);
+            obj.Worldspaces.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -18050,6 +18082,28 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout4ModGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+                {
+                    foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
+                {
+                    foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -24328,6 +24382,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout4ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]

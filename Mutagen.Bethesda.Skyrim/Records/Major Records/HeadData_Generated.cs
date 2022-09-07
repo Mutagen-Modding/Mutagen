@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -1013,6 +1015,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadDataCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => HeadDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => HeadDataSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => HeadDataSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1074,6 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IHeadData :
+        IAssetLinkContainer,
         IFormLinkContainer,
         IHeadDataGetter,
         ILoquiObjectSetter<IHeadData>,
@@ -1094,6 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHeadDataGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IHeadDataGetter>,
@@ -1426,6 +1433,28 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Model?.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IHeadData obj)
+        {
+            foreach (var item in obj.TintMasks.SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IHeadData obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.TintMasks.ForEach(x => x.RemapListedAssetLinks(mapping));
+            obj.Model?.RemapListedAssetLinks(mapping);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1739,6 +1768,25 @@ namespace Mutagen.Bethesda.Skyrim
                 foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IHeadDataGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.TintMasks.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;
@@ -2264,6 +2312,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => HeadDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

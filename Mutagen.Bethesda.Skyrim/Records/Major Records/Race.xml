@@ -310,7 +310,7 @@
   <Object name="TintAssets" objType="Subrecord" GUID="2a4a72e5-c74d-4afd-9783-e4947dc83f79" ID="76">
     <Fields>
       <UInt16 name="Index" recordType="TINI" />
-      <String name="FileName" recordType="TINT" />
+      <AssetLink name="FileName" recordType="TINT" assetType="SkyrimTexture" />
       <Enum name="MaskType" enumName="TintAssets.TintMaskType" byteLength="2" recordType="TINP" />
       <FormLink name="PresetDefault" refName="ColorRecord" recordType="TIND" />
       <RefList name="Presets" refName="TintPreset" />

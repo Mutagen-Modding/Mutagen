@@ -72,10 +72,10 @@
       <ByteArray name="GNAM" recordType="GNAM" />
       <P3Float name="LinearVelocity" recordType="NAM0" />
       <P3Float name="AngularVelocity" recordType="NAM1" />
-      <String name="NoiseLayerOneTexture" recordType="NAM2" />
-      <String name="NoiseLayerTwoTexture" recordType="NAM3" />
-      <String name="NoiseLayerThreeTexture" recordType="NAM4" />
-      <String name="FlowNormalsNoiseTexture" recordType="NAM5" />
+      <AssetLink name="NoiseLayerOneTexture" recordType="NAM2" assetType="SkyrimTexture" />
+      <AssetLink name="NoiseLayerTwoTexture" recordType="NAM3" assetType="SkyrimTexture" />
+      <AssetLink name="NoiseLayerThreeTexture" recordType="NAM4" assetType="SkyrimTexture" />
+      <AssetLink name="FlowNormalsNoiseTexture" recordType="NAM5" assetType="SkyrimTexture" />
     </Fields>
   </Object>
 </Loqui>

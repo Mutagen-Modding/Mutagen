@@ -28,6 +28,33 @@
     <None Remove="Pex\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\SkyrimBehaviorAssetType.cs" />
+    <Compile Include="Assets\SkyrimBodyTextureAssetType.cs" />
+    <Compile Include="Assets\SkyrimDeformedModelAssetType.cs" />
+    <Compile Include="Assets\SkyrimModelAssetType.cs" />
+    <Compile Include="Assets\SkyrimMusicAssetType.cs" />
+    <Compile Include="Assets\SkyrimScriptCompiledAssetType.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Assets\SkyrimScriptSourceAssetType.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Assets\SkyrimSeqAssetType.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Assets\SkyrimSoundAssetType.cs" />
+    <Compile Include="Assets\SkyrimTextureAssetType.cs" />
+    <Compile Include="Assets\SkyrimTranslationAssetType.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Agression.cs" />
@@ -105,6 +132,9 @@
     </Compile>
     <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistration.cs" />
+    <Compile Include="Records\Assets\VoiceType\VoiceContainer.cs" />
+    <Compile Include="Records\Assets\VoiceType\VoiceContainerExtension.cs" />
+    <Compile Include="Records\Assets\VoiceType\VoiceTypeAssetLookup.cs" />
     <Compile Include="Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>
     </Compile>
@@ -2098,6 +2128,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Records\Assets" />
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.skyrim&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />

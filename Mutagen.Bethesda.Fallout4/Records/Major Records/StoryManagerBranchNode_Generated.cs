@@ -383,8 +383,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = StoryManagerBranchNode_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StoryManagerBranchNodeCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerBranchNodeSetterCommon.Instance.RemapLinks(this, mapping);
         public StoryManagerBranchNode(FormKey formKey)
         {
             this.FormKey = formKey;

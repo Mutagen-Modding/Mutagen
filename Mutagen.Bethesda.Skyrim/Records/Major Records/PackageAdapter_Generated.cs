@@ -359,11 +359,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageAdapterCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageAdapterSetterCommon.Instance.RemapLinks(this, mapping);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageAdapterBinaryWriteTranslation.Instance;

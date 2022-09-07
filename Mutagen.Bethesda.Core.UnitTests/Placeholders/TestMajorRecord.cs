@@ -1,10 +1,12 @@
 using Loqui;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog.StructuredStrings;
-using System.ComponentModel;
 
 namespace Mutagen.Bethesda.UnitTests.Placeholders;
 
@@ -160,10 +162,26 @@ public class TestMajorRecord : ITestMajorRecord
         return EnumerateMajorRecords(type, throwIfUnknown);
     }
 
+    public Type Type => throw new NotImplementedException();
+    
+    public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<IAssetLink> EnumerateListedAssetLinks()
+    {
+        throw new NotImplementedException();
+    }
+
     public void Clear()
     {
         throw new NotImplementedException();
     }
 
-    public Type Type => throw new NotImplementedException();
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null,
+        Type? assetType = null)
+    {
+        throw new NotImplementedException();
+    }
 }

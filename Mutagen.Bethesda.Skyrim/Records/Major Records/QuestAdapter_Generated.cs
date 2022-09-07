@@ -7,8 +7,10 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -640,6 +642,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestAdapterCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterSetterCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => QuestAdapterCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => QuestAdapterSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => QuestAdapterSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -699,6 +704,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IQuestAdapter :
+        IAssetLinkContainer,
         IAVirtualMachineAdapter,
         IFormLinkContainer,
         ILoquiObjectSetter<IQuestAdapter>,
@@ -713,6 +719,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IQuestAdapterGetter :
         IAVirtualMachineAdapterGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IQuestAdapterGetter>
@@ -989,6 +996,25 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Aliases.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IQuestAdapter obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Aliases.SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IQuestAdapter obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Aliases.ForEach(x => x.RemapListedAssetLinks(mapping));
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1241,6 +1267,22 @@ namespace Mutagen.Bethesda.Skyrim
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IQuestAdapterGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Aliases.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1629,6 +1671,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestAdapterCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => QuestAdapterCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

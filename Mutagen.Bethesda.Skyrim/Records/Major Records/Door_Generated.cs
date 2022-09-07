@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -793,6 +795,9 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DoorCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DoorSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DoorSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -872,6 +877,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IDoor :
+        IAssetLinkContainer,
         IDoorGetter,
         IExplodeSpawn,
         IFormLinkContainer,
@@ -925,6 +931,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.DOOR)]
     public partial interface IDoorGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
@@ -1288,6 +1295,44 @@ namespace Mutagen.Bethesda.Skyrim
             obj.OpenSound.Relink(mapping);
             obj.CloseSound.Relink(mapping);
             obj.LoopSound.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDoor obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            {
+                foreach (var item in VirtualMachineAdapterItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IDoor obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapListedAssetLinks(mapping);
+            obj.Model?.RemapListedAssetLinks(mapping);
+            obj.Destructible?.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -1675,6 +1720,39 @@ namespace Mutagen.Bethesda.Skyrim
             if (FormLinkInformation.TryFactory(obj.LoopSound, out var LoopSoundInfo))
             {
                 yield return LoopSoundInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDoorGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+                {
+                    foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Destructible is {} DestructibleItems)
+                {
+                    foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -2267,6 +2345,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DoorCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DoorCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

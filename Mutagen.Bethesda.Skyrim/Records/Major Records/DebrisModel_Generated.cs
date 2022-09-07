@@ -7,17 +7,21 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -53,7 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte Percentage { get; set; } = default;
         #endregion
         #region ModelFilename
-        public String ModelFilename { get; set; } = string.Empty;
+        public AssetLink<SkyrimModelAssetType> ModelFilename { get; set; } = new AssetLink<SkyrimModelAssetType>();
+        AssetLinkGetter<SkyrimModelAssetType> IDebrisModelGetter.ModelFilename => this.ModelFilename;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -506,6 +511,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DebrisModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DebrisModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DebrisModelSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -567,11 +575,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IDebrisModel :
+        IAssetLinkContainer,
         IDebrisModelGetter,
         ILoquiObjectSetter<IDebrisModel>
     {
         new Byte Percentage { get; set; }
-        new String ModelFilename { get; set; }
+        new AssetLink<SkyrimModelAssetType> ModelFilename { get; set; }
         new DebrisModel.Flag Flags { get; set; }
         new MemorySlice<Byte>? TextureFileHashes { get; set; }
         new DebrisModel.DATADataType DATADataTypeState { get; set; }
@@ -579,6 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDebrisModelGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IDebrisModelGetter>
     {
@@ -590,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DebrisModel_Registration.Instance;
         Byte Percentage { get; }
-        String ModelFilename { get; }
+        AssetLinkGetter<SkyrimModelAssetType> ModelFilename { get; }
         DebrisModel.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte>? TextureFileHashes { get; }
         DebrisModel.DATADataType DATADataTypeState { get; }
@@ -866,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Percentage = default;
-            item.ModelFilename = string.Empty;
+            item.ModelFilename.SetToNull();
             item.Flags = default;
             item.TextureFileHashes = default;
             item.DATADataTypeState = default;
@@ -875,6 +885,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public void RemapLinks(IDebrisModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDebrisModel obj)
+        {
+            yield return obj.ModelFilename;
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IDebrisModel obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.ModelFilename.Relink(mapping);
         }
         
         #endregion
@@ -921,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Percentage = item.Percentage == rhs.Percentage;
-            ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
+            ret.ModelFilename = object.Equals(item.ModelFilename, rhs.ModelFilename);
             ret.Flags = item.Flags == rhs.Flags;
             ret.TextureFileHashes = MemorySliceExt.Equal(item.TextureFileHashes, rhs.TextureFileHashes);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
@@ -1005,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
             {
-                if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
+                if (!object.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
             {
@@ -1050,6 +1071,15 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDebrisModelGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                yield return obj.ModelFilename;
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -1069,10 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Percentage = rhs.Percentage;
             }
-            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
-            {
-                item.ModelFilename = rhs.ModelFilename;
-            }
+            item.ModelFilename.RawPath = rhs.ModelFilename.RawPath;
             if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
@@ -1200,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer.Write(item.Percentage);
                 StringBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ModelFilename,
+                    item: item.ModelFilename.RawPath,
                     binaryType: StringBinaryType.NullTerminate);
                 if (!item.DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0))
                 {
@@ -1272,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
                     item.Percentage = dataFrame.ReadUInt8();
-                    item.ModelFilename = StringBinaryTranslation.Instance.Parse(
+                    item.ModelFilename.RawPath = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: false);
@@ -1347,6 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DebrisModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DebrisModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1369,7 +1397,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte Percentage => _Percentage_IsSet ? _recordData.Span[_PercentageLocation] : default;
         #endregion
         #region ModelFilename
-        public String ModelFilename { get; private set; } = string.Empty;
+        public AssetLinkGetter<SkyrimModelAssetType> ModelFilename { get; private set; } = null!;
         protected int ModelFilenameEndingPos;
         #endregion
         #region Flags
@@ -1418,8 +1446,8 @@ namespace Mutagen.Bethesda.Skyrim
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
-            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.Length + 1;
+            ret.ModelFilename = new AssetLink<SkyrimModelAssetType>(BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated));
+            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.RawPath.Length + 1;
             return ret;
         }
 

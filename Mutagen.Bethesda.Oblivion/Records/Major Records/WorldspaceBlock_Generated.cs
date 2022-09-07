@@ -7,10 +7,12 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -598,6 +600,9 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WorldspaceBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WorldspaceBlockSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WorldspaceBlockSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -659,6 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWorldspaceBlock :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceBlock>,
         IMajorRecordEnumerable,
@@ -673,6 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWorldspaceBlockGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IWorldspaceBlockGetter>,
@@ -1315,6 +1322,21 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWorldspaceBlock obj)
+        {
+            foreach (var item in obj.Items.WhereCastable<IWorldspaceSubBlockGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IWorldspaceBlock obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.Items.ForEach(x => x.RemapListedAssetLinks(mapping));
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1648,6 +1670,19 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWorldspaceBlockGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Items.WhereCastable<IWorldspaceSubBlockGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -1952,6 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceBlockCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WorldspaceBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

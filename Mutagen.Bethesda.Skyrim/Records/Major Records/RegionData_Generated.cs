@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -425,6 +427,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionDataCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RegionDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => RegionDataSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RegionDataSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -463,6 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
     /// </summary>
     public partial interface IRegionData :
+        IAssetLinkContainer,
         IFormLinkContainer,
         IHasIcons,
         ILoquiObjectSetter<IRegionData>,
@@ -480,6 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IRegionDataGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHasIconsGetter,
@@ -774,6 +781,23 @@ namespace Mutagen.Bethesda.Skyrim
         {
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRegionData obj)
+        {
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IRegionData obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.Icons?.RemapListedAssetLinks(mapping);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -933,6 +957,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionDataGetter obj)
         {
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IRegionDataGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Icons is {} IconsItems)
+                {
+                    foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+            }
             yield break;
         }
         
@@ -1225,6 +1264,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RegionDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => RegionDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

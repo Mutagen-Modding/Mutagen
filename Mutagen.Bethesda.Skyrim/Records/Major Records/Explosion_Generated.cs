@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -1213,6 +1215,9 @@ namespace Mutagen.Bethesda.Skyrim
             Break1 = 2,
             Break2 = 4
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ExplosionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ExplosionSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ExplosionSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1292,6 +1297,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IExplosion :
+        IAssetLinkContainer,
         IExplodeSpawn,
         IExplosionGetter,
         IFormLinkContainer,
@@ -1349,6 +1355,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.EXPL)]
     public partial interface IExplosionGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
@@ -1738,6 +1745,36 @@ namespace Mutagen.Bethesda.Skyrim
             obj.ImpactDataSet.Relink(mapping);
             obj.PlacedObject.Relink(mapping);
             obj.SpawnProjectile.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IExplosion obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            {
+                foreach (var item in VirtualMachineAdapterItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IExplosion obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapListedAssetLinks(mapping);
+            obj.Model?.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -2219,6 +2256,32 @@ namespace Mutagen.Bethesda.Skyrim
             yield return FormLinkInformation.Factory(obj.ImpactDataSet);
             yield return FormLinkInformation.Factory(obj.PlacedObject);
             yield return FormLinkInformation.Factory(obj.SpawnProjectile);
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IExplosionGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+                {
+                    foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+            }
             yield break;
         }
         
@@ -2915,6 +2978,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ExplosionCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ExplosionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ExplosionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

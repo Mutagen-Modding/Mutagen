@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -2851,6 +2853,9 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => NpcCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => NpcSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => NpcSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2931,6 +2936,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface INpc :
         IAliasVoiceType,
+        IAssetLinkContainer,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILockList,
@@ -3020,6 +3026,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcGetter :
         ISkyrimMajorRecordGetter,
         IAliasVoiceTypeGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
@@ -3564,6 +3571,36 @@ namespace Mutagen.Bethesda.Skyrim
             obj.DefaultPackageList.Relink(mapping);
             obj.CrimeFaction.Relink(mapping);
             obj.HeadTexture.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(INpc obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+            {
+                foreach (var item in VirtualMachineAdapterItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(INpc obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapListedAssetLinks(mapping);
+            obj.Destructible?.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -4591,6 +4628,41 @@ namespace Mutagen.Bethesda.Skyrim
             if (FormLinkInformation.TryFactory(obj.HeadTexture, out var HeadTextureInfo))
             {
                 yield return HeadTextureInfo;
+            }
+            yield break;
+        }
+        
+        public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(INpcGetter obj, IAssetLinkCache linkCache, Type? assetType);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(INpcGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Resolved))
+            {
+                if (linkCache == null) throw new ArgumentNullException("No link cache was given on a query interested in resolved assets");
+                foreach (var additional in GetResolvedAssetLinks(obj, linkCache, assetType))
+                {
+                    yield return additional;
+                }
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+                {
+                    foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Destructible is {} DestructibleItems)
+                {
+                    foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -6148,6 +6220,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => NpcCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

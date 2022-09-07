@@ -7,8 +7,10 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -825,6 +827,9 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RegionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => RegionSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RegionSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -904,6 +909,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegion :
+        IAssetLinkContainer,
         IEmittance,
         IFormLinkContainer,
         ILoquiObjectSetter<IRegionInternal>,
@@ -935,6 +941,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.REGN)]
     public partial interface IRegionGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IEmittanceGetter,
         IFormLinkContainerGetter,
@@ -1261,6 +1268,68 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Weather?.RemapLinks(mapping);
             obj.Grasses?.RemapLinks(mapping);
             obj.Sounds?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRegion obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Objects is {} ObjectsItems)
+            {
+                foreach (var item in ObjectsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Weather is {} WeatherItems)
+            {
+                foreach (var item in WeatherItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Map is {} MapItems)
+            {
+                foreach (var item in MapItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Land is {} LandItems)
+            {
+                foreach (var item in LandItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Grasses is {} GrassesItems)
+            {
+                foreach (var item in GrassesItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Sounds is {} SoundsItems)
+            {
+                foreach (var item in SoundsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IRegion obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.Objects?.RemapListedAssetLinks(mapping);
+            obj.Weather?.RemapListedAssetLinks(mapping);
+            obj.Map?.RemapListedAssetLinks(mapping);
+            obj.Land?.RemapListedAssetLinks(mapping);
+            obj.Grasses?.RemapListedAssetLinks(mapping);
+            obj.Sounds?.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -1691,6 +1760,60 @@ namespace Mutagen.Bethesda.Skyrim
                 foreach (var item in SoundsItems.EnumerateFormLinks())
                 {
                     yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IRegionGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Objects is {} ObjectsItems)
+                {
+                    foreach (var item in ObjectsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Weather is {} WeatherItems)
+                {
+                    foreach (var item in WeatherItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Map is {} MapItems)
+                {
+                    foreach (var item in MapItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Land is {} LandItems)
+                {
+                    foreach (var item in LandItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Grasses is {} GrassesItems)
+                {
+                    foreach (var item in GrassesItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Sounds is {} SoundsItems)
+                {
+                    foreach (var item in SoundsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;
@@ -2310,6 +2433,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RegionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

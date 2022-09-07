@@ -1,12 +1,16 @@
 using Noggog;
 using Loqui;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 
 namespace Mutagen.Bethesda.Plugins.Records;
 
 /// <summary>
 /// An interface that Group Record objects implement to hook into the common systems
 /// </summary>
-public interface IGroupGetter : IFormLinkContainerGetter
+public interface IGroupGetter : 
+    IFormLinkContainerGetter, 
+    IAssetLinkContainerGetter
 {
     /// <summary>
     /// Mod object the Group belongs to
@@ -78,7 +82,7 @@ public interface IGroupGetter<out TMajor> : IGroupGetter, IEnumerable<TMajor>
     new IEnumerable<TMajor> Records { get; }
 }
 
-public interface IGroup : IGroupGetter
+public interface IGroup : IGroupGetter, IAssetLinkContainer
 {
     /// <summary>
     /// Adds

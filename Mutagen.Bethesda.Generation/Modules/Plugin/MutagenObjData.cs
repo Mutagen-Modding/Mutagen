@@ -62,6 +62,10 @@ public class MutagenObjData
 
     public List<int> Subgroups = new();
 
+    public bool HasInferredAssets;
+
+    public bool HasResolvedAssets;
+
     public MutagenObjData(ObjectGeneration objGen)
     {
         this.ObjGen = objGen;

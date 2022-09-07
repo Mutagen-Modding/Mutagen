@@ -7,10 +7,12 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -3218,6 +3220,9 @@ namespace Mutagen.Bethesda.Oblivion
         IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, typeof(TMajor), throwIfUnknown: throwIfUnknown).Select(x => x.AsType<Mutagen.Bethesda.Plugins.Records.IMajorRecordQueryableGetter, TMajor>());
         [DebuggerStepThrough]
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, type: type, throwIfUnknown: throwIfUnknown);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => OblivionModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => OblivionModSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => OblivionModSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -3385,6 +3390,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IOblivionMod :
+        IAssetLinkContainer,
         IContextMod<IOblivionMod, IOblivionModGetter>,
         IFormLinkContainer,
         ILoquiObjectSetter<IOblivionMod>,
@@ -3453,6 +3459,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IOblivionModGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IContextGetterMod<IOblivionMod, IOblivionModGetter>,
         IFormLinkContainerGetter,
         ILoquiObject<IOblivionModGetter>,
@@ -5041,6 +5048,31 @@ namespace Mutagen.Bethesda.Oblivion
                         break;
                     }
             }
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IOblivionMod obj)
+        {
+            if (obj.Cells is IAssetLinkContainer CellslinkCont)
+            {
+                foreach (var item in CellslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Worldspaces is IAssetLinkContainer WorldspaceslinkCont)
+            {
+                foreach (var item in WorldspaceslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IOblivionMod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.Cells.RemapListedAssetLinks(mapping);
+            obj.Worldspaces.RemapListedAssetLinks(mapping);
         }
         
         #endregion
@@ -8988,6 +9020,28 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IOblivionModGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+                {
+                    foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
+                {
+                    foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -11969,6 +12023,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool CanUseLocalization => false;
         public bool UsingLocalization => false;
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OblivionModCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => OblivionModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]

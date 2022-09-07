@@ -7,8 +7,10 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -477,6 +479,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DestructibleCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DestructibleCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DestructibleSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DestructibleSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -538,6 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IDestructible :
+        IAssetLinkContainer,
         IDestructibleGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IDestructible>
@@ -548,6 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDestructibleGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IDestructibleGetter>
@@ -845,6 +852,20 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Stages.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDestructible obj)
+        {
+            foreach (var item in obj.Stages.SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IDestructible obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.Stages.ForEach(x => x.RemapListedAssetLinks(mapping));
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1008,6 +1029,18 @@ namespace Mutagen.Bethesda.Skyrim
             foreach (var item in obj.Stages.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDestructibleGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Stages.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1307,6 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DestructibleCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DestructibleCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructibleBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
