@@ -1,22 +1,24 @@
-﻿using Mutagen.Bethesda.Assets;
-using Mutagen.Bethesda.Environments;
-using Mutagen.Bethesda.Plugins;
+﻿using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
+using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.AutoData;
 using Xunit;
 namespace Mutagen.Bethesda.UnitTests.Skyrim.Assets;
 
 public class VoiceTypeAssetLookupTestSkyrim
 {
-    private static readonly ILinkCache<ISkyrimMod, ISkyrimModGetter> LinkCache = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE).LinkCache;
+    private readonly ILinkCache _linkCache;
     private readonly VoiceTypeAssetLookup _searcher = new();
 
     public VoiceTypeAssetLookupTestSkyrim()
     {
-        _searcher.Prep(LinkCache.CreateImmutableAssetLinkCache());
+        var mod = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.VoiceTypeTesting, SkyrimRelease.SkyrimSE);
+        _linkCache = mod.ToImmutableLinkCache();
+        
+        _searcher.Prep(_linkCache.CreateImmutableAssetLinkCache());
     }
 
     [Theory]
@@ -78,87 +80,154 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Fact]
-    public void TestAliasAdditionalVoicesVoiceTypeList()
+    public void TestGetIsID()
     {
-        Assert.True(LinkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("0E3039:Skyrim.esm"), out var responses), "Response not resolved");
-        Assert.True(LinkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("0E2D1E:Skyrim.esm"), out var topic), "Topic not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("15549C:VoiceTypeTestPlugin.esm"), out var responses), "Response not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("155352:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
             new VoiceContainer(new HashSet<string>
             {
-                "MaleCommander",
-                "MaleNord"
+                "CYRaaaPLACEHOLDERVoicetype"
             }),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
 
     [Fact]
-    public void TestNotEqualToZero()
+    public void TestGetInFaction()
     {
-        Assert.True(LinkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("074A09:Skyrim.esm"), out var responses), "Response not resolved");
-        Assert.True(LinkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("074772:Skyrim.esm"), out var topic), "Topic not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("0CE3BE:VoiceTypeTestPlugin.esm"), out var responses), "Response not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("0CE39F:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
             new VoiceContainer(new HashSet<string>
             {
-                "FemaleEvenToned",
-                "FemaleYoungEager",
-                "MaleNord"
+                "CYRMaleEvenToned",
+                "CYRMaleStandard",
+                "CYRMaleHonorable",
+                "CYRFemaleRich",
+                "CYRFemaleSultry",
+                "CYRFemaleEnergetic",
+                "CYRaaaPLACEHOLDERVoicetype"
             }),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
 
     [Fact]
-    public void TestAdditionalVoicesNPCAndCreatedNPC()
+    public void TestGetInFactionQuestConditions()
     {
-        Assert.True(LinkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("05C9DB:Skyrim.esm"), out var responses), "Response not resolved");
-        Assert.True(LinkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("05C9C8:Skyrim.esm"), out var topic), "Topic not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("0724F4:VoiceTypeTestPlugin.esm"), out var responses), "Response not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("0724D7:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
             new VoiceContainer(new HashSet<string>
             {
-                "MaleGuard",
-                "MaleNordCommander"
+                "CYRMaleArgonian",
+                "CYRMaleArgonianAccented",
+                "CYRFemaleDeepToned",
+                "CYRFemaleKhajiit",
+                "CYRFemaleSoftToned",
+                "CYRFemaleNord",
+                "CYRMaleBrute",
+                "CYRMaleEvenToned",
+                "CYRMaleElfHaughty",
+                "CYRMaleGuttural",
+                "CYRMaleLightToned",
+                "CYRMaleDunmer",
+                "CYRMaleRoughshod",
+                "CYRMaleStandard",
+                "CYRMaleNord",
+                "CYRFemaleArgonian",
+                "CYRMaleNordThick",
+                "CYRFemaleRich",
+                "CYRMaleKhajiitMercurial",
+                "CYRFemaleEnergetic",
+                "CYRMaleEnglishRich",
+                "CYRMaleOrcAlexC"
             }),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
 
     [Fact]
-    public void TestAdditionalVoicesNPCAndForcedRef()
+    public void TestAliasForcedRef()
     {
-        Assert.True(LinkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("0D0514:Skyrim.esm"), out var responses), "Response not resolved");
-        Assert.True(LinkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("0D04FB:Skyrim.esm"), out var topic), "Topic not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("0AF3C5:VoiceTypeTestPlugin.esm"), out var responses), "Response not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("0AF395:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
             new VoiceContainer(new HashSet<string>
             {
-                "FemaleNord",
-                "MaleGuard",
-                "MaleNordCommander"
+                "CYRMaleSemiUniqueTES4MaleImperialVoiceMatch"
             }),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
 
     [Fact]
-    public void TestMultipleFactionsAndVoiceTypesOr()
+    public void TestAliasExternal()
     {
-        Assert.True(LinkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("07D905:Skyrim.esm"), out var responses), "Response not resolved");
-        Assert.True(LinkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("02A3DB:Skyrim.esm"), out var topic), "Topic not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("07EFF0:VoiceTypeTestPlugin.esm"), out var responses), "Response not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("07EFDC:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
             new VoiceContainer(new HashSet<string>
             {
-                "MaleUniqueHadvar",
-                "MaleNordCommander",
-                "MaleSoldier",
-                "MaleNord",
-                "FemaleCommander",
-                "MaleCommander",
-                "MaleYoungEager"
+                "CYRFemaleEnergetic",
+                "CYRMaleHonorable",
+                "CYRMaleStandard"
+            }),
+            _searcher.GetVoicesWithQuest(topic!, responses!)
+        );
+    }
+
+    [Fact]
+    public void TestEmptyLeveledChar()
+    {
+        Assert.True(_linkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("16EAE5:VoiceTypeTestPlugin.esm"), out var responses), "Response not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("16EAE2:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
+
+        Assert.Equal(
+            new VoiceContainer(new HashSet<string>()),
+            _searcher.GetVoicesWithQuest(topic!, responses!)
+        );
+    }
+
+    [Fact]
+    public void TestGetIsVoiceTypeQuestConditions()
+    {
+        Assert.True(_linkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("063C34:VoiceTypeTestPlugin.esm"), out var responses), "Response not resolved");
+        Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("063B3F:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
+
+        Assert.Equal(
+            new VoiceContainer(new HashSet<string>
+            {
+                "CYRMaleArgonian",
+                "CYRMaleArgonianAccented",
+                "CYRFemaleDeepToned",
+                "CYRFemaleKhajiit",
+                "CYRFemaleSoftToned",
+                "CYRFemaleNord",
+                "CYRMaleBrute",
+                "CYRMaleEvenToned",
+                "CYRMaleElfHaughty",
+                "CYRMaleGuttural",
+                "CYRMaleLightToned",
+                "CYRMaleDunmer",
+                "CYRMaleRoughshod",
+                "CYRMaleStandard",
+                "CYRMaleNord",
+                "CYRFemaleArgonian",
+                "CYRMaleHonorable",
+                "CYRMaleNordThick",
+                "CYRFemaleRich",
+                "CYRMaleKhajiitMercurial",
+                "CYRFemaleSultry",
+                "CYRFemaleEnergetic",
+                "CYRMaleEnglishRich",
+                "CYRMaleOrcAlexC"
             }),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
