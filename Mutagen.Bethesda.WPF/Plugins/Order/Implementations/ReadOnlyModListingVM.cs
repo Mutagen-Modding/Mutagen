@@ -11,13 +11,20 @@ public class ReadOnlyModListingVM : ViewModel, IModListingGetter
 {
     private readonly ILoadOrderListingGetter _listing;
 
+    /// <inheritdoc />
     public ModKey ModKey => _listing.ModKey;
 
+    /// <inheritdoc />
     public bool Enabled => _listing.Enabled;
         
+    /// <inheritdoc />
     public bool Ghosted => _listing.Ghosted;
 
+    /// <inheritdoc />
     public string GhostSuffix => _listing.GhostSuffix;
+
+    /// <inheritdoc />
+    public string FileName => _listing.FileName;
 
     private readonly ObservableAsPropertyHelper<bool> _existsOnDisk;
     public bool ExistsOnDisk => _existsOnDisk.Value;
@@ -25,15 +32,11 @@ public class ReadOnlyModListingVM : ViewModel, IModListingGetter
     public ReadOnlyModListingVM(ILoadOrderListingGetter listing, string dataFolder)
     {
         _listing = listing;
-        var path = Path.Combine(dataFolder, listing.ModKey.FileName);
+        var path = Path.Combine(dataFolder, listing.FileName);
         var exists = File.Exists(path);
         _existsOnDisk = Observable.Defer(() =>
                 Noggog.ObservableExt.WatchFile(path)
-                    .Select(_ =>
-                    {
-                        var ret = File.Exists(path);
-                        return ret;
-                    }))
+                    .Select(_ => File.Exists(path)))
             .ToGuiProperty(this, nameof(ExistsOnDisk), initialValue: exists);
     }
 

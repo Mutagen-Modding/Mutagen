@@ -29,6 +29,11 @@ public interface ILoadOrderListingGetter : IModKeyed
     /// the mods differently depending on the context
     /// </summary>
     string GhostSuffix { get; }
+    
+    /// <summary>
+    /// File name with ghost concepts considered.
+    /// </summary>
+    string FileName { get; }
         
     public static string ToString(ILoadOrderListingGetter getter)
     {
@@ -51,6 +56,9 @@ public sealed record LoadOrderListing : ILoadOrderListingGetter
 
     /// <inheritdoc />
     public string GhostSuffix { get; init; } = string.Empty;
+
+    /// <inheritdoc />
+    public string FileName => OrderUtility.GetListingFilename(ModKey, GhostSuffix);
 
     public LoadOrderListing()
     {
