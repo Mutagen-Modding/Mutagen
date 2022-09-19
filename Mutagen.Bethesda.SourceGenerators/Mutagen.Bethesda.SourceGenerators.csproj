@@ -23,11 +23,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Loqui" Version="2.50.1" GeneratePathProperty="true" />
-        <PackageReference Include="Loqui.Generation" Version="2.50.1" GeneratePathProperty="true" />
+        <PackageReference Include="Loqui" Version="2.50.1.1-dev" GeneratePathProperty="true" />
+        <PackageReference Include="Loqui.Generation" Version="2.50.1.1-dev" GeneratePathProperty="true" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" PrivateAssets="all" />
-        <PackageReference Include="Noggog.CSharpExt" Version="2.50.1" GeneratePathProperty="true" />
+        <PackageReference Include="Noggog.CSharpExt" Version="2.50.1.1-dev" GeneratePathProperty="true" />
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
