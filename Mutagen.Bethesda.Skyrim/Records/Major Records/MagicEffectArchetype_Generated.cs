@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.AssociationKey = FormKey.Null;
-            item.ActorValue = MagicEffectArchetype._ActorValue_Default;
+            item.ActorValue = MagicEffectArchetype.ActorValueDefault;
         }
         
         #region Mutagen

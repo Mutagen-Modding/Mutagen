@@ -96,16 +96,16 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte Unknown { get; set; } = default;
         #endregion
         #region MembraneSourceBlendMode
-        public readonly static EffectShader.BlendMode _MembraneSourceBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode MembraneSourceBlendMode { get; set; } = _MembraneSourceBlendMode_Default;
+        public static readonly EffectShader.BlendMode MembraneSourceBlendModeDefault = BlendMode.Zero;
+        public EffectShader.BlendMode MembraneSourceBlendMode { get; set; } = MembraneSourceBlendModeDefault;
         #endregion
         #region MembraneBlendOperation
-        public readonly static EffectShader.BlendOperation _MembraneBlendOperation_Default = BlendOperation.Add;
-        public EffectShader.BlendOperation MembraneBlendOperation { get; set; } = _MembraneBlendOperation_Default;
+        public static readonly EffectShader.BlendOperation MembraneBlendOperationDefault = BlendOperation.Add;
+        public EffectShader.BlendOperation MembraneBlendOperation { get; set; } = MembraneBlendOperationDefault;
         #endregion
         #region MembraneZTest
-        public readonly static EffectShader.ZTest _MembraneZTest_Default = ZTest.EqualTo;
-        public EffectShader.ZTest MembraneZTest { get; set; } = _MembraneZTest_Default;
+        public static readonly EffectShader.ZTest MembraneZTestDefault = ZTest.EqualTo;
+        public EffectShader.ZTest MembraneZTest { get; set; } = MembraneZTestDefault;
         #endregion
         #region FillColorKey1
         public Color FillColorKey1 { get; set; } = default;
@@ -165,8 +165,8 @@ namespace Mutagen.Bethesda.Fallout4
         public Single EdgeEffectFullAlphaRatio { get; set; } = default;
         #endregion
         #region MembraneDestBlendMode
-        public readonly static EffectShader.BlendMode _MembraneDestBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode MembraneDestBlendMode { get; set; } = _MembraneDestBlendMode_Default;
+        public static readonly EffectShader.BlendMode MembraneDestBlendModeDefault = BlendMode.Zero;
+        public EffectShader.BlendMode MembraneDestBlendMode { get; set; } = MembraneDestBlendModeDefault;
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2729,9 +2729,9 @@ namespace Mutagen.Bethesda.Fallout4
             item.ParticlePaletteTexture = default;
             item.DATA = default;
             item.Unknown = default;
-            item.MembraneSourceBlendMode = EffectShader._MembraneSourceBlendMode_Default;
-            item.MembraneBlendOperation = EffectShader._MembraneBlendOperation_Default;
-            item.MembraneZTest = EffectShader._MembraneZTest_Default;
+            item.MembraneSourceBlendMode = EffectShader.MembraneSourceBlendModeDefault;
+            item.MembraneBlendOperation = EffectShader.MembraneBlendOperationDefault;
+            item.MembraneZTest = EffectShader.MembraneZTestDefault;
             item.FillColorKey1 = default;
             item.FillAlphaFadeInTime = default;
             item.FillFullAlphaTime = default;
@@ -2751,7 +2751,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.EdgeEffectAlphaPulseFrequency = default;
             item.FillFullAlphaRatio = default;
             item.EdgeEffectFullAlphaRatio = default;
-            item.MembraneDestBlendMode = EffectShader._MembraneDestBlendMode_Default;
+            item.MembraneDestBlendMode = EffectShader.MembraneDestBlendModeDefault;
             item.Unknown2 = new byte[152];
             item.HolesAnimationStartTime = default;
             item.HolesAnimationEndTime = default;

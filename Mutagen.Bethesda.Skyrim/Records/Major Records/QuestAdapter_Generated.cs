@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Skyrim
         public QuestAdapter.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region ExtraBindDataVersion
-        public readonly static Byte _ExtraBindDataVersion_Default = 2;
-        public Byte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
+        public static readonly Byte ExtraBindDataVersionDefault = 2;
+        public Byte ExtraBindDataVersion { get; set; } = ExtraBindDataVersionDefault;
         #endregion
         #region FileName
         public String FileName { get; set; } = string.Empty;
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Versioning = default;
-            item.ExtraBindDataVersion = QuestAdapter._ExtraBindDataVersion_Default;
+            item.ExtraBindDataVersion = QuestAdapter.ExtraBindDataVersionDefault;
             item.FileName = string.Empty;
             item.Fragments.Clear();
             item.Aliases.Clear();

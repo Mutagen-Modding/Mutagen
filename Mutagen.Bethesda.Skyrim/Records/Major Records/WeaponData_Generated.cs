@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte BaseVATStoHitChance { get; set; } = default;
         #endregion
         #region AttackAnimation
-        public readonly static WeaponData.AttackAnimationType _AttackAnimation_Default = WeaponData.AttackAnimationType.Default;
-        public WeaponData.AttackAnimationType AttackAnimation { get; set; } = _AttackAnimation_Default;
+        public static readonly WeaponData.AttackAnimationType AttackAnimationDefault = WeaponData.AttackAnimationType.Default;
+        public WeaponData.AttackAnimationType AttackAnimation { get; set; } = AttackAnimationDefault;
         #endregion
         #region NumProjectiles
         public Byte NumProjectiles { get; set; } = default;
@@ -138,8 +138,8 @@ namespace Mutagen.Bethesda.Skyrim
         public Int64 Unknown4 { get; set; } = default;
         #endregion
         #region Resist
-        public readonly static ActorValue _Resist_Default = ActorValue.None;
-        public ActorValue Resist { get; set; } = _Resist_Default;
+        public static readonly ActorValue ResistDefault = ActorValue.None;
+        public ActorValue Resist { get; set; } = ResistDefault;
         #endregion
         #region Unknown5
         public Int32 Unknown5 { get; set; } = default;
@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.SightFOV = default;
             item.Unknown = default;
             item.BaseVATStoHitChance = default;
-            item.AttackAnimation = WeaponData._AttackAnimation_Default;
+            item.AttackAnimation = WeaponData.AttackAnimationDefault;
             item.NumProjectiles = default;
             item.EmbeddedWeaponAV = default;
             item.RangeMin = default;
@@ -1635,7 +1635,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Unknown3 = new byte[12];
             item.Skill = default;
             item.Unknown4 = default;
-            item.Resist = WeaponData._Resist_Default;
+            item.Resist = WeaponData.ResistDefault;
             item.Unknown5 = default;
             item.Stagger = default;
         }

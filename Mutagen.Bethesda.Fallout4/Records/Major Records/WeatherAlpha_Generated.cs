@@ -50,36 +50,36 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Sunrise
-        public readonly static Single _Sunrise_Default = 1f;
-        public Single Sunrise { get; set; } = _Sunrise_Default;
+        public static readonly Single SunriseDefault = 1f;
+        public Single Sunrise { get; set; } = SunriseDefault;
         #endregion
         #region Day
-        public readonly static Single _Day_Default = 1f;
-        public Single Day { get; set; } = _Day_Default;
+        public static readonly Single DayDefault = 1f;
+        public Single Day { get; set; } = DayDefault;
         #endregion
         #region Sunset
-        public readonly static Single _Sunset_Default = 1f;
-        public Single Sunset { get; set; } = _Sunset_Default;
+        public static readonly Single SunsetDefault = 1f;
+        public Single Sunset { get; set; } = SunsetDefault;
         #endregion
         #region Night
-        public readonly static Single _Night_Default = 1f;
-        public Single Night { get; set; } = _Night_Default;
+        public static readonly Single NightDefault = 1f;
+        public Single Night { get; set; } = NightDefault;
         #endregion
         #region EarlySunrise
-        public readonly static Single _EarlySunrise_Default = 1f;
-        public Single EarlySunrise { get; set; } = _EarlySunrise_Default;
+        public static readonly Single EarlySunriseDefault = 1f;
+        public Single EarlySunrise { get; set; } = EarlySunriseDefault;
         #endregion
         #region LateSunrise
-        public readonly static Single _LateSunrise_Default = 1f;
-        public Single LateSunrise { get; set; } = _LateSunrise_Default;
+        public static readonly Single LateSunriseDefault = 1f;
+        public Single LateSunrise { get; set; } = LateSunriseDefault;
         #endregion
         #region EarlySunset
-        public readonly static Single _EarlySunset_Default = 1f;
-        public Single EarlySunset { get; set; } = _EarlySunset_Default;
+        public static readonly Single EarlySunsetDefault = 1f;
+        public Single EarlySunset { get; set; } = EarlySunsetDefault;
         #endregion
         #region LateSunset
-        public readonly static Single _LateSunset_Default = 1f;
-        public Single LateSunset { get; set; } = _LateSunset_Default;
+        public static readonly Single LateSunsetDefault = 1f;
+        public Single LateSunset { get; set; } = LateSunsetDefault;
         #endregion
 
         #region To String
@@ -945,14 +945,14 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWeatherAlpha item)
         {
             ClearPartial();
-            item.Sunrise = WeatherAlpha._Sunrise_Default;
-            item.Day = WeatherAlpha._Day_Default;
-            item.Sunset = WeatherAlpha._Sunset_Default;
-            item.Night = WeatherAlpha._Night_Default;
-            item.EarlySunrise = WeatherAlpha._EarlySunrise_Default;
-            item.LateSunrise = WeatherAlpha._LateSunrise_Default;
-            item.EarlySunset = WeatherAlpha._EarlySunset_Default;
-            item.LateSunset = WeatherAlpha._LateSunset_Default;
+            item.Sunrise = WeatherAlpha.SunriseDefault;
+            item.Day = WeatherAlpha.DayDefault;
+            item.Sunset = WeatherAlpha.SunsetDefault;
+            item.Night = WeatherAlpha.NightDefault;
+            item.EarlySunrise = WeatherAlpha.EarlySunriseDefault;
+            item.LateSunrise = WeatherAlpha.LateSunriseDefault;
+            item.EarlySunset = WeatherAlpha.EarlySunsetDefault;
+            item.LateSunset = WeatherAlpha.LateSunsetDefault;
         }
         
         #region Mutagen

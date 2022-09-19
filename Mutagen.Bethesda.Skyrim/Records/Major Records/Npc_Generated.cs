@@ -441,8 +441,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.GiftFilter => this.GiftFilter;
         #endregion
         #region NAM5
-        public readonly static UInt16 _NAM5_Default = 0xFF00;
-        public UInt16 NAM5 { get; set; } = _NAM5_Default;
+        public static readonly UInt16 NAM5Default = 0xFF00;
+        public UInt16 NAM5 { get; set; } = NAM5Default;
         #endregion
         #region Height
         public Single Height { get; set; } = default;
@@ -3509,7 +3509,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.HairColor.Clear();
             item.CombatStyle.Clear();
             item.GiftFilter.Clear();
-            item.NAM5 = Npc._NAM5_Default;
+            item.NAM5 = Npc.NAM5Default;
             item.Height = default;
             item.Weight = default;
             item.SoundLevel = default;

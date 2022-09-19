@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
         public LightData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Time
-        public readonly static Int32 _Time_Default = -1;
-        public Int32 Time { get; set; } = _Time_Default;
+        public static readonly Int32 TimeDefault = -1;
+        public Int32 Time { get; set; } = TimeDefault;
         #endregion
         #region Radius
         public UInt32 Radius { get; set; } = default;
@@ -68,12 +68,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Light.LightFlag Flags { get; set; } = default;
         #endregion
         #region FalloffExponent
-        public readonly static Single _FalloffExponent_Default = 1;
-        public Single FalloffExponent { get; set; } = _FalloffExponent_Default;
+        public static readonly Single FalloffExponentDefault = 1;
+        public Single FalloffExponent { get; set; } = FalloffExponentDefault;
         #endregion
         #region FOV
-        public readonly static Single _FOV_Default = 90;
-        public Single FOV { get; set; } = _FOV_Default;
+        public static readonly Single FOVDefault = 90;
+        public Single FOV { get; set; } = FOVDefault;
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
@@ -996,12 +996,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Versioning = default;
-            item.Time = LightData._Time_Default;
+            item.Time = LightData.TimeDefault;
             item.Radius = default;
             item.Color = default;
             item.Flags = default;
-            item.FalloffExponent = LightData._FalloffExponent_Default;
-            item.FOV = LightData._FOV_Default;
+            item.FalloffExponent = LightData.FalloffExponentDefault;
+            item.FOV = LightData.FOVDefault;
             item.Value = default;
             item.Weight = default;
         }

@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region MaxAngle
-        public readonly static Single _MaxAngle_Default = 30;
-        public Single MaxAngle { get; set; } = _MaxAngle_Default;
+        public static readonly Single MaxAngleDefault = 30;
+        public Single MaxAngle { get; set; } = MaxAngleDefault;
         public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
         #endregion
         #region Material
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.ObjectBounds.Clear();
             item.Model = null;
-            item.MaxAngle = Static._MaxAngle_Default;
+            item.MaxAngle = Static.MaxAngleDefault;
             item.Material.Clear();
             item.Flags = default;
             item.Unused = new byte[3];

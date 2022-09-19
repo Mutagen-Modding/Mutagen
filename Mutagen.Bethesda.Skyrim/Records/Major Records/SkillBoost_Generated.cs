@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Skill
-        public readonly static ActorValue _Skill_Default = ActorValue.None;
-        public ActorValue Skill { get; set; } = _Skill_Default;
+        public static readonly ActorValue SkillDefault = ActorValue.None;
+        public ActorValue Skill { get; set; } = SkillDefault;
         #endregion
         #region Boost
         public SByte Boost { get; set; } = default;
@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ISkillBoost item)
         {
             ClearPartial();
-            item.Skill = SkillBoost._Skill_Default;
+            item.Skill = SkillBoost.SkillDefault;
             item.Boost = default;
         }
         

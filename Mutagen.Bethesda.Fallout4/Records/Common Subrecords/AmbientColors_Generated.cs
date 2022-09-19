@@ -72,8 +72,8 @@ namespace Mutagen.Bethesda.Fallout4
         public Color Specular { get; set; } = default;
         #endregion
         #region Scale
-        public readonly static Single _Scale_Default = 1f;
-        public Single Scale { get; set; } = _Scale_Default;
+        public static readonly Single ScaleDefault = 1f;
+        public Single Scale { get; set; } = ScaleDefault;
         #endregion
 
         #region To String
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.DirectionalZPlus = default;
             item.DirectionalZMinus = default;
             item.Specular = default;
-            item.Scale = AmbientColors._Scale_Default;
+            item.Scale = AmbientColors.ScaleDefault;
         }
         
         #region Mutagen

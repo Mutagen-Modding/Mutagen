@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Single FogDistanceNightMax { get; set; } = default;
         #endregion
         #region FogDistanceDayNearHeightMid
-        public readonly static Single _FogDistanceDayNearHeightMid_Default = 0f;
+        public static readonly Single FogDistanceDayNearHeightMidDefault = 0f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceDayNearHeightMid;
         public Single FogDistanceDayNearHeightMid
@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceDayNearHeightRange
-        public readonly static Single _FogDistanceDayNearHeightRange_Default = 10000f;
+        public static readonly Single FogDistanceDayNearHeightRangeDefault = 10000f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceDayNearHeightRange;
         public Single FogDistanceDayNearHeightRange
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceNightNearHeightMid
-        public readonly static Single _FogDistanceNightNearHeightMid_Default = 0f;
+        public static readonly Single FogDistanceNightNearHeightMidDefault = 0f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNightNearHeightMid;
         public Single FogDistanceNightNearHeightMid
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceNightNearHeightRange
-        public readonly static Single _FogDistanceNightNearHeightRange_Default = 10000f;
+        public static readonly Single FogDistanceNightNearHeightRangeDefault = 10000f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNightNearHeightRange;
         public Single FogDistanceNightNearHeightRange
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceDayHighDensityScale
-        public readonly static Single _FogDistanceDayHighDensityScale_Default = 1f;
+        public static readonly Single FogDistanceDayHighDensityScaleDefault = 1f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceDayHighDensityScale;
         public Single FogDistanceDayHighDensityScale
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceNightHighDensityScale
-        public readonly static Single _FogDistanceNightHighDensityScale_Default = 1f;
+        public static readonly Single FogDistanceNightHighDensityScaleDefault = 1f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNightHighDensityScale;
         public Single FogDistanceNightHighDensityScale
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceDayFarHeightMid
-        public readonly static Single _FogDistanceDayFarHeightMid_Default = 0f;
+        public static readonly Single FogDistanceDayFarHeightMidDefault = 0f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceDayFarHeightMid;
         public Single FogDistanceDayFarHeightMid
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceDayFarHeightRange
-        public readonly static Single _FogDistanceDayFarHeightRange_Default = 10000f;
+        public static readonly Single FogDistanceDayFarHeightRangeDefault = 10000f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceDayFarHeightRange;
         public Single FogDistanceDayFarHeightRange
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceNightFarHeightMid
-        public readonly static Single _FogDistanceNightFarHeightMid_Default = 0f;
+        public static readonly Single FogDistanceNightFarHeightMidDefault = 0f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNightFarHeightMid;
         public Single FogDistanceNightFarHeightMid
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceNightFarHeightRange
-        public readonly static Single _FogDistanceNightFarHeightRange_Default = 10000f;
+        public static readonly Single FogDistanceNightFarHeightRangeDefault = 10000f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNightFarHeightRange;
         public Single FogDistanceNightFarHeightRange
@@ -4544,16 +4544,16 @@ namespace Mutagen.Bethesda.Fallout4
             item.FogDistanceNightPower = default;
             item.FogDistanceDayMax = default;
             item.FogDistanceNightMax = default;
-            item.FogDistanceDayNearHeightMid = Weather._FogDistanceDayNearHeightMid_Default;
-            item.FogDistanceDayNearHeightRange = Weather._FogDistanceDayNearHeightRange_Default;
-            item.FogDistanceNightNearHeightMid = Weather._FogDistanceNightNearHeightMid_Default;
-            item.FogDistanceNightNearHeightRange = Weather._FogDistanceNightNearHeightRange_Default;
-            item.FogDistanceDayHighDensityScale = Weather._FogDistanceDayHighDensityScale_Default;
-            item.FogDistanceNightHighDensityScale = Weather._FogDistanceNightHighDensityScale_Default;
-            item.FogDistanceDayFarHeightMid = Weather._FogDistanceDayFarHeightMid_Default;
-            item.FogDistanceDayFarHeightRange = Weather._FogDistanceDayFarHeightRange_Default;
-            item.FogDistanceNightFarHeightMid = Weather._FogDistanceNightFarHeightMid_Default;
-            item.FogDistanceNightFarHeightRange = Weather._FogDistanceNightFarHeightRange_Default;
+            item.FogDistanceDayNearHeightMid = Weather.FogDistanceDayNearHeightMidDefault;
+            item.FogDistanceDayNearHeightRange = Weather.FogDistanceDayNearHeightRangeDefault;
+            item.FogDistanceNightNearHeightMid = Weather.FogDistanceNightNearHeightMidDefault;
+            item.FogDistanceNightNearHeightRange = Weather.FogDistanceNightNearHeightRangeDefault;
+            item.FogDistanceDayHighDensityScale = Weather.FogDistanceDayHighDensityScaleDefault;
+            item.FogDistanceNightHighDensityScale = Weather.FogDistanceNightHighDensityScaleDefault;
+            item.FogDistanceDayFarHeightMid = Weather.FogDistanceDayFarHeightMidDefault;
+            item.FogDistanceDayFarHeightRange = Weather.FogDistanceDayFarHeightRangeDefault;
+            item.FogDistanceNightFarHeightMid = Weather.FogDistanceNightFarHeightMidDefault;
+            item.FogDistanceNightFarHeightRange = Weather.FogDistanceNightFarHeightRangeDefault;
             item.WindSpeed = default;
             item.Unknown = default;
             item.TransDelta = default;

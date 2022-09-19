@@ -151,12 +151,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Single BaseCost { get; set; } = default;
         #endregion
         #region MagicSkill
-        public readonly static ActorValue _MagicSkill_Default = ActorValue.None;
-        public ActorValue MagicSkill { get; set; } = _MagicSkill_Default;
+        public static readonly ActorValue MagicSkillDefault = ActorValue.None;
+        public ActorValue MagicSkill { get; set; } = MagicSkillDefault;
         #endregion
         #region ResistValue
-        public readonly static ActorValue _ResistValue_Default = ActorValue.None;
-        public ActorValue ResistValue { get; set; } = _ResistValue_Default;
+        public static readonly ActorValue ResistValueDefault = ActorValue.None;
+        public ActorValue ResistValue { get; set; } = ResistValueDefault;
         #endregion
         #region Unknown1
         public UInt16 Unknown1 { get; set; } = default;
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Skyrim
         public TargetType TargetType { get; set; } = default;
         #endregion
         #region SecondActorValue
-        public readonly static ActorValue _SecondActorValue_Default = ActorValue.None;
-        public ActorValue SecondActorValue { get; set; } = _SecondActorValue_Default;
+        public static readonly ActorValue SecondActorValueDefault = ActorValue.None;
+        public ActorValue SecondActorValue { get; set; } = SecondActorValueDefault;
         #endregion
         #region CastingArt
         private readonly IFormLink<IArtObjectGetter> _CastingArt = new FormLink<IArtObjectGetter>();
@@ -2902,8 +2902,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.Keywords = null;
             item.Flags = default;
             item.BaseCost = default;
-            item.MagicSkill = MagicEffect._MagicSkill_Default;
-            item.ResistValue = MagicEffect._ResistValue_Default;
+            item.MagicSkill = MagicEffect.MagicSkillDefault;
+            item.ResistValue = MagicEffect.ResistValueDefault;
             item.Unknown1 = default;
             item.CastingLight.Clear();
             item.TaperWeight = default;
@@ -2920,7 +2920,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Explosion.Clear();
             item.CastType = default;
             item.TargetType = default;
-            item.SecondActorValue = MagicEffect._SecondActorValue_Default;
+            item.SecondActorValue = MagicEffect.SecondActorValueDefault;
             item.CastingArt.Clear();
             item.HitEffectArt.Clear();
             item.ImpactData.Clear();

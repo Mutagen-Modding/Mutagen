@@ -52,12 +52,12 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region NavmeshVersion
-        public readonly static UInt32 _NavmeshVersion_Default = 15;
-        public UInt32 NavmeshVersion { get; set; } = _NavmeshVersion_Default;
+        public static readonly UInt32 NavmeshVersionDefault = 15;
+        public UInt32 NavmeshVersion { get; set; } = NavmeshVersionDefault;
         #endregion
         #region Magic
-        public readonly static UInt32 _Magic_Default = 0xA5E9A03C;
-        public UInt32 Magic { get; set; } = _Magic_Default;
+        public static readonly UInt32 MagicDefault = 0xA5E9A03C;
+        public UInt32 Magic { get; set; } = MagicDefault;
         #endregion
         #region Parent
         public ANavmeshParent Parent { get; set; } = default!;
@@ -1760,8 +1760,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INavmeshGeometry item)
         {
             ClearPartial();
-            item.NavmeshVersion = NavmeshGeometry._NavmeshVersion_Default;
-            item.Magic = NavmeshGeometry._Magic_Default;
+            item.NavmeshVersion = NavmeshGeometry.NavmeshVersionDefault;
+            item.Magic = NavmeshGeometry.MagicDefault;
             item.Parent.Clear();
             item.Vertices.Clear();
             item.Triangles.Clear();

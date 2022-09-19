@@ -228,19 +228,19 @@ namespace Mutagen.Bethesda.Skyrim
         public Size Size { get; set; } = default;
         #endregion
         #region HeadBipedObject
-        public readonly static BipedObject _HeadBipedObject_Default = BipedObject.None;
-        public BipedObject HeadBipedObject { get; set; } = _HeadBipedObject_Default;
+        public static readonly BipedObject HeadBipedObjectDefault = BipedObject.None;
+        public BipedObject HeadBipedObject { get; set; } = HeadBipedObjectDefault;
         #endregion
         #region HairBipedObject
-        public readonly static BipedObject _HairBipedObject_Default = BipedObject.None;
-        public BipedObject HairBipedObject { get; set; } = _HairBipedObject_Default;
+        public static readonly BipedObject HairBipedObjectDefault = BipedObject.None;
+        public BipedObject HairBipedObject { get; set; } = HairBipedObjectDefault;
         #endregion
         #region InjuredHealthPercent
         public Single InjuredHealthPercent { get; set; } = default;
         #endregion
         #region ShieldBipedObject
-        public readonly static BipedObject _ShieldBipedObject_Default = BipedObject.None;
-        public BipedObject ShieldBipedObject { get; set; } = _ShieldBipedObject_Default;
+        public static readonly BipedObject ShieldBipedObjectDefault = BipedObject.None;
+        public BipedObject ShieldBipedObject { get; set; } = ShieldBipedObjectDefault;
         #endregion
         #region Regen
         private readonly Dictionary<BasicStat, Single> _Regen = new Dictionary<BasicStat, Single>();
@@ -258,8 +258,8 @@ namespace Mutagen.Bethesda.Skyrim
         public Single UnarmedReach { get; set; } = default;
         #endregion
         #region BodyBipedObject
-        public readonly static BipedObject _BodyBipedObject_Default = BipedObject.None;
-        public BipedObject BodyBipedObject { get; set; } = _BodyBipedObject_Default;
+        public static readonly BipedObject BodyBipedObjectDefault = BipedObject.None;
+        public BipedObject BodyBipedObject { get; set; } = BodyBipedObjectDefault;
         #endregion
         #region AimAngleTolerance
         public Single AimAngleTolerance { get; set; } = default;
@@ -4718,14 +4718,14 @@ namespace Mutagen.Bethesda.Skyrim
             item.AccelerationRate = default;
             item.DecelerationRate = default;
             item.Size = default;
-            item.HeadBipedObject = Race._HeadBipedObject_Default;
-            item.HairBipedObject = Race._HairBipedObject_Default;
+            item.HeadBipedObject = Race.HeadBipedObjectDefault;
+            item.HairBipedObject = Race.HairBipedObjectDefault;
             item.InjuredHealthPercent = default;
-            item.ShieldBipedObject = Race._ShieldBipedObject_Default;
+            item.ShieldBipedObject = Race.ShieldBipedObjectDefault;
             item.Regen.Clear();
             item.UnarmedDamage = default;
             item.UnarmedReach = default;
-            item.BodyBipedObject = Race._BodyBipedObject_Default;
+            item.BodyBipedObject = Race.BodyBipedObjectDefault;
             item.AimAngleTolerance = default;
             item.FlightRadius = default;
             item.AngularAccelerationRate = default;

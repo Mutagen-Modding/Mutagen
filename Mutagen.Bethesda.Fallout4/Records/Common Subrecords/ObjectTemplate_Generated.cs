@@ -94,8 +94,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region AddonIndex
-        public readonly static Int16 _AddonIndex_Default = -1;
-        public Int16 AddonIndex { get; set; } = _AddonIndex_Default;
+        public static readonly Int16 AddonIndexDefault = -1;
+        public Int16 AddonIndex { get; set; } = AddonIndexDefault;
         #endregion
         #region LevelMin
         public Byte LevelMin { get; set; } = default;
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.IsEditorOnly = default;
             item.Name = default;
-            item.AddonIndex = ObjectTemplate<T>._AddonIndex_Default;
+            item.AddonIndex = ObjectTemplate<T>.AddonIndexDefault;
             item.LevelMin = default;
             item.LevelMax = default;
             item.Default = default;

@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Fallout4
         public QuestAdapter.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region ExtraBindDataVersion
-        public readonly static Byte _ExtraBindDataVersion_Default = 3;
-        public Byte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
+        public static readonly Byte ExtraBindDataVersionDefault = 3;
+        public Byte ExtraBindDataVersion { get; set; } = ExtraBindDataVersionDefault;
         #endregion
         #region Script
         public ScriptEntry Script { get; set; } = new ScriptEntry();
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Versioning = default;
-            item.ExtraBindDataVersion = QuestAdapter._ExtraBindDataVersion_Default;
+            item.ExtraBindDataVersion = QuestAdapter.ExtraBindDataVersionDefault;
             item.Script.Clear();
             item.Fragments.Clear();
             item.Aliases.Clear();

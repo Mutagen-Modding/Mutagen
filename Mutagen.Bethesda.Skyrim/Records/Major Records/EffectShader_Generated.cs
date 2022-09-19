@@ -87,16 +87,16 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region MembraneSourceBlendMode
-        public readonly static EffectShader.BlendMode _MembraneSourceBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode MembraneSourceBlendMode { get; set; } = _MembraneSourceBlendMode_Default;
+        public static readonly EffectShader.BlendMode MembraneSourceBlendModeDefault = BlendMode.Zero;
+        public EffectShader.BlendMode MembraneSourceBlendMode { get; set; } = MembraneSourceBlendModeDefault;
         #endregion
         #region MembraneBlendOperation
-        public readonly static EffectShader.BlendOperation _MembraneBlendOperation_Default = BlendOperation.Add;
-        public EffectShader.BlendOperation MembraneBlendOperation { get; set; } = _MembraneBlendOperation_Default;
+        public static readonly EffectShader.BlendOperation MembraneBlendOperationDefault = BlendOperation.Add;
+        public EffectShader.BlendOperation MembraneBlendOperation { get; set; } = MembraneBlendOperationDefault;
         #endregion
         #region MembraneZTest
-        public readonly static EffectShader.ZTest _MembraneZTest_Default = ZTest.Normal;
-        public EffectShader.ZTest MembraneZTest { get; set; } = _MembraneZTest_Default;
+        public static readonly EffectShader.ZTest MembraneZTestDefault = ZTest.Normal;
+        public EffectShader.ZTest MembraneZTest { get; set; } = MembraneZTestDefault;
         #endregion
         #region FillColorKey1
         public Color FillColorKey1 { get; set; } = default;
@@ -156,24 +156,24 @@ namespace Mutagen.Bethesda.Skyrim
         public Single EdgeEffectFullAlphaRatio { get; set; } = default;
         #endregion
         #region MembraneDestBlendMode
-        public readonly static EffectShader.BlendMode _MembraneDestBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode MembraneDestBlendMode { get; set; } = _MembraneDestBlendMode_Default;
+        public static readonly EffectShader.BlendMode MembraneDestBlendModeDefault = BlendMode.Zero;
+        public EffectShader.BlendMode MembraneDestBlendMode { get; set; } = MembraneDestBlendModeDefault;
         #endregion
         #region ParticleSourceBlendMode
-        public readonly static EffectShader.BlendMode _ParticleSourceBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode ParticleSourceBlendMode { get; set; } = _ParticleSourceBlendMode_Default;
+        public static readonly EffectShader.BlendMode ParticleSourceBlendModeDefault = BlendMode.Zero;
+        public EffectShader.BlendMode ParticleSourceBlendMode { get; set; } = ParticleSourceBlendModeDefault;
         #endregion
         #region ParticleBlendOperation
-        public readonly static EffectShader.BlendOperation _ParticleBlendOperation_Default = BlendOperation.Add;
-        public EffectShader.BlendOperation ParticleBlendOperation { get; set; } = _ParticleBlendOperation_Default;
+        public static readonly EffectShader.BlendOperation ParticleBlendOperationDefault = BlendOperation.Add;
+        public EffectShader.BlendOperation ParticleBlendOperation { get; set; } = ParticleBlendOperationDefault;
         #endregion
         #region ParticleZTest
-        public readonly static EffectShader.ZTest _ParticleZTest_Default = ZTest.Normal;
-        public EffectShader.ZTest ParticleZTest { get; set; } = _ParticleZTest_Default;
+        public static readonly EffectShader.ZTest ParticleZTestDefault = ZTest.Normal;
+        public EffectShader.ZTest ParticleZTest { get; set; } = ParticleZTestDefault;
         #endregion
         #region ParticleDestBlendMode
-        public readonly static EffectShader.BlendMode _ParticleDestBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode ParticleDestBlendMode { get; set; } = _ParticleDestBlendMode_Default;
+        public static readonly EffectShader.BlendMode ParticleDestBlendModeDefault = BlendMode.Zero;
+        public EffectShader.BlendMode ParticleDestBlendMode { get; set; } = ParticleDestBlendModeDefault;
         #endregion
         #region ParticleBirthRampUpTime
         public Single ParticleBirthRampUpTime { get; set; } = default;
@@ -4855,9 +4855,9 @@ namespace Mutagen.Bethesda.Skyrim
             item.MembranePaletteTexture = default;
             item.ParticlePaletteTexture = default;
             item.Unknown = default;
-            item.MembraneSourceBlendMode = EffectShader._MembraneSourceBlendMode_Default;
-            item.MembraneBlendOperation = EffectShader._MembraneBlendOperation_Default;
-            item.MembraneZTest = EffectShader._MembraneZTest_Default;
+            item.MembraneSourceBlendMode = EffectShader.MembraneSourceBlendModeDefault;
+            item.MembraneBlendOperation = EffectShader.MembraneBlendOperationDefault;
+            item.MembraneZTest = EffectShader.MembraneZTestDefault;
             item.FillColorKey1 = default;
             item.FillAlphaFadeInTime = default;
             item.FillFullAlphaTime = default;
@@ -4877,11 +4877,11 @@ namespace Mutagen.Bethesda.Skyrim
             item.EdgeEffectAlphaPulseFrequency = default;
             item.FillFullAlphaRatio = default;
             item.EdgeEffectFullAlphaRatio = default;
-            item.MembraneDestBlendMode = EffectShader._MembraneDestBlendMode_Default;
-            item.ParticleSourceBlendMode = EffectShader._ParticleSourceBlendMode_Default;
-            item.ParticleBlendOperation = EffectShader._ParticleBlendOperation_Default;
-            item.ParticleZTest = EffectShader._ParticleZTest_Default;
-            item.ParticleDestBlendMode = EffectShader._ParticleDestBlendMode_Default;
+            item.MembraneDestBlendMode = EffectShader.MembraneDestBlendModeDefault;
+            item.ParticleSourceBlendMode = EffectShader.ParticleSourceBlendModeDefault;
+            item.ParticleBlendOperation = EffectShader.ParticleBlendOperationDefault;
+            item.ParticleZTest = EffectShader.ParticleZTestDefault;
+            item.ParticleDestBlendMode = EffectShader.ParticleDestBlendModeDefault;
             item.ParticleBirthRampUpTime = default;
             item.ParticleFullBirthTime = default;
             item.ParticleBirthRampDownTime = default;

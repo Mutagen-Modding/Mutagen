@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ExtraBindDataVersion
-        public readonly static Byte _ExtraBindDataVersion_Default = 3;
-        public Byte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
+        public static readonly Byte ExtraBindDataVersionDefault = 3;
+        public Byte ExtraBindDataVersion { get; set; } = ExtraBindDataVersionDefault;
         #endregion
         #region Script
         public ScriptEntry Script { get; set; } = new ScriptEntry();
@@ -845,7 +845,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IScriptFragments item)
         {
             ClearPartial();
-            item.ExtraBindDataVersion = ScriptFragments._ExtraBindDataVersion_Default;
+            item.ExtraBindDataVersion = ScriptFragments.ExtraBindDataVersionDefault;
             item.Script.Clear();
             item.OnBegin = null;
             item.OnEnd = null;

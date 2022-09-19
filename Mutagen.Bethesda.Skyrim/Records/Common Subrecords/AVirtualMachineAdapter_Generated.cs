@@ -57,12 +57,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Version
-        public readonly static Int16 _Version_Default = 5;
-        public Int16 Version { get; set; } = _Version_Default;
+        public static readonly Int16 VersionDefault = 5;
+        public Int16 Version { get; set; } = VersionDefault;
         #endregion
         #region ObjectFormat
-        public readonly static UInt16 _ObjectFormat_Default = 2;
-        public UInt16 ObjectFormat { get; set; } = _ObjectFormat_Default;
+        public static readonly UInt16 ObjectFormatDefault = 2;
+        public UInt16 ObjectFormat { get; set; } = ObjectFormatDefault;
         #endregion
         #region Scripts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -841,8 +841,8 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void Clear(IAVirtualMachineAdapter item)
         {
             ClearPartial();
-            item.Version = AVirtualMachineAdapter._Version_Default;
-            item.ObjectFormat = AVirtualMachineAdapter._ObjectFormat_Default;
+            item.Version = AVirtualMachineAdapter.VersionDefault;
+            item.ObjectFormat = AVirtualMachineAdapter.ObjectFormatDefault;
             item.Scripts.Clear();
         }
         

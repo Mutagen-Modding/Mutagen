@@ -64,8 +64,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IFallout4MajorRecordGetter> IScriptObjectPropertyGetter.Object => this.Object;
         #endregion
         #region Alias
-        public readonly static Int16 _Alias_Default = -1;
-        public Int16 Alias { get; set; } = _Alias_Default;
+        public static readonly Int16 AliasDefault = -1;
+        public Int16 Alias { get; set; } = AliasDefault;
         #endregion
         #region Unused
         public UInt16 Unused { get; set; } = default;
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Object.Clear();
-            item.Alias = ScriptObjectProperty._Alias_Default;
+            item.Alias = ScriptObjectProperty.AliasDefault;
             item.Unused = default;
             base.Clear(item);
         }

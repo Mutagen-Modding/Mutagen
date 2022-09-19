@@ -52,12 +52,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavmeshVersion
-        public readonly static UInt32 _NavmeshVersion_Default = 12;
-        public UInt32 NavmeshVersion { get; set; } = _NavmeshVersion_Default;
+        public static readonly UInt32 NavmeshVersionDefault = 12;
+        public UInt32 NavmeshVersion { get; set; } = NavmeshVersionDefault;
         #endregion
         #region Magic
-        public readonly static UInt32 _Magic_Default = 0xA5E9A03C;
-        public UInt32 Magic { get; set; } = _Magic_Default;
+        public static readonly UInt32 MagicDefault = 0xA5E9A03C;
+        public UInt32 Magic { get; set; } = MagicDefault;
         #endregion
         #region Parent
         public ANavmeshParent Parent { get; set; } = default!;
@@ -1456,8 +1456,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(INavigationMeshData item)
         {
             ClearPartial();
-            item.NavmeshVersion = NavigationMeshData._NavmeshVersion_Default;
-            item.Magic = NavigationMeshData._Magic_Default;
+            item.NavmeshVersion = NavigationMeshData.NavmeshVersionDefault;
+            item.Magic = NavigationMeshData.MagicDefault;
             item.Parent.Clear();
             item.Vertices.Clear();
             item.Triangles.Clear();

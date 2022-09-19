@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ExtraBindDataVersion
-        public readonly static SByte _ExtraBindDataVersion_Default = 2;
-        public SByte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
+        public static readonly SByte ExtraBindDataVersionDefault = 2;
+        public SByte ExtraBindDataVersion { get; set; } = ExtraBindDataVersionDefault;
         #endregion
         #region ScriptName
         public String ScriptName { get; set; } = string.Empty;
@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IScriptFragment item)
         {
             ClearPartial();
-            item.ExtraBindDataVersion = ScriptFragment._ExtraBindDataVersion_Default;
+            item.ExtraBindDataVersion = ScriptFragment.ExtraBindDataVersionDefault;
             item.ScriptName = string.Empty;
             item.FragmentName = string.Empty;
         }

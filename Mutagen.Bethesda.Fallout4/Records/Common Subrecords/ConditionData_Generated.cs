@@ -67,8 +67,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IFallout4MajorRecordGetter> IConditionDataGetter.Reference => this.Reference;
         #endregion
         #region Unknown3
-        public readonly static Int32 _Unknown3_Default = -1;
-        public Int32 Unknown3 { get; set; } = _Unknown3_Default;
+        public static readonly Int32 Unknown3Default = -1;
+        public Int32 Unknown3 { get; set; } = Unknown3Default;
         #endregion
 
         #region To String
@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.RunOnType = default;
             item.Reference.Clear();
-            item.Unknown3 = ConditionData._Unknown3_Default;
+            item.Unknown3 = ConditionData.Unknown3Default;
         }
         
         #region Mutagen

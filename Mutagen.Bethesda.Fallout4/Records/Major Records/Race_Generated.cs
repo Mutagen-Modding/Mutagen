@@ -225,16 +225,16 @@ namespace Mutagen.Bethesda.Fallout4
         public Single InjuredHealthPercent { get; set; } = default;
         #endregion
         #region ShieldBipedObject
-        public readonly static BipedObject _ShieldBipedObject_Default = BipedObject.None;
-        public BipedObject ShieldBipedObject { get; set; } = _ShieldBipedObject_Default;
+        public static readonly BipedObject ShieldBipedObjectDefault = BipedObject.None;
+        public BipedObject ShieldBipedObject { get; set; } = ShieldBipedObjectDefault;
         #endregion
         #region BeardBipedObject
-        public readonly static BipedObject _BeardBipedObject_Default = BipedObject.None;
-        public BipedObject BeardBipedObject { get; set; } = _BeardBipedObject_Default;
+        public static readonly BipedObject BeardBipedObjectDefault = BipedObject.None;
+        public BipedObject BeardBipedObject { get; set; } = BeardBipedObjectDefault;
         #endregion
         #region BodyBipedObject
-        public readonly static BipedObject _BodyBipedObject_Default = BipedObject.None;
-        public BipedObject BodyBipedObject { get; set; } = _BodyBipedObject_Default;
+        public static readonly BipedObject BodyBipedObjectDefault = BipedObject.None;
+        public BipedObject BodyBipedObject { get; set; } = BodyBipedObjectDefault;
         #endregion
         #region AimAngleTolerance
         public Single AimAngleTolerance { get; set; } = default;
@@ -260,8 +260,8 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte> IRaceGetter.Unknown2 => this.Unknown2;
         #endregion
         #region PipboyBipedObject
-        public readonly static BipedObject _PipboyBipedObject_Default = BipedObject.None;
-        public BipedObject PipboyBipedObject { get; set; } = _PipboyBipedObject_Default;
+        public static readonly BipedObject PipboyBipedObjectDefault = BipedObject.None;
+        public BipedObject PipboyBipedObject { get; set; } = PipboyBipedObjectDefault;
         #endregion
         #region XPValue
         public Int16 XPValue { get; set; } = default;
@@ -5385,15 +5385,15 @@ namespace Mutagen.Bethesda.Fallout4
             item.Size = default;
             item.Unknown = new byte[8];
             item.InjuredHealthPercent = default;
-            item.ShieldBipedObject = Race._ShieldBipedObject_Default;
-            item.BeardBipedObject = Race._BeardBipedObject_Default;
-            item.BodyBipedObject = Race._BodyBipedObject_Default;
+            item.ShieldBipedObject = Race.ShieldBipedObjectDefault;
+            item.BeardBipedObject = Race.BeardBipedObjectDefault;
+            item.BodyBipedObject = Race.BodyBipedObjectDefault;
             item.AimAngleTolerance = default;
             item.FlightRadius = default;
             item.AngularAccelerationRate = default;
             item.AngularTolerance = default;
             item.Unknown2 = new byte[36];
-            item.PipboyBipedObject = Race._PipboyBipedObject_Default;
+            item.PipboyBipedObject = Race.PipboyBipedObjectDefault;
             item.XPValue = default;
             item.SeverableDebrisScale = default;
             item.SeverableDebrisCount = default;
