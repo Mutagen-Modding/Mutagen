@@ -57,7 +57,8 @@ namespace Mutagen.Bethesda.Fallout4
         public UInt32 NumRecords { get; set; } = default;
         #endregion
         #region NextFormID
-        public UInt32 NextFormID { get; set; } = default;
+        public static readonly UInt32 NextFormIDDefault = 0x800;
+        public UInt32 NextFormID { get; set; } = NextFormIDDefault;
         #endregion
 
         #region To String
@@ -767,7 +768,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Version = ModStats.VersionDefault;
             item.NumRecords = default;
-            item.NextFormID = default;
+            item.NextFormID = ModStats.NextFormIDDefault;
         }
         
         #region Mutagen
