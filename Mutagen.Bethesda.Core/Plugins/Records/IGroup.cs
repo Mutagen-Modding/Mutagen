@@ -60,7 +60,7 @@ public interface IGroupGetter :
 /// <summary>
 /// An interface that Group Record objects implement to hook into the common systems
 /// </summary>
-public interface IGroupGetter<out TMajor> : IGroupGetter, IEnumerable<TMajor>
+public interface IGroupGetter<out TMajor> : IGroupGetter, IReadOnlyCollection<TMajor>
     where TMajor : IMajorRecordGetter
 {
     /// <summary>
@@ -80,6 +80,11 @@ public interface IGroupGetter<out TMajor> : IGroupGetter, IEnumerable<TMajor>
     /// Enumerable containing all the FormKeys present in the group
     /// </summary>
     new IEnumerable<TMajor> Records { get; }
+
+    /// <summary>
+    /// Number of contained records
+    /// </summary>
+    new int Count { get; }
 }
 
 public interface IGroup : IGroupGetter, IAssetLinkContainer
