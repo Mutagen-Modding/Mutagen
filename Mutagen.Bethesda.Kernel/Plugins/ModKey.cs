@@ -24,6 +24,8 @@ public readonly struct ModKey : IEquatable<ModKey>
     /// </summary>
     public static readonly ModKey Null = new ModKey(null!, type: ModType.Master);
 
+    public const string NullStr = "Null";
+
     private readonly string? _name;
     private readonly int _hash;
 
@@ -130,7 +132,7 @@ public readonly struct ModKey : IEquatable<ModKey>
     /// <returns>String representation of ModKey</returns>
     public override string ToString()
     {
-        if (string.IsNullOrWhiteSpace(Name)) return "Null";
+        if (string.IsNullOrWhiteSpace(Name)) return NullStr;
         return string.Create(Name.Length + 4, this, (chars, modKey) =>
         {
             modKey.Name.AsSpan().CopyTo(chars);
@@ -159,6 +161,12 @@ public readonly struct ModKey : IEquatable<ModKey>
         if (index == -1
             || index != str.Length - 4)
         {
+            if (str.SequenceEqual(NullStr.AsSpan()))
+            {
+                modKey = Null;
+                errorReason = string.Empty;
+                return true;
+            }
             modKey = default;
             errorReason = "Could not locate file extension";
             return false;
