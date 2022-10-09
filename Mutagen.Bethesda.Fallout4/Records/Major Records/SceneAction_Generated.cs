@@ -2028,7 +2028,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.SetParentQuestStage = this.SetParentQuestStage.Combine(rhs.SetParentQuestStage);
                 ret.TimerMinSeconds = this.TimerMinSeconds.Combine(rhs.TimerMinSeconds);
                 ret.STSC = this.STSC.Combine(rhs.STSC);
-                ret.StartScenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StartScene.ErrorMask?>>?>(ExceptionExt.Combine(this.StartScenes?.Overall, rhs.StartScenes?.Overall), ExceptionExt.Combine(this.StartScenes?.Specific, rhs.StartScenes?.Specific));
+                ret.StartScenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StartScene.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.StartScenes?.Overall, rhs.StartScenes?.Overall), Noggog.ExceptionExt.Combine(this.StartScenes?.Specific, rhs.StartScenes?.Specific));
                 ret.PlayerPositiveResponse = this.PlayerPositiveResponse.Combine(rhs.PlayerPositiveResponse);
                 ret.PlayerNegativeResponse = this.PlayerNegativeResponse.Combine(rhs.PlayerNegativeResponse);
                 ret.PlayerNeutralResponse = this.PlayerNeutralResponse.Combine(rhs.PlayerNeutralResponse);
@@ -2037,7 +2037,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PlayerNegativeSubtype = this.PlayerNegativeSubtype.Combine(rhs.PlayerNegativeSubtype);
                 ret.PlayerNeutralSubtype = this.PlayerNeutralSubtype.Combine(rhs.PlayerNeutralSubtype);
                 ret.PlayerQuestionSubtype = this.PlayerQuestionSubtype.Combine(rhs.PlayerQuestionSubtype);
-                ret.NpcHeadtrackingActorIds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.NpcHeadtrackingActorIds?.Overall, rhs.NpcHeadtrackingActorIds?.Overall), ExceptionExt.Combine(this.NpcHeadtrackingActorIds?.Specific, rhs.NpcHeadtrackingActorIds?.Specific));
+                ret.NpcHeadtrackingActorIds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.NpcHeadtrackingActorIds?.Overall, rhs.NpcHeadtrackingActorIds?.Overall), Noggog.ExceptionExt.Combine(this.NpcHeadtrackingActorIds?.Specific, rhs.NpcHeadtrackingActorIds?.Specific));
                 ret.NpcPositiveResponse = this.NpcPositiveResponse.Combine(rhs.NpcPositiveResponse);
                 ret.NpcNegativeResponse = this.NpcNegativeResponse.Combine(rhs.NpcNegativeResponse);
                 ret.NpcNeutralResponse = this.NpcNeutralResponse.Combine(rhs.NpcNeutralResponse);
@@ -2047,14 +2047,14 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.NpcNeutralSubtype = this.NpcNeutralSubtype.Combine(rhs.NpcNeutralSubtype);
                 ret.NpcQuestionSubtype = this.NpcQuestionSubtype.Combine(rhs.NpcQuestionSubtype);
                 ret.DialogueTargetActorId = this.DialogueTargetActorId.Combine(rhs.DialogueTargetActorId);
-                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
+                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), Noggog.ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
                 ret.Topic = this.Topic.Combine(rhs.Topic);
                 ret.LoopingMax = this.LoopingMax.Combine(rhs.LoopingMax);
                 ret.LoopingMin = this.LoopingMin.Combine(rhs.LoopingMin);
                 ret.Camera = this.Camera.Combine(rhs.Camera, (l, r) => l.Combine(r));
                 ret.Emotion = this.Emotion.Combine(rhs.Emotion);
                 ret.EmotionValue = this.EmotionValue.Combine(rhs.EmotionValue);
-                ret.PlayerHeadTrackingActorIds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PlayerHeadTrackingActorIds?.Overall, rhs.PlayerHeadTrackingActorIds?.Overall), ExceptionExt.Combine(this.PlayerHeadTrackingActorIds?.Specific, rhs.PlayerHeadTrackingActorIds?.Specific));
+                ret.PlayerHeadTrackingActorIds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PlayerHeadTrackingActorIds?.Overall, rhs.PlayerHeadTrackingActorIds?.Overall), Noggog.ExceptionExt.Combine(this.PlayerHeadTrackingActorIds?.Specific, rhs.PlayerHeadTrackingActorIds?.Specific));
                 ret.DialogueSubtype = this.DialogueSubtype.Combine(rhs.DialogueSubtype);
                 ret.AnimArchType = this.AnimArchType.Combine(rhs.AnimArchType);
                 ret.AudioOutputOverride = this.AudioOutputOverride.Combine(rhs.AudioOutputOverride);
@@ -2896,7 +2896,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.TimerMaxSeconds = item.TimerMaxSeconds.EqualsWithin(rhs.TimerMaxSeconds);
             ret.SetParentQuestStage = item.SetParentQuestStage == rhs.SetParentQuestStage;
             ret.TimerMinSeconds = item.TimerMinSeconds.EqualsWithin(rhs.TimerMinSeconds);
-            ret.STSC = MemorySliceExt.Equal(item.STSC, rhs.STSC);
+            ret.STSC = MemorySliceExt.SequenceEqual(item.STSC, rhs.STSC);
             ret.StartScenes = item.StartScenes.CollectionEqualsHelper(
                 rhs.StartScenes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3274,7 +3274,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.STSC) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.STSC, rhs.STSC)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.STSC, rhs.STSC)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.StartScenes) ?? true))
             {

@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.NorthwestCellCoords = item.NorthwestCellCoords.Equals(rhs.NorthwestCellCoords);
             ret.NorthwestCellSize = item.NorthwestCellSize.Equals(rhs.NorthwestCellSize);
-            ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
+            ret.Data = MemorySliceExt.SequenceEqual(item.Data, rhs.Data);
             ret.WLEVDataTypeState = item.WLEVDataTypeState == rhs.WLEVDataTypeState;
         }
         
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)WorldDefaultLevelData_FieldIndex.Data) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Data, rhs.Data)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)WorldDefaultLevelData_FieldIndex.WLEVDataTypeState) ?? true))
             {

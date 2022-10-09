@@ -1118,14 +1118,14 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.NeckFatAdjustmentsScale = this.NeckFatAdjustmentsScale.Combine(rhs.NeckFatAdjustmentsScale, (l, r) => l.Combine(r));
-                ret.HeadParts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, HeadPartReference.ErrorMask?>>?>(ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
-                ret.RacePresets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RacePresets?.Overall, rhs.RacePresets?.Overall), ExceptionExt.Combine(this.RacePresets?.Specific, rhs.RacePresets?.Specific));
-                ret.AvailableHairColors = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AvailableHairColors?.Overall, rhs.AvailableHairColors?.Overall), ExceptionExt.Combine(this.AvailableHairColors?.Specific, rhs.AvailableHairColors?.Specific));
-                ret.FaceDetails = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.FaceDetails?.Overall, rhs.FaceDetails?.Overall), ExceptionExt.Combine(this.FaceDetails?.Specific, rhs.FaceDetails?.Specific));
+                ret.HeadParts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, HeadPartReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), Noggog.ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
+                ret.RacePresets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RacePresets?.Overall, rhs.RacePresets?.Overall), Noggog.ExceptionExt.Combine(this.RacePresets?.Specific, rhs.RacePresets?.Specific));
+                ret.AvailableHairColors = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AvailableHairColors?.Overall, rhs.AvailableHairColors?.Overall), Noggog.ExceptionExt.Combine(this.AvailableHairColors?.Specific, rhs.AvailableHairColors?.Specific));
+                ret.FaceDetails = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.FaceDetails?.Overall, rhs.FaceDetails?.Overall), Noggog.ExceptionExt.Combine(this.FaceDetails?.Specific, rhs.FaceDetails?.Specific));
                 ret.DefaultFaceTexture = this.DefaultFaceTexture.Combine(rhs.DefaultFaceTexture);
-                ret.TintLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintGroup.ErrorMask?>>?>(ExceptionExt.Combine(this.TintLayers?.Overall, rhs.TintLayers?.Overall), ExceptionExt.Combine(this.TintLayers?.Specific, rhs.TintLayers?.Specific));
-                ret.MorphGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphGroup.ErrorMask?>>?>(ExceptionExt.Combine(this.MorphGroups?.Overall, rhs.MorphGroups?.Overall), ExceptionExt.Combine(this.MorphGroups?.Specific, rhs.MorphGroups?.Specific));
-                ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorph.ErrorMask?>>?>(ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
+                ret.TintLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintGroup.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TintLayers?.Overall, rhs.TintLayers?.Overall), Noggog.ExceptionExt.Combine(this.TintLayers?.Specific, rhs.TintLayers?.Specific));
+                ret.MorphGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphGroup.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MorphGroups?.Overall, rhs.MorphGroups?.Overall), Noggog.ExceptionExt.Combine(this.MorphGroups?.Specific, rhs.MorphGroups?.Specific));
+                ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), Noggog.ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
                 ret.MaleWrinkleMapPath = this.MaleWrinkleMapPath.Combine(rhs.MaleWrinkleMapPath);
                 return ret;
             }

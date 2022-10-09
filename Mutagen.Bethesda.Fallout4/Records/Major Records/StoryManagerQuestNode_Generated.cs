@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MaxConcurrentQuests = this.MaxConcurrentQuests.Combine(rhs.MaxConcurrentQuests);
                 ret.MaxNumQuestsToRun = this.MaxNumQuestsToRun.Combine(rhs.MaxNumQuestsToRun);
                 ret.HoursUntilReset = this.HoursUntilReset.Combine(rhs.HoursUntilReset);
-                ret.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), ExceptionExt.Combine(this.Quests?.Specific, rhs.Quests?.Specific));
+                ret.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), Noggog.ExceptionExt.Combine(this.Quests?.Specific, rhs.Quests?.Specific));
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }

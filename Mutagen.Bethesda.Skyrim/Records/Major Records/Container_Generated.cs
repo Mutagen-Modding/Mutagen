@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Weight = this.Weight.Combine(rhs.Weight);

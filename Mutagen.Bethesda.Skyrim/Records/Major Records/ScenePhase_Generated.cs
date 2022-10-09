@@ -637,8 +637,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.StartConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.StartConditions?.Overall, rhs.StartConditions?.Overall), ExceptionExt.Combine(this.StartConditions?.Specific, rhs.StartConditions?.Specific));
-                ret.CompletionConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.CompletionConditions?.Overall, rhs.CompletionConditions?.Overall), ExceptionExt.Combine(this.CompletionConditions?.Specific, rhs.CompletionConditions?.Specific));
+                ret.StartConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.StartConditions?.Overall, rhs.StartConditions?.Overall), Noggog.ExceptionExt.Combine(this.StartConditions?.Specific, rhs.StartConditions?.Specific));
+                ret.CompletionConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CompletionConditions?.Overall, rhs.CompletionConditions?.Overall), Noggog.ExceptionExt.Combine(this.CompletionConditions?.Specific, rhs.CompletionConditions?.Specific));
                 ret.Unused = this.Unused.Combine(rhs.Unused, (l, r) => l.Combine(r));
                 ret.Unused2 = this.Unused2.Combine(rhs.Unused2, (l, r) => l.Combine(r));
                 ret.EditorWidth = this.EditorWidth.Combine(rhs.EditorWidth);

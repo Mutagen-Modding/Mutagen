@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ReferenceAliasLocation = this.ReferenceAliasLocation.Combine(rhs.ReferenceAliasLocation, (l, r) => l.Combine(r));
                 ret.ExternalAliasLocation = this.ExternalAliasLocation.Combine(rhs.ExternalAliasLocation, (l, r) => l.Combine(r));
                 ret.FindMatchingRefFromEvent = this.FindMatchingRefFromEvent.Combine(rhs.FindMatchingRefFromEvent, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.ClosestToAlias = this.ClosestToAlias.Combine(rhs.ClosestToAlias);
                 return ret;
             }

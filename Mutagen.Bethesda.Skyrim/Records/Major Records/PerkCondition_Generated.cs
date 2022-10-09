@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.RunOnTabIndex = this.RunOnTabIndex.Combine(rhs.RunOnTabIndex);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

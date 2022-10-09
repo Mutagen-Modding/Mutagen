@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Grasses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionGrass.ErrorMask?>>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
+                ret.Grasses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionGrass.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), Noggog.ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
                 ret.LodDisplayDistanceMultiplier = this.LodDisplayDistanceMultiplier.Combine(rhs.LodDisplayDistanceMultiplier);
                 ret.OcclusionAccuracyDist = this.OcclusionAccuracyDist.Combine(rhs.OcclusionAccuracyDist);
                 return ret;

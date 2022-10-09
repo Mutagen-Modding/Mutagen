@@ -3458,12 +3458,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.CloudTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CloudTextures?.Overall, rhs.CloudTextures?.Overall), ExceptionExt.Combine(this.CloudTextures?.Specific, rhs.CloudTextures?.Specific));
+                ret.CloudTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CloudTextures?.Overall, rhs.CloudTextures?.Overall), Noggog.ExceptionExt.Combine(this.CloudTextures?.Specific, rhs.CloudTextures?.Specific));
                 ret.LNAM = this.LNAM.Combine(rhs.LNAM);
                 ret.Precipitation = this.Precipitation.Combine(rhs.Precipitation);
                 ret.VisualEffect = this.VisualEffect.Combine(rhs.VisualEffect);
                 ret.ONAM = this.ONAM.Combine(rhs.ONAM);
-                ret.Clouds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CloudLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Clouds?.Overall, rhs.Clouds?.Overall), ExceptionExt.Combine(this.Clouds?.Specific, rhs.Clouds?.Specific));
+                ret.Clouds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CloudLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Clouds?.Overall, rhs.Clouds?.Overall), Noggog.ExceptionExt.Combine(this.Clouds?.Specific, rhs.Clouds?.Specific));
                 ret.SkyUpperColor = this.SkyUpperColor.Combine(rhs.SkyUpperColor, (l, r) => l.Combine(r));
                 ret.FogNearColor = this.FogNearColor.Combine(rhs.FogNearColor, (l, r) => l.Combine(r));
                 ret.UnknownColor = this.UnknownColor.Combine(rhs.UnknownColor, (l, r) => l.Combine(r));
@@ -3483,7 +3483,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MoonGlareColor = this.MoonGlareColor.Combine(rhs.MoonGlareColor, (l, r) => l.Combine(r));
                 ret.FogNearHigh = this.FogNearHigh.Combine(rhs.FogNearHigh, (l, r) => l.Combine(r));
                 ret.FogFarHigh = this.FogFarHigh.Combine(rhs.FogFarHigh, (l, r) => l.Combine(r));
-                ret.NAM4 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.NAM4?.Overall, rhs.NAM4?.Overall), ExceptionExt.Combine(this.NAM4?.Specific, rhs.NAM4?.Specific));
+                ret.NAM4 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.NAM4?.Overall, rhs.NAM4?.Overall), Noggog.ExceptionExt.Combine(this.NAM4?.Specific, rhs.NAM4?.Specific));
                 ret.FogDistanceDayNear = this.FogDistanceDayNear.Combine(rhs.FogDistanceDayNear);
                 ret.FogDistanceDayFar = this.FogDistanceDayFar.Combine(rhs.FogDistanceDayFar);
                 ret.FogDistanceNightNear = this.FogDistanceNightNear.Combine(rhs.FogDistanceNightNear);
@@ -3519,8 +3519,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.WindDirection = this.WindDirection.Combine(rhs.WindDirection);
                 ret.WindDirectionRange = this.WindDirectionRange.Combine(rhs.WindDirectionRange);
                 ret.WindTurbulance = this.WindTurbulance.Combine(rhs.WindTurbulance);
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
-                ret.SkyStatics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SkyStatics?.Overall, rhs.SkyStatics?.Overall), ExceptionExt.Combine(this.SkyStatics?.Specific, rhs.SkyStatics?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.SkyStatics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SkyStatics?.Overall, rhs.SkyStatics?.Overall), Noggog.ExceptionExt.Combine(this.SkyStatics?.Specific, rhs.SkyStatics?.Specific));
                 ret.ImageSpaceSunrise = this.ImageSpaceSunrise.Combine(rhs.ImageSpaceSunrise);
                 ret.ImageSpaceDay = this.ImageSpaceDay.Combine(rhs.ImageSpaceDay);
                 ret.ImageSpaceSunset = this.ImageSpaceSunset.Combine(rhs.ImageSpaceSunset);
@@ -4697,10 +4697,10 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.CloudTextures,
                 (l, r) => string.Equals(l, r),
                 include);
-            ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
+            ret.LNAM = MemorySliceExt.SequenceEqual(item.LNAM, rhs.LNAM);
             ret.Precipitation = item.Precipitation.Equals(rhs.Precipitation);
             ret.VisualEffect = item.VisualEffect.Equals(rhs.VisualEffect);
-            ret.ONAM = MemorySliceExt.Equal(item.ONAM, rhs.ONAM);
+            ret.ONAM = MemorySliceExt.SequenceEqual(item.ONAM, rhs.ONAM);
             ret.Clouds = EqualsMaskHelper.SpanEqualsHelper<ICloudLayerGetter, CloudLayer.Mask<bool>>(
                 item.Clouds,
                 rhs.Clouds,
@@ -5298,7 +5298,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.LNAM, rhs.LNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
             {
@@ -5310,7 +5310,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ONAM, rhs.ONAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Clouds) ?? true))
             {

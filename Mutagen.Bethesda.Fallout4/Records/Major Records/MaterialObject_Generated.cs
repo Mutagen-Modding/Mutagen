@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.DNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DNAMs?.Overall, rhs.DNAMs?.Overall), ExceptionExt.Combine(this.DNAMs?.Specific, rhs.DNAMs?.Specific));
+                ret.DNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.DNAMs?.Overall, rhs.DNAMs?.Overall), Noggog.ExceptionExt.Combine(this.DNAMs?.Specific, rhs.DNAMs?.Specific));
                 ret.FalloffScale = this.FalloffScale.Combine(rhs.FalloffScale);
                 ret.FalloffBias = this.FalloffBias.Combine(rhs.FalloffBias);
                 ret.NoiseUvScale = this.NoiseUvScale.Combine(rhs.NoiseUvScale);

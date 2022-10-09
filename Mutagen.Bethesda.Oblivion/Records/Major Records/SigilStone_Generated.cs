@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Script = this.Script.Combine(rhs.Script);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }

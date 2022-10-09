@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Flags = item.Flags == rhs.Flags;
             ret.HavokImpactDataSet = item.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet);
             ret.BreakableFX = string.Equals(item.BreakableFX, rhs.BreakableFX);
-            ret.ModelData = MemorySliceExt.Equal(item.ModelData, rhs.ModelData);
+            ret.ModelData = MemorySliceExt.SequenceEqual(item.ModelData, rhs.ModelData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.ModelData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ModelData, rhs.ModelData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ModelData, rhs.ModelData)) return false;
             }
             return true;
         }

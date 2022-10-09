@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.FileName = this.FileName.Combine(rhs.FileName);
                 ret.MaskType = this.MaskType.Combine(rhs.MaskType);
                 ret.PresetDefault = this.PresetDefault.Combine(rhs.PresetDefault);
-                ret.Presets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintPreset.ErrorMask?>>?>(ExceptionExt.Combine(this.Presets?.Overall, rhs.Presets?.Overall), ExceptionExt.Combine(this.Presets?.Specific, rhs.Presets?.Specific));
+                ret.Presets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintPreset.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Presets?.Overall, rhs.Presets?.Overall), Noggog.ExceptionExt.Combine(this.Presets?.Specific, rhs.Presets?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

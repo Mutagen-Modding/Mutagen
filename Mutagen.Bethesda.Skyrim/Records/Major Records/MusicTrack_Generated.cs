@@ -784,9 +784,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.TrackFilename = this.TrackFilename.Combine(rhs.TrackFilename);
                 ret.FinaleFilename = this.FinaleFilename.Combine(rhs.FinaleFilename);
                 ret.LoopData = this.LoopData.Combine(rhs.LoopData, (l, r) => l.Combine(r));
-                ret.CuePoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CuePoints?.Overall, rhs.CuePoints?.Overall), ExceptionExt.Combine(this.CuePoints?.Specific, rhs.CuePoints?.Specific));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Tracks?.Overall, rhs.Tracks?.Overall), ExceptionExt.Combine(this.Tracks?.Specific, rhs.Tracks?.Specific));
+                ret.CuePoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CuePoints?.Overall, rhs.CuePoints?.Overall), Noggog.ExceptionExt.Combine(this.CuePoints?.Specific, rhs.CuePoints?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Tracks?.Overall, rhs.Tracks?.Overall), Noggog.ExceptionExt.Combine(this.Tracks?.Specific, rhs.Tracks?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

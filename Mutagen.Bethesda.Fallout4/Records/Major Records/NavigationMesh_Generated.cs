@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
                 ret.ONAM = this.ONAM.Combine(rhs.ONAM);
                 ret.NNAM = this.NNAM.Combine(rhs.NNAM);
-                ret.PreCutMapEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PreCutMapEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.PreCutMapEntries?.Overall, rhs.PreCutMapEntries?.Overall), ExceptionExt.Combine(this.PreCutMapEntries?.Specific, rhs.PreCutMapEntries?.Specific));
+                ret.PreCutMapEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PreCutMapEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PreCutMapEntries?.Overall, rhs.PreCutMapEntries?.Overall), Noggog.ExceptionExt.Combine(this.PreCutMapEntries?.Specific, rhs.PreCutMapEntries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Fallout4
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ONAM = item.ONAM.Equals(rhs.ONAM);
-            ret.NNAM = MemorySliceExt.Equal(item.NNAM, rhs.NNAM);
+            ret.NNAM = MemorySliceExt.SequenceEqual(item.NNAM, rhs.NNAM);
             ret.PreCutMapEntries = item.PreCutMapEntries.CollectionEqualsHelper(
                 rhs.PreCutMapEntries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NNAM, rhs.NNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NNAM, rhs.NNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.PreCutMapEntries) ?? true))
             {

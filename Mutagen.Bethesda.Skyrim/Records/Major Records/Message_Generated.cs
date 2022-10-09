@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Quest = this.Quest.Combine(rhs.Quest);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.DisplayTime = this.DisplayTime.Combine(rhs.DisplayTime);
-                ret.MenuButtons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>(ExceptionExt.Combine(this.MenuButtons?.Overall, rhs.MenuButtons?.Overall), ExceptionExt.Combine(this.MenuButtons?.Specific, rhs.MenuButtons?.Specific));
+                ret.MenuButtons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MenuButtons?.Overall, rhs.MenuButtons?.Overall), Noggog.ExceptionExt.Combine(this.MenuButtons?.Specific, rhs.MenuButtons?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

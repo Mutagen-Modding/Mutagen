@@ -1168,11 +1168,11 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MaxRank = this.MaxRank.Combine(rhs.MaxRank);
                 ret.LevelTierScaledOffset = this.LevelTierScaledOffset.Combine(rhs.LevelTierScaledOffset);
                 ret.AttachPoint = this.AttachPoint.Combine(rhs.AttachPoint);
-                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModItem.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-                ret.Includes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModInclude.ErrorMask?>>?>(ExceptionExt.Combine(this.Includes?.Overall, rhs.Includes?.Overall), ExceptionExt.Combine(this.Includes?.Specific, rhs.Includes?.Specific));
-                ret.TargetOmodKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.TargetOmodKeywords?.Overall, rhs.TargetOmodKeywords?.Overall), ExceptionExt.Combine(this.TargetOmodKeywords?.Specific, rhs.TargetOmodKeywords?.Specific));
-                ret.FilterKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.FilterKeywords?.Overall, rhs.FilterKeywords?.Overall), ExceptionExt.Combine(this.FilterKeywords?.Specific, rhs.FilterKeywords?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Includes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModInclude.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Includes?.Overall, rhs.Includes?.Overall), Noggog.ExceptionExt.Combine(this.Includes?.Specific, rhs.Includes?.Specific));
+                ret.TargetOmodKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TargetOmodKeywords?.Overall, rhs.TargetOmodKeywords?.Overall), Noggog.ExceptionExt.Combine(this.TargetOmodKeywords?.Specific, rhs.TargetOmodKeywords?.Specific));
+                ret.FilterKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.FilterKeywords?.Overall, rhs.FilterKeywords?.Overall), Noggog.ExceptionExt.Combine(this.FilterKeywords?.Specific, rhs.FilterKeywords?.Specific));
                 ret.LooseMod = this.LooseMod.Combine(rhs.LooseMod);
                 ret.Priority = this.Priority.Combine(rhs.Priority);
                 ret.Filter = this.Filter.Combine(rhs.Filter);

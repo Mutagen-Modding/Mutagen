@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Music = this.Music.Combine(rhs.Music);
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.LodDisplayDistanceMultiplier = this.LodDisplayDistanceMultiplier.Combine(rhs.LodDisplayDistanceMultiplier);
                 ret.OcclusionAccuracyDist = this.OcclusionAccuracyDist.Combine(rhs.OcclusionAccuracyDist);
                 return ret;

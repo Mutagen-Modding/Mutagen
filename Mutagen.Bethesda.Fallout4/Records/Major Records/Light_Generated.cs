@@ -1532,9 +1532,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.Time = this.Time.Combine(rhs.Time);

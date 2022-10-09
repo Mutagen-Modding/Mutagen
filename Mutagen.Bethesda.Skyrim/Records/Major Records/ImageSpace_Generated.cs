@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim
             ImageSpace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ENAM = MemorySliceExt.Equal(item.ENAM, rhs.ENAM);
+            ret.ENAM = MemorySliceExt.SequenceEqual(item.ENAM, rhs.ENAM);
             ret.Hdr = EqualsMaskHelper.EqualsHelper(
                 item.Hdr,
                 rhs.Hdr,
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.ENAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ENAM, rhs.ENAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Hdr) ?? true))
             {

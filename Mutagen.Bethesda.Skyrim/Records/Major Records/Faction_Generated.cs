@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>(ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
+                ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), Noggog.ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ExteriorJailMarker = this.ExteriorJailMarker.Combine(rhs.ExteriorJailMarker);
                 ret.FollowerWaitMarker = this.FollowerWaitMarker.Combine(rhs.FollowerWaitMarker);
@@ -1097,12 +1097,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SharedCrimeFactionList = this.SharedCrimeFactionList.Combine(rhs.SharedCrimeFactionList);
                 ret.JailOutfit = this.JailOutfit.Combine(rhs.JailOutfit);
                 ret.CrimeValues = this.CrimeValues.Combine(rhs.CrimeValues, (l, r) => l.Combine(r));
-                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
+                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), Noggog.ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
                 ret.VendorBuySellList = this.VendorBuySellList.Combine(rhs.VendorBuySellList);
                 ret.MerchantContainer = this.MerchantContainer.Combine(rhs.MerchantContainer);
                 ret.VendorValues = this.VendorValues.Combine(rhs.VendorValues, (l, r) => l.Combine(r));
                 ret.VendorLocation = this.VendorLocation.Combine(rhs.VendorLocation, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

@@ -672,9 +672,9 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.BehaviorGraph = this.BehaviorGraph.Combine(rhs.BehaviorGraph);
-                ret.ActorKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorKeywords?.Overall, rhs.ActorKeywords?.Overall), ExceptionExt.Combine(this.ActorKeywords?.Specific, rhs.ActorKeywords?.Specific));
-                ret.TargetKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.TargetKeywords?.Overall, rhs.TargetKeywords?.Overall), ExceptionExt.Combine(this.TargetKeywords?.Specific, rhs.TargetKeywords?.Specific));
-                ret.AnimationPaths = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AnimationPaths?.Overall, rhs.AnimationPaths?.Overall), ExceptionExt.Combine(this.AnimationPaths?.Specific, rhs.AnimationPaths?.Specific));
+                ret.ActorKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorKeywords?.Overall, rhs.ActorKeywords?.Overall), Noggog.ExceptionExt.Combine(this.ActorKeywords?.Specific, rhs.ActorKeywords?.Specific));
+                ret.TargetKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TargetKeywords?.Overall, rhs.TargetKeywords?.Overall), Noggog.ExceptionExt.Combine(this.TargetKeywords?.Specific, rhs.TargetKeywords?.Specific));
+                ret.AnimationPaths = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AnimationPaths?.Overall, rhs.AnimationPaths?.Overall), Noggog.ExceptionExt.Combine(this.AnimationPaths?.Specific, rhs.AnimationPaths?.Specific));
                 ret.Role = this.Role.Combine(rhs.Role);
                 ret.Perspective = this.Perspective.Combine(rhs.Perspective);
                 return ret;

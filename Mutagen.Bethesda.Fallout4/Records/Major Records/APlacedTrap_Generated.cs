@@ -1566,8 +1566,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
                 ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
-                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
-                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), Noggog.ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
+                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
                 ret.ActivateParents = this.ActivateParents.Combine(rhs.ActivateParents, (l, r) => l.Combine(r));
                 ret.UnknownReference = this.UnknownReference.Combine(rhs.UnknownReference);
                 ret.XATP = this.XATP.Combine(rhs.XATP);
@@ -1583,10 +1583,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
                 ret.MultiBoundReference = this.MultiBoundReference.Combine(rhs.MultiBoundReference);
                 ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
-                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
+                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
-                ret.DistantLodData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DistantLodData?.Overall, rhs.DistantLodData?.Overall), ExceptionExt.Combine(this.DistantLodData?.Specific, rhs.DistantLodData?.Specific));
+                ret.DistantLodData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.DistantLodData?.Overall, rhs.DistantLodData?.Overall), Noggog.ExceptionExt.Combine(this.DistantLodData?.Specific, rhs.DistantLodData?.Specific));
                 ret.Position = this.Position.Combine(rhs.Position);
                 ret.Rotation = this.Rotation.Combine(rhs.Rotation);
                 ret.Comments = this.Comments.Combine(rhs.Comments);
@@ -2449,13 +2449,13 @@ namespace Mutagen.Bethesda.Fallout4
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.UnknownReference = item.UnknownReference.Equals(rhs.UnknownReference);
-            ret.XATP = MemorySliceExt.Equal(item.XATP, rhs.XATP);
+            ret.XATP = MemorySliceExt.SequenceEqual(item.XATP, rhs.XATP);
             ret.AmmoCount = item.AmmoCount == rhs.AmmoCount;
             ret.IsLinkedRefTransient = item.IsLinkedRefTransient == rhs.IsLinkedRefTransient;
             ret.Layer = item.Layer.Equals(rhs.Layer);
             ret.MaterialSwap = item.MaterialSwap.Equals(rhs.MaterialSwap);
             ret.ReferenceGroup = item.ReferenceGroup.Equals(rhs.ReferenceGroup);
-            ret.XCVR = MemorySliceExt.Equal(item.XCVR, rhs.XCVR);
+            ret.XCVR = MemorySliceExt.SequenceEqual(item.XCVR, rhs.XCVR);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent,
                 rhs.EnableParent,
@@ -2793,7 +2793,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.XATP) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XATP, rhs.XATP)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XATP, rhs.XATP)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.AmmoCount) ?? true))
             {
@@ -2817,7 +2817,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.XCVR) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XCVR, rhs.XCVR)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XCVR, rhs.XCVR)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.EnableParent) ?? true))
             {

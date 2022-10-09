@@ -534,8 +534,8 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.Min = this.Min.Combine(rhs.Min);
                 ret.Max = this.Max.Combine(rhs.Max);
-                ret.Triangles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
-                ret.Vertices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Vertices?.Overall, rhs.Vertices?.Overall), ExceptionExt.Combine(this.Vertices?.Specific, rhs.Vertices?.Specific));
+                ret.Triangles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), Noggog.ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
+                ret.Vertices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Vertices?.Overall, rhs.Vertices?.Overall), Noggog.ExceptionExt.Combine(this.Vertices?.Specific, rhs.Vertices?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

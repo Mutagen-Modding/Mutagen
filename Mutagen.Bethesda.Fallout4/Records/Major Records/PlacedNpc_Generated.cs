@@ -1692,7 +1692,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Count = this.Count.Combine(rhs.Count);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
                 ret.Health = this.Health.Combine(rhs.Health);
-                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
                 ret.ActivateParents = this.ActivateParents.Combine(rhs.ActivateParents, (l, r) => l.Combine(r));
                 ret.IsActivationPoint = this.IsActivationPoint.Combine(rhs.IsActivationPoint);
                 ret.IsLinkedRefTransient = this.IsLinkedRefTransient.Combine(rhs.IsLinkedRefTransient);
@@ -1701,9 +1701,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MaterialSwap = this.MaterialSwap.Combine(rhs.MaterialSwap);
                 ret.PersistentLocation = this.PersistentLocation.Combine(rhs.PersistentLocation);
                 ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
-                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
+                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
-                ret.SplineConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SplineConnection.ErrorMask?>>?>(ExceptionExt.Combine(this.SplineConnections?.Overall, rhs.SplineConnections?.Overall), ExceptionExt.Combine(this.SplineConnections?.Specific, rhs.SplineConnections?.Specific));
+                ret.SplineConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SplineConnection.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SplineConnections?.Overall, rhs.SplineConnections?.Overall), Noggog.ExceptionExt.Combine(this.SplineConnections?.Specific, rhs.SplineConnections?.Specific));
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
                 ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
                 ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
@@ -2592,8 +2592,8 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Base = item.Base.Equals(rhs.Base);
             ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
-            ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
-            ret.RagdollBipedData = MemorySliceExt.Equal(item.RagdollBipedData, rhs.RagdollBipedData);
+            ret.RagdollData = MemorySliceExt.SequenceEqual(item.RagdollData, rhs.RagdollData);
+            ret.RagdollBipedData = MemorySliceExt.SequenceEqual(item.RagdollBipedData, rhs.RagdollBipedData);
             ret.Patrol = EqualsMaskHelper.EqualsHelper(
                 item.Patrol,
                 rhs.Patrol,
@@ -2951,11 +2951,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollBipedData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Patrol) ?? true))
             {

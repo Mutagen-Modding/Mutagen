@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
+                ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), Noggog.ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

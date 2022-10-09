@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.NavMeshVersion = this.NavMeshVersion.Combine(rhs.NavMeshVersion);
-                ret.MapInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>(ExceptionExt.Combine(this.MapInfos?.Overall, rhs.MapInfos?.Overall), ExceptionExt.Combine(this.MapInfos?.Specific, rhs.MapInfos?.Specific));
+                ret.MapInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MapInfos?.Overall, rhs.MapInfos?.Overall), Noggog.ExceptionExt.Combine(this.MapInfos?.Specific, rhs.MapInfos?.Specific));
                 ret.PreferredPathing = this.PreferredPathing.Combine(rhs.PreferredPathing, (l, r) => l.Combine(r));
                 ret.NVSI = this.NVSI.Combine(rhs.NVSI);
                 return ret;
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.PreferredPathing,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.NVSI = MemorySliceExt.Equal(item.NVSI, rhs.NVSI);
+            ret.NVSI = MemorySliceExt.SequenceEqual(item.NVSI, rhs.NVSI);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NVSI) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NVSI, rhs.NVSI)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NVSI, rhs.NVSI)) return false;
             }
             return true;
         }

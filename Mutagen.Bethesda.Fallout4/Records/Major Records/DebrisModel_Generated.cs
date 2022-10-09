@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Percentage = item.Percentage == rhs.Percentage;
             ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.TextureFileHashes = MemorySliceExt.Equal(item.TextureFileHashes, rhs.TextureFileHashes);
+            ret.TextureFileHashes = MemorySliceExt.SequenceEqual(item.TextureFileHashes, rhs.TextureFileHashes);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
         }
         
@@ -1013,7 +1013,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.TextureFileHashes) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TextureFileHashes, rhs.TextureFileHashes)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TextureFileHashes, rhs.TextureFileHashes)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.DATADataTypeState) ?? true))
             {

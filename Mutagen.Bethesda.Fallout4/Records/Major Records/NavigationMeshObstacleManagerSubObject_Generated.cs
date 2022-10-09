@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Index = this.Index.Combine(rhs.Index);
-                ret.DATAs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DATAs?.Overall, rhs.DATAs?.Overall), ExceptionExt.Combine(this.DATAs?.Specific, rhs.DATAs?.Specific));
+                ret.DATAs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.DATAs?.Overall, rhs.DATAs?.Overall), Noggog.ExceptionExt.Combine(this.DATAs?.Specific, rhs.DATAs?.Specific));
                 ret.INTV = this.INTV.Combine(rhs.INTV);
                 ret.Model = this.Model.Combine(rhs.Model);
                 return ret;
@@ -951,7 +951,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.DATAs,
                 (l, r) => l == r,
                 include);
-            ret.INTV = MemorySliceExt.Equal(item.INTV, rhs.INTV);
+            ret.INTV = MemorySliceExt.SequenceEqual(item.INTV, rhs.INTV);
             ret.Model = string.Equals(item.Model, rhs.Model);
         }
         
@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMeshObstacleManagerSubObject_FieldIndex.INTV) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.INTV, rhs.INTV)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.INTV, rhs.INTV)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMeshObstacleManagerSubObject_FieldIndex.Model) ?? true))
             {

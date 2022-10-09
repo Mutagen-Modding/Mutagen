@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Havok = this.Havok.Combine(rhs.Havok, (l, r) => l.Combine(r));
                 ret.TextureSpecularExponent = this.TextureSpecularExponent.Combine(rhs.TextureSpecularExponent);
-                ret.PotentialGrass = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PotentialGrass?.Overall, rhs.PotentialGrass?.Overall), ExceptionExt.Combine(this.PotentialGrass?.Specific, rhs.PotentialGrass?.Specific));
+                ret.PotentialGrass = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PotentialGrass?.Overall, rhs.PotentialGrass?.Overall), Noggog.ExceptionExt.Combine(this.PotentialGrass?.Specific, rhs.PotentialGrass?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

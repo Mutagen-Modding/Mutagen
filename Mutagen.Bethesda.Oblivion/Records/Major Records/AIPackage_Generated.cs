@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Location = this.Location.Combine(rhs.Location, (l, r) => l.Combine(r));
                 ret.Schedule = this.Schedule.Combine(rhs.Schedule, (l, r) => l.Combine(r));
                 ret.Target = this.Target.Combine(rhs.Target, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

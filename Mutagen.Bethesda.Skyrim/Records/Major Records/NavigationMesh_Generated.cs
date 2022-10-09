@@ -1014,9 +1014,9 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Data,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.ONAM = MemorySliceExt.Equal(item.ONAM, rhs.ONAM);
-            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
-            ret.NNAM = MemorySliceExt.Equal(item.NNAM, rhs.NNAM);
+            ret.ONAM = MemorySliceExt.SequenceEqual(item.ONAM, rhs.ONAM);
+            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
+            ret.NNAM = MemorySliceExt.SequenceEqual(item.NNAM, rhs.NNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1144,15 +1144,15 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.ONAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ONAM, rhs.ONAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.PNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NNAM, rhs.NNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NNAM, rhs.NNAM)) return false;
             }
             return true;
         }

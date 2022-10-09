@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.MenuDisplayObject = this.MenuDisplayObject.Combine(rhs.MenuDisplayObject);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.WordsOfPower = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ShoutWord.ErrorMask?>>?>(ExceptionExt.Combine(this.WordsOfPower?.Overall, rhs.WordsOfPower?.Overall), ExceptionExt.Combine(this.WordsOfPower?.Specific, rhs.WordsOfPower?.Specific));
+                ret.WordsOfPower = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ShoutWord.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.WordsOfPower?.Overall, rhs.WordsOfPower?.Overall), Noggog.ExceptionExt.Combine(this.WordsOfPower?.Specific, rhs.WordsOfPower?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

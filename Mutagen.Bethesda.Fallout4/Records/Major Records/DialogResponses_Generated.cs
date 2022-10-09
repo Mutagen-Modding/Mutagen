@@ -1152,8 +1152,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.SharedDialog = this.SharedDialog.Combine(rhs.SharedDialog);
                 ret.DialogGroup = this.DialogGroup.Combine(rhs.DialogGroup);
                 ret.OverrideFileName = this.OverrideFileName.Combine(rhs.OverrideFileName);
-                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Prompt = this.Prompt.Combine(rhs.Prompt);
                 ret.Speaker = this.Speaker.Combine(rhs.Speaker);
                 ret.StartScene = this.StartScene.Combine(rhs.StartScene);
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Prompt = object.Equals(item.Prompt, rhs.Prompt);
             ret.Speaker = item.Speaker.Equals(rhs.Speaker);
             ret.StartScene = item.StartScene.Equals(rhs.StartScene);
-            ret.INTV = MemorySliceExt.Equal(item.INTV, rhs.INTV);
+            ret.INTV = MemorySliceExt.SequenceEqual(item.INTV, rhs.INTV);
             ret.ForcedAlias = item.ForcedAlias == rhs.ForcedAlias;
             ret.AudioOutputOverride = item.AudioOutputOverride.Equals(rhs.AudioOutputOverride);
             ret.GreetDistance = item.GreetDistance == rhs.GreetDistance;
@@ -2220,7 +2220,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.INTV) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.INTV, rhs.INTV)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.INTV, rhs.INTV)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.ForcedAlias) ?? true))
             {

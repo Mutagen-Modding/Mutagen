@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
-            ret.TNAM = MemorySliceExt.Equal(item.TNAM, rhs.TNAM);
+            ret.TNAM = MemorySliceExt.SequenceEqual(item.TNAM, rhs.TNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -997,7 +997,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.TNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TNAM, rhs.TNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TNAM, rhs.TNAM)) return false;
             }
             return true;
         }

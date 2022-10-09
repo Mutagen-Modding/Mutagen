@@ -2276,7 +2276,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MaxHeightData = this.MaxHeightData.Combine(rhs.MaxHeightData, (l, r) => l.Combine(r));
                 ret.LightingTemplate = this.LightingTemplate.Combine(rhs.LightingTemplate);
                 ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
-                ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
+                ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), Noggog.ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
                 ret.Location = this.Location.Combine(rhs.Location);
                 ret.XWCN = this.XWCN.Combine(rhs.XWCN);
                 ret.WaterVelocity = this.WaterVelocity.Combine(rhs.WaterVelocity, (l, r) => l.Combine(r));
@@ -2292,19 +2292,19 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Music = this.Music.Combine(rhs.Music);
                 ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
                 ret.GodRays = this.GodRays.Combine(rhs.GodRays);
-                ret.PhysicsReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PhysicsReferences?.Overall, rhs.PhysicsReferences?.Overall), ExceptionExt.Combine(this.PhysicsReferences?.Specific, rhs.PhysicsReferences?.Specific));
-                ret.CombinedMeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CombinedMeshes?.Overall, rhs.CombinedMeshes?.Overall), ExceptionExt.Combine(this.CombinedMeshes?.Specific, rhs.CombinedMeshes?.Specific));
-                ret.CombinedMeshReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellCombinedMeshReference.ErrorMask?>>?>(ExceptionExt.Combine(this.CombinedMeshReferences?.Overall, rhs.CombinedMeshReferences?.Overall), ExceptionExt.Combine(this.CombinedMeshReferences?.Specific, rhs.CombinedMeshReferences?.Specific));
+                ret.PhysicsReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PhysicsReferences?.Overall, rhs.PhysicsReferences?.Overall), Noggog.ExceptionExt.Combine(this.PhysicsReferences?.Specific, rhs.PhysicsReferences?.Specific));
+                ret.CombinedMeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CombinedMeshes?.Overall, rhs.CombinedMeshes?.Overall), Noggog.ExceptionExt.Combine(this.CombinedMeshes?.Specific, rhs.CombinedMeshes?.Specific));
+                ret.CombinedMeshReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellCombinedMeshReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CombinedMeshReferences?.Overall, rhs.CombinedMeshReferences?.Overall), Noggog.ExceptionExt.Combine(this.CombinedMeshReferences?.Specific, rhs.CombinedMeshReferences?.Specific));
                 ret.Landscape = this.Landscape.Combine(rhs.Landscape, (l, r) => l.Combine(r));
-                ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
+                ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), Noggog.ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.UnknownGroupData = this.UnknownGroupData.Combine(rhs.UnknownGroupData);
                 ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
                 ret.PersistentUnknownGroupData = this.PersistentUnknownGroupData.Combine(rhs.PersistentUnknownGroupData);
-                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
+                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), Noggog.ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
                 ret.TemporaryTimestamp = this.TemporaryTimestamp.Combine(rhs.TemporaryTimestamp);
                 ret.TemporaryUnknownGroupData = this.TemporaryUnknownGroupData.Combine(rhs.TemporaryUnknownGroupData);
-                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
+                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), Noggog.ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3691,7 +3691,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.PrecombinedObjectLevelXY = item.PrecombinedObjectLevelXY == rhs.PrecombinedObjectLevelXY;
             ret.PrecombinedObjectLevelZ = item.PrecombinedObjectLevelZ == rhs.PrecombinedObjectLevelZ;
-            ret.TVDT = MemorySliceExt.Equal(item.TVDT, rhs.TVDT);
+            ret.TVDT = MemorySliceExt.SequenceEqual(item.TVDT, rhs.TVDT);
             ret.MaxHeightData = EqualsMaskHelper.EqualsHelper(
                 item.MaxHeightData,
                 rhs.MaxHeightData,
@@ -3704,7 +3704,7 @@ namespace Mutagen.Bethesda.Fallout4
                 (l, r) => object.Equals(l, r),
                 include);
             ret.Location = item.Location.Equals(rhs.Location);
-            ret.XWCN = MemorySliceExt.Equal(item.XWCN, rhs.XWCN);
+            ret.XWCN = MemorySliceExt.SequenceEqual(item.XWCN, rhs.XWCN);
             ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
                 item.WaterVelocity,
                 rhs.WaterVelocity,
@@ -4165,7 +4165,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.TVDT) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TVDT, rhs.TVDT)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TVDT, rhs.TVDT)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.MaxHeightData) ?? true))
             {
@@ -4193,7 +4193,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XWCN, rhs.XWCN)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XWCN, rhs.XWCN)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterVelocity) ?? true))
             {

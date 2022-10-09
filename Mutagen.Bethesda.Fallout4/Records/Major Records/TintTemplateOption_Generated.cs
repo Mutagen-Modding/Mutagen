@@ -829,10 +829,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Index = this.Index.Combine(rhs.Index);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), Noggog.ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
                 ret.BlendOperation = this.BlendOperation.Combine(rhs.BlendOperation);
-                ret.TemplateColors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintTemplateColor.ErrorMask?>>?>(ExceptionExt.Combine(this.TemplateColors?.Overall, rhs.TemplateColors?.Overall), ExceptionExt.Combine(this.TemplateColors?.Specific, rhs.TemplateColors?.Specific));
+                ret.TemplateColors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintTemplateColor.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TemplateColors?.Overall, rhs.TemplateColors?.Overall), Noggog.ExceptionExt.Combine(this.TemplateColors?.Specific, rhs.TemplateColors?.Specific));
                 ret.Default = this.Default.Combine(rhs.Default);
                 ret.TETIDataTypeState = this.TETIDataTypeState.Combine(rhs.TETIDataTypeState);
                 return ret;

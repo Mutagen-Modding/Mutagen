@@ -865,10 +865,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.Category = this.Category.Combine(rhs.Category);
                 ret.AlternateSoundFor = this.AlternateSoundFor.Combine(rhs.AlternateSoundFor);
-                ret.SoundFiles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SoundFiles?.Overall, rhs.SoundFiles?.Overall), ExceptionExt.Combine(this.SoundFiles?.Specific, rhs.SoundFiles?.Specific));
+                ret.SoundFiles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SoundFiles?.Overall, rhs.SoundFiles?.Overall), Noggog.ExceptionExt.Combine(this.SoundFiles?.Specific, rhs.SoundFiles?.Specific));
                 ret.OutputModel = this.OutputModel.Combine(rhs.OutputModel);
                 ret.String = this.String.Combine(rhs.String);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.LoopAndRumble = this.LoopAndRumble.Combine(rhs.LoopAndRumble, (l, r) => l.Combine(r));
                 ret.PercentFrequencyShift = this.PercentFrequencyShift.Combine(rhs.PercentFrequencyShift);
                 ret.PercentFrequencyVariance = this.PercentFrequencyVariance.Combine(rhs.PercentFrequencyVariance);

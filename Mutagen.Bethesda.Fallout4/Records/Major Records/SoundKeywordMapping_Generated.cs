@@ -628,8 +628,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ExteriorTail = this.ExteriorTail.Combine(rhs.ExteriorTail);
                 ret.VatsDescriptor = this.VatsDescriptor.Combine(rhs.VatsDescriptor);
                 ret.VatsThreshold = this.VatsThreshold.Combine(rhs.VatsThreshold);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MappingSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MappingSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

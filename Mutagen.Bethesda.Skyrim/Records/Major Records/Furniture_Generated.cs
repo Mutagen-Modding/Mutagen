@@ -961,13 +961,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.InteractionKeyword = this.InteractionKeyword.Combine(rhs.InteractionKeyword);
                 ret.WorkbenchData = this.WorkbenchData.Combine(rhs.WorkbenchData, (l, r) => l.Combine(r));
                 ret.AssociatedSpell = this.AssociatedSpell.Combine(rhs.AssociatedSpell);
-                ret.Markers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarker.ErrorMask?>>?>(ExceptionExt.Combine(this.Markers?.Overall, rhs.Markers?.Overall), ExceptionExt.Combine(this.Markers?.Specific, rhs.Markers?.Specific));
+                ret.Markers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarker.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Markers?.Overall, rhs.Markers?.Overall), Noggog.ExceptionExt.Combine(this.Markers?.Specific, rhs.Markers?.Specific));
                 ret.ModelFilename = this.ModelFilename.Combine(rhs.ModelFilename);
                 return ret;
             }
@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
+            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
             ret.Flags = item.Flags == rhs.Flags;
             ret.InteractionKeyword = item.InteractionKeyword.Equals(rhs.InteractionKeyword);
             ret.WorkbenchData = EqualsMaskHelper.EqualsHelper(
@@ -2006,7 +2006,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.PNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Flags) ?? true))
             {

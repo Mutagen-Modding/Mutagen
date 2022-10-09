@@ -584,8 +584,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Quest = this.Quest.Combine(rhs.Quest);
-                ret.Branches = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Branches?.Overall, rhs.Branches?.Overall), ExceptionExt.Combine(this.Branches?.Specific, rhs.Branches?.Specific));
-                ret.TNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.TNAMs?.Overall, rhs.TNAMs?.Overall), ExceptionExt.Combine(this.TNAMs?.Specific, rhs.TNAMs?.Specific));
+                ret.Branches = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Branches?.Overall, rhs.Branches?.Overall), Noggog.ExceptionExt.Combine(this.Branches?.Specific, rhs.Branches?.Specific));
+                ret.TNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TNAMs?.Overall, rhs.TNAMs?.Overall), Noggog.ExceptionExt.Combine(this.TNAMs?.Specific, rhs.TNAMs?.Specific));
                 ret.ENAM = this.ENAM.Combine(rhs.ENAM);
                 ret.DNAM = this.DNAM.Combine(rhs.DNAM);
                 return ret;
@@ -1185,8 +1185,8 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.TNAMs,
                 (l, r) => MemoryExtensions.SequenceEqual(l.Span, r.Span),
                 include);
-            ret.ENAM = MemorySliceExt.Equal(item.ENAM, rhs.ENAM);
-            ret.DNAM = MemorySliceExt.Equal(item.DNAM, rhs.DNAM);
+            ret.ENAM = MemorySliceExt.SequenceEqual(item.ENAM, rhs.ENAM);
+            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1340,11 +1340,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.ENAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ENAM, rhs.ENAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.DNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
             }
             return true;
         }

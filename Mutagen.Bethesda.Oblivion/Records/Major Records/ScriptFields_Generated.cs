@@ -573,8 +573,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.MetadataSummary = this.MetadataSummary.Combine(rhs.MetadataSummary, (l, r) => l.Combine(r));
                 ret.CompiledScript = this.CompiledScript.Combine(rhs.CompiledScript);
                 ret.SourceCode = this.SourceCode.Combine(rhs.SourceCode);
-                ret.LocalVariables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocalVariable.ErrorMask?>>?>(ExceptionExt.Combine(this.LocalVariables?.Overall, rhs.LocalVariables?.Overall), ExceptionExt.Combine(this.LocalVariables?.Specific, rhs.LocalVariables?.Specific));
-                ret.References = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>(ExceptionExt.Combine(this.References?.Overall, rhs.References?.Overall), ExceptionExt.Combine(this.References?.Specific, rhs.References?.Specific));
+                ret.LocalVariables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocalVariable.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocalVariables?.Overall, rhs.LocalVariables?.Overall), Noggog.ExceptionExt.Combine(this.LocalVariables?.Specific, rhs.LocalVariables?.Specific));
+                ret.References = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.References?.Overall, rhs.References?.Overall), Noggog.ExceptionExt.Combine(this.References?.Specific, rhs.References?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.MetadataSummary = MaskItemExt.Factory(item.MetadataSummary.GetEqualsMask(rhs.MetadataSummary, include), include);
-            ret.CompiledScript = MemorySliceExt.Equal(item.CompiledScript, rhs.CompiledScript);
+            ret.CompiledScript = MemorySliceExt.SequenceEqual(item.CompiledScript, rhs.CompiledScript);
             ret.SourceCode = string.Equals(item.SourceCode, rhs.SourceCode);
             ret.LocalVariables = item.LocalVariables.CollectionEqualsHelper(
                 rhs.LocalVariables,
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.CompiledScript) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CompiledScript, rhs.CompiledScript)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.CompiledScript, rhs.CompiledScript)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.SourceCode) ?? true))
             {

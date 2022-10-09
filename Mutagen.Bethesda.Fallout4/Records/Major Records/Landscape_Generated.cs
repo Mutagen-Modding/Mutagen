@@ -873,12 +873,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.DATA = this.DATA.Combine(rhs.DATA);
-                ret.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.VertexNormals?.Overall, rhs.VertexNormals?.Overall), ExceptionExt.Combine(this.VertexNormals?.Specific, rhs.VertexNormals?.Specific));
+                ret.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.VertexNormals?.Overall, rhs.VertexNormals?.Overall), Noggog.ExceptionExt.Combine(this.VertexNormals?.Specific, rhs.VertexNormals?.Specific));
                 ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap, (l, r) => l.Combine(r));
-                ret.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.VertexColors?.Overall, rhs.VertexColors?.Overall), ExceptionExt.Combine(this.VertexColors?.Specific, rhs.VertexColors?.Specific));
-                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
-                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
-                ret.MPCDs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LandscapeMPCD.ErrorMask?>>?>(ExceptionExt.Combine(this.MPCDs?.Overall, rhs.MPCDs?.Overall), ExceptionExt.Combine(this.MPCDs?.Specific, rhs.MPCDs?.Specific));
+                ret.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.VertexColors?.Overall, rhs.VertexColors?.Overall), Noggog.ExceptionExt.Combine(this.VertexColors?.Specific, rhs.VertexColors?.Specific));
+                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), Noggog.ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
+                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), Noggog.ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
+                ret.MPCDs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LandscapeMPCD.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MPCDs?.Overall, rhs.MPCDs?.Overall), Noggog.ExceptionExt.Combine(this.MPCDs?.Specific, rhs.MPCDs?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1476,7 +1476,7 @@ namespace Mutagen.Bethesda.Fallout4
             Landscape.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.VertexNormals = item.VertexNormals.Array2dEqualsHelper(
                 rhs.VertexNormals,
                 (l, r) => l.Equals(r),
@@ -1684,7 +1684,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {

@@ -934,11 +934,11 @@ namespace Mutagen.Bethesda.Skyrim
             ScenePhaseUnusedData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
-            ret.SCDA = MemorySliceExt.Equal(item.SCDA, rhs.SCDA);
-            ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
-            ret.QNAM = MemorySliceExt.Equal(item.QNAM, rhs.QNAM);
-            ret.SCRO = MemorySliceExt.Equal(item.SCRO, rhs.SCRO);
+            ret.SCHR = MemorySliceExt.SequenceEqual(item.SCHR, rhs.SCHR);
+            ret.SCDA = MemorySliceExt.SequenceEqual(item.SCDA, rhs.SCDA);
+            ret.SCTX = MemorySliceExt.SequenceEqual(item.SCTX, rhs.SCTX);
+            ret.QNAM = MemorySliceExt.SequenceEqual(item.QNAM, rhs.QNAM);
+            ret.SCRO = MemorySliceExt.SequenceEqual(item.SCRO, rhs.SCRO);
         }
         
         public string Print(
@@ -1019,23 +1019,23 @@ namespace Mutagen.Bethesda.Skyrim
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCHR) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCHR, rhs.SCHR)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCDA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCDA, rhs.SCDA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCDA, rhs.SCDA)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCTX) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCTX, rhs.SCTX)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.QNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.QNAM, rhs.QNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCRO) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCRO, rhs.SCRO)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCRO, rhs.SCRO)) return false;
             }
             return true;
         }

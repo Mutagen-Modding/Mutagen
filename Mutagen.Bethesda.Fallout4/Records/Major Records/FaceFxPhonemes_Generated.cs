@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.R = this.R.Combine(rhs.R, (l, r) => l.Combine(r));
                 ret.Th = this.Th.Combine(rhs.Th, (l, r) => l.Combine(r));
                 ret.W = this.W.Combine(rhs.W, (l, r) => l.Combine(r));
-                ret.Unknowns = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Phoneme.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknowns?.Overall, rhs.Unknowns?.Overall), ExceptionExt.Combine(this.Unknowns?.Specific, rhs.Unknowns?.Specific));
+                ret.Unknowns = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Phoneme.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknowns?.Overall, rhs.Unknowns?.Overall), Noggog.ExceptionExt.Combine(this.Unknowns?.Specific, rhs.Unknowns?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

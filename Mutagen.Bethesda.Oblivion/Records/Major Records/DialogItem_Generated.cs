@@ -947,11 +947,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Quest = this.Quest.Combine(rhs.Quest);
                 ret.PreviousTopic = this.PreviousTopic.Combine(rhs.PreviousTopic);
-                ret.Topics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
-                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Choices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Choices?.Overall, rhs.Choices?.Overall), ExceptionExt.Combine(this.Choices?.Specific, rhs.Choices?.Specific));
-                ret.LinkFrom = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LinkFrom?.Overall, rhs.LinkFrom?.Overall), ExceptionExt.Combine(this.LinkFrom?.Specific, rhs.LinkFrom?.Specific));
+                ret.Topics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), Noggog.ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
+                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Choices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Choices?.Overall, rhs.Choices?.Overall), Noggog.ExceptionExt.Combine(this.Choices?.Specific, rhs.Choices?.Specific));
+                ret.LinkFrom = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LinkFrom?.Overall, rhs.LinkFrom?.Overall), Noggog.ExceptionExt.Combine(this.LinkFrom?.Specific, rhs.LinkFrom?.Specific));
                 ret.Script = this.Script.Combine(rhs.Script, (l, r) => l.Combine(r));
                 return ret;
             }

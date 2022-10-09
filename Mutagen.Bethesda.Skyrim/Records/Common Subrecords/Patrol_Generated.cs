@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Idle = this.Idle.Combine(rhs.Idle);
                 ret.SCHR = this.SCHR.Combine(rhs.SCHR);
                 ret.SCTX = this.SCTX.Combine(rhs.SCTX);
-                ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
+                ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), Noggog.ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1009,8 +1009,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ret.IdleTime = item.IdleTime.EqualsWithin(rhs.IdleTime);
             ret.Idle = item.Idle.Equals(rhs.Idle);
-            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
-            ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
+            ret.SCHR = MemorySliceExt.SequenceEqual(item.SCHR, rhs.SCHR);
+            ret.SCTX = MemorySliceExt.SequenceEqual(item.SCTX, rhs.SCTX);
             ret.Topics = item.Topics.CollectionEqualsHelper(
                 rhs.Topics,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1110,11 +1110,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCHR, rhs.SCHR)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.SCTX) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCTX, rhs.SCTX)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.Topics) ?? true))
             {

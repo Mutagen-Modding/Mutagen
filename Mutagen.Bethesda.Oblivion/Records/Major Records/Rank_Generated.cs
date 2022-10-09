@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.RankNumber = this.RankNumber.Combine(rhs.RankNumber);
-                ret.Name = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Name?.Overall, rhs.Name?.Overall), GenderedItem.Combine(this.Name?.Specific, rhs.Name?.Specific));
+                ret.Name = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Name?.Overall, rhs.Name?.Overall), GenderedItem.Combine(this.Name?.Specific, rhs.Name?.Specific));
                 ret.Insignia = this.Insignia.Combine(rhs.Insignia);
                 return ret;
             }

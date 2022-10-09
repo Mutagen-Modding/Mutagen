@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Locations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LoadScreenLocation.ErrorMask?>>?>(ExceptionExt.Combine(this.Locations?.Overall, rhs.Locations?.Overall), ExceptionExt.Combine(this.Locations?.Specific, rhs.Locations?.Specific));
+                ret.Locations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LoadScreenLocation.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Locations?.Overall, rhs.Locations?.Overall), Noggog.ExceptionExt.Combine(this.Locations?.Specific, rhs.Locations?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

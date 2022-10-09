@@ -734,9 +734,9 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
-                ret.Targets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestTarget.ErrorMask?>>?>(ExceptionExt.Combine(this.Targets?.Overall, rhs.Targets?.Overall), ExceptionExt.Combine(this.Targets?.Specific, rhs.Targets?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), Noggog.ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
+                ret.Targets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestTarget.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Targets?.Overall, rhs.Targets?.Overall), Noggog.ExceptionExt.Combine(this.Targets?.Specific, rhs.Targets?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

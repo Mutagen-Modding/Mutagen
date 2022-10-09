@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ret.File = string.Equals(item.File, rhs.File);
             ret.BoundRadius = item.BoundRadius.EqualsWithin(rhs.BoundRadius);
-            ret.Hashes = MemorySliceExt.Equal(item.Hashes, rhs.Hashes);
+            ret.Hashes = MemorySliceExt.SequenceEqual(item.Hashes, rhs.Hashes);
         }
         
         public string Print(
@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Model_FieldIndex.Hashes) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Hashes, rhs.Hashes)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Hashes, rhs.Hashes)) return false;
             }
             return true;
         }

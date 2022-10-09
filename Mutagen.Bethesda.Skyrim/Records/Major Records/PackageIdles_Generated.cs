@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.TimerSetting = this.TimerSetting.Combine(rhs.TimerSetting);
-                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

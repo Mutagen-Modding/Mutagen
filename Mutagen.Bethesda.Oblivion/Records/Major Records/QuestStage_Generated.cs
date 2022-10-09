@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Stage = this.Stage.Combine(rhs.Stage);
-                ret.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.LogEntries?.Overall, rhs.LogEntries?.Overall), ExceptionExt.Combine(this.LogEntries?.Specific, rhs.LogEntries?.Specific));
+                ret.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LogEntries?.Overall, rhs.LogEntries?.Overall), Noggog.ExceptionExt.Combine(this.LogEntries?.Specific, rhs.LogEntries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

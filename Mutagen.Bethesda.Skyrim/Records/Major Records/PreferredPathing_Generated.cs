@@ -474,8 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.NavmeshSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshSet.ErrorMask?>>?>(ExceptionExt.Combine(this.NavmeshSets?.Overall, rhs.NavmeshSets?.Overall), ExceptionExt.Combine(this.NavmeshSets?.Specific, rhs.NavmeshSets?.Specific));
-                ret.NavmeshTree = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshNode.ErrorMask?>>?>(ExceptionExt.Combine(this.NavmeshTree?.Overall, rhs.NavmeshTree?.Overall), ExceptionExt.Combine(this.NavmeshTree?.Specific, rhs.NavmeshTree?.Specific));
+                ret.NavmeshSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshSet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavmeshSets?.Overall, rhs.NavmeshSets?.Overall), Noggog.ExceptionExt.Combine(this.NavmeshSets?.Specific, rhs.NavmeshSets?.Specific));
+                ret.NavmeshTree = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshNode.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavmeshTree?.Overall, rhs.NavmeshTree?.Overall), Noggog.ExceptionExt.Combine(this.NavmeshTree?.Specific, rhs.NavmeshTree?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

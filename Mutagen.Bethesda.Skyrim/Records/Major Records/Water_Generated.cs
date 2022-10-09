@@ -2443,7 +2443,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.UnusedNoisemaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.UnusedNoisemaps?.Overall, rhs.UnusedNoisemaps?.Overall), ExceptionExt.Combine(this.UnusedNoisemaps?.Specific, rhs.UnusedNoisemaps?.Specific));
+                ret.UnusedNoisemaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.UnusedNoisemaps?.Overall, rhs.UnusedNoisemaps?.Overall), Noggog.ExceptionExt.Combine(this.UnusedNoisemaps?.Specific, rhs.UnusedNoisemaps?.Specific));
                 ret.Opacity = this.Opacity.Combine(rhs.Opacity);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.MNAM = this.MNAM.Combine(rhs.MNAM);
@@ -3621,7 +3621,7 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
             ret.Opacity = item.Opacity == rhs.Opacity;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.MNAM = MemorySliceExt.Equal(item.MNAM, rhs.MNAM);
+            ret.MNAM = MemorySliceExt.SequenceEqual(item.MNAM, rhs.MNAM);
             ret.Material = item.Material.Equals(rhs.Material);
             ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
             ret.Spell = item.Spell.Equals(rhs.Spell);
@@ -3677,7 +3677,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.DepthSpecularLighting = item.DepthSpecularLighting.EqualsWithin(rhs.DepthSpecularLighting);
             ret.SpecularSunSparklePower = item.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower);
             ret.NoiseFlowmapScale = item.NoiseFlowmapScale.EqualsWithin(rhs.NoiseFlowmapScale);
-            ret.GNAM = MemorySliceExt.Equal(item.GNAM, rhs.GNAM);
+            ret.GNAM = MemorySliceExt.SequenceEqual(item.GNAM, rhs.GNAM);
             ret.LinearVelocity = item.LinearVelocity.Equals(rhs.LinearVelocity);
             ret.AngularVelocity = item.AngularVelocity.Equals(rhs.AngularVelocity);
             ret.NoiseLayerOneTexture = object.Equals(item.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture);
@@ -4093,7 +4093,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.MNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.MNAM, rhs.MNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.MNAM, rhs.MNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
             {
@@ -4317,7 +4317,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.GNAM, rhs.GNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.GNAM, rhs.GNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
             {

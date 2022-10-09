@@ -851,10 +851,10 @@ namespace Mutagen.Bethesda.Pex
                 ret.IsConst = this.IsConst.Combine(rhs.IsConst);
                 ret.RawUserFlags = this.RawUserFlags.Combine(rhs.RawUserFlags);
                 ret.AutoStateName = this.AutoStateName.Combine(rhs.AutoStateName);
-                ret.StructInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectStructInfo.ErrorMask?>>?>(ExceptionExt.Combine(this.StructInfos?.Overall, rhs.StructInfos?.Overall), ExceptionExt.Combine(this.StructInfos?.Specific, rhs.StructInfos?.Specific));
-                ret.Variables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectVariable.ErrorMask?>>?>(ExceptionExt.Combine(this.Variables?.Overall, rhs.Variables?.Overall), ExceptionExt.Combine(this.Variables?.Specific, rhs.Variables?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
-                ret.States = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectState.ErrorMask?>>?>(ExceptionExt.Combine(this.States?.Overall, rhs.States?.Overall), ExceptionExt.Combine(this.States?.Specific, rhs.States?.Specific));
+                ret.StructInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectStructInfo.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.StructInfos?.Overall, rhs.StructInfos?.Overall), Noggog.ExceptionExt.Combine(this.StructInfos?.Specific, rhs.StructInfos?.Specific));
+                ret.Variables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectVariable.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Variables?.Overall, rhs.Variables?.Overall), Noggog.ExceptionExt.Combine(this.Variables?.Specific, rhs.Variables?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.States = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectState.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.States?.Overall, rhs.States?.Overall), Noggog.ExceptionExt.Combine(this.States?.Specific, rhs.States?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

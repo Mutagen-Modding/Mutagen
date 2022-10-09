@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Number = this.Number.Combine(rhs.Number);
-                ret.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Title?.Overall, rhs.Title?.Overall), GenderedItem.Combine(this.Title?.Specific, rhs.Title?.Specific));
+                ret.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Title?.Overall, rhs.Title?.Overall), GenderedItem.Combine(this.Title?.Specific, rhs.Title?.Specific));
                 ret.Insignia = this.Insignia.Combine(rhs.Insignia);
                 return ret;
             }

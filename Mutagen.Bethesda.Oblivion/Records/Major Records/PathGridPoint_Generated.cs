@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Point = this.Point.Combine(rhs.Point);
                 ret.NumConnections = this.NumConnections.Combine(rhs.NumConnections);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.Connections = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Connections?.Overall, rhs.Connections?.Overall), ExceptionExt.Combine(this.Connections?.Specific, rhs.Connections?.Specific));
+                ret.Connections = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Connections?.Overall, rhs.Connections?.Overall), Noggog.ExceptionExt.Combine(this.Connections?.Specific, rhs.Connections?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

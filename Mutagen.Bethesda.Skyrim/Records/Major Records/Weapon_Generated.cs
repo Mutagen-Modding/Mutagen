@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.AlternateBlockMaterial = this.AlternateBlockMaterial.Combine(rhs.AlternateBlockMaterial);
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.ScopeModel = this.ScopeModel.Combine(rhs.ScopeModel, (l, r) => l.Combine(r));
                 ret.Unused = this.Unused.Combine(rhs.Unused);
@@ -2608,7 +2608,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.ScopeModel,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unused = MemorySliceExt.Equal(item.Unused, rhs.Unused);
+            ret.Unused = MemorySliceExt.SequenceEqual(item.Unused, rhs.Unused);
             ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
             ret.FirstPersonModel = item.FirstPersonModel.Equals(rhs.FirstPersonModel);
             ret.AttackSound = item.AttackSound.Equals(rhs.AttackSound);
@@ -2970,7 +2970,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Unused) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Unused, rhs.Unused)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Unused, rhs.Unused)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
             {

@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim
             DialogResponsesUnknownData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
+            ret.SCHR = MemorySliceExt.SequenceEqual(item.SCHR, rhs.SCHR);
             ret.QNAM = item.QNAM.Equals(rhs.QNAM);
             ret.NEXT = item.NEXT == rhs.NEXT;
         }
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.SCHR) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCHR, rhs.SCHR)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
             {

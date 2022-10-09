@@ -708,8 +708,8 @@ namespace Mutagen.Bethesda.Pex
                 ret.Username = this.Username.Combine(rhs.Username);
                 ret.MachineName = this.MachineName.Combine(rhs.MachineName);
                 ret.DebugInfo = this.DebugInfo.Combine(rhs.DebugInfo, (l, r) => l.Combine(r));
-                ret.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObject.ErrorMask?>>?>(ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), ExceptionExt.Combine(this.Objects?.Specific, rhs.Objects?.Specific));
-                ret.UserFlags = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.UserFlags?.Overall, rhs.UserFlags?.Overall), ExceptionExt.Combine(this.UserFlags?.Specific, rhs.UserFlags?.Specific));
+                ret.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObject.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), Noggog.ExceptionExt.Combine(this.Objects?.Specific, rhs.Objects?.Specific));
+                ret.UserFlags = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.UserFlags?.Overall, rhs.UserFlags?.Overall), Noggog.ExceptionExt.Combine(this.UserFlags?.Specific, rhs.UserFlags?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

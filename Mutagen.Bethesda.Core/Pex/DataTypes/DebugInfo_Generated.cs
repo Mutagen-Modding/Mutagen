@@ -589,9 +589,9 @@ namespace Mutagen.Bethesda.Pex
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ModificationTime = this.ModificationTime.Combine(rhs.ModificationTime);
-                ret.Functions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugFunction.ErrorMask?>>?>(ExceptionExt.Combine(this.Functions?.Overall, rhs.Functions?.Overall), ExceptionExt.Combine(this.Functions?.Specific, rhs.Functions?.Specific));
-                ret.PropertyGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugPropertyGroup.ErrorMask?>>?>(ExceptionExt.Combine(this.PropertyGroups?.Overall, rhs.PropertyGroups?.Overall), ExceptionExt.Combine(this.PropertyGroups?.Specific, rhs.PropertyGroups?.Specific));
-                ret.StructOrders = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugStructOrder.ErrorMask?>>?>(ExceptionExt.Combine(this.StructOrders?.Overall, rhs.StructOrders?.Overall), ExceptionExt.Combine(this.StructOrders?.Specific, rhs.StructOrders?.Specific));
+                ret.Functions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugFunction.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Functions?.Overall, rhs.Functions?.Overall), Noggog.ExceptionExt.Combine(this.Functions?.Specific, rhs.Functions?.Specific));
+                ret.PropertyGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugPropertyGroup.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PropertyGroups?.Overall, rhs.PropertyGroups?.Overall), Noggog.ExceptionExt.Combine(this.PropertyGroups?.Specific, rhs.PropertyGroups?.Specific));
+                ret.StructOrders = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugStructOrder.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.StructOrders?.Overall, rhs.StructOrders?.Overall), Noggog.ExceptionExt.Combine(this.StructOrders?.Specific, rhs.StructOrders?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Deleted = this.Deleted.Combine(rhs.Deleted);
                 ret.Author = this.Author.Combine(rhs.Author);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
+                ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), Noggog.ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1163,8 +1163,8 @@ namespace Mutagen.Bethesda.Oblivion
             ret.FormID = item.FormID == rhs.FormID;
             ret.Version = item.Version == rhs.Version;
             ret.Stats = MaskItemExt.Factory(item.Stats.GetEqualsMask(rhs.Stats, include), include);
-            ret.TypeOffsets = MemorySliceExt.Equal(item.TypeOffsets, rhs.TypeOffsets);
-            ret.Deleted = MemorySliceExt.Equal(item.Deleted, rhs.Deleted);
+            ret.TypeOffsets = MemorySliceExt.SequenceEqual(item.TypeOffsets, rhs.TypeOffsets);
+            ret.Deleted = MemorySliceExt.SequenceEqual(item.Deleted, rhs.Deleted);
             ret.Author = string.Equals(item.Author, rhs.Author);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.MasterReferences = item.MasterReferences.CollectionEqualsHelper(
@@ -1296,11 +1296,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.TypeOffsets) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Deleted) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Deleted, rhs.Deleted)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Deleted, rhs.Deleted)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Author) ?? true))
             {

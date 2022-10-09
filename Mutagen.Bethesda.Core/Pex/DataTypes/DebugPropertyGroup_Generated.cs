@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Pex
                 var ret = new ErrorMask();
                 ret.ObjectName = this.ObjectName.Combine(rhs.ObjectName);
                 ret.GroupName = this.GroupName.Combine(rhs.GroupName);
-                ret.PropertyNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PropertyNames?.Overall, rhs.PropertyNames?.Overall), ExceptionExt.Combine(this.PropertyNames?.Specific, rhs.PropertyNames?.Specific));
+                ret.PropertyNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PropertyNames?.Overall, rhs.PropertyNames?.Overall), Noggog.ExceptionExt.Combine(this.PropertyNames?.Specific, rhs.PropertyNames?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

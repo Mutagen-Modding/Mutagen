@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.MapColor = this.MapColor.Combine(rhs.MapColor);
                 ret.Worldspace = this.Worldspace.Combine(rhs.Worldspace);
-                ret.Areas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ExceptionExt.Combine(this.Areas?.Overall, rhs.Areas?.Overall), ExceptionExt.Combine(this.Areas?.Specific, rhs.Areas?.Specific));
+                ret.Areas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Areas?.Overall, rhs.Areas?.Overall), Noggog.ExceptionExt.Combine(this.Areas?.Specific, rhs.Areas?.Specific));
                 ret.Objects = this.Objects.Combine(rhs.Objects, (l, r) => l.Combine(r));
                 ret.Weather = this.Weather.Combine(rhs.Weather, (l, r) => l.Combine(r));
                 ret.MapName = this.MapName.Combine(rhs.MapName, (l, r) => l.Combine(r));

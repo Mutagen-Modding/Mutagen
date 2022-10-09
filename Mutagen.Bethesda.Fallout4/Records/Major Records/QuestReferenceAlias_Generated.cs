@@ -1768,20 +1768,20 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.FindMatchingRefNearAlias = this.FindMatchingRefNearAlias.Combine(rhs.FindMatchingRefNearAlias, (l, r) => l.Combine(r));
                 ret.FindMatchingRefFromEvent = this.FindMatchingRefFromEvent.Combine(rhs.FindMatchingRefFromEvent, (l, r) => l.Combine(r));
                 ret.ClosestToAlias = this.ClosestToAlias.Combine(rhs.ClosestToAlias);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.SpectatorOverridePackageList = this.SpectatorOverridePackageList.Combine(rhs.SpectatorOverridePackageList);
                 ret.ObserveDeadBodyOverridePackageList = this.ObserveDeadBodyOverridePackageList.Combine(rhs.ObserveDeadBodyOverridePackageList);
                 ret.GuardWarnOverridePackageList = this.GuardWarnOverridePackageList.Combine(rhs.GuardWarnOverridePackageList);
                 ret.CombatOverridePackageList = this.CombatOverridePackageList.Combine(rhs.CombatOverridePackageList);
-                ret.LinkedAliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedAlias.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedAliases?.Overall, rhs.LinkedAliases?.Overall), ExceptionExt.Combine(this.LinkedAliases?.Specific, rhs.LinkedAliases?.Specific));
+                ret.LinkedAliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedAliases?.Overall, rhs.LinkedAliases?.Overall), Noggog.ExceptionExt.Combine(this.LinkedAliases?.Specific, rhs.LinkedAliases?.Specific));
                 ret.DisplayName = this.DisplayName.Combine(rhs.DisplayName);
                 ret.ForcedVoice = this.ForcedVoice.Combine(rhs.ForcedVoice);
                 ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
-                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
-                ret.Factions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
-                ret.PackageData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PackageData?.Overall, rhs.PackageData?.Overall), ExceptionExt.Combine(this.PackageData?.Specific, rhs.PackageData?.Specific));
+                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), Noggog.ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
+                ret.Factions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), Noggog.ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.PackageData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PackageData?.Overall, rhs.PackageData?.Overall), Noggog.ExceptionExt.Combine(this.PackageData?.Specific, rhs.PackageData?.Specific));
                 ret.VoiceTypes = this.VoiceTypes.Combine(rhs.VoiceTypes);
                 return ret;
             }

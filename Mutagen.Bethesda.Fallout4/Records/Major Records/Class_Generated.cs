@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.BleedoutDefault = this.BleedoutDefault.Combine(rhs.BleedoutDefault);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);

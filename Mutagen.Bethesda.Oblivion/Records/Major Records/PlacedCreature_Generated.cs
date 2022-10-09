@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs.EnableParent,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
+            ret.RagdollData = MemorySliceExt.SequenceEqual(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.Location = EqualsMaskHelper.EqualsHelper(
                 item.Location,
@@ -1328,7 +1328,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)PlacedCreature_FieldIndex.RagdollData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Scale) ?? true))
             {

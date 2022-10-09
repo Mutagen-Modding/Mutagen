@@ -1551,20 +1551,20 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Configuration = this.Configuration.Combine(rhs.Configuration, (l, r) => l.Combine(r));
-                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), Noggog.ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
                 ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
+                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), Noggog.ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
                 ret.Script = this.Script.Combine(rhs.Script);
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.AIData = this.AIData.Combine(rhs.AIData, (l, r) => l.Combine(r));
-                ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
-                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), Noggog.ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
+                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
                 ret.Class = this.Class.Combine(rhs.Class);
                 ret.Stats = this.Stats.Combine(rhs.Stats, (l, r) => l.Combine(r));
                 ret.Hair = this.Hair.Combine(rhs.Hair);
                 ret.HairLength = this.HairLength.Combine(rhs.HairLength);
-                ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
+                ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), Noggog.ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
                 ret.HairColor = this.HairColor.Combine(rhs.HairColor);
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
                 ret.FaceGenGeometrySymmetric = this.FaceGenGeometrySymmetric.Combine(rhs.FaceGenGeometrySymmetric);
@@ -2369,10 +2369,10 @@ namespace Mutagen.Bethesda.Oblivion
                 include);
             ret.HairColor = item.HairColor.ColorOnlyEquals(rhs.HairColor);
             ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
-            ret.FaceGenGeometrySymmetric = MemorySliceExt.Equal(item.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric);
-            ret.FaceGenGeometryAsymmetric = MemorySliceExt.Equal(item.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric);
-            ret.FaceGenTextureSymmetric = MemorySliceExt.Equal(item.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric);
-            ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
+            ret.FaceGenGeometrySymmetric = MemorySliceExt.SequenceEqual(item.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric);
+            ret.FaceGenGeometryAsymmetric = MemorySliceExt.SequenceEqual(item.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric);
+            ret.FaceGenTextureSymmetric = MemorySliceExt.SequenceEqual(item.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric);
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2727,19 +2727,19 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceGenGeometrySymmetric) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceGenGeometryAsymmetric) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceGenTextureSymmetric) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
             }
             return true;
         }

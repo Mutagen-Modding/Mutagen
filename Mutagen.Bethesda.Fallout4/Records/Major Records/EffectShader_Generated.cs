@@ -2866,7 +2866,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.HolesTexture = string.Equals(item.HolesTexture, rhs.HolesTexture);
             ret.MembranePaletteTexture = string.Equals(item.MembranePaletteTexture, rhs.MembranePaletteTexture);
             ret.ParticlePaletteTexture = string.Equals(item.ParticlePaletteTexture, rhs.ParticlePaletteTexture);
-            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.MembraneSourceBlendMode = item.MembraneSourceBlendMode == rhs.MembraneSourceBlendMode;
             ret.MembraneBlendOperation = item.MembraneBlendOperation == rhs.MembraneBlendOperation;
@@ -3256,7 +3256,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.DATA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown) ?? true))
             {

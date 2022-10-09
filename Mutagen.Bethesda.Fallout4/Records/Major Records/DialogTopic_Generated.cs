@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.SubtypeName = this.SubtypeName.Combine(rhs.SubtypeName);
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
+                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }

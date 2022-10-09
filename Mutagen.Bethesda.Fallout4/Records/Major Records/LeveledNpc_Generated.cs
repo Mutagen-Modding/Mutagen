@@ -702,8 +702,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MaxCount = this.MaxCount.Combine(rhs.MaxCount);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Global = this.Global.Combine(rhs.Global);
-                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledNpcEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
-                ret.FilterKeywordChances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>(ExceptionExt.Combine(this.FilterKeywordChances?.Overall, rhs.FilterKeywordChances?.Overall), ExceptionExt.Combine(this.FilterKeywordChances?.Specific, rhs.FilterKeywordChances?.Specific));
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledNpcEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.FilterKeywordChances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FilterKeywordChances?.Overall, rhs.FilterKeywordChances?.Overall), Noggog.ExceptionExt.Combine(this.FilterKeywordChances?.Specific, rhs.FilterKeywordChances?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }

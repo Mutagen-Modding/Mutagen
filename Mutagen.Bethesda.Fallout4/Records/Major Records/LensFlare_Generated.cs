@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.ColorInfluence = this.ColorInfluence.Combine(rhs.ColorInfluence);
                 ret.FadeDistanceRadiusScale = this.FadeDistanceRadiusScale.Combine(rhs.FadeDistanceRadiusScale);
-                ret.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(ExceptionExt.Combine(this.Sprites?.Overall, rhs.Sprites?.Overall), ExceptionExt.Combine(this.Sprites?.Specific, rhs.Sprites?.Specific));
+                ret.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sprites?.Overall, rhs.Sprites?.Overall), Noggog.ExceptionExt.Combine(this.Sprites?.Specific, rhs.Sprites?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

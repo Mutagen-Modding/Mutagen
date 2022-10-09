@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.EquipmentType = this.EquipmentType.Combine(rhs.EquipmentType);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.CastDuration = this.CastDuration.Combine(rhs.CastDuration);
                 ret.Range = this.Range.Combine(rhs.Range);
                 ret.CastingPerk = this.CastingPerk.Combine(rhs.CastingPerk);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 ret.SPITDataTypeState = this.SPITDataTypeState.Combine(rhs.SPITDataTypeState);
                 return ret;
             }

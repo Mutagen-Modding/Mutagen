@@ -910,20 +910,20 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.BodyTemplate = this.BodyTemplate.Combine(rhs.BodyTemplate, (l, r) => l.Combine(r));
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.Priority = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Priority?.Overall, rhs.Priority?.Overall), GenderedItem.Combine(this.Priority?.Specific, rhs.Priority?.Specific));
-                ret.WeightSliderEnabled = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WeightSliderEnabled?.Overall, rhs.WeightSliderEnabled?.Overall), GenderedItem.Combine(this.WeightSliderEnabled?.Specific, rhs.WeightSliderEnabled?.Specific));
+                ret.Priority = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Priority?.Overall, rhs.Priority?.Overall), GenderedItem.Combine(this.Priority?.Specific, rhs.Priority?.Specific));
+                ret.WeightSliderEnabled = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WeightSliderEnabled?.Overall, rhs.WeightSliderEnabled?.Overall), GenderedItem.Combine(this.WeightSliderEnabled?.Specific, rhs.WeightSliderEnabled?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.DetectionSoundValue = this.DetectionSoundValue.Combine(rhs.DetectionSoundValue);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.WeaponAdjust = this.WeaponAdjust.Combine(rhs.WeaponAdjust);
-                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
-                ret.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.FirstPersonModel?.Overall, rhs.FirstPersonModel?.Overall), GenderedItem.Combine(this.FirstPersonModel?.Specific, rhs.FirstPersonModel?.Specific));
-                ret.SkinTexture = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.SkinTexture?.Overall, rhs.SkinTexture?.Overall), GenderedItem.Combine(this.SkinTexture?.Specific, rhs.SkinTexture?.Specific));
-                ret.TextureSwapList = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.TextureSwapList?.Overall, rhs.TextureSwapList?.Overall), GenderedItem.Combine(this.TextureSwapList?.Specific, rhs.TextureSwapList?.Specific));
-                ret.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AdditionalRaces?.Overall, rhs.AdditionalRaces?.Overall), ExceptionExt.Combine(this.AdditionalRaces?.Specific, rhs.AdditionalRaces?.Specific));
+                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
+                ret.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.FirstPersonModel?.Overall, rhs.FirstPersonModel?.Overall), GenderedItem.Combine(this.FirstPersonModel?.Specific, rhs.FirstPersonModel?.Specific));
+                ret.SkinTexture = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.SkinTexture?.Overall, rhs.SkinTexture?.Overall), GenderedItem.Combine(this.SkinTexture?.Specific, rhs.SkinTexture?.Specific));
+                ret.TextureSwapList = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.TextureSwapList?.Overall, rhs.TextureSwapList?.Overall), GenderedItem.Combine(this.TextureSwapList?.Specific, rhs.TextureSwapList?.Specific));
+                ret.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AdditionalRaces?.Overall, rhs.AdditionalRaces?.Overall), Noggog.ExceptionExt.Combine(this.AdditionalRaces?.Specific, rhs.AdditionalRaces?.Specific));
                 ret.FootstepSound = this.FootstepSound.Combine(rhs.FootstepSound);
                 ret.ArtObject = this.ArtObject.Combine(rhs.ArtObject);
-                ret.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BoneData?.Overall, rhs.BoneData?.Overall), GenderedItem.Combine(this.BoneData?.Specific, rhs.BoneData?.Specific));
+                ret.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.BoneData?.Overall, rhs.BoneData?.Overall), GenderedItem.Combine(this.BoneData?.Specific, rhs.BoneData?.Specific));
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }

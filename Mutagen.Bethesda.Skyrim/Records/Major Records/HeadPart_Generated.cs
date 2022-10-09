@@ -760,8 +760,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Type = this.Type.Combine(rhs.Type);
-                ret.ExtraParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ExtraParts?.Overall, rhs.ExtraParts?.Overall), ExceptionExt.Combine(this.ExtraParts?.Specific, rhs.ExtraParts?.Specific));
-                ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Part.ErrorMask?>>?>(ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
+                ret.ExtraParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ExtraParts?.Overall, rhs.ExtraParts?.Overall), Noggog.ExceptionExt.Combine(this.ExtraParts?.Specific, rhs.ExtraParts?.Specific));
+                ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Part.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), Noggog.ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
                 ret.TextureSet = this.TextureSet.Combine(rhs.TextureSet);
                 ret.Color = this.Color.Combine(rhs.Color);
                 ret.ValidRaces = this.ValidRaces.Combine(rhs.ValidRaces);

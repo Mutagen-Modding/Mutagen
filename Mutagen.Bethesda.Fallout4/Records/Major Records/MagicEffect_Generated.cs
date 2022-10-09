@@ -2113,7 +2113,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.MenuDisplayObject = this.MenuDisplayObject.Combine(rhs.MenuDisplayObject);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
                 ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
@@ -2151,10 +2151,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.CastingSoundLevel = this.CastingSoundLevel.Combine(rhs.CastingSoundLevel);
                 ret.ScriptEffectAIScore = this.ScriptEffectAIScore.Combine(rhs.ScriptEffectAIScore);
                 ret.ScriptEffectAIDelayTime = this.ScriptEffectAIDelayTime.Combine(rhs.ScriptEffectAIDelayTime);
-                ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), Noggog.ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }

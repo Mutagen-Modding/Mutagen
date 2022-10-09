@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.ObjectEffect = this.ObjectEffect.Combine(rhs.ObjectEffect);
                 ret.EnchantmentAmount = this.EnchantmentAmount.Combine(rhs.EnchantmentAmount);
-                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
+                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
                 ret.BodyTemplate = this.BodyTemplate.Combine(rhs.BodyTemplate, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
@@ -1286,9 +1286,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.BashImpactDataSet = this.BashImpactDataSet.Combine(rhs.BashImpactDataSet);
                 ret.AlternateBlockMaterial = this.AlternateBlockMaterial.Combine(rhs.AlternateBlockMaterial);
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Armature = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Armature?.Overall, rhs.Armature?.Overall), ExceptionExt.Combine(this.Armature?.Specific, rhs.Armature?.Specific));
+                ret.Armature = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Armature?.Overall, rhs.Armature?.Overall), Noggog.ExceptionExt.Combine(this.Armature?.Specific, rhs.Armature?.Specific));
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.ArmorRating = this.ArmorRating.Combine(rhs.ArmorRating);

@@ -682,10 +682,10 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.IdleTimer = this.IdleTimer.Combine(rhs.IdleTimer);
-                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;

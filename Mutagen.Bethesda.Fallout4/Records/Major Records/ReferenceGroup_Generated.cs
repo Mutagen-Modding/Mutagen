@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Reference = item.Reference.Equals(rhs.Reference);
-            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
+            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1080,7 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.PNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
             }
             return true;
         }

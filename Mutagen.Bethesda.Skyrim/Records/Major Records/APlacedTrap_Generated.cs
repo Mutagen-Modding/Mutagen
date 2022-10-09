@@ -1218,16 +1218,16 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
                 ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
-                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
-                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), Noggog.ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
+                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
                 ret.ActivateParents = this.ActivateParents.Combine(rhs.ActivateParents, (l, r) => l.Combine(r));
                 ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
                 ret.MultiBoundReference = this.MultiBoundReference.Combine(rhs.MultiBoundReference);
                 ret.IgnoredBySandbox = this.IgnoredBySandbox.Combine(rhs.IgnoredBySandbox);
-                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
+                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
-                ret.DistantLodData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DistantLodData?.Overall, rhs.DistantLodData?.Overall), ExceptionExt.Combine(this.DistantLodData?.Specific, rhs.DistantLodData?.Specific));
+                ret.DistantLodData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.DistantLodData?.Overall, rhs.DistantLodData?.Overall), Noggog.ExceptionExt.Combine(this.DistantLodData?.Specific, rhs.DistantLodData?.Specific));
                 ret.Scale = this.Scale.Combine(rhs.Scale);
                 ret.Placement = this.Placement.Combine(rhs.Placement, (l, r) => l.Combine(r));
                 return ret;
@@ -1997,7 +1997,7 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
             ret.Emittance = item.Emittance.Equals(rhs.Emittance);
             ret.MultiBoundReference = item.MultiBoundReference.Equals(rhs.MultiBoundReference);
-            ret.IgnoredBySandbox = MemorySliceExt.Equal(item.IgnoredBySandbox, rhs.IgnoredBySandbox);
+            ret.IgnoredBySandbox = MemorySliceExt.SequenceEqual(item.IgnoredBySandbox, rhs.IgnoredBySandbox);
             ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
                 rhs.LocationRefTypes,
                 (l, r) => object.Equals(l, r),
@@ -2295,7 +2295,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.IgnoredBySandbox) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.IgnoredBySandbox, rhs.IgnoredBySandbox)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.IgnoredBySandbox, rhs.IgnoredBySandbox)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LocationRefTypes) ?? true))
             {

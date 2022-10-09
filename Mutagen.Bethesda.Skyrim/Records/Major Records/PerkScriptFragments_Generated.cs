@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.ExtraBindDataVersion = this.ExtraBindDataVersion.Combine(rhs.ExtraBindDataVersion);
                 ret.FileName = this.FileName.Combine(rhs.FileName);
-                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IndexedScriptFragment.ErrorMask?>>?>(ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
+                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IndexedScriptFragment.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), Noggog.ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

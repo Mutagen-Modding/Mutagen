@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
+                ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), Noggog.ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
                 ret.TPIC = this.TPIC.Combine(rhs.TPIC);
                 return ret;
             }
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Topics,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.TPIC = MemorySliceExt.Equal(item.TPIC, rhs.TPIC);
+            ret.TPIC = MemorySliceExt.SequenceEqual(item.TPIC, rhs.TPIC);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -967,7 +967,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)PackageDataTopic_FieldIndex.TPIC) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TPIC, rhs.TPIC)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TPIC, rhs.TPIC)) return false;
             }
             return true;
         }

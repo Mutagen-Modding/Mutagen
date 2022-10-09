@@ -714,11 +714,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.TextureLowerLayer = this.TextureLowerLayer.Combine(rhs.TextureLowerLayer);
                 ret.TextureUpperLayer = this.TextureUpperLayer.Combine(rhs.TextureUpperLayer);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Colors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherColors.ErrorMask?>>?>(ExceptionExt.Combine(this.Colors?.Overall, rhs.Colors?.Overall), ExceptionExt.Combine(this.Colors?.Specific, rhs.Colors?.Specific));
+                ret.Colors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherColors.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Colors?.Overall, rhs.Colors?.Overall), Noggog.ExceptionExt.Combine(this.Colors?.Specific, rhs.Colors?.Specific));
                 ret.FogDistance = this.FogDistance.Combine(rhs.FogDistance, (l, r) => l.Combine(r));
                 ret.HDRData = this.HDRData.Combine(rhs.HDRData, (l, r) => l.Combine(r));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

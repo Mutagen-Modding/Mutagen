@@ -2167,11 +2167,11 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.LevelMin = this.LevelMin.Combine(rhs.LevelMin);
                 ret.LevelMax = this.LevelMax.Combine(rhs.LevelMax);
                 ret.Default = this.Default.Combine(rhs.Default);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.MinLevelForRanks = this.MinLevelForRanks.Combine(rhs.MinLevelForRanks);
                 ret.AltLevelsPerTier = this.AltLevelsPerTier.Combine(rhs.AltLevelsPerTier);
-                ret.Includes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplateInclude.ErrorMask?>>?>(ExceptionExt.Combine(this.Includes?.Overall, rhs.Includes?.Overall), ExceptionExt.Combine(this.Includes?.Specific, rhs.Includes?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Includes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplateInclude.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Includes?.Overall, rhs.Includes?.Overall), Noggog.ExceptionExt.Combine(this.Includes?.Specific, rhs.Includes?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

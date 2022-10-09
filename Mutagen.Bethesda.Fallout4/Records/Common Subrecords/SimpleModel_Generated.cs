@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.File = string.Equals(item.File, rhs.File);
             ret.ColorRemappingIndex = item.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex);
-            ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
+            ret.Data = MemorySliceExt.SequenceEqual(item.Data, rhs.Data);
             ret.MaterialSwap = item.MaterialSwap.Equals(rhs.MaterialSwap);
         }
         
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Data, rhs.Data)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
             {

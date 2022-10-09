@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Values = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Values?.Overall, rhs.Values?.Overall), ExceptionExt.Combine(this.Values?.Specific, rhs.Values?.Specific));
+                ret.Values = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Values?.Overall, rhs.Values?.Overall), Noggog.ExceptionExt.Combine(this.Values?.Specific, rhs.Values?.Specific));
                 ret.BMMP = this.BMMP.Combine(rhs.BMMP);
                 return ret;
             }
@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Values,
                 (l, r) => l.EqualsWithin(r),
                 include);
-            ret.BMMP = MemorySliceExt.Equal(item.BMMP, rhs.BMMP);
+            ret.BMMP = MemorySliceExt.SequenceEqual(item.BMMP, rhs.BMMP);
         }
         
         public string Print(
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Bone_FieldIndex.BMMP) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.BMMP, rhs.BMMP)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.BMMP, rhs.BMMP)) return false;
             }
             return true;
         }

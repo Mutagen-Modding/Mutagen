@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.ObjectEffect = this.ObjectEffect.Combine(rhs.ObjectEffect);
-                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
+                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
                 ret.BipedBodyTemplate = this.BipedBodyTemplate.Combine(rhs.BipedBodyTemplate, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
@@ -1756,10 +1756,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.BlockBashImpactDataSet = this.BlockBashImpactDataSet.Combine(rhs.BlockBashImpactDataSet);
                 ret.AlternateBlockMaterial = this.AlternateBlockMaterial.Combine(rhs.AlternateBlockMaterial);
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.InstanceNaming = this.InstanceNaming.Combine(rhs.InstanceNaming);
-                ret.Armatures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorAddonModel.ErrorMask?>>?>(ExceptionExt.Combine(this.Armatures?.Overall, rhs.Armatures?.Overall), ExceptionExt.Combine(this.Armatures?.Specific, rhs.Armatures?.Specific));
+                ret.Armatures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorAddonModel.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Armatures?.Overall, rhs.Armatures?.Overall), Noggog.ExceptionExt.Combine(this.Armatures?.Specific, rhs.Armatures?.Specific));
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.Health = this.Health.Combine(rhs.Health);
@@ -1767,10 +1767,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.BaseAddonIndex = this.BaseAddonIndex.Combine(rhs.BaseAddonIndex);
                 ret.StaggerRating = this.StaggerRating.Combine(rhs.StaggerRating);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>(ExceptionExt.Combine(this.Resistances?.Overall, rhs.Resistances?.Overall), ExceptionExt.Combine(this.Resistances?.Specific, rhs.Resistances?.Specific));
+                ret.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resistances?.Overall, rhs.Resistances?.Overall), Noggog.ExceptionExt.Combine(this.Resistances?.Specific, rhs.Resistances?.Specific));
                 ret.TemplateArmor = this.TemplateArmor.Combine(rhs.TemplateArmor);
-                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
-                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 ret.FNAMDataTypeState = this.FNAMDataTypeState.Combine(rhs.FNAMDataTypeState);
                 return ret;

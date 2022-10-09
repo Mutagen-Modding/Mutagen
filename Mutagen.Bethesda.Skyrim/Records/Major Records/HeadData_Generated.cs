@@ -927,13 +927,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.HeadParts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, HeadPartReference.ErrorMask?>>?>(ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
+                ret.HeadParts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, HeadPartReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), Noggog.ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
                 ret.AvailableMorphs = this.AvailableMorphs.Combine(rhs.AvailableMorphs, (l, r) => l.Combine(r));
-                ret.RacePresets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RacePresets?.Overall, rhs.RacePresets?.Overall), ExceptionExt.Combine(this.RacePresets?.Specific, rhs.RacePresets?.Specific));
-                ret.AvailableHairColors = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AvailableHairColors?.Overall, rhs.AvailableHairColors?.Overall), ExceptionExt.Combine(this.AvailableHairColors?.Specific, rhs.AvailableHairColors?.Specific));
-                ret.FaceDetails = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.FaceDetails?.Overall, rhs.FaceDetails?.Overall), ExceptionExt.Combine(this.FaceDetails?.Specific, rhs.FaceDetails?.Specific));
+                ret.RacePresets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RacePresets?.Overall, rhs.RacePresets?.Overall), Noggog.ExceptionExt.Combine(this.RacePresets?.Specific, rhs.RacePresets?.Specific));
+                ret.AvailableHairColors = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AvailableHairColors?.Overall, rhs.AvailableHairColors?.Overall), Noggog.ExceptionExt.Combine(this.AvailableHairColors?.Specific, rhs.AvailableHairColors?.Specific));
+                ret.FaceDetails = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.FaceDetails?.Overall, rhs.FaceDetails?.Overall), Noggog.ExceptionExt.Combine(this.FaceDetails?.Specific, rhs.FaceDetails?.Specific));
                 ret.DefaultFaceTexture = this.DefaultFaceTexture.Combine(rhs.DefaultFaceTexture);
-                ret.TintMasks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintAssets.ErrorMask?>>?>(ExceptionExt.Combine(this.TintMasks?.Overall, rhs.TintMasks?.Overall), ExceptionExt.Combine(this.TintMasks?.Specific, rhs.TintMasks?.Specific));
+                ret.TintMasks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintAssets.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TintMasks?.Overall, rhs.TintMasks?.Overall), Noggog.ExceptionExt.Combine(this.TintMasks?.Specific, rhs.TintMasks?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }

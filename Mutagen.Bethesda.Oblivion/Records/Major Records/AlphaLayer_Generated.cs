@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
             AlphaLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.AlphaLayerData = MemorySliceExt.Equal(item.AlphaLayerData, rhs.AlphaLayerData);
+            ret.AlphaLayerData = MemorySliceExt.SequenceEqual(item.AlphaLayerData, rhs.AlphaLayerData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!base.Equals((IBaseLayerGetter)lhs, (IBaseLayerGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
             }
             return true;
         }

@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Idle = this.Idle.Combine(rhs.Idle);
-                ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
+                ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), Noggog.ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

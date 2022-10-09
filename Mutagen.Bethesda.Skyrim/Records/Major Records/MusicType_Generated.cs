@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.FadeDuration = this.FadeDuration.Combine(rhs.FadeDuration);
-                ret.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Tracks?.Overall, rhs.Tracks?.Overall), ExceptionExt.Combine(this.Tracks?.Specific, rhs.Tracks?.Specific));
+                ret.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Tracks?.Overall, rhs.Tracks?.Overall), Noggog.ExceptionExt.Combine(this.Tracks?.Specific, rhs.Tracks?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

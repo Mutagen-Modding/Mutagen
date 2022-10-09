@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Entry = this.Entry.Combine(rhs.Entry);
                 ret.NextQuest = this.NextQuest.Combine(rhs.NextQuest);
                 ret.SCHR = this.SCHR.Combine(rhs.SCHR);
@@ -1110,9 +1110,9 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
             ret.Entry = object.Equals(item.Entry, rhs.Entry);
             ret.NextQuest = item.NextQuest.Equals(rhs.NextQuest);
-            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
-            ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
-            ret.QNAM = MemorySliceExt.Equal(item.QNAM, rhs.QNAM);
+            ret.SCHR = MemorySliceExt.SequenceEqual(item.SCHR, rhs.SCHR);
+            ret.SCTX = MemorySliceExt.SequenceEqual(item.SCTX, rhs.SCTX);
+            ret.QNAM = MemorySliceExt.SequenceEqual(item.QNAM, rhs.QNAM);
         }
         
         public string Print(
@@ -1227,15 +1227,15 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCHR, rhs.SCHR)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCTX) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCTX, rhs.SCTX)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.QNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.QNAM, rhs.QNAM)) return false;
             }
             return true;
         }

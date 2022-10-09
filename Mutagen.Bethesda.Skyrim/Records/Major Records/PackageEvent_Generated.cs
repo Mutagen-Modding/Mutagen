@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SCTX = this.SCTX.Combine(rhs.SCTX);
                 ret.QNAM = this.QNAM.Combine(rhs.QNAM);
                 ret.TNAM = this.TNAM.Combine(rhs.TNAM);
-                ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
+                ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), Noggog.ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1107,11 +1107,11 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Idle = item.Idle.Equals(rhs.Idle);
-            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
-            ret.SCDA = MemorySliceExt.Equal(item.SCDA, rhs.SCDA);
-            ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
-            ret.QNAM = MemorySliceExt.Equal(item.QNAM, rhs.QNAM);
-            ret.TNAM = MemorySliceExt.Equal(item.TNAM, rhs.TNAM);
+            ret.SCHR = MemorySliceExt.SequenceEqual(item.SCHR, rhs.SCHR);
+            ret.SCDA = MemorySliceExt.SequenceEqual(item.SCDA, rhs.SCDA);
+            ret.SCTX = MemorySliceExt.SequenceEqual(item.SCTX, rhs.SCTX);
+            ret.QNAM = MemorySliceExt.SequenceEqual(item.QNAM, rhs.QNAM);
+            ret.TNAM = MemorySliceExt.SequenceEqual(item.TNAM, rhs.TNAM);
             ret.Topics = item.Topics.CollectionEqualsHelper(
                 rhs.Topics,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1218,23 +1218,23 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCHR, rhs.SCHR)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCDA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCDA, rhs.SCDA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCDA, rhs.SCDA)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCTX) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCTX, rhs.SCTX)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.QNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.QNAM, rhs.QNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.TNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TNAM, rhs.TNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TNAM, rhs.TNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.Topics) ?? true))
             {

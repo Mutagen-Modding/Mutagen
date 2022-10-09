@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Trait = this.Trait.Combine(rhs.Trait);
                 ret.Level = this.Level.Combine(rhs.Level);
                 ret.NumRanks = this.NumRanks.Combine(rhs.NumRanks);
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Sound = this.Sound.Combine(rhs.Sound);
                 ret.NextPerk = this.NextPerk.Combine(rhs.NextPerk);
                 ret.Swf = this.Swf.Combine(rhs.Swf);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }

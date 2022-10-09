@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DebugColor = this.DebugColor.Combine(rhs.DebugColor);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.CollidesWith = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CollidesWith?.Overall, rhs.CollidesWith?.Overall), ExceptionExt.Combine(this.CollidesWith?.Specific, rhs.CollidesWith?.Specific));
+                ret.CollidesWith = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CollidesWith?.Overall, rhs.CollidesWith?.Overall), Noggog.ExceptionExt.Combine(this.CollidesWith?.Specific, rhs.CollidesWith?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

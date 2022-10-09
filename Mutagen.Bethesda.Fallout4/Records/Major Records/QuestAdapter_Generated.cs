@@ -578,8 +578,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.ExtraBindDataVersion = this.ExtraBindDataVersion.Combine(rhs.ExtraBindDataVersion);
                 ret.Script = this.Script.Combine(rhs.Script, (l, r) => l.Combine(r));
-                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestScriptFragment.ErrorMask?>>?>(ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
-                ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestFragmentAlias.ErrorMask?>>?>(ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
+                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestScriptFragment.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), Noggog.ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
+                ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestFragmentAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), Noggog.ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

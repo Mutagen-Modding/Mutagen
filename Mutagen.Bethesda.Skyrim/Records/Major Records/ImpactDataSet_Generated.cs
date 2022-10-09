@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Impacts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>(ExceptionExt.Combine(this.Impacts?.Overall, rhs.Impacts?.Overall), ExceptionExt.Combine(this.Impacts?.Specific, rhs.Impacts?.Specific));
+                ret.Impacts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ImpactData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Impacts?.Overall, rhs.Impacts?.Overall), Noggog.ExceptionExt.Combine(this.Impacts?.Specific, rhs.Impacts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

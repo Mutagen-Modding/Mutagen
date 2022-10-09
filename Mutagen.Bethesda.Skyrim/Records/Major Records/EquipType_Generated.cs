@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SlotParents?.Overall, rhs.SlotParents?.Overall), ExceptionExt.Combine(this.SlotParents?.Specific, rhs.SlotParents?.Specific));
+                ret.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SlotParents?.Overall, rhs.SlotParents?.Overall), Noggog.ExceptionExt.Combine(this.SlotParents?.Specific, rhs.SlotParents?.Specific));
                 ret.UseAllParents = this.UseAllParents.Combine(rhs.UseAllParents);
                 return ret;
             }

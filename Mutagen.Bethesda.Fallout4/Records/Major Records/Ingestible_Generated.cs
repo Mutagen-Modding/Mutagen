@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
@@ -1216,7 +1216,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AddictionChance = this.AddictionChance.Combine(rhs.AddictionChance);
                 ret.ConsumeSound = this.ConsumeSound.Combine(rhs.ConsumeSound);
                 ret.AddictionName = this.AddictionName.Combine(rhs.AddictionName);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
                 return ret;
             }

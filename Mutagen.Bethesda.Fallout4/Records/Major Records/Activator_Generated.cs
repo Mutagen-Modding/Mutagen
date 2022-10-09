@@ -1320,8 +1320,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
                 ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
                 ret.MarkerColor = this.MarkerColor.Combine(rhs.MarkerColor);
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.InteractionKeyword = this.InteractionKeyword.Combine(rhs.InteractionKeyword);
                 ret.RadioReceiver = this.RadioReceiver.Combine(rhs.RadioReceiver, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
                 return ret;
             }

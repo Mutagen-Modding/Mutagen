@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Offset = this.Offset.Combine(rhs.Offset);
-                ret.HeightMap = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.HeightMap?.Overall, rhs.HeightMap?.Overall), ExceptionExt.Combine(this.HeightMap?.Specific, rhs.HeightMap?.Specific));
+                ret.HeightMap = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.HeightMap?.Overall, rhs.HeightMap?.Overall), Noggog.ExceptionExt.Combine(this.HeightMap?.Specific, rhs.HeightMap?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }

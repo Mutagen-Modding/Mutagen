@@ -682,9 +682,9 @@ namespace Mutagen.Bethesda.Pex
                 ret.ReturnTypeName = this.ReturnTypeName.Combine(rhs.ReturnTypeName);
                 ret.DocString = this.DocString.Combine(rhs.DocString);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Parameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionVariable.ErrorMask?>>?>(ExceptionExt.Combine(this.Parameters?.Overall, rhs.Parameters?.Overall), ExceptionExt.Combine(this.Parameters?.Specific, rhs.Parameters?.Specific));
-                ret.Locals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionVariable.ErrorMask?>>?>(ExceptionExt.Combine(this.Locals?.Overall, rhs.Locals?.Overall), ExceptionExt.Combine(this.Locals?.Specific, rhs.Locals?.Specific));
-                ret.Instructions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionInstruction.ErrorMask?>>?>(ExceptionExt.Combine(this.Instructions?.Overall, rhs.Instructions?.Overall), ExceptionExt.Combine(this.Instructions?.Specific, rhs.Instructions?.Specific));
+                ret.Parameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionVariable.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Parameters?.Overall, rhs.Parameters?.Overall), Noggog.ExceptionExt.Combine(this.Parameters?.Specific, rhs.Parameters?.Specific));
+                ret.Locals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionVariable.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Locals?.Overall, rhs.Locals?.Overall), Noggog.ExceptionExt.Combine(this.Locals?.Specific, rhs.Locals?.Specific));
+                ret.Instructions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionInstruction.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Instructions?.Overall, rhs.Instructions?.Overall), Noggog.ExceptionExt.Combine(this.Instructions?.Specific, rhs.Instructions?.Specific));
                 ret.RawUserFlags = this.RawUserFlags.Combine(rhs.RawUserFlags);
                 return ret;
             }

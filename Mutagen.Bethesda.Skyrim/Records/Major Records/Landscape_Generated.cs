@@ -761,11 +761,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.VertexNormals?.Overall, rhs.VertexNormals?.Overall), ExceptionExt.Combine(this.VertexNormals?.Specific, rhs.VertexNormals?.Specific));
+                ret.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.VertexNormals?.Overall, rhs.VertexNormals?.Overall), Noggog.ExceptionExt.Combine(this.VertexNormals?.Specific, rhs.VertexNormals?.Specific));
                 ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap, (l, r) => l.Combine(r));
-                ret.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.VertexColors?.Overall, rhs.VertexColors?.Overall), ExceptionExt.Combine(this.VertexColors?.Specific, rhs.VertexColors?.Specific));
-                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
-                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
+                ret.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.VertexColors?.Overall, rhs.VertexColors?.Overall), Noggog.ExceptionExt.Combine(this.VertexColors?.Specific, rhs.VertexColors?.Specific));
+                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), Noggog.ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
+                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), Noggog.ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

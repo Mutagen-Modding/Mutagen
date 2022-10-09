@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.Rank = this.Rank.Combine(rhs.Rank);
                 ret.Priority = this.Priority.Combine(rhs.Priority);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.PRKEDataTypeState = this.PRKEDataTypeState.Combine(rhs.PRKEDataTypeState);
                 return ret;
             }

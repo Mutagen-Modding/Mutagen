@@ -875,14 +875,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Trait = this.Trait.Combine(rhs.Trait);
                 ret.Level = this.Level.Combine(rhs.Level);
                 ret.NumRanks = this.NumRanks.Combine(rhs.NumRanks);
                 ret.Playable = this.Playable.Combine(rhs.Playable);
                 ret.Hidden = this.Hidden.Combine(rhs.Hidden);
                 ret.NextPerk = this.NextPerk.Combine(rhs.NextPerk);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }

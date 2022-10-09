@@ -865,8 +865,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Deleted = this.Deleted.Combine(rhs.Deleted);
                 ret.Author = this.Author.Combine(rhs.Author);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
-                ret.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.OverriddenForms?.Overall, rhs.OverriddenForms?.Overall), ExceptionExt.Combine(this.OverriddenForms?.Specific, rhs.OverriddenForms?.Specific));
+                ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), Noggog.ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
+                ret.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.OverriddenForms?.Overall, rhs.OverriddenForms?.Overall), Noggog.ExceptionExt.Combine(this.OverriddenForms?.Specific, rhs.OverriddenForms?.Specific));
                 ret.INTV = this.INTV.Combine(rhs.INTV);
                 ret.INCC = this.INCC.Combine(rhs.INCC);
                 return ret;
@@ -1442,8 +1442,8 @@ namespace Mutagen.Bethesda.Skyrim
             ret.FormVersion = item.FormVersion == rhs.FormVersion;
             ret.Version2 = item.Version2 == rhs.Version2;
             ret.Stats = MaskItemExt.Factory(item.Stats.GetEqualsMask(rhs.Stats, include), include);
-            ret.TypeOffsets = MemorySliceExt.Equal(item.TypeOffsets, rhs.TypeOffsets);
-            ret.Deleted = MemorySliceExt.Equal(item.Deleted, rhs.Deleted);
+            ret.TypeOffsets = MemorySliceExt.SequenceEqual(item.TypeOffsets, rhs.TypeOffsets);
+            ret.Deleted = MemorySliceExt.SequenceEqual(item.Deleted, rhs.Deleted);
             ret.Author = string.Equals(item.Author, rhs.Author);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.MasterReferences = item.MasterReferences.CollectionEqualsHelper(
@@ -1622,11 +1622,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.TypeOffsets) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Deleted) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Deleted, rhs.Deleted)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Deleted, rhs.Deleted)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Author) ?? true))
             {

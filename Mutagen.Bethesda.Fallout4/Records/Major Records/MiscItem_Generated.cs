@@ -1136,12 +1136,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.FeaturedItemMessage = this.FeaturedItemMessage.Combine(rhs.FeaturedItemMessage);
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
-                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MiscItemComponent.ErrorMask?>>?>(ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
-                ret.ComponentDisplayIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ComponentDisplayIndices?.Overall, rhs.ComponentDisplayIndices?.Overall), ExceptionExt.Combine(this.ComponentDisplayIndices?.Specific, rhs.ComponentDisplayIndices?.Specific));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MiscItemComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.ComponentDisplayIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ComponentDisplayIndices?.Overall, rhs.ComponentDisplayIndices?.Overall), Noggog.ExceptionExt.Combine(this.ComponentDisplayIndices?.Specific, rhs.ComponentDisplayIndices?.Specific));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }

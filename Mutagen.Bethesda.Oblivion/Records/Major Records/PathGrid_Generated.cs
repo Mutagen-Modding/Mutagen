@@ -612,10 +612,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.PointToPointConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PathGridPoint.ErrorMask?>>?>(ExceptionExt.Combine(this.PointToPointConnections?.Overall, rhs.PointToPointConnections?.Overall), ExceptionExt.Combine(this.PointToPointConnections?.Specific, rhs.PointToPointConnections?.Specific));
+                ret.PointToPointConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PathGridPoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PointToPointConnections?.Overall, rhs.PointToPointConnections?.Overall), Noggog.ExceptionExt.Combine(this.PointToPointConnections?.Specific, rhs.PointToPointConnections?.Specific));
                 ret.PGAG = this.PGAG.Combine(rhs.PGAG);
-                ret.InterCellConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InterCellPoint.ErrorMask?>>?>(ExceptionExt.Combine(this.InterCellConnections?.Overall, rhs.InterCellConnections?.Overall), ExceptionExt.Combine(this.InterCellConnections?.Specific, rhs.InterCellConnections?.Specific));
-                ret.PointToReferenceMappings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PointToReferenceMapping.ErrorMask?>>?>(ExceptionExt.Combine(this.PointToReferenceMappings?.Overall, rhs.PointToReferenceMappings?.Overall), ExceptionExt.Combine(this.PointToReferenceMappings?.Specific, rhs.PointToReferenceMappings?.Specific));
+                ret.InterCellConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InterCellPoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.InterCellConnections?.Overall, rhs.InterCellConnections?.Overall), Noggog.ExceptionExt.Combine(this.InterCellConnections?.Specific, rhs.InterCellConnections?.Specific));
+                ret.PointToReferenceMappings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PointToReferenceMapping.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PointToReferenceMappings?.Overall, rhs.PointToReferenceMappings?.Overall), Noggog.ExceptionExt.Combine(this.PointToReferenceMappings?.Specific, rhs.PointToReferenceMappings?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs.PointToPointConnections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.PGAG = MemorySliceExt.Equal(item.PGAG, rhs.PGAG);
+            ret.PGAG = MemorySliceExt.SequenceEqual(item.PGAG, rhs.PGAG);
             ret.InterCellConnections = item.InterCellConnections.CollectionEqualsHelper(
                 rhs.InterCellConnections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1338,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)PathGrid_FieldIndex.PGAG) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PGAG, rhs.PGAG)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.PGAG, rhs.PGAG)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PathGrid_FieldIndex.InterCellConnections) ?? true))
             {

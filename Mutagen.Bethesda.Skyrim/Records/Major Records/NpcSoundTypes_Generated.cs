@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Types = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSoundType.ErrorMask?>>?>(ExceptionExt.Combine(this.Types?.Overall, rhs.Types?.Overall), ExceptionExt.Combine(this.Types?.Specific, rhs.Types?.Specific));
+                ret.Types = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSoundType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Types?.Overall, rhs.Types?.Overall), Noggog.ExceptionExt.Combine(this.Types?.Specific, rhs.Types?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

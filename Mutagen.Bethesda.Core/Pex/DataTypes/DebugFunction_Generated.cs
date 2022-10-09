@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Pex
                 ret.StateName = this.StateName.Combine(rhs.StateName);
                 ret.FunctionName = this.FunctionName.Combine(rhs.FunctionName);
                 ret.FunctionType = this.FunctionType.Combine(rhs.FunctionType);
-                ret.Instructions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Instructions?.Overall, rhs.Instructions?.Overall), ExceptionExt.Combine(this.Instructions?.Specific, rhs.Instructions?.Specific));
+                ret.Instructions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Instructions?.Overall, rhs.Instructions?.Overall), Noggog.ExceptionExt.Combine(this.Instructions?.Specific, rhs.Instructions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

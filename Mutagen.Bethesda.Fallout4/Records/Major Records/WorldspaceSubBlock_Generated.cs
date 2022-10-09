@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.GroupType = this.GroupType.Combine(rhs.GroupType);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Pex
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.OpCode = this.OpCode.Combine(rhs.OpCode);
-                ret.Arguments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectVariableData.ErrorMask?>>?>(ExceptionExt.Combine(this.Arguments?.Overall, rhs.Arguments?.Overall), ExceptionExt.Combine(this.Arguments?.Specific, rhs.Arguments?.Specific));
+                ret.Arguments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectVariableData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Arguments?.Overall, rhs.Arguments?.Overall), Noggog.ExceptionExt.Combine(this.Arguments?.Specific, rhs.Arguments?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

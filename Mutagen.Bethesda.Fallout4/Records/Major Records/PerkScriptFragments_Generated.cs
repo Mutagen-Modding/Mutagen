@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.ExtraBindDataVersion = this.ExtraBindDataVersion.Combine(rhs.ExtraBindDataVersion);
                 ret.Script = this.Script.Combine(rhs.Script, (l, r) => l.Combine(r));
-                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkScriptFragment.ErrorMask?>>?>(ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
+                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkScriptFragment.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), Noggog.ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

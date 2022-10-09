@@ -577,10 +577,10 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>(ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
+                ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), Noggog.ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.CrimeGoldMultiplier = this.CrimeGoldMultiplier.Combine(rhs.CrimeGoldMultiplier);
-                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
+                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), Noggog.ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

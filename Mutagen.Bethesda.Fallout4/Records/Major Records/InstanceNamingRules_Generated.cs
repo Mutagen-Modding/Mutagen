@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Target = this.Target.Combine(rhs.Target);
-                ret.RuleSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>(ExceptionExt.Combine(this.RuleSets?.Overall, rhs.RuleSets?.Overall), ExceptionExt.Combine(this.RuleSets?.Specific, rhs.RuleSets?.Specific));
+                ret.RuleSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RuleSets?.Overall, rhs.RuleSets?.Overall), Noggog.ExceptionExt.Combine(this.RuleSets?.Specific, rhs.RuleSets?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

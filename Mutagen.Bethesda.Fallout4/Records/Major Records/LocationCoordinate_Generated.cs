@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Location = this.Location.Combine(rhs.Location);
-                ret.Coordinates = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Coordinates?.Overall, rhs.Coordinates?.Overall), ExceptionExt.Combine(this.Coordinates?.Specific, rhs.Coordinates?.Specific));
+                ret.Coordinates = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Coordinates?.Overall, rhs.Coordinates?.Overall), Noggog.ExceptionExt.Combine(this.Coordinates?.Specific, rhs.Coordinates?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

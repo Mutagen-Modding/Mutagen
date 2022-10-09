@@ -909,7 +909,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.StartPhase = this.StartPhase.Combine(rhs.StartPhase);
                 ret.EndPhase = this.EndPhase.Combine(rhs.EndPhase);
                 ret.TimerSeconds = this.TimerSeconds.Combine(rhs.TimerSeconds);
-                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
+                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), Noggog.ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
                 ret.Topic = this.Topic.Combine(rhs.Topic);
                 ret.HeadtrackActorID = this.HeadtrackActorID.Combine(rhs.HeadtrackActorID);
                 ret.LoopingMax = this.LoopingMax.Combine(rhs.LoopingMax);
@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Type = item.Type == rhs.Type;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.ActorID = item.ActorID == rhs.ActorID;
-            ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
+            ret.LNAM = MemorySliceExt.SequenceEqual(item.LNAM, rhs.LNAM);
             ret.Index = item.Index == rhs.Index;
             ret.Flags = item.Flags == rhs.Flags;
             ret.StartPhase = item.StartPhase == rhs.StartPhase;
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.LNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.LNAM, rhs.LNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Index) ?? true))
             {

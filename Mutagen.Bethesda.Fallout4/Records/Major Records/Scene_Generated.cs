@@ -1299,9 +1299,9 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Phases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScenePhase.ErrorMask?>>?>(ExceptionExt.Combine(this.Phases?.Overall, rhs.Phases?.Overall), ExceptionExt.Combine(this.Phases?.Specific, rhs.Phases?.Specific));
-                ret.Actors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneActor.ErrorMask?>>?>(ExceptionExt.Combine(this.Actors?.Overall, rhs.Actors?.Overall), ExceptionExt.Combine(this.Actors?.Specific, rhs.Actors?.Specific));
-                ret.Actions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneAction.ErrorMask?>>?>(ExceptionExt.Combine(this.Actions?.Overall, rhs.Actions?.Overall), ExceptionExt.Combine(this.Actions?.Specific, rhs.Actions?.Specific));
+                ret.Phases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScenePhase.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Phases?.Overall, rhs.Phases?.Overall), Noggog.ExceptionExt.Combine(this.Phases?.Specific, rhs.Phases?.Specific));
+                ret.Actors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneActor.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Actors?.Overall, rhs.Actors?.Overall), Noggog.ExceptionExt.Combine(this.Actors?.Specific, rhs.Actors?.Specific));
+                ret.Actions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneAction.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Actions?.Overall, rhs.Actions?.Overall), Noggog.ExceptionExt.Combine(this.Actions?.Specific, rhs.Actions?.Specific));
                 ret.Unused = this.Unused.Combine(rhs.Unused, (l, r) => l.Combine(r));
                 ret.Unused2 = this.Unused2.Combine(rhs.Unused2, (l, r) => l.Combine(r));
                 ret.Quest = this.Quest.Combine(rhs.Quest);
@@ -1310,8 +1310,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.CameraDistanceOverride = this.CameraDistanceOverride.Combine(rhs.CameraDistanceOverride);
                 ret.DialogueDistanceOverride = this.DialogueDistanceOverride.Combine(rhs.DialogueDistanceOverride);
                 ret.FovOverride = this.FovOverride.Combine(rhs.FovOverride);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.SetParentQuestStage = this.SetParentQuestStage.Combine(rhs.SetParentQuestStage, (l, r) => l.Combine(r));
                 ret.Notes = this.Notes.Combine(rhs.Notes);
                 ret.Template = this.Template.Combine(rhs.Template);
@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.LastActionIndex = item.LastActionIndex == rhs.LastActionIndex;
-            ret.VNAM = MemorySliceExt.Equal(item.VNAM, rhs.VNAM);
+            ret.VNAM = MemorySliceExt.SequenceEqual(item.VNAM, rhs.VNAM);
             ret.CameraDistanceOverride = item.CameraDistanceOverride.EqualsWithin(rhs.CameraDistanceOverride);
             ret.DialogueDistanceOverride = item.DialogueDistanceOverride.EqualsWithin(rhs.DialogueDistanceOverride);
             ret.FovOverride = item.FovOverride.EqualsWithin(rhs.FovOverride);
@@ -2402,7 +2402,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.VNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.VNAM, rhs.VNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.VNAM, rhs.VNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.CameraDistanceOverride) ?? true))
             {

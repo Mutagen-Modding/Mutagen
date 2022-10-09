@@ -622,8 +622,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.VertexNormals = this.VertexNormals.Combine(rhs.VertexNormals);
                 ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap);
                 ret.VertexColors = this.VertexColors.Combine(rhs.VertexColors);
-                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
-                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
+                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), Noggog.ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
+                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), Noggog.ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1204,10 +1204,10 @@ namespace Mutagen.Bethesda.Oblivion
             Landscape.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
-            ret.VertexNormals = MemorySliceExt.Equal(item.VertexNormals, rhs.VertexNormals);
-            ret.VertexHeightMap = MemorySliceExt.Equal(item.VertexHeightMap, rhs.VertexHeightMap);
-            ret.VertexColors = MemorySliceExt.Equal(item.VertexColors, rhs.VertexColors);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
+            ret.VertexNormals = MemorySliceExt.SequenceEqual(item.VertexNormals, rhs.VertexNormals);
+            ret.VertexHeightMap = MemorySliceExt.SequenceEqual(item.VertexHeightMap, rhs.VertexHeightMap);
+            ret.VertexColors = MemorySliceExt.SequenceEqual(item.VertexColors, rhs.VertexColors);
             ret.Layers = item.Layers.CollectionEqualsHelper(
                 rhs.Layers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1362,19 +1362,19 @@ namespace Mutagen.Bethesda.Oblivion
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.VertexNormals, rhs.VertexNormals)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.VertexNormals, rhs.VertexNormals)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.VertexColors, rhs.VertexColors)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.VertexColors, rhs.VertexColors)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
             {

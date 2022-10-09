@@ -1596,17 +1596,17 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
-                ret.Models = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), Noggog.ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
+                ret.Models = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), Noggog.ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
                 ret.NIFT = this.NIFT.Combine(rhs.NIFT);
                 ret.Configuration = this.Configuration.Combine(rhs.Configuration, (l, r) => l.Combine(r));
-                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), Noggog.ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
                 ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.AIData = this.AIData.Combine(rhs.AIData, (l, r) => l.Combine(r));
-                ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
-                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), Noggog.ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
+                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.AttackReach = this.AttackReach.Combine(rhs.AttackReach);
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.BloodSpray = this.BloodSpray.Combine(rhs.BloodSpray);
                 ret.BloodDecal = this.BloodDecal.Combine(rhs.BloodDecal);
                 ret.InheritsSoundFrom = this.InheritsSoundFrom.Combine(rhs.InheritsSoundFrom);
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2377,7 +2377,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs.Models,
                 (l, r) => string.Equals(l, r),
                 include);
-            ret.NIFT = MemorySliceExt.Equal(item.NIFT, rhs.NIFT);
+            ret.NIFT = MemorySliceExt.SequenceEqual(item.NIFT, rhs.NIFT);
             ret.Configuration = EqualsMaskHelper.EqualsHelper(
                 item.Configuration,
                 rhs.Configuration,
@@ -2716,7 +2716,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.NIFT) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NIFT, rhs.NIFT)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NIFT, rhs.NIFT)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Configuration) ?? true))
             {

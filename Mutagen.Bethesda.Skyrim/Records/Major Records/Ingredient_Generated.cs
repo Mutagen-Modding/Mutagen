@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
@@ -1087,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.IngredientValue = this.IngredientValue.Combine(rhs.IngredientValue);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
                 return ret;

@@ -1009,17 +1009,17 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.CreatedObject = this.CreatedObject.Combine(rhs.CreatedObject);
                 ret.WorkbenchKeyword = this.WorkbenchKeyword.Combine(rhs.WorkbenchKeyword);
                 ret.NAM1 = this.NAM1.Combine(rhs.NAM1);
                 ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
                 ret.NAM3 = this.NAM3.Combine(rhs.NAM3);
                 ret.MenuArtObject = this.MenuArtObject.Combine(rhs.MenuArtObject);
-                ret.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Categories?.Overall, rhs.Categories?.Overall), ExceptionExt.Combine(this.Categories?.Specific, rhs.Categories?.Specific));
-                ret.CreatedObjectCounts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleCreatedObjectCount.ErrorMask?>>?>(ExceptionExt.Combine(this.CreatedObjectCounts?.Overall, rhs.CreatedObjectCounts?.Overall), ExceptionExt.Combine(this.CreatedObjectCounts?.Specific, rhs.CreatedObjectCounts?.Specific));
+                ret.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Categories?.Overall, rhs.Categories?.Overall), Noggog.ExceptionExt.Combine(this.Categories?.Specific, rhs.Categories?.Specific));
+                ret.CreatedObjectCounts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleCreatedObjectCount.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CreatedObjectCounts?.Overall, rhs.CreatedObjectCounts?.Overall), Noggog.ExceptionExt.Combine(this.CreatedObjectCounts?.Specific, rhs.CreatedObjectCounts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1689,9 +1689,9 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.CreatedObject = item.CreatedObject.Equals(rhs.CreatedObject);
             ret.WorkbenchKeyword = item.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword);
-            ret.NAM1 = MemorySliceExt.Equal(item.NAM1, rhs.NAM1);
-            ret.NAM2 = MemorySliceExt.Equal(item.NAM2, rhs.NAM2);
-            ret.NAM3 = MemorySliceExt.Equal(item.NAM3, rhs.NAM3);
+            ret.NAM1 = MemorySliceExt.SequenceEqual(item.NAM1, rhs.NAM1);
+            ret.NAM2 = MemorySliceExt.SequenceEqual(item.NAM2, rhs.NAM2);
+            ret.NAM3 = MemorySliceExt.SequenceEqual(item.NAM3, rhs.NAM3);
             ret.MenuArtObject = item.MenuArtObject.Equals(rhs.MenuArtObject);
             ret.Categories = item.Categories.CollectionEqualsHelper(
                 rhs.Categories,
@@ -1927,15 +1927,15 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM1) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NAM1, rhs.NAM1)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NAM1, rhs.NAM1)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM2) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NAM2, rhs.NAM2)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NAM2, rhs.NAM2)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM3) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NAM3, rhs.NAM3)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NAM3, rhs.NAM3)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuArtObject) ?? true))
             {

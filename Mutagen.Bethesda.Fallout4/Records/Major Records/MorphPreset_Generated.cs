@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.UnknownMPPM = string.Equals(item.UnknownMPPM, rhs.UnknownMPPM);
             ret.Texture = item.Texture.Equals(rhs.Texture);
-            ret.UnknownMPPF = MemorySliceExt.Equal(item.UnknownMPPF, rhs.UnknownMPPF);
+            ret.UnknownMPPF = MemorySliceExt.SequenceEqual(item.UnknownMPPF, rhs.UnknownMPPF);
         }
         
         public string Print(
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)MorphPreset_FieldIndex.UnknownMPPF) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.UnknownMPPF, rhs.UnknownMPPF)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.UnknownMPPF, rhs.UnknownMPPF)) return false;
             }
             return true;
         }

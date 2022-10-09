@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Fallout4
             Model.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.Unknown = MemorySliceExt.SequenceEqual(item.Unknown, rhs.Unknown);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((ISimpleModelGetter)lhs, (ISimpleModelGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Model_FieldIndex.Unknown) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
             }
             return true;
         }

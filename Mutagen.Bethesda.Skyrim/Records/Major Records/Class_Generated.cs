@@ -856,10 +856,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Teaches = this.Teaches.Combine(rhs.Teaches);
                 ret.MaxTrainingLevel = this.MaxTrainingLevel.Combine(rhs.MaxTrainingLevel);
-                ret.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(ExceptionExt.Combine(this.SkillWeights?.Overall, rhs.SkillWeights?.Overall), ExceptionExt.Combine(this.SkillWeights?.Specific, rhs.SkillWeights?.Specific));
+                ret.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(Noggog.ExceptionExt.Combine(this.SkillWeights?.Overall, rhs.SkillWeights?.Overall), Noggog.ExceptionExt.Combine(this.SkillWeights?.Specific, rhs.SkillWeights?.Specific));
                 ret.BleedoutDefault = this.BleedoutDefault.Combine(rhs.BleedoutDefault);
                 ret.VoicePoints = this.VoicePoints.Combine(rhs.VoicePoints);
-                ret.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(ExceptionExt.Combine(this.StatWeights?.Overall, rhs.StatWeights?.Overall), ExceptionExt.Combine(this.StatWeights?.Specific, rhs.StatWeights?.Specific));
+                ret.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(Noggog.ExceptionExt.Combine(this.StatWeights?.Overall, rhs.StatWeights?.Overall), Noggog.ExceptionExt.Combine(this.StatWeights?.Specific, rhs.StatWeights?.Specific));
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;

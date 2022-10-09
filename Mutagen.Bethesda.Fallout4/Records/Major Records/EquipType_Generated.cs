@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SlotParents?.Overall, rhs.SlotParents?.Overall), ExceptionExt.Combine(this.SlotParents?.Specific, rhs.SlotParents?.Specific));
+                ret.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SlotParents?.Overall, rhs.SlotParents?.Overall), Noggog.ExceptionExt.Combine(this.SlotParents?.Specific, rhs.SlotParents?.Specific));
                 ret.Flag = this.Flag.Combine(rhs.Flag);
                 ret.ConditionActorValue = this.ConditionActorValue.Combine(rhs.ConditionActorValue);
                 return ret;

@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.BodyParts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>(ExceptionExt.Combine(this.BodyParts?.Overall, rhs.BodyParts?.Overall), ExceptionExt.Combine(this.BodyParts?.Specific, rhs.BodyParts?.Specific));
+                ret.BodyParts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BodyParts?.Overall, rhs.BodyParts?.Overall), Noggog.ExceptionExt.Combine(this.BodyParts?.Specific, rhs.BodyParts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

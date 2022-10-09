@@ -518,8 +518,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResistanceDestructible.ErrorMask?>>?>(ExceptionExt.Combine(this.Resistances?.Overall, rhs.Resistances?.Overall), ExceptionExt.Combine(this.Resistances?.Specific, rhs.Resistances?.Specific));
-                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DestructionStage.ErrorMask?>>?>(ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
+                ret.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResistanceDestructible.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resistances?.Overall, rhs.Resistances?.Overall), Noggog.ExceptionExt.Combine(this.Resistances?.Specific, rhs.Resistances?.Specific));
+                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DestructionStage.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), Noggog.ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

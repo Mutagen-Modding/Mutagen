@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.DisplayTime = this.DisplayTime.Combine(rhs.DisplayTime);
                 ret.Swf = this.Swf.Combine(rhs.Swf);
                 ret.ShortTitle = this.ShortTitle.Combine(rhs.ShortTitle);
-                ret.MenuButtons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>(ExceptionExt.Combine(this.MenuButtons?.Overall, rhs.MenuButtons?.Overall), ExceptionExt.Combine(this.MenuButtons?.Specific, rhs.MenuButtons?.Specific));
+                ret.MenuButtons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MenuButtons?.Overall, rhs.MenuButtons?.Overall), Noggog.ExceptionExt.Combine(this.MenuButtons?.Specific, rhs.MenuButtons?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

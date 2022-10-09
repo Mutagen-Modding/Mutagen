@@ -650,8 +650,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.SkillBoost5 = this.SkillBoost5.Combine(rhs.SkillBoost5, (l, r) => l.Combine(r));
                 ret.SkillBoost6 = this.SkillBoost6.Combine(rhs.SkillBoost6, (l, r) => l.Combine(r));
                 ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
-                ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
+                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
+                ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }

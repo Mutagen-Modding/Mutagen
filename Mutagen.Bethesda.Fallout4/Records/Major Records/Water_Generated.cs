@@ -2926,7 +2926,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.ConsumeSpell = item.ConsumeSpell.Equals(rhs.ConsumeSpell);
             ret.ContactSpell = item.ContactSpell.Equals(rhs.ContactSpell);
             ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
-            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.FogDepthAmount = item.FogDepthAmount.EqualsWithin(rhs.FogDepthAmount);
             ret.FogShallowCo_rlor = item.FogShallowCo_rlor.ColorOnlyEquals(rhs.FogShallowCo_rlor);
             ret.FogDeepColor = item.FogDeepColor.ColorOnlyEquals(rhs.FogDeepColor);
@@ -2966,7 +2966,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.NoiseLayerOne = MaskItemExt.Factory(item.NoiseLayerOne.GetEqualsMask(rhs.NoiseLayerOne, include), include);
             ret.NoiseLayerTwo = MaskItemExt.Factory(item.NoiseLayerTwo.GetEqualsMask(rhs.NoiseLayerTwo, include), include);
             ret.NoiseLayerThree = MaskItemExt.Factory(item.NoiseLayerThree.GetEqualsMask(rhs.NoiseLayerThree, include), include);
-            ret.GNAM = MemorySliceExt.Equal(item.GNAM, rhs.GNAM);
+            ret.GNAM = MemorySliceExt.SequenceEqual(item.GNAM, rhs.GNAM);
             ret.LinearVelocity = item.LinearVelocity.Equals(rhs.LinearVelocity);
             ret.AngularVelocity = item.AngularVelocity.Equals(rhs.AngularVelocity);
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
@@ -3314,7 +3314,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.DATA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogDepthAmount) ?? true))
             {
@@ -3486,7 +3486,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.GNAM, rhs.GNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.GNAM, rhs.GNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
             {

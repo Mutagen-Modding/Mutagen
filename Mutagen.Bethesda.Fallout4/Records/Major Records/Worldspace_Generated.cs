@@ -1702,7 +1702,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.LargeReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceGridReference.ErrorMask?>>?>(ExceptionExt.Combine(this.LargeReferences?.Overall, rhs.LargeReferences?.Overall), ExceptionExt.Combine(this.LargeReferences?.Specific, rhs.LargeReferences?.Specific));
+                ret.LargeReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceGridReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LargeReferences?.Overall, rhs.LargeReferences?.Overall), Noggog.ExceptionExt.Combine(this.LargeReferences?.Specific, rhs.LargeReferences?.Specific));
                 ret.MaxHeight = this.MaxHeight.Combine(rhs.MaxHeight, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.FixedDimensionsCenterCell = this.FixedDimensionsCenterCell.Combine(rhs.FixedDimensionsCenterCell);
@@ -1735,7 +1735,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.TopCell = this.TopCell.Combine(rhs.TopCell, (l, r) => l.Combine(r));
                 ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
                 ret.SubCellsUnknown = this.SubCellsUnknown.Combine(rhs.SubCellsUnknown);
-                ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
+                ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), Noggog.ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
                 ret.ONAMDataTypeState = this.ONAMDataTypeState.Combine(rhs.ONAMDataTypeState);
                 ret.NAM0DataTypeState = this.NAM0DataTypeState.Combine(rhs.NAM0DataTypeState);
                 ret.NAM9DataTypeState = this.NAM9DataTypeState.Combine(rhs.NAM9DataTypeState);
@@ -3335,8 +3335,8 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.DefaultLevelData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.OffsetData = MemorySliceExt.Equal(item.OffsetData, rhs.OffsetData);
-            ret.CellSizeData = MemorySliceExt.Equal(item.CellSizeData, rhs.CellSizeData);
+            ret.OffsetData = MemorySliceExt.SequenceEqual(item.OffsetData, rhs.OffsetData);
+            ret.CellSizeData = MemorySliceExt.SequenceEqual(item.CellSizeData, rhs.CellSizeData);
             ret.TopCell = EqualsMaskHelper.EqualsHelper(
                 item.TopCell,
                 rhs.TopCell,
@@ -3772,11 +3772,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.OffsetData, rhs.OffsetData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.OffsetData, rhs.OffsetData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.CellSizeData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CellSizeData, rhs.CellSizeData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.CellSizeData, rhs.CellSizeData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {

@@ -1456,13 +1456,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Count = this.Count.Combine(rhs.Count);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
                 ret.Health = this.Health.Combine(rhs.Health);
-                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
                 ret.ActivateParents = this.ActivateParents.Combine(rhs.ActivateParents, (l, r) => l.Combine(r));
                 ret.LinkedReferenceColor = this.LinkedReferenceColor.Combine(rhs.LinkedReferenceColor, (l, r) => l.Combine(r));
                 ret.PersistentLocation = this.PersistentLocation.Combine(rhs.PersistentLocation);
                 ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
                 ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
-                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
+                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
                 ret.Horse = this.Horse.Combine(rhs.Horse);
                 ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
@@ -2330,8 +2330,8 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
             ret.Base = item.Base.Equals(rhs.Base);
             ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
-            ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
-            ret.RagdollBipedData = MemorySliceExt.Equal(item.RagdollBipedData, rhs.RagdollBipedData);
+            ret.RagdollData = MemorySliceExt.SequenceEqual(item.RagdollData, rhs.RagdollData);
+            ret.RagdollBipedData = MemorySliceExt.SequenceEqual(item.RagdollBipedData, rhs.RagdollBipedData);
             ret.Patrol = EqualsMaskHelper.EqualsHelper(
                 item.Patrol,
                 rhs.Patrol,
@@ -2650,11 +2650,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollBipedData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Patrol) ?? true))
             {

@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
+                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), Noggog.ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
                 ret.SunTexture = this.SunTexture.Combine(rhs.SunTexture);
                 ret.SunGlareTexture = this.SunGlareTexture.Combine(rhs.SunGlareTexture);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));

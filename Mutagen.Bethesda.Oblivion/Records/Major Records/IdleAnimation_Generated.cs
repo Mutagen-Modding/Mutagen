@@ -553,9 +553,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.AnimationGroupSection = this.AnimationGroupSection.Combine(rhs.AnimationGroupSection);
-                ret.RelatedIdleAnimations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RelatedIdleAnimations?.Overall, rhs.RelatedIdleAnimations?.Overall), ExceptionExt.Combine(this.RelatedIdleAnimations?.Specific, rhs.RelatedIdleAnimations?.Specific));
+                ret.RelatedIdleAnimations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RelatedIdleAnimations?.Overall, rhs.RelatedIdleAnimations?.Overall), Noggog.ExceptionExt.Combine(this.RelatedIdleAnimations?.Specific, rhs.RelatedIdleAnimations?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

@@ -1427,18 +1427,18 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.WelcomeText = this.WelcomeText.Combine(rhs.WelcomeText);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
-                ret.Holotapes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalHolotapeEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Holotapes?.Overall, rhs.Holotapes?.Overall), ExceptionExt.Combine(this.Holotapes?.Specific, rhs.Holotapes?.Specific));
+                ret.Holotapes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalHolotapeEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Holotapes?.Overall, rhs.Holotapes?.Overall), Noggog.ExceptionExt.Combine(this.Holotapes?.Specific, rhs.Holotapes?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.WorkbenchData = this.WorkbenchData.Combine(rhs.WorkbenchData);
                 ret.MarkerModel = this.MarkerModel.Combine(rhs.MarkerModel);
-                ret.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(ExceptionExt.Combine(this.MarkerParameters?.Overall, rhs.MarkerParameters?.Overall), ExceptionExt.Combine(this.MarkerParameters?.Specific, rhs.MarkerParameters?.Specific));
-                ret.BodyTexts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalBodyText.ErrorMask?>>?>(ExceptionExt.Combine(this.BodyTexts?.Overall, rhs.BodyTexts?.Overall), ExceptionExt.Combine(this.BodyTexts?.Specific, rhs.BodyTexts?.Specific));
-                ret.MenuItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuItem.ErrorMask?>>?>(ExceptionExt.Combine(this.MenuItems?.Overall, rhs.MenuItems?.Overall), ExceptionExt.Combine(this.MenuItems?.Specific, rhs.MenuItems?.Specific));
+                ret.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MarkerParameters?.Overall, rhs.MarkerParameters?.Overall), Noggog.ExceptionExt.Combine(this.MarkerParameters?.Specific, rhs.MarkerParameters?.Specific));
+                ret.BodyTexts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalBodyText.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BodyTexts?.Overall, rhs.BodyTexts?.Overall), Noggog.ExceptionExt.Combine(this.BodyTexts?.Specific, rhs.BodyTexts?.Specific));
+                ret.MenuItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MenuItems?.Overall, rhs.MenuItems?.Overall), Noggog.ExceptionExt.Combine(this.MenuItems?.Specific, rhs.MenuItems?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2244,15 +2244,15 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
+            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
             ret.LoopingSound = item.LoopingSound.Equals(rhs.LoopingSound);
-            ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
             ret.Holotapes = item.Holotapes.CollectionEqualsHelper(
                 rhs.Holotapes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.WorkbenchData = MemorySliceExt.Equal(item.WorkbenchData, rhs.WorkbenchData);
+            ret.WorkbenchData = MemorySliceExt.SequenceEqual(item.WorkbenchData, rhs.WorkbenchData);
             ret.MarkerModel = string.Equals(item.MarkerModel, rhs.MarkerModel);
             ret.MarkerParameters = item.MarkerParameters.CollectionEqualsHelper(
                 rhs.MarkerParameters,
@@ -2565,7 +2565,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.PNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.LoopingSound) ?? true))
             {
@@ -2573,7 +2573,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.FNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.Holotapes) ?? true))
             {
@@ -2585,7 +2585,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.WorkbenchData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.WorkbenchData, rhs.WorkbenchData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.WorkbenchData, rhs.WorkbenchData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Terminal_FieldIndex.MarkerModel) ?? true))
             {

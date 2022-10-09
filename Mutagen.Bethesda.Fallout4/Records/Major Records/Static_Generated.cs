@@ -981,14 +981,14 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
                 ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.MaxAngle = this.MaxAngle.Combine(rhs.MaxAngle);
                 ret.Material = this.Material.Combine(rhs.Material);
                 ret.LeafAmplitude = this.LeafAmplitude.Combine(rhs.LeafAmplitude);
                 ret.LeafFrequency = this.LeafFrequency.Combine(rhs.LeafFrequency);
                 ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
-                ret.DistantLods = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DistantLod.ErrorMask?>>?>(ExceptionExt.Combine(this.DistantLods?.Overall, rhs.DistantLods?.Overall), ExceptionExt.Combine(this.DistantLods?.Specific, rhs.DistantLods?.Specific));
+                ret.DistantLods = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DistantLod.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DistantLods?.Overall, rhs.DistantLods?.Overall), Noggog.ExceptionExt.Combine(this.DistantLods?.Specific, rhs.DistantLods?.Specific));
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }

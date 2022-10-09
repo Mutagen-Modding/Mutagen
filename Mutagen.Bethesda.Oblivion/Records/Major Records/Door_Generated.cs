@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
                 ret.LoopSound = this.LoopSound.Combine(rhs.LoopSound);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.RandomTeleportDestinations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RandomTeleportDestinations?.Overall, rhs.RandomTeleportDestinations?.Overall), ExceptionExt.Combine(this.RandomTeleportDestinations?.Specific, rhs.RandomTeleportDestinations?.Specific));
+                ret.RandomTeleportDestinations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RandomTeleportDestinations?.Overall, rhs.RandomTeleportDestinations?.Overall), Noggog.ExceptionExt.Combine(this.RandomTeleportDestinations?.Specific, rhs.RandomTeleportDestinations?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

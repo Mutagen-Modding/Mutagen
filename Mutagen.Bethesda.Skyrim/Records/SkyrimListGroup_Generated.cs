@@ -1959,7 +1959,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ExceptionExt.Combine(this.Records?.Overall, rhs.Records?.Overall), ExceptionExt.Combine(this.Records?.Specific, rhs.Records?.Specific));
+                ret.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(Noggog.ExceptionExt.Combine(this.Records?.Overall, rhs.Records?.Overall), Noggog.ExceptionExt.Combine(this.Records?.Specific, rhs.Records?.Specific));
                 return ret;
             }
             public static ErrorMask<T_ErrMask>? Combine(ErrorMask<T_ErrMask>? lhs, ErrorMask<T_ErrMask>? rhs)

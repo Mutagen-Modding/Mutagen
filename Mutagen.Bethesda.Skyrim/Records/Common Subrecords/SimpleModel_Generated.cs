@@ -828,7 +828,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.File = object.Equals(item.File, rhs.File);
-            ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
+            ret.Data = MemorySliceExt.SequenceEqual(item.Data, rhs.Data);
         }
         
         public string Print(
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Data, rhs.Data)) return false;
             }
             return true;
         }

@@ -2585,31 +2585,31 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Configuration = this.Configuration.Combine(rhs.Configuration, (l, r) => l.Combine(r));
-                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), Noggog.ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
                 ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
                 ret.Voice = this.Voice.Combine(rhs.Voice);
                 ret.Template = this.Template.Combine(rhs.Template);
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
+                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), Noggog.ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.WornArmor = this.WornArmor.Combine(rhs.WornArmor);
                 ret.FarAwayModel = this.FarAwayModel.Combine(rhs.FarAwayModel);
                 ret.AttackRace = this.AttackRace.Combine(rhs.AttackRace);
-                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
+                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), Noggog.ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
                 ret.SpectatorOverridePackageList = this.SpectatorOverridePackageList.Combine(rhs.SpectatorOverridePackageList);
                 ret.ObserveDeadBodyOverridePackageList = this.ObserveDeadBodyOverridePackageList.Combine(rhs.ObserveDeadBodyOverridePackageList);
                 ret.GuardWarnOverridePackageList = this.GuardWarnOverridePackageList.Combine(rhs.GuardWarnOverridePackageList);
                 ret.CombatOverridePackageList = this.CombatOverridePackageList.Combine(rhs.CombatOverridePackageList);
-                ret.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Perks?.Overall, rhs.Perks?.Overall), ExceptionExt.Combine(this.Perks?.Specific, rhs.Perks?.Specific));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Perks?.Overall, rhs.Perks?.Overall), Noggog.ExceptionExt.Combine(this.Perks?.Specific, rhs.Perks?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.AIData = this.AIData.Combine(rhs.AIData, (l, r) => l.Combine(r));
-                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), Noggog.ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Class = this.Class.Combine(rhs.Class);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
                 ret.PlayerSkills = this.PlayerSkills.Combine(rhs.PlayerSkills, (l, r) => l.Combine(r));
-                ret.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
+                ret.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), Noggog.ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
                 ret.HairColor = this.HairColor.Combine(rhs.HairColor);
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
                 ret.GiftFilter = this.GiftFilter.Combine(rhs.GiftFilter);
@@ -2626,7 +2626,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.TextureLighting = this.TextureLighting.Combine(rhs.TextureLighting);
                 ret.FaceMorph = this.FaceMorph.Combine(rhs.FaceMorph, (l, r) => l.Combine(r));
                 ret.FaceParts = this.FaceParts.Combine(rhs.FaceParts, (l, r) => l.Combine(r));
-                ret.TintLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.TintLayers?.Overall, rhs.TintLayers?.Overall), ExceptionExt.Combine(this.TintLayers?.Specific, rhs.TintLayers?.Specific));
+                ret.TintLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TintLayers?.Overall, rhs.TintLayers?.Overall), Noggog.ExceptionExt.Combine(this.TintLayers?.Specific, rhs.TintLayers?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

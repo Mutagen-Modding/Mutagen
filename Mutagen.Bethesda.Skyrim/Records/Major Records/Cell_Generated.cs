@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.LNAM = this.LNAM.Combine(rhs.LNAM);
                 ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
                 ret.WaterNoiseTexture = this.WaterNoiseTexture.Combine(rhs.WaterNoiseTexture);
-                ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
+                ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), Noggog.ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
                 ret.Location = this.Location.Combine(rhs.Location);
                 ret.XWCN = this.XWCN.Combine(rhs.XWCN);
                 ret.XWCS = this.XWCS.Combine(rhs.XWCS);
@@ -1828,15 +1828,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Music = this.Music.Combine(rhs.Music);
                 ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
                 ret.Landscape = this.Landscape.Combine(rhs.Landscape, (l, r) => l.Combine(r));
-                ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
+                ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), Noggog.ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.UnknownGroupData = this.UnknownGroupData.Combine(rhs.UnknownGroupData);
                 ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
                 ret.PersistentUnknownGroupData = this.PersistentUnknownGroupData.Combine(rhs.PersistentUnknownGroupData);
-                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
+                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), Noggog.ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
                 ret.TemporaryTimestamp = this.TemporaryTimestamp.Combine(rhs.TemporaryTimestamp);
                 ret.TemporaryUnknownGroupData = this.TemporaryUnknownGroupData.Combine(rhs.TemporaryUnknownGroupData);
-                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
+                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), Noggog.ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3156,14 +3156,14 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Lighting,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.OcclusionData = MemorySliceExt.Equal(item.OcclusionData, rhs.OcclusionData);
+            ret.OcclusionData = MemorySliceExt.SequenceEqual(item.OcclusionData, rhs.OcclusionData);
             ret.MaxHeightData = EqualsMaskHelper.EqualsHelper(
                 item.MaxHeightData,
                 rhs.MaxHeightData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.LightingTemplate = item.LightingTemplate.Equals(rhs.LightingTemplate);
-            ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
+            ret.LNAM = MemorySliceExt.SequenceEqual(item.LNAM, rhs.LNAM);
             ret.WaterHeight = item.WaterHeight.EqualsWithin(rhs.WaterHeight);
             ret.WaterNoiseTexture = string.Equals(item.WaterNoiseTexture, rhs.WaterNoiseTexture);
             ret.Regions = item.Regions.CollectionEqualsHelper(
@@ -3171,8 +3171,8 @@ namespace Mutagen.Bethesda.Skyrim
                 (l, r) => object.Equals(l, r),
                 include);
             ret.Location = item.Location.Equals(rhs.Location);
-            ret.XWCN = MemorySliceExt.Equal(item.XWCN, rhs.XWCN);
-            ret.XWCS = MemorySliceExt.Equal(item.XWCS, rhs.XWCS);
+            ret.XWCN = MemorySliceExt.SequenceEqual(item.XWCN, rhs.XWCN);
+            ret.XWCS = MemorySliceExt.SequenceEqual(item.XWCS, rhs.XWCS);
             ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
                 item.WaterVelocity,
                 rhs.WaterVelocity,
@@ -3529,7 +3529,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.OcclusionData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.OcclusionData, rhs.OcclusionData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.OcclusionData, rhs.OcclusionData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.MaxHeightData) ?? true))
             {
@@ -3545,7 +3545,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.LNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.LNAM, rhs.LNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
             {
@@ -3565,11 +3565,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XWCN, rhs.XWCN)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XWCN, rhs.XWCN)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.XWCS) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XWCS, rhs.XWCS)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XWCS, rhs.XWCS)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterVelocity) ?? true))
             {

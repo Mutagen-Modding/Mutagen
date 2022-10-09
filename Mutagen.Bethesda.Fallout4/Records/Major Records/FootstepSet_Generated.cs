@@ -794,11 +794,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.WalkFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkFootsteps?.Overall, rhs.WalkFootsteps?.Overall), ExceptionExt.Combine(this.WalkFootsteps?.Specific, rhs.WalkFootsteps?.Specific));
-                ret.RunFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RunFootsteps?.Overall, rhs.RunFootsteps?.Overall), ExceptionExt.Combine(this.RunFootsteps?.Specific, rhs.RunFootsteps?.Specific));
-                ret.SprintFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SprintFootsteps?.Overall, rhs.SprintFootsteps?.Overall), ExceptionExt.Combine(this.SprintFootsteps?.Specific, rhs.SprintFootsteps?.Specific));
-                ret.SneakFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SneakFootsteps?.Overall, rhs.SneakFootsteps?.Overall), ExceptionExt.Combine(this.SneakFootsteps?.Specific, rhs.SneakFootsteps?.Specific));
-                ret.SwimFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SwimFootsteps?.Overall, rhs.SwimFootsteps?.Overall), ExceptionExt.Combine(this.SwimFootsteps?.Specific, rhs.SwimFootsteps?.Specific));
+                ret.WalkFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.WalkFootsteps?.Overall, rhs.WalkFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.WalkFootsteps?.Specific, rhs.WalkFootsteps?.Specific));
+                ret.RunFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RunFootsteps?.Overall, rhs.RunFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.RunFootsteps?.Specific, rhs.RunFootsteps?.Specific));
+                ret.SprintFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SprintFootsteps?.Overall, rhs.SprintFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.SprintFootsteps?.Specific, rhs.SprintFootsteps?.Specific));
+                ret.SneakFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SneakFootsteps?.Overall, rhs.SneakFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.SneakFootsteps?.Specific, rhs.SneakFootsteps?.Specific));
+                ret.SwimFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SwimFootsteps?.Overall, rhs.SwimFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.SwimFootsteps?.Specific, rhs.SwimFootsteps?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

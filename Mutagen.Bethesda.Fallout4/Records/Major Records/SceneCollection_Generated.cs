@@ -571,9 +571,9 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Quest = this.Quest.Combine(rhs.Quest);
-                ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneCollectionItem.ErrorMask?>>?>(ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
+                ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneCollectionItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), Noggog.ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
                 ret.VNAM = this.VNAM.Combine(rhs.VNAM);
-                ret.XNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.XNAMs?.Overall, rhs.XNAMs?.Overall), ExceptionExt.Combine(this.XNAMs?.Specific, rhs.XNAMs?.Specific));
+                ret.XNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.XNAMs?.Overall, rhs.XNAMs?.Overall), Noggog.ExceptionExt.Combine(this.XNAMs?.Specific, rhs.XNAMs?.Specific));
                 ret.VNAM2 = this.VNAM2.Combine(rhs.VNAM2);
                 return ret;
             }

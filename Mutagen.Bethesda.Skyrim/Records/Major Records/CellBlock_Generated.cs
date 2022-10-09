@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.GroupType = this.GroupType.Combine(rhs.GroupType);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.SubBlocks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellSubBlock.ErrorMask?>>?>(ExceptionExt.Combine(this.SubBlocks?.Overall, rhs.SubBlocks?.Overall), ExceptionExt.Combine(this.SubBlocks?.Specific, rhs.SubBlocks?.Specific));
+                ret.SubBlocks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellSubBlock.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SubBlocks?.Overall, rhs.SubBlocks?.Overall), Noggog.ExceptionExt.Combine(this.SubBlocks?.Specific, rhs.SubBlocks?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

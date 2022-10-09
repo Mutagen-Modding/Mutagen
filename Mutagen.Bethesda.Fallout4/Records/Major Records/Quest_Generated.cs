@@ -1661,21 +1661,21 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Event = this.Event.Combine(rhs.Event);
                 ret.Location = this.Location.Combine(rhs.Location);
                 ret.QuestCompletionXp = this.QuestCompletionXp.Combine(rhs.QuestCompletionXp);
-                ret.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.TextDisplayGlobals?.Overall, rhs.TextDisplayGlobals?.Overall), ExceptionExt.Combine(this.TextDisplayGlobals?.Specific, rhs.TextDisplayGlobals?.Specific));
+                ret.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TextDisplayGlobals?.Overall, rhs.TextDisplayGlobals?.Overall), Noggog.ExceptionExt.Combine(this.TextDisplayGlobals?.Specific, rhs.TextDisplayGlobals?.Specific));
                 ret.Filter = this.Filter.Combine(rhs.Filter);
-                ret.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogConditions?.Overall, rhs.DialogConditions?.Overall), ExceptionExt.Combine(this.DialogConditions?.Specific, rhs.DialogConditions?.Specific));
-                ret.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.UnusedConditions?.Overall, rhs.UnusedConditions?.Overall), ExceptionExt.Combine(this.UnusedConditions?.Specific, rhs.UnusedConditions?.Specific));
-                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
-                ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
-                ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AQuestAlias.ErrorMask?>>?>(ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
+                ret.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DialogConditions?.Overall, rhs.DialogConditions?.Overall), Noggog.ExceptionExt.Combine(this.DialogConditions?.Specific, rhs.DialogConditions?.Specific));
+                ret.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UnusedConditions?.Overall, rhs.UnusedConditions?.Overall), Noggog.ExceptionExt.Combine(this.UnusedConditions?.Specific, rhs.UnusedConditions?.Specific));
+                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), Noggog.ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
+                ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), Noggog.ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
+                ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AQuestAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), Noggog.ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.QuestGroup = this.QuestGroup.Combine(rhs.QuestGroup);
                 ret.SwfFile = this.SwfFile.Combine(rhs.SwfFile);
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.DialogBranches = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogBranches?.Overall, rhs.DialogBranches?.Overall), ExceptionExt.Combine(this.DialogBranches?.Specific, rhs.DialogBranches?.Specific));
-                ret.DialogTopics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogTopics?.Overall, rhs.DialogTopics?.Overall), ExceptionExt.Combine(this.DialogTopics?.Specific, rhs.DialogTopics?.Specific));
-                ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>(ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
+                ret.DialogBranches = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DialogBranches?.Overall, rhs.DialogBranches?.Overall), Noggog.ExceptionExt.Combine(this.DialogBranches?.Specific, rhs.DialogBranches?.Specific));
+                ret.DialogTopics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DialogTopics?.Overall, rhs.DialogTopics?.Overall), Noggog.ExceptionExt.Combine(this.DialogTopics?.Specific, rhs.DialogTopics?.Specific));
+                ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), Noggog.ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

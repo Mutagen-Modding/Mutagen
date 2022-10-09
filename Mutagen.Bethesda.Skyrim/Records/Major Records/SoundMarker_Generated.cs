@@ -1023,8 +1023,8 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
-            ret.SNDD = MemorySliceExt.Equal(item.SNDD, rhs.SNDD);
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
+            ret.SNDD = MemorySliceExt.SequenceEqual(item.SNDD, rhs.SNDD);
             ret.SoundDescriptor = item.SoundDescriptor.Equals(rhs.SoundDescriptor);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1151,11 +1151,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)SoundMarker_FieldIndex.FNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundMarker_FieldIndex.SNDD) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SNDD, rhs.SNDD)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SNDD, rhs.SNDD)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
             {

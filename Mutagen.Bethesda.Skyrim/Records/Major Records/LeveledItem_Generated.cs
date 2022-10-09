@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Global = this.Global.Combine(rhs.Global);
-                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

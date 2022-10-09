@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.MenuDisplayObject = this.MenuDisplayObject.Combine(rhs.MenuDisplayObject);
                 ret.EquipmentType = this.EquipmentType.Combine(rhs.EquipmentType);
                 ret.Description = this.Description.Combine(rhs.Description);
@@ -1270,7 +1270,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.CastDuration = this.CastDuration.Combine(rhs.CastDuration);
                 ret.Range = this.Range.Combine(rhs.Range);
                 ret.HalfCostPerk = this.HalfCostPerk.Combine(rhs.HalfCostPerk);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 ret.SPITDataTypeState = this.SPITDataTypeState.Combine(rhs.SPITDataTypeState);
                 return ret;

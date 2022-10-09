@@ -1422,7 +1422,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AlternateLipText = string.Equals(item.AlternateLipText, rhs.AlternateLipText);
             ret.SpeakerIdleAnimation = item.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation);
             ret.ListenerIdleAnimation = item.ListenerIdleAnimation.Equals(rhs.ListenerIdleAnimation);
-            ret.TextHash = MemorySliceExt.Equal(item.TextHash, rhs.TextHash);
+            ret.TextHash = MemorySliceExt.SequenceEqual(item.TextHash, rhs.TextHash);
             ret.CameraPath = item.CameraPath.Equals(rhs.CameraPath);
             ret.StopOnSceneEnd = item.StopOnSceneEnd == rhs.StopOnSceneEnd;
             ret.TRDADataTypeState = item.TRDADataTypeState == rhs.TRDADataTypeState;
@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.TextHash) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TextHash, rhs.TextHash)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TextHash, rhs.TextHash)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraPath) ?? true))
             {

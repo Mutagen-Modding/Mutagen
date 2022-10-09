@@ -745,8 +745,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.SkillValues = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(ExceptionExt.Combine(this.SkillValues?.Overall, rhs.SkillValues?.Overall), ExceptionExt.Combine(this.SkillValues?.Specific, rhs.SkillValues?.Specific));
-                ret.SkillOffsets = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(ExceptionExt.Combine(this.SkillOffsets?.Overall, rhs.SkillOffsets?.Overall), ExceptionExt.Combine(this.SkillOffsets?.Specific, rhs.SkillOffsets?.Specific));
+                ret.SkillValues = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(Noggog.ExceptionExt.Combine(this.SkillValues?.Overall, rhs.SkillValues?.Overall), Noggog.ExceptionExt.Combine(this.SkillValues?.Specific, rhs.SkillValues?.Specific));
+                ret.SkillOffsets = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(Noggog.ExceptionExt.Combine(this.SkillOffsets?.Overall, rhs.SkillOffsets?.Overall), Noggog.ExceptionExt.Combine(this.SkillOffsets?.Specific, rhs.SkillOffsets?.Specific));
                 ret.Health = this.Health.Combine(rhs.Health);
                 ret.Magicka = this.Magicka.Combine(rhs.Magicka);
                 ret.Stamina = this.Stamina.Combine(rhs.Stamina);

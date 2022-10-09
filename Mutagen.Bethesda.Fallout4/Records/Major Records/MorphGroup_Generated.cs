@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.MorphPresets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphPreset.ErrorMask?>>?>(ExceptionExt.Combine(this.MorphPresets?.Overall, rhs.MorphPresets?.Overall), ExceptionExt.Combine(this.MorphPresets?.Specific, rhs.MorphPresets?.Specific));
+                ret.MorphPresets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphPreset.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MorphPresets?.Overall, rhs.MorphPresets?.Overall), Noggog.ExceptionExt.Combine(this.MorphPresets?.Specific, rhs.MorphPresets?.Specific));
                 ret.UnknownMPPK = this.UnknownMPPK.Combine(rhs.UnknownMPPK);
                 ret.UnknownMPGS = this.UnknownMPGS.Combine(rhs.UnknownMPGS);
                 return ret;
@@ -996,8 +996,8 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.MorphPresets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.UnknownMPPK = MemorySliceExt.Equal(item.UnknownMPPK, rhs.UnknownMPPK);
-            ret.UnknownMPGS = MemorySliceExt.Equal(item.UnknownMPGS, rhs.UnknownMPGS);
+            ret.UnknownMPPK = MemorySliceExt.SequenceEqual(item.UnknownMPPK, rhs.UnknownMPPK);
+            ret.UnknownMPGS = MemorySliceExt.SequenceEqual(item.UnknownMPGS, rhs.UnknownMPGS);
         }
         
         public string Print(
@@ -1091,11 +1091,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)MorphGroup_FieldIndex.UnknownMPPK) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.UnknownMPPK, rhs.UnknownMPPK)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.UnknownMPPK, rhs.UnknownMPPK)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MorphGroup_FieldIndex.UnknownMPGS) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.UnknownMPGS, rhs.UnknownMPGS)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.UnknownMPGS, rhs.UnknownMPGS)) return false;
             }
             return true;
         }

@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.GridCell = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.GridCell?.Overall, rhs.GridCell?.Overall), ExceptionExt.Combine(this.GridCell?.Specific, rhs.GridCell?.Specific));
+                ret.GridCell = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.GridCell?.Overall, rhs.GridCell?.Overall), Noggog.ExceptionExt.Combine(this.GridCell?.Specific, rhs.GridCell?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

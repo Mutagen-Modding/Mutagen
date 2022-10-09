@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.HavokFriction = this.HavokFriction.Combine(rhs.HavokFriction);
                 ret.HavokRestitution = this.HavokRestitution.Combine(rhs.HavokRestitution);
                 ret.TextureSpecularExponent = this.TextureSpecularExponent.Combine(rhs.TextureSpecularExponent);
-                ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
+                ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), Noggog.ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.HNAMDataTypeState = this.HNAMDataTypeState.Combine(rhs.HNAMDataTypeState);
                 return ret;

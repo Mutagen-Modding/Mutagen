@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.HorizontalPosition = this.HorizontalPosition.Combine(rhs.HorizontalPosition);
                 ret.VerticalPosition = this.VerticalPosition.Combine(rhs.VerticalPosition);
                 ret.AssociatedSkill = this.AssociatedSkill.Combine(rhs.AssociatedSkill);
-                ret.ConnectionLineToIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ConnectionLineToIndices?.Overall, rhs.ConnectionLineToIndices?.Overall), ExceptionExt.Combine(this.ConnectionLineToIndices?.Specific, rhs.ConnectionLineToIndices?.Specific));
+                ret.ConnectionLineToIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ConnectionLineToIndices?.Overall, rhs.ConnectionLineToIndices?.Overall), Noggog.ExceptionExt.Combine(this.ConnectionLineToIndices?.Specific, rhs.ConnectionLineToIndices?.Specific));
                 ret.Index = this.Index.Combine(rhs.Index);
                 return ret;
             }
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Perk = item.Perk.Equals(rhs.Perk);
-            ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
             ret.PerkGridX = item.PerkGridX == rhs.PerkGridX;
             ret.PerkGridY = item.PerkGridY == rhs.PerkGridY;
             ret.HorizontalPosition = item.HorizontalPosition.EqualsWithin(rhs.HorizontalPosition);
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.FNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.PerkGridX) ?? true))
             {

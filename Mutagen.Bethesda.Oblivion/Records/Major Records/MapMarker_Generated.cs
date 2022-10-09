@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Types = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Types?.Overall, rhs.Types?.Overall), ExceptionExt.Combine(this.Types?.Specific, rhs.Types?.Specific));
+                ret.Types = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Types?.Overall, rhs.Types?.Overall), Noggog.ExceptionExt.Combine(this.Types?.Specific, rhs.Types?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

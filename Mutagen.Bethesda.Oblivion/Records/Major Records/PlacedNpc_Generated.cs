@@ -1258,8 +1258,8 @@ namespace Mutagen.Bethesda.Oblivion
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Base = item.Base.Equals(rhs.Base);
-            ret.XPCIFluff = MemorySliceExt.Equal(item.XPCIFluff, rhs.XPCIFluff);
-            ret.FULLFluff = MemorySliceExt.Equal(item.FULLFluff, rhs.FULLFluff);
+            ret.XPCIFluff = MemorySliceExt.SequenceEqual(item.XPCIFluff, rhs.XPCIFluff);
+            ret.FULLFluff = MemorySliceExt.SequenceEqual(item.FULLFluff, rhs.FULLFluff);
             ret.DistantLODData = EqualsMaskHelper.EqualsHelper(
                 item.DistantLODData,
                 rhs.DistantLODData,
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion
                 include);
             ret.MerchantContainer = item.MerchantContainer.Equals(rhs.MerchantContainer);
             ret.Horse = item.Horse.Equals(rhs.Horse);
-            ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
+            ret.RagdollData = MemorySliceExt.SequenceEqual(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.Location = EqualsMaskHelper.EqualsHelper(
                 item.Location,
@@ -1427,11 +1427,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.XPCIFluff) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XPCIFluff, rhs.XPCIFluff)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XPCIFluff, rhs.XPCIFluff)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FULLFluff) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FULLFluff, rhs.FULLFluff)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FULLFluff, rhs.FULLFluff)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.DistantLODData) ?? true))
             {
@@ -1459,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Scale) ?? true))
             {

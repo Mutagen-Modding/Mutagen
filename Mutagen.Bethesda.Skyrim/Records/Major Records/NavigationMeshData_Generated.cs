@@ -969,10 +969,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.NavmeshVersion = this.NavmeshVersion.Combine(rhs.NavmeshVersion);
                 ret.Magic = this.Magic.Combine(rhs.Magic);
                 ret.Parent = this.Parent.Combine(rhs.Parent, (l, r) => l.Combine(r));
-                ret.Vertices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Vertices?.Overall, rhs.Vertices?.Overall), ExceptionExt.Combine(this.Vertices?.Specific, rhs.Vertices?.Specific));
-                ret.Triangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>(ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
-                ret.EdgeLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EdgeLink.ErrorMask?>>?>(ExceptionExt.Combine(this.EdgeLinks?.Overall, rhs.EdgeLinks?.Overall), ExceptionExt.Combine(this.EdgeLinks?.Specific, rhs.EdgeLinks?.Specific));
-                ret.DoorTriangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>(ExceptionExt.Combine(this.DoorTriangles?.Overall, rhs.DoorTriangles?.Overall), ExceptionExt.Combine(this.DoorTriangles?.Specific, rhs.DoorTriangles?.Specific));
+                ret.Vertices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Vertices?.Overall, rhs.Vertices?.Overall), Noggog.ExceptionExt.Combine(this.Vertices?.Specific, rhs.Vertices?.Specific));
+                ret.Triangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), Noggog.ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
+                ret.EdgeLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EdgeLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EdgeLinks?.Overall, rhs.EdgeLinks?.Overall), Noggog.ExceptionExt.Combine(this.EdgeLinks?.Specific, rhs.EdgeLinks?.Specific));
+                ret.DoorTriangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DoorTriangles?.Overall, rhs.DoorTriangles?.Overall), Noggog.ExceptionExt.Combine(this.DoorTriangles?.Specific, rhs.DoorTriangles?.Specific));
                 ret.NavmeshGridDivisor = this.NavmeshGridDivisor.Combine(rhs.NavmeshGridDivisor);
                 ret.MaxDistanceX = this.MaxDistanceX.Combine(rhs.MaxDistanceX);
                 ret.MaxDistanceY = this.MaxDistanceY.Combine(rhs.MaxDistanceY);

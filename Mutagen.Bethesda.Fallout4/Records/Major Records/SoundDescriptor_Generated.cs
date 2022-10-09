@@ -914,12 +914,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Category = this.Category.Combine(rhs.Category);
                 ret.AlternateSoundFor = this.AlternateSoundFor.Combine(rhs.AlternateSoundFor);
-                ret.SoundFiles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SoundFiles?.Overall, rhs.SoundFiles?.Overall), ExceptionExt.Combine(this.SoundFiles?.Specific, rhs.SoundFiles?.Specific));
+                ret.SoundFiles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SoundFiles?.Overall, rhs.SoundFiles?.Overall), Noggog.ExceptionExt.Combine(this.SoundFiles?.Specific, rhs.SoundFiles?.Specific));
                 ret.OutputModel = this.OutputModel.Combine(rhs.OutputModel);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.LoopAndRumble = this.LoopAndRumble.Combine(rhs.LoopAndRumble, (l, r) => l.Combine(r));
-                ret.Descriptors = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Descriptors?.Overall, rhs.Descriptors?.Overall), ExceptionExt.Combine(this.Descriptors?.Specific, rhs.Descriptors?.Specific));
-                ret.RatesOfFire = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundRateOfFire.ErrorMask?>>?>(ExceptionExt.Combine(this.RatesOfFire?.Overall, rhs.RatesOfFire?.Overall), ExceptionExt.Combine(this.RatesOfFire?.Specific, rhs.RatesOfFire?.Specific));
+                ret.Descriptors = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Descriptors?.Overall, rhs.Descriptors?.Overall), Noggog.ExceptionExt.Combine(this.Descriptors?.Specific, rhs.Descriptors?.Specific));
+                ret.RatesOfFire = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundRateOfFire.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RatesOfFire?.Overall, rhs.RatesOfFire?.Overall), Noggog.ExceptionExt.Combine(this.RatesOfFire?.Specific, rhs.RatesOfFire?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

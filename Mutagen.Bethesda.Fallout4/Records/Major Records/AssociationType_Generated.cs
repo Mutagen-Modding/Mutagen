@@ -365,8 +365,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ParentTitle = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.ParentTitle?.Overall, rhs.ParentTitle?.Overall), GenderedItem.Combine(this.ParentTitle?.Specific, rhs.ParentTitle?.Specific));
-                ret.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Title?.Overall, rhs.Title?.Overall), GenderedItem.Combine(this.Title?.Specific, rhs.Title?.Specific));
+                ret.ParentTitle = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.ParentTitle?.Overall, rhs.ParentTitle?.Overall), GenderedItem.Combine(this.ParentTitle?.Specific, rhs.ParentTitle?.Specific));
+                ret.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Title?.Overall, rhs.Title?.Overall), GenderedItem.Combine(this.Title?.Specific, rhs.Title?.Specific));
                 ret.IsFamily = this.IsFamily.Combine(rhs.IsFamily);
                 return ret;
             }

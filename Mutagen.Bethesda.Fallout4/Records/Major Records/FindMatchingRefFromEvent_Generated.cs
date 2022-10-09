@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.FromEvent = item.FromEvent == rhs.FromEvent;
-            ret.EventData = MemorySliceExt.Equal(item.EventData, rhs.EventData);
+            ret.EventData = MemorySliceExt.SequenceEqual(item.EventData, rhs.EventData);
         }
         
         public string Print(
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)FindMatchingRefFromEvent_FieldIndex.EventData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.EventData, rhs.EventData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.EventData, rhs.EventData)) return false;
             }
             return true;
         }

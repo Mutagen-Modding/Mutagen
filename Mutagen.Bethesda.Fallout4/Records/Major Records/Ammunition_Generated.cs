@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.Projectile = this.Projectile.Combine(rhs.Projectile);
@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Health = item.Health == rhs.Health;
             ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
             ret.CasingModel = string.Equals(item.CasingModel, rhs.CasingModel);
-            ret.ModelInfo = MemorySliceExt.Equal(item.ModelInfo, rhs.ModelInfo);
+            ret.ModelInfo = MemorySliceExt.SequenceEqual(item.ModelInfo, rhs.ModelInfo);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -2178,7 +2178,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.ModelInfo) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ModelInfo, rhs.ModelInfo)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ModelInfo, rhs.ModelInfo)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.DATADataTypeState) ?? true))
             {

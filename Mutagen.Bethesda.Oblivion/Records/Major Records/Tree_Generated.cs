@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icon = this.Icon.Combine(rhs.Icon);
-                ret.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SpeedTreeSeeds?.Overall, rhs.SpeedTreeSeeds?.Overall), ExceptionExt.Combine(this.SpeedTreeSeeds?.Specific, rhs.SpeedTreeSeeds?.Specific));
+                ret.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SpeedTreeSeeds?.Overall, rhs.SpeedTreeSeeds?.Overall), Noggog.ExceptionExt.Combine(this.SpeedTreeSeeds?.Specific, rhs.SpeedTreeSeeds?.Specific));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.BillboardDimensions = this.BillboardDimensions.Combine(rhs.BillboardDimensions, (l, r) => l.Combine(r));
                 return ret;

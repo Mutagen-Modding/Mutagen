@@ -575,11 +575,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Quests = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), ExceptionExt.Combine(this.Quests?.Specific, rhs.Quests?.Specific));
+                ret.Quests = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), Noggog.ExceptionExt.Combine(this.Quests?.Specific, rhs.Quests?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.DialogType = this.DialogType.Combine(rhs.DialogType);
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogItem.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

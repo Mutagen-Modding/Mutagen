@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Filter = this.Filter.Combine(rhs.Filter);
-                ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StaticPart.ErrorMask?>>?>(ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
+                ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StaticPart.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), Noggog.ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

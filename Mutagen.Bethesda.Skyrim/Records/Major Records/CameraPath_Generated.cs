@@ -637,11 +637,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.RelatedPaths = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RelatedPaths?.Overall, rhs.RelatedPaths?.Overall), ExceptionExt.Combine(this.RelatedPaths?.Specific, rhs.RelatedPaths?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.RelatedPaths = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RelatedPaths?.Overall, rhs.RelatedPaths?.Overall), Noggog.ExceptionExt.Combine(this.RelatedPaths?.Specific, rhs.RelatedPaths?.Specific));
                 ret.Zoom = this.Zoom.Combine(rhs.Zoom);
                 ret.ZoomMustHaveCameraShots = this.ZoomMustHaveCameraShots.Combine(rhs.ZoomMustHaveCameraShots);
-                ret.Shots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Shots?.Overall, rhs.Shots?.Overall), ExceptionExt.Combine(this.Shots?.Specific, rhs.Shots?.Specific));
+                ret.Shots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Shots?.Overall, rhs.Shots?.Overall), Noggog.ExceptionExt.Combine(this.Shots?.Specific, rhs.Shots?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

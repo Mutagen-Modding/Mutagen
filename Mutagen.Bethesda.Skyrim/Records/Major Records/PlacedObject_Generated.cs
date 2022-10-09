@@ -2853,18 +2853,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Primitive = this.Primitive.Combine(rhs.Primitive, (l, r) => l.Combine(r));
                 ret.XORD = this.XORD.Combine(rhs.XORD);
                 ret.OcclusionPlane = this.OcclusionPlane.Combine(rhs.OcclusionPlane, (l, r) => l.Combine(r));
-                ret.Portals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>(ExceptionExt.Combine(this.Portals?.Overall, rhs.Portals?.Overall), ExceptionExt.Combine(this.Portals?.Specific, rhs.Portals?.Specific));
+                ret.Portals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Portals?.Overall, rhs.Portals?.Overall), Noggog.ExceptionExt.Combine(this.Portals?.Specific, rhs.Portals?.Specific));
                 ret.RoomPortal = this.RoomPortal.Combine(rhs.RoomPortal, (l, r) => l.Combine(r));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.LightingTemplate = this.LightingTemplate.Combine(rhs.LightingTemplate);
                 ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
-                ret.LinkedRooms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LinkedRooms?.Overall, rhs.LinkedRooms?.Overall), ExceptionExt.Combine(this.LinkedRooms?.Specific, rhs.LinkedRooms?.Specific));
+                ret.LinkedRooms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LinkedRooms?.Overall, rhs.LinkedRooms?.Overall), Noggog.ExceptionExt.Combine(this.LinkedRooms?.Specific, rhs.LinkedRooms?.Specific));
                 ret.IsMultiBoundPrimitive = this.IsMultiBoundPrimitive.Combine(rhs.IsMultiBoundPrimitive);
                 ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
                 ret.RagdollBipedData = this.RagdollBipedData.Combine(rhs.RagdollBipedData);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
-                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
-                ret.LitWater = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LitWater?.Overall, rhs.LitWater?.Overall), ExceptionExt.Combine(this.LitWater?.Specific, rhs.LitWater?.Specific));
+                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), Noggog.ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
+                ret.LitWater = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LitWater?.Overall, rhs.LitWater?.Overall), Noggog.ExceptionExt.Combine(this.LitWater?.Specific, rhs.LitWater?.Specific));
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
                 ret.LightData = this.LightData.Combine(rhs.LightData, (l, r) => l.Combine(r));
                 ret.Alpha = this.Alpha.Combine(rhs.Alpha, (l, r) => l.Combine(r));
@@ -2888,7 +2888,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Lock = this.Lock.Combine(rhs.Lock, (l, r) => l.Combine(r));
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
                 ret.NavigationDoorLink = this.NavigationDoorLink.Combine(rhs.NavigationDoorLink, (l, r) => l.Combine(r));
-                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
+                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
                 ret.Owner = this.Owner.Combine(rhs.Owner);
                 ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
@@ -2896,7 +2896,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Charge = this.Charge.Combine(rhs.Charge);
                 ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
                 ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
-                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
                 ret.Patrol = this.Patrol.Combine(rhs.Patrol, (l, r) => l.Combine(r));
                 ret.Action = this.Action.Combine(rhs.Action);
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
@@ -3996,7 +3996,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Primitive,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.XORD = MemorySliceExt.Equal(item.XORD, rhs.XORD);
+            ret.XORD = MemorySliceExt.SequenceEqual(item.XORD, rhs.XORD);
             ret.OcclusionPlane = EqualsMaskHelper.EqualsHelper(
                 item.OcclusionPlane,
                 rhs.OcclusionPlane,
@@ -4019,8 +4019,8 @@ namespace Mutagen.Bethesda.Skyrim
                 (l, r) => object.Equals(l, r),
                 include);
             ret.IsMultiBoundPrimitive = item.IsMultiBoundPrimitive == rhs.IsMultiBoundPrimitive;
-            ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
-            ret.RagdollBipedData = MemorySliceExt.Equal(item.RagdollBipedData, rhs.RagdollBipedData);
+            ret.RagdollData = MemorySliceExt.SequenceEqual(item.RagdollData, rhs.RagdollData);
+            ret.RagdollBipedData = MemorySliceExt.SequenceEqual(item.RagdollBipedData, rhs.RagdollBipedData);
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
             ret.Reflections = item.Reflections.CollectionEqualsHelper(
                 rhs.Reflections,
@@ -4048,16 +4048,16 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
             ret.TeleportMessageBox = item.TeleportMessageBox.Equals(rhs.TeleportMessageBox);
             ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
-            ret.XWCN = MemorySliceExt.Equal(item.XWCN, rhs.XWCN);
-            ret.XWCS = MemorySliceExt.Equal(item.XWCS, rhs.XWCS);
+            ret.XWCN = MemorySliceExt.SequenceEqual(item.XWCN, rhs.XWCN);
+            ret.XWCS = MemorySliceExt.SequenceEqual(item.XWCS, rhs.XWCS);
             ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
                 item.WaterVelocity,
                 rhs.WaterVelocity,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.XCVL = MemorySliceExt.Equal(item.XCVL, rhs.XCVL);
+            ret.XCVL = MemorySliceExt.SequenceEqual(item.XCVL, rhs.XCVL);
             ret.XCZR = item.XCZR.Equals(rhs.XCZR);
-            ret.XCZA = MemorySliceExt.Equal(item.XCZA, rhs.XCZA);
+            ret.XCZA = MemorySliceExt.SequenceEqual(item.XCZA, rhs.XCZA);
             ret.XCZC = item.XCZC.Equals(rhs.XCZC);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.SpawnContainer = item.SpawnContainer.Equals(rhs.SpawnContainer);
@@ -4115,7 +4115,7 @@ namespace Mutagen.Bethesda.Skyrim
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.AttachRef = item.AttachRef.Equals(rhs.AttachRef);
-            ret.DistantLodData = MemorySliceExt.Equal(item.DistantLodData, rhs.DistantLodData);
+            ret.DistantLodData = MemorySliceExt.SequenceEqual(item.DistantLodData, rhs.DistantLodData);
             ret.Placement = EqualsMaskHelper.EqualsHelper(
                 item.Placement,
                 rhs.Placement,
@@ -4576,7 +4576,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XORD) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XORD, rhs.XORD)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XORD, rhs.XORD)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.OcclusionPlane) ?? true))
             {
@@ -4620,11 +4620,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollBipedData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Radius) ?? true))
             {
@@ -4676,11 +4676,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XWCN, rhs.XWCN)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XWCN, rhs.XWCN)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCS) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XWCS, rhs.XWCS)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XWCS, rhs.XWCS)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.WaterVelocity) ?? true))
             {
@@ -4692,7 +4692,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCVL) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XCVL, rhs.XCVL)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XCVL, rhs.XCVL)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
             {
@@ -4700,7 +4700,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XCZA, rhs.XCZA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XCZA, rhs.XCZA)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZC) ?? true))
             {
@@ -4836,7 +4836,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLodData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DistantLodData, rhs.DistantLodData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DistantLodData, rhs.DistantLodData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Placement) ?? true))
             {

@@ -803,14 +803,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.BranchType = this.BranchType.Combine(rhs.BranchType);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Root = this.Root.Combine(rhs.Root, (l, r) => l.Combine(r));
                 ret.ProcedureType = this.ProcedureType.Combine(rhs.ProcedureType);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.DataInputIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DataInputIndices?.Overall, rhs.DataInputIndices?.Overall), ExceptionExt.Combine(this.DataInputIndices?.Specific, rhs.DataInputIndices?.Specific));
+                ret.DataInputIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.DataInputIndices?.Overall, rhs.DataInputIndices?.Overall), Noggog.ExceptionExt.Combine(this.DataInputIndices?.Specific, rhs.DataInputIndices?.Specific));
                 ret.FlagsOverride = this.FlagsOverride.Combine(rhs.FlagsOverride, (l, r) => l.Combine(r));
                 ret.FlagsOverrideUnused = this.FlagsOverrideUnused.Combine(rhs.FlagsOverrideUnused, (l, r) => l.Combine(r));
-                ret.Unknown = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Unknown?.Overall, rhs.Unknown?.Overall), ExceptionExt.Combine(this.Unknown?.Specific, rhs.Unknown?.Specific));
+                ret.Unknown = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Unknown?.Overall, rhs.Unknown?.Overall), Noggog.ExceptionExt.Combine(this.Unknown?.Specific, rhs.Unknown?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

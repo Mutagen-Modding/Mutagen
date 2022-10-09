@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.EdgeFallOff = this.EdgeFallOff.Combine(rhs.EdgeFallOff);
-                ret.RegionPoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RegionPoints?.Overall, rhs.RegionPoints?.Overall), ExceptionExt.Combine(this.RegionPoints?.Specific, rhs.RegionPoints?.Specific));
+                ret.RegionPoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RegionPoints?.Overall, rhs.RegionPoints?.Overall), Noggog.ExceptionExt.Combine(this.RegionPoints?.Specific, rhs.RegionPoints?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.MapColor = this.MapColor.Combine(rhs.MapColor);
                 ret.Worldspace = this.Worldspace.Combine(rhs.Worldspace);
-                ret.RegionAreas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ExceptionExt.Combine(this.RegionAreas?.Overall, rhs.RegionAreas?.Overall), ExceptionExt.Combine(this.RegionAreas?.Specific, rhs.RegionAreas?.Specific));
+                ret.RegionAreas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RegionAreas?.Overall, rhs.RegionAreas?.Overall), Noggog.ExceptionExt.Combine(this.RegionAreas?.Specific, rhs.RegionAreas?.Specific));
                 ret.Objects = this.Objects.Combine(rhs.Objects, (l, r) => l.Combine(r));
                 ret.Weather = this.Weather.Combine(rhs.Weather, (l, r) => l.Combine(r));
                 ret.Map = this.Map.Combine(rhs.Map, (l, r) => l.Combine(r));

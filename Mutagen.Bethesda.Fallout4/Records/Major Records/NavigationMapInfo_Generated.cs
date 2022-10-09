@@ -818,9 +818,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Point = this.Point.Combine(rhs.Point);
                 ret.PreferredMergesFlag = this.PreferredMergesFlag.Combine(rhs.PreferredMergesFlag);
-                ret.MergedTo = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.MergedTo?.Overall, rhs.MergedTo?.Overall), ExceptionExt.Combine(this.MergedTo?.Specific, rhs.MergedTo?.Specific));
-                ret.PreferredMerges = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PreferredMerges?.Overall, rhs.PreferredMerges?.Overall), ExceptionExt.Combine(this.PreferredMerges?.Specific, rhs.PreferredMerges?.Specific));
-                ret.LinkedDoors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedDoor.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedDoors?.Overall, rhs.LinkedDoors?.Overall), ExceptionExt.Combine(this.LinkedDoors?.Specific, rhs.LinkedDoors?.Specific));
+                ret.MergedTo = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MergedTo?.Overall, rhs.MergedTo?.Overall), Noggog.ExceptionExt.Combine(this.MergedTo?.Specific, rhs.MergedTo?.Specific));
+                ret.PreferredMerges = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PreferredMerges?.Overall, rhs.PreferredMerges?.Overall), Noggog.ExceptionExt.Combine(this.PreferredMerges?.Specific, rhs.PreferredMerges?.Specific));
+                ret.LinkedDoors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedDoor.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedDoors?.Overall, rhs.LinkedDoors?.Overall), Noggog.ExceptionExt.Combine(this.LinkedDoors?.Specific, rhs.LinkedDoors?.Specific));
                 ret.Island = this.Island.Combine(rhs.Island, (l, r) => l.Combine(r));
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.Parent = this.Parent.Combine(rhs.Parent, (l, r) => l.Combine(r));

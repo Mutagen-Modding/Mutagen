@@ -1136,10 +1136,10 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Data,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
             ret.Type = item.Type == rhs.Type;
-            ret.CNAM = MemorySliceExt.Equal(item.CNAM, rhs.CNAM);
-            ret.SNAM = MemorySliceExt.Equal(item.SNAM, rhs.SNAM);
+            ret.CNAM = MemorySliceExt.SequenceEqual(item.CNAM, rhs.CNAM);
+            ret.SNAM = MemorySliceExt.SequenceEqual(item.SNAM, rhs.SNAM);
             ret.OutputChannels = EqualsMaskHelper.EqualsHelper(
                 item.OutputChannels,
                 rhs.OutputChannels,
@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.FNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Type) ?? true))
             {
@@ -1300,11 +1300,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.CNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.CNAM, rhs.CNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.SNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SNAM, rhs.SNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SNAM, rhs.SNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.OutputChannels) ?? true))
             {

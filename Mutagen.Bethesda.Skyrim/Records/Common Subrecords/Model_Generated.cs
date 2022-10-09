@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.AlternateTextures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlternateTexture.ErrorMask?>>?>(ExceptionExt.Combine(this.AlternateTextures?.Overall, rhs.AlternateTextures?.Overall), ExceptionExt.Combine(this.AlternateTextures?.Specific, rhs.AlternateTextures?.Specific));
+                ret.AlternateTextures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlternateTexture.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.AlternateTextures?.Overall, rhs.AlternateTextures?.Overall), Noggog.ExceptionExt.Combine(this.AlternateTextures?.Specific, rhs.AlternateTextures?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

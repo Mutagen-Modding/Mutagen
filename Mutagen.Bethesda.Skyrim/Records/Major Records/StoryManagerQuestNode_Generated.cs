@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.QuestFlags = this.QuestFlags.Combine(rhs.QuestFlags);
                 ret.MaxConcurrentQuests = this.MaxConcurrentQuests.Combine(rhs.MaxConcurrentQuests);
                 ret.MaxNumQuestsToRun = this.MaxNumQuestsToRun.Combine(rhs.MaxNumQuestsToRun);
-                ret.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), ExceptionExt.Combine(this.Quests?.Specific, rhs.Quests?.Specific));
+                ret.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), Noggog.ExceptionExt.Combine(this.Quests?.Specific, rhs.Quests?.Specific));
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }

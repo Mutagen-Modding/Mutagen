@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Navmeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Navmeshes?.Overall, rhs.Navmeshes?.Overall), ExceptionExt.Combine(this.Navmeshes?.Specific, rhs.Navmeshes?.Specific));
+                ret.Navmeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Navmeshes?.Overall, rhs.Navmeshes?.Overall), Noggog.ExceptionExt.Combine(this.Navmeshes?.Specific, rhs.Navmeshes?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

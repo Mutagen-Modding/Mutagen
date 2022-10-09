@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Property = this.Property.Combine(rhs.Property, (l, r) => l.Combine(r));
                 ret.Version = this.Version.Combine(rhs.Version);
                 ret.ObjectFormat = this.ObjectFormat.Combine(rhs.ObjectFormat);
-                ret.Scripts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), ExceptionExt.Combine(this.Scripts?.Specific, rhs.Scripts?.Specific));
+                ret.Scripts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), Noggog.ExceptionExt.Combine(this.Scripts?.Specific, rhs.Scripts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

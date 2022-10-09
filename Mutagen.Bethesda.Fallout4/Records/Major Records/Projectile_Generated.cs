@@ -2323,7 +2323,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unused = MemorySliceExt.Equal(item.Unused, rhs.Unused);
+            ret.Unused = MemorySliceExt.SequenceEqual(item.Unused, rhs.Unused);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Type = item.Type == rhs.Type;
             ret.Gravity = item.Gravity.EqualsWithin(rhs.Gravity);
@@ -2350,7 +2350,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.TracerFrequency = item.TracerFrequency == rhs.TracerFrequency;
             ret.VATSProjectile = item.VATSProjectile.Equals(rhs.VATSProjectile);
             ret.MuzzleFlashModel = string.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
-            ret.TextureFilesHashes = MemorySliceExt.Equal(item.TextureFilesHashes, rhs.TextureFilesHashes);
+            ret.TextureFilesHashes = MemorySliceExt.SequenceEqual(item.TextureFilesHashes, rhs.TextureFilesHashes);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -2621,7 +2621,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Unused) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Unused, rhs.Unused)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Unused, rhs.Unused)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Flags) ?? true))
             {
@@ -2729,7 +2729,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.SoundLevel) ?? true))
             {

@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledSpellEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledSpellEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

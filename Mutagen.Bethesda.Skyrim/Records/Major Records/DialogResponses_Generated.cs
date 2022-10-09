@@ -1096,11 +1096,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Topic = this.Topic.Combine(rhs.Topic);
                 ret.PreviousDialog = this.PreviousDialog.Combine(rhs.PreviousDialog);
                 ret.FavorLevel = this.FavorLevel.Combine(rhs.FavorLevel);
-                ret.LinkTo = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LinkTo?.Overall, rhs.LinkTo?.Overall), ExceptionExt.Combine(this.LinkTo?.Specific, rhs.LinkTo?.Specific));
+                ret.LinkTo = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LinkTo?.Overall, rhs.LinkTo?.Overall), Noggog.ExceptionExt.Combine(this.LinkTo?.Specific, rhs.LinkTo?.Specific));
                 ret.ResponseData = this.ResponseData.Combine(rhs.ResponseData);
-                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.UnknownData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponsesUnknownData.ErrorMask?>>?>(ExceptionExt.Combine(this.UnknownData?.Overall, rhs.UnknownData?.Overall), ExceptionExt.Combine(this.UnknownData?.Specific, rhs.UnknownData?.Specific));
+                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.UnknownData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponsesUnknownData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UnknownData?.Overall, rhs.UnknownData?.Overall), Noggog.ExceptionExt.Combine(this.UnknownData?.Specific, rhs.UnknownData?.Specific));
                 ret.Prompt = this.Prompt.Combine(rhs.Prompt);
                 ret.Speaker = this.Speaker.Combine(rhs.Speaker);
                 ret.WalkAwayTopic = this.WalkAwayTopic.Combine(rhs.WalkAwayTopic);
@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.Flags = EqualsMaskHelper.EqualsHelper(
                 item.Flags,
                 rhs.Flags,
@@ -2081,7 +2081,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.DATA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.Flags) ?? true))
             {

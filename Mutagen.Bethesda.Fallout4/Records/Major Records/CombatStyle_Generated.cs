@@ -2930,7 +2930,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AvoidThreatChance = item.AvoidThreatChance.EqualsWithin(rhs.AvoidThreatChance);
             ret.DodgeThreadChance = item.DodgeThreadChance.EqualsWithin(rhs.DodgeThreadChance);
             ret.EvadeThreatChance = item.EvadeThreatChance.EqualsWithin(rhs.EvadeThreatChance);
-            ret.CSMD = MemorySliceExt.Equal(item.CSMD, rhs.CSMD);
+            ret.CSMD = MemorySliceExt.SequenceEqual(item.CSMD, rhs.CSMD);
             ret.MeleeAttackStaggeredMult = item.MeleeAttackStaggeredMult.EqualsWithin(rhs.MeleeAttackStaggeredMult);
             ret.MeleePowerAttackStaggeredMult = item.MeleePowerAttackStaggeredMult.EqualsWithin(rhs.MeleePowerAttackStaggeredMult);
             ret.MeleePowerAttackBlockingMult = item.MeleePowerAttackBlockingMult.EqualsWithin(rhs.MeleePowerAttackBlockingMult);
@@ -3344,7 +3344,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMD) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CSMD, rhs.CSMD)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.CSMD, rhs.CSMD)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackStaggeredMult) ?? true))
             {

@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.EquipmentScoreMultUnarmed = item.EquipmentScoreMultUnarmed.EqualsWithin(rhs.EquipmentScoreMultUnarmed);
             ret.EquipmentScoreMultStaff = item.EquipmentScoreMultStaff.EqualsWithin(rhs.EquipmentScoreMultStaff);
             ret.AvoidThreatChance = item.AvoidThreatChance.EqualsWithin(rhs.AvoidThreatChance);
-            ret.CSMD = MemorySliceExt.Equal(item.CSMD, rhs.CSMD);
+            ret.CSMD = MemorySliceExt.SequenceEqual(item.CSMD, rhs.CSMD);
             ret.Melee = EqualsMaskHelper.EqualsHelper(
                 item.Melee,
                 rhs.Melee,
@@ -1830,7 +1830,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMD) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CSMD, rhs.CSMD)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.CSMD, rhs.CSMD)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Melee) ?? true))
             {

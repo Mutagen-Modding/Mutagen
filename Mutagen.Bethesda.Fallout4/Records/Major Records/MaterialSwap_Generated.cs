@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.TreeFolder = this.TreeFolder.Combine(rhs.TreeFolder);
-                ret.Substitutions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MaterialSubstitution.ErrorMask?>>?>(ExceptionExt.Combine(this.Substitutions?.Overall, rhs.Substitutions?.Overall), ExceptionExt.Combine(this.Substitutions?.Specific, rhs.Substitutions?.Specific));
+                ret.Substitutions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MaterialSubstitution.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Substitutions?.Overall, rhs.Substitutions?.Overall), Noggog.ExceptionExt.Combine(this.Substitutions?.Specific, rhs.Substitutions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

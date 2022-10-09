@@ -842,9 +842,9 @@ namespace Mutagen.Bethesda.Oblivion
             FaceGenData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.SymmetricGeometry = MemorySliceExt.Equal(item.SymmetricGeometry, rhs.SymmetricGeometry);
-            ret.AsymmetricGeometry = MemorySliceExt.Equal(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
-            ret.SymmetricTexture = MemorySliceExt.Equal(item.SymmetricTexture, rhs.SymmetricTexture);
+            ret.SymmetricGeometry = MemorySliceExt.SequenceEqual(item.SymmetricGeometry, rhs.SymmetricGeometry);
+            ret.AsymmetricGeometry = MemorySliceExt.SequenceEqual(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
+            ret.SymmetricTexture = MemorySliceExt.SequenceEqual(item.SymmetricTexture, rhs.SymmetricTexture);
         }
         
         public string Print(
@@ -915,15 +915,15 @@ namespace Mutagen.Bethesda.Oblivion
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SymmetricTexture, rhs.SymmetricTexture)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SymmetricTexture, rhs.SymmetricTexture)) return false;
             }
             return true;
         }

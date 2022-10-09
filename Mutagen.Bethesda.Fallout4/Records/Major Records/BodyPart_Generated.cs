@@ -2818,7 +2818,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.OnCrippleDecalCount = item.OnCrippleDecalCount == rhs.OnCrippleDecalCount;
             ret.LimbReplacementModel = string.Equals(item.LimbReplacementModel, rhs.LimbReplacementModel);
             ret.GoreTargetBone = string.Equals(item.GoreTargetBone, rhs.GoreTargetBone);
-            ret.TextureFilesHashes = MemorySliceExt.Equal(item.TextureFilesHashes, rhs.TextureFilesHashes);
+            ret.TextureFilesHashes = MemorySliceExt.SequenceEqual(item.TextureFilesHashes, rhs.TextureFilesHashes);
             ret.HitReactionStart = string.Equals(item.HitReactionStart, rhs.HitReactionStart);
             ret.HitReactionEnd = string.Equals(item.HitReactionEnd, rhs.HitReactionEnd);
             ret.GoreEffectsDismemberBloodArt = item.GoreEffectsDismemberBloodArt.Equals(rhs.GoreEffectsDismemberBloodArt);
@@ -3248,7 +3248,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.TextureFilesHashes) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.HitReactionStart) ?? true))
             {

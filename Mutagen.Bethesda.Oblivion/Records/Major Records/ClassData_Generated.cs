@@ -629,9 +629,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Versioning = this.Versioning.Combine(rhs.Versioning);
-                ret.PrimaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PrimaryAttributes?.Overall, rhs.PrimaryAttributes?.Overall), ExceptionExt.Combine(this.PrimaryAttributes?.Specific, rhs.PrimaryAttributes?.Specific));
+                ret.PrimaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PrimaryAttributes?.Overall, rhs.PrimaryAttributes?.Overall), Noggog.ExceptionExt.Combine(this.PrimaryAttributes?.Specific, rhs.PrimaryAttributes?.Specific));
                 ret.Specialization = this.Specialization.Combine(rhs.Specialization);
-                ret.SecondaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SecondaryAttributes?.Overall, rhs.SecondaryAttributes?.Overall), ExceptionExt.Combine(this.SecondaryAttributes?.Specific, rhs.SecondaryAttributes?.Specific));
+                ret.SecondaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SecondaryAttributes?.Overall, rhs.SecondaryAttributes?.Overall), Noggog.ExceptionExt.Combine(this.SecondaryAttributes?.Specific, rhs.SecondaryAttributes?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ClassServices = this.ClassServices.Combine(rhs.ClassServices);
                 ret.Training = this.Training.Combine(rhs.Training, (l, r) => l.Combine(r));

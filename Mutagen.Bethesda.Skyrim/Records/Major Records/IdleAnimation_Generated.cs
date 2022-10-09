@@ -711,10 +711,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Filename = this.Filename.Combine(rhs.Filename);
                 ret.AnimationEvent = this.AnimationEvent.Combine(rhs.AnimationEvent);
-                ret.RelatedIdles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RelatedIdles?.Overall, rhs.RelatedIdles?.Overall), ExceptionExt.Combine(this.RelatedIdles?.Specific, rhs.RelatedIdles?.Specific));
+                ret.RelatedIdles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RelatedIdles?.Overall, rhs.RelatedIdles?.Overall), Noggog.ExceptionExt.Combine(this.RelatedIdles?.Specific, rhs.RelatedIdles?.Specific));
                 ret.LoopingSecondsMin = this.LoopingSecondsMin.Combine(rhs.LoopingSecondsMin);
                 ret.LoopingSecondsMax = this.LoopingSecondsMax.Combine(rhs.LoopingSecondsMax);
                 ret.Flags = this.Flags.Combine(rhs.Flags);

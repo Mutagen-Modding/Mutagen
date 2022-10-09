@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Scene = this.Scene.Combine(rhs.Scene);
                 ret.PhaseIndex = this.PhaseIndex.Combine(rhs.PhaseIndex);
                 ret.StartPhaseForScene = this.StartPhaseForScene.Combine(rhs.StartPhaseForScene);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

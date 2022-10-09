@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Abbreviation = this.Abbreviation.Combine(rhs.Abbreviation);
                 ret.CNAM = this.CNAM.Combine(rhs.CNAM);
                 ret.Skill = this.Skill.Combine(rhs.Skill, (l, r) => l.Combine(r));
-                ret.PerkTree = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorValuePerkNode.ErrorMask?>>?>(ExceptionExt.Combine(this.PerkTree?.Overall, rhs.PerkTree?.Overall), ExceptionExt.Combine(this.PerkTree?.Specific, rhs.PerkTree?.Specific));
+                ret.PerkTree = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorValuePerkNode.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PerkTree?.Overall, rhs.PerkTree?.Overall), Noggog.ExceptionExt.Combine(this.PerkTree?.Specific, rhs.PerkTree?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Abbreviation = string.Equals(item.Abbreviation, rhs.Abbreviation);
-            ret.CNAM = MemorySliceExt.Equal(item.CNAM, rhs.CNAM);
+            ret.CNAM = MemorySliceExt.SequenceEqual(item.CNAM, rhs.CNAM);
             ret.Skill = EqualsMaskHelper.EqualsHelper(
                 item.Skill,
                 rhs.Skill,
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.CNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.CNAM, rhs.CNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Skill) ?? true))
             {

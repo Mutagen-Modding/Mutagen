@@ -2074,7 +2074,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.LimbReplacementScale = item.LimbReplacementScale.EqualsWithin(rhs.LimbReplacementScale);
             ret.LimbReplacementModel = string.Equals(item.LimbReplacementModel, rhs.LimbReplacementModel);
             ret.GoreTargetBone = string.Equals(item.GoreTargetBone, rhs.GoreTargetBone);
-            ret.TextureFilesHashes = MemorySliceExt.Equal(item.TextureFilesHashes, rhs.TextureFilesHashes);
+            ret.TextureFilesHashes = MemorySliceExt.SequenceEqual(item.TextureFilesHashes, rhs.TextureFilesHashes);
             ret.BPNDDataTypeState = item.BPNDDataTypeState == rhs.BPNDDataTypeState;
         }
         
@@ -2389,7 +2389,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.TextureFilesHashes) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.BPNDDataTypeState) ?? true))
             {

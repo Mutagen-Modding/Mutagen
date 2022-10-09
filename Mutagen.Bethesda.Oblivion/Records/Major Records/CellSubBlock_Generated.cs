@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.BlockNumber = this.BlockNumber.Combine(rhs.BlockNumber);
                 ret.GroupType = this.GroupType.Combine(rhs.GroupType);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
-                ret.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), ExceptionExt.Combine(this.Cells?.Specific, rhs.Cells?.Specific));
+                ret.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), Noggog.ExceptionExt.Combine(this.Cells?.Specific, rhs.Cells?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

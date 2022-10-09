@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

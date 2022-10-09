@@ -990,8 +990,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
@@ -1752,9 +1752,9 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
+            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
             ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
-            ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
             ret.Ingredient = item.Ingredient.Equals(rhs.Ingredient);
             ret.HarvestSound = item.HarvestSound.Equals(rhs.HarvestSound);
             ret.Production = EqualsMaskHelper.EqualsHelper(
@@ -1994,7 +1994,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.PNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.ActivateTextOverride) ?? true))
             {
@@ -2002,7 +2002,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.FNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {

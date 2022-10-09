@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ChargeTime = this.ChargeTime.Combine(rhs.ChargeTime);
                 ret.BaseEnchantment = this.BaseEnchantment.Combine(rhs.BaseEnchantment);
                 ret.WornRestrictions = this.WornRestrictions.Combine(rhs.WornRestrictions);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
                 return ret;
             }

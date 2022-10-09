@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledCreatureEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledCreatureEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Template = this.Template.Combine(rhs.Template);
                 return ret;

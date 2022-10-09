@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Index = this.Index.Combine(rhs.Index);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestLogEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.LogEntries?.Overall, rhs.LogEntries?.Overall), ExceptionExt.Combine(this.LogEntries?.Specific, rhs.LogEntries?.Specific));
+                ret.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestLogEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LogEntries?.Overall, rhs.LogEntries?.Overall), Noggog.ExceptionExt.Combine(this.LogEntries?.Specific, rhs.LogEntries?.Specific));
                 ret.INDXDataTypeState = this.INDXDataTypeState.Combine(rhs.INDXDataTypeState);
                 return ret;
             }

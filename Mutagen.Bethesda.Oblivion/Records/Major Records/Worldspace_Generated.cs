@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Road = this.Road.Combine(rhs.Road, (l, r) => l.Combine(r));
                 ret.TopCell = this.TopCell.Combine(rhs.TopCell, (l, r) => l.Combine(r));
                 ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
-                ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
+                ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), Noggog.ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2055,7 +2055,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret.ObjectBoundsMin = item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
             ret.ObjectBoundsMax = item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
             ret.Music = item.Music == rhs.Music;
-            ret.OffsetData = MemorySliceExt.Equal(item.OffsetData, rhs.OffsetData);
+            ret.OffsetData = MemorySliceExt.SequenceEqual(item.OffsetData, rhs.OffsetData);
             ret.Road = EqualsMaskHelper.EqualsHelper(
                 item.Road,
                 rhs.Road,
@@ -2292,7 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.OffsetData, rhs.OffsetData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.OffsetData, rhs.OffsetData)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
             {

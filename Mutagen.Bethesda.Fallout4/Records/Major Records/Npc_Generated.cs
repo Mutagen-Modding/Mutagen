@@ -4461,7 +4461,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.UseTemplateActors = this.UseTemplateActors.Combine(rhs.UseTemplateActors);
                 ret.BleedoutOverride = this.BleedoutOverride.Combine(rhs.BleedoutOverride);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), Noggog.ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
                 ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
                 ret.Voice = this.Voice.Combine(rhs.Voice);
                 ret.DefaultTemplate = this.DefaultTemplate.Combine(rhs.DefaultTemplate);
@@ -4469,23 +4469,23 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.LegendaryChance = this.LegendaryChance.Combine(rhs.LegendaryChance);
                 ret.TemplateActors = this.TemplateActors.Combine(rhs.TemplateActors, (l, r) => l.Combine(r));
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
+                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), Noggog.ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Skin = this.Skin.Combine(rhs.Skin);
                 ret.FarAwayModel = this.FarAwayModel.Combine(rhs.FarAwayModel);
                 ret.AttackRace = this.AttackRace.Combine(rhs.AttackRace);
-                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
+                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), Noggog.ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
                 ret.SpectatorOverridePackageList = this.SpectatorOverridePackageList.Combine(rhs.SpectatorOverridePackageList);
                 ret.ObserveDeadBodyOverridePackageList = this.ObserveDeadBodyOverridePackageList.Combine(rhs.ObserveDeadBodyOverridePackageList);
                 ret.GuardWarnOverridePackageList = this.GuardWarnOverridePackageList.Combine(rhs.GuardWarnOverridePackageList);
                 ret.CombatOverridePackageList = this.CombatOverridePackageList.Combine(rhs.CombatOverridePackageList);
                 ret.FollowerCommandPackageList = this.FollowerCommandPackageList.Combine(rhs.FollowerCommandPackageList);
                 ret.FollowerElevatorPackageList = this.FollowerElevatorPackageList.Combine(rhs.FollowerElevatorPackageList);
-                ret.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Perks?.Overall, rhs.Perks?.Overall), ExceptionExt.Combine(this.Perks?.Specific, rhs.Perks?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Perks?.Overall, rhs.Perks?.Overall), Noggog.ExceptionExt.Combine(this.Perks?.Specific, rhs.Perks?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.Aggression = this.Aggression.Combine(rhs.Aggression);
                 ret.Confidence = this.Confidence.Combine(rhs.Confidence);
                 ret.EnergyLevel = this.EnergyLevel.Combine(rhs.EnergyLevel);
@@ -4497,10 +4497,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AggroRadiusWarnOrAttack = this.AggroRadiusWarnOrAttack.Combine(rhs.AggroRadiusWarnOrAttack);
                 ret.AggroRadiusAttack = this.AggroRadiusAttack.Combine(rhs.AggroRadiusAttack);
                 ret.NoSlowApproach = this.NoSlowApproach.Combine(rhs.NoSlowApproach);
-                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
-                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), Noggog.ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
                 ret.Class = this.Class.Combine(rhs.Class);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
@@ -4509,7 +4509,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.FarAwayModelDistance = this.FarAwayModelDistance.Combine(rhs.FarAwayModelDistance);
                 ret.GearedUpWeapons = this.GearedUpWeapons.Combine(rhs.GearedUpWeapons);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
+                ret.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), Noggog.ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
                 ret.HairColor = this.HairColor.Combine(rhs.HairColor);
                 ret.FacialHairColor = this.FacialHairColor.Combine(rhs.FacialHairColor);
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
@@ -4520,7 +4520,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.HeightMax = this.HeightMax.Combine(rhs.HeightMax);
                 ret.Weight = this.Weight.Combine(rhs.Weight, (l, r) => l.Combine(r));
                 ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.SoundsFinalize = this.SoundsFinalize.Combine(rhs.SoundsFinalize);
                 ret.InheritsSoundsFrom = this.InheritsSoundsFrom.Combine(rhs.InheritsSoundsFrom);
                 ret.PowerArmorStand = this.PowerArmorStand.Combine(rhs.PowerArmorStand);
@@ -4530,10 +4530,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.CrimeFaction = this.CrimeFaction.Combine(rhs.CrimeFaction);
                 ret.HeadTexture = this.HeadTexture.Combine(rhs.HeadTexture);
                 ret.TextureLighting = this.TextureLighting.Combine(rhs.TextureLighting);
-                ret.Morphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcMorph.ErrorMask?>>?>(ExceptionExt.Combine(this.Morphs?.Overall, rhs.Morphs?.Overall), ExceptionExt.Combine(this.Morphs?.Specific, rhs.Morphs?.Specific));
-                ret.FaceTintingLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceTintingLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.FaceTintingLayers?.Overall, rhs.FaceTintingLayers?.Overall), ExceptionExt.Combine(this.FaceTintingLayers?.Specific, rhs.FaceTintingLayers?.Specific));
+                ret.Morphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcMorph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Morphs?.Overall, rhs.Morphs?.Overall), Noggog.ExceptionExt.Combine(this.Morphs?.Specific, rhs.Morphs?.Specific));
+                ret.FaceTintingLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceTintingLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceTintingLayers?.Overall, rhs.FaceTintingLayers?.Overall), Noggog.ExceptionExt.Combine(this.FaceTintingLayers?.Specific, rhs.FaceTintingLayers?.Specific));
                 ret.BodyMorphRegionValues = this.BodyMorphRegionValues.Combine(rhs.BodyMorphRegionValues, (l, r) => l.Combine(r));
-                ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>(ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
+                ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), Noggog.ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
                 ret.FacialMorphIntensity = this.FacialMorphIntensity.Combine(rhs.FacialMorphIntensity);
                 ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.ACBSDataTypeState = this.ACBSDataTypeState.Combine(rhs.ACBSDataTypeState);
@@ -6034,7 +6034,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.FacialHairColor = item.FacialHairColor.Equals(rhs.FacialHairColor);
             ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
             ret.GiftFilter = item.GiftFilter.Equals(rhs.GiftFilter);
-            ret.NAM5 = MemorySliceExt.Equal(item.NAM5, rhs.NAM5);
+            ret.NAM5 = MemorySliceExt.SequenceEqual(item.NAM5, rhs.NAM5);
             ret.HeightMin = item.HeightMin.EqualsWithin(rhs.HeightMin);
             ret.NAM7 = item.NAM7.EqualsWithin(rhs.NAM7);
             ret.HeightMax = item.HeightMax.EqualsWithin(rhs.HeightMax);
@@ -6048,7 +6048,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SoundsFinalize = MemorySliceExt.Equal(item.SoundsFinalize, rhs.SoundsFinalize);
+            ret.SoundsFinalize = MemorySliceExt.SequenceEqual(item.SoundsFinalize, rhs.SoundsFinalize);
             ret.InheritsSoundsFrom = item.InheritsSoundsFrom.Equals(rhs.InheritsSoundsFrom);
             ret.PowerArmorStand = item.PowerArmorStand.Equals(rhs.PowerArmorStand);
             ret.DefaultOutfit = item.DefaultOutfit.Equals(rhs.DefaultOutfit);
@@ -6997,7 +6997,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NAM5, rhs.NAM5)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NAM5, rhs.NAM5)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeightMin) ?? true))
             {
@@ -7029,7 +7029,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SoundsFinalize) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SoundsFinalize, rhs.SoundsFinalize)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SoundsFinalize, rhs.SoundsFinalize)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.InheritsSoundsFrom) ?? true))
             {

@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Grid = this.Grid.Combine(rhs.Grid);
                 ret.Lighting = this.Lighting.Combine(rhs.Lighting, (l, r) => l.Combine(r));
-                ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
+                ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), Noggog.ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
                 ret.MusicType = this.MusicType.Combine(rhs.MusicType);
                 ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
                 ret.Climate = this.Climate.Combine(rhs.Climate);
@@ -1292,11 +1292,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Landscape = this.Landscape.Combine(rhs.Landscape, (l, r) => l.Combine(r));
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
-                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
+                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), Noggog.ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
                 ret.TemporaryTimestamp = this.TemporaryTimestamp.Combine(rhs.TemporaryTimestamp);
-                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
+                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), Noggog.ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
                 ret.VisibleWhenDistantTimestamp = this.VisibleWhenDistantTimestamp.Combine(rhs.VisibleWhenDistantTimestamp);
-                ret.VisibleWhenDistant = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.VisibleWhenDistant?.Overall, rhs.VisibleWhenDistant?.Overall), ExceptionExt.Combine(this.VisibleWhenDistant?.Specific, rhs.VisibleWhenDistant?.Specific));
+                ret.VisibleWhenDistant = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.VisibleWhenDistant?.Overall, rhs.VisibleWhenDistant?.Overall), Noggog.ExceptionExt.Combine(this.VisibleWhenDistant?.Specific, rhs.VisibleWhenDistant?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)

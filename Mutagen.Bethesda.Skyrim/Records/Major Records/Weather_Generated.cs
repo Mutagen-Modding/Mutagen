@@ -2680,7 +2680,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.CloudTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CloudTextures?.Overall, rhs.CloudTextures?.Overall), ExceptionExt.Combine(this.CloudTextures?.Specific, rhs.CloudTextures?.Specific));
+                ret.CloudTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CloudTextures?.Overall, rhs.CloudTextures?.Overall), Noggog.ExceptionExt.Combine(this.CloudTextures?.Specific, rhs.CloudTextures?.Specific));
                 ret.DNAM = this.DNAM.Combine(rhs.DNAM);
                 ret.CNAM = this.CNAM.Combine(rhs.CNAM);
                 ret.ANAM = this.ANAM.Combine(rhs.ANAM);
@@ -2689,7 +2689,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Precipitation = this.Precipitation.Combine(rhs.Precipitation);
                 ret.VisualEffect = this.VisualEffect.Combine(rhs.VisualEffect);
                 ret.ONAM = this.ONAM.Combine(rhs.ONAM);
-                ret.Clouds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CloudLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Clouds?.Overall, rhs.Clouds?.Overall), ExceptionExt.Combine(this.Clouds?.Specific, rhs.Clouds?.Specific));
+                ret.Clouds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CloudLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Clouds?.Overall, rhs.Clouds?.Overall), Noggog.ExceptionExt.Combine(this.Clouds?.Specific, rhs.Clouds?.Specific));
                 ret.SkyUpperColor = this.SkyUpperColor.Combine(rhs.SkyUpperColor, (l, r) => l.Combine(r));
                 ret.FogNearColor = this.FogNearColor.Combine(rhs.FogNearColor, (l, r) => l.Combine(r));
                 ret.UnknownColor = this.UnknownColor.Combine(rhs.UnknownColor, (l, r) => l.Combine(r));
@@ -2731,8 +2731,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.VisualEffectEnd = this.VisualEffectEnd.Combine(rhs.VisualEffectEnd);
                 ret.WindDirection = this.WindDirection.Combine(rhs.WindDirection);
                 ret.WindDirectionRange = this.WindDirectionRange.Combine(rhs.WindDirectionRange);
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
-                ret.SkyStatics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SkyStatics?.Overall, rhs.SkyStatics?.Overall), ExceptionExt.Combine(this.SkyStatics?.Specific, rhs.SkyStatics?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.SkyStatics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SkyStatics?.Overall, rhs.SkyStatics?.Overall), Noggog.ExceptionExt.Combine(this.SkyStatics?.Specific, rhs.SkyStatics?.Specific));
                 ret.ImageSpaces = this.ImageSpaces.Combine(rhs.ImageSpaces, (l, r) => l.Combine(r));
                 ret.VolumetricLighting = this.VolumetricLighting.Combine(rhs.VolumetricLighting, (l, r) => l.Combine(r));
                 ret.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors.Combine(rhs.DirectionalAmbientLightingColors, (l, r) => l.Combine(r));
@@ -3791,14 +3791,14 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.CloudTextures,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.DNAM = MemorySliceExt.Equal(item.DNAM, rhs.DNAM);
-            ret.CNAM = MemorySliceExt.Equal(item.CNAM, rhs.CNAM);
-            ret.ANAM = MemorySliceExt.Equal(item.ANAM, rhs.ANAM);
-            ret.BNAM = MemorySliceExt.Equal(item.BNAM, rhs.BNAM);
-            ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
+            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
+            ret.CNAM = MemorySliceExt.SequenceEqual(item.CNAM, rhs.CNAM);
+            ret.ANAM = MemorySliceExt.SequenceEqual(item.ANAM, rhs.ANAM);
+            ret.BNAM = MemorySliceExt.SequenceEqual(item.BNAM, rhs.BNAM);
+            ret.LNAM = MemorySliceExt.SequenceEqual(item.LNAM, rhs.LNAM);
             ret.Precipitation = item.Precipitation.Equals(rhs.Precipitation);
             ret.VisualEffect = item.VisualEffect.Equals(rhs.VisualEffect);
-            ret.ONAM = MemorySliceExt.Equal(item.ONAM, rhs.ONAM);
+            ret.ONAM = MemorySliceExt.SequenceEqual(item.ONAM, rhs.ONAM);
             ret.Clouds = EqualsMaskHelper.SpanEqualsHelper<ICloudLayerGetter, CloudLayer.Mask<bool>>(
                 item.Clouds,
                 rhs.Clouds,
@@ -3868,8 +3868,8 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.DirectionalAmbientLightingColors,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.NAM2 = MemorySliceExt.Equal(item.NAM2, rhs.NAM2);
-            ret.NAM3 = MemorySliceExt.Equal(item.NAM3, rhs.NAM3);
+            ret.NAM2 = MemorySliceExt.SequenceEqual(item.NAM2, rhs.NAM2);
+            ret.NAM3 = MemorySliceExt.SequenceEqual(item.NAM3, rhs.NAM3);
             ret.Aurora = EqualsMaskHelper.EqualsHelper(
                 item.Aurora,
                 rhs.Aurora,
@@ -4286,23 +4286,23 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.CNAM, rhs.CNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ANAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ANAM, rhs.ANAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ANAM, rhs.ANAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.BNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.BNAM, rhs.BNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.BNAM, rhs.BNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.LNAM, rhs.LNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
             {
@@ -4314,7 +4314,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ONAM, rhs.ONAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Clouds) ?? true))
             {
@@ -4586,11 +4586,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.NAM2) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NAM2, rhs.NAM2)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NAM2, rhs.NAM2)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.NAM3) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NAM3, rhs.NAM3)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NAM3, rhs.NAM3)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Aurora) ?? true))
             {

@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.EdgeFallOff = this.EdgeFallOff.Combine(rhs.EdgeFallOff);
-                ret.RegionPointListData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RegionPointListData?.Overall, rhs.RegionPointListData?.Overall), ExceptionExt.Combine(this.RegionPointListData?.Specific, rhs.RegionPointListData?.Specific));
+                ret.RegionPointListData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RegionPointListData?.Overall, rhs.RegionPointListData?.Overall), Noggog.ExceptionExt.Combine(this.RegionPointListData?.Specific, rhs.RegionPointListData?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }

@@ -1855,25 +1855,25 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
                 ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
                 ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 ret.DrinkingWater = this.DrinkingWater.Combine(rhs.DrinkingWater);
                 ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.BenchType = this.BenchType.Combine(rhs.BenchType);
                 ret.UsesSkill = this.UsesSkill.Combine(rhs.UsesSkill);
                 ret.AssociatedForm = this.AssociatedForm.Combine(rhs.AssociatedForm);
                 ret.EnabledEntryPoints = this.EnabledEntryPoints.Combine(rhs.EnabledEntryPoints);
-                ret.MarkerEntryPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>(ExceptionExt.Combine(this.MarkerEntryPoints?.Overall, rhs.MarkerEntryPoints?.Overall), ExceptionExt.Combine(this.MarkerEntryPoints?.Specific, rhs.MarkerEntryPoints?.Specific));
+                ret.MarkerEntryPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MarkerEntryPoints?.Overall, rhs.MarkerEntryPoints?.Overall), Noggog.ExceptionExt.Combine(this.MarkerEntryPoints?.Specific, rhs.MarkerEntryPoints?.Specific));
                 ret.MarkerModel = this.MarkerModel.Combine(rhs.MarkerModel);
-                ret.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(ExceptionExt.Combine(this.MarkerParameters?.Overall, rhs.MarkerParameters?.Overall), ExceptionExt.Combine(this.MarkerParameters?.Specific, rhs.MarkerParameters?.Specific));
-                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
-                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MarkerParameters?.Overall, rhs.MarkerParameters?.Overall), Noggog.ExceptionExt.Combine(this.MarkerParameters?.Specific, rhs.MarkerParameters?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
                 ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
                 ret.WBDTDataTypeState = this.WBDTDataTypeState.Combine(rhs.WBDTDataTypeState);
                 return ret;
@@ -2770,7 +2770,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.NativeTerminal = item.NativeTerminal.Equals(rhs.NativeTerminal);
             ret.ForcedLocRefType = item.ForcedLocRefType.Equals(rhs.ForcedLocRefType);
-            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
+            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
             ret.DrinkingWater = item.DrinkingWater.Equals(rhs.DrinkingWater);
             ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.Flags = item.Flags == rhs.Flags;
@@ -3170,7 +3170,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.PNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.DrinkingWater) ?? true))
             {
