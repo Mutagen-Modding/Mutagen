@@ -422,11 +422,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkEntryPointModifyValuesCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointModifyValuesSetterCommon.Instance.RemapLinks(this, mapping);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkEntryPointModifyValuesBinaryWriteTranslation.Instance;

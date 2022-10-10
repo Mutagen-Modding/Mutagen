@@ -423,8 +423,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectArchetypeCommon.Instance.EnumerateFormLinks(this);
-        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectArchetypeSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectArchetypeCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectArchetypeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -789,7 +789,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public void RemapLinks(IMagicEffectArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.AssociationKey = RemappingMixIn.Remap(obj.AssociationKey, mapping);
+            obj.AssociationKey = FormLinkRemappingMixIn.Remap(obj.AssociationKey, mapping);
             obj.ActorValue.Relink(mapping);
         }
         

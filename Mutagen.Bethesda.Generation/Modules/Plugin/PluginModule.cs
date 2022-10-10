@@ -23,7 +23,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new CorrectnessModule());
         SubModules.Add(new ModModule());
         SubModules.Add(new ColorTypeModule());
-        SubModules.Add(new LinkModule());
+        SubModules.Add(new ContainedFormLinksModule());
         SubModules.Add(new MajorRecordModule());
         SubModules.Add(new MajorRecordEnumerationModule());
         SubModules.Add(new ContainerParentModule());
@@ -35,6 +35,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new MajorRecordContextEnumerationModule());
         SubModules.Add(new AspectInterfaceModule());
         SubModules.Add(new TypeOptionSolidifier());
+        SubModules.Add(new ContainedAssetLinksModule());
         SubModules.Add(new LinkCacheExtensionsModule());
         SubModules.Add(new DuplicateModule());
         SubModules.Add(new GameCategoryExtensionsModule());

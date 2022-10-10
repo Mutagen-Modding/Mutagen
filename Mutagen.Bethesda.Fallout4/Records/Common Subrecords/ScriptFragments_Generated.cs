@@ -489,8 +489,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptFragmentsCommon.Instance.EnumerateFormLinks(this);
-        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFragmentsSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptFragmentsCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFragmentsSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation

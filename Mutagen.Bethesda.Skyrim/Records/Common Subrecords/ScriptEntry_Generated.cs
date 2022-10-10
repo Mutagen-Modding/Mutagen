@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -501,6 +503,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptEntryCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEntrySetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ScriptEntryCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ScriptEntrySetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ScriptEntrySetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -562,6 +567,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScriptEntry :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IScriptEntry>,
         INamedRequired,
@@ -577,6 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScriptEntryGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IScriptEntryGetter>,
@@ -867,6 +874,15 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Properties.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IScriptEntry obj)
+        {
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IScriptEntry obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1029,6 +1045,19 @@ namespace Mutagen.Bethesda.Skyrim
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IScriptEntryGetter obj, Type? assetType);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IScriptEntryGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Inferred))
+            {
+                foreach (var additional in GetInferredAssetLinks(obj, assetType))
+                {
+                    yield return additional;
+                }
             }
             yield break;
         }
@@ -1261,6 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptEntryCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ScriptEntryCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

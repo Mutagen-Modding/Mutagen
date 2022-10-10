@@ -40,16 +40,8 @@ public class MajorRecordBuilder : ISpecimenBuilder
     {
         if (_modBuilder.LastCreatedConcreteMod == null) return null;
         var ret = MajorRecordInstantiator.Activator(_modBuilder.LastCreatedConcreteMod.GetNextFormKey(), _release, t);
-
-        try
-        {
-            var group = _modBuilder.LastCreatedConcreteMod.GetTopLevelGroup(t);
-            group.AddUntyped(ret);
-        }
-        catch (Exception e)
-        {
-        }
-        
+        var group = _modBuilder.LastCreatedConcreteMod.TryGetTopLevelGroup(t);
+        group?.AddUntyped(ret);
         return ret;
     }
 }

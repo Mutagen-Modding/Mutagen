@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -3989,6 +3991,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => RaceSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RaceSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -4068,6 +4073,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRace :
+        IAssetLinkContainer,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IRaceInternal>,
@@ -4185,6 +4191,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.RACE)]
     public partial interface IRaceGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -4811,6 +4818,46 @@ namespace Mutagen.Bethesda.Skyrim
             obj.HeadData?.RemapLinks(mapping);
             obj.MorphRace.Relink(mapping);
             obj.ArmorRace.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRace obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.SkeletalModel is {} SkeletalModelItem)
+            {
+                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.HeadData is {} HeadDataItem)
+            {
+                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IRace obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.SkeletalModel?.ForEach(x => x?.RemapListedAssetLinks(mapping));
+            obj.BodyData.ForEach(x => x?.RemapListedAssetLinks(mapping));
+            obj.BehaviorGraph.ForEach(x => x?.RemapListedAssetLinks(mapping));
+            obj.HeadData?.ForEach(x => x?.RemapListedAssetLinks(mapping));
         }
         
         #endregion
@@ -6157,6 +6204,40 @@ namespace Mutagen.Bethesda.Skyrim
             if (FormLinkInformation.TryFactory(obj.ArmorRace, out var ArmorRaceInfo))
             {
                 yield return ArmorRaceInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IRaceGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.SkeletalModel is {} SkeletalModelItem)
+                {
+                    foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                    {
+                        yield return item;
+                    }
+                }
+                foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.HeadData is {} HeadDataItem)
+                {
+                    foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -8159,6 +8240,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

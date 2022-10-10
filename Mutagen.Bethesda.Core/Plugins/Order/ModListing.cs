@@ -20,6 +20,9 @@ public sealed record ModListing : IModListingGetter
     public bool Ghosted => !string.IsNullOrWhiteSpace(GhostSuffix);
 
     /// <inheritdoc />
+    public string FileName => OrderUtility.GetListingFilename(ModKey, GhostSuffix);
+
+    /// <inheritdoc />
     public string GhostSuffix { get; init; } = string.Empty;
 
     public ModListing()
@@ -68,6 +71,9 @@ public sealed record ModListing<TMod> : IModListing<TMod>
 
     /// <inheritdoc />
     public string GhostSuffix { get; init; } = string.Empty;
+
+    /// <inheritdoc />
+    public string FileName => OrderUtility.GetListingFilename(ModKey, GhostSuffix);
     
     /// <inheritdoc cref="IModListing{TMod}.Mod" />
     public TMod? Mod { get; set; }

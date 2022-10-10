@@ -1,12 +1,14 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using Noggog.StructuredStrings;
 
@@ -123,4 +125,12 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
     IEnumerable<TRhs> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TRhs>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor, TRhs>(throwIfUnknown: throwIfUnknown);
     [DebuggerStepThrough]
     IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed, 
+        IAssetLinkCache? linkCache = null, 
+        Type? assetType = null)
+    {
+        return _groupMerge.EnumerateAssetLinks(queryCategories, linkCache, assetType);
+    }
 }

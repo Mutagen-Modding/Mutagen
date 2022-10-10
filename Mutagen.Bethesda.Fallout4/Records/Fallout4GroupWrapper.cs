@@ -2,9 +2,13 @@ using System.Collections;
 using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
@@ -125,4 +129,12 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
     IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
 
     public ILoquiRegistration ContainedRecordRegistration => _groupMerge.ContainedRecordRegistration;
+
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed, 
+        IAssetLinkCache? linkCache = null, 
+        Type? assetType = null)
+    {
+        return _groupMerge.EnumerateAssetLinks(queryCategories, linkCache, assetType);
+    }
 }

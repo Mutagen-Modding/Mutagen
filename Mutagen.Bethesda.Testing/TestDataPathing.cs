@@ -40,6 +40,7 @@ public class TestDataPathing
     public static string SkyrimPlacedObjectReflectedWaterMissingData = "Files/Skyrim/PlacedObjectReflectedWaterMissingData.esp";
     public static string SubgraphOutOfOrder = "Files/Fallout4/SubgraphOutOfOrder.esp";
     public static string SkyrimConditionWithTwoStrings = "Files/Skyrim/ConditionWithTwoStrings.esp";
+    public static string VoiceTypeTesting = "Files/Skyrim/VoiceTypeTestPlugin.esm";
     public static string CountDisagreesWithReality = "Files/Core/CountDisagreesWithReality.esp";
     public static string HeaderOverflow = "Plugins/Binary/Headers/ModHeaderOverflow";
 

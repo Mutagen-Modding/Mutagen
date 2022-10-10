@@ -54,6 +54,7 @@ public class RecordGeneratorProvider : IGenerationConstructor
         gen.AddTypeAssociation<GenderedType>("Gendered");
         gen.AddTypeAssociation<BreakType>("Break");
         gen.AddTypeAssociation<MarkerType>("Marker");
+        gen.AddTypeAssociation<AssetLinkType>("AssetLink");
         gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, EnumType>();
         gen.ReplaceTypeAssociation<Loqui.Generation.StringType, StringType>();
         gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, MutagenLoquiType>();

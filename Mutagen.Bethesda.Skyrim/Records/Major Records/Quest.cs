@@ -1,8 +1,11 @@
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Noggog;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.Skyrim;
@@ -39,6 +42,18 @@ public partial class Quest
     public enum TargetFlag
     {
         CompassMarkerIgnoresLocks = 0x1,
+    }
+}
+
+partial class QuestCommon
+{
+    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IQuestGetter obj, Type? assetType)
+    {
+        if (obj.Flags.HasFlag(Quest.Flag.StartGameEnabled))
+        {
+            yield return new AssetLink<SkyrimSeqAssetType>(
+                Path.Combine($"{obj.FormKey.ModKey.Name}.seq"));
+        }
     }
 }
 

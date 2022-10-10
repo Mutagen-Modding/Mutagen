@@ -7,17 +7,21 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -50,12 +54,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LargeIconFilename
-        public String LargeIconFilename { get; set; } = string.Empty;
+        public AssetLink<SkyrimTextureAssetType> LargeIconFilename { get; set; } = new AssetLink<SkyrimTextureAssetType>();
+        AssetLinkGetter<SkyrimTextureAssetType> IIconsGetter.LargeIconFilename => this.LargeIconFilename;
         #endregion
         #region SmallIconFilename
-        public String? SmallIconFilename { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? SmallIconFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IIconsGetter.SmallIconFilename => this.SmallIconFilename;
+        AssetLinkGetter<SkyrimTextureAssetType>? IIconsGetter.SmallIconFilename => this.SmallIconFilename;
         #endregion
 
         #region To String
@@ -385,6 +390,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => IconsCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => IconsSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => IconsSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => IconsBinaryWriteTranslation.Instance;
@@ -444,15 +455,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IIcons :
+        IAssetLinkContainer,
         IIconsGetter,
         ILoquiObjectSetter<IIcons>
     {
-        new String LargeIconFilename { get; set; }
-        new String? SmallIconFilename { get; set; }
+        new AssetLink<SkyrimTextureAssetType> LargeIconFilename { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? SmallIconFilename { get; set; }
     }
 
     public partial interface IIconsGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IIconsGetter>
     {
@@ -463,8 +476,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Icons_Registration.Instance;
-        String LargeIconFilename { get; }
-        String? SmallIconFilename { get; }
+        AssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? SmallIconFilename { get; }
 
     }
 
@@ -733,13 +746,29 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IIcons item)
         {
             ClearPartial();
-            item.LargeIconFilename = string.Empty;
+            item.LargeIconFilename.SetToNull();
             item.SmallIconFilename = default;
         }
         
         #region Mutagen
         public void RemapLinks(IIcons obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IIcons obj)
+        {
+            yield return obj.LargeIconFilename;
+            if (obj.SmallIconFilename != null)
+            {
+                yield return obj.SmallIconFilename;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IIcons obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            obj.LargeIconFilename.Relink(mapping);
+            obj.SmallIconFilename?.Relink(mapping);
         }
         
         #endregion
@@ -784,8 +813,8 @@ namespace Mutagen.Bethesda.Skyrim
             Icons.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
-            ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
+            ret.LargeIconFilename = object.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
+            ret.SmallIconFilename = object.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
         }
         
         public string Print(
@@ -850,11 +879,11 @@ namespace Mutagen.Bethesda.Skyrim
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Icons_FieldIndex.LargeIconFilename) ?? true))
             {
-                if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
+                if (!object.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Icons_FieldIndex.SmallIconFilename) ?? true))
             {
-                if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+                if (!object.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
             }
             return true;
         }
@@ -884,6 +913,19 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IIconsGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                yield return obj.LargeIconFilename;
+                if (obj.SmallIconFilename != null)
+                {
+                    yield return obj.SmallIconFilename;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -899,14 +941,8 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)Icons_FieldIndex.LargeIconFilename) ?? true))
-            {
-                item.LargeIconFilename = rhs.LargeIconFilename;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Icons_FieldIndex.SmallIconFilename) ?? true))
-            {
-                item.SmallIconFilename = rhs.SmallIconFilename;
-            }
+            item.LargeIconFilename.RawPath = rhs.LargeIconFilename.RawPath;
+            item.SmallIconFilename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.SmallIconFilename, rhs.SmallIconFilename);
         }
         
         #endregion
@@ -1006,12 +1042,12 @@ namespace Mutagen.Bethesda.Skyrim
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LargeIconFilename,
+                item: item.LargeIconFilename.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SmallIconFilename,
+                item: item.SmallIconFilename?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MICO),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -1060,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)Icons_FieldIndex.LargeIconFilename, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LargeIconFilename = StringBinaryTranslation.Instance.Parse(
+                    item.LargeIconFilename.RawPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Icons_FieldIndex.LargeIconFilename;
@@ -1068,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.MICO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SmallIconFilename = StringBinaryTranslation.Instance.Parse(
+                    item.SmallIconFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Icons_FieldIndex.SmallIconFilename;
@@ -1127,6 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => IconsCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => IconsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1143,11 +1180,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region LargeIconFilename
         private int? _LargeIconFilenameLocation;
-        public String LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public AssetLinkGetter<SkyrimTextureAssetType> LargeIconFilename => _LargeIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<SkyrimTextureAssetType>.Null;
         #endregion
         #region SmallIconFilename
         private int? _SmallIconFilenameLocation;
-        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<SkyrimTextureAssetType>? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

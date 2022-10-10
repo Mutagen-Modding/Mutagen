@@ -1,4 +1,3 @@
-using Ionic.Zlib;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -6,12 +5,13 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Noggog;
-using System.Buffers.Binary;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Cache;
 
 namespace Mutagen.Bethesda.Plugins.Records;
 
@@ -153,6 +153,17 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
 
     /// <inheritdoc />
     public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
+        
+    /// <inheritdoc />
+    public abstract IEnumerable<IAssetLink> EnumerateListedAssetLinks();
+
+    /// <inheritdoc />
+    public abstract void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping);
+
+    public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
+        IAssetLinkCache? linkCache = null,
+        Type? assetType = null);
 }
 
 internal static class GroupRecordTypeGetter<T>
@@ -338,6 +349,11 @@ internal abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGrou
     public Type ContainedRecordType => typeof(TMajor);
 
     public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
+
+    public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
+        AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
+        IAssetLinkCache? linkCache = null,
+        Type? assetType = null);
 
     public bool ContainsKey(FormKey key)
     {

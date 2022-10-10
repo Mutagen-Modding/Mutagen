@@ -7,8 +7,10 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -22,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -57,15 +60,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region CloudTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String[] _CloudTextures = new String[29];
-        public String[] CloudTextures
+        private IAssetLink<SkyrimTextureAssetType>[] _CloudTextures = new IAssetLink<SkyrimTextureAssetType>[29];
+        public IAssetLink<SkyrimTextureAssetType>[] CloudTextures
         {
             get => this._CloudTextures;
             init => this._CloudTextures = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<String?> IWeatherGetter.CloudTextures => _CloudTextures;
+        ReadOnlyMemorySlice<IAssetLinkGetter<SkyrimTextureAssetType>?> IWeatherGetter.CloudTextures => _CloudTextures;
         #endregion
 
         #endregion
@@ -3020,6 +3023,9 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WeatherCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WeatherSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WeatherSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -3099,12 +3105,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWeather :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IWeatherInternal>,
         ISkyrimMajorRecordInternal,
         IWeatherGetter
     {
-        new String?[] CloudTextures { get; }
+        new IAssetLink<SkyrimTextureAssetType>?[] CloudTextures { get; }
         new MemorySlice<Byte>? DNAM { get; set; }
         new MemorySlice<Byte>? CNAM { get; set; }
         new MemorySlice<Byte>? ANAM { get; set; }
@@ -3179,13 +3186,14 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.WTHR)]
     public partial interface IWeatherGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IWeatherGetter>,
         IMapsToGetter<IWeatherGetter>
     {
         static new ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
-        ReadOnlyMemorySlice<String?> CloudTextures { get; }
+        ReadOnlyMemorySlice<IAssetLinkGetter<SkyrimTextureAssetType>?> CloudTextures { get; }
         ReadOnlyMemorySlice<Byte>? DNAM { get; }
         ReadOnlyMemorySlice<Byte>? CNAM { get; }
         ReadOnlyMemorySlice<Byte>? ANAM { get; }
@@ -3686,6 +3694,33 @@ namespace Mutagen.Bethesda.Skyrim
             obj.SunGlareLensFlare.Relink(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWeather obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CloudTextures.NotNull())
+            {
+                yield return item;
+            }
+            if (obj.Aurora is {} AuroraItems)
+            {
+                foreach (var item in AuroraItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IWeather obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.CloudTextures.ForEach(x => x?.Relink(mapping));
+            obj.Aurora?.RemapListedAssetLinks(mapping);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -3751,10 +3786,10 @@ namespace Mutagen.Bethesda.Skyrim
             Weather.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.CloudTextures = EqualsMaskHelper.SpanEqualsHelper<String?>(
+            ret.CloudTextures = EqualsMaskHelper.SpanEqualsHelper<IAssetLinkGetter<SkyrimTextureAssetType>?>(
                 item.CloudTextures,
                 rhs.CloudTextures,
-                (l, r) => string.Equals(l, r),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.DNAM = MemorySliceExt.Equal(item.DNAM, rhs.DNAM);
             ret.CNAM = MemorySliceExt.Equal(item.CNAM, rhs.CNAM);
@@ -4247,7 +4282,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual<String>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
+                if (!MemoryExtensions.SequenceEqual<IAssetLinkGetter<SkyrimTextureAssetType>>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
@@ -4778,6 +4813,29 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWeatherGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.CloudTextures.NotNull())
+                {
+                    yield return item;
+                }
+                if (obj.Aurora is {} AuroraItems)
+                {
+                    foreach (var item in AuroraItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public Weather Duplicate(
             IWeatherGetter item,
@@ -4851,7 +4909,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                rhs.CloudTextures.Span.CopyTo(item.CloudTextures.AsSpan());
+                item.CloudTextures.SetTo(rhs.CloudTextures.Select(x => x?.AsSetter()));
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
@@ -6605,6 +6663,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WeatherCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -18,13 +18,16 @@ public class FileSyncedLoadOrderListingVM : ViewModel, IModListing
     public bool Enabled { get; set; }
         
     [Reactive]
-    public string GhostSuffix { get; set; } = string.Empty;
+    public string GhostSuffix { get; set; }
 
     private readonly ObservableAsPropertyHelper<bool> _existsOnDisk;
     public bool ExistsOnDisk => _existsOnDisk.Value;
 
-    private readonly ObservableAsPropertyHelper<bool> _Ghosted;
-    public bool Ghosted => _Ghosted.Value;
+    private readonly ObservableAsPropertyHelper<bool> _ghosted;
+    public bool Ghosted => _ghosted.Value;
+
+    private readonly ObservableAsPropertyHelper<string> _fileName;
+    public string FileName => _fileName.Value;
 
     public FileSyncedLoadOrderListingVM(
         IDataDirectoryProvider dataDirectoryContext,
@@ -44,9 +47,13 @@ public class FileSyncedLoadOrderListingVM : ViewModel, IModListing
                         return ret;
                     }))
             .ToGuiProperty(this, nameof(ExistsOnDisk), initialValue: exists);
-        _Ghosted = this.WhenAnyValue(x => x.GhostSuffix)
+        _ghosted = this.WhenAnyValue(x => x.GhostSuffix)
             .Select(x => !x.IsNullOrWhitespace())
             .ToGuiProperty(this, nameof(Ghosted));
+        _fileName = this.WhenAnyValue( x => x.GhostSuffix)
+            .Skip(1)
+            .Select(x => OrderUtility.GetListingFilename(ModKey, x))
+            .ToGuiProperty(this, nameof(FileName), OrderUtility.GetListingFilename(ModKey, GhostSuffix));
     }
 
     public override string ToString()

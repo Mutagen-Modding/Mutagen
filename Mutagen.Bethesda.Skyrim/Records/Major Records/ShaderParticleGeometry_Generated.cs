@@ -7,12 +7,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -21,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -110,9 +114,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region ParticleTexture
-        public String? ParticleTexture { get; set; }
+        public AssetLink<SkyrimTextureAssetType>? ParticleTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IShaderParticleGeometryGetter.ParticleTexture => this.ParticleTexture;
+        AssetLinkGetter<SkyrimTextureAssetType>? IShaderParticleGeometryGetter.ParticleTexture => this.ParticleTexture;
         #endregion
         #region DATADataTypeState
         public ShaderParticleGeometry.DATADataType DATADataTypeState { get; set; } = default;
@@ -845,6 +849,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ShaderParticleGeometryCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ShaderParticleGeometrySetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ShaderParticleGeometrySetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -924,6 +931,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IShaderParticleGeometry :
+        IAssetLinkContainer,
         ILoquiObjectSetter<IShaderParticleGeometryInternal>,
         IShaderParticleGeometryGetter,
         ISkyrimMajorRecordInternal
@@ -940,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ShaderParticleGeometry.TypeEnum Type { get; set; }
         new UInt32 BoxSize { get; set; }
         new Single ParticleDensity { get; set; }
-        new String? ParticleTexture { get; set; }
+        new AssetLink<SkyrimTextureAssetType>? ParticleTexture { get; set; }
         new ShaderParticleGeometry.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -954,6 +962,7 @@ namespace Mutagen.Bethesda.Skyrim
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts.SPGD)]
     public partial interface IShaderParticleGeometryGetter :
         ISkyrimMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IShaderParticleGeometryGetter>,
         IMapsToGetter<IShaderParticleGeometryGetter>
@@ -971,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
         ShaderParticleGeometry.TypeEnum Type { get; }
         UInt32 BoxSize { get; }
         Single ParticleDensity { get; }
-        String? ParticleTexture { get; }
+        AssetLinkGetter<SkyrimTextureAssetType>? ParticleTexture { get; }
         ShaderParticleGeometry.DATADataType DATADataTypeState { get; }
 
     }
@@ -1282,6 +1291,25 @@ namespace Mutagen.Bethesda.Skyrim
             base.RemapLinks(obj, mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IShaderParticleGeometry obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.ParticleTexture != null)
+            {
+                yield return obj.ParticleTexture;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IShaderParticleGeometry obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.ParticleTexture?.Relink(mapping);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1359,7 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Type = item.Type == rhs.Type;
             ret.BoxSize = item.BoxSize == rhs.BoxSize;
             ret.ParticleDensity = item.ParticleDensity.EqualsWithin(rhs.ParticleDensity);
-            ret.ParticleTexture = string.Equals(item.ParticleTexture, rhs.ParticleTexture);
+            ret.ParticleTexture = object.Equals(item.ParticleTexture, rhs.ParticleTexture);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1565,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
             {
-                if (!string.Equals(lhs.ParticleTexture, rhs.ParticleTexture)) return false;
+                if (!object.Equals(lhs.ParticleTexture, rhs.ParticleTexture)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -1644,6 +1672,22 @@ namespace Mutagen.Bethesda.Skyrim
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IShaderParticleGeometryGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.ParticleTexture != null)
+                {
+                    yield return obj.ParticleTexture;
+                }
             }
             yield break;
         }
@@ -1767,10 +1811,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ParticleDensity = rhs.ParticleDensity;
             }
-            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
-            {
-                item.ParticleTexture = rhs.ParticleTexture;
-            }
+            item.ParticleTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.ParticleTexture, rhs.ParticleTexture);
             if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
@@ -1980,7 +2021,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ParticleTexture,
+                item: item.ParticleTexture?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -2117,7 +2158,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParticleTexture = StringBinaryTranslation.Instance.Parse(
+                    item.ParticleTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
@@ -2166,6 +2207,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ShaderParticleGeometryCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ShaderParticleGeometryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2244,7 +2286,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ParticleTexture
         private int? _ParticleTextureLocation;
-        public String? ParticleTexture => _ParticleTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<SkyrimTextureAssetType>? ParticleTexture => _ParticleTextureLocation.HasValue ? new AssetLinkGetter<SkyrimTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

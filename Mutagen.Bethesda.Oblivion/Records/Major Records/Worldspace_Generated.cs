@@ -7,11 +7,13 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -1039,6 +1041,9 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WorldspaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WorldspaceSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WorldspaceSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1118,6 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWorldspace :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceInternal>,
         IMajorRecordEnumerable,
@@ -1157,6 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts.WRLD)]
     public partial interface IWorldspaceGetter :
         IOblivionMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IWorldspaceGetter>,
@@ -1936,6 +1943,34 @@ namespace Mutagen.Bethesda.Oblivion
                         break;
                     }
             }
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWorldspace obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.TopCell is IAssetLinkContainer TopCelllinkCont)
+            {
+                foreach (var item in TopCelllinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapListedAssetLinks(IWorldspace obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        {
+            base.RemapListedAssetLinks(obj, mapping);
+            obj.TopCell?.RemapListedAssetLinks(mapping);
+            obj.SubCells.ForEach(x => x.RemapListedAssetLinks(mapping));
         }
         
         #endregion
@@ -3160,6 +3195,30 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWorldspaceGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.TopCell is IAssetLinkContainerGetter TopCelllinkCont)
+                {
+                    foreach (var item in TopCelllinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public Worldspace Duplicate(
             IWorldspaceGetter item,
@@ -3844,6 +3903,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WorldspaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

@@ -8,6 +8,8 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 
@@ -533,5 +535,18 @@ internal static class PluginUtilityTranslation
         {
             return stream.Position - offset;
         }
+    }
+
+    internal static AssetLink<TAssetType>? AssetNullableDeepCopyIn<TAssetType>(AssetLink<TAssetType>? lhs, IAssetLinkGetter<TAssetType>? rhs)
+        where TAssetType : IAssetType
+    {
+        if (rhs == null) return null;
+        if (lhs == null)
+        {
+            return new AssetLink<TAssetType>(rhs.RawPath);
+        }
+
+        lhs.RawPath = rhs.RawPath;
+        return lhs;
     }
 }

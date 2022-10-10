@@ -1,9 +1,12 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Collections;
+using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Skyrim;
@@ -48,6 +51,60 @@ internal class ArmorAddonWeightSliderContainer : IGenderedItem<bool>
     }
 
     IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+}
+
+partial class ArmorAddonCommon
+{
+    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType)
+    {
+        if (assetType != null && assetType != typeof(SkyrimModelAssetType)) yield break;
+        
+        IEnumerable<IAssetLink> TryToAddWeightModel(string path)
+        {
+            var name = Path.GetFileNameWithoutExtension(path);
+            if (name.Length < 3) yield break;
+
+            IAssetLink ReplaceWeightSuffix(string newFileSuffix)
+            {
+                var dir = Path.GetDirectoryName(path);
+                var newFile = $"{name[..^2]}{newFileSuffix}.{SkyrimModelAssetType.Instance.FileExtensions.First()}";
+                return dir == null ? new AssetLink<SkyrimModelAssetType>(newFile) : new AssetLink<SkyrimModelAssetType>(Path.Combine(dir, newFile));
+            }
+
+            const string zeroSuffix = "_0";
+            const string oneSuffix = "_1";
+            if (name.EndsWith(oneSuffix))
+            {
+                yield return ReplaceWeightSuffix(zeroSuffix);
+            }
+            else if (name.EndsWith(zeroSuffix))
+            {
+                yield return ReplaceWeightSuffix(oneSuffix);
+            }
+        }
+
+        if (obj.WorldModel?.Female != null)
+        {
+            foreach (var assetLink in TryToAddWeightModel(obj.WorldModel.Female.File.RawPath)) yield return assetLink;
+        }
+
+        if (obj.WorldModel?.Male != null)
+        {
+            foreach (var assetLink in TryToAddWeightModel(obj.WorldModel.Male.File.RawPath)) yield return assetLink;
+        }
+
+        if (obj.FirstPersonModel?.Female != null)
+        {
+            foreach (var assetLink in TryToAddWeightModel(obj.FirstPersonModel.Female.File.RawPath))
+                yield return assetLink;
+        }
+
+        if (obj.FirstPersonModel?.Male != null)
+        {
+            foreach (var assetLink in TryToAddWeightModel(obj.FirstPersonModel.Male.File.RawPath))
+                yield return assetLink;
+        }
+    }
 }
 
 partial class ArmorAddonBinaryCreateTranslation
