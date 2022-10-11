@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Mutagen.Bethesda.Assets;
 
@@ -85,7 +85,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
     public bool IsNull => RawPath == IAssetLinkGetter.NullPath;
 
     [return: NotNullIfNotNull("asset")]
-    public static implicit operator string? (AssetLinkGetter<TAssetType> asset) => asset?.RawPath;
+    public static implicit operator string? (AssetLinkGetter<TAssetType>? asset) => asset?.RawPath;
 
     [return: NotNullIfNotNull("path")]
     public static implicit operator AssetLinkGetter<TAssetType>?(string? path) => path == null ? null : new(path);
