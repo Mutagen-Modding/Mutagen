@@ -179,6 +179,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Assets\AssetLinkExt.cs" />
     <Compile Include="Plugins\Assets\AssetLinkQuery.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
