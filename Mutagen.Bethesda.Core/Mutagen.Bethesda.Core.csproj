@@ -31,16 +31,16 @@
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.16" />
     <PackageReference Include="Loqui" Version="2.50.1.1-dev" />
     <PackageReference Include="Noggog.CSharpExt" Version="2.50.1.1-dev" />
-    <PackageReference Include="NuGetizer" Version="0.8.0">
+    <PackageReference Include="NuGetizer" Version="0.9.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SharpZipLib" Version="1.3.3" />
+    <PackageReference Include="SharpZipLib" Version="1.4.0" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
-    <PackageReference Include="GameFinder" Version="1.7.3" />
-    <PackageReference Include="GameFinder.StoreHandlers.GOG" Version="1.7.3" />
-    <PackageReference Include="GameFinder.StoreHandlers.Steam" Version="1.7.3" />
+    <PackageReference Include="GameFinder" Version="1.8.0" />
+    <PackageReference Include="GameFinder.StoreHandlers.GOG" Version="2.0.0" />
+    <PackageReference Include="GameFinder.StoreHandlers.Steam" Version="2.0.0" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
