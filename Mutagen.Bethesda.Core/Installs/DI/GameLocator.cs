@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using GameFinder;
 using GameFinder.StoreHandlers.GOG;
 using GameFinder.StoreHandlers.Steam;
@@ -10,13 +10,13 @@ namespace Mutagen.Bethesda.Installs.DI;
 
 public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 {
-    private readonly Lazy<GetResponse<SteamHandler>> _steamHandler;
-    private readonly Lazy<GetResponse<GOGHandler>> _gogHandler;
+    private readonly Lazy<SteamHandler> _steamHandler;
+    private readonly Lazy<GOGHandler> _gogHandler;
         
     public GameLocator()
     {
-        _steamHandler = new(TryFactory<SteamHandler, SteamGame>);
-        _gogHandler = new(TryFactory<GOGHandler, GOGGame>);
+        _steamHandler = new Lazy<SteamHandler>(() => new SteamHandler());
+        _gogHandler = new(() => new GOGHandler());
     }
 
     /// <summary>
@@ -49,22 +49,22 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
             yield return regisPath;
         }
             
-        var steamHandler = _steamHandler.Value;
-        if (steamHandler.Succeeded)
+        foreach (var game in _steamHandler.Value.FindAllGames()
+            .Where(x => x.Error.IsNullOrWhitespace())
+            .Select(x => x.Game)
+            .NotNull()
+            .Where(x => x.Equals(Games[release].SteamId)))
         {
-            foreach (var game in steamHandler.Value.Games.Where(x => x.ID.Equals(Games[release].SteamId)))
-            {
-                yield return game.Path;
-            }
+            yield return game.Path;
         }
-            
-        var gogHandler = _gogHandler.Value;
-        if (gogHandler.Succeeded)
+
+        foreach (var game in _gogHandler.Value.FindAllGames()
+            .Where(x => x.Error.IsNullOrWhitespace())
+            .Select(x => x.Game)
+            .NotNull()
+            .Where(x => x.Id.Equals(Games[release].GogId)))
         {
-            foreach (var game in gogHandler.Value.Games.Where(x => x.GameID.Equals(Games[release].GogId)))
-            {
-                yield return game.Path;
-            }
+            yield return game.Path;
         }
     }
         

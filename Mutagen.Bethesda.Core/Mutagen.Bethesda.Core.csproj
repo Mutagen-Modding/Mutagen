@@ -39,8 +39,8 @@
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="GameFinder" Version="1.8.0" />
-    <PackageReference Include="GameFinder.StoreHandlers.GOG" Version="2.0.0" />
-    <PackageReference Include="GameFinder.StoreHandlers.Steam" Version="2.0.0" />
+    <PackageReference Include="GameFinder.StoreHandlers.GOG" Version="2.2.1" />
+    <PackageReference Include="GameFinder.StoreHandlers.Steam" Version="2.2.1" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
