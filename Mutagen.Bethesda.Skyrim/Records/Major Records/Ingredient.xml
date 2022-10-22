@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Ingredient" recordType="INGR" baseClass="SkyrimMajorRecord" objType="Record" GUID="03907af3-2557-45c7-9c9e-c22854b4ffe6" ID="164">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >

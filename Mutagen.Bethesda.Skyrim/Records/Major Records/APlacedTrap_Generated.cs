@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(
+            var triggers = RecordCollection.Factory(
                 RecordTypes.VMAD,
                 RecordTypes.NAME,
                 RecordTypes.XEZN,
@@ -1788,7 +1788,36 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.PGRE,
                 RecordTypes.PHZD,
                 RecordTypes.PMIS);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var all = RecordCollection.Factory(
+                RecordTypes.VMAD,
+                RecordTypes.NAME,
+                RecordTypes.XEZN,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XHTW,
+                RecordTypes.XFVC,
+                RecordTypes.XPWR,
+                RecordTypes.XLKR,
+                RecordTypes.XAPD,
+                RecordTypes.XESP,
+                RecordTypes.XEMI,
+                RecordTypes.XMBR,
+                RecordTypes.XIS2,
+                RecordTypes.XLRT,
+                RecordTypes.XLRL,
+                RecordTypes.XLOD,
+                RecordTypes.XSCL,
+                RecordTypes.DATA,
+                RecordTypes.PARW,
+                RecordTypes.PBEA,
+                RecordTypes.PFLA,
+                RecordTypes.PCON,
+                RecordTypes.PBAR,
+                RecordTypes.PGRE,
+                RecordTypes.PHZD,
+                RecordTypes.PMIS,
+                RecordTypes.XXXX);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APlacedTrapBinaryWriteTranslation);
         #region Interface
@@ -2984,7 +3013,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             APlacedTrapBinaryWriteTranslation.WriteBinaryTrapForm(
                 writer: writer,
@@ -3182,7 +3211,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)APlacedTrap_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
@@ -3308,6 +3339,11 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Placement = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
                     return (int)APlacedTrap_FieldIndex.Placement;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -3372,8 +3408,9 @@ namespace Mutagen.Bethesda.Skyrim
         public APlacedTrap.MajorFlag MajorFlags => (APlacedTrap.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region TrapForm
@@ -3466,6 +3503,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)APlacedTrap_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
@@ -3595,6 +3637,11 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     _PlacementLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)APlacedTrap_FieldIndex.Placement;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

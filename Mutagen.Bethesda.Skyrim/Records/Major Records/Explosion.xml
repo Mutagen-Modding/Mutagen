@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Explosion" recordType="EXPL" objType="Record" baseClass="SkyrimMajorRecord" GUID="ce166e0d-db1e-4510-b8f6-af429a302425" ID="109">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />

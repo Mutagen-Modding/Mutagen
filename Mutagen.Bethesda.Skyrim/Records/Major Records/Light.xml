@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Light" recordType="LIGH" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="749a2492-52b8-4580-ac1c-b645cabfd20b" ID="107">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />

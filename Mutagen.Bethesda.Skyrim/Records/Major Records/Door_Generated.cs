@@ -1209,6 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.DOOR,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
@@ -2110,7 +2111,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
@@ -2241,7 +2242,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Door_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -2299,6 +2302,11 @@ namespace Mutagen.Bethesda.Skyrim
                         reader: frame,
                         length: contentLength);
                     return (int)Door_FieldIndex.Flags;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2362,8 +2370,9 @@ namespace Mutagen.Bethesda.Skyrim
         public Door.MajorFlag MajorFlags => (Door.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
@@ -2473,6 +2482,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Door_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -2522,6 +2536,11 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return (int)Door_FieldIndex.Flags;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

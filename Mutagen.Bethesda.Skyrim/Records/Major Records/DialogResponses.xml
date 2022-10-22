@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="39a0ccd0-da05-4f90-b32a-20fcdb7a9ea3" ID="350">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <ByteArray name="DATA" recordType="DATA" />
       <RefDirect name="Flags" refName="DialogResponseFlags" />
       <FormLink name="Topic" recordType="TPIC" refName="DialogTopic" />

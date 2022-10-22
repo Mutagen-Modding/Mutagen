@@ -1451,6 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.SCEN,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.FNAM,
                 RecordTypes.HNAM,
                 RecordTypes.NAM0,
@@ -2486,7 +2487,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((SceneAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             EnumBinaryTranslation<Scene.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -2651,7 +2652,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.SceneAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.SceneAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Scene_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FNAM:
@@ -2739,6 +2742,11 @@ namespace Mutagen.Bethesda.Skyrim
                             transl: Condition.TryCreateFromBinary));
                     return (int)Scene_FieldIndex.Conditions;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -2800,8 +2808,9 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public ISceneAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? SceneAdapterBinaryOverlay.SceneAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public ISceneAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? SceneAdapterBinaryOverlay.SceneAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
@@ -2898,6 +2907,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Scene_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FNAM:
@@ -2982,6 +2996,11 @@ namespace Mutagen.Bethesda.Skyrim
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Scene_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

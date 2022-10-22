@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Quest" recordType="QUST" objType="Record" baseClass="SkyrimMajorRecord" inferredAssets="true" GUID="480d7a0d-3841-44f9-9a48-b53a29731f22" ID="351">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="QuestAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="QuestAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <Data recordType="DNAM">
         <Fields>

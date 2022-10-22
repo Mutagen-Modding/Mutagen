@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Scene" recordType="SCEN" objType="Record" baseClass="SkyrimMajorRecord" GUID="1b4d8bf2-2bfe-484e-9447-4dda9d66a0f1" ID="464">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="SceneAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="SceneAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <Enum name="Flags" enumName="Scene.Flag" byteLength="4" recordType="FNAM" />
       <RefList name="Phases" refName="ScenePhase" />
       <RefList name="Actors" refName="SceneActor" />

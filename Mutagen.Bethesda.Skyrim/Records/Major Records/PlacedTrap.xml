@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="APlacedTrap" baseClass="SkyrimMajorRecord" abstract="true" objType="Record" majorFlag="true" GUID="29f40f03-4046-4b2d-b061-b0c5c48d253b" ID="294">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <CustomLogic name="TrapForm" byteLength="4" recordType="NAME" />
       <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />
       <FormLink name="Owner" recordType="XOWN">
