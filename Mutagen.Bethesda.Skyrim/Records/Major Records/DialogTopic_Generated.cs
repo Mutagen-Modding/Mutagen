@@ -1520,6 +1520,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.TIFC,
                 RecordTypes.INFO,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.ENAM,
                 RecordTypes.TPIC,
                 RecordTypes.CNAM,

@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Perk" recordType="PERK" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="dd36c48f-42dc-4b8d-82d7-4e1b3eb9dc3c" ID="114">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="PerkAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="PerkAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
       <RefDirect name="Icons" refName="Icons" />

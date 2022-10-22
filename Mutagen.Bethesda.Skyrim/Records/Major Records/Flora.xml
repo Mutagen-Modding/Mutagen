@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Flora" recordType="FLOR" baseClass="SkyrimMajorRecord" objType="Record" GUID="004a650f-053a-425f-8eb9-2efda89c4869" ID="191">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
