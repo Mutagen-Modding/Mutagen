@@ -31,8 +31,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Json\Mutagen.Bethesda.Json.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Fallout4\Mutagen.Bethesda.Fallout4.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Testing\Mutagen.Bethesda.Testing.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
   </ItemGroup>
@@ -50,7 +52,14 @@
     <Compile Include="Exceptions\DidNotMatchException.cs" />
     <Compile Include="Exceptions\MoreDataException.cs" />
     <Compile Include="Exceptions\UnexpectedlyMoreData.cs" />
+    <Compile Include="Json\JsonConverterTests.cs" />
     <Compile Include="Passthrough Tests\Fallout4PassthroughTest.cs" />
+    <Compile Include="Plugins\Exceptions\RecordExceptionTests.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookupTests.cs" />
     <Compile Include="Processing\BinaryFileProcessor.cs" />
     <Compile Include="ComparisonStream.cs" />
     <Compile Include="FlattenedMod_Tests.cs" />

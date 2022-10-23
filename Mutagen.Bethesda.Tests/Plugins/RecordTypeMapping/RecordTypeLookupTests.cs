@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests.Plugins.RecordTypeMapping;
+namespace Mutagen.Bethesda.Tests.Plugins.RecordTypeMapping;
 
 public class RecordTypeLookupTests
 {

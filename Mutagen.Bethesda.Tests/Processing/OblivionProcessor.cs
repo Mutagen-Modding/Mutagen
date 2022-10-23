@@ -111,7 +111,7 @@ public class OblivionProcessor : Processor
                 writer.Write((ushort)(existingLen - 7));
             }
             _instructions.SetSubstitution(
-                loc: fileOffset + Plugins.Internals.Constants.HeaderLength,
+                loc: fileOffset + Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength,
                 sub: lenData);
         }
 
@@ -459,7 +459,7 @@ public class OblivionProcessor : Processor
             if (len == 0x02) 
             { 
                 _instructions.SetSubstitution( 
-                    loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
+                    loc: fileOffset + dataRec.Location + Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0, 0 }); 
                 _instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
@@ -471,7 +471,7 @@ public class OblivionProcessor : Processor
             if (len == 0x56) 
             { 
                 _instructions.SetSubstitution( 
-                    loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
+                    loc: fileOffset + dataRec.Location + Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0x54, 0 }); 
                 _instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
@@ -483,7 +483,7 @@ public class OblivionProcessor : Processor
             if (len == 0x2A) 
             { 
                 _instructions.SetSubstitution( 
-                    loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
+                    loc: fileOffset + dataRec.Location + Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0x28, 0 }); 
                 _instructions.SetRemove( 
                     section: RangeInt64.FromLength( 
@@ -495,7 +495,7 @@ public class OblivionProcessor : Processor
             if (len == 0x3E) 
             { 
                 _instructions.SetSubstitution( 
-                    loc: fileOffset + dataRec.Location + Plugins.Internals.Constants.HeaderLength, 
+                    loc: fileOffset + dataRec.Location + Mutagen.Bethesda.Plugins.Internals.Constants.HeaderLength, 
                     sub: new byte[] { 0x3C, 0 }); 
                 _instructions.SetRemove( 
                     section: RangeInt64.FromLength( 

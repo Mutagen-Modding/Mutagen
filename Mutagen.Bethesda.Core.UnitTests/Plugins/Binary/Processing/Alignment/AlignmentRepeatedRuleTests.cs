@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using Xunit;
 
@@ -47,127 +46,127 @@ public class AlignmentRepeatedRuleTests
     public void GrabsAllRelated()
     {
         var bytes = GetBytes(
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX00,
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX03);
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX03);
         var read = new MutagenMemoryReadStream(bytes, new ParsingBundle(GameConstants.SkyrimSE, null!));
         AssertBytes(
             AlignmentRepeatedRule.Basic(
-                RecordTypes.TX00,
-                RecordTypes.TX01).GetBytes(read),
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX00,
-            RecordTypes.TX00,
-            RecordTypes.TX01);
+                TestRecordTypes.TX00,
+                TestRecordTypes.TX01).GetBytes(read),
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01);
     }
     
     [Fact]
     public void TriggersOffLaterItems()
     {
         var bytes = GetBytes(
-            RecordTypes.TX01,
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX03);
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX03);
         var read = new MutagenMemoryReadStream(bytes, new ParsingBundle(GameConstants.SkyrimSE, null!));
         AssertBytes(
             AlignmentRepeatedRule.Basic(
-                RecordTypes.TX00,
-                RecordTypes.TX01).GetBytes(read),
-            RecordTypes.TX01,
-            RecordTypes.TX00,
-            RecordTypes.TX01);
+                TestRecordTypes.TX00,
+                TestRecordTypes.TX01).GetBytes(read),
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01);
     }
     
     [Fact]
     public void BasicDoesNotEnforceOrder()
     {
         var bytes = GetBytes(
-            RecordTypes.TX01,
-            RecordTypes.TX00,
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX03);
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX03);
         var read = new MutagenMemoryReadStream(bytes, new ParsingBundle(GameConstants.SkyrimSE, null!));
         AssertBytes(
             AlignmentRepeatedRule.Basic(
-                RecordTypes.TX00,
-                RecordTypes.TX01).GetBytes(read),
-            RecordTypes.TX01,
-            RecordTypes.TX00,
-            RecordTypes.TX00,
-            RecordTypes.TX01);
+                TestRecordTypes.TX00,
+                TestRecordTypes.TX01).GetBytes(read),
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01);
     }
     
     [Fact]
     public void SortingWithRepeatedButSingleEntries()
     {
         var bytes = GetBytes(
-            RecordTypes.TX01,
-            RecordTypes.TX00,
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX03);
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX03);
         var read = new MutagenMemoryReadStream(bytes, new ParsingBundle(GameConstants.SkyrimSE, null!));
         AssertBytes(
             AlignmentRepeatedRule.Sorted(
-                    new AlignmentRepeatedSubrule(RecordTypes.TX00, true),
-                    new AlignmentRepeatedSubrule(RecordTypes.TX01, true))
+                    new AlignmentRepeatedSubrule(TestRecordTypes.TX00, true),
+                    new AlignmentRepeatedSubrule(TestRecordTypes.TX01, true))
                 .GetBytes(read),
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX00,
-            RecordTypes.TX01);
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01);
     }
     
     [Fact]
     public void SortingConfusedWithMultiple()
     {
         var bytes = GetBytes(
-            RecordTypes.TX01,
-            RecordTypes.TX00,
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX03);
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX03);
         var read = new MutagenMemoryReadStream(bytes, new ParsingBundle(GameConstants.SkyrimSE, null!));
         AssertBytes(
             AlignmentRepeatedRule.Sorted(
-                    new AlignmentRepeatedSubrule(RecordTypes.TX00, false),
-                    new AlignmentRepeatedSubrule(RecordTypes.TX01, true))
+                    new AlignmentRepeatedSubrule(TestRecordTypes.TX00, false),
+                    new AlignmentRepeatedSubrule(TestRecordTypes.TX01, true))
                 .GetBytes(read),
-            RecordTypes.TX00,
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX01);
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX01);
     }
     
     [Fact]
     public void SortingWithStabilizingEntries()
     {
         var bytes = GetBytes(
-            RecordTypes.TX01,
-            RecordTypes.TX00,
-            RecordTypes.TX02,
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX02,
-            RecordTypes.TX03);
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX02,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX02,
+            TestRecordTypes.TX03);
         var read = new MutagenMemoryReadStream(bytes, new ParsingBundle(GameConstants.SkyrimSE, null!));
         AssertBytes(
             AlignmentRepeatedRule.Sorted(
-                    new AlignmentRepeatedSubrule(RecordTypes.TX00, true),
-                    new AlignmentRepeatedSubrule(RecordTypes.TX01, true),
-                    new AlignmentRepeatedSubrule(RecordTypes.TX02, true))
+                    new AlignmentRepeatedSubrule(TestRecordTypes.TX00, true),
+                    new AlignmentRepeatedSubrule(TestRecordTypes.TX01, true),
+                    new AlignmentRepeatedSubrule(TestRecordTypes.TX02, true))
                 .GetBytes(read),
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX02,
-            RecordTypes.TX00,
-            RecordTypes.TX01,
-            RecordTypes.TX02);
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX02,
+            TestRecordTypes.TX00,
+            TestRecordTypes.TX01,
+            TestRecordTypes.TX02);
     }
 }

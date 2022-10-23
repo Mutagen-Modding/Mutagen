@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests.Plugins.Exceptions;
+namespace Mutagen.Bethesda.Tests.Plugins.Exceptions;
 
 public class RecordExceptionTests
 {

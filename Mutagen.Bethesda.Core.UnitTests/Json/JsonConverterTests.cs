@@ -2,7 +2,6 @@ using FluentAssertions;
 using Mutagen.Bethesda.Json;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Placeholders;
 using Newtonsoft.Json;
@@ -530,37 +529,6 @@ public class JsonConverterTests
     {
         public IFormLinkGetter Interface { get; set; } = new FormLinkInformation(TestConstants.Form1, typeof(ITestMajorRecordGetter));
         public FormLinkInformation Direct { get; set; } = new FormLinkInformation(TestConstants.Form1, typeof(ITestMajorRecordGetter));
-    }
-
-    [Fact]
-    public void FormLinkInformationConverter_FormLink_Serialize()
-    {
-        var settings = new JsonSerializerSettings();
-        settings.Converters.Add(new FormKeyJsonConverter());
-        var toSerialize = new FormLinkInformationClass()
-        {
-            Direct = new FormLinkInformation(TestConstants.Form2, typeof(IBookGetter)),
-            Interface = new FormLinkInformation(TestConstants.Form2, typeof(IBookGetter)),
-        };
-        JsonConvert.SerializeObject(toSerialize, settings)
-            .Should().Be($"{{\"Interface\":\"{toSerialize.Direct.FormKey}<Skyrim.Book>\",\"Direct\":\"{toSerialize.Direct.FormKey}<Skyrim.Book>\"}}");
-    }
-
-    [Fact]
-    public void FormLinkInformationConverter_FormLink_Deserialize()
-    {
-        Warmup.Init();
-        var settings = new JsonSerializerSettings();
-        settings.Converters.Add(new FormKeyJsonConverter());
-        var target = new FormLinkInformationClass()
-        {
-            Direct = new FormLinkInformation(TestConstants.Form2, typeof(IBookGetter)),
-            Interface = new FormLinkInformation(TestConstants.Form2, typeof(IBookGetter)),
-        };
-        var toDeserialize = $"{{\"Interface\":\"{target.Direct.FormKey}<Skyrim.Book>\",\"Direct\":\"{target.Direct.FormKey}<Skyrim.Book>\"}}";
-        JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
-            .Direct
-            .Should().Be(target.Direct);
     }
     
     [Fact]
