@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using GameFinder;
 using GameFinder.StoreHandlers.GOG;
 using GameFinder.StoreHandlers.Steam;
 using Microsoft.Win32;
@@ -8,7 +7,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Installs.DI;
 
-public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
+public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IGameInstallLookup
 {
     private readonly Lazy<SteamHandler> _steamHandler;
     private readonly Lazy<GOGHandler> _gogHandler;
@@ -18,56 +17,69 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         _steamHandler = new Lazy<SteamHandler>(() => new SteamHandler());
         _gogHandler = new(() => new GOGHandler());
     }
-
-    /// <summary>
-    /// Given a release, will return all the located game folders it could find
-    /// </summary>
-    /// <param name="release">Release to query</param>
-    /// <returns>The located game folders it could find</returns>
-    public IEnumerable<DirectoryPath> GetGameDirectories(GameRelease release)
+    
+    private IEnumerable<DirectoryPath> GetAllGameDirectories(GameRelease release)
     {
-        return InternalGetGameFolders(release)
+        return GetSteamFolders(release)
+            .And(GetGogFolders(release))
             .Distinct();
     }
-
-    /// <summary>
-    /// Given a release, will return all the located data folders it could find
-    /// </summary>
-    /// <param name="release">Release to query</param>
-    /// <returns>The located data folders it could find</returns>
-    public IEnumerable<DirectoryPath> GetDataDirectories(GameRelease release)
+    
+    private bool TryGetSteam(GameRelease release, out DirectoryPath directoryPath)
     {
-        return GetGameDirectories(release)
-            .Select(path => new DirectoryPath(Path.Combine(path, "Data")));
+        directoryPath = GetSteamFolders(release).FirstOrDefault();
+        return directoryPath != default;
     }
 
-    private IEnumerable<DirectoryPath> InternalGetGameFolders(GameRelease release)
+    private bool TryGetGog(GameRelease release, out DirectoryPath directoryPath)
+    {
+        directoryPath = GetGogFolders(release).FirstOrDefault();
+        return directoryPath != default;
+    }
+
+    private IEnumerable<DirectoryPath> GetSteamFolders(GameRelease release)
     {
         if (TryGetGameDirectoryFromRegistry(release, out var regisPath)
             && regisPath.Exists)
         {
             yield return regisPath;
         }
-            
-        foreach (var game in _steamHandler.Value.FindAllGames()
-            .Where(x => x.Error.IsNullOrWhitespace())
-            .Select(x => x.Game)
-            .NotNull()
-            .Where(x => x.Equals(Games[release].SteamId)))
-        {
-            yield return game.Path;
-        }
 
-        foreach (var game in _gogHandler.Value.FindAllGames()
-            .Where(x => x.Error.IsNullOrWhitespace())
-            .Select(x => x.Game)
-            .NotNull()
-            .Where(x => x.Id.Equals(Games[release].GogId)))
+        foreach (var game in _steamHandler.Value.FindAllGames()
+                     .Where(x => x.Error.IsNullOrWhitespace())
+                     .Select(x => x.Game)
+                     .NotNull()
+                     .Where(x => x.AppId == Games[release].SteamId))
         {
             yield return game.Path;
         }
     }
-        
+
+    private IEnumerable<DirectoryPath> GetGogFolders(GameRelease release)
+    {
+        foreach (var game in _gogHandler.Value.FindAllGames()
+                     .Where(x => x.Error.IsNullOrWhitespace())
+                     .Select(x => x.Game)
+                     .NotNull()
+                     .Where(x => x.Id == Games[release].GogId))
+        {
+            yield return game.Path;
+        }
+    }
+
+    private IEnumerable<GameInstallMode> InternalGetInstallModes(GameRelease release)
+    {
+        if (TryGetSteam(release, out _))
+        {
+            yield return GameInstallMode.Steam;
+        }
+        if (TryGetGog(release, out _))
+        {
+            yield return GameInstallMode.Gog;
+        }
+    }
+    
+    [Obsolete("Will be made private at some point")]
     public bool TryGetGameDirectoryFromRegistry(GameRelease release,
         [MaybeNullWhen(false)] out DirectoryPath path)
     {
@@ -104,50 +116,45 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
             return false;
         }
     }
-        
-    /// <summary>
-    /// Given a release, tries to retrieve the preferred game directory (not the data folder within)
-    /// </summary>
-    /// <param name="release">Release to query</param>
-    /// <param name="path">The game folder, if located</param>
-    /// <returns>True if located</returns>
-    public bool TryGetGameDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
+    
+    private bool TryGetGameDirectory(GameRelease release, GameInstallMode installMode, [MaybeNullWhen(false)] out DirectoryPath path)
     {
-        var p = GetGameDirectories(release).Select<DirectoryPath, DirectoryPath?>(x => x).FirstOrDefault();
-        if (p == null)
+        switch (installMode)
         {
-            path = default;
-            return false;
+            case GameInstallMode.Steam:
+                foreach (var folder in GetSteamFolders(release))
+                {
+                    path = folder;
+                    return true;
+                }
+                break;
+            case GameInstallMode.Gog:
+                foreach (var folder in GetGogFolders(release))
+                {
+                    path = folder;
+                    return true;
+                }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(installMode), installMode, null);
         }
-
-        path = p.Value;
-        return true;
+        
+        path = default;
+        return false;
     }
 
-    /// <summary>
-    /// Given a release, tries to retrieve the preferred game directory (not the data folder within)
-    /// </summary>
-    /// <param name="release">Release to query</param>
-    /// <exception cref="System.IO.DirectoryNotFoundException">Thrown if the game folder could not be located</exception>
-    /// <returns>The game folder</returns>
-    public DirectoryPath GetGameDirectory(GameRelease release)
+    private DirectoryPath GetGameDirectory(GameRelease release, GameInstallMode installMode)
     {
-        if (TryGetGameDirectory(release, out var path))
+        if (TryGetGameDirectory(release, installMode, out var path))
         {
             return path;
         }
-        throw new DirectoryNotFoundException($"Game folder for {release} cannot be found automatically");
+        throw new DirectoryNotFoundException($"Game folder for {installMode} {release} cannot be found automatically");
     }
 
-    /// <summary>
-    /// Given a release, tries to retrieve the preferred data directory
-    /// </summary>
-    /// <param name="release">Release to query</param>
-    /// <param name="path">The data folder, if located</param>
-    /// <returns>True if located</returns>
-    public bool TryGetDataDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
+    private bool TryGetDataDirectory(GameRelease release, GameInstallMode installMode, [MaybeNullWhen(false)] out DirectoryPath path)
     {
-        if (TryGetGameDirectory(release, out path))
+        if (TryGetGameDirectory(release, installMode, out path))
         {
             path = Path.Combine(path, "Data");
             return true;
@@ -156,35 +163,24 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         return false;
     }
 
-    /// <summary>
-    /// Given a release, tries to retrieve the preferred data directory
-    /// </summary>
-    /// <param name="release">Release to query</param>
-    /// <exception cref="System.IO.DirectoryNotFoundException">Thrown if the data folder could not be located</exception>
-    /// <returns>The data folder provider</returns>
-    public DirectoryPath GetDataDirectory(GameRelease release)
+    private DirectoryPath GetDataDirectory(GameRelease release, GameInstallMode installMode)
     {
-        if (TryGetDataDirectory(release, out var path))
+        if (TryGetDataDirectory(release, installMode, out var path))
         {
             return path;
         }
-        throw new DirectoryNotFoundException($"Data folder for {release} cannot be found automatically");
+        throw new DirectoryNotFoundException($"Data folder for {installMode} {release} cannot be found automatically");
     }
-        
-    private GetResponse<TStoreHandler> TryFactory<TStoreHandler, TStoreGame>() 
-        where TStoreHandler : AStoreHandler<TStoreGame>, new()
-        where TStoreGame : AStoreGame
+
+    public GameInstallMode GetInstallMode(GameRelease release)
     {
-        try
+        GameInstallMode ret = default;
+        foreach (var mode in InternalGetInstallModes(release))
         {
-            var storeHandler = new TStoreHandler();
-            storeHandler.FindAllGames();
-            return storeHandler;
+            ret |= mode;
         }
-        catch (Exception e)
-        {
-            return ErrorResponse.Fail(e).BubbleFailure<TStoreHandler>();
-        }
+
+        return ret;
     }
 
     internal static IReadOnlyDictionary<GameRelease, GameMetaData> Games { get; }
@@ -227,7 +223,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                     NexusName: "skyrimspecialedition",
                     NexusGameId: 1704,
                     SteamId: 489830,
-                    GogId: null,
+                    GogId: 1711230643,
                     RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition",
                     RegistryKey: @"installed path",
                     RequiredFiles: new string[]
@@ -280,32 +276,58 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 
     IEnumerable<DirectoryPath> IDataDirectoryLookup.GetAll(GameRelease release)
     {
-        return GetDataDirectories(release);
+        return GetAllGameDirectories(release)
+            .Select(path => new DirectoryPath(Path.Combine(path, "Data")));
     }
 
     bool IDataDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)
     {
-        return TryGetDataDirectory(release, out path);
+        return TryGetDataDirectory(release, GameInstallMode.Steam, out path);
+    }
+
+    bool IDataDirectoryLookup.TryGet(GameRelease release, GameInstallMode installMode, out DirectoryPath path)
+    {
+        return TryGetDataDirectory(release, installMode, out path);
+    }
+
+    IEnumerable<DirectoryPath> IGameInstallLookup.GetAll(GameRelease release)
+    {
+        return GetAllGameDirectories(release);
+    }
+
+    DirectoryPath IGameDirectoryLookup.Get(GameRelease release, GameInstallMode installMode)
+    {
+        return GetGameDirectory(release, installMode);
+    }
+
+    bool IGameDirectoryLookup.TryGet(GameRelease release, GameInstallMode installMode, out DirectoryPath path)
+    {
+        return TryGetGameDirectory(release, installMode, out path);
     }
 
     DirectoryPath IDataDirectoryLookup.Get(GameRelease release)
     {
-        return GetDataDirectory(release);
+        return GetDataDirectory(release, GameInstallMode.Steam);
+    }
+
+    DirectoryPath IDataDirectoryLookup.Get(GameRelease release, GameInstallMode installMode)
+    {
+        return GetDataDirectory(release, installMode);
     }
 
     IEnumerable<DirectoryPath> IGameDirectoryLookup.GetAll(GameRelease release)
     {
-        return GetGameDirectories(release);
+        return GetAllGameDirectories(release);
     }
 
     bool IGameDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)
     {
-        return TryGetGameDirectory(release, out path);
+        return TryGetGameDirectory(release, GameInstallMode.Steam, out path);
     }
 
     DirectoryPath IGameDirectoryLookup.Get(GameRelease release)
     {
-        return GetGameDirectory(release);
+        return GetGameDirectory(release, GameInstallMode.Steam);
     }
 
     #endregion

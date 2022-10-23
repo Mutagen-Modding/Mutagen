@@ -39,4 +39,12 @@
     <PackageReference Include="Noggog.CSharpExt" Version="2.50.1.1-dev" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="GameInstallMode.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+  </ItemGroup>
+
 </Project>

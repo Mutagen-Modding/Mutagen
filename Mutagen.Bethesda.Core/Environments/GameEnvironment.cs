@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Installs;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
@@ -163,7 +164,11 @@ public sealed class GameEnvironmentState :
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
-        var pluginListingsPathProvider = new PluginListingsPathProvider(gameReleaseInjection);
+        var pluginListingsPathProvider = new PluginListingsPathProvider(
+            new GameInstallModeProvider(
+                new GameLocator(),
+                gameReleaseInjection),
+            gameReleaseInjection);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(
@@ -276,7 +281,11 @@ public sealed class GameEnvironmentState<TMod> :
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
-        var pluginListingsPathProvider = new PluginListingsPathProvider(gameReleaseInjection);
+        var pluginListingsPathProvider = new PluginListingsPathProvider(
+            new GameInstallModeProvider(
+                new GameLocator(),
+                gameReleaseInjection),
+            gameReleaseInjection);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(
@@ -398,7 +407,11 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
-        var pluginListingsPathProvider = new PluginListingsPathProvider(gameReleaseInjection);
+        var pluginListingsPathProvider = new PluginListingsPathProvider(
+            new GameInstallModeProvider(
+                new GameLocator(),
+                gameReleaseInjection),
+            gameReleaseInjection);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(

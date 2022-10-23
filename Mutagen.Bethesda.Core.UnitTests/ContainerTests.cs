@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using Autofac;
 using Mutagen.Bethesda.Autofac;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Noggog.Autofac;
 using Xunit;
 
@@ -16,6 +17,7 @@ public class ContainerTests
         builder.RegisterModule<MutagenModule>();
         builder.RegisterType<FileSystem>().As<IFileSystem>();
         builder.RegisterType<GameReleasePlaceholder>().As<IGameReleaseContext>();
+        builder.RegisterType<GameInstallModePlaceholder>().As<IGameInstallModeProvider>();
         var cont = builder.Build();
         cont.ValidateEverything();
     }

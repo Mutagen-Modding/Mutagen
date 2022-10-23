@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;
@@ -14,26 +15,57 @@ public interface IPluginListingsPathProvider
 
 public sealed class PluginListingsPathProvider : IPluginListingsPathProvider
 {
+    private readonly IGameInstallModeProvider _gameInstallModeProvider;
     private readonly IGameReleaseContext _gameReleaseContext;
 
-    public PluginListingsPathProvider(IGameReleaseContext gameReleaseContext)
+    public PluginListingsPathProvider(
+        IGameInstallModeProvider gameInstallModeProvider, 
+        IGameReleaseContext gameReleaseContext)
     {
+        _gameInstallModeProvider = gameInstallModeProvider;
         _gameReleaseContext = gameReleaseContext;
+    }
+
+    private string? GetInstallModeSuffix()
+    {
+        return _gameInstallModeProvider.InstallMode switch
+        {
+            GameInstallMode.Gog => " GOG",
+            _ => null,
+        };
+    }
+    
+    private string GetGameFolder()
+    {
+        return _gameReleaseContext.Release switch
+        {
+            GameRelease.Oblivion => "Oblivion",
+            GameRelease.SkyrimLE => "Skyrim",
+            GameRelease.EnderalLE => "Enderal",
+            GameRelease.SkyrimSE => "Skyrim Special Edition",
+            GameRelease.EnderalSE => "Enderal Special Edition",
+            GameRelease.SkyrimVR => "Skyrim VR",
+            GameRelease.Fallout4 => "Fallout4",
+            _ => throw new NotImplementedException()
+        };
     }
     
     private string GetRelativePluginsPath()
     {
-        return _gameReleaseContext.Release switch
+        var installModeSuffix = GetInstallModeSuffix();
+        var gameFolder = GetGameFolder();
+        if (installModeSuffix == null)
         {
-            GameRelease.Oblivion => "Oblivion/Plugins.txt",
-            GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
-            GameRelease.EnderalLE => "Enderal/Plugins.txt",
-            GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
-            GameRelease.EnderalSE => "Enderal Special Edition/Plugins.txt",
-            GameRelease.SkyrimVR => "Skyrim VR/Plugins.txt",
-            GameRelease.Fallout4 => "Fallout4/Plugins.txt",
-            _ => throw new NotImplementedException()
-        };
+            return System.IO.Path.Combine(
+                gameFolder,
+                "Plugins.txt");
+        }
+        else
+        {
+            return System.IO.Path.Combine(
+                $"{gameFolder}{installModeSuffix}",
+                "Plugins.txt");
+        }
     }
 
     /// <inheritdoc />

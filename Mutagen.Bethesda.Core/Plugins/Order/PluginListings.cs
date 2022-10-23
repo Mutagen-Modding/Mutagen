@@ -4,6 +4,7 @@ using System.IO.Abstractions;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 
 namespace Mutagen.Bethesda.Plugins.Order;
@@ -13,7 +14,12 @@ public static class PluginListings
     /// <inheritdoc cref="IPluginListingsProvider"/>
     public static string GetListingsPath(GameRelease game)
     {
-        return new PluginListingsPathProvider(new GameReleaseInjection(game)).Path;
+        var gameReleaseInjection = new GameReleaseInjection(game);
+        return new PluginListingsPathProvider(
+            new GameInstallModeProvider(
+                new GameLocator(),
+                gameReleaseInjection),
+            gameReleaseInjection).Path;
     }
 
     /// <summary>
@@ -67,9 +73,13 @@ public static class PluginListings
         DirectoryPath dataPath,
         bool throwOnMissingMods = true)
     {
+        var gameReleaseInjection = new GameReleaseInjection(game);
         return LoadOrderListingsFromPath(
             new PluginListingsPathProvider(
-                new GameReleaseInjection(game)).Path,
+                new GameInstallModeProvider(
+                    new GameLocator(),
+                    gameReleaseInjection),
+                gameReleaseInjection).Path,
             game,
             dataPath,
             throwOnMissingMods);
@@ -133,9 +143,13 @@ public static class PluginListings
     /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
     public static IObservable<Unit> GetLoadOrderChanged(GameRelease game)
     {
+        var gameReleaseInjection = new GameReleaseInjection(game);
         return ObservableExt.WatchFile(
             new PluginListingsPathProvider(
-                new GameReleaseInjection(game)).Path);
+                new GameInstallModeProvider(
+                    new GameLocator(),
+                    gameReleaseInjection),
+                gameReleaseInjection).Path);
     }
 
     public static bool HasEnabledMarkers(GameRelease game)

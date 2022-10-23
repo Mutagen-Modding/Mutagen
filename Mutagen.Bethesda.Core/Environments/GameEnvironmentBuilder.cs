@@ -138,7 +138,11 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         var category = new GameCategoryContext(Release);
         var gameLocator = new GameLocator();
         var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(Release, gameLocator);
-        var pluginPathProvider = PluginListingsPathProvider ?? new PluginListingsPathProvider(Release);
+        var pluginPathProvider = PluginListingsPathProvider ?? new PluginListingsPathProvider(
+            new GameInstallModeProvider(
+                new GameLocator(),
+                Release),
+            Release);
         var cccPath = CccListingsPathProvider ?? new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(category),
@@ -333,7 +337,11 @@ public sealed record GameEnvironmentBuilder
         var category = new GameCategoryContext(Release);
         var gameLocator = new GameLocator();
         var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(Release, gameLocator);
-        var pluginPathProvider = PluginListingsPathProvider ?? new PluginListingsPathProvider(Release);
+        var pluginPathProvider = PluginListingsPathProvider ?? new PluginListingsPathProvider(
+            new GameInstallModeProvider(
+                new GameLocator(),
+                Release),
+            Release);
         var cccPath = CccListingsPathProvider ?? new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(category),
