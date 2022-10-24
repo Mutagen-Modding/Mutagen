@@ -23,18 +23,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.16.0" />
-    <PackageReference Include="GitInfo" Version="2.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.16" />
     <PackageReference Include="Loqui" Version="2.51" />
     <PackageReference Include="Noggog.CSharpExt" Version="2.51" />
-    <PackageReference Include="NuGetizer" Version="0.9.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="SharpZipLib" Version="1.4.0" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />

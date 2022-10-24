@@ -23,16 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitInfo" Version="2.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NuGetizer" Version="0.8.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
+  
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.json&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
   </Target>

@@ -2434,16 +2434,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GitInfo" Version="2.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Loqui" Version="2.51" />
     <PackageReference Include="Noggog.CSharpExt" Version="2.51" />
-    <PackageReference Include="NuGetizer" Version="0.9.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

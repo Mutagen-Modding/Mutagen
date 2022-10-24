@@ -1,4 +1,12 @@
 <Project>
+   
+  <ItemGroup> 
+    <PackageReference Include="GitInfo" Version="2.2.0" > 
+      <PrivateAssets>all</PrivateAssets> 
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets> 
+    </PackageReference>
+  </ItemGroup> 
+  
   <!-- To be redefined by GitInfo after restore. -->
   <Target Name="GitVersion" />
 
