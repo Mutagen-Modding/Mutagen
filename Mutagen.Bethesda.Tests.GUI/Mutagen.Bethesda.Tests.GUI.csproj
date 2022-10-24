@@ -11,12 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.51" />
-    <PackageReference Include="Noggog.WPF" Version="2.51" />
-    <PackageReference Include="ReactiveUI" Version="18.3.1" />
-    <PackageReference Include="ReactiveUI.Fody" Version="18.3.1" />
-    <PackageReference Include="Simple.Wpf.Terminal" Version="2.3.51" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Noggog.CSharpExt" />
+    <PackageReference Include="Noggog.WPF" />
+    <PackageReference Include="ReactiveUI" />
+    <PackageReference Include="ReactiveUI.Fody" />
+    <PackageReference Include="Simple.Wpf.Terminal" />
   </ItemGroup>
 
   <ItemGroup>

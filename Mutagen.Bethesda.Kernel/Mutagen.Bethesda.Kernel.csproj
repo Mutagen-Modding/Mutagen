@@ -28,7 +28,7 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="Noggog.CSharpExt" Version="2.51" />
+    <PackageReference Include="Noggog.CSharpExt" />
   </ItemGroup>
 
   <ItemGroup>

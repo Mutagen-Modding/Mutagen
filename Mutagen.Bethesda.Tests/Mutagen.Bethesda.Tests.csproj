@@ -16,11 +16,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
-    <PackageReference Include="FluentAssertions" Version="6.8.0" />
-    <PackageReference Include="Loqui" Version="2.51" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.51" />
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Loqui" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Noggog.CSharpExt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Json\Mutagen.Bethesda.Json.csproj" />

@@ -18,9 +18,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoFixture" Version="4.17.0" />
-        <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.17.0" />
-        <PackageReference Include="Noggog.Testing" Version="2.51" />
+        <PackageReference Include="AutoFixture" />
+        <PackageReference Include="AutoFixture.AutoNSubstitute" />
+        <PackageReference Include="Noggog.Testing" />
     </ItemGroup>
 
     <ItemGroup>
