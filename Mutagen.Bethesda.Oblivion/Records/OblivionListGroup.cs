@@ -5,10 +5,11 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Translations.Binary;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion;
 
-public partial class OblivionListGroup<T>
+public partial class OblivionListGroup<T> : AListGroup<T>
 {
     public IEnumerator<T> GetEnumerator() => Records.GetEnumerator();
 
@@ -17,7 +18,7 @@ public partial class OblivionListGroup<T>
         return GetEnumerator();
     }
 
-    public int Count => Records.Count;
+    protected override IExtendedList<T> ProtectedList => Records;
 }
 
 partial class OblivionListGroupBinaryCreateTranslation<T>
@@ -28,6 +29,10 @@ partial class OblivionListGroupBinaryCreateTranslation<T>
     {
         frame.Reader.Position += 4;
     }
+}
+
+public partial interface IOblivionListGroup<T> : IListGroup<T>
+{
 }
 
 public partial interface IOblivionListGroupGetter<out T> : IReadOnlyCollection<T>

@@ -34,6 +34,7 @@ internal sealed class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, I
     
     public IEnumerable<TMajor> Records => SubGroups.SelectMany(x => x.Records);
     IEnumerable<IMajorRecordGetter> IGroupGetter.Records => Records;
+    IEnumerable<ILoquiObject> IGroupCommonGetter.Records => Records;
 
     public IEnumerator<TMajor> GetEnumerator() => Records.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

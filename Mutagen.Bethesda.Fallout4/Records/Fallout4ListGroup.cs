@@ -1,14 +1,15 @@
-﻿using System.Collections;
+using System.Collections;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Translations.Binary;
+using Noggog;
 
 namespace Mutagen.Bethesda.Fallout4;
 
-public partial class Fallout4ListGroup<T>
+public partial class Fallout4ListGroup<T> : AListGroup<T>
 {
     public IEnumerator<T> GetEnumerator() => Records.GetEnumerator();
 
@@ -17,7 +18,7 @@ public partial class Fallout4ListGroup<T>
         return GetEnumerator();
     }
 
-    public int Count => Records.Count;
+    protected override IExtendedList<T> ProtectedList => Records;
 }
 
 partial class Fallout4ListGroupBinaryCreateTranslation<T>
@@ -28,6 +29,10 @@ partial class Fallout4ListGroupBinaryCreateTranslation<T>
     {
         frame.Reader.Position += 4;
     }
+}
+
+public partial interface IFallout4ListGroup<T> : IListGroup<T>
+{
 }
 
 public partial interface IFallout4ListGroupGetter<out T> : IReadOnlyCollection<T>

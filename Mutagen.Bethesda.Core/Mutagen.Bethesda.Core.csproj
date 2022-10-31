@@ -467,6 +467,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Records\AListGroup.cs" />
     <Compile Include="Plugins\Records\DI\ModActivator.cs" />
     <Compile Include="Plugins\Records\DI\ModImporter.cs" />
     <Compile Include="Plugins\Records\GroupMergeGetter.cs" />
