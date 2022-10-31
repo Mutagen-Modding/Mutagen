@@ -15,8 +15,9 @@ public static class PluginListings
     public static string GetListingsPath(GameRelease game)
     {
         var gameReleaseInjection = new GameReleaseInjection(game);
-        return new PluginListingsPathProvider(
-            new GameInstallModeProvider(
+        return new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            new GameInstallModeContext(
                 new GameLocator(),
                 gameReleaseInjection),
             gameReleaseInjection).Path;
@@ -75,8 +76,9 @@ public static class PluginListings
     {
         var gameReleaseInjection = new GameReleaseInjection(game);
         return LoadOrderListingsFromPath(
-            new PluginListingsPathProvider(
-                new GameInstallModeProvider(
+            new PluginListingsPathContext(
+                new PluginListingsPathProvider(),
+                new GameInstallModeContext(
                     new GameLocator(),
                     gameReleaseInjection),
                 gameReleaseInjection).Path,
@@ -145,8 +147,9 @@ public static class PluginListings
     {
         var gameReleaseInjection = new GameReleaseInjection(game);
         return ObservableExt.WatchFile(
-            new PluginListingsPathProvider(
-                new GameInstallModeProvider(
+            new PluginListingsPathContext(
+                new PluginListingsPathProvider(),
+                new GameInstallModeContext(
                     new GameLocator(),
                     gameReleaseInjection),
                 gameReleaseInjection).Path);
@@ -161,7 +164,7 @@ public static class PluginListings
     private static PluginListingsProvider PluginListingsProvider(
         IDataDirectoryProvider dataDirectory,
         IGameReleaseContext gameContext,
-        IPluginListingsPathProvider listingsPathProvider, 
+        IPluginListingsPathContext listingsPathContext, 
         bool throwOnMissingMods,
         IFileSystem fs)
     {
@@ -177,12 +180,12 @@ public static class PluginListings
                     fs,
                     pluginListingParser),
                 dataDirectory,
-                listingsPathProvider),
+                listingsPathContext),
             new EnabledPluginListingsProvider(
                 new PluginRawListingsReader(
                     fs,
                     pluginListingParser),
-                listingsPathProvider));
+                listingsPathContext));
         return provider;
     }
 }

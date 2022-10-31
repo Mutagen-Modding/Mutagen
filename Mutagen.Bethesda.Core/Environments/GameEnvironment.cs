@@ -107,7 +107,7 @@ public interface IGameEnvironment<TModSetter, TModGetter> : IGameEnvironment<TMo
 /// </summary>
 public sealed class GameEnvironmentState :
     IDataDirectoryProvider,
-    IPluginListingsPathProvider,
+    IPluginListingsPathContext,
     ICreationClubListingsPathProvider,
     IGameEnvironment
 {
@@ -164,8 +164,9 @@ public sealed class GameEnvironmentState :
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
-        var pluginListingsPathProvider = new PluginListingsPathProvider(
-            new GameInstallModeProvider(
+        var pluginListingsPathProvider = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            new GameInstallModeContext(
                 new GameLocator(),
                 gameReleaseInjection),
             gameReleaseInjection);
@@ -213,7 +214,7 @@ public sealed class GameEnvironmentState :
 
     DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
 
-    FilePath IPluginListingsPathProvider.Path => LoadOrderFilePath;
+    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath;
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 }
@@ -223,7 +224,7 @@ public sealed class GameEnvironmentState :
 /// </summary>
 public sealed class GameEnvironmentState<TMod> :
     IDataDirectoryProvider,
-    IPluginListingsPathProvider,
+    IPluginListingsPathContext,
     ICreationClubListingsPathProvider,
     IGameEnvironment<TMod>
     where TMod : class, IModGetter
@@ -281,8 +282,9 @@ public sealed class GameEnvironmentState<TMod> :
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
-        var pluginListingsPathProvider = new PluginListingsPathProvider(
-            new GameInstallModeProvider(
+        var pluginListingsPathProvider = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            new GameInstallModeContext(
                 new GameLocator(),
                 gameReleaseInjection),
             gameReleaseInjection);
@@ -330,7 +332,7 @@ public sealed class GameEnvironmentState<TMod> :
 
     DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
 
-    FilePath IPluginListingsPathProvider.Path => LoadOrderFilePath;
+    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath;
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 
@@ -342,7 +344,7 @@ public sealed class GameEnvironmentState<TMod> :
 /// </summary>
 public sealed class GameEnvironmentState<TModSetter, TModGetter> : 
     IDataDirectoryProvider, 
-    IPluginListingsPathProvider,
+    IPluginListingsPathContext,
     ICreationClubListingsPathProvider,
     IGameEnvironment<TModSetter, TModGetter> 
     where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
@@ -407,8 +409,9 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
-        var pluginListingsPathProvider = new PluginListingsPathProvider(
-            new GameInstallModeProvider(
+        var pluginListingsPathProvider = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            new GameInstallModeContext(
                 new GameLocator(),
                 gameReleaseInjection),
             gameReleaseInjection);
@@ -456,7 +459,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
 
     DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
 
-    FilePath IPluginListingsPathProvider.Path => LoadOrderFilePath;
+    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath;
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 

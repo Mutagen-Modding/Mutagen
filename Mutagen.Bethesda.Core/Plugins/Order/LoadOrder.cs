@@ -105,8 +105,9 @@ public static class LoadOrder
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var gameContext = new GameReleaseInjection(game);
         var categoryContext = new GameCategoryInjection(game.ToCategory());
-        var pluginPath = new PluginListingsPathProvider(
-            new GameInstallModeProvider(
+        var pluginPath = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            new GameInstallModeContext(
                 new GameLocator(),
                 gameContext),
             gameContext);
@@ -194,8 +195,9 @@ public static class LoadOrder
     {
         var dataDir = new DataDirectoryInjection(dataFolderPath);
         var gameRelease = new GameReleaseInjection(game);
-        var pluginPath = new PluginListingsPathProvider(
-            new GameInstallModeProvider(
+        var pluginPath = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            new GameInstallModeContext(
                 new GameLocator(),
                 gameRelease),
             gameRelease);
@@ -453,7 +455,7 @@ public static class LoadOrder
     private static PluginListingsProvider PluginListingsProvider(
         IDataDirectoryProvider dataDirectory,
         IGameReleaseContext gameContext,
-        IPluginListingsPathProvider listingsPathProvider, 
+        IPluginListingsPathContext listingsPathContext, 
         bool throwOnMissingMods,
         IFileSystem fs)
     {
@@ -469,12 +471,12 @@ public static class LoadOrder
                     fs,
                     pluginListingParser),
                 dataDirectory,
-                listingsPathProvider),
+                listingsPathContext),
             new EnabledPluginListingsProvider(
                 new PluginRawListingsReader(
                     fs,
                     pluginListingParser),
-                listingsPathProvider));
+                listingsPathContext));
         return provider;
     }
 }

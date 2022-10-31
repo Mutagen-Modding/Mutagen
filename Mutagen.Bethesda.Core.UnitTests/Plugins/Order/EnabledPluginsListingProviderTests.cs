@@ -12,12 +12,12 @@ public class EnabledPluginsListingProviderTests
 {
     [Theory, MutagenAutoData]
     public void Typical(
-        [Frozen]IPluginListingsPathProvider pathProvider,
+        [Frozen]IPluginListingsPathContext pathContext,
         [Frozen]IPluginRawListingsReader reader,
         IEnumerable<IModListingGetter> listings,
         EnabledPluginListingsProvider sut)
     {
-        reader.Read(pathProvider.Path).Returns(listings);
+        reader.Read(pathContext.Path).Returns(listings);
         sut.Get()
             .Should().Equal(listings);
     }

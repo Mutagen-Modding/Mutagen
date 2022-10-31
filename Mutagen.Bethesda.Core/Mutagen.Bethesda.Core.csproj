@@ -145,8 +145,8 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Installs\DI\GameLocator.cs" />
-    <Compile Include="Installs\DI\IGameInstallModeProvider.cs" />
-    <Compile Include="Installs\DI\IGameInstallLookup.cs">
+    <Compile Include="Installs\DI\IGameInstallModeContext.cs" />
+    <Compile Include="Installs\DI\IGameInstallProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
@@ -419,6 +419,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Order\DI\PluginListingsPathProvider.cs" />
     <Compile Include="Plugins\Order\DI\PluginListingsProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -429,7 +430,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Plugins\Order\DI\PluginListingsPathProvider.cs">
+    <Compile Include="Plugins\Order\DI\PluginListingsPathContext.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>

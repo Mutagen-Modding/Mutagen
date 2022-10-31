@@ -7,7 +7,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Installs.DI;
 
-public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IGameInstallLookup
+public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IGameInstallProvider
 {
     private readonly Lazy<SteamHandler> _steamHandler;
     private readonly Lazy<GOGHandler> _gogHandler;
@@ -290,7 +290,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
         return TryGetDataDirectory(release, installMode, out path);
     }
 
-    IEnumerable<DirectoryPath> IGameInstallLookup.GetAll(GameRelease release)
+    IEnumerable<DirectoryPath> IGameInstallProvider.GetAll(GameRelease release)
     {
         return GetAllGameDirectories(release);
     }

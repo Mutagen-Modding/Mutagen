@@ -19,7 +19,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
 
     internal IDataDirectoryProvider? DataDirectoryProvider { get; init; }
     internal ILoadOrderListingsProvider? ListingsProvider { get; init; }
-    internal IPluginListingsPathProvider? PluginListingsPathProvider { get; init; }
+    internal IPluginListingsPathContext? PluginListingsPathContext { get; init; }
     internal ICreationClubListingsPathProvider? CccListingsPathProvider { get; init; }
 
     private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
@@ -40,13 +40,13 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         IGameReleaseContext releaseProvider,
         IDataDirectoryProvider dataDirectoryProvider,
         ILoadOrderListingsProvider listingsProvider,
-        IPluginListingsPathProvider pluginListingsPathProvider,
+        IPluginListingsPathContext pluginListingsPathContext,
         ICreationClubListingsPathProvider cccListingsPathProvider)
     {
         Release = releaseProvider;
         DataDirectoryProvider = dataDirectoryProvider;
         ListingsProvider = listingsProvider;
-        PluginListingsPathProvider = pluginListingsPathProvider;
+        PluginListingsPathContext = pluginListingsPathContext;
         CccListingsPathProvider = cccListingsPathProvider;
         LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
         ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>>.Empty;
@@ -138,8 +138,9 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         var category = new GameCategoryContext(Release);
         var gameLocator = new GameLocator();
         var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(Release, gameLocator);
-        var pluginPathProvider = PluginListingsPathProvider ?? new PluginListingsPathProvider(
-            new GameInstallModeProvider(
+        var pluginPathProvider = PluginListingsPathContext ?? new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            new GameInstallModeContext(
                 new GameLocator(),
                 Release),
             Release);
@@ -218,7 +219,7 @@ public sealed record GameEnvironmentBuilder
 
     internal IDataDirectoryProvider? DataDirectoryProvider { get; init; }
     internal ILoadOrderListingsProvider? ListingsProvider { get; init; }
-    internal IPluginListingsPathProvider? PluginListingsPathProvider { get; init; }
+    internal IPluginListingsPathContext? PluginListingsPathContext { get; init; }
     internal ICreationClubListingsPathProvider? CccListingsPathProvider { get; init; }
 
     private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
@@ -239,13 +240,13 @@ public sealed record GameEnvironmentBuilder
         IGameReleaseContext releaseProvider,
         IDataDirectoryProvider dataDirectoryProvider,
         ILoadOrderListingsProvider listingsProvider,
-        IPluginListingsPathProvider pluginListingsPathProvider,
+        IPluginListingsPathContext pluginListingsPathContext,
         ICreationClubListingsPathProvider cccListingsPathProvider)
     {
         Release = releaseProvider;
         DataDirectoryProvider = dataDirectoryProvider;
         ListingsProvider = listingsProvider;
-        PluginListingsPathProvider = pluginListingsPathProvider;
+        PluginListingsPathContext = pluginListingsPathContext;
         CccListingsPathProvider = cccListingsPathProvider;
         LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
         ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>>.Empty;
@@ -337,8 +338,9 @@ public sealed record GameEnvironmentBuilder
         var category = new GameCategoryContext(Release);
         var gameLocator = new GameLocator();
         var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(Release, gameLocator);
-        var pluginPathProvider = PluginListingsPathProvider ?? new PluginListingsPathProvider(
-            new GameInstallModeProvider(
+        var pluginPathProvider = PluginListingsPathContext ?? new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            new GameInstallModeContext(
                 new GameLocator(),
                 Release),
             Release);

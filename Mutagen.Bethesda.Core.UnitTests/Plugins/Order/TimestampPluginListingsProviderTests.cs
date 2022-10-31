@@ -13,7 +13,7 @@ public class TimestampPluginListingsProviderTests
         sut.Get()
             .Should().Equal(
                 sut.Aligner.AlignToTimestamps(
-                    sut.RawListingsReader.Read(sut.ListingsPathProvider.Path),
+                    sut.RawListingsReader.Read(sut.ListingsPathContext.Path),
                     sut.DirectoryProvider.Path,
                     sut.Prefs.ThrowOnMissingMods));
     }

@@ -27,20 +27,20 @@ public sealed class GameEnvironmentProvider : IGameEnvironmentProvider
     private readonly IGameReleaseContext _gameReleaseContext;
     private readonly ILoadOrderImporter _loadOrderImporter;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
-    private readonly IPluginListingsPathProvider _pluginListingsPathProvider;
+    private readonly IPluginListingsPathContext _pluginListingsPathContext;
     private readonly ICreationClubListingsPathProvider _cccPath;
 
     public GameEnvironmentProvider(
         IGameReleaseContext gameReleaseContext,
         ILoadOrderImporter loadOrderImporter,
         IDataDirectoryProvider dataDirectoryProvider,
-        IPluginListingsPathProvider pluginListingsPathProvider,
+        IPluginListingsPathContext pluginListingsPathContext,
         ICreationClubListingsPathProvider cccPath)
     {
         _gameReleaseContext = gameReleaseContext;
         _loadOrderImporter = loadOrderImporter;
         _dataDirectoryProvider = dataDirectoryProvider;
-        _pluginListingsPathProvider = pluginListingsPathProvider;
+        _pluginListingsPathContext = pluginListingsPathContext;
         _cccPath = cccPath;
     }
 
@@ -51,7 +51,7 @@ public sealed class GameEnvironmentProvider : IGameEnvironmentProvider
         return new GameEnvironmentState<IModGetter>(
             gameRelease: _gameReleaseContext.Release,
             dataFolderPath: _dataDirectoryProvider.Path,
-            loadOrderFilePath: _pluginListingsPathProvider.Path,
+            loadOrderFilePath: _pluginListingsPathContext.Path,
             creationClubListingsFilePath: _cccPath.Path,
             loadOrder: loadOrder,
             linkCache: loadOrder.ToUntypedImmutableLinkCache(linkCachePrefs),
@@ -65,20 +65,20 @@ public sealed class GameEnvironmentProvider<TMod> : IGameEnvironmentProvider<TMo
     private readonly IGameReleaseContext _gameReleaseContext;
     private readonly ILoadOrderImporter<TMod> _loadOrderImporter;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
-    private readonly IPluginListingsPathProvider _pluginListingsPathProvider;
+    private readonly IPluginListingsPathContext _pluginListingsPathContext;
     private readonly ICreationClubListingsPathProvider _cccPath;
 
     public GameEnvironmentProvider(
         IGameReleaseContext gameReleaseContext,
         ILoadOrderImporter<TMod> loadOrderImporter,
         IDataDirectoryProvider dataDirectoryProvider,
-        IPluginListingsPathProvider pluginListingsPathProvider,
+        IPluginListingsPathContext pluginListingsPathContext,
         ICreationClubListingsPathProvider cccPath)
     {
         _gameReleaseContext = gameReleaseContext;
         _loadOrderImporter = loadOrderImporter;
         _dataDirectoryProvider = dataDirectoryProvider;
-        _pluginListingsPathProvider = pluginListingsPathProvider;
+        _pluginListingsPathContext = pluginListingsPathContext;
         _cccPath = cccPath;
     }
 
@@ -89,7 +89,7 @@ public sealed class GameEnvironmentProvider<TMod> : IGameEnvironmentProvider<TMo
         return new GameEnvironmentState<TMod>(
             gameRelease: _gameReleaseContext.Release,
             dataFolderPath: _dataDirectoryProvider.Path,
-            loadOrderFilePath: _pluginListingsPathProvider.Path,
+            loadOrderFilePath: _pluginListingsPathContext.Path,
             creationClubListingsFilePath: _cccPath.Path,
             loadOrder: loadOrder,
             linkCache: loadOrder.ToUntypedImmutableLinkCache(linkCachePrefs),
@@ -104,20 +104,20 @@ public sealed class GameEnvironmentProvider<TModSetter, TModGetter> : IGameEnvir
     private readonly IGameReleaseContext _gameReleaseContext;
     private readonly ILoadOrderImporter<TModGetter> _loadOrderImporter;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
-    private readonly IPluginListingsPathProvider _pluginListingsPathProvider;
+    private readonly IPluginListingsPathContext _pluginListingsPathContext;
     private readonly ICreationClubListingsPathProvider _cccPath;
 
     public GameEnvironmentProvider(
         IGameReleaseContext gameReleaseContext,
         ILoadOrderImporter<TModGetter> loadOrderImporter,
         IDataDirectoryProvider dataDirectoryProvider,
-        IPluginListingsPathProvider pluginListingsPathProvider,
+        IPluginListingsPathContext pluginListingsPathContext,
         ICreationClubListingsPathProvider cccPath)
     {
         _gameReleaseContext = gameReleaseContext;
         _loadOrderImporter = loadOrderImporter;
         _dataDirectoryProvider = dataDirectoryProvider;
-        _pluginListingsPathProvider = pluginListingsPathProvider;
+        _pluginListingsPathContext = pluginListingsPathContext;
         _cccPath = cccPath;
     }
 
@@ -128,7 +128,7 @@ public sealed class GameEnvironmentProvider<TModSetter, TModGetter> : IGameEnvir
         return new GameEnvironmentState<TModSetter, TModGetter>(
             gameRelease: _gameReleaseContext.Release,
             dataFolderPath: _dataDirectoryProvider.Path,
-            loadOrderFilePath: _pluginListingsPathProvider.Path,
+            loadOrderFilePath: _pluginListingsPathContext.Path,
             creationClubListingsFilePath: _cccPath.Path,
             loadOrder: loadOrder,
             linkCache: loadOrder.ToImmutableLinkCache<TModSetter, TModGetter>(linkCachePrefs),

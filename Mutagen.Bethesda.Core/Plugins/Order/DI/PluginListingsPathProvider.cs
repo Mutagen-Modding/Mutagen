@@ -1,43 +1,26 @@
-using Mutagen.Bethesda.Environments.DI;
-using Mutagen.Bethesda.Installs.DI;
-using Noggog;
+﻿using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;
 
 public interface IPluginListingsPathProvider
 {
-    /// <summary>
-    /// Returns expected location of the plugin load order file
-    /// </summary>
-    /// <returns>Expected path to load order file</returns>
-    FilePath Path { get; }
+    FilePath Get(GameRelease release, GameInstallMode installMode);
 }
 
-public sealed class PluginListingsPathProvider : IPluginListingsPathProvider
+public class PluginListingsPathProvider : IPluginListingsPathProvider
 {
-    private readonly IGameInstallModeProvider _gameInstallModeProvider;
-    private readonly IGameReleaseContext _gameReleaseContext;
-
-    public PluginListingsPathProvider(
-        IGameInstallModeProvider gameInstallModeProvider, 
-        IGameReleaseContext gameReleaseContext)
+    private string? GetInstallModeSuffix(GameInstallMode installMode)
     {
-        _gameInstallModeProvider = gameInstallModeProvider;
-        _gameReleaseContext = gameReleaseContext;
-    }
-
-    private string? GetInstallModeSuffix()
-    {
-        return _gameInstallModeProvider.InstallMode switch
+        return installMode switch
         {
             GameInstallMode.Gog => " GOG",
             _ => null,
         };
     }
     
-    private string GetGameFolder()
+    private string GetGameFolder(GameRelease release)
     {
-        return _gameReleaseContext.Release switch
+        return release switch
         {
             GameRelease.Oblivion => "Oblivion",
             GameRelease.SkyrimLE => "Skyrim",
@@ -50,10 +33,10 @@ public sealed class PluginListingsPathProvider : IPluginListingsPathProvider
         };
     }
     
-    private string GetRelativePluginsPath()
+    private string GetRelativePluginsPath(GameRelease release, GameInstallMode installMode)
     {
-        var installModeSuffix = GetInstallModeSuffix();
-        var gameFolder = GetGameFolder();
+        var installModeSuffix = GetInstallModeSuffix(installMode);
+        var gameFolder = GetGameFolder(release);
         if (installModeSuffix == null)
         {
             return System.IO.Path.Combine(
@@ -68,10 +51,7 @@ public sealed class PluginListingsPathProvider : IPluginListingsPathProvider
         }
     }
 
-    /// <inheritdoc />
-    public FilePath Path => System.IO.Path.Combine(
+    public FilePath Get(GameRelease release, GameInstallMode installMode) => System.IO.Path.Combine(
         Environment.GetEnvironmentVariable("LocalAppData")!,
-        GetRelativePluginsPath());
+        GetRelativePluginsPath(release, installMode));
 }
-
-public sealed record PluginListingsPathInjection(FilePath Path) : IPluginListingsPathProvider;

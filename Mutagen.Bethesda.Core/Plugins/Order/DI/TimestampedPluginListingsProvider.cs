@@ -12,25 +12,25 @@ public sealed class TimestampedPluginListingsProvider : ITimestampedPluginListin
     public ITimestampedPluginListingsPreferences Prefs { get; }
     public IPluginRawListingsReader RawListingsReader { get; }
     public IDataDirectoryProvider DirectoryProvider { get; }
-    public IPluginListingsPathProvider ListingsPathProvider { get; }
+    public IPluginListingsPathContext ListingsPathContext { get; }
 
     public TimestampedPluginListingsProvider(
         ITimestampAligner timestampAligner,
         ITimestampedPluginListingsPreferences prefs,
         IPluginRawListingsReader rawListingsReader,
         IDataDirectoryProvider dataDirectoryProvider,
-        IPluginListingsPathProvider pluginListingsPathProvider)
+        IPluginListingsPathContext pluginListingsPathContext)
     {
         Aligner = timestampAligner;
         Prefs = prefs;
         RawListingsReader = rawListingsReader;
         DirectoryProvider = dataDirectoryProvider;
-        ListingsPathProvider = pluginListingsPathProvider;
+        ListingsPathContext = pluginListingsPathContext;
     }
 
     public IEnumerable<ILoadOrderListingGetter> Get()
     {
-        var mods = RawListingsReader.Read(ListingsPathProvider.Path);
+        var mods = RawListingsReader.Read(ListingsPathContext.Path);
         return Aligner.AlignToTimestamps(
             mods,
             DirectoryProvider.Path, 
