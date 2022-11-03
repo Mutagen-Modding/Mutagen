@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Kernel;
+using Noggog;
 
 namespace Mutagen.Bethesda.Testing.AutoData;
 
@@ -27,7 +28,23 @@ public class GameReleaseBuilder : ISpecimenBuilder
         {
             return _release.ToCategory();
         }
-            
+        
+        if (t.Name.EndsWith("Release"))
+        {
+            if (Enum.TryParse<GameCategory>(t.Name.TrimEnd("Release"), out var cata))
+            {
+                switch (cata)
+                {
+                    case GameCategory.Skyrim:
+                        return Enum.Parse(t, "SkyrimSE");
+                    case GameCategory.Fallout4:
+                    case GameCategory.Oblivion:
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+        
         return new NoSpecimen();
     }
 }
