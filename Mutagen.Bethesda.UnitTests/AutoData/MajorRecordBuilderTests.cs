@@ -17,6 +17,16 @@ public class MajorRecordBuilderTests
     }
     
     [Theory]
+    [MutagenModAutoData(ConfigureMembers: true)]
+    public void ConfigureMembers(
+        SkyrimMod mod,
+        Npc npc)
+    {
+        npc.FormKey.ModKey.Should().Be(mod.ModKey);
+        mod.Npcs.Records.Should().Contain(n => n == npc);
+    }
+    
+    [Theory]
     [MutagenModAutoData]
     public void TwoRequests(
         SkyrimMod mod,

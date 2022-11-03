@@ -8,13 +8,14 @@ public class MutagenModAutoDataAttribute : AutoDataAttribute
 {
     public MutagenModAutoDataAttribute(
         GameRelease Release = GameRelease.SkyrimSE,
-        bool UseMockFileSystem = true)
+        bool UseMockFileSystem = true,
+        bool ConfigureMembers = false)
         : base(() =>
         {
             var ret = new Fixture();
             ret.Customize(new MutagenDefaultCustomization(
                 useMockFileSystem: UseMockFileSystem,
-                configureMembers: false,
+                configureMembers: ConfigureMembers,
                 release: Release));
             ret.Customize(new MutagenConcreteModsCustomization(release: Release));
             return ret;
