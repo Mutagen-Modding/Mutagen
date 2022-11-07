@@ -77,12 +77,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IAIPackageTargetGetter rhs) return false;
-            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAIPackageTargetGetter? obj)
         {
-            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -885,18 +885,18 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IAIPackageTargetGetter? lhs,
             IAIPackageTargetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.ObjectType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.ObjectType) ?? true))
             {
                 if (lhs.ObjectType != rhs.ObjectType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.Object) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.Object) ?? true))
             {
                 if (lhs.Object != rhs.Object) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.Count) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.Count) ?? true))
             {
                 if (lhs.Count != rhs.Count) return false;
             }
@@ -1236,12 +1236,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IAIPackageTargetGetter rhs) return false;
-            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAIPackageTargetGetter? obj)
         {
-            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AIPackageTargetCommon)((IAIPackageTargetGetter)this).CommonInstance()!).GetHashCode(this);

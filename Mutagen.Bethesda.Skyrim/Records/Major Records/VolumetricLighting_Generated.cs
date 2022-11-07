@@ -788,12 +788,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IVolumetricLightingGetter rhs) return false;
-            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IVolumetricLightingGetter? obj)
         {
-            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((VolumetricLightingCommon)((IVolumetricLightingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((VolumetricLightingCommon)((IVolumetricLightingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1034,6 +1034,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static VolumetricLighting Duplicate(
+            this IVolumetricLightingGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1449,55 +1460,55 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IVolumetricLightingGetter? lhs,
             IVolumetricLightingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.Intensity) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.Intensity) ?? true))
             {
                 if (!lhs.Intensity.EqualsWithin(rhs.Intensity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.CustomColorContribution) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.CustomColorContribution) ?? true))
             {
                 if (!lhs.CustomColorContribution.EqualsWithin(rhs.CustomColorContribution)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.ColorR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.ColorR) ?? true))
             {
                 if (!lhs.ColorR.EqualsWithin(rhs.ColorR)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.ColorG) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.ColorG) ?? true))
             {
                 if (!lhs.ColorG.EqualsWithin(rhs.ColorG)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.ColorB) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.ColorB) ?? true))
             {
                 if (!lhs.ColorB.EqualsWithin(rhs.ColorB)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensityContribution) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensityContribution) ?? true))
             {
                 if (!lhs.DensityContribution.EqualsWithin(rhs.DensityContribution)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensitySize) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensitySize) ?? true))
             {
                 if (!lhs.DensitySize.EqualsWithin(rhs.DensitySize)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensityWindSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensityWindSpeed) ?? true))
             {
                 if (!lhs.DensityWindSpeed.EqualsWithin(rhs.DensityWindSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensityFallingSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensityFallingSpeed) ?? true))
             {
                 if (!lhs.DensityFallingSpeed.EqualsWithin(rhs.DensityFallingSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.PhaseFunctionContribution) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.PhaseFunctionContribution) ?? true))
             {
                 if (!lhs.PhaseFunctionContribution.EqualsWithin(rhs.PhaseFunctionContribution)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.PhaseFunctionScattering) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.PhaseFunctionScattering) ?? true))
             {
                 if (!lhs.PhaseFunctionScattering.EqualsWithin(rhs.PhaseFunctionScattering)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor) ?? true))
             {
                 if (!lhs.SamplingRepartitionRangeFactor.EqualsWithin(rhs.SamplingRepartitionRangeFactor)) return false;
             }
@@ -1507,23 +1518,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IVolumetricLightingGetter?)lhs,
                 rhs: rhs as IVolumetricLightingGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IVolumetricLightingGetter?)lhs,
                 rhs: rhs as IVolumetricLightingGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IVolumetricLightingGetter item)
@@ -2363,12 +2374,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IVolumetricLightingGetter rhs) return false;
-            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IVolumetricLightingGetter? obj)
         {
-            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((VolumetricLightingCommon)((IVolumetricLightingGetter)this).CommonInstance()!).GetHashCode(this);

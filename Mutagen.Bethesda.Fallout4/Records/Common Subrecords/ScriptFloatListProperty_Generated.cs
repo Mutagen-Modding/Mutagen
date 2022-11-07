@@ -85,12 +85,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptFloatListPropertyGetter rhs) return false;
-            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptFloatListPropertyGetter? obj)
         {
-            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).GetHashCode(this);
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -884,11 +884,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IScriptFloatListPropertyGetter? lhs,
             IScriptFloatListPropertyGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ScriptFloatListProperty_FieldIndex.Data) ?? true))
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ScriptFloatListProperty_FieldIndex.Data) ?? true))
             {
                 if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
             }
@@ -898,12 +898,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IScriptPropertyGetter? lhs,
             IScriptPropertyGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IScriptFloatListPropertyGetter?)lhs,
                 rhs: rhs as IScriptFloatListPropertyGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IScriptFloatListPropertyGetter item)
@@ -1262,12 +1262,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptFloatListPropertyGetter rhs) return false;
-            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptFloatListPropertyGetter? obj)
         {
-            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).GetHashCode(this);

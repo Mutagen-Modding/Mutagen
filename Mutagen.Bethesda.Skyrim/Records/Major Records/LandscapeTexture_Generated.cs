@@ -729,12 +729,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeTextureGetter rhs) return false;
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeTextureGetter? obj)
         {
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -971,6 +971,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static LandscapeTexture Duplicate(
+            this ILandscapeTextureGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1357,39 +1368,39 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILandscapeTextureGetter? lhs,
             ILandscapeTextureGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
             {
                 if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
             {
                 if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
             {
                 if (lhs.HavokFriction != rhs.HavokFriction) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokRestitution) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokRestitution) ?? true))
             {
                 if (lhs.HavokRestitution != rhs.HavokRestitution) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSpecularExponent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSpecularExponent) ?? true))
             {
                 if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Grasses) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Grasses) ?? true))
             {
                 if (!lhs.Grasses.SequenceEqualNullable(rhs.Grasses)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HNAMDataTypeState) ?? true))
             {
                 if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
             }
@@ -1399,23 +1410,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandscapeTextureGetter?)lhs,
                 rhs: rhs as ILandscapeTextureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandscapeTextureGetter?)lhs,
                 rhs: rhs as ILandscapeTextureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILandscapeTextureGetter item)
@@ -2168,12 +2179,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeTextureGetter rhs) return false;
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeTextureGetter? obj)
         {
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).GetHashCode(this);

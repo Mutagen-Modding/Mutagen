@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILinkedDoorGetter rhs) return false;
-            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILinkedDoorGetter? obj)
         {
-            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LinkedDoorCommon)((ILinkedDoorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -848,14 +848,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILinkedDoorGetter? lhs,
             ILinkedDoorGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Door) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Door) ?? true))
             {
                 if (!lhs.Door.Equals(rhs.Door)) return false;
             }
@@ -1179,12 +1179,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILinkedDoorGetter rhs) return false;
-            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILinkedDoorGetter? obj)
         {
-            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).GetHashCode(this);

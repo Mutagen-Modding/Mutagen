@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkAbilityEffectGetter rhs) return false;
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkAbilityEffectGetter? obj)
         {
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -824,11 +824,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPerkAbilityEffectGetter? lhs,
             IPerkAbilityEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
+            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
             {
                 if (!lhs.Ability.Equals(rhs.Ability)) return false;
             }
@@ -838,12 +838,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAPerkEffectGetter? lhs,
             IAPerkEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkAbilityEffectGetter?)lhs,
                 rhs: rhs as IPerkAbilityEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPerkAbilityEffectGetter item)
@@ -1186,12 +1186,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkAbilityEffectGetter rhs) return false;
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkAbilityEffectGetter? obj)
         {
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).GetHashCode(this);

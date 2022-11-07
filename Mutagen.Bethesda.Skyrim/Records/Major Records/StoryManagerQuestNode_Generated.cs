@@ -655,12 +655,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IStoryManagerQuestNodeGetter rhs) return false;
-            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStoryManagerQuestNodeGetter? obj)
         {
-            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -891,6 +891,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static StoryManagerQuestNode Duplicate(
+            this IStoryManagerQuestNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1309,31 +1320,31 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IStoryManagerQuestNodeGetter? lhs,
             IStoryManagerQuestNodeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Flags) ?? true))
+            if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.QuestFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.QuestFlags) ?? true))
             {
                 if (lhs.QuestFlags != rhs.QuestFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests) ?? true))
             {
                 if (lhs.MaxConcurrentQuests != rhs.MaxConcurrentQuests) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun) ?? true))
             {
                 if (lhs.MaxNumQuestsToRun != rhs.MaxNumQuestsToRun) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Quests) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Quests) ?? true))
             {
-                if (!lhs.Quests.SequenceEqual(rhs.Quests, (l, r) => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)StoryManagerQuestNode_FieldIndex.Quests)))) return false;
+                if (!lhs.Quests.SequenceEqual(rhs.Quests, (l, r) => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)StoryManagerQuestNode_FieldIndex.Quests)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.DNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
@@ -1343,34 +1354,34 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IAStoryManagerNodeGetter? lhs,
             IAStoryManagerNodeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStoryManagerQuestNodeGetter?)lhs,
                 rhs: rhs as IStoryManagerQuestNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStoryManagerQuestNodeGetter?)lhs,
                 rhs: rhs as IStoryManagerQuestNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStoryManagerQuestNodeGetter?)lhs,
                 rhs: rhs as IStoryManagerQuestNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IStoryManagerQuestNodeGetter item)
@@ -2147,12 +2158,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IStoryManagerQuestNodeGetter rhs) return false;
-            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStoryManagerQuestNodeGetter? obj)
         {
-            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).GetHashCode(this);

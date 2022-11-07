@@ -84,12 +84,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkQuestEffectGetter rhs) return false;
-            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkQuestEffectGetter? obj)
         {
-            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -866,15 +866,15 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPerkQuestEffectGetter? lhs,
             IPerkQuestEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Quest) ?? true))
+            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Stage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Stage) ?? true))
             {
                 if (lhs.Stage != rhs.Stage) return false;
             }
@@ -884,12 +884,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAPerkEffectGetter? lhs,
             IAPerkEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkQuestEffectGetter?)lhs,
                 rhs: rhs as IPerkQuestEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPerkQuestEffectGetter item)
@@ -1240,12 +1240,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkQuestEffectGetter rhs) return false;
-            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkQuestEffectGetter? obj)
         {
-            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).GetHashCode(this);

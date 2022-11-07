@@ -380,12 +380,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IBodyPartGetter rhs) return false;
-            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBodyPartGetter? obj)
         {
-            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2388,7 +2388,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -3083,206 +3083,206 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IBodyPartGetter? lhs,
             IBodyPartGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.PartNode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.PartNode) ?? true))
             {
                 if (!string.Equals(lhs.PartNode, rhs.PartNode)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.VatsTarget) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.VatsTarget) ?? true))
             {
                 if (!string.Equals(lhs.VatsTarget, rhs.VatsTarget)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.DamageMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.DamageMult) ?? true))
             {
                 if (!lhs.DamageMult.EqualsWithin(rhs.DamageMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebris) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebris) ?? true))
             {
                 if (!lhs.ExplodableDebris.Equals(rhs.ExplodableDebris)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosion) ?? true))
             {
                 if (!lhs.ExplodableExplosion.Equals(rhs.ExplodableExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisScale) ?? true))
             {
                 if (!lhs.ExplodableDebrisScale.EqualsWithin(rhs.ExplodableDebrisScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebris) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebris) ?? true))
             {
                 if (!lhs.SeverableDebris.Equals(rhs.SeverableDebris)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableExplosion) ?? true))
             {
                 if (!lhs.SeverableExplosion.Equals(rhs.SeverableExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisScale) ?? true))
             {
                 if (!lhs.SeverableDebrisScale.EqualsWithin(rhs.SeverableDebrisScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.CutMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.CutMin) ?? true))
             {
                 if (!lhs.CutMin.EqualsWithin(rhs.CutMin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.CutMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.CutMax) ?? true))
             {
                 if (!lhs.CutMax.EqualsWithin(rhs.CutMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.CutRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.CutRadius) ?? true))
             {
                 if (!lhs.CutRadius.EqualsWithin(rhs.CutRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreEffectsLocalRotateX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreEffectsLocalRotateX) ?? true))
             {
                 if (!lhs.GoreEffectsLocalRotateX.EqualsWithin(rhs.GoreEffectsLocalRotateX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreEffectsLocalRotateY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreEffectsLocalRotateY) ?? true))
             {
                 if (!lhs.GoreEffectsLocalRotateY.EqualsWithin(rhs.GoreEffectsLocalRotateY)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.CutTesselation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.CutTesselation) ?? true))
             {
                 if (!lhs.CutTesselation.EqualsWithin(rhs.CutTesselation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableImpactData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableImpactData) ?? true))
             {
                 if (!lhs.SeverableImpactData.Equals(rhs.SeverableImpactData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableImpactData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableImpactData) ?? true))
             {
                 if (!lhs.ExplodableImpactData.Equals(rhs.ExplodableImpactData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableLimbReplacementScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableLimbReplacementScale) ?? true))
             {
                 if (!lhs.ExplodableLimbReplacementScale.EqualsWithin(rhs.ExplodableLimbReplacementScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.HealthPercent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.HealthPercent) ?? true))
             {
                 if (!lhs.HealthPercent.Equals(rhs.HealthPercent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ActorValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ActorValue) ?? true))
             {
                 if (!lhs.ActorValue.Equals(rhs.ActorValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ToHitChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ToHitChance) ?? true))
             {
                 if (!lhs.ToHitChance.Equals(rhs.ToHitChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplosionChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplosionChance) ?? true))
             {
                 if (!lhs.ExplosionChance.Equals(rhs.ExplosionChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.NonLethalDismembermentChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.NonLethalDismembermentChance) ?? true))
             {
                 if (!lhs.NonLethalDismembermentChance.Equals(rhs.NonLethalDismembermentChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisCount) ?? true))
             {
                 if (lhs.SeverableDebrisCount != rhs.SeverableDebrisCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisCount) ?? true))
             {
                 if (lhs.ExplodableDebrisCount != rhs.ExplodableDebrisCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDecalCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDecalCount) ?? true))
             {
                 if (lhs.SeverableDecalCount != rhs.SeverableDecalCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDecalCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDecalCount) ?? true))
             {
                 if (lhs.ExplodableDecalCount != rhs.ExplodableDecalCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.GeometrySegmentIndex) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GeometrySegmentIndex) ?? true))
             {
                 if (lhs.GeometrySegmentIndex != rhs.GeometrySegmentIndex) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleArtObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleArtObject) ?? true))
             {
                 if (!lhs.OnCrippleArtObject.Equals(rhs.OnCrippleArtObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleDebris) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleDebris) ?? true))
             {
                 if (!lhs.OnCrippleDebris.Equals(rhs.OnCrippleDebris)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleExplosion) ?? true))
             {
                 if (!lhs.OnCrippleExplosion.Equals(rhs.OnCrippleExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleImpactData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleImpactData) ?? true))
             {
                 if (!lhs.OnCrippleImpactData.Equals(rhs.OnCrippleImpactData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleDebrisScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleDebrisScale) ?? true))
             {
                 if (!lhs.OnCrippleDebrisScale.EqualsWithin(rhs.OnCrippleDebrisScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleDebrisCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleDebrisCount) ?? true))
             {
                 if (lhs.OnCrippleDebrisCount != rhs.OnCrippleDebrisCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleDecalCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleDecalCount) ?? true))
             {
                 if (lhs.OnCrippleDecalCount != rhs.OnCrippleDecalCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.LimbReplacementModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.LimbReplacementModel) ?? true))
             {
                 if (!string.Equals(lhs.LimbReplacementModel, rhs.LimbReplacementModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreTargetBone) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreTargetBone) ?? true))
             {
                 if (!string.Equals(lhs.GoreTargetBone, rhs.GoreTargetBone)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.TextureFilesHashes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.TextureFilesHashes) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.HitReactionStart) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.HitReactionStart) ?? true))
             {
                 if (!string.Equals(lhs.HitReactionStart, rhs.HitReactionStart)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.HitReactionEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.HitReactionEnd) ?? true))
             {
                 if (!string.Equals(lhs.HitReactionEnd, rhs.HitReactionEnd)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreEffectsDismemberBloodArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreEffectsDismemberBloodArt) ?? true))
             {
                 if (!lhs.GoreEffectsDismemberBloodArt.Equals(rhs.GoreEffectsDismemberBloodArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreEffectsBloodImpactMaterialType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreEffectsBloodImpactMaterialType) ?? true))
             {
                 if (!lhs.GoreEffectsBloodImpactMaterialType.Equals(rhs.GoreEffectsBloodImpactMaterialType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleBloodImpactMaterialType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.OnCrippleBloodImpactMaterialType) ?? true))
             {
                 if (!lhs.OnCrippleBloodImpactMaterialType.Equals(rhs.OnCrippleBloodImpactMaterialType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.MeatCapTextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.MeatCapTextureSet) ?? true))
             {
                 if (!lhs.MeatCapTextureSet.Equals(rhs.MeatCapTextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.CollarTextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.CollarTextureSet) ?? true))
             {
                 if (!lhs.CollarTextureSet.Equals(rhs.CollarTextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.TwistVariablePrefix) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.TwistVariablePrefix) ?? true))
             {
                 if (!string.Equals(lhs.TwistVariablePrefix, rhs.TwistVariablePrefix)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.BPNDDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.BPNDDataTypeState) ?? true))
             {
                 if (lhs.BPNDDataTypeState != rhs.BPNDDataTypeState) return false;
             }
@@ -4615,12 +4615,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IBodyPartGetter rhs) return false;
-            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBodyPartGetter? obj)
         {
-            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).GetHashCode(this);

@@ -1057,12 +1057,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISoulGemGetter rhs) return false;
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoulGemGetter? obj)
         {
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1385,6 +1385,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static SoulGem Duplicate(
+            this ISoulGemGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1884,79 +1895,79 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISoulGemGetter? lhs,
             ISoulGemGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)SoulGem_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)SoulGem_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)SoulGem_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)SoulGem_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)SoulGem_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)SoulGem_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)SoulGem_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
             {
                 if (lhs.ContainedSoul != rhs.ContainedSoul) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
             {
                 if (lhs.MaximumCapacity != rhs.MaximumCapacity) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.LinkedTo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.LinkedTo) ?? true))
             {
                 if (!lhs.LinkedTo.Equals(rhs.LinkedTo)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1966,23 +1977,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoulGemGetter?)lhs,
                 rhs: rhs as ISoulGemGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoulGemGetter?)lhs,
                 rhs: rhs as ISoulGemGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoulGemGetter item)
@@ -3084,12 +3095,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISoulGemGetter rhs) return false;
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoulGemGetter? obj)
         {
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).GetHashCode(this);

@@ -94,12 +94,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPlacedObjectSplineGetter rhs) return false;
-            return ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedObjectSplineGetter? obj)
         {
-            return ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)this).CommonInstance()!).GetHashCode(this);
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1027,30 +1027,30 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPlacedObjectSplineGetter? lhs,
             IPlacedObjectSplineGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.Slack) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.Slack) ?? true))
             {
                 if (!lhs.Slack.EqualsWithin(rhs.Slack)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.Thickness) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.Thickness) ?? true))
             {
                 if (!lhs.Thickness.EqualsWithin(rhs.Thickness)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.HalfExtents) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.HalfExtents) ?? true))
             {
                 if (!lhs.HalfExtents.Equals(rhs.HalfExtents)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.IsWindDetachedEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.IsWindDetachedEnd) ?? true))
             {
                 if (lhs.IsWindDetachedEnd != rhs.IsWindDetachedEnd) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectSpline_FieldIndex.Unknown) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
@@ -1430,12 +1430,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPlacedObjectSplineGetter rhs) return false;
-            return ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedObjectSplineGetter? obj)
         {
-            return ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectSplineCommon)((IPlacedObjectSplineGetter)this).CommonInstance()!).GetHashCode(this);

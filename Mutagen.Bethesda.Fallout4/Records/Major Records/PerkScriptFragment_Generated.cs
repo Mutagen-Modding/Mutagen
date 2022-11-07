@@ -83,12 +83,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkScriptFragmentGetter rhs) return false;
-            return ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkScriptFragmentGetter? obj)
         {
-            return ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -958,26 +958,26 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPerkScriptFragmentGetter? lhs,
             IPerkScriptFragmentGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PerkScriptFragment_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkScriptFragment_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkScriptFragment_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkScriptFragment_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkScriptFragment_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkScriptFragment_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkScriptFragment_FieldIndex.ScriptName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkScriptFragment_FieldIndex.ScriptName) ?? true))
             {
                 if (!string.Equals(lhs.ScriptName, rhs.ScriptName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkScriptFragment_FieldIndex.FragmentName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkScriptFragment_FieldIndex.FragmentName) ?? true))
             {
                 if (!string.Equals(lhs.FragmentName, rhs.FragmentName)) return false;
             }
@@ -1339,12 +1339,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkScriptFragmentGetter rhs) return false;
-            return ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkScriptFragmentGetter? obj)
         {
-            return ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkScriptFragmentCommon)((IPerkScriptFragmentGetter)this).CommonInstance()!).GetHashCode(this);

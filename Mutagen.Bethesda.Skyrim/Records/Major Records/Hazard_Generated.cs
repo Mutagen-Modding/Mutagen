@@ -983,12 +983,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IHazardGetter rhs) return false;
-            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHazardGetter? obj)
         {
-            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HazardCommon)((IHazardGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((HazardCommon)((IHazardGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1279,6 +1279,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Hazard Duplicate(
+            this IHazardGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((HazardCommon)((IHazardGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1730,75 +1741,75 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IHazardGetter? lhs,
             IHazardGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Hazard_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Hazard_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Hazard_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Hazard_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
             {
                 if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
             {
                 if (lhs.Limit != rhs.Limit) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Radius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Radius) ?? true))
             {
                 if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Lifetime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Lifetime) ?? true))
             {
                 if (!lhs.Lifetime.EqualsWithin(rhs.Lifetime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceRadius) ?? true))
             {
                 if (!lhs.ImageSpaceRadius.EqualsWithin(rhs.ImageSpaceRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.TargetInterval) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.TargetInterval) ?? true))
             {
                 if (!lhs.TargetInterval.EqualsWithin(rhs.TargetInterval)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Spell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Spell) ?? true))
             {
                 if (!lhs.Spell.Equals(rhs.Spell)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
             {
                 if (!lhs.Light.Equals(rhs.Light)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
             {
                 if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1808,23 +1819,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHazardGetter?)lhs,
                 rhs: rhs as IHazardGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHazardGetter?)lhs,
                 rhs: rhs as IHazardGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IHazardGetter item)
@@ -2726,12 +2737,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IHazardGetter rhs) return false;
-            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHazardGetter? obj)
         {
-            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HazardCommon)((IHazardGetter)this).CommonInstance()!).GetHashCode(this);

@@ -98,12 +98,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IOblivionListGroupGetter<T> rhs) return false;
-            return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOblivionListGroupGetter<T>? obj)
         {
-            return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: null);
+                equalsMask: null);
         }
 
         public static bool Equals<T, T_TranslMask>(
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask.GetCrystal());
+                equalsMask: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter>(
@@ -992,20 +992,20 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IOblivionListGroupGetter<T>? lhs,
             IOblivionListGroupGetter<T>? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)OblivionListGroup_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionListGroup_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionListGroup_FieldIndex.LastModified) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionListGroup_FieldIndex.LastModified) ?? true))
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionListGroup_FieldIndex.Records) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionListGroup_FieldIndex.Records) ?? true))
             {
-                if (!lhs.Records.SequenceEqual(rhs.Records, (l, r) => ((CellBlockCommon)((ICellBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)OblivionListGroup_FieldIndex.Records)))) return false;
+                if (!lhs.Records.SequenceEqual(rhs.Records, (l, r) => ((CellBlockCommon)((ICellBlockGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)OblivionListGroup_FieldIndex.Records)))) return false;
             }
             return true;
         }
@@ -1559,12 +1559,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IOblivionListGroupGetter<T> rhs) return false;
-            return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOblivionListGroupGetter<T>? obj)
         {
-            return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);

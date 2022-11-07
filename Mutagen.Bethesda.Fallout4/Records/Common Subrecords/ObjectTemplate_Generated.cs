@@ -185,12 +185,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IObjectTemplateGetter<T> rhs) return false;
-            return ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IObjectTemplateGetter<T>? obj)
         {
-            return ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: null);
+                equalsMask: null);
         }
 
         public static bool Equals<T>(
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask.GetCrystal());
+                equalsMask: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T>(
@@ -848,52 +848,52 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IObjectTemplateGetter<T>? lhs,
             IObjectTemplateGetter<T>? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.IsEditorOnly) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.IsEditorOnly) ?? true))
             {
                 if (lhs.IsEditorOnly != rhs.IsEditorOnly) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.AddonIndex) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.AddonIndex) ?? true))
             {
                 if (lhs.AddonIndex != rhs.AddonIndex) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.LevelMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.LevelMin) ?? true))
             {
                 if (lhs.LevelMin != rhs.LevelMin) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.LevelMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.LevelMax) ?? true))
             {
                 if (lhs.LevelMax != rhs.LevelMax) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Default) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Default) ?? true))
             {
                 if (lhs.Default != rhs.Default) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.MinLevelForRanks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.MinLevelForRanks) ?? true))
             {
                 if (lhs.MinLevelForRanks != rhs.MinLevelForRanks) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.AltLevelsPerTier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.AltLevelsPerTier) ?? true))
             {
                 if (lhs.AltLevelsPerTier != rhs.AltLevelsPerTier) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Includes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Includes) ?? true))
             {
-                if (!lhs.Includes.SequenceEqual(rhs.Includes, (l, r) => ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ObjectTemplate_FieldIndex.Includes)))) return false;
+                if (!lhs.Includes.SequenceEqual(rhs.Includes, (l, r) => ((ObjectTemplateIncludeCommon)((IObjectTemplateIncludeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ObjectTemplate_FieldIndex.Includes)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectTemplate_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)l).CommonInstance(typeof(T))!).Equals(l, r, crystal?.GetSubCrystal((int)ObjectTemplate_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)l).CommonInstance(typeof(T))!).Equals(l, r, equalsMask?.GetSubCrystal((int)ObjectTemplate_FieldIndex.Properties)))) return false;
             }
             return true;
         }
@@ -1474,12 +1474,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IObjectTemplateGetter<T> rhs) return false;
-            return ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IObjectTemplateGetter<T>? obj)
         {
-            return ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ObjectTemplateCommon<T>)((IObjectTemplateGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);

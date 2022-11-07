@@ -107,12 +107,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IArmorModelGetter rhs) return false;
-            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IArmorModelGetter? obj)
         {
-            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -925,22 +925,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IArmorModelGetter? lhs,
             IArmorModelGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ArmorModel_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)ArmorModel_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)ArmorModel_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorModel_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)ArmorModel_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)ArmorModel_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
@@ -1400,12 +1400,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IArmorModelGetter rhs) return false;
-            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IArmorModelGetter? obj)
         {
-            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).GetHashCode(this);

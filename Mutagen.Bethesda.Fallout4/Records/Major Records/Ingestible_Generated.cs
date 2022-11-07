@@ -1386,12 +1386,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IIngestibleGetter rhs) return false;
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIngestibleGetter? obj)
         {
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1660,7 +1660,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((IngestibleCommon)((IIngestibleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1734,6 +1734,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Ingestible Duplicate(
+            this IIngestibleGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((IngestibleCommon)((IIngestibleGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -2276,107 +2287,107 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IIngestibleGetter? lhs,
             IIngestibleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Ingestible_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Ingestible_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Ingestible_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
             {
                 if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.CraftingSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.CraftingSound) ?? true))
             {
                 if (!lhs.CraftingSound.Equals(rhs.CraftingSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Ingestible_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Addiction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Addiction) ?? true))
             {
                 if (!lhs.Addiction.Equals(rhs.Addiction)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionChance) ?? true))
             {
                 if (!lhs.AddictionChance.EqualsWithin(rhs.AddictionChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.ConsumeSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ConsumeSound) ?? true))
             {
                 if (!lhs.ConsumeSound.Equals(rhs.ConsumeSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionName) ?? true))
             {
                 if (!object.Equals(lhs.AddictionName, rhs.AddictionName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Effects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Ingestible_FieldIndex.Effects)))) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.Effects)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.ENITDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ENITDataTypeState) ?? true))
             {
                 if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
             }
@@ -2386,23 +2397,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IIngestibleGetter?)lhs,
                 rhs: rhs as IIngestibleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IIngestibleGetter?)lhs,
                 rhs: rhs as IIngestibleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IIngestibleGetter item)
@@ -3684,12 +3695,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IIngestibleGetter rhs) return false;
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIngestibleGetter? obj)
         {
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).GetHashCode(this);

@@ -94,12 +94,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAmbientColorsGetter rhs) return false;
-            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAmbientColorsGetter? obj)
         {
-            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1086,38 +1086,38 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAmbientColorsGetter? lhs,
             IAmbientColorsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalXPlus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalXPlus) ?? true))
             {
                 if (!lhs.DirectionalXPlus.ColorOnlyEquals(rhs.DirectionalXPlus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalXMinus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalXMinus) ?? true))
             {
                 if (!lhs.DirectionalXMinus.ColorOnlyEquals(rhs.DirectionalXMinus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalYPlus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalYPlus) ?? true))
             {
                 if (!lhs.DirectionalYPlus.ColorOnlyEquals(rhs.DirectionalYPlus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalYMinus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalYMinus) ?? true))
             {
                 if (!lhs.DirectionalYMinus.ColorOnlyEquals(rhs.DirectionalYMinus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZPlus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZPlus) ?? true))
             {
                 if (!lhs.DirectionalZPlus.ColorOnlyEquals(rhs.DirectionalZPlus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZMinus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZMinus) ?? true))
             {
                 if (!lhs.DirectionalZMinus.ColorOnlyEquals(rhs.DirectionalZMinus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.Specular) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Specular) ?? true))
             {
                 if (!lhs.Specular.ColorOnlyEquals(rhs.Specular)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.Scale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Scale) ?? true))
             {
                 if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             }
@@ -1501,12 +1501,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAmbientColorsGetter rhs) return false;
-            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAmbientColorsGetter? obj)
         {
-            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).GetHashCode(this);

@@ -6816,12 +6816,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IImageSpaceAdapterGetter rhs) return false;
-            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceAdapterGetter? obj)
         {
-            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -7092,7 +7092,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -7166,6 +7166,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static ImageSpaceAdapter Duplicate(
+            this IImageSpaceAdapterGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -8777,263 +8788,263 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IImageSpaceAdapterGetter? lhs,
             IImageSpaceAdapterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Animatable) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Animatable) ?? true))
             {
                 if (lhs.Animatable != rhs.Animatable) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
             {
                 if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget) ?? true))
             {
                 if (lhs.RadialBlurUseTarget != rhs.RadialBlurUseTarget) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
             {
                 if (!lhs.RadialBlurCenter.Equals(rhs.RadialBlurCenter)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags) ?? true))
             {
                 if (lhs.DepthOfFieldFlags != rhs.DepthOfFieldFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
             {
-                if (!lhs.BlurRadius.SequenceEqualNullable(rhs.BlurRadius, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.BlurRadius)))) return false;
+                if (!lhs.BlurRadius.SequenceEqualNullable(rhs.BlurRadius, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.BlurRadius)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength) ?? true))
             {
-                if (!lhs.DoubleVisionStrength.SequenceEqualNullable(rhs.DoubleVisionStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength)))) return false;
+                if (!lhs.DoubleVisionStrength.SequenceEqualNullable(rhs.DoubleVisionStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.TintColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.TintColor) ?? true))
             {
-                if (!lhs.TintColor.SequenceEqualNullable(rhs.TintColor, (l, r) => ((ColorFrameCommon)((IColorFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.TintColor)))) return false;
+                if (!lhs.TintColor.SequenceEqualNullable(rhs.TintColor, (l, r) => ((ColorFrameCommon)((IColorFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.TintColor)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.FadeColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.FadeColor) ?? true))
             {
-                if (!lhs.FadeColor.SequenceEqualNullable(rhs.FadeColor, (l, r) => ((ColorFrameCommon)((IColorFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.FadeColor)))) return false;
+                if (!lhs.FadeColor.SequenceEqualNullable(rhs.FadeColor, (l, r) => ((ColorFrameCommon)((IColorFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.FadeColor)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength) ?? true))
             {
-                if (!lhs.RadialBlurStrength.SequenceEqualNullable(rhs.RadialBlurStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength)))) return false;
+                if (!lhs.RadialBlurStrength.SequenceEqualNullable(rhs.RadialBlurStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp) ?? true))
             {
-                if (!lhs.RadialBlurRampUp.SequenceEqualNullable(rhs.RadialBlurRampUp, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp)))) return false;
+                if (!lhs.RadialBlurRampUp.SequenceEqualNullable(rhs.RadialBlurRampUp, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart) ?? true))
             {
-                if (!lhs.RadialBlurStart.SequenceEqualNullable(rhs.RadialBlurStart, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart)))) return false;
+                if (!lhs.RadialBlurStart.SequenceEqualNullable(rhs.RadialBlurStart, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown) ?? true))
             {
-                if (!lhs.RadialBlurRampDown.SequenceEqualNullable(rhs.RadialBlurRampDown, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown)))) return false;
+                if (!lhs.RadialBlurRampDown.SequenceEqualNullable(rhs.RadialBlurRampDown, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart) ?? true))
             {
-                if (!lhs.RadialBlurDownStart.SequenceEqualNullable(rhs.RadialBlurDownStart, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart)))) return false;
+                if (!lhs.RadialBlurDownStart.SequenceEqualNullable(rhs.RadialBlurDownStart, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength) ?? true))
             {
-                if (!lhs.DepthOfFieldStrength.SequenceEqualNullable(rhs.DepthOfFieldStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength)))) return false;
+                if (!lhs.DepthOfFieldStrength.SequenceEqualNullable(rhs.DepthOfFieldStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance) ?? true))
             {
-                if (!lhs.DepthOfFieldDistance.SequenceEqualNullable(rhs.DepthOfFieldDistance, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance)))) return false;
+                if (!lhs.DepthOfFieldDistance.SequenceEqualNullable(rhs.DepthOfFieldDistance, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange) ?? true))
             {
-                if (!lhs.DepthOfFieldRange.SequenceEqualNullable(rhs.DepthOfFieldRange, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange)))) return false;
+                if (!lhs.DepthOfFieldRange.SequenceEqualNullable(rhs.DepthOfFieldRange, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius) ?? true))
             {
-                if (!lhs.DepthOfFieldVignetteRadius.SequenceEqualNullable(rhs.DepthOfFieldVignetteRadius, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius)))) return false;
+                if (!lhs.DepthOfFieldVignetteRadius.SequenceEqualNullable(rhs.DepthOfFieldVignetteRadius, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength) ?? true))
             {
-                if (!lhs.DepthOfFieldVignetteStrength.SequenceEqualNullable(rhs.DepthOfFieldVignetteStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength)))) return false;
+                if (!lhs.DepthOfFieldVignetteStrength.SequenceEqualNullable(rhs.DepthOfFieldVignetteStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength) ?? true))
             {
-                if (!lhs.MotionBlurStrength.SequenceEqualNullable(rhs.MotionBlurStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength)))) return false;
+                if (!lhs.MotionBlurStrength.SequenceEqualNullable(rhs.MotionBlurStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult) ?? true))
             {
-                if (!lhs.HdrEyeAdaptSpeedMult.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult)))) return false;
+                if (!lhs.HdrEyeAdaptSpeedMult.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd) ?? true))
             {
-                if (!lhs.HdrEyeAdaptSpeedAdd.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd)))) return false;
+                if (!lhs.HdrEyeAdaptSpeedAdd.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult) ?? true))
             {
-                if (!lhs.HdrBloomBlurRadiusMult.SequenceEqualNullable(rhs.HdrBloomBlurRadiusMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult)))) return false;
+                if (!lhs.HdrBloomBlurRadiusMult.SequenceEqualNullable(rhs.HdrBloomBlurRadiusMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd) ?? true))
             {
-                if (!lhs.HdrBloomBlurRadiusAdd.SequenceEqualNullable(rhs.HdrBloomBlurRadiusAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd)))) return false;
+                if (!lhs.HdrBloomBlurRadiusAdd.SequenceEqualNullable(rhs.HdrBloomBlurRadiusAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult) ?? true))
             {
-                if (!lhs.HdrBloomThresholdMult.SequenceEqualNullable(rhs.HdrBloomThresholdMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult)))) return false;
+                if (!lhs.HdrBloomThresholdMult.SequenceEqualNullable(rhs.HdrBloomThresholdMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd) ?? true))
             {
-                if (!lhs.HdrBloomThresholdAdd.SequenceEqualNullable(rhs.HdrBloomThresholdAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd)))) return false;
+                if (!lhs.HdrBloomThresholdAdd.SequenceEqualNullable(rhs.HdrBloomThresholdAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult) ?? true))
             {
-                if (!lhs.HdrBloomScaleMult.SequenceEqualNullable(rhs.HdrBloomScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult)))) return false;
+                if (!lhs.HdrBloomScaleMult.SequenceEqualNullable(rhs.HdrBloomScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd) ?? true))
             {
-                if (!lhs.HdrBloomScaleAdd.SequenceEqualNullable(rhs.HdrBloomScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd)))) return false;
+                if (!lhs.HdrBloomScaleAdd.SequenceEqualNullable(rhs.HdrBloomScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult) ?? true))
             {
-                if (!lhs.HdrTargetLumMinMult.SequenceEqualNullable(rhs.HdrTargetLumMinMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult)))) return false;
+                if (!lhs.HdrTargetLumMinMult.SequenceEqualNullable(rhs.HdrTargetLumMinMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd) ?? true))
             {
-                if (!lhs.HdrTargetLumMinAdd.SequenceEqualNullable(rhs.HdrTargetLumMinAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd)))) return false;
+                if (!lhs.HdrTargetLumMinAdd.SequenceEqualNullable(rhs.HdrTargetLumMinAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult) ?? true))
             {
-                if (!lhs.HdrTargetLumMaxMult.SequenceEqualNullable(rhs.HdrTargetLumMaxMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult)))) return false;
+                if (!lhs.HdrTargetLumMaxMult.SequenceEqualNullable(rhs.HdrTargetLumMaxMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd) ?? true))
             {
-                if (!lhs.HdrTargetLumMaxAdd.SequenceEqualNullable(rhs.HdrTargetLumMaxAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd)))) return false;
+                if (!lhs.HdrTargetLumMaxAdd.SequenceEqualNullable(rhs.HdrTargetLumMaxAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult) ?? true))
             {
-                if (!lhs.HdrSunlightScaleMult.SequenceEqualNullable(rhs.HdrSunlightScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult)))) return false;
+                if (!lhs.HdrSunlightScaleMult.SequenceEqualNullable(rhs.HdrSunlightScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd) ?? true))
             {
-                if (!lhs.HdrSunlightScaleAdd.SequenceEqualNullable(rhs.HdrSunlightScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd)))) return false;
+                if (!lhs.HdrSunlightScaleAdd.SequenceEqualNullable(rhs.HdrSunlightScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult) ?? true))
             {
-                if (!lhs.HdrSkyScaleMult.SequenceEqualNullable(rhs.HdrSkyScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult)))) return false;
+                if (!lhs.HdrSkyScaleMult.SequenceEqualNullable(rhs.HdrSkyScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd) ?? true))
             {
-                if (!lhs.HdrSkyScaleAdd.SequenceEqualNullable(rhs.HdrSkyScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd)))) return false;
+                if (!lhs.HdrSkyScaleAdd.SequenceEqualNullable(rhs.HdrSkyScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown08) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown08) ?? true))
             {
-                if (!lhs.Unknown08.SequenceEqualNullable(rhs.Unknown08, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown08)))) return false;
+                if (!lhs.Unknown08.SequenceEqualNullable(rhs.Unknown08, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown08)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown48) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown48) ?? true))
             {
-                if (!lhs.Unknown48.SequenceEqualNullable(rhs.Unknown48, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown48)))) return false;
+                if (!lhs.Unknown48.SequenceEqualNullable(rhs.Unknown48, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown48)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown09) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown09) ?? true))
             {
-                if (!lhs.Unknown09.SequenceEqualNullable(rhs.Unknown09, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown09)))) return false;
+                if (!lhs.Unknown09.SequenceEqualNullable(rhs.Unknown09, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown09)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown49) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown49) ?? true))
             {
-                if (!lhs.Unknown49.SequenceEqualNullable(rhs.Unknown49, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown49)))) return false;
+                if (!lhs.Unknown49.SequenceEqualNullable(rhs.Unknown49, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown49)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0A) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0A) ?? true))
             {
-                if (!lhs.Unknown0A.SequenceEqualNullable(rhs.Unknown0A, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0A)))) return false;
+                if (!lhs.Unknown0A.SequenceEqualNullable(rhs.Unknown0A, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0A)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4A) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4A) ?? true))
             {
-                if (!lhs.Unknown4A.SequenceEqualNullable(rhs.Unknown4A, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4A)))) return false;
+                if (!lhs.Unknown4A.SequenceEqualNullable(rhs.Unknown4A, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4A)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0B) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0B) ?? true))
             {
-                if (!lhs.Unknown0B.SequenceEqualNullable(rhs.Unknown0B, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0B)))) return false;
+                if (!lhs.Unknown0B.SequenceEqualNullable(rhs.Unknown0B, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0B)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4B) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4B) ?? true))
             {
-                if (!lhs.Unknown4B.SequenceEqualNullable(rhs.Unknown4B, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4B)))) return false;
+                if (!lhs.Unknown4B.SequenceEqualNullable(rhs.Unknown4B, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4B)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0C) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0C) ?? true))
             {
-                if (!lhs.Unknown0C.SequenceEqualNullable(rhs.Unknown0C, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0C)))) return false;
+                if (!lhs.Unknown0C.SequenceEqualNullable(rhs.Unknown0C, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0C)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4C) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4C) ?? true))
             {
-                if (!lhs.Unknown4C.SequenceEqualNullable(rhs.Unknown4C, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4C)))) return false;
+                if (!lhs.Unknown4C.SequenceEqualNullable(rhs.Unknown4C, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4C)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0D) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0D) ?? true))
             {
-                if (!lhs.Unknown0D.SequenceEqualNullable(rhs.Unknown0D, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0D)))) return false;
+                if (!lhs.Unknown0D.SequenceEqualNullable(rhs.Unknown0D, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0D)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4D) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4D) ?? true))
             {
-                if (!lhs.Unknown4D.SequenceEqualNullable(rhs.Unknown4D, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4D)))) return false;
+                if (!lhs.Unknown4D.SequenceEqualNullable(rhs.Unknown4D, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4D)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0E) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0E) ?? true))
             {
-                if (!lhs.Unknown0E.SequenceEqualNullable(rhs.Unknown0E, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0E)))) return false;
+                if (!lhs.Unknown0E.SequenceEqualNullable(rhs.Unknown0E, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0E)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4E) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4E) ?? true))
             {
-                if (!lhs.Unknown4E.SequenceEqualNullable(rhs.Unknown4E, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4E)))) return false;
+                if (!lhs.Unknown4E.SequenceEqualNullable(rhs.Unknown4E, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4E)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0F) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0F) ?? true))
             {
-                if (!lhs.Unknown0F.SequenceEqualNullable(rhs.Unknown0F, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0F)))) return false;
+                if (!lhs.Unknown0F.SequenceEqualNullable(rhs.Unknown0F, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0F)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4F) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4F) ?? true))
             {
-                if (!lhs.Unknown4F.SequenceEqualNullable(rhs.Unknown4F, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4F)))) return false;
+                if (!lhs.Unknown4F.SequenceEqualNullable(rhs.Unknown4F, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4F)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown10) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown10) ?? true))
             {
-                if (!lhs.Unknown10.SequenceEqualNullable(rhs.Unknown10, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown10)))) return false;
+                if (!lhs.Unknown10.SequenceEqualNullable(rhs.Unknown10, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown10)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown50) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown50) ?? true))
             {
-                if (!lhs.Unknown50.SequenceEqualNullable(rhs.Unknown50, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown50)))) return false;
+                if (!lhs.Unknown50.SequenceEqualNullable(rhs.Unknown50, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown50)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult) ?? true))
             {
-                if (!lhs.CinematicSaturationMult.SequenceEqualNullable(rhs.CinematicSaturationMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult)))) return false;
+                if (!lhs.CinematicSaturationMult.SequenceEqualNullable(rhs.CinematicSaturationMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd) ?? true))
             {
-                if (!lhs.CinematicSaturationAdd.SequenceEqualNullable(rhs.CinematicSaturationAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd)))) return false;
+                if (!lhs.CinematicSaturationAdd.SequenceEqualNullable(rhs.CinematicSaturationAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult) ?? true))
             {
-                if (!lhs.CinematicBrightnessMult.SequenceEqualNullable(rhs.CinematicBrightnessMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult)))) return false;
+                if (!lhs.CinematicBrightnessMult.SequenceEqualNullable(rhs.CinematicBrightnessMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd) ?? true))
             {
-                if (!lhs.CinematicBrightnessAdd.SequenceEqualNullable(rhs.CinematicBrightnessAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd)))) return false;
+                if (!lhs.CinematicBrightnessAdd.SequenceEqualNullable(rhs.CinematicBrightnessAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult) ?? true))
             {
-                if (!lhs.CinematicContrastMult.SequenceEqualNullable(rhs.CinematicContrastMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult)))) return false;
+                if (!lhs.CinematicContrastMult.SequenceEqualNullable(rhs.CinematicContrastMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd) ?? true))
             {
-                if (!lhs.CinematicContrastAdd.SequenceEqualNullable(rhs.CinematicContrastAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd)))) return false;
+                if (!lhs.CinematicContrastAdd.SequenceEqualNullable(rhs.CinematicContrastAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown14) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown14) ?? true))
             {
-                if (!lhs.Unknown14.SequenceEqualNullable(rhs.Unknown14, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown14)))) return false;
+                if (!lhs.Unknown14.SequenceEqualNullable(rhs.Unknown14, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown14)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown54) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown54) ?? true))
             {
-                if (!lhs.Unknown54.SequenceEqualNullable(rhs.Unknown54, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown54)))) return false;
+                if (!lhs.Unknown54.SequenceEqualNullable(rhs.Unknown54, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown54)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
@@ -9043,23 +9054,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImageSpaceAdapterGetter?)lhs,
                 rhs: rhs as IImageSpaceAdapterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImageSpaceAdapterGetter?)lhs,
                 rhs: rhs as IImageSpaceAdapterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IImageSpaceAdapterGetter item)
@@ -13687,12 +13698,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IImageSpaceAdapterGetter rhs) return false;
-            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceAdapterGetter? obj)
         {
-            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).GetHashCode(this);

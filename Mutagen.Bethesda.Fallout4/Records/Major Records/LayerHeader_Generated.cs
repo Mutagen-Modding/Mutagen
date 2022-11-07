@@ -88,12 +88,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILayerHeaderGetter rhs) return false;
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILayerHeaderGetter? obj)
         {
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).GetHashCode(this);
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -943,22 +943,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILayerHeaderGetter? lhs,
             ILayerHeaderGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
             {
                 if (!lhs.Texture.Equals(rhs.Texture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {
                 if (lhs.Quadrant != rhs.Quadrant) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.LayerNumber) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.LayerNumber) ?? true))
             {
                 if (lhs.LayerNumber != rhs.LayerNumber) return false;
             }
@@ -1310,12 +1310,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILayerHeaderGetter rhs) return false;
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILayerHeaderGetter? obj)
         {
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).GetHashCode(this);

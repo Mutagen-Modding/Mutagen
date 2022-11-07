@@ -592,12 +592,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAttractionRuleGetter rhs) return false;
-            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAttractionRuleGetter? obj)
         {
-            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AttractionRuleCommon)((IAttractionRuleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -828,6 +828,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static AttractionRule Duplicate(
+            this IAttractionRuleGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AttractionRuleCommon)((IAttractionRuleGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1185,35 +1196,35 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAttractionRuleGetter? lhs,
             IAttractionRuleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.Radius) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.Radius) ?? true))
             {
                 if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.MinDelay) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.MinDelay) ?? true))
             {
                 if (!lhs.MinDelay.EqualsWithin(rhs.MinDelay)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.MaxDelay) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.MaxDelay) ?? true))
             {
                 if (!lhs.MaxDelay.EqualsWithin(rhs.MaxDelay)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.RequiresLineOfSight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.RequiresLineOfSight) ?? true))
             {
                 if (lhs.RequiresLineOfSight != rhs.RequiresLineOfSight) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.IsCombatTarget) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.IsCombatTarget) ?? true))
             {
                 if (lhs.IsCombatTarget != rhs.IsCombatTarget) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.AOR2DataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.AOR2DataTypeState) ?? true))
             {
                 if (lhs.AOR2DataTypeState != rhs.AOR2DataTypeState) return false;
             }
@@ -1223,23 +1234,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAttractionRuleGetter?)lhs,
                 rhs: rhs as IAttractionRuleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAttractionRuleGetter?)lhs,
                 rhs: rhs as IAttractionRuleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAttractionRuleGetter item)
@@ -1878,12 +1889,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAttractionRuleGetter rhs) return false;
-            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAttractionRuleGetter? obj)
         {
-            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).GetHashCode(this);

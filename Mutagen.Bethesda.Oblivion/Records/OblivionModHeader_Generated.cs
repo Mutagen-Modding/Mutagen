@@ -129,12 +129,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IOblivionModHeaderGetter rhs) return false;
-            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOblivionModHeaderGetter? obj)
         {
-            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1271,48 +1271,48 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IOblivionModHeaderGetter? lhs,
             IOblivionModHeaderGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.FormID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.FormID) ?? true))
             {
                 if (lhs.FormID != rhs.FormID) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Version) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Version) ?? true))
             {
                 if (lhs.Version != rhs.Version) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Stats) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Stats) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Stats, rhs.Stats, out var lhsStats, out var rhsStats, out var isStatsEqual))
                 {
-                    if (!((ModStatsCommon)((IModStatsGetter)lhsStats).CommonInstance()!).Equals(lhsStats, rhsStats, crystal?.GetSubCrystal((int)OblivionModHeader_FieldIndex.Stats))) return false;
+                    if (!((ModStatsCommon)((IModStatsGetter)lhsStats).CommonInstance()!).Equals(lhsStats, rhsStats, equalsMask?.GetSubCrystal((int)OblivionModHeader_FieldIndex.Stats))) return false;
                 }
                 else if (!isStatsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.TypeOffsets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.TypeOffsets) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Deleted) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Deleted) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.Deleted, rhs.Deleted)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Author) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Author) ?? true))
             {
                 if (!string.Equals(lhs.Author, rhs.Author)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Description) ?? true))
             {
                 if (!string.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.MasterReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.MasterReferences) ?? true))
             {
-                if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences, (l, r) => ((MasterReferenceCommon)((IMasterReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)OblivionModHeader_FieldIndex.MasterReferences)))) return false;
+                if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences, (l, r) => ((MasterReferenceCommon)((IMasterReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)OblivionModHeader_FieldIndex.MasterReferences)))) return false;
             }
             return true;
         }
@@ -1930,12 +1930,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IOblivionModHeaderGetter rhs) return false;
-            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOblivionModHeaderGetter? obj)
         {
-            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).GetHashCode(this);

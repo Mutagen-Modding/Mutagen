@@ -529,12 +529,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPackInGetter rhs) return false;
-            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackInGetter? obj)
         {
-            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackInCommon)((IPackInGetter)this).CommonInstance()!).GetHashCode(this);
@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PackInCommon)((IPackInGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -779,6 +779,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static PackIn Duplicate(
+            this IPackInGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((PackInCommon)((IPackInGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1126,27 +1137,27 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPackInGetter? lhs,
             IPackInGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)PackIn_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackIn_FieldIndex.Filter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Filter) ?? true))
             {
                 if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackIn_FieldIndex.Cell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Cell) ?? true))
             {
                 if (!lhs.Cell.Equals(rhs.Cell)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackIn_FieldIndex.Version) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackIn_FieldIndex.Version) ?? true))
             {
                 if (lhs.Version != rhs.Version) return false;
             }
@@ -1156,23 +1167,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackInGetter?)lhs,
                 rhs: rhs as IPackInGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackInGetter?)lhs,
                 rhs: rhs as IPackInGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPackInGetter item)
@@ -1826,12 +1837,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPackInGetter rhs) return false;
-            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackInGetter? obj)
         {
-            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackInCommon)((IPackInGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackInCommon)((IPackInGetter)this).CommonInstance()!).GetHashCode(this);

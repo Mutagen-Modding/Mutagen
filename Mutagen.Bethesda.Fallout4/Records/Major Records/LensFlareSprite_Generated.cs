@@ -90,12 +90,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILensFlareSpriteGetter rhs) return false;
-            return ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILensFlareSpriteGetter? obj)
         {
-            return ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)this).CommonInstance()!).GetHashCode(this);
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -908,22 +908,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILensFlareSpriteGetter? lhs,
             ILensFlareSpriteGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LensFlareSprite_FieldIndex.LensFlareSpriteId) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlareSprite_FieldIndex.LensFlareSpriteId) ?? true))
             {
                 if (!string.Equals(lhs.LensFlareSpriteId, rhs.LensFlareSpriteId)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LensFlareSprite_FieldIndex.Texture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlareSprite_FieldIndex.Texture) ?? true))
             {
                 if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LensFlareSprite_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlareSprite_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)LensFlareSprite_FieldIndex.Data))) return false;
+                    if (!((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)LensFlareSprite_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
@@ -1374,12 +1374,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILensFlareSpriteGetter rhs) return false;
-            return ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILensFlareSpriteGetter? obj)
         {
-            return ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)this).CommonInstance()!).GetHashCode(this);

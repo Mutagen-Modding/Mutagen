@@ -83,12 +83,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptMetaSummaryGetter rhs) return false;
-            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptMetaSummaryGetter? obj)
         {
-            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -967,26 +967,26 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IScriptMetaSummaryGetter? lhs,
             IScriptMetaSummaryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.RefCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.RefCount) ?? true))
             {
                 if (lhs.RefCount != rhs.RefCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.CompiledSize) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.CompiledSize) ?? true))
             {
                 if (lhs.CompiledSize != rhs.CompiledSize) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.VariableCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.VariableCount) ?? true))
             {
                 if (lhs.VariableCount != rhs.VariableCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
@@ -1362,12 +1362,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptMetaSummaryGetter rhs) return false;
-            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptMetaSummaryGetter? obj)
         {
-            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).GetHashCode(this);

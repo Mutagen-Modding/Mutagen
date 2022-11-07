@@ -76,12 +76,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IWorkbenchDataGetter rhs) return false;
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorkbenchDataGetter? obj)
         {
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorkbenchDataCommon)((IWorkbenchDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -846,14 +846,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IWorkbenchDataGetter? lhs,
             IWorkbenchDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WorkbenchData_FieldIndex.BenchType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorkbenchData_FieldIndex.BenchType) ?? true))
             {
                 if (lhs.BenchType != rhs.BenchType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WorkbenchData_FieldIndex.UsesSkill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorkbenchData_FieldIndex.UsesSkill) ?? true))
             {
                 if (lhs.UsesSkill != rhs.UsesSkill) return false;
             }
@@ -1204,12 +1204,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IWorkbenchDataGetter rhs) return false;
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorkbenchDataGetter? obj)
         {
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).GetHashCode(this);

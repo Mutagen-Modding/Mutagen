@@ -517,12 +517,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IVisualEffectGetter rhs) return false;
-            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IVisualEffectGetter? obj)
         {
-            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((VisualEffectCommon)((IVisualEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -749,6 +749,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static VisualEffect Duplicate(
+            this IVisualEffectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((VisualEffectCommon)((IVisualEffectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1087,23 +1098,23 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IVisualEffectGetter? lhs,
             IVisualEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
             {
                 if (!lhs.EffectArt.Equals(rhs.EffectArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
             {
                 if (!lhs.Shader.Equals(rhs.Shader)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1113,23 +1124,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IVisualEffectGetter?)lhs,
                 rhs: rhs as IVisualEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IVisualEffectGetter?)lhs,
                 rhs: rhs as IVisualEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IVisualEffectGetter item)
@@ -1735,12 +1746,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IVisualEffectGetter rhs) return false;
-            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IVisualEffectGetter? obj)
         {
-            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).GetHashCode(this);

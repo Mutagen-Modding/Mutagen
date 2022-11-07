@@ -1157,12 +1157,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IConstructibleObjectGetter rhs) return false;
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IConstructibleObjectGetter? obj)
         {
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1413,6 +1413,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static ConstructibleObject Duplicate(
+            this IConstructibleObjectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1893,61 +1904,61 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IConstructibleObjectGetter? lhs,
             IConstructibleObjectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PickUpSound) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Components) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Components) ?? true))
             {
-                if (!lhs.Components.SequenceEqualNullable(rhs.Components, (l, r) => ((ConstructibleObjectComponentCommon)((IConstructibleObjectComponentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Components)))) return false;
+                if (!lhs.Components.SequenceEqualNullable(rhs.Components, (l, r) => ((ConstructibleObjectComponentCommon)((IConstructibleObjectComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Components)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
             {
                 if (!lhs.CreatedObject.Equals(rhs.CreatedObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
             {
                 if (!lhs.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM1) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.NAM1, rhs.NAM1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM2) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.NAM2, rhs.NAM2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM3) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.NAM3, rhs.NAM3)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuArtObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuArtObject) ?? true))
             {
                 if (!lhs.MenuArtObject.Equals(rhs.MenuArtObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Categories) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Categories) ?? true))
             {
                 if (!lhs.Categories.SequenceEqualNullable(rhs.Categories)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCounts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCounts) ?? true))
             {
-                if (!lhs.CreatedObjectCounts.SequenceEqualNullable(rhs.CreatedObjectCounts, (l, r) => ((ConstructibleCreatedObjectCountCommon)((IConstructibleCreatedObjectCountGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ConstructibleObject_FieldIndex.CreatedObjectCounts)))) return false;
+                if (!lhs.CreatedObjectCounts.SequenceEqualNullable(rhs.CreatedObjectCounts, (l, r) => ((ConstructibleCreatedObjectCountCommon)((IConstructibleCreatedObjectCountGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.CreatedObjectCounts)))) return false;
             }
             return true;
         }
@@ -1955,23 +1966,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IConstructibleObjectGetter?)lhs,
                 rhs: rhs as IConstructibleObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IConstructibleObjectGetter?)lhs,
                 rhs: rhs as IConstructibleObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IConstructibleObjectGetter item)
@@ -3040,12 +3051,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IConstructibleObjectGetter rhs) return false;
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IConstructibleObjectGetter? obj)
         {
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).GetHashCode(this);

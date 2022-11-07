@@ -84,12 +84,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IAmmunitionDataGetter rhs) return false;
-            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAmmunitionDataGetter? obj)
         {
-            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AmmunitionDataCommon)((IAmmunitionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -972,26 +972,26 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IAmmunitionDataGetter? lhs,
             IAmmunitionDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Speed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Speed) ?? true))
             {
                 if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Damage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Damage) ?? true))
             {
                 if (lhs.Damage != rhs.Damage) return false;
             }
@@ -1351,12 +1351,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IAmmunitionDataGetter rhs) return false;
-            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAmmunitionDataGetter? obj)
         {
-            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -94,12 +94,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IStaticPartGetter rhs) return false;
-            return ((StaticPartCommon)((IStaticPartGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StaticPartCommon)((IStaticPartGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStaticPartGetter? obj)
         {
-            return ((StaticPartCommon)((IStaticPartGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StaticPartCommon)((IStaticPartGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StaticPartCommon)((IStaticPartGetter)this).CommonInstance()!).GetHashCode(this);
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((StaticPartCommon)((IStaticPartGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -947,16 +947,16 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IStaticPartGetter? lhs,
             IStaticPartGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)StaticPart_FieldIndex.Static) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StaticPart_FieldIndex.Static) ?? true))
             {
                 if (!lhs.Static.Equals(rhs.Static)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StaticPart_FieldIndex.Placements) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StaticPart_FieldIndex.Placements) ?? true))
             {
-                if (!lhs.Placements.SequenceEqualNullable(rhs.Placements, (l, r) => ((StaticPlacementCommon)((IStaticPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)StaticPart_FieldIndex.Placements)))) return false;
+                if (!lhs.Placements.SequenceEqualNullable(rhs.Placements, (l, r) => ((StaticPlacementCommon)((IStaticPlacementGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)StaticPart_FieldIndex.Placements)))) return false;
             }
             return true;
         }
@@ -1389,12 +1389,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IStaticPartGetter rhs) return false;
-            return ((StaticPartCommon)((IStaticPartGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StaticPartCommon)((IStaticPartGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStaticPartGetter? obj)
         {
-            return ((StaticPartCommon)((IStaticPartGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StaticPartCommon)((IStaticPartGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StaticPartCommon)((IStaticPartGetter)this).CommonInstance()!).GetHashCode(this);

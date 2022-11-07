@@ -380,12 +380,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IGameSettingIntGetter rhs) return false;
-            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGameSettingIntGetter? obj)
         {
-            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).GetHashCode(this);
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GameSettingIntCommon)((IGameSettingIntGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -604,6 +604,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static GameSettingInt Duplicate(
+            this IGameSettingIntGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((GameSettingIntCommon)((IGameSettingIntGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -952,11 +963,11 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IGameSettingIntGetter? lhs,
             IGameSettingIntGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)GameSettingInt_FieldIndex.Data) ?? true))
+            if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)GameSettingInt_FieldIndex.Data) ?? true))
             {
                 if (lhs.Data != rhs.Data) return false;
             }
@@ -966,34 +977,34 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IGameSettingGetter? lhs,
             IGameSettingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGameSettingIntGetter?)lhs,
                 rhs: rhs as IGameSettingIntGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGameSettingIntGetter?)lhs,
                 rhs: rhs as IGameSettingIntGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGameSettingIntGetter?)lhs,
                 rhs: rhs as IGameSettingIntGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IGameSettingIntGetter item)
@@ -1593,12 +1604,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IGameSettingIntGetter rhs) return false;
-            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGameSettingIntGetter? obj)
         {
-            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).GetHashCode(this);

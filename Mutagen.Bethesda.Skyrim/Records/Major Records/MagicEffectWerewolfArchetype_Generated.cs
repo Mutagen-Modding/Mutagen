@@ -62,12 +62,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMagicEffectWerewolfArchetypeGetter rhs) return false;
-            return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectWerewolfArchetypeGetter? obj)
         {
-            return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -737,22 +737,22 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMagicEffectWerewolfArchetypeGetter? lhs,
             IMagicEffectWerewolfArchetypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, crystal)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, equalsMask)) return false;
             return true;
         }
         
         public override bool Equals(
             IMagicEffectArchetypeGetter? lhs,
             IMagicEffectArchetypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMagicEffectWerewolfArchetypeGetter?)lhs,
                 rhs: rhs as IMagicEffectWerewolfArchetypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMagicEffectWerewolfArchetypeGetter item)
@@ -1084,12 +1084,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMagicEffectWerewolfArchetypeGetter rhs) return false;
-            return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectWerewolfArchetypeGetter? obj)
         {
-            return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).GetHashCode(this);

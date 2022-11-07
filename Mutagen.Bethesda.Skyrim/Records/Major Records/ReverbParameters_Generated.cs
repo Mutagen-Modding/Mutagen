@@ -797,12 +797,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IReverbParametersGetter rhs) return false;
-            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IReverbParametersGetter? obj)
         {
-            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).GetHashCode(this);
@@ -971,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ReverbParametersCommon)((IReverbParametersGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1045,6 +1045,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static ReverbParameters Duplicate(
+            this IReverbParametersGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ReverbParametersCommon)((IReverbParametersGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1444,59 +1455,59 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IReverbParametersGetter? lhs,
             IReverbParametersGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DecayMilliseconds) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DecayMilliseconds) ?? true))
             {
                 if (lhs.DecayMilliseconds != rhs.DecayMilliseconds) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.HfReferenceHertz) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.HfReferenceHertz) ?? true))
             {
                 if (lhs.HfReferenceHertz != rhs.HfReferenceHertz) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.RoomFilter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.RoomFilter) ?? true))
             {
                 if (lhs.RoomFilter != rhs.RoomFilter) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.RoomHfFilter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.RoomHfFilter) ?? true))
             {
                 if (lhs.RoomHfFilter != rhs.RoomHfFilter) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Reflections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Reflections) ?? true))
             {
                 if (lhs.Reflections != rhs.Reflections) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReverbAmp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReverbAmp) ?? true))
             {
                 if (lhs.ReverbAmp != rhs.ReverbAmp) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DecayHfRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DecayHfRatio) ?? true))
             {
                 if (!lhs.DecayHfRatio.EqualsWithin(rhs.DecayHfRatio)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReflectDelayMS) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReflectDelayMS) ?? true))
             {
                 if (lhs.ReflectDelayMS != rhs.ReflectDelayMS) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReverbDelayMS) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReverbDelayMS) ?? true))
             {
                 if (lhs.ReverbDelayMS != rhs.ReverbDelayMS) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DiffusionPercent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DiffusionPercent) ?? true))
             {
                 if (!lhs.DiffusionPercent.Equals(rhs.DiffusionPercent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DensityPercent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DensityPercent) ?? true))
             {
                 if (!lhs.DensityPercent.Equals(rhs.DensityPercent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1506,23 +1517,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IReverbParametersGetter?)lhs,
                 rhs: rhs as IReverbParametersGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IReverbParametersGetter?)lhs,
                 rhs: rhs as IReverbParametersGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IReverbParametersGetter item)
@@ -2250,12 +2261,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IReverbParametersGetter rhs) return false;
-            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IReverbParametersGetter? obj)
         {
-            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).GetHashCode(this);

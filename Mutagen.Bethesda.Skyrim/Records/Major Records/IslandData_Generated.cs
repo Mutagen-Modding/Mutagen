@@ -102,12 +102,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IIslandDataGetter rhs) return false;
-            return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIslandDataGetter? obj)
         {
-            return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((IslandDataCommon)((IIslandDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1098,22 +1098,22 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IIslandDataGetter? lhs,
             IIslandDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)IslandData_FieldIndex.Min) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IslandData_FieldIndex.Min) ?? true))
             {
                 if (!lhs.Min.Equals(rhs.Min)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IslandData_FieldIndex.Max) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IslandData_FieldIndex.Max) ?? true))
             {
                 if (!lhs.Max.Equals(rhs.Max)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IslandData_FieldIndex.Triangles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IslandData_FieldIndex.Triangles) ?? true))
             {
                 if (!lhs.Triangles.SequenceEqualNullable(rhs.Triangles)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IslandData_FieldIndex.Vertices) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IslandData_FieldIndex.Vertices) ?? true))
             {
                 if (!lhs.Vertices.SequenceEqualNullable(rhs.Vertices)) return false;
             }
@@ -1503,12 +1503,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IIslandDataGetter rhs) return false;
-            return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIslandDataGetter? obj)
         {
-            return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).GetHashCode(this);

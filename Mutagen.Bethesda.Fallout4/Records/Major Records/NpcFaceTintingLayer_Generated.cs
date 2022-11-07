@@ -110,12 +110,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INpcFaceTintingLayerGetter rhs) return false;
-            return ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcFaceTintingLayerGetter? obj)
         {
-            return ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1086,34 +1086,34 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INpcFaceTintingLayerGetter? lhs,
             INpcFaceTintingLayerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.DataType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.DataType) ?? true))
             {
                 if (lhs.DataType != rhs.DataType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.Value) ?? true))
             {
                 if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.Color) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TemplateColorIndex) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TemplateColorIndex) ?? true))
             {
                 if (lhs.TemplateColorIndex != rhs.TemplateColorIndex) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TETIDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TETIDataTypeState) ?? true))
             {
                 if (lhs.TETIDataTypeState != rhs.TETIDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TENDDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TENDDataTypeState) ?? true))
             {
                 if (lhs.TENDDataTypeState != rhs.TENDDataTypeState) return false;
             }
@@ -1598,12 +1598,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INpcFaceTintingLayerGetter rhs) return false;
-            return ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcFaceTintingLayerGetter? obj)
         {
-            return ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)this).CommonInstance()!).GetHashCode(this);

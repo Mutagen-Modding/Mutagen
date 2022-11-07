@@ -104,12 +104,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDynamicAttentuationValuesGetter rhs) return false;
-            return ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDynamicAttentuationValuesGetter? obj)
         {
-            return ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1263,54 +1263,54 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDynamicAttentuationValuesGetter? lhs,
             IDynamicAttentuationValuesGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInDistanceStart) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInDistanceStart) ?? true))
             {
                 if (!lhs.FadeInDistanceStart.EqualsWithin(rhs.FadeInDistanceStart)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInDistanceEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInDistanceEnd) ?? true))
             {
                 if (!lhs.FadeInDistanceEnd.EqualsWithin(rhs.FadeInDistanceEnd)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutDistanceStart) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutDistanceStart) ?? true))
             {
                 if (!lhs.FadeOutDistanceStart.EqualsWithin(rhs.FadeOutDistanceStart)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutDistanceEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutDistanceEnd) ?? true))
             {
                 if (!lhs.FadeOutDistanceEnd.EqualsWithin(rhs.FadeOutDistanceEnd)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInCurveValue1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInCurveValue1) ?? true))
             {
                 if (lhs.FadeInCurveValue1 != rhs.FadeInCurveValue1) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInCurveValue2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInCurveValue2) ?? true))
             {
                 if (lhs.FadeInCurveValue2 != rhs.FadeInCurveValue2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInCurveValue3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInCurveValue3) ?? true))
             {
                 if (lhs.FadeInCurveValue3 != rhs.FadeInCurveValue3) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInCurveValue4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeInCurveValue4) ?? true))
             {
                 if (lhs.FadeInCurveValue4 != rhs.FadeInCurveValue4) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutCurveValue1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutCurveValue1) ?? true))
             {
                 if (lhs.FadeOutCurveValue1 != rhs.FadeOutCurveValue1) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutCurveValue2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutCurveValue2) ?? true))
             {
                 if (lhs.FadeOutCurveValue2 != rhs.FadeOutCurveValue2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutCurveValue3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutCurveValue3) ?? true))
             {
                 if (lhs.FadeOutCurveValue3 != rhs.FadeOutCurveValue3) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutCurveValue4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DynamicAttentuationValues_FieldIndex.FadeOutCurveValue4) ?? true))
             {
                 if (lhs.FadeOutCurveValue4 != rhs.FadeOutCurveValue4) return false;
             }
@@ -1725,12 +1725,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDynamicAttentuationValuesGetter rhs) return false;
-            return ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDynamicAttentuationValuesGetter? obj)
         {
-            return ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DynamicAttentuationValuesCommon)((IDynamicAttentuationValuesGetter)this).CommonInstance()!).GetHashCode(this);

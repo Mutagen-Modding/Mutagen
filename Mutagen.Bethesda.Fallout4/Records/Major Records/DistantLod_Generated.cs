@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDistantLodGetter rhs) return false;
-            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDistantLodGetter? obj)
         {
-            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).GetHashCode(this);
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DistantLodCommon)((IDistantLodGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -840,14 +840,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDistantLodGetter? lhs,
             IDistantLodGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DistantLod_FieldIndex.Mesh) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DistantLod_FieldIndex.Mesh) ?? true))
             {
                 if (!string.Equals(lhs.Mesh, rhs.Mesh)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DistantLod_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DistantLod_FieldIndex.Data) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Data.Span, rhs.Data.Span)) return false;
             }
@@ -1183,12 +1183,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDistantLodGetter rhs) return false;
-            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDistantLodGetter? obj)
         {
-            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).GetHashCode(this);

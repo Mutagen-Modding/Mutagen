@@ -108,12 +108,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherDataGetter rhs) return false;
-            return ((WeatherDataCommon)((IWeatherDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherDataCommon)((IWeatherDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherDataGetter? obj)
         {
-            return ((WeatherDataCommon)((IWeatherDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherDataCommon)((IWeatherDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherDataCommon)((IWeatherDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -905,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherDataCommon)((IWeatherDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1306,58 +1306,58 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IWeatherDataGetter? lhs,
             IWeatherDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.WindSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.WindSpeed) ?? true))
             {
                 if (lhs.WindSpeed != rhs.WindSpeed) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.CloudSpeedLower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.CloudSpeedLower) ?? true))
             {
                 if (lhs.CloudSpeedLower != rhs.CloudSpeedLower) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.CloudSpeedUpper) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.CloudSpeedUpper) ?? true))
             {
                 if (lhs.CloudSpeedUpper != rhs.CloudSpeedUpper) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.TransDelta) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.TransDelta) ?? true))
             {
                 if (lhs.TransDelta != rhs.TransDelta) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.SunGlare) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.SunGlare) ?? true))
             {
                 if (lhs.SunGlare != rhs.SunGlare) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.SunDamage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.SunDamage) ?? true))
             {
                 if (lhs.SunDamage != rhs.SunDamage) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.PrecipitationBeginFadeIn) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.PrecipitationBeginFadeIn) ?? true))
             {
                 if (lhs.PrecipitationBeginFadeIn != rhs.PrecipitationBeginFadeIn) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.PrecipitationEndFadeOut) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.PrecipitationEndFadeOut) ?? true))
             {
                 if (lhs.PrecipitationEndFadeOut != rhs.PrecipitationEndFadeOut) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
             {
                 if (lhs.ThunderLightningBeginFadeIn != rhs.ThunderLightningBeginFadeIn) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.ThunderLightningEndFadeOut) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.ThunderLightningEndFadeOut) ?? true))
             {
                 if (lhs.ThunderLightningEndFadeOut != rhs.ThunderLightningEndFadeOut) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.ThunderLightningFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.ThunderLightningFrequency) ?? true))
             {
                 if (lhs.ThunderLightningFrequency != rhs.ThunderLightningFrequency) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.Classification) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.Classification) ?? true))
             {
                 if (lhs.Classification != rhs.Classification) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherData_FieldIndex.LightningColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.LightningColor) ?? true))
             {
                 if (!lhs.LightningColor.ColorOnlyEquals(rhs.LightningColor)) return false;
             }
@@ -1780,12 +1780,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherDataGetter rhs) return false;
-            return ((WeatherDataCommon)((IWeatherDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherDataCommon)((IWeatherDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherDataGetter? obj)
         {
-            return ((WeatherDataCommon)((IWeatherDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherDataCommon)((IWeatherDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherDataCommon)((IWeatherDataGetter)this).CommonInstance()!).GetHashCode(this);

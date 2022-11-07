@@ -77,12 +77,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IAnimationChangeThresholdsGetter rhs) return false;
-            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAnimationChangeThresholdsGetter? obj)
         {
-            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -885,18 +885,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IAnimationChangeThresholdsGetter? lhs,
             IAnimationChangeThresholdsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)AnimationChangeThresholds_FieldIndex.Directional) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AnimationChangeThresholds_FieldIndex.Directional) ?? true))
             {
                 if (!lhs.Directional.EqualsWithin(rhs.Directional)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AnimationChangeThresholds_FieldIndex.MovementSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AnimationChangeThresholds_FieldIndex.MovementSpeed) ?? true))
             {
                 if (!lhs.MovementSpeed.EqualsWithin(rhs.MovementSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AnimationChangeThresholds_FieldIndex.RotationSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AnimationChangeThresholds_FieldIndex.RotationSpeed) ?? true))
             {
                 if (!lhs.RotationSpeed.EqualsWithin(rhs.RotationSpeed)) return false;
             }
@@ -1237,12 +1237,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IAnimationChangeThresholdsGetter rhs) return false;
-            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAnimationChangeThresholdsGetter? obj)
         {
-            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).GetHashCode(this);

@@ -4002,12 +4002,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRaceGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -4346,7 +4346,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -4420,6 +4420,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Race Duplicate(
+            this IRaceGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -5571,335 +5582,335 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IRaceGetter? lhs,
             IRaceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ActorEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ActorEffect) ?? true))
             {
                 if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
             {
                 if (!lhs.Skin.Equals(rhs.Skin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BodyTemplate, rhs.BodyTemplate, out var lhsBodyTemplate, out var rhsBodyTemplate, out var isBodyTemplateEqual))
                 {
-                    if (!((BodyTemplateCommon)((IBodyTemplateGetter)lhsBodyTemplate).CommonInstance()!).Equals(lhsBodyTemplate, rhsBodyTemplate, crystal?.GetSubCrystal((int)Race_FieldIndex.BodyTemplate))) return false;
+                    if (!((BodyTemplateCommon)((IBodyTemplateGetter)lhsBodyTemplate).CommonInstance()!).Equals(lhsBodyTemplate, rhsBodyTemplate, equalsMask?.GetSubCrystal((int)Race_FieldIndex.BodyTemplate))) return false;
                 }
                 else if (!isBodyTemplateEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost0, rhs.SkillBoost0, out var lhsSkillBoost0, out var rhsSkillBoost0, out var isSkillBoost0Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost0).CommonInstance()!).Equals(lhsSkillBoost0, rhsSkillBoost0, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost0).CommonInstance()!).Equals(lhsSkillBoost0, rhsSkillBoost0, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0))) return false;
                 }
                 else if (!isSkillBoost0Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost1, rhs.SkillBoost1, out var lhsSkillBoost1, out var rhsSkillBoost1, out var isSkillBoost1Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost1).CommonInstance()!).Equals(lhsSkillBoost1, rhsSkillBoost1, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost1).CommonInstance()!).Equals(lhsSkillBoost1, rhsSkillBoost1, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1))) return false;
                 }
                 else if (!isSkillBoost1Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost2, rhs.SkillBoost2, out var lhsSkillBoost2, out var rhsSkillBoost2, out var isSkillBoost2Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost2).CommonInstance()!).Equals(lhsSkillBoost2, rhsSkillBoost2, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost2).CommonInstance()!).Equals(lhsSkillBoost2, rhsSkillBoost2, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2))) return false;
                 }
                 else if (!isSkillBoost2Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost3, rhs.SkillBoost3, out var lhsSkillBoost3, out var rhsSkillBoost3, out var isSkillBoost3Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost3).CommonInstance()!).Equals(lhsSkillBoost3, rhsSkillBoost3, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost3).CommonInstance()!).Equals(lhsSkillBoost3, rhsSkillBoost3, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3))) return false;
                 }
                 else if (!isSkillBoost3Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost4, rhs.SkillBoost4, out var lhsSkillBoost4, out var rhsSkillBoost4, out var isSkillBoost4Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost4).CommonInstance()!).Equals(lhsSkillBoost4, rhsSkillBoost4, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost4).CommonInstance()!).Equals(lhsSkillBoost4, rhsSkillBoost4, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4))) return false;
                 }
                 else if (!isSkillBoost4Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost5, rhs.SkillBoost5, out var lhsSkillBoost5, out var rhsSkillBoost5, out var isSkillBoost5Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost5).CommonInstance()!).Equals(lhsSkillBoost5, rhsSkillBoost5, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost5).CommonInstance()!).Equals(lhsSkillBoost5, rhsSkillBoost5, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5))) return false;
                 }
                 else if (!isSkillBoost5Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost6, rhs.SkillBoost6, out var lhsSkillBoost6, out var rhsSkillBoost6, out var isSkillBoost6Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost6).CommonInstance()!).Equals(lhsSkillBoost6, rhsSkillBoost6, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost6).CommonInstance()!).Equals(lhsSkillBoost6, rhsSkillBoost6, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6))) return false;
                 }
                 else if (!isSkillBoost6Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
             {
                 if (!Equals(lhs.Height, rhs.Height)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
             {
                 if (!Equals(lhs.Weight, rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Starting) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Starting) ?? true))
             {
                 if (!lhs.Starting.SequenceEqualNullable(rhs.Starting)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseCarryWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseCarryWeight) ?? true))
             {
                 if (!lhs.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMass) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMass) ?? true))
             {
                 if (!lhs.BaseMass.EqualsWithin(rhs.BaseMass)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
             {
                 if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
             {
                 if (!lhs.DecelerationRate.EqualsWithin(rhs.DecelerationRate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
             {
                 if (lhs.Size != rhs.Size) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HeadBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HeadBipedObject) ?? true))
             {
                 if (lhs.HeadBipedObject != rhs.HeadBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HairBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HairBipedObject) ?? true))
             {
                 if (lhs.HairBipedObject != rhs.HairBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
             {
                 if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
             {
                 if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Regen) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Regen) ?? true))
             {
                 if (!lhs.Regen.SequenceEqualNullable(rhs.Regen)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedDamage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedDamage) ?? true))
             {
                 if (!lhs.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedReach) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedReach) ?? true))
             {
                 if (!lhs.UnarmedReach.EqualsWithin(rhs.UnarmedReach)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
             {
                 if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
             {
                 if (!lhs.AimAngleTolerance.EqualsWithin(rhs.AimAngleTolerance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
             {
                 if (!lhs.FlightRadius.EqualsWithin(rhs.FlightRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
             {
                 if (!lhs.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
             {
                 if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MountData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MountData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MountData, rhs.MountData, out var lhsMountData, out var rhsMountData, out var isMountDataEqual))
                 {
-                    if (!((MountDataCommon)((IMountDataGetter)lhsMountData).CommonInstance()!).Equals(lhsMountData, rhsMountData, crystal?.GetSubCrystal((int)Race_FieldIndex.MountData))) return false;
+                    if (!((MountDataCommon)((IMountDataGetter)lhsMountData).CommonInstance()!).Equals(lhsMountData, rhsMountData, equalsMask?.GetSubCrystal((int)Race_FieldIndex.MountData))) return false;
                 }
                 else if (!isMountDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
             {
                 if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
             {
                 if (!lhs.MovementTypeNames.SequenceEqualNullable(rhs.MovementTypeNames)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
                 if (!Equals(lhs.Voices, rhs.Voices)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
             {
                 if (!Equals(lhs.DecapitateArmors, rhs.DecapitateArmors)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
             {
                 if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
             {
                 if (lhs.NumberOfTintsInList != rhs.NumberOfTintsInList) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
             {
                 if (!lhs.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
             {
                 if (!lhs.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
             {
                 if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Attacks)))) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.Attacks)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
                 if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
             {
                 if (!lhs.Hairs.SequenceEqualNullable(rhs.Hairs)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
             {
                 if (!lhs.Eyes.SequenceEqualNullable(rhs.Eyes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
             {
                 if (!lhs.BodyPartData.Equals(rhs.BodyPartData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
             {
                 if (!Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MaterialType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MaterialType) ?? true))
             {
                 if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
             {
                 if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecapitationFX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitationFX) ?? true))
             {
                 if (!lhs.DecapitationFX.Equals(rhs.DecapitationFX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OpenLootSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.OpenLootSound) ?? true))
             {
                 if (!lhs.OpenLootSound.Equals(rhs.OpenLootSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.CloseLootSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.CloseLootSound) ?? true))
             {
                 if (!lhs.CloseLootSound.Equals(rhs.CloseLootSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BipedObjectNames) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BipedObjectNames) ?? true))
             {
                 if (!lhs.BipedObjectNames.SequenceEqualNullable(rhs.BipedObjectNames)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypes) ?? true))
             {
-                if (!lhs.MovementTypes.SequenceEqual(rhs.MovementTypes, (l, r) => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.MovementTypes)))) return false;
+                if (!lhs.MovementTypes.SequenceEqual(rhs.MovementTypes, (l, r) => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.MovementTypes)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
             {
                 if (lhs.EquipmentFlags != rhs.EquipmentFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
             {
                 if (!lhs.EquipmentSlots.SequenceEqualNullable(rhs.EquipmentSlots)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedEquipSlot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedEquipSlot) ?? true))
             {
                 if (!lhs.UnarmedEquipSlot.Equals(rhs.UnarmedEquipSlot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes, out var lhsFaceFxPhonemes, out var rhsFaceFxPhonemes, out var isFaceFxPhonemesEqual))
                 {
-                    if (!((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)lhsFaceFxPhonemes).CommonInstance()!).Equals(lhsFaceFxPhonemes, rhsFaceFxPhonemes, crystal?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes))) return false;
+                    if (!((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)lhsFaceFxPhonemes).CommonInstance()!).Equals(lhsFaceFxPhonemes, rhsFaceFxPhonemes, equalsMask?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes))) return false;
                 }
                 else if (!isFaceFxPhonemesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultWalk) ?? true))
             {
                 if (!lhs.BaseMovementDefaultWalk.Equals(rhs.BaseMovementDefaultWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultRun) ?? true))
             {
                 if (!lhs.BaseMovementDefaultRun.Equals(rhs.BaseMovementDefaultRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
             {
                 if (!lhs.BaseMovementDefaultSwim.Equals(rhs.BaseMovementDefaultSwim)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
             {
                 if (!lhs.BaseMovementDefaultFly.Equals(rhs.BaseMovementDefaultFly)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
             {
                 if (!lhs.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSprint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSprint) ?? true))
             {
                 if (!lhs.BaseMovementDefaultSprint.Equals(rhs.BaseMovementDefaultSprint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
             {
                 if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
             {
                 if (!lhs.MorphRace.Equals(rhs.MorphRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
             {
                 if (!lhs.ArmorRace.Equals(rhs.ArmorRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -5909,23 +5920,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRaceGetter?)lhs,
                 rhs: rhs as IRaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRaceGetter?)lhs,
                 rhs: rhs as IRaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRaceGetter item)
@@ -9064,12 +9075,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRaceGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);

@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IOverdriveAudioEffectGetter rhs) return false;
-            return ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOverdriveAudioEffectGetter? obj)
         {
-            return ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -909,23 +909,23 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IOverdriveAudioEffectGetter? lhs,
             IOverdriveAudioEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAAudioEffectGetter)lhs, (IAAudioEffectGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)OverdriveAudioEffect_FieldIndex.InputGain) ?? true))
+            if (!base.Equals((IAAudioEffectGetter)lhs, (IAAudioEffectGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)OverdriveAudioEffect_FieldIndex.InputGain) ?? true))
             {
                 if (!lhs.InputGain.EqualsWithin(rhs.InputGain)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OverdriveAudioEffect_FieldIndex.OutputGain) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OverdriveAudioEffect_FieldIndex.OutputGain) ?? true))
             {
                 if (!lhs.OutputGain.EqualsWithin(rhs.OutputGain)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OverdriveAudioEffect_FieldIndex.UpperThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OverdriveAudioEffect_FieldIndex.UpperThreshold) ?? true))
             {
                 if (!lhs.UpperThreshold.EqualsWithin(rhs.UpperThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OverdriveAudioEffect_FieldIndex.LowerThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OverdriveAudioEffect_FieldIndex.LowerThreshold) ?? true))
             {
                 if (!lhs.LowerThreshold.EqualsWithin(rhs.LowerThreshold)) return false;
             }
@@ -935,12 +935,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAAudioEffectGetter? lhs,
             IAAudioEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IOverdriveAudioEffectGetter?)lhs,
                 rhs: rhs as IOverdriveAudioEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IOverdriveAudioEffectGetter item)
@@ -1302,12 +1302,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IOverdriveAudioEffectGetter rhs) return false;
-            return ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOverdriveAudioEffectGetter? obj)
         {
-            return ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OverdriveAudioEffectCommon)((IOverdriveAudioEffectGetter)this).CommonInstance()!).GetHashCode(this);

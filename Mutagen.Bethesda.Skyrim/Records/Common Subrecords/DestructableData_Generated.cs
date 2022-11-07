@@ -80,12 +80,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IDestructableDataGetter rhs) return false;
-            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDestructableDataGetter? obj)
         {
-            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DestructableDataCommon)((IDestructableDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -927,22 +927,22 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IDestructableDataGetter? lhs,
             IDestructableDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DestructableData_FieldIndex.Health) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DestructableData_FieldIndex.Health) ?? true))
             {
                 if (lhs.Health != rhs.Health) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DestructableData_FieldIndex.DESTCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DestructableData_FieldIndex.DESTCount) ?? true))
             {
                 if (lhs.DESTCount != rhs.DESTCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DestructableData_FieldIndex.VATSTargetable) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DestructableData_FieldIndex.VATSTargetable) ?? true))
             {
                 if (lhs.VATSTargetable != rhs.VATSTargetable) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DestructableData_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DestructableData_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
@@ -1285,12 +1285,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IDestructableDataGetter rhs) return false;
-            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDestructableDataGetter? obj)
         {
-            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).GetHashCode(this);

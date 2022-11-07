@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMagicEffectArchetypeGetter rhs) return false;
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectArchetypeGetter? obj)
         {
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -882,18 +882,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMagicEffectArchetypeGetter? lhs,
             IMagicEffectArchetypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.AssociationKey) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.AssociationKey) ?? true))
             {
                 if (lhs.AssociationKey != rhs.AssociationKey) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.ActorValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.ActorValue) ?? true))
             {
                 if (lhs.ActorValue != rhs.ActorValue) return false;
             }
@@ -1227,12 +1227,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMagicEffectArchetypeGetter rhs) return false;
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectArchetypeGetter? obj)
         {
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).GetHashCode(this);

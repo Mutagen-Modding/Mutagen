@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IFurnitureMarkerEntryPointsGetter rhs) return false;
-            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFurnitureMarkerEntryPointsGetter? obj)
         {
-            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -843,14 +843,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IFurnitureMarkerEntryPointsGetter? lhs,
             IFurnitureMarkerEntryPointsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.Points) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.Points) ?? true))
             {
                 if (lhs.Points != rhs.Points) return false;
             }
@@ -1187,12 +1187,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IFurnitureMarkerEntryPointsGetter rhs) return false;
-            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFurnitureMarkerEntryPointsGetter? obj)
         {
-            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)this).CommonInstance()!).GetHashCode(this);

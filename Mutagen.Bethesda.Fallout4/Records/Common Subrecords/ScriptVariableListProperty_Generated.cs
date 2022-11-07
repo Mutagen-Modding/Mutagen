@@ -85,12 +85,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptVariableListPropertyGetter rhs) return false;
-            return ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptVariableListPropertyGetter? obj)
         {
-            return ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)this).CommonInstance()!).GetHashCode(this);
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -884,11 +884,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IScriptVariableListPropertyGetter? lhs,
             IScriptVariableListPropertyGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ScriptVariableListProperty_FieldIndex.Data) ?? true))
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ScriptVariableListProperty_FieldIndex.Data) ?? true))
             {
                 if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
             }
@@ -898,12 +898,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IScriptPropertyGetter? lhs,
             IScriptPropertyGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IScriptVariableListPropertyGetter?)lhs,
                 rhs: rhs as IScriptVariableListPropertyGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IScriptVariableListPropertyGetter item)
@@ -1262,12 +1262,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptVariableListPropertyGetter rhs) return false;
-            return ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptVariableListPropertyGetter? obj)
         {
-            return ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptVariableListPropertyCommon)((IScriptVariableListPropertyGetter)this).CommonInstance()!).GetHashCode(this);

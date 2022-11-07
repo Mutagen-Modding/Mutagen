@@ -1221,12 +1221,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IShaderParticleGeometryGetter rhs) return false;
-            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IShaderParticleGeometryGetter? obj)
         {
-            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1495,6 +1495,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static ShaderParticleGeometry Duplicate(
+            this IShaderParticleGeometryGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1987,111 +1998,111 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IShaderParticleGeometryGetter? lhs,
             IShaderParticleGeometryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
             {
                 if (!lhs.GravityVelocity.EqualsWithin(rhs.GravityVelocity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown1) ?? true))
             {
                 if (!lhs.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.RotationVelocity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.RotationVelocity) ?? true))
             {
                 if (!lhs.RotationVelocity.EqualsWithin(rhs.RotationVelocity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown2) ?? true))
             {
                 if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX) ?? true))
             {
                 if (!lhs.ParticleSizeX.EqualsWithin(rhs.ParticleSizeX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown3) ?? true))
             {
                 if (!lhs.Unknown3.EqualsWithin(rhs.Unknown3)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY) ?? true))
             {
                 if (!lhs.ParticleSizeY.EqualsWithin(rhs.ParticleSizeY)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown4) ?? true))
             {
                 if (!lhs.Unknown4.EqualsWithin(rhs.Unknown4)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin) ?? true))
             {
                 if (!lhs.CenterOffsetMin.EqualsWithin(rhs.CenterOffsetMin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown5) ?? true))
             {
                 if (!lhs.Unknown5.EqualsWithin(rhs.Unknown5)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax) ?? true))
             {
                 if (!lhs.CenterOffsetMax.EqualsWithin(rhs.CenterOffsetMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown6) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown6) ?? true))
             {
                 if (!lhs.Unknown6.EqualsWithin(rhs.Unknown6)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.InitialRotation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.InitialRotation) ?? true))
             {
                 if (!lhs.InitialRotation.EqualsWithin(rhs.InitialRotation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown7) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown7) ?? true))
             {
                 if (!lhs.Unknown7.EqualsWithin(rhs.Unknown7)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX) ?? true))
             {
                 if (!lhs.NumSubtexturesX.EqualsWithin(rhs.NumSubtexturesX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown8) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown8) ?? true))
             {
                 if (!lhs.Unknown8.EqualsWithin(rhs.Unknown8)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY) ?? true))
             {
                 if (!lhs.NumSubtexturesY.EqualsWithin(rhs.NumSubtexturesY)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown9) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown9) ?? true))
             {
                 if (!lhs.Unknown9.EqualsWithin(rhs.Unknown9)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown10) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown10) ?? true))
             {
                 if (!lhs.Unknown10.EqualsWithin(rhs.Unknown10)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.BoxSize) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.BoxSize) ?? true))
             {
                 if (lhs.BoxSize != rhs.BoxSize) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown11) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown11) ?? true))
             {
                 if (!lhs.Unknown11.EqualsWithin(rhs.Unknown11)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleDensity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleDensity) ?? true))
             {
                 if (!lhs.ParticleDensity.EqualsWithin(rhs.ParticleDensity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown12) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Unknown12) ?? true))
             {
                 if (!lhs.Unknown12.EqualsWithin(rhs.Unknown12)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
             {
                 if (!string.Equals(lhs.ParticleTexture, rhs.ParticleTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -2101,23 +2112,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IShaderParticleGeometryGetter?)lhs,
                 rhs: rhs as IShaderParticleGeometryGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IShaderParticleGeometryGetter?)lhs,
                 rhs: rhs as IShaderParticleGeometryGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IShaderParticleGeometryGetter item)
@@ -3063,12 +3074,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IShaderParticleGeometryGetter rhs) return false;
-            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IShaderParticleGeometryGetter? obj)
         {
-            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).GetHashCode(this);

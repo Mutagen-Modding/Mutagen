@@ -90,12 +90,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMessageButtonGetter rhs) return false;
-            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMessageButtonGetter? obj)
         {
-            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).GetHashCode(this);
@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MessageButtonCommon)((IMessageButtonGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -948,16 +948,16 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMessageButtonGetter? lhs,
             IMessageButtonGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)MessageButton_FieldIndex.Text) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Text) ?? true))
             {
                 if (!object.Equals(lhs.Text, rhs.Text)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MessageButton_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MessageButton_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MessageButton_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1393,12 +1393,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMessageButtonGetter rhs) return false;
-            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMessageButtonGetter? obj)
         {
-            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).GetHashCode(this);

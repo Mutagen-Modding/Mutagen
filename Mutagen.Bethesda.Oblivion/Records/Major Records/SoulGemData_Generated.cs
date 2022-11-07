@@ -75,12 +75,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ISoulGemDataGetter rhs) return false;
-            return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoulGemDataGetter? obj)
         {
-            return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SoulGemDataCommon)((ISoulGemDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -846,14 +846,14 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ISoulGemDataGetter? lhs,
             ISoulGemDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SoulGemData_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGemData_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGemData_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGemData_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
@@ -1182,12 +1182,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ISoulGemDataGetter rhs) return false;
-            return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoulGemDataGetter? obj)
         {
-            return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).GetHashCode(this);

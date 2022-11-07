@@ -2395,12 +2395,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMagicEffectGetter rhs) return false;
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectGetter? obj)
         {
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2674,7 +2674,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2748,6 +2748,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static MagicEffect Duplicate(
+            this IMagicEffectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -3476,199 +3487,199 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMagicEffectGetter? lhs,
             IMagicEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
             {
                 if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
             {
                 if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSkill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSkill) ?? true))
             {
                 if (!lhs.MagicSkill.Equals(rhs.MagicSkill)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ResistValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ResistValue) ?? true))
             {
                 if (!lhs.ResistValue.Equals(rhs.ResistValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
             {
                 if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
             {
                 if (lhs.Unknown1 != rhs.Unknown1) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingLight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingLight) ?? true))
             {
                 if (!lhs.CastingLight.Equals(rhs.CastingLight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
             {
                 if (!lhs.TaperWeight.EqualsWithin(rhs.TaperWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitShader) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitShader) ?? true))
             {
                 if (!lhs.HitShader.Equals(rhs.HitShader)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantShader) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantShader) ?? true))
             {
                 if (!lhs.EnchantShader.Equals(rhs.EnchantShader)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
             {
                 if (lhs.MinimumSkillLevel != rhs.MinimumSkillLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingArea) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingArea) ?? true))
             {
                 if (lhs.SpellmakingArea != rhs.SpellmakingArea) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingCastingTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingCastingTime) ?? true))
             {
                 if (!lhs.SpellmakingCastingTime.EqualsWithin(rhs.SpellmakingCastingTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperCurve) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperCurve) ?? true))
             {
                 if (!lhs.TaperCurve.EqualsWithin(rhs.TaperCurve)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperDuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperDuration) ?? true))
             {
                 if (!lhs.TaperDuration.EqualsWithin(rhs.TaperDuration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValueWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValueWeight) ?? true))
             {
                 if (!lhs.SecondActorValueWeight.EqualsWithin(rhs.SecondActorValueWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Archetype, rhs.Archetype, out var lhsArchetype, out var rhsArchetype, out var isArchetypeEqual))
                 {
-                    if (!((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)lhsArchetype).CommonInstance()!).Equals(lhsArchetype, rhsArchetype, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype))) return false;
+                    if (!((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)lhsArchetype).CommonInstance()!).Equals(lhsArchetype, rhsArchetype, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype))) return false;
                 }
                 else if (!isArchetypeEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
             {
                 if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Explosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Explosion) ?? true))
             {
                 if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
             {
                 if (lhs.CastType != rhs.CastType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.TargetType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TargetType) ?? true))
             {
                 if (lhs.TargetType != rhs.TargetType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValue) ?? true))
             {
                 if (!lhs.SecondActorValue.Equals(rhs.SecondActorValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
             {
                 if (!lhs.CastingArt.Equals(rhs.CastingArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitEffectArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitEffectArt) ?? true))
             {
                 if (!lhs.HitEffectArt.Equals(rhs.HitEffectArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImpactData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImpactData) ?? true))
             {
                 if (!lhs.ImpactData.Equals(rhs.ImpactData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
             {
                 if (!lhs.SkillUsageMultiplier.EqualsWithin(rhs.SkillUsageMultiplier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastArt) ?? true))
             {
                 if (!lhs.DualCastArt.Equals(rhs.DualCastArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastScale) ?? true))
             {
                 if (!lhs.DualCastScale.EqualsWithin(rhs.DualCastScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantArt) ?? true))
             {
                 if (!lhs.EnchantArt.Equals(rhs.EnchantArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitVisuals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitVisuals) ?? true))
             {
                 if (!lhs.HitVisuals.Equals(rhs.HitVisuals)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantVisuals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantVisuals) ?? true))
             {
                 if (!lhs.EnchantVisuals.Equals(rhs.EnchantVisuals)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
             {
                 if (!lhs.EquipAbility.Equals(rhs.EquipAbility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImageSpaceModifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImageSpaceModifier) ?? true))
             {
                 if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.PerkToApply) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.PerkToApply) ?? true))
             {
                 if (!lhs.PerkToApply.Equals(rhs.PerkToApply)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
             {
                 if (lhs.CastingSoundLevel != rhs.CastingSoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIScore) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIScore) ?? true))
             {
                 if (!lhs.ScriptEffectAIScore.EqualsWithin(rhs.ScriptEffectAIScore)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime) ?? true))
             {
                 if (!lhs.ScriptEffectAIDelayTime.EqualsWithin(rhs.ScriptEffectAIDelayTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
                 if (!lhs.CounterEffects.SequenceEqualNullable(rhs.CounterEffects)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Sounds)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -3678,23 +3689,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMagicEffectGetter?)lhs,
                 rhs: rhs as IMagicEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMagicEffectGetter?)lhs,
                 rhs: rhs as IMagicEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMagicEffectGetter item)
@@ -5360,12 +5371,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMagicEffectGetter rhs) return false;
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectGetter? obj)
         {
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);

@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IMappingSoundGetter rhs) return false;
-            return ((MappingSoundCommon)((IMappingSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MappingSoundCommon)((IMappingSoundGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMappingSoundGetter? obj)
         {
-            return ((MappingSoundCommon)((IMappingSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MappingSoundCommon)((IMappingSoundGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MappingSoundCommon)((IMappingSoundGetter)this).CommonInstance()!).GetHashCode(this);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MappingSoundCommon)((IMappingSoundGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -859,14 +859,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMappingSoundGetter? lhs,
             IMappingSoundGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)MappingSound_FieldIndex.ReverbClass) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MappingSound_FieldIndex.ReverbClass) ?? true))
             {
                 if (lhs.ReverbClass != rhs.ReverbClass) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MappingSound_FieldIndex.Descriptor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MappingSound_FieldIndex.Descriptor) ?? true))
             {
                 if (!lhs.Descriptor.Equals(rhs.Descriptor)) return false;
             }
@@ -1202,12 +1202,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IMappingSoundGetter rhs) return false;
-            return ((MappingSoundCommon)((IMappingSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MappingSoundCommon)((IMappingSoundGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMappingSoundGetter? obj)
         {
-            return ((MappingSoundCommon)((IMappingSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MappingSoundCommon)((IMappingSoundGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MappingSoundCommon)((IMappingSoundGetter)this).CommonInstance()!).GetHashCode(this);

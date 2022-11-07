@@ -86,12 +86,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IContainerEntryGetter rhs) return false;
-            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IContainerEntryGetter? obj)
         {
-            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -878,22 +878,22 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IContainerEntryGetter? lhs,
             IContainerEntryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Item) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Item) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Item, rhs.Item, out var lhsItem, out var rhsItem, out var isItemEqual))
                 {
-                    if (!((ContainerItemCommon)((IContainerItemGetter)lhsItem).CommonInstance()!).Equals(lhsItem, rhsItem, crystal?.GetSubCrystal((int)ContainerEntry_FieldIndex.Item))) return false;
+                    if (!((ContainerItemCommon)((IContainerItemGetter)lhsItem).CommonInstance()!).Equals(lhsItem, rhsItem, equalsMask?.GetSubCrystal((int)ContainerEntry_FieldIndex.Item))) return false;
                 }
                 else if (!isItemEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((ExtraDataCommon)((IExtraDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)ContainerEntry_FieldIndex.Data))) return false;
+                    if (!((ExtraDataCommon)((IExtraDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)ContainerEntry_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
@@ -1335,12 +1335,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IContainerEntryGetter rhs) return false;
-            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IContainerEntryGetter? obj)
         {
-            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).GetHashCode(this);

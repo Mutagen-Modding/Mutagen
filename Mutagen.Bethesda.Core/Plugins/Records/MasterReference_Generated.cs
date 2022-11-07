@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Plugins.Records
         public override bool Equals(object? obj)
         {
             if (obj is not IMasterReferenceGetter rhs) return false;
-            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMasterReferenceGetter? obj)
         {
-            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             return ((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -841,14 +841,14 @@ namespace Mutagen.Bethesda.Plugins.Records
         public virtual bool Equals(
             IMasterReferenceGetter? lhs,
             IMasterReferenceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
             {
                 if (lhs.Master != rhs.Master) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MasterReference_FieldIndex.FileSize) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MasterReference_FieldIndex.FileSize) ?? true))
             {
                 if (lhs.FileSize != rhs.FileSize) return false;
             }
@@ -1232,12 +1232,12 @@ namespace Mutagen.Bethesda.Plugins.Records
         public override bool Equals(object? obj)
         {
             if (obj is not IMasterReferenceGetter rhs) return false;
-            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMasterReferenceGetter? obj)
         {
-            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).GetHashCode(this);

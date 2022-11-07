@@ -92,12 +92,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILeveledNpcEntryGetter rhs) return false;
-            return ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILeveledNpcEntryGetter? obj)
         {
-            return ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -887,22 +887,22 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILeveledNpcEntryGetter? lhs,
             ILeveledNpcEntryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LeveledNpcEntry_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledNpcEntry_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((LeveledNpcEntryDataCommon)((ILeveledNpcEntryDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)LeveledNpcEntry_FieldIndex.Data))) return false;
+                    if (!((LeveledNpcEntryDataCommon)((ILeveledNpcEntryDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)LeveledNpcEntry_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledNpcEntry_FieldIndex.ExtraData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledNpcEntry_FieldIndex.ExtraData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ExtraData, rhs.ExtraData, out var lhsExtraData, out var rhsExtraData, out var isExtraDataEqual))
                 {
-                    if (!((ExtraDataCommon)((IExtraDataGetter)lhsExtraData).CommonInstance()!).Equals(lhsExtraData, rhsExtraData, crystal?.GetSubCrystal((int)LeveledNpcEntry_FieldIndex.ExtraData))) return false;
+                    if (!((ExtraDataCommon)((IExtraDataGetter)lhsExtraData).CommonInstance()!).Equals(lhsExtraData, rhsExtraData, equalsMask?.GetSubCrystal((int)LeveledNpcEntry_FieldIndex.ExtraData))) return false;
                 }
                 else if (!isExtraDataEqual) return false;
             }
@@ -1357,12 +1357,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILeveledNpcEntryGetter rhs) return false;
-            return ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILeveledNpcEntryGetter? obj)
         {
-            return ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)this).CommonInstance()!).GetHashCode(this);

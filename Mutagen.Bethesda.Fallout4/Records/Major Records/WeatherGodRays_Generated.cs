@@ -149,12 +149,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherGodRaysGetter rhs) return false;
-            return ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherGodRaysGetter? obj)
         {
-            return ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)this).CommonInstance()!).GetHashCode(this);
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1167,38 +1167,38 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWeatherGodRaysGetter? lhs,
             IWeatherGodRaysGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRaySunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRaySunrise) ?? true))
             {
                 if (!lhs.GodRaySunrise.Equals(rhs.GodRaySunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayDay) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayDay) ?? true))
             {
                 if (!lhs.GodRayDay.Equals(rhs.GodRayDay)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRaySunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRaySunset) ?? true))
             {
                 if (!lhs.GodRaySunset.Equals(rhs.GodRaySunset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayNight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayNight) ?? true))
             {
                 if (!lhs.GodRayNight.Equals(rhs.GodRayNight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayEarlySunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayEarlySunrise) ?? true))
             {
                 if (!lhs.GodRayEarlySunrise.Equals(rhs.GodRayEarlySunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayLateSunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayLateSunrise) ?? true))
             {
                 if (!lhs.GodRayLateSunrise.Equals(rhs.GodRayLateSunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayEarlySunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayEarlySunset) ?? true))
             {
                 if (!lhs.GodRayEarlySunset.Equals(rhs.GodRayEarlySunset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayLateSunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherGodRays_FieldIndex.GodRayLateSunset) ?? true))
             {
                 if (!lhs.GodRayLateSunset.Equals(rhs.GodRayLateSunset)) return false;
             }
@@ -1598,12 +1598,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherGodRaysGetter rhs) return false;
-            return ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherGodRaysGetter? obj)
         {
-            return ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherGodRaysCommon)((IWeatherGodRaysGetter)this).CommonInstance()!).GetHashCode(this);

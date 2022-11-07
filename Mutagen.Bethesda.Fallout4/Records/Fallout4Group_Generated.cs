@@ -99,12 +99,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IFallout4GroupGetter<T> rhs) return false;
-            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFallout4GroupGetter<T>? obj)
         {
-            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: null);
+                equalsMask: null);
         }
 
         public static bool Equals<T, T_TranslMask>(
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask.GetCrystal());
+                equalsMask: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter>(
@@ -1007,22 +1007,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IFallout4GroupGetter<T>? lhs,
             IFallout4GroupGetter<T>? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Fallout4Group_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Group_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Group_FieldIndex.LastModified) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Group_FieldIndex.LastModified) ?? true))
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Group_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Group_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Group_FieldIndex.RecordCache) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Group_FieldIndex.RecordCache) ?? true))
             {
                 if (!lhs.RecordCache.SequenceEqualNullable(rhs.RecordCache)) return false;
             }
@@ -1577,12 +1577,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IFallout4GroupGetter<T> rhs) return false;
-            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFallout4GroupGetter<T>? obj)
         {
-            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((Fallout4GroupCommon<T>)((IFallout4GroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);

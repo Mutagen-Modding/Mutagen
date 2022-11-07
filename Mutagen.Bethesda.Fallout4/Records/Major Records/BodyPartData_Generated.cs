@@ -523,12 +523,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IBodyPartDataGetter rhs) return false;
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBodyPartDataGetter? obj)
         {
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((BodyPartDataCommon)((IBodyPartDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -761,6 +761,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static BodyPartData Duplicate(
+            this IBodyPartDataGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1121,21 +1132,21 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IBodyPartDataGetter? lhs,
             IBodyPartDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)BodyPartData_FieldIndex.Model) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)BodyPartData_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPartData_FieldIndex.Parts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Parts) ?? true))
             {
-                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((BodyPartCommon)((IBodyPartGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)BodyPartData_FieldIndex.Parts)))) return false;
+                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((BodyPartCommon)((IBodyPartGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Parts)))) return false;
             }
             return true;
         }
@@ -1143,23 +1154,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBodyPartDataGetter?)lhs,
                 rhs: rhs as IBodyPartDataGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBodyPartDataGetter?)lhs,
                 rhs: rhs as IBodyPartDataGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IBodyPartDataGetter item)
@@ -1804,12 +1815,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IBodyPartDataGetter rhs) return false;
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBodyPartDataGetter? obj)
         {
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).GetHashCode(this);

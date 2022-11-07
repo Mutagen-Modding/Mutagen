@@ -643,12 +643,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ICollisionLayerGetter rhs) return false;
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICollisionLayerGetter? obj)
         {
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((CollisionLayerCommon)((ICollisionLayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -889,6 +889,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static CollisionLayer Duplicate(
+            this ICollisionLayerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1260,31 +1271,31 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ICollisionLayerGetter? lhs,
             ICollisionLayerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.DebugColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.DebugColor) ?? true))
             {
                 if (!lhs.DebugColor.ColorOnlyEquals(rhs.DebugColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.CollidesWith) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.CollidesWith) ?? true))
             {
                 if (!lhs.CollidesWith.SequenceEqualNullable(rhs.CollidesWith)) return false;
             }
@@ -1294,23 +1305,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICollisionLayerGetter?)lhs,
                 rhs: rhs as ICollisionLayerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICollisionLayerGetter?)lhs,
                 rhs: rhs as ICollisionLayerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ICollisionLayerGetter item)
@@ -2034,12 +2045,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ICollisionLayerGetter rhs) return false;
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICollisionLayerGetter? obj)
         {
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).GetHashCode(this);

@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IImpactDataGetter rhs) return false;
-            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImpactDataGetter? obj)
         {
-            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ImpactDataCommon)((IImpactDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -867,14 +867,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IImpactDataGetter? lhs,
             IImpactDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ImpactData_FieldIndex.Material) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Material) ?? true))
             {
                 if (!lhs.Material.Equals(rhs.Material)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImpactData_FieldIndex.Impact) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Impact) ?? true))
             {
                 if (!lhs.Impact.Equals(rhs.Impact)) return false;
             }
@@ -1208,12 +1208,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IImpactDataGetter rhs) return false;
-            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImpactDataGetter? obj)
         {
-            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).GetHashCode(this);

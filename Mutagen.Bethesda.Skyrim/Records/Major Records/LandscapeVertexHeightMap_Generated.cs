@@ -88,12 +88,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILandscapeVertexHeightMapGetter rhs) return false;
-            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeVertexHeightMapGetter? obj)
         {
-            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).GetHashCode(this);
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -976,18 +976,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILandscapeVertexHeightMapGetter? lhs,
             ILandscapeVertexHeightMapGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Offset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Offset) ?? true))
             {
                 if (!lhs.Offset.EqualsWithin(rhs.Offset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.HeightMap) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.HeightMap) ?? true))
             {
                 if (!lhs.HeightMap.SequenceEqualNullable(rhs.HeightMap)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Unknown) ?? true))
             {
                 if (!lhs.Unknown.Equals(rhs.Unknown)) return false;
             }
@@ -1353,12 +1353,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILandscapeVertexHeightMapGetter rhs) return false;
-            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeVertexHeightMapGetter? obj)
         {
-            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).GetHashCode(this);

@@ -400,12 +400,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IDefaultObjectGetter rhs) return false;
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDefaultObjectGetter? obj)
         {
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DefaultObjectCommon)((IDefaultObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -626,6 +626,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static DefaultObject Duplicate(
+            this IDefaultObjectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -942,11 +953,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDefaultObjectGetter? lhs,
             IDefaultObjectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)DefaultObject_FieldIndex.Object) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DefaultObject_FieldIndex.Object) ?? true))
             {
                 if (!lhs.Object.Equals(rhs.Object)) return false;
             }
@@ -956,23 +967,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDefaultObjectGetter?)lhs,
                 rhs: rhs as IDefaultObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDefaultObjectGetter?)lhs,
                 rhs: rhs as IDefaultObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IDefaultObjectGetter item)
@@ -1517,12 +1528,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IDefaultObjectGetter rhs) return false;
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDefaultObjectGetter? obj)
         {
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).GetHashCode(this);

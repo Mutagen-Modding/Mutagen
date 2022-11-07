@@ -1031,12 +1031,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISoundDescriptorGetter rhs) return false;
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundDescriptorGetter? obj)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1287,6 +1287,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static SoundDescriptor Duplicate(
+            this ISoundDescriptorGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1759,67 +1770,67 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISoundDescriptorGetter? lhs,
             ISoundDescriptorGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Type) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
             {
                 if (!lhs.Category.Equals(rhs.Category)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.AlternateSoundFor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.AlternateSoundFor) ?? true))
             {
                 if (!lhs.AlternateSoundFor.Equals(rhs.AlternateSoundFor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.SoundFiles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.SoundFiles) ?? true))
             {
                 if (!lhs.SoundFiles.SequenceEqualNullable(rhs.SoundFiles)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.OutputModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.OutputModel) ?? true))
             {
                 if (!lhs.OutputModel.Equals(rhs.OutputModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.String) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.String) ?? true))
             {
                 if (!string.Equals(lhs.String, rhs.String)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SoundDescriptor_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SoundDescriptor_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.LoopAndRumble) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.LoopAndRumble) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LoopAndRumble, rhs.LoopAndRumble, out var lhsLoopAndRumble, out var rhsLoopAndRumble, out var isLoopAndRumbleEqual))
                 {
-                    if (!((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)lhsLoopAndRumble).CommonInstance()!).Equals(lhsLoopAndRumble, rhsLoopAndRumble, crystal?.GetSubCrystal((int)SoundDescriptor_FieldIndex.LoopAndRumble))) return false;
+                    if (!((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)lhsLoopAndRumble).CommonInstance()!).Equals(lhsLoopAndRumble, rhsLoopAndRumble, equalsMask?.GetSubCrystal((int)SoundDescriptor_FieldIndex.LoopAndRumble))) return false;
                 }
                 else if (!isLoopAndRumbleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyShift) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyShift) ?? true))
             {
                 if (!lhs.PercentFrequencyShift.Equals(rhs.PercentFrequencyShift)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyVariance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyVariance) ?? true))
             {
                 if (!lhs.PercentFrequencyVariance.Equals(rhs.PercentFrequencyVariance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Priority) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Priority) ?? true))
             {
                 if (lhs.Priority != rhs.Priority) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Variance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Variance) ?? true))
             {
                 if (lhs.Variance != rhs.Variance) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.StaticAttenuation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.StaticAttenuation) ?? true))
             {
                 if (!lhs.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.BNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.BNAMDataTypeState) ?? true))
             {
                 if (lhs.BNAMDataTypeState != rhs.BNAMDataTypeState) return false;
             }
@@ -1829,23 +1840,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundDescriptorGetter?)lhs,
                 rhs: rhs as ISoundDescriptorGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundDescriptorGetter?)lhs,
                 rhs: rhs as ISoundDescriptorGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoundDescriptorGetter item)
@@ -2824,12 +2835,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISoundDescriptorGetter rhs) return false;
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundDescriptorGetter? obj)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).GetHashCode(this);

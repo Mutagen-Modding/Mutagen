@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageDataBoolGetter rhs) return false;
-            return ((PackageDataBoolCommon)((IPackageDataBoolGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageDataBoolCommon)((IPackageDataBoolGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageDataBoolGetter? obj)
         {
-            return ((PackageDataBoolCommon)((IPackageDataBoolGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageDataBoolCommon)((IPackageDataBoolGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageDataBoolCommon)((IPackageDataBoolGetter)this).CommonInstance()!).GetHashCode(this);
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageDataBoolCommon)((IPackageDataBoolGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -804,11 +804,11 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPackageDataBoolGetter? lhs,
             IPackageDataBoolGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PackageDataBool_FieldIndex.Data) ?? true))
+            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PackageDataBool_FieldIndex.Data) ?? true))
             {
                 if (lhs.Data != rhs.Data) return false;
             }
@@ -818,12 +818,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IAPackageDataGetter? lhs,
             IAPackageDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackageDataBoolGetter?)lhs,
                 rhs: rhs as IPackageDataBoolGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPackageDataBoolGetter item)
@@ -1153,12 +1153,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageDataBoolGetter rhs) return false;
-            return ((PackageDataBoolCommon)((IPackageDataBoolGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageDataBoolCommon)((IPackageDataBoolGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageDataBoolGetter? obj)
         {
-            return ((PackageDataBoolCommon)((IPackageDataBoolGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageDataBoolCommon)((IPackageDataBoolGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageDataBoolCommon)((IPackageDataBoolGetter)this).CommonInstance()!).GetHashCode(this);

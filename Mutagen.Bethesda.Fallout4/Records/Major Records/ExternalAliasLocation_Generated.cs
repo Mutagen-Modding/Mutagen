@@ -84,12 +84,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IExternalAliasLocationGetter rhs) return false;
-            return ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IExternalAliasLocationGetter? obj)
         {
-            return ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -859,14 +859,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IExternalAliasLocationGetter? lhs,
             IExternalAliasLocationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ExternalAliasLocation_FieldIndex.Quest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ExternalAliasLocation_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ExternalAliasLocation_FieldIndex.AliasID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ExternalAliasLocation_FieldIndex.AliasID) ?? true))
             {
                 if (lhs.AliasID != rhs.AliasID) return false;
             }
@@ -1260,12 +1260,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IExternalAliasLocationGetter rhs) return false;
-            return ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IExternalAliasLocationGetter? obj)
         {
-            return ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)this).CommonInstance()!).GetHashCode(this);

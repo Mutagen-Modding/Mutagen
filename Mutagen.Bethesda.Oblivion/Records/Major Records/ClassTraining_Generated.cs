@@ -78,12 +78,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IClassTrainingGetter rhs) return false;
-            return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClassTrainingGetter? obj)
         {
-            return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -875,18 +875,18 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IClassTrainingGetter? lhs,
             IClassTrainingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ClassTraining_FieldIndex.TrainedSkill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.TrainedSkill) ?? true))
             {
                 if (lhs.TrainedSkill != rhs.TrainedSkill) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ClassTraining_FieldIndex.MaximumTrainingLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.MaximumTrainingLevel) ?? true))
             {
                 if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ClassTraining_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
@@ -1219,12 +1219,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IClassTrainingGetter rhs) return false;
-            return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClassTrainingGetter? obj)
         {
-            return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).GetHashCode(this);

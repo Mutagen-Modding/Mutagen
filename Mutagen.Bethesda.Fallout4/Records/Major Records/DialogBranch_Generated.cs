@@ -510,12 +510,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IDialogBranchGetter rhs) return false;
-            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogBranchGetter? obj)
         {
-            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).GetHashCode(this);
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -742,6 +742,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static DialogBranch Duplicate(
+            this IDialogBranchGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1085,23 +1096,23 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDialogBranchGetter? lhs,
             IDialogBranchGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.Quest) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.Category) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Category) ?? true))
             {
                 if (lhs.Category != rhs.Category) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.StartingTopic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.StartingTopic) ?? true))
             {
                 if (!lhs.StartingTopic.Equals(rhs.StartingTopic)) return false;
             }
@@ -1111,23 +1122,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDialogBranchGetter?)lhs,
                 rhs: rhs as IDialogBranchGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDialogBranchGetter?)lhs,
                 rhs: rhs as IDialogBranchGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IDialogBranchGetter item)
@@ -1757,12 +1768,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IDialogBranchGetter rhs) return false;
-            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogBranchGetter? obj)
         {
-            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).GetHashCode(this);

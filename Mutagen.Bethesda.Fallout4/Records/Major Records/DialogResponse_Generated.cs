@@ -165,12 +165,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDialogResponseGetter rhs) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogResponseGetter? obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1545,74 +1545,74 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDialogResponseGetter? lhs,
             IDialogResponseGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
             {
                 if (!lhs.Emotion.Equals(rhs.Emotion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
             {
                 if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.InterruptPercentage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.InterruptPercentage) ?? true))
             {
                 if (lhs.InterruptPercentage != rhs.InterruptPercentage) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraTargetAlias) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraTargetAlias) ?? true))
             {
                 if (lhs.CameraTargetAlias != rhs.CameraTargetAlias) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraLocationAlias) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraLocationAlias) ?? true))
             {
                 if (lhs.CameraLocationAlias != rhs.CameraLocationAlias) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Text) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Text) ?? true))
             {
                 if (!object.Equals(lhs.Text, rhs.Text)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ScriptNotes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ScriptNotes) ?? true))
             {
                 if (!string.Equals(lhs.ScriptNotes, rhs.ScriptNotes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Edits) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Edits) ?? true))
             {
                 if (!string.Equals(lhs.Edits, rhs.Edits)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.AlternateLipText) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AlternateLipText) ?? true))
             {
                 if (!string.Equals(lhs.AlternateLipText, rhs.AlternateLipText)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
             {
                 if (!lhs.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
             {
                 if (!lhs.ListenerIdleAnimation.Equals(rhs.ListenerIdleAnimation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.TextHash) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TextHash) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.TextHash, rhs.TextHash)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraPath) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraPath) ?? true))
             {
                 if (!lhs.CameraPath.Equals(rhs.CameraPath)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.StopOnSceneEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.StopOnSceneEnd) ?? true))
             {
                 if (lhs.StopOnSceneEnd != rhs.StopOnSceneEnd) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDADataTypeState) ?? true))
             {
                 if (lhs.TRDADataTypeState != rhs.TRDADataTypeState) return false;
             }
@@ -2375,12 +2375,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDialogResponseGetter rhs) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogResponseGetter? obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);

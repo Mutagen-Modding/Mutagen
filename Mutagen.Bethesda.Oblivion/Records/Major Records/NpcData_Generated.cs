@@ -158,12 +158,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not INpcDataGetter rhs) return false;
-            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcDataGetter? obj)
         {
-            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2019,126 +2019,126 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             INpcDataGetter? lhs,
             INpcDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Armorer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Armorer) ?? true))
             {
                 if (lhs.Armorer != rhs.Armorer) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Athletics) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Athletics) ?? true))
             {
                 if (lhs.Athletics != rhs.Athletics) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Blade) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Blade) ?? true))
             {
                 if (lhs.Blade != rhs.Blade) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Block) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Block) ?? true))
             {
                 if (lhs.Block != rhs.Block) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Blunt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Blunt) ?? true))
             {
                 if (lhs.Blunt != rhs.Blunt) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.HandToHand) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.HandToHand) ?? true))
             {
                 if (lhs.HandToHand != rhs.HandToHand) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.HeavyArmor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.HeavyArmor) ?? true))
             {
                 if (lhs.HeavyArmor != rhs.HeavyArmor) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Alchemy) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Alchemy) ?? true))
             {
                 if (lhs.Alchemy != rhs.Alchemy) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Alteration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Alteration) ?? true))
             {
                 if (lhs.Alteration != rhs.Alteration) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Conjuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Conjuration) ?? true))
             {
                 if (lhs.Conjuration != rhs.Conjuration) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Destruction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Destruction) ?? true))
             {
                 if (lhs.Destruction != rhs.Destruction) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Illusion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Illusion) ?? true))
             {
                 if (lhs.Illusion != rhs.Illusion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Mysticism) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Mysticism) ?? true))
             {
                 if (lhs.Mysticism != rhs.Mysticism) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Restoration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Restoration) ?? true))
             {
                 if (lhs.Restoration != rhs.Restoration) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Acrobatics) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Acrobatics) ?? true))
             {
                 if (lhs.Acrobatics != rhs.Acrobatics) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.LightArmor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.LightArmor) ?? true))
             {
                 if (lhs.LightArmor != rhs.LightArmor) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Marksman) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Marksman) ?? true))
             {
                 if (lhs.Marksman != rhs.Marksman) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Mercantile) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Mercantile) ?? true))
             {
                 if (lhs.Mercantile != rhs.Mercantile) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Security) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Security) ?? true))
             {
                 if (lhs.Security != rhs.Security) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Sneak) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Sneak) ?? true))
             {
                 if (lhs.Sneak != rhs.Sneak) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Speechcraft) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Speechcraft) ?? true))
             {
                 if (lhs.Speechcraft != rhs.Speechcraft) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Health) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Health) ?? true))
             {
                 if (lhs.Health != rhs.Health) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Strength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Strength) ?? true))
             {
                 if (lhs.Strength != rhs.Strength) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Intelligence) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Intelligence) ?? true))
             {
                 if (lhs.Intelligence != rhs.Intelligence) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Willpower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Willpower) ?? true))
             {
                 if (lhs.Willpower != rhs.Willpower) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Agility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Agility) ?? true))
             {
                 if (lhs.Agility != rhs.Agility) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Speed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Speed) ?? true))
             {
                 if (lhs.Speed != rhs.Speed) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Endurance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Endurance) ?? true))
             {
                 if (lhs.Endurance != rhs.Endurance) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Personality) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Personality) ?? true))
             {
                 if (lhs.Personality != rhs.Personality) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Luck) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcData_FieldIndex.Luck) ?? true))
             {
                 if (lhs.Luck != rhs.Luck) return false;
             }
@@ -2689,12 +2689,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not INpcDataGetter rhs) return false;
-            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcDataGetter? obj)
         {
-            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -101,12 +101,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICrimeValuesGetter rhs) return false;
-            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICrimeValuesGetter? obj)
         {
-            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CrimeValuesCommon)((ICrimeValuesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1230,50 +1230,50 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ICrimeValuesGetter? lhs,
             ICrimeValuesGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Arrest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Arrest) ?? true))
             {
                 if (lhs.Arrest != rhs.Arrest) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.AttackOnSight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.AttackOnSight) ?? true))
             {
                 if (lhs.AttackOnSight != rhs.AttackOnSight) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Murder) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Murder) ?? true))
             {
                 if (lhs.Murder != rhs.Murder) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Assault) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Assault) ?? true))
             {
                 if (lhs.Assault != rhs.Assault) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Trespass) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Trespass) ?? true))
             {
                 if (lhs.Trespass != rhs.Trespass) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Pickpocket) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Pickpocket) ?? true))
             {
                 if (lhs.Pickpocket != rhs.Pickpocket) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.StealMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.StealMult) ?? true))
             {
                 if (!lhs.StealMult.EqualsWithin(rhs.StealMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Escape) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Escape) ?? true))
             {
                 if (lhs.Escape != rhs.Escape) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Werewolf) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Werewolf) ?? true))
             {
                 if (lhs.Werewolf != rhs.Werewolf) return false;
             }
@@ -1697,12 +1697,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICrimeValuesGetter rhs) return false;
-            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICrimeValuesGetter? obj)
         {
-            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).GetHashCode(this);

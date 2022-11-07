@@ -591,12 +591,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not INavigationMeshInfoMapGetter rhs) return false;
-            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavigationMeshInfoMapGetter? obj)
         {
-            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).GetHashCode(this);
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -823,6 +823,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static NavigationMeshInfoMap Duplicate(
+            this INavigationMeshInfoMapGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1184,27 +1195,27 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INavigationMeshInfoMapGetter? lhs,
             INavigationMeshInfoMapGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion) ?? true))
             {
                 if (lhs.NavMeshVersion != rhs.NavMeshVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.MapInfos) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.MapInfos) ?? true))
             {
-                if (!lhs.MapInfos.SequenceEqual(rhs.MapInfos, (l, r) => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.MapInfos)))) return false;
+                if (!lhs.MapInfos.SequenceEqual(rhs.MapInfos, (l, r) => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.MapInfos)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.PreferredPathing, rhs.PreferredPathing, out var lhsPreferredPathing, out var rhsPreferredPathing, out var isPreferredPathingEqual))
                 {
-                    if (!((PreferredPathingCommon)((IPreferredPathingGetter)lhsPreferredPathing).CommonInstance()!).Equals(lhsPreferredPathing, rhsPreferredPathing, crystal?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing))) return false;
+                    if (!((PreferredPathingCommon)((IPreferredPathingGetter)lhsPreferredPathing).CommonInstance()!).Equals(lhsPreferredPathing, rhsPreferredPathing, equalsMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing))) return false;
                 }
                 else if (!isPreferredPathingEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NVSI) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NVSI) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.NVSI, rhs.NVSI)) return false;
             }
@@ -1214,23 +1225,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INavigationMeshInfoMapGetter?)lhs,
                 rhs: rhs as INavigationMeshInfoMapGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INavigationMeshInfoMapGetter?)lhs,
                 rhs: rhs as INavigationMeshInfoMapGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(INavigationMeshInfoMapGetter item)
@@ -1932,12 +1943,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not INavigationMeshInfoMapGetter rhs) return false;
-            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavigationMeshInfoMapGetter? obj)
         {
-            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).GetHashCode(this);

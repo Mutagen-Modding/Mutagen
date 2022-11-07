@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IResistanceDestructibleGetter rhs) return false;
-            return ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IResistanceDestructibleGetter? obj)
         {
-            return ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -848,14 +848,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IResistanceDestructibleGetter? lhs,
             IResistanceDestructibleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ResistanceDestructible_FieldIndex.DamageType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ResistanceDestructible_FieldIndex.DamageType) ?? true))
             {
                 if (!lhs.DamageType.Equals(rhs.DamageType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ResistanceDestructible_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ResistanceDestructible_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
@@ -1179,12 +1179,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IResistanceDestructibleGetter rhs) return false;
-            return ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IResistanceDestructibleGetter? obj)
         {
-            return ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ResistanceDestructibleCommon)((IResistanceDestructibleGetter)this).CommonInstance()!).GetHashCode(this);

@@ -118,12 +118,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionMapGetter rhs) return false;
-            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionMapGetter? obj)
         {
-            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).GetHashCode(this);
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -950,19 +950,19 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IRegionMapGetter? lhs,
             IRegionMapGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)RegionMap_FieldIndex.Name) ?? true))
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)RegionMap_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RegionMap_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionMap_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
             {
                 if (!lhs.LodDisplayDistanceMultiplier.EqualsWithin(rhs.LodDisplayDistanceMultiplier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RegionMap_FieldIndex.OcclusionAccuracyDist) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionMap_FieldIndex.OcclusionAccuracyDist) ?? true))
             {
                 if (!lhs.OcclusionAccuracyDist.EqualsWithin(rhs.OcclusionAccuracyDist)) return false;
             }
@@ -972,12 +972,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IRegionDataGetter? lhs,
             IRegionDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRegionMapGetter?)lhs,
                 rhs: rhs as IRegionMapGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRegionMapGetter item)
@@ -1439,12 +1439,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionMapGetter rhs) return false;
-            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionMapGetter? obj)
         {
-            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).GetHashCode(this);

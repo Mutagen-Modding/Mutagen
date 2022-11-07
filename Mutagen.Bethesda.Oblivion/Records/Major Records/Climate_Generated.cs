@@ -627,12 +627,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IClimateGetter rhs) return false;
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClimateGetter? obj)
         {
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).GetHashCode(this);
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -871,6 +871,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Climate Duplicate(
+            this IClimateGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1242,35 +1253,35 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IClimateGetter? lhs,
             IClimateGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Weathers) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Weathers) ?? true))
             {
-                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Climate_FieldIndex.Weathers)))) return false;
+                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Climate_FieldIndex.Weathers)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
             {
                 if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunGlareTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunGlareTexture) ?? true))
             {
                 if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Climate_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Climate_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((ClimateDataCommon)((IClimateDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Climate_FieldIndex.Data))) return false;
+                    if (!((ClimateDataCommon)((IClimateDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Climate_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
@@ -1280,23 +1291,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IClimateGetter?)lhs,
                 rhs: rhs as IClimateGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IClimateGetter?)lhs,
                 rhs: rhs as IClimateGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IClimateGetter item)
@@ -2052,12 +2063,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IClimateGetter rhs) return false;
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClimateGetter? obj)
         {
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).GetHashCode(this);

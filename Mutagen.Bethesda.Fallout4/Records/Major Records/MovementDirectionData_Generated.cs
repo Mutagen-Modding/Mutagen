@@ -80,12 +80,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IMovementDirectionDataGetter rhs) return false;
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMovementDirectionDataGetter? obj)
         {
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -916,22 +916,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMovementDirectionDataGetter? lhs,
             IMovementDirectionDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Unused1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Unused1) ?? true))
             {
                 if (lhs.Unused1 != rhs.Unused1) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Walk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Walk) ?? true))
             {
                 if (!lhs.Walk.EqualsWithin(rhs.Walk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Run) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Run) ?? true))
             {
                 if (!lhs.Run.EqualsWithin(rhs.Run)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Unused2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Unused2) ?? true))
             {
                 if (lhs.Unused2 != rhs.Unused2) return false;
             }
@@ -1271,12 +1271,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IMovementDirectionDataGetter rhs) return false;
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMovementDirectionDataGetter? obj)
         {
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).GetHashCode(this);

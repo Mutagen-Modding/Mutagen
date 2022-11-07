@@ -75,12 +75,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILinkedReferenceColorGetter rhs) return false;
-            return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILinkedReferenceColorGetter? obj)
         {
-            return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -844,14 +844,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILinkedReferenceColorGetter? lhs,
             ILinkedReferenceColorGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.Start) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.Start) ?? true))
             {
                 if (!lhs.Start.ColorOnlyEquals(rhs.Start)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.End) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.End) ?? true))
             {
                 if (!lhs.End.ColorOnlyEquals(rhs.End)) return false;
             }
@@ -1182,12 +1182,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILinkedReferenceColorGetter rhs) return false;
-            return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILinkedReferenceColorGetter? obj)
         {
-            return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).GetHashCode(this);

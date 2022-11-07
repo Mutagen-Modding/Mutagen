@@ -943,12 +943,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ITreeGetter rhs) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITreeGetter? obj)
         {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1258,6 +1258,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Tree Duplicate(
+            this ITreeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1715,75 +1726,75 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ITreeGetter? lhs,
             ITreeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Tree_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Tree_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Tree_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
             {
                 if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
             {
                 if (!lhs.HarvestSound.Equals(rhs.HarvestSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Production, rhs.Production, out var lhsProduction, out var rhsProduction, out var isProductionEqual))
                 {
-                    if (!((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)lhsProduction).CommonInstance()!).Equals(lhsProduction, rhsProduction, crystal?.GetSubCrystal((int)Tree_FieldIndex.Production))) return false;
+                    if (!((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)lhsProduction).CommonInstance()!).Equals(lhsProduction, rhsProduction, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.Production))) return false;
                 }
                 else if (!isProductionEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
             {
                 if (!lhs.TrunkFlexibility.EqualsWithin(rhs.TrunkFlexibility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.BranchFlexibility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchFlexibility) ?? true))
             {
                 if (!lhs.BranchFlexibility.EqualsWithin(rhs.BranchFlexibility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Unknown) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.LeafAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafAmplitude) ?? true))
             {
                 if (!lhs.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.LeafFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafFrequency) ?? true))
             {
                 if (!lhs.LeafFrequency.EqualsWithin(rhs.LeafFrequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
             {
                 if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
             }
@@ -1793,23 +1804,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITreeGetter?)lhs,
                 rhs: rhs as ITreeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITreeGetter?)lhs,
                 rhs: rhs as ITreeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ITreeGetter item)
@@ -2794,12 +2805,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ITreeGetter rhs) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITreeGetter? obj)
         {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);

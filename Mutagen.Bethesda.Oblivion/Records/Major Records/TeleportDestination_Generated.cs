@@ -86,12 +86,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ITeleportDestinationGetter rhs) return false;
-            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITeleportDestinationGetter? obj)
         {
-            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -904,18 +904,18 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ITeleportDestinationGetter? lhs,
             ITeleportDestinationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
             {
                 if (!lhs.Destination.Equals(rhs.Destination)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {
                 if (!lhs.Position.Equals(rhs.Position)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Rotation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Rotation) ?? true))
             {
                 if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
             }
@@ -1258,12 +1258,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ITeleportDestinationGetter rhs) return false;
-            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITeleportDestinationGetter? obj)
         {
-            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).GetHashCode(this);

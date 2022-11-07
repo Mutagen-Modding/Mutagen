@@ -262,12 +262,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IFaceFxPhonemesGetter rhs) return false;
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFaceFxPhonemesGetter? obj)
         {
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1882,144 +1882,144 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IFaceFxPhonemesGetter? lhs,
             IFaceFxPhonemesGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ForceNames) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ForceNames) ?? true))
             {
                 if (lhs.ForceNames != rhs.ForceNames) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Aah_LipBigAah, rhs.Aah_LipBigAah, out var lhsAah_LipBigAah, out var rhsAah_LipBigAah, out var isAah_LipBigAahEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsAah_LipBigAah).CommonInstance()!).Equals(lhsAah_LipBigAah, rhsAah_LipBigAah, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsAah_LipBigAah).CommonInstance()!).Equals(lhsAah_LipBigAah, rhsAah_LipBigAah, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah))) return false;
                 }
                 else if (!isAah_LipBigAahEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BigAah_LipDST, rhs.BigAah_LipDST, out var lhsBigAah_LipDST, out var rhsBigAah_LipDST, out var isBigAah_LipDSTEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsBigAah_LipDST).CommonInstance()!).Equals(lhsBigAah_LipDST, rhsBigAah_LipDST, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsBigAah_LipDST).CommonInstance()!).Equals(lhsBigAah_LipDST, rhsBigAah_LipDST, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST))) return false;
                 }
                 else if (!isBigAah_LipDSTEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BMP_LipEee) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BMP_LipEee) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BMP_LipEee, rhs.BMP_LipEee, out var lhsBMP_LipEee, out var rhsBMP_LipEee, out var isBMP_LipEeeEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsBMP_LipEee).CommonInstance()!).Equals(lhsBMP_LipEee, rhsBMP_LipEee, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BMP_LipEee))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsBMP_LipEee).CommonInstance()!).Equals(lhsBMP_LipEee, rhsBMP_LipEee, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BMP_LipEee))) return false;
                 }
                 else if (!isBMP_LipEeeEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ChJSh_LipFV, rhs.ChJSh_LipFV, out var lhsChJSh_LipFV, out var rhsChJSh_LipFV, out var isChJSh_LipFVEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsChJSh_LipFV).CommonInstance()!).Equals(lhsChJSh_LipFV, rhsChJSh_LipFV, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsChJSh_LipFV).CommonInstance()!).Equals(lhsChJSh_LipFV, rhsChJSh_LipFV, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV))) return false;
                 }
                 else if (!isChJSh_LipFVEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.DST_LipK) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.DST_LipK) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DST_LipK, rhs.DST_LipK, out var lhsDST_LipK, out var rhsDST_LipK, out var isDST_LipKEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsDST_LipK).CommonInstance()!).Equals(lhsDST_LipK, rhsDST_LipK, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.DST_LipK))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsDST_LipK).CommonInstance()!).Equals(lhsDST_LipK, rhsDST_LipK, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.DST_LipK))) return false;
                 }
                 else if (!isDST_LipKEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eee_LipL) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eee_LipL) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Eee_LipL, rhs.Eee_LipL, out var lhsEee_LipL, out var rhsEee_LipL, out var isEee_LipLEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsEee_LipL).CommonInstance()!).Equals(lhsEee_LipL, rhsEee_LipL, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eee_LipL))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsEee_LipL).CommonInstance()!).Equals(lhsEee_LipL, rhsEee_LipL, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eee_LipL))) return false;
                 }
                 else if (!isEee_LipLEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eh_LipR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eh_LipR) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Eh_LipR, rhs.Eh_LipR, out var lhsEh_LipR, out var rhsEh_LipR, out var isEh_LipREqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsEh_LipR).CommonInstance()!).Equals(lhsEh_LipR, rhsEh_LipR, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eh_LipR))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsEh_LipR).CommonInstance()!).Equals(lhsEh_LipR, rhsEh_LipR, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eh_LipR))) return false;
                 }
                 else if (!isEh_LipREqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.FV_LipTh) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.FV_LipTh) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FV_LipTh, rhs.FV_LipTh, out var lhsFV_LipTh, out var rhsFV_LipTh, out var isFV_LipThEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsFV_LipTh).CommonInstance()!).Equals(lhsFV_LipTh, rhsFV_LipTh, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.FV_LipTh))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsFV_LipTh).CommonInstance()!).Equals(lhsFV_LipTh, rhsFV_LipTh, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.FV_LipTh))) return false;
                 }
                 else if (!isFV_LipThEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.I) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.I) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.I, rhs.I, out var lhsI, out var rhsI, out var isIEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsI).CommonInstance()!).Equals(lhsI, rhsI, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.I))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsI).CommonInstance()!).Equals(lhsI, rhsI, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.I))) return false;
                 }
                 else if (!isIEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.K) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.K) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.K, rhs.K, out var lhsK, out var rhsK, out var isKEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsK).CommonInstance()!).Equals(lhsK, rhsK, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.K))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsK).CommonInstance()!).Equals(lhsK, rhsK, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.K))) return false;
                 }
                 else if (!isKEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.N) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.N) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.N, rhs.N, out var lhsN, out var rhsN, out var isNEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsN).CommonInstance()!).Equals(lhsN, rhsN, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.N))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsN).CommonInstance()!).Equals(lhsN, rhsN, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.N))) return false;
                 }
                 else if (!isNEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Oh) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Oh) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Oh, rhs.Oh, out var lhsOh, out var rhsOh, out var isOhEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsOh).CommonInstance()!).Equals(lhsOh, rhsOh, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Oh))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsOh).CommonInstance()!).Equals(lhsOh, rhsOh, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Oh))) return false;
                 }
                 else if (!isOhEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OohQ) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OohQ) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OohQ, rhs.OohQ, out var lhsOohQ, out var rhsOohQ, out var isOohQEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsOohQ).CommonInstance()!).Equals(lhsOohQ, rhsOohQ, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OohQ))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsOohQ).CommonInstance()!).Equals(lhsOohQ, rhsOohQ, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OohQ))) return false;
                 }
                 else if (!isOohQEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.R) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.R) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.R, rhs.R, out var lhsR, out var rhsR, out var isREqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsR).CommonInstance()!).Equals(lhsR, rhsR, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.R))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsR).CommonInstance()!).Equals(lhsR, rhsR, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.R))) return false;
                 }
                 else if (!isREqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Th) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Th) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Th, rhs.Th, out var lhsTh, out var rhsTh, out var isThEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsTh).CommonInstance()!).Equals(lhsTh, rhsTh, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Th))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsTh).CommonInstance()!).Equals(lhsTh, rhsTh, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Th))) return false;
                 }
                 else if (!isThEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.W) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.W) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.W, rhs.W, out var lhsW, out var rhsW, out var isWEqual))
                 {
-                    if (!((PhonemeCommon)((IPhonemeGetter)lhsW).CommonInstance()!).Equals(lhsW, rhsW, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.W))) return false;
+                    if (!((PhonemeCommon)((IPhonemeGetter)lhsW).CommonInstance()!).Equals(lhsW, rhsW, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.W))) return false;
                 }
                 else if (!isWEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Unknowns) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Unknowns) ?? true))
             {
-                if (!lhs.Unknowns.SequenceEqual(rhs.Unknowns, (l, r) => ((PhonemeCommon)((IPhonemeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Unknowns)))) return false;
+                if (!lhs.Unknowns.SequenceEqual(rhs.Unknowns, (l, r) => ((PhonemeCommon)((IPhonemeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Unknowns)))) return false;
             }
             return true;
         }
@@ -2830,12 +2830,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IFaceFxPhonemesGetter rhs) return false;
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFaceFxPhonemesGetter? obj)
         {
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).GetHashCode(this);

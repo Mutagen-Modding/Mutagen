@@ -685,12 +685,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IFactionGetter rhs) return false;
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFactionGetter? obj)
         {
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -933,6 +933,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Faction Duplicate(
+            this IFactionGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1310,29 +1321,29 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IFactionGetter? lhs,
             IFactionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
             {
-                if (!lhs.Relations.SequenceEqual(rhs.Relations, (l, r) => ((RelationCommon)((IRelationGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Faction_FieldIndex.Relations)))) return false;
+                if (!lhs.Relations.SequenceEqual(rhs.Relations, (l, r) => ((RelationCommon)((IRelationGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Relations)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.CrimeGoldMultiplier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeGoldMultiplier) ?? true))
             {
                 if (!lhs.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
             {
-                if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((RankCommon)((IRankGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Faction_FieldIndex.Ranks)))) return false;
+                if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((RankCommon)((IRankGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks)))) return false;
             }
             return true;
         }
@@ -1340,23 +1351,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFactionGetter?)lhs,
                 rhs: rhs as IFactionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFactionGetter?)lhs,
                 rhs: rhs as IFactionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IFactionGetter item)
@@ -2092,12 +2103,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IFactionGetter rhs) return false;
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFactionGetter? obj)
         {
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);

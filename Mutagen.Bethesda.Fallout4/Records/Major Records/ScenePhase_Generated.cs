@@ -138,12 +138,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScenePhaseGetter rhs) return false;
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScenePhaseGetter? obj)
         {
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).GetHashCode(this);
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ScenePhaseCommon)((IScenePhaseGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1259,34 +1259,34 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IScenePhaseGetter? lhs,
             IScenePhaseGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.StartConditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.StartConditions) ?? true))
             {
-                if (!lhs.StartConditions.SequenceEqual(rhs.StartConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.StartConditions)))) return false;
+                if (!lhs.StartConditions.SequenceEqual(rhs.StartConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ScenePhase_FieldIndex.StartConditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.CompletionConditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.CompletionConditions) ?? true))
             {
-                if (!lhs.CompletionConditions.SequenceEqual(rhs.CompletionConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.CompletionConditions)))) return false;
+                if (!lhs.CompletionConditions.SequenceEqual(rhs.CompletionConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ScenePhase_FieldIndex.CompletionConditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.EditorWidth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.EditorWidth) ?? true))
             {
                 if (lhs.EditorWidth != rhs.EditorWidth) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.PhaseSetParentQuestStage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.PhaseSetParentQuestStage) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.PhaseSetParentQuestStage, rhs.PhaseSetParentQuestStage, out var lhsPhaseSetParentQuestStage, out var rhsPhaseSetParentQuestStage, out var isPhaseSetParentQuestStageEqual))
                 {
-                    if (!((SceneSetParentQuestStageCommon)((ISceneSetParentQuestStageGetter)lhsPhaseSetParentQuestStage).CommonInstance()!).Equals(lhsPhaseSetParentQuestStage, rhsPhaseSetParentQuestStage, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.PhaseSetParentQuestStage))) return false;
+                    if (!((SceneSetParentQuestStageCommon)((ISceneSetParentQuestStageGetter)lhsPhaseSetParentQuestStage).CommonInstance()!).Equals(lhsPhaseSetParentQuestStage, rhsPhaseSetParentQuestStage, equalsMask?.GetSubCrystal((int)ScenePhase_FieldIndex.PhaseSetParentQuestStage))) return false;
                 }
                 else if (!isPhaseSetParentQuestStageEqual) return false;
             }
@@ -1969,12 +1969,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScenePhaseGetter rhs) return false;
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScenePhaseGetter? obj)
         {
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).GetHashCode(this);

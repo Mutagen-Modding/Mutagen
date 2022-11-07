@@ -111,12 +111,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICriticalDataGetter rhs) return false;
-            return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICriticalDataGetter? obj)
         {
-            return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CriticalDataCommon)((ICriticalDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1166,42 +1166,42 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ICriticalDataGetter? lhs,
             ICriticalDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CriticalData_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CriticalData_FieldIndex.Damage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Damage) ?? true))
             {
                 if (lhs.Damage != rhs.Damage) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CriticalData_FieldIndex.PercentMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CriticalData_FieldIndex.PercentMult) ?? true))
             {
                 if (!lhs.PercentMult.EqualsWithin(rhs.PercentMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CriticalData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused2) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused3) ?? true))
             {
                 if (lhs.Unused3 != rhs.Unused3) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CriticalData_FieldIndex.Effect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Effect) ?? true))
             {
                 if (!lhs.Effect.Equals(rhs.Effect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused4) ?? true))
             {
                 if (lhs.Unused4 != rhs.Unused4) return false;
             }
@@ -1625,12 +1625,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICriticalDataGetter rhs) return false;
-            return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICriticalDataGetter? obj)
         {
-            return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).GetHashCode(this);

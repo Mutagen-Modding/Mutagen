@@ -62,12 +62,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMagicEffectCloakArchetypeGetter rhs) return false;
-            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectCloakArchetypeGetter? obj)
         {
-            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -737,22 +737,22 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMagicEffectCloakArchetypeGetter? lhs,
             IMagicEffectCloakArchetypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, crystal)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, equalsMask)) return false;
             return true;
         }
         
         public override bool Equals(
             IMagicEffectArchetypeGetter? lhs,
             IMagicEffectArchetypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMagicEffectCloakArchetypeGetter?)lhs,
                 rhs: rhs as IMagicEffectCloakArchetypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMagicEffectCloakArchetypeGetter item)
@@ -1084,12 +1084,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMagicEffectCloakArchetypeGetter rhs) return false;
-            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectCloakArchetypeGetter? obj)
         {
-            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectCloakArchetypeCommon)((IMagicEffectCloakArchetypeGetter)this).CommonInstance()!).GetHashCode(this);

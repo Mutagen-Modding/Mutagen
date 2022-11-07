@@ -91,12 +91,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ICreateReferenceToObjectGetter rhs) return false;
-            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICreateReferenceToObjectGetter? obj)
         {
-            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -990,26 +990,26 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ICreateReferenceToObjectGetter? lhs,
             ICreateReferenceToObjectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Object) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Object) ?? true))
             {
                 if (!lhs.Object.Equals(rhs.Object)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasID) ?? true))
             {
                 if (lhs.AliasID != rhs.AliasID) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Create) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Create) ?? true))
             {
                 if (lhs.Create != rhs.Create) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Level) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Level) ?? true))
             {
                 if (lhs.Level != rhs.Level) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.ALCADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.ALCADataTypeState) ?? true))
             {
                 if (lhs.ALCADataTypeState != rhs.ALCADataTypeState) return false;
             }
@@ -1465,12 +1465,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ICreateReferenceToObjectGetter rhs) return false;
-            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICreateReferenceToObjectGetter? obj)
         {
-            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).GetHashCode(this);

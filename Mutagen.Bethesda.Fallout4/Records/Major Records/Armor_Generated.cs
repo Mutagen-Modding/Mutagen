@@ -1972,12 +1972,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IArmorGetter rhs) return false;
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IArmorGetter? obj)
         {
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2260,7 +2260,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2334,6 +2334,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Armor Duplicate(
+            this IArmorGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -3040,147 +3051,147 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IArmorGetter? lhs,
             IArmorGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Armor_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Armor_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ObjectEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectEffect) ?? true))
             {
                 if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.WorldModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.WorldModel) ?? true))
             {
                 if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.BipedBodyTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.BipedBodyTemplate) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BipedBodyTemplate, rhs.BipedBodyTemplate, out var lhsBipedBodyTemplate, out var rhsBipedBodyTemplate, out var isBipedBodyTemplateEqual))
                 {
-                    if (!((BipedBodyTemplateCommon)((IBipedBodyTemplateGetter)lhsBipedBodyTemplate).CommonInstance()!).Equals(lhsBipedBodyTemplate, rhsBipedBodyTemplate, crystal?.GetSubCrystal((int)Armor_FieldIndex.BipedBodyTemplate))) return false;
+                    if (!((BipedBodyTemplateCommon)((IBipedBodyTemplateGetter)lhsBipedBodyTemplate).CommonInstance()!).Equals(lhsBipedBodyTemplate, rhsBipedBodyTemplate, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.BipedBodyTemplate))) return false;
                 }
                 else if (!isBipedBodyTemplateEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Armor_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.EquipmentType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.EquipmentType) ?? true))
             {
                 if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.BlockBashImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.BlockBashImpactDataSet) ?? true))
             {
                 if (!lhs.BlockBashImpactDataSet.Equals(rhs.BlockBashImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.AlternateBlockMaterial) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.AlternateBlockMaterial) ?? true))
             {
                 if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Race) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Race) ?? true))
             {
                 if (!lhs.Race.Equals(rhs.Race)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.InstanceNaming) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.InstanceNaming) ?? true))
             {
                 if (!lhs.InstanceNaming.Equals(rhs.InstanceNaming)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Armatures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Armatures) ?? true))
             {
-                if (!lhs.Armatures.SequenceEqual(rhs.Armatures, (l, r) => ((ArmorAddonModelCommon)((IArmorAddonModelGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Armor_FieldIndex.Armatures)))) return false;
+                if (!lhs.Armatures.SequenceEqual(rhs.Armatures, (l, r) => ((ArmorAddonModelCommon)((IArmorAddonModelGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Armatures)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Health) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Health) ?? true))
             {
                 if (lhs.Health != rhs.Health) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ArmorRating) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ArmorRating) ?? true))
             {
                 if (lhs.ArmorRating != rhs.ArmorRating) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.BaseAddonIndex) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.BaseAddonIndex) ?? true))
             {
                 if (lhs.BaseAddonIndex != rhs.BaseAddonIndex) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.StaggerRating) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.StaggerRating) ?? true))
             {
                 if (lhs.StaggerRating != rhs.StaggerRating) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Resistances) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Resistances) ?? true))
             {
-                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances, (l, r) => ((ArmorResistanceCommon)((IArmorResistanceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Armor_FieldIndex.Resistances)))) return false;
+                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances, (l, r) => ((ArmorResistanceCommon)((IArmorResistanceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Resistances)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.TemplateArmor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.TemplateArmor) ?? true))
             {
                 if (!lhs.TemplateArmor.Equals(rhs.TemplateArmor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.AttachParentSlots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.AttachParentSlots) ?? true))
             {
                 if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ObjectTemplates) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectTemplates) ?? true))
             {
-                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Armor.Property>)((IObjectTemplateGetter<Armor.Property>)l).CommonInstance(typeof(Armor.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)Armor_FieldIndex.ObjectTemplates)))) return false;
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Armor.Property>)((IObjectTemplateGetter<Armor.Property>)l).CommonInstance(typeof(Armor.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.ObjectTemplates)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.FNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.FNAMDataTypeState) ?? true))
             {
                 if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
             }
@@ -3190,23 +3201,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IArmorGetter?)lhs,
                 rhs: rhs as IArmorGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IArmorGetter?)lhs,
                 rhs: rhs as IArmorGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IArmorGetter item)
@@ -4920,12 +4931,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IArmorGetter rhs) return false;
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IArmorGetter? obj)
         {
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).GetHashCode(this);

@@ -4169,12 +4169,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IEffectShaderGetter rhs) return false;
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEffectShaderGetter? obj)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).GetHashCode(this);
@@ -4533,7 +4533,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -4607,6 +4607,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static EffectShader Duplicate(
+            this IEffectShaderGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -5708,431 +5719,431 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IEffectShaderGetter? lhs,
             IEffectShaderGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
             {
                 if (!object.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
             {
                 if (!object.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
             {
                 if (!object.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembranePaletteTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembranePaletteTexture) ?? true))
             {
                 if (!object.Equals(lhs.MembranePaletteTexture, rhs.MembranePaletteTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePaletteTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePaletteTexture) ?? true))
             {
                 if (!object.Equals(lhs.ParticlePaletteTexture, rhs.ParticlePaletteTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneSourceBlendMode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneSourceBlendMode) ?? true))
             {
                 if (lhs.MembraneSourceBlendMode != rhs.MembraneSourceBlendMode) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneBlendOperation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneBlendOperation) ?? true))
             {
                 if (lhs.MembraneBlendOperation != rhs.MembraneBlendOperation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneZTest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneZTest) ?? true))
             {
                 if (lhs.MembraneZTest != rhs.MembraneZTest) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1) ?? true))
             {
                 if (!lhs.FillColorKey1.ColorOnlyEquals(rhs.FillColorKey1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaFadeInTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaFadeInTime) ?? true))
             {
                 if (!lhs.FillAlphaFadeInTime.EqualsWithin(rhs.FillAlphaFadeInTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaTime) ?? true))
             {
                 if (!lhs.FillFullAlphaTime.EqualsWithin(rhs.FillFullAlphaTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFadeOutTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFadeOutTime) ?? true))
             {
                 if (!lhs.FillFadeOutTime.EqualsWithin(rhs.FillFadeOutTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillPersistentAlphaRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillPersistentAlphaRatio) ?? true))
             {
                 if (!lhs.FillPersistentAlphaRatio.EqualsWithin(rhs.FillPersistentAlphaRatio)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseAmplitude) ?? true))
             {
                 if (!lhs.FillAlphaPulseAmplitude.EqualsWithin(rhs.FillAlphaPulseAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseFrequency) ?? true))
             {
                 if (!lhs.FillAlphaPulseFrequency.EqualsWithin(rhs.FillAlphaPulseFrequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedU) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedU) ?? true))
             {
                 if (!lhs.FillTextureAnimationSpeedU.EqualsWithin(rhs.FillTextureAnimationSpeedU)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedV) ?? true))
             {
                 if (!lhs.FillTextureAnimationSpeedV.EqualsWithin(rhs.FillTextureAnimationSpeedV)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
             {
                 if (!lhs.EdgeEffectFallOff.EqualsWithin(rhs.EdgeEffectFallOff)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
             {
                 if (!lhs.EdgeEffectColor.ColorOnlyEquals(rhs.EdgeEffectColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
             {
                 if (!lhs.EdgeEffectAlphaFadeInTime.EqualsWithin(rhs.EdgeEffectAlphaFadeInTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
             {
                 if (!lhs.EdgeEffectFullAlphaTime.EqualsWithin(rhs.EdgeEffectFullAlphaTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
             {
                 if (!lhs.EdgeEffectAlphaFadeOutTime.EqualsWithin(rhs.EdgeEffectAlphaFadeOutTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
             {
                 if (!lhs.EdgeEffectPersistentAlphaRatio.EqualsWithin(rhs.EdgeEffectPersistentAlphaRatio)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
             {
                 if (!lhs.EdgeEffectAlphaPulseAmplitude.EqualsWithin(rhs.EdgeEffectAlphaPulseAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
             {
                 if (!lhs.EdgeEffectAlphaPulseFrequency.EqualsWithin(rhs.EdgeEffectAlphaPulseFrequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaRatio) ?? true))
             {
                 if (!lhs.FillFullAlphaRatio.EqualsWithin(rhs.FillFullAlphaRatio)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
             {
                 if (!lhs.EdgeEffectFullAlphaRatio.EqualsWithin(rhs.EdgeEffectFullAlphaRatio)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneDestBlendMode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneDestBlendMode) ?? true))
             {
                 if (lhs.MembraneDestBlendMode != rhs.MembraneDestBlendMode) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleSourceBlendMode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleSourceBlendMode) ?? true))
             {
                 if (lhs.ParticleSourceBlendMode != rhs.ParticleSourceBlendMode) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBlendOperation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBlendOperation) ?? true))
             {
                 if (lhs.ParticleBlendOperation != rhs.ParticleBlendOperation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleZTest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleZTest) ?? true))
             {
                 if (lhs.ParticleZTest != rhs.ParticleZTest) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleDestBlendMode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleDestBlendMode) ?? true))
             {
                 if (lhs.ParticleDestBlendMode != rhs.ParticleDestBlendMode) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBirthRampUpTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBirthRampUpTime) ?? true))
             {
                 if (!lhs.ParticleBirthRampUpTime.EqualsWithin(rhs.ParticleBirthRampUpTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleFullBirthTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleFullBirthTime) ?? true))
             {
                 if (!lhs.ParticleFullBirthTime.EqualsWithin(rhs.ParticleFullBirthTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBirthRampDownTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBirthRampDownTime) ?? true))
             {
                 if (!lhs.ParticleBirthRampDownTime.EqualsWithin(rhs.ParticleBirthRampDownTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleFullBirthRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleFullBirthRatio) ?? true))
             {
                 if (!lhs.ParticleFullBirthRatio.EqualsWithin(rhs.ParticleFullBirthRatio)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePeristentCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePeristentCount) ?? true))
             {
                 if (!lhs.ParticlePeristentCount.EqualsWithin(rhs.ParticlePeristentCount)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleLifetime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleLifetime) ?? true))
             {
                 if (!lhs.ParticleLifetime.EqualsWithin(rhs.ParticleLifetime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleLifetimePlusMinus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleLifetimePlusMinus) ?? true))
             {
                 if (!lhs.ParticleLifetimePlusMinus.EqualsWithin(rhs.ParticleLifetimePlusMinus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormal) ?? true))
             {
                 if (!lhs.ParticleInitialSpeedAlongNormal.EqualsWithin(rhs.ParticleInitialSpeedAlongNormal)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAccelerationAlongNormal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAccelerationAlongNormal) ?? true))
             {
                 if (!lhs.ParticleAccelerationAlongNormal.EqualsWithin(rhs.ParticleAccelerationAlongNormal)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity1) ?? true))
             {
                 if (!lhs.ParticleInitialVelocity1.EqualsWithin(rhs.ParticleInitialVelocity1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity2) ?? true))
             {
                 if (!lhs.ParticleInitialVelocity2.EqualsWithin(rhs.ParticleInitialVelocity2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity3) ?? true))
             {
                 if (!lhs.ParticleInitialVelocity3.EqualsWithin(rhs.ParticleInitialVelocity3)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration1) ?? true))
             {
                 if (!lhs.ParticleAcceleration1.EqualsWithin(rhs.ParticleAcceleration1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration2) ?? true))
             {
                 if (!lhs.ParticleAcceleration2.EqualsWithin(rhs.ParticleAcceleration2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration3) ?? true))
             {
                 if (!lhs.ParticleAcceleration3.EqualsWithin(rhs.ParticleAcceleration3)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey1) ?? true))
             {
                 if (!lhs.ParticleScaleKey1.EqualsWithin(rhs.ParticleScaleKey1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey2) ?? true))
             {
                 if (!lhs.ParticleScaleKey2.EqualsWithin(rhs.ParticleScaleKey2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey1Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey1Time) ?? true))
             {
                 if (!lhs.ParticleScaleKey1Time.EqualsWithin(rhs.ParticleScaleKey1Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey2Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey2Time) ?? true))
             {
                 if (!lhs.ParticleScaleKey2Time.EqualsWithin(rhs.ParticleScaleKey2Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1) ?? true))
             {
                 if (!lhs.ColorKey1.ColorOnlyEquals(rhs.ColorKey1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2) ?? true))
             {
                 if (!lhs.ColorKey2.ColorOnlyEquals(rhs.ColorKey2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3) ?? true))
             {
                 if (!lhs.ColorKey3.ColorOnlyEquals(rhs.ColorKey3)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Alpha) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Alpha) ?? true))
             {
                 if (!lhs.ColorKey1Alpha.EqualsWithin(rhs.ColorKey1Alpha)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Alpha) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Alpha) ?? true))
             {
                 if (!lhs.ColorKey2Alpha.EqualsWithin(rhs.ColorKey2Alpha)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Alpha) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Alpha) ?? true))
             {
                 if (!lhs.ColorKey3Alpha.EqualsWithin(rhs.ColorKey3Alpha)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Time) ?? true))
             {
                 if (!lhs.ColorKey1Time.EqualsWithin(rhs.ColorKey1Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Time) ?? true))
             {
                 if (!lhs.ColorKey2Time.EqualsWithin(rhs.ColorKey2Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Time) ?? true))
             {
                 if (!lhs.ColorKey3Time.EqualsWithin(rhs.ColorKey3Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormalPlusMinus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormalPlusMinus) ?? true))
             {
                 if (!lhs.ParticleInitialSpeedAlongNormalPlusMinus.EqualsWithin(rhs.ParticleInitialSpeedAlongNormalPlusMinus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialRotationDegree) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialRotationDegree) ?? true))
             {
                 if (!lhs.ParticleInitialRotationDegree.EqualsWithin(rhs.ParticleInitialRotationDegree)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialRotationDegreePlusMinus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialRotationDegreePlusMinus) ?? true))
             {
                 if (!lhs.ParticleInitialRotationDegreePlusMinus.EqualsWithin(rhs.ParticleInitialRotationDegreePlusMinus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSec) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSec) ?? true))
             {
                 if (!lhs.ParticleRotationSpeedDegreePerSec.EqualsWithin(rhs.ParticleRotationSpeedDegreePerSec)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSecPlusMinus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSecPlusMinus) ?? true))
             {
                 if (!lhs.ParticleRotationSpeedDegreePerSecPlusMinus.EqualsWithin(rhs.ParticleRotationSpeedDegreePerSecPlusMinus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModels) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModels) ?? true))
             {
                 if (!lhs.AddonModels.Equals(rhs.AddonModels)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartTime) ?? true))
             {
                 if (!lhs.HolesStartTime.EqualsWithin(rhs.HolesStartTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesEndTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesEndTime) ?? true))
             {
                 if (!lhs.HolesEndTime.EqualsWithin(rhs.HolesEndTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartValue) ?? true))
             {
                 if (!lhs.HolesStartValue.EqualsWithin(rhs.HolesStartValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesEndValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesEndValue) ?? true))
             {
                 if (!lhs.HolesEndValue.EqualsWithin(rhs.HolesEndValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeWidth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeWidth) ?? true))
             {
                 if (!lhs.EdgeWidth.EqualsWithin(rhs.EdgeWidth)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeColor) ?? true))
             {
                 if (!lhs.EdgeColor.ColorOnlyEquals(rhs.EdgeColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ExplosionWindSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ExplosionWindSpeed) ?? true))
             {
                 if (!lhs.ExplosionWindSpeed.EqualsWithin(rhs.ExplosionWindSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.TextureCountU) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.TextureCountU) ?? true))
             {
                 if (lhs.TextureCountU != rhs.TextureCountU) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.TextureCountV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.TextureCountV) ?? true))
             {
                 if (lhs.TextureCountV != rhs.TextureCountV) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsFadeInTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsFadeInTime) ?? true))
             {
                 if (!lhs.AddonModelsFadeInTime.EqualsWithin(rhs.AddonModelsFadeInTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsFadeOutTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsFadeOutTime) ?? true))
             {
                 if (!lhs.AddonModelsFadeOutTime.EqualsWithin(rhs.AddonModelsFadeOutTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleStart) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleStart) ?? true))
             {
                 if (!lhs.AddonModelsScaleStart.EqualsWithin(rhs.AddonModelsScaleStart)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleEnd) ?? true))
             {
                 if (!lhs.AddonModelsScaleEnd.EqualsWithin(rhs.AddonModelsScaleEnd)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleInTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleInTime) ?? true))
             {
                 if (!lhs.AddonModelsScaleInTime.EqualsWithin(rhs.AddonModelsScaleInTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleOutTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleOutTime) ?? true))
             {
                 if (!lhs.AddonModelsScaleOutTime.EqualsWithin(rhs.AddonModelsScaleOutTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
             {
                 if (!lhs.AmbientSound.Equals(rhs.AmbientSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
             {
                 if (!lhs.FillColorKey2.ColorOnlyEquals(rhs.FillColorKey2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3) ?? true))
             {
                 if (!lhs.FillColorKey3.ColorOnlyEquals(rhs.FillColorKey3)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Scale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Scale) ?? true))
             {
                 if (!lhs.FillColorKey1Scale.EqualsWithin(rhs.FillColorKey1Scale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Scale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Scale) ?? true))
             {
                 if (!lhs.FillColorKey2Scale.EqualsWithin(rhs.FillColorKey2Scale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Scale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Scale) ?? true))
             {
                 if (!lhs.FillColorKey3Scale.EqualsWithin(rhs.FillColorKey3Scale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Time) ?? true))
             {
                 if (!lhs.FillColorKey1Time.EqualsWithin(rhs.FillColorKey1Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Time) ?? true))
             {
                 if (!lhs.FillColorKey2Time.EqualsWithin(rhs.FillColorKey2Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Time) ?? true))
             {
                 if (!lhs.FillColorKey3Time.EqualsWithin(rhs.FillColorKey3Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorScale) ?? true))
             {
                 if (!lhs.ColorScale.EqualsWithin(rhs.ColorScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.BirthPositionOffset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.BirthPositionOffset) ?? true))
             {
                 if (!lhs.BirthPositionOffset.EqualsWithin(rhs.BirthPositionOffset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.BirthPositionOffsetRangePlusMinus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.BirthPositionOffsetRangePlusMinus) ?? true))
             {
                 if (!lhs.BirthPositionOffsetRangePlusMinus.EqualsWithin(rhs.BirthPositionOffsetRangePlusMinus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedStartFrame) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedStartFrame) ?? true))
             {
                 if (lhs.ParticleAnimatedStartFrame != rhs.ParticleAnimatedStartFrame) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedStartFrameVariation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedStartFrameVariation) ?? true))
             {
                 if (lhs.ParticleAnimatedStartFrameVariation != rhs.ParticleAnimatedStartFrameVariation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedEndFrame) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedEndFrame) ?? true))
             {
                 if (lhs.ParticleAnimatedEndFrame != rhs.ParticleAnimatedEndFrame) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedLoopStartFrame) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedLoopStartFrame) ?? true))
             {
                 if (lhs.ParticleAnimatedLoopStartFrame != rhs.ParticleAnimatedLoopStartFrame) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedLoopStartVariation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedLoopStartVariation) ?? true))
             {
                 if (lhs.ParticleAnimatedLoopStartVariation != rhs.ParticleAnimatedLoopStartVariation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedFrameCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedFrameCount) ?? true))
             {
                 if (lhs.ParticleAnimatedFrameCount != rhs.ParticleAnimatedFrameCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedFrameCountVariation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedFrameCountVariation) ?? true))
             {
                 if (lhs.ParticleAnimatedFrameCountVariation != rhs.ParticleAnimatedFrameCountVariation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleU) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleU) ?? true))
             {
                 if (!lhs.FillTextureScaleU.EqualsWithin(rhs.FillTextureScaleU)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleV) ?? true))
             {
                 if (!lhs.FillTextureScaleV.EqualsWithin(rhs.FillTextureScaleV)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit) ?? true))
             {
                 if (lhs.SceneGraphEmitDepthLimit != rhs.SceneGraphEmitDepthLimit) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -6142,23 +6153,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IEffectShaderGetter?)lhs,
                 rhs: rhs as IEffectShaderGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IEffectShaderGetter?)lhs,
                 rhs: rhs as IEffectShaderGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IEffectShaderGetter item)
@@ -8438,12 +8449,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IEffectShaderGetter rhs) return false;
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEffectShaderGetter? obj)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).GetHashCode(this);

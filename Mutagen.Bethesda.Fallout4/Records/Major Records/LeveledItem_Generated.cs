@@ -851,12 +851,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILeveledItemGetter rhs) return false;
-            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILeveledItemGetter? obj)
         {
-            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1115,6 +1115,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static LeveledItem Duplicate(
+            this ILeveledItemGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1530,47 +1541,47 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILeveledItemGetter? lhs,
             ILeveledItemGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
             {
                 if (lhs.ChanceNone != rhs.ChanceNone) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledItem_FieldIndex.MaxCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.MaxCount) ?? true))
             {
                 if (lhs.MaxCount != rhs.MaxCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledItem_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
             {
                 if (!lhs.Global.Equals(rhs.Global)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
             {
-                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries, (l, r) => ((LeveledItemEntryCommon)((ILeveledItemEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledItem_FieldIndex.Entries)))) return false;
+                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries, (l, r) => ((LeveledItemEntryCommon)((ILeveledItemEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Entries)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledItem_FieldIndex.FilterKeywordChances) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.FilterKeywordChances) ?? true))
             {
-                if (!lhs.FilterKeywordChances.SequenceEqualNullable(rhs.FilterKeywordChances, (l, r) => ((FilterKeywordChanceCommon)((IFilterKeywordChanceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledItem_FieldIndex.FilterKeywordChances)))) return false;
+                if (!lhs.FilterKeywordChances.SequenceEqualNullable(rhs.FilterKeywordChances, (l, r) => ((FilterKeywordChanceCommon)((IFilterKeywordChanceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.FilterKeywordChances)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledItem_FieldIndex.EpicLootChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.EpicLootChance) ?? true))
             {
                 if (!lhs.EpicLootChance.Equals(rhs.EpicLootChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledItem_FieldIndex.OverrideName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.OverrideName) ?? true))
             {
                 if (!object.Equals(lhs.OverrideName, rhs.OverrideName)) return false;
             }
@@ -1580,23 +1591,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILeveledItemGetter?)lhs,
                 rhs: rhs as ILeveledItemGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILeveledItemGetter?)lhs,
                 rhs: rhs as ILeveledItemGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILeveledItemGetter item)
@@ -2481,12 +2492,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILeveledItemGetter rhs) return false;
-            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILeveledItemGetter? obj)
         {
-            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).GetHashCode(this);

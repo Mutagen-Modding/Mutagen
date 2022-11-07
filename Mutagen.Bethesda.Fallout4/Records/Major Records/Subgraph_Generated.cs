@@ -122,12 +122,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISubgraphGetter rhs) return false;
-            return ((SubgraphCommon)((ISubgraphGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SubgraphCommon)((ISubgraphGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISubgraphGetter? obj)
         {
-            return ((SubgraphCommon)((ISubgraphGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SubgraphCommon)((ISubgraphGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SubgraphCommon)((ISubgraphGetter)this).CommonInstance()!).GetHashCode(this);
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SubgraphCommon)((ISubgraphGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1298,30 +1298,30 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISubgraphGetter? lhs,
             ISubgraphGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Subgraph_FieldIndex.BehaviorGraph) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Subgraph_FieldIndex.BehaviorGraph) ?? true))
             {
                 if (!string.Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Subgraph_FieldIndex.ActorKeywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Subgraph_FieldIndex.ActorKeywords) ?? true))
             {
                 if (!lhs.ActorKeywords.SequenceEqualNullable(rhs.ActorKeywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Subgraph_FieldIndex.TargetKeywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Subgraph_FieldIndex.TargetKeywords) ?? true))
             {
                 if (!lhs.TargetKeywords.SequenceEqualNullable(rhs.TargetKeywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Subgraph_FieldIndex.AnimationPaths) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Subgraph_FieldIndex.AnimationPaths) ?? true))
             {
                 if (!lhs.AnimationPaths.SequenceEqualNullable(rhs.AnimationPaths)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Subgraph_FieldIndex.Role) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Subgraph_FieldIndex.Role) ?? true))
             {
                 if (lhs.Role != rhs.Role) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Subgraph_FieldIndex.Perspective) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Subgraph_FieldIndex.Perspective) ?? true))
             {
                 if (lhs.Perspective != rhs.Perspective) return false;
             }
@@ -1927,12 +1927,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISubgraphGetter rhs) return false;
-            return ((SubgraphCommon)((ISubgraphGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SubgraphCommon)((ISubgraphGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISubgraphGetter? obj)
         {
-            return ((SubgraphCommon)((ISubgraphGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SubgraphCommon)((ISubgraphGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SubgraphCommon)((ISubgraphGetter)this).CommonInstance()!).GetHashCode(this);

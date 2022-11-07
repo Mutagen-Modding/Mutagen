@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IHolotapeVoiceGetter rhs) return false;
-            return ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHolotapeVoiceGetter? obj)
         {
-            return ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -789,11 +789,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IHolotapeVoiceGetter? lhs,
             IHolotapeVoiceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAHolotapeDataGetter)lhs, (IAHolotapeDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)HolotapeVoice_FieldIndex.Scene) ?? true))
+            if (!base.Equals((IAHolotapeDataGetter)lhs, (IAHolotapeDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)HolotapeVoice_FieldIndex.Scene) ?? true))
             {
                 if (!lhs.Scene.Equals(rhs.Scene)) return false;
             }
@@ -803,12 +803,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAHolotapeDataGetter? lhs,
             IAHolotapeDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHolotapeVoiceGetter?)lhs,
                 rhs: rhs as IHolotapeVoiceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IHolotapeVoiceGetter item)
@@ -1144,12 +1144,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IHolotapeVoiceGetter rhs) return false;
-            return ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHolotapeVoiceGetter? obj)
         {
-            return ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HolotapeVoiceCommon)((IHolotapeVoiceGetter)this).CommonInstance()!).GetHashCode(this);

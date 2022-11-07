@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IInt16MinMaxGetter rhs) return false;
-            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IInt16MinMaxGetter? obj)
         {
-            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((Int16MinMaxCommon)((IInt16MinMaxGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -832,14 +832,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IInt16MinMaxGetter? lhs,
             IInt16MinMaxGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Int16MinMax_FieldIndex.Min) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Int16MinMax_FieldIndex.Min) ?? true))
             {
                 if (lhs.Min != rhs.Min) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Int16MinMax_FieldIndex.Max) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Int16MinMax_FieldIndex.Max) ?? true))
             {
                 if (lhs.Max != rhs.Max) return false;
             }
@@ -1159,12 +1159,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IInt16MinMaxGetter rhs) return false;
-            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IInt16MinMaxGetter? obj)
         {
-            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).GetHashCode(this);

@@ -78,12 +78,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ICollectionAliasGetter rhs) return false;
-            return ((CollectionAliasCommon)((ICollectionAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CollectionAliasCommon)((ICollectionAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICollectionAliasGetter? obj)
         {
-            return ((CollectionAliasCommon)((ICollectionAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CollectionAliasCommon)((ICollectionAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CollectionAliasCommon)((ICollectionAliasGetter)this).CommonInstance()!).GetHashCode(this);
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((CollectionAliasCommon)((ICollectionAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -835,15 +835,15 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ICollectionAliasGetter? lhs,
             ICollectionAliasGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAQuestAliasGetter)lhs, (IAQuestAliasGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)CollectionAlias_FieldIndex.AliasID) ?? true))
+            if (!base.Equals((IAQuestAliasGetter)lhs, (IAQuestAliasGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.AliasID) ?? true))
             {
                 if (lhs.AliasID != rhs.AliasID) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollectionAlias_FieldIndex.MaxInitialFillCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.MaxInitialFillCount) ?? true))
             {
                 if (lhs.MaxInitialFillCount != rhs.MaxInitialFillCount) return false;
             }
@@ -853,12 +853,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAQuestAliasGetter? lhs,
             IAQuestAliasGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICollectionAliasGetter?)lhs,
                 rhs: rhs as ICollectionAliasGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ICollectionAliasGetter item)
@@ -1261,12 +1261,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ICollectionAliasGetter rhs) return false;
-            return ((CollectionAliasCommon)((ICollectionAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CollectionAliasCommon)((ICollectionAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICollectionAliasGetter? obj)
         {
-            return ((CollectionAliasCommon)((ICollectionAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CollectionAliasCommon)((ICollectionAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CollectionAliasCommon)((ICollectionAliasGetter)this).CommonInstance()!).GetHashCode(this);

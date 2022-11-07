@@ -107,12 +107,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPlacedObjectMapMarkerGetter rhs) return false;
-            return ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedObjectMapMarkerGetter? obj)
         {
-            return ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -667,7 +667,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1013,26 +1013,26 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPlacedObjectMapMarkerGetter? lhs,
             IPlacedObjectMapMarkerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.TNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.TNAMDataTypeState) ?? true))
             {
                 if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
             }
@@ -1495,12 +1495,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPlacedObjectMapMarkerGetter rhs) return false;
-            return ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedObjectMapMarkerGetter? obj)
         {
-            return ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectMapMarkerCommon)((IPlacedObjectMapMarkerGetter)this).CommonInstance()!).GetHashCode(this);

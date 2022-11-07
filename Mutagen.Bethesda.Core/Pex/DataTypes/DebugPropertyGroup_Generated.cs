@@ -68,12 +68,12 @@ namespace Mutagen.Bethesda.Pex
         public override bool Equals(object? obj)
         {
             if (obj is not IDebugPropertyGroupGetter rhs) return false;
-            return ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDebugPropertyGroupGetter? obj)
         {
-            return ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)this).CommonInstance()!).GetHashCode(this);
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Pex
             return ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -865,18 +865,18 @@ namespace Mutagen.Bethesda.Pex
         public virtual bool Equals(
             IDebugPropertyGroupGetter? lhs,
             IDebugPropertyGroupGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DebugPropertyGroup_FieldIndex.ObjectName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugPropertyGroup_FieldIndex.ObjectName) ?? true))
             {
                 if (!string.Equals(lhs.ObjectName, rhs.ObjectName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugPropertyGroup_FieldIndex.GroupName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugPropertyGroup_FieldIndex.GroupName) ?? true))
             {
                 if (!string.Equals(lhs.GroupName, rhs.GroupName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugPropertyGroup_FieldIndex.PropertyNames) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugPropertyGroup_FieldIndex.PropertyNames) ?? true))
             {
                 if (!lhs.PropertyNames.SequenceEqualNullable(rhs.PropertyNames)) return false;
             }

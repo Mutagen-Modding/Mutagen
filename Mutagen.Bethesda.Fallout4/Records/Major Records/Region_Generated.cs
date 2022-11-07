@@ -824,12 +824,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IRegionGetter rhs) return false;
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionGetter? obj)
         {
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1076,6 +1076,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Region Duplicate(
+            this IRegionGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1502,67 +1513,67 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IRegionGetter? lhs,
             IRegionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
             {
                 if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
                 if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
             {
-                if (!lhs.RegionAreas.SequenceEqual(rhs.RegionAreas, (l, r) => ((RegionAreaCommon)((IRegionAreaGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Region_FieldIndex.RegionAreas)))) return false;
+                if (!lhs.RegionAreas.SequenceEqual(rhs.RegionAreas, (l, r) => ((RegionAreaCommon)((IRegionAreaGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Region_FieldIndex.RegionAreas)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Objects, rhs.Objects, out var lhsObjects, out var rhsObjects, out var isObjectsEqual))
                 {
-                    if (!((RegionObjectsCommon)((IRegionObjectsGetter)lhsObjects).CommonInstance()!).Equals(lhsObjects, rhsObjects, crystal?.GetSubCrystal((int)Region_FieldIndex.Objects))) return false;
+                    if (!((RegionObjectsCommon)((IRegionObjectsGetter)lhsObjects).CommonInstance()!).Equals(lhsObjects, rhsObjects, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Objects))) return false;
                 }
                 else if (!isObjectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Weather, rhs.Weather, out var lhsWeather, out var rhsWeather, out var isWeatherEqual))
                 {
-                    if (!((RegionWeatherCommon)((IRegionWeatherGetter)lhsWeather).CommonInstance()!).Equals(lhsWeather, rhsWeather, crystal?.GetSubCrystal((int)Region_FieldIndex.Weather))) return false;
+                    if (!((RegionWeatherCommon)((IRegionWeatherGetter)lhsWeather).CommonInstance()!).Equals(lhsWeather, rhsWeather, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Weather))) return false;
                 }
                 else if (!isWeatherEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Map) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Map) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Map, rhs.Map, out var lhsMap, out var rhsMap, out var isMapEqual))
                 {
-                    if (!((RegionMapCommon)((IRegionMapGetter)lhsMap).CommonInstance()!).Equals(lhsMap, rhsMap, crystal?.GetSubCrystal((int)Region_FieldIndex.Map))) return false;
+                    if (!((RegionMapCommon)((IRegionMapGetter)lhsMap).CommonInstance()!).Equals(lhsMap, rhsMap, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Map))) return false;
                 }
                 else if (!isMapEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Land) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Land) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Land, rhs.Land, out var lhsLand, out var rhsLand, out var isLandEqual))
                 {
-                    if (!((RegionLandCommon)((IRegionLandGetter)lhsLand).CommonInstance()!).Equals(lhsLand, rhsLand, crystal?.GetSubCrystal((int)Region_FieldIndex.Land))) return false;
+                    if (!((RegionLandCommon)((IRegionLandGetter)lhsLand).CommonInstance()!).Equals(lhsLand, rhsLand, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Land))) return false;
                 }
                 else if (!isLandEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Grasses, rhs.Grasses, out var lhsGrasses, out var rhsGrasses, out var isGrassesEqual))
                 {
-                    if (!((RegionGrassesCommon)((IRegionGrassesGetter)lhsGrasses).CommonInstance()!).Equals(lhsGrasses, rhsGrasses, crystal?.GetSubCrystal((int)Region_FieldIndex.Grasses))) return false;
+                    if (!((RegionGrassesCommon)((IRegionGrassesGetter)lhsGrasses).CommonInstance()!).Equals(lhsGrasses, rhsGrasses, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Grasses))) return false;
                 }
                 else if (!isGrassesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Sounds, rhs.Sounds, out var lhsSounds, out var rhsSounds, out var isSoundsEqual))
                 {
-                    if (!((RegionSoundsCommon)((IRegionSoundsGetter)lhsSounds).CommonInstance()!).Equals(lhsSounds, rhsSounds, crystal?.GetSubCrystal((int)Region_FieldIndex.Sounds))) return false;
+                    if (!((RegionSoundsCommon)((IRegionSoundsGetter)lhsSounds).CommonInstance()!).Equals(lhsSounds, rhsSounds, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Sounds))) return false;
                 }
                 else if (!isSoundsEqual) return false;
             }
@@ -1572,23 +1583,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRegionGetter?)lhs,
                 rhs: rhs as IRegionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRegionGetter?)lhs,
                 rhs: rhs as IRegionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRegionGetter item)
@@ -2459,12 +2470,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IRegionGetter rhs) return false;
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionGetter? obj)
         {
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);

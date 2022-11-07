@@ -66,12 +66,12 @@ namespace Mutagen.Bethesda.Pex
         public override bool Equals(object? obj)
         {
             if (obj is not IPexObjectFunctionInstructionGetter rhs) return false;
-            return ((PexObjectFunctionInstructionCommon)((IPexObjectFunctionInstructionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PexObjectFunctionInstructionCommon)((IPexObjectFunctionInstructionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPexObjectFunctionInstructionGetter? obj)
         {
-            return ((PexObjectFunctionInstructionCommon)((IPexObjectFunctionInstructionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PexObjectFunctionInstructionCommon)((IPexObjectFunctionInstructionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PexObjectFunctionInstructionCommon)((IPexObjectFunctionInstructionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Pex
             return ((PexObjectFunctionInstructionCommon)((IPexObjectFunctionInstructionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -822,16 +822,16 @@ namespace Mutagen.Bethesda.Pex
         public virtual bool Equals(
             IPexObjectFunctionInstructionGetter? lhs,
             IPexObjectFunctionInstructionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PexObjectFunctionInstruction_FieldIndex.OpCode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectFunctionInstruction_FieldIndex.OpCode) ?? true))
             {
                 if (lhs.OpCode != rhs.OpCode) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectFunctionInstruction_FieldIndex.Arguments) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectFunctionInstruction_FieldIndex.Arguments) ?? true))
             {
-                if (!lhs.Arguments.SequenceEqual(rhs.Arguments, (l, r) => ((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObjectFunctionInstruction_FieldIndex.Arguments)))) return false;
+                if (!lhs.Arguments.SequenceEqual(rhs.Arguments, (l, r) => ((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PexObjectFunctionInstruction_FieldIndex.Arguments)))) return false;
             }
             return true;
         }

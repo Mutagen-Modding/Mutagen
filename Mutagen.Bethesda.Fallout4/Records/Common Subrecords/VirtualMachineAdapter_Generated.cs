@@ -70,12 +70,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IVirtualMachineAdapterGetter rhs) return false;
-            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IVirtualMachineAdapterGetter? obj)
         {
-            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -750,22 +750,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IVirtualMachineAdapterGetter? lhs,
             IVirtualMachineAdapterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, crystal)) return false;
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, equalsMask)) return false;
             return true;
         }
         
         public override bool Equals(
             IAVirtualMachineAdapterGetter? lhs,
             IAVirtualMachineAdapterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IVirtualMachineAdapterGetter?)lhs,
                 rhs: rhs as IVirtualMachineAdapterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IVirtualMachineAdapterGetter item)
@@ -1080,12 +1080,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IVirtualMachineAdapterGetter rhs) return false;
-            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IVirtualMachineAdapterGetter? obj)
         {
-            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);

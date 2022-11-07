@@ -90,12 +90,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILensFlareSpriteDataGetter rhs) return false;
-            return ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILensFlareSpriteDataGetter? obj)
         {
-            return ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1054,34 +1054,34 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILensFlareSpriteDataGetter? lhs,
             ILensFlareSpriteDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Tint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Tint) ?? true))
             {
                 if (!lhs.Tint.ColorOnlyEquals(rhs.Tint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Width) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Width) ?? true))
             {
                 if (!lhs.Width.EqualsWithin(rhs.Width)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Height) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Height) ?? true))
             {
                 if (!lhs.Height.EqualsWithin(rhs.Height)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Position) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Position) ?? true))
             {
                 if (!lhs.Position.EqualsWithin(rhs.Position)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.AngularFade) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.AngularFade) ?? true))
             {
                 if (!lhs.AngularFade.EqualsWithin(rhs.AngularFade)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Opacity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Opacity) ?? true))
             {
                 if (!lhs.Opacity.EqualsWithin(rhs.Opacity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlareSpriteData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
@@ -1466,12 +1466,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILensFlareSpriteDataGetter rhs) return false;
-            return ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILensFlareSpriteDataGetter? obj)
         {
-            return ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LensFlareSpriteDataCommon)((ILensFlareSpriteDataGetter)this).CommonInstance()!).GetHashCode(this);

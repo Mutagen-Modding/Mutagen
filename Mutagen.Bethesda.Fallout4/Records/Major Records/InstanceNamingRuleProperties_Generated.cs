@@ -77,12 +77,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IInstanceNamingRulePropertiesGetter rhs) return false;
-            return ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IInstanceNamingRulePropertiesGetter? obj)
         {
-            return ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -885,18 +885,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IInstanceNamingRulePropertiesGetter? lhs,
             IInstanceNamingRulePropertiesGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)InstanceNamingRuleProperties_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRuleProperties_FieldIndex.Value) ?? true))
             {
                 if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)InstanceNamingRuleProperties_FieldIndex.Target) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRuleProperties_FieldIndex.Target) ?? true))
             {
                 if (lhs.Target != rhs.Target) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)InstanceNamingRuleProperties_FieldIndex.Operation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRuleProperties_FieldIndex.Operation) ?? true))
             {
                 if (lhs.Operation != rhs.Operation) return false;
             }
@@ -1243,12 +1243,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IInstanceNamingRulePropertiesGetter rhs) return false;
-            return ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IInstanceNamingRulePropertiesGetter? obj)
         {
-            return ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)this).CommonInstance()!).GetHashCode(this);

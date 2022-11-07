@@ -98,12 +98,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICellBlockGetter rhs) return false;
-            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellBlockGetter? obj)
         {
-            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).GetHashCode(this);
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CellBlockCommon)((ICellBlockGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1549,28 +1549,28 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ICellBlockGetter? lhs,
             ICellBlockGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CellBlock_FieldIndex.BlockNumber) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellBlock_FieldIndex.BlockNumber) ?? true))
             {
                 if (lhs.BlockNumber != rhs.BlockNumber) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellBlock_FieldIndex.GroupType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellBlock_FieldIndex.GroupType) ?? true))
             {
                 if (lhs.GroupType != rhs.GroupType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellBlock_FieldIndex.LastModified) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellBlock_FieldIndex.LastModified) ?? true))
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellBlock_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellBlock_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellBlock_FieldIndex.SubBlocks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellBlock_FieldIndex.SubBlocks) ?? true))
             {
-                if (!lhs.SubBlocks.SequenceEqual(rhs.SubBlocks, (l, r) => ((CellSubBlockCommon)((ICellSubBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)CellBlock_FieldIndex.SubBlocks)))) return false;
+                if (!lhs.SubBlocks.SequenceEqual(rhs.SubBlocks, (l, r) => ((CellSubBlockCommon)((ICellSubBlockGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)CellBlock_FieldIndex.SubBlocks)))) return false;
             }
             return true;
         }
@@ -2197,12 +2197,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICellBlockGetter rhs) return false;
-            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellBlockGetter? obj)
         {
-            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).GetHashCode(this);

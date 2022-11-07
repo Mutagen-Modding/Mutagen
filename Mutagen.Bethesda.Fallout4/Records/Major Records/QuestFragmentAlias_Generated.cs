@@ -97,12 +97,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestFragmentAliasGetter rhs) return false;
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestFragmentAliasGetter? obj)
         {
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).GetHashCode(this);
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1025,28 +1025,28 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IQuestFragmentAliasGetter? lhs,
             IQuestFragmentAliasGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Property) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Property) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Property, rhs.Property, out var lhsProperty, out var rhsProperty, out var isPropertyEqual))
                 {
-                    if (!((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)lhsProperty).CommonInstance()!).Equals(lhsProperty, rhsProperty, crystal?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Property))) return false;
+                    if (!((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)lhsProperty).CommonInstance()!).Equals(lhsProperty, rhsProperty, equalsMask?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Property))) return false;
                 }
                 else if (!isPropertyEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Version) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Version) ?? true))
             {
                 if (lhs.Version != rhs.Version) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.ObjectFormat) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.ObjectFormat) ?? true))
             {
                 if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Scripts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Scripts) ?? true))
             {
-                if (!lhs.Scripts.SequenceEqual(rhs.Scripts, (l, r) => ((ScriptEntryCommon)((IScriptEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Scripts)))) return false;
+                if (!lhs.Scripts.SequenceEqual(rhs.Scripts, (l, r) => ((ScriptEntryCommon)((IScriptEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Scripts)))) return false;
             }
             return true;
         }
@@ -1479,12 +1479,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestFragmentAliasGetter rhs) return false;
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestFragmentAliasGetter? obj)
         {
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).GetHashCode(this);

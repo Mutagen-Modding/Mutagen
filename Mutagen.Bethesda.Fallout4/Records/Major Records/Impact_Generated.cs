@@ -1036,12 +1036,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IImpactGetter rhs) return false;
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImpactGetter? obj)
         {
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1306,6 +1306,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Impact Duplicate(
+            this IImpactGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1770,87 +1781,87 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IImpactGetter? lhs,
             IImpactGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Model) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Impact_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Duration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Duration) ?? true))
             {
                 if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Orientation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Orientation) ?? true))
             {
                 if (lhs.Orientation != rhs.Orientation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.AngleThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.AngleThreshold) ?? true))
             {
                 if (!lhs.AngleThreshold.EqualsWithin(rhs.AngleThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.PlacementRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.PlacementRadius) ?? true))
             {
                 if (!lhs.PlacementRadius.EqualsWithin(rhs.PlacementRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.SoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.SoundLevel) ?? true))
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
             {
                 if (lhs.NoDecalData != rhs.NoDecalData) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
             {
                 if (lhs.Result != rhs.Result) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Decal, rhs.Decal, out var lhsDecal, out var rhsDecal, out var isDecalEqual))
                 {
-                    if (!((DecalCommon)((IDecalGetter)lhsDecal).CommonInstance()!).Equals(lhsDecal, rhsDecal, crystal?.GetSubCrystal((int)Impact_FieldIndex.Decal))) return false;
+                    if (!((DecalCommon)((IDecalGetter)lhsDecal).CommonInstance()!).Equals(lhsDecal, rhsDecal, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.Decal))) return false;
                 }
                 else if (!isDecalEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
             {
                 if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
             {
                 if (!lhs.SecondaryTextureSet.Equals(rhs.SecondaryTextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
             {
                 if (!lhs.Sound1.Equals(rhs.Sound1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
             {
                 if (!lhs.Sound2.Equals(rhs.Sound2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.FootstepExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.FootstepExplosion) ?? true))
             {
                 if (!lhs.FootstepExplosion.Equals(rhs.FootstepExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
             {
                 if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.FootstepParticleMaxDist) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.FootstepParticleMaxDist) ?? true))
             {
                 if (!lhs.FootstepParticleMaxDist.EqualsWithin(rhs.FootstepParticleMaxDist)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1860,23 +1871,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImpactGetter?)lhs,
                 rhs: rhs as IImpactGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImpactGetter?)lhs,
                 rhs: rhs as IImpactGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IImpactGetter item)
@@ -2869,12 +2880,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IImpactGetter rhs) return false;
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImpactGetter? obj)
         {
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);

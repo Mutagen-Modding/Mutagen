@@ -959,12 +959,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IDialogTopicGetter rhs) return false;
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogTopicGetter? obj)
         {
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1439,6 +1439,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static DialogTopic Duplicate(
+            this IDialogTopicGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1969,59 +1980,59 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDialogTopicGetter? lhs,
             IDialogTopicGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Priority) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Priority) ?? true))
             {
                 if (!lhs.Priority.EqualsWithin(rhs.Priority)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
             {
                 if (!lhs.Branch.Equals(rhs.Branch)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Keyword) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Keyword) ?? true))
             {
                 if (!lhs.Keyword.Equals(rhs.Keyword)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
             {
                 if (lhs.TopicFlags != rhs.TopicFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
             {
                 if (lhs.Category != rhs.Category) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
             {
                 if (lhs.Subtype != rhs.Subtype) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
             {
                 if (lhs.SubtypeName != rhs.SubtypeName) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
             {
                 if (lhs.Timestamp != rhs.Timestamp) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
             {
-                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponsesCommon)((IDialogResponsesGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogTopic_FieldIndex.Responses)))) return false;
+                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponsesCommon)((IDialogResponsesGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Responses)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -2031,23 +2042,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDialogTopicGetter?)lhs,
                 rhs: rhs as IDialogTopicGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDialogTopicGetter?)lhs,
                 rhs: rhs as IDialogTopicGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IDialogTopicGetter item)
@@ -3170,12 +3181,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IDialogTopicGetter rhs) return false;
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogTopicGetter? obj)
         {
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).GetHashCode(this);

@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Pex
         public override bool Equals(object? obj)
         {
             if (obj is not IDebugFunctionGetter rhs) return false;
-            return ((DebugFunctionCommon)((IDebugFunctionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DebugFunctionCommon)((IDebugFunctionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDebugFunctionGetter? obj)
         {
-            return ((DebugFunctionCommon)((IDebugFunctionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DebugFunctionCommon)((IDebugFunctionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DebugFunctionCommon)((IDebugFunctionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Pex
             return ((DebugFunctionCommon)((IDebugFunctionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -949,26 +949,26 @@ namespace Mutagen.Bethesda.Pex
         public virtual bool Equals(
             IDebugFunctionGetter? lhs,
             IDebugFunctionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DebugFunction_FieldIndex.ObjectName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugFunction_FieldIndex.ObjectName) ?? true))
             {
                 if (!string.Equals(lhs.ObjectName, rhs.ObjectName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugFunction_FieldIndex.StateName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugFunction_FieldIndex.StateName) ?? true))
             {
                 if (!string.Equals(lhs.StateName, rhs.StateName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugFunction_FieldIndex.FunctionName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugFunction_FieldIndex.FunctionName) ?? true))
             {
                 if (!string.Equals(lhs.FunctionName, rhs.FunctionName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugFunction_FieldIndex.FunctionType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugFunction_FieldIndex.FunctionType) ?? true))
             {
                 if (lhs.FunctionType != rhs.FunctionType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugFunction_FieldIndex.Instructions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugFunction_FieldIndex.Instructions) ?? true))
             {
                 if (!lhs.Instructions.SequenceEqualNullable(rhs.Instructions)) return false;
             }

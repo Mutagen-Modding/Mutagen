@@ -437,12 +437,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ICombatStyleGetter rhs) return false;
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleGetter? obj)
         {
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -663,6 +663,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static CombatStyle Duplicate(
+            this ICombatStyleGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -993,23 +1004,23 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ICombatStyleGetter? lhs,
             ICombatStyleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Data) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((CombatStyleDataCommon)((ICombatStyleDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)CombatStyle_FieldIndex.Data))) return false;
+                    if (!((CombatStyleDataCommon)((ICombatStyleDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Advanced, rhs.Advanced, out var lhsAdvanced, out var rhsAdvanced, out var isAdvancedEqual))
                 {
-                    if (!((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)lhsAdvanced).CommonInstance()!).Equals(lhsAdvanced, rhsAdvanced, crystal?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced))) return false;
+                    if (!((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)lhsAdvanced).CommonInstance()!).Equals(lhsAdvanced, rhsAdvanced, equalsMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced))) return false;
                 }
                 else if (!isAdvancedEqual) return false;
             }
@@ -1019,23 +1030,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICombatStyleGetter?)lhs,
                 rhs: rhs as ICombatStyleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICombatStyleGetter?)lhs,
                 rhs: rhs as ICombatStyleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ICombatStyleGetter item)
@@ -1653,12 +1664,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ICombatStyleGetter rhs) return false;
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleGetter? obj)
         {
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);

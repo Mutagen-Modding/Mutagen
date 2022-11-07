@@ -80,12 +80,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPlacedObjectRadioGetter rhs) return false;
-            return ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedObjectRadioGetter? obj)
         {
-            return ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -927,22 +927,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPlacedObjectRadioGetter? lhs,
             IPlacedObjectRadioGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectRadio_FieldIndex.Frequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectRadio_FieldIndex.Frequency) ?? true))
             {
                 if (!lhs.Frequency.EqualsWithin(rhs.Frequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectRadio_FieldIndex.MinWeakDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectRadio_FieldIndex.MinWeakDistance) ?? true))
             {
                 if (!lhs.MinWeakDistance.EqualsWithin(rhs.MinWeakDistance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectRadio_FieldIndex.MaxWeakDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectRadio_FieldIndex.MaxWeakDistance) ?? true))
             {
                 if (!lhs.MaxWeakDistance.EqualsWithin(rhs.MaxWeakDistance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectRadio_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectRadio_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
@@ -1296,12 +1296,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPlacedObjectRadioGetter rhs) return false;
-            return ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedObjectRadioGetter? obj)
         {
-            return ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectRadioCommon)((IPlacedObjectRadioGetter)this).CommonInstance()!).GetHashCode(this);

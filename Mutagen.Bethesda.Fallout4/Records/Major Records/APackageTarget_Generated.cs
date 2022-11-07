@@ -75,12 +75,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAPackageTargetGetter rhs) return false;
-            return ((APackageTargetCommon)((IAPackageTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((APackageTargetCommon)((IAPackageTargetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAPackageTargetGetter? obj)
         {
-            return ((APackageTargetCommon)((IAPackageTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((APackageTargetCommon)((IAPackageTargetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((APackageTargetCommon)((IAPackageTargetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((APackageTargetCommon)((IAPackageTargetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -775,10 +775,10 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAPackageTargetGetter? lhs,
             IAPackageTargetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)APackageTarget_FieldIndex.CountOrDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APackageTarget_FieldIndex.CountOrDistance) ?? true))
             {
                 if (lhs.CountOrDistance != rhs.CountOrDistance) return false;
             }
@@ -1086,12 +1086,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAPackageTargetGetter rhs) return false;
-            return ((APackageTargetCommon)((IAPackageTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((APackageTargetCommon)((IAPackageTargetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAPackageTargetGetter? obj)
         {
-            return ((APackageTargetCommon)((IAPackageTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((APackageTargetCommon)((IAPackageTargetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((APackageTargetCommon)((IAPackageTargetGetter)this).CommonInstance()!).GetHashCode(this);

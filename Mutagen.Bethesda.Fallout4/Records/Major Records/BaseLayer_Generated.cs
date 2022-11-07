@@ -84,12 +84,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IBaseLayerGetter rhs) return false;
-            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBaseLayerGetter? obj)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -829,14 +829,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IBaseLayerGetter? lhs,
             IBaseLayerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)BaseLayer_FieldIndex.Header) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Header) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Header, rhs.Header, out var lhsHeader, out var rhsHeader, out var isHeaderEqual))
                 {
-                    if (!((LayerHeaderCommon)((ILayerHeaderGetter)lhsHeader).CommonInstance()!).Equals(lhsHeader, rhsHeader, crystal?.GetSubCrystal((int)BaseLayer_FieldIndex.Header))) return false;
+                    if (!((LayerHeaderCommon)((ILayerHeaderGetter)lhsHeader).CommonInstance()!).Equals(lhsHeader, rhsHeader, equalsMask?.GetSubCrystal((int)BaseLayer_FieldIndex.Header))) return false;
                 }
                 else if (!isHeaderEqual) return false;
             }
@@ -1233,12 +1233,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IBaseLayerGetter rhs) return false;
-            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBaseLayerGetter? obj)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).GetHashCode(this);

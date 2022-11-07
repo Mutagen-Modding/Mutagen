@@ -606,12 +606,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAcousticSpaceGetter rhs) return false;
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAcousticSpaceGetter? obj)
         {
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -856,6 +856,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static AcousticSpace Duplicate(
+            this IAcousticSpaceGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1216,35 +1227,35 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAcousticSpaceGetter? lhs,
             IAcousticSpaceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)AcousticSpace_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.LoopingSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.LoopingSound) ?? true))
             {
                 if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
             {
                 if (!lhs.UseSoundFromRegion.Equals(rhs.UseSoundFromRegion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
             {
                 if (!lhs.EnvironmentType.Equals(rhs.EnvironmentType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.IsInterior) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.IsInterior) ?? true))
             {
                 if (lhs.IsInterior != rhs.IsInterior) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WeatherAttenuationDb) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WeatherAttenuationDb) ?? true))
             {
                 if (!lhs.WeatherAttenuationDb.EqualsWithin(rhs.WeatherAttenuationDb)) return false;
             }
@@ -1254,23 +1265,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAcousticSpaceGetter?)lhs,
                 rhs: rhs as IAcousticSpaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAcousticSpaceGetter?)lhs,
                 rhs: rhs as IAcousticSpaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAcousticSpaceGetter item)
@@ -1973,12 +1984,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAcousticSpaceGetter rhs) return false;
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAcousticSpaceGetter? obj)
         {
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).GetHashCode(this);

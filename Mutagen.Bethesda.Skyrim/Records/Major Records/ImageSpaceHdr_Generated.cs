@@ -95,12 +95,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IImageSpaceHdrGetter rhs) return false;
-            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceHdrGetter? obj)
         {
-            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)this).CommonInstance()!).GetHashCode(this);
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1137,42 +1137,42 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IImageSpaceHdrGetter? lhs,
             IImageSpaceHdrGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.EyeAdaptSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.EyeAdaptSpeed) ?? true))
             {
                 if (!lhs.EyeAdaptSpeed.EqualsWithin(rhs.EyeAdaptSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.BloomBlurRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.BloomBlurRadius) ?? true))
             {
                 if (!lhs.BloomBlurRadius.EqualsWithin(rhs.BloomBlurRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.BloomThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.BloomThreshold) ?? true))
             {
                 if (!lhs.BloomThreshold.EqualsWithin(rhs.BloomThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.BloomScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.BloomScale) ?? true))
             {
                 if (!lhs.BloomScale.EqualsWithin(rhs.BloomScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.ReceiveBloomThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.ReceiveBloomThreshold) ?? true))
             {
                 if (!lhs.ReceiveBloomThreshold.EqualsWithin(rhs.ReceiveBloomThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.White) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.White) ?? true))
             {
                 if (!lhs.White.EqualsWithin(rhs.White)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.SunlightScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.SunlightScale) ?? true))
             {
                 if (!lhs.SunlightScale.EqualsWithin(rhs.SunlightScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.SkyScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.SkyScale) ?? true))
             {
                 if (!lhs.SkyScale.EqualsWithin(rhs.SkyScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.EyeAdaptStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.EyeAdaptStrength) ?? true))
             {
                 if (!lhs.EyeAdaptStrength.EqualsWithin(rhs.EyeAdaptStrength)) return false;
             }
@@ -1573,12 +1573,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IImageSpaceHdrGetter rhs) return false;
-            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceHdrGetter? obj)
         {
-            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)this).CommonInstance()!).GetHashCode(this);

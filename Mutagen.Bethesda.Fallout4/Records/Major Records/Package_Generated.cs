@@ -1692,12 +1692,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPackageGetter rhs) return false;
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageGetter? obj)
         {
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageCommon)((IPackageGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1907,7 +1907,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PackageCommon)((IPackageGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1981,6 +1981,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Package Duplicate(
+            this IPackageGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((PackageCommon)((IPackageGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -2592,143 +2603,143 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPackageGetter? lhs,
             IPackageGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((PackageAdapterCommon)((IPackageAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Package_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((PackageAdapterCommon)((IPackageAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Package_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.InterruptOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.InterruptOverride) ?? true))
             {
                 if (lhs.InterruptOverride != rhs.InterruptOverride) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PreferredSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.PreferredSpeed) ?? true))
             {
                 if (lhs.PreferredSpeed != rhs.PreferredSpeed) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.InteruptFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.InteruptFlags) ?? true))
             {
                 if (lhs.InteruptFlags != rhs.InteruptFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMonth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMonth) ?? true))
             {
                 if (lhs.ScheduleMonth != rhs.ScheduleMonth) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDayOfWeek) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDayOfWeek) ?? true))
             {
                 if (lhs.ScheduleDayOfWeek != rhs.ScheduleDayOfWeek) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDate) ?? true))
             {
                 if (lhs.ScheduleDate != rhs.ScheduleDate) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleHour) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleHour) ?? true))
             {
                 if (lhs.ScheduleHour != rhs.ScheduleHour) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMinute) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMinute) ?? true))
             {
                 if (lhs.ScheduleMinute != rhs.ScheduleMinute) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unknown3) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDurationInMinutes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDurationInMinutes) ?? true))
             {
                 if (lhs.ScheduleDurationInMinutes != rhs.ScheduleDurationInMinutes) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Package_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.IdleAnimations) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.IdleAnimations) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.IdleAnimations, rhs.IdleAnimations, out var lhsIdleAnimations, out var rhsIdleAnimations, out var isIdleAnimationsEqual))
                 {
-                    if (!((PackageIdlesCommon)((IPackageIdlesGetter)lhsIdleAnimations).CommonInstance()!).Equals(lhsIdleAnimations, rhsIdleAnimations, crystal?.GetSubCrystal((int)Package_FieldIndex.IdleAnimations))) return false;
+                    if (!((PackageIdlesCommon)((IPackageIdlesGetter)lhsIdleAnimations).CommonInstance()!).Equals(lhsIdleAnimations, rhsIdleAnimations, equalsMask?.GetSubCrystal((int)Package_FieldIndex.IdleAnimations))) return false;
                 }
                 else if (!isIdleAnimationsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
             {
                 if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
             {
                 if (!lhs.OwnerQuest.Equals(rhs.OwnerQuest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
             {
                 if (!lhs.PackageTemplate.Equals(rhs.PackageTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.DataInputVersion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.DataInputVersion) ?? true))
             {
                 if (lhs.DataInputVersion != rhs.DataInputVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Data) ?? true))
             {
                 if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.XnamMarker) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.XnamMarker) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.XnamMarker.Span, rhs.XnamMarker.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ProcedureTree) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ProcedureTree) ?? true))
             {
-                if (!lhs.ProcedureTree.SequenceEqual(rhs.ProcedureTree, (l, r) => ((PackageBranchCommon)((IPackageBranchGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Package_FieldIndex.ProcedureTree)))) return false;
+                if (!lhs.ProcedureTree.SequenceEqual(rhs.ProcedureTree, (l, r) => ((PackageBranchCommon)((IPackageBranchGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Package_FieldIndex.ProcedureTree)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnBegin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OnBegin) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OnBegin, rhs.OnBegin, out var lhsOnBegin, out var rhsOnBegin, out var isOnBeginEqual))
                 {
-                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnBegin).CommonInstance()!).Equals(lhsOnBegin, rhsOnBegin, crystal?.GetSubCrystal((int)Package_FieldIndex.OnBegin))) return false;
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnBegin).CommonInstance()!).Equals(lhsOnBegin, rhsOnBegin, equalsMask?.GetSubCrystal((int)Package_FieldIndex.OnBegin))) return false;
                 }
                 else if (!isOnBeginEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OnEnd) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OnEnd, rhs.OnEnd, out var lhsOnEnd, out var rhsOnEnd, out var isOnEndEqual))
                 {
-                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnEnd).CommonInstance()!).Equals(lhsOnEnd, rhsOnEnd, crystal?.GetSubCrystal((int)Package_FieldIndex.OnEnd))) return false;
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnEnd).CommonInstance()!).Equals(lhsOnEnd, rhsOnEnd, equalsMask?.GetSubCrystal((int)Package_FieldIndex.OnEnd))) return false;
                 }
                 else if (!isOnEndEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnChange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OnChange) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OnChange, rhs.OnChange, out var lhsOnChange, out var rhsOnChange, out var isOnChangeEqual))
                 {
-                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnChange).CommonInstance()!).Equals(lhsOnChange, rhsOnChange, crystal?.GetSubCrystal((int)Package_FieldIndex.OnChange))) return false;
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnChange).CommonInstance()!).Equals(lhsOnChange, rhsOnChange, equalsMask?.GetSubCrystal((int)Package_FieldIndex.OnChange))) return false;
                 }
                 else if (!isOnChangeEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PKDTDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.PKDTDataTypeState) ?? true))
             {
                 if (lhs.PKDTDataTypeState != rhs.PKDTDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PSDTDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.PSDTDataTypeState) ?? true))
             {
                 if (lhs.PSDTDataTypeState != rhs.PSDTDataTypeState) return false;
             }
@@ -2738,23 +2749,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackageGetter?)lhs,
                 rhs: rhs as IPackageGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackageGetter?)lhs,
                 rhs: rhs as IPackageGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPackageGetter item)
@@ -4143,12 +4154,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPackageGetter rhs) return false;
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageGetter? obj)
         {
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageCommon)((IPackageGetter)this).CommonInstance()!).GetHashCode(this);

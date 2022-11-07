@@ -97,12 +97,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageDataTopicGetter rhs) return false;
-            return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageDataTopicGetter? obj)
         {
-            return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).GetHashCode(this);
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PackageDataTopicCommon)((IPackageDataTopicGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -957,15 +957,15 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPackageDataTopicGetter? lhs,
             IPackageDataTopicGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PackageDataTopic_FieldIndex.Topics) ?? true))
+            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PackageDataTopic_FieldIndex.Topics) ?? true))
             {
-                if (!lhs.Topics.SequenceEqual(rhs.Topics, (l, r) => ((ATopicReferenceCommon)((IATopicReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PackageDataTopic_FieldIndex.Topics)))) return false;
+                if (!lhs.Topics.SequenceEqual(rhs.Topics, (l, r) => ((ATopicReferenceCommon)((IATopicReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PackageDataTopic_FieldIndex.Topics)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageDataTopic_FieldIndex.TPIC) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageDataTopic_FieldIndex.TPIC) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.TPIC, rhs.TPIC)) return false;
             }
@@ -975,12 +975,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAPackageDataGetter? lhs,
             IAPackageDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackageDataTopicGetter?)lhs,
                 rhs: rhs as IPackageDataTopicGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPackageDataTopicGetter item)
@@ -1394,12 +1394,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageDataTopicGetter rhs) return false;
-            return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageDataTopicGetter? obj)
         {
-            return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).GetHashCode(this);

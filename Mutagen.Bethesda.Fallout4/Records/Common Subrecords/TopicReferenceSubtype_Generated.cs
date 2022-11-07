@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITopicReferenceSubtypeGetter rhs) return false;
-            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITopicReferenceSubtypeGetter? obj)
         {
-            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -780,11 +780,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ITopicReferenceSubtypeGetter? lhs,
             ITopicReferenceSubtypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IATopicReferenceGetter)lhs, (IATopicReferenceGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)TopicReferenceSubtype_FieldIndex.Subtype) ?? true))
+            if (!base.Equals((IATopicReferenceGetter)lhs, (IATopicReferenceGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)TopicReferenceSubtype_FieldIndex.Subtype) ?? true))
             {
                 if (lhs.Subtype != rhs.Subtype) return false;
             }
@@ -794,12 +794,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IATopicReferenceGetter? lhs,
             IATopicReferenceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITopicReferenceSubtypeGetter?)lhs,
                 rhs: rhs as ITopicReferenceSubtypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ITopicReferenceSubtypeGetter item)
@@ -1129,12 +1129,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITopicReferenceSubtypeGetter rhs) return false;
-            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITopicReferenceSubtypeGetter? obj)
         {
-            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).GetHashCode(this);

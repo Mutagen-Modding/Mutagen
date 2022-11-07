@@ -500,12 +500,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not INpcModificationGetter rhs) return false;
-            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcModificationGetter? obj)
         {
-            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -736,6 +736,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static NpcModification Duplicate(
+            this INpcModificationGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((NpcModificationCommon)((INpcModificationGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1144,13 +1155,13 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INpcModificationGetter? lhs,
             INpcModificationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)NpcModification_FieldIndex.Properties) ?? true))
+            if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)NpcModification_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<Npc.Property>)((IAObjectModPropertyGetter<Npc.Property>)l).CommonInstance(typeof(Npc.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)NpcModification_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<Npc.Property>)((IAObjectModPropertyGetter<Npc.Property>)l).CommonInstance(typeof(Npc.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)NpcModification_FieldIndex.Properties)))) return false;
             }
             return true;
         }
@@ -1158,34 +1169,34 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAObjectModificationGetter? lhs,
             IAObjectModificationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INpcModificationGetter?)lhs,
                 rhs: rhs as INpcModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INpcModificationGetter?)lhs,
                 rhs: rhs as INpcModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INpcModificationGetter?)lhs,
                 rhs: rhs as INpcModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(INpcModificationGetter item)
@@ -1747,12 +1758,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not INpcModificationGetter rhs) return false;
-            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcModificationGetter? obj)
         {
-            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcModificationCommon)((INpcModificationGetter)this).CommonInstance()!).GetHashCode(this);

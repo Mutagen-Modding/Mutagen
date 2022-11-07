@@ -85,12 +85,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISplineConnectionGetter rhs) return false;
-            return ((SplineConnectionCommon)((ISplineConnectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SplineConnectionCommon)((ISplineConnectionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISplineConnectionGetter? obj)
         {
-            return ((SplineConnectionCommon)((ISplineConnectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SplineConnectionCommon)((ISplineConnectionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SplineConnectionCommon)((ISplineConnectionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SplineConnectionCommon)((ISplineConnectionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -906,18 +906,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISplineConnectionGetter? lhs,
             ISplineConnectionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SplineConnection_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SplineConnection_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SplineConnection_FieldIndex.Ref) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SplineConnection_FieldIndex.Ref) ?? true))
             {
                 if (!lhs.Ref.Equals(rhs.Ref)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SplineConnection_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SplineConnection_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
@@ -1266,12 +1266,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISplineConnectionGetter rhs) return false;
-            return ((SplineConnectionCommon)((ISplineConnectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SplineConnectionCommon)((ISplineConnectionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISplineConnectionGetter? obj)
         {
-            return ((SplineConnectionCommon)((ISplineConnectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SplineConnectionCommon)((ISplineConnectionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SplineConnectionCommon)((ISplineConnectionGetter)this).CommonInstance()!).GetHashCode(this);

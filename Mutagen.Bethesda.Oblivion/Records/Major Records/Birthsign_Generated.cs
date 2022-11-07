@@ -578,12 +578,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IBirthsignGetter rhs) return false;
-            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBirthsignGetter? obj)
         {
-            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).GetHashCode(this);
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -822,6 +822,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Birthsign Duplicate(
+            this IBirthsignGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1175,23 +1186,23 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IBirthsignGetter? lhs,
             IBirthsignGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Birthsign_FieldIndex.Name) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Birthsign_FieldIndex.Icon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Icon) ?? true))
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Birthsign_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Description) ?? true))
             {
                 if (!string.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Birthsign_FieldIndex.Spells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Spells) ?? true))
             {
                 if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
             }
@@ -1201,23 +1212,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBirthsignGetter?)lhs,
                 rhs: rhs as IBirthsignGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBirthsignGetter?)lhs,
                 rhs: rhs as IBirthsignGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IBirthsignGetter item)
@@ -1886,12 +1897,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IBirthsignGetter rhs) return false;
-            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBirthsignGetter? obj)
         {
-            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).GetHashCode(this);

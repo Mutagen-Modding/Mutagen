@@ -92,12 +92,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkEntryPointAddActivateChoiceGetter rhs) return false;
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkEntryPointAddActivateChoiceGetter? obj)
         {
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -967,19 +967,19 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPerkEntryPointAddActivateChoiceGetter? lhs,
             IPerkEntryPointAddActivateChoiceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
             {
                 if (!lhs.Spell.Equals(rhs.Spell)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
             {
                 if (!object.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
@@ -989,23 +989,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAPerkEntryPointEffectGetter? lhs,
             IAPerkEntryPointEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkEntryPointAddActivateChoiceGetter?)lhs,
                 rhs: rhs as IPerkEntryPointAddActivateChoiceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
             IAPerkEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkEntryPointAddActivateChoiceGetter?)lhs,
                 rhs: rhs as IPerkEntryPointAddActivateChoiceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPerkEntryPointAddActivateChoiceGetter item)
@@ -1504,12 +1504,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkEntryPointAddActivateChoiceGetter rhs) return false;
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkEntryPointAddActivateChoiceGetter? obj)
         {
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).GetHashCode(this);

@@ -727,12 +727,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMessageGetter rhs) return false;
-            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMessageGetter? obj)
         {
-            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MessageCommon)((IMessageGetter)this).CommonInstance()!).GetHashCode(this);
@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MessageCommon)((IMessageGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -981,6 +981,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Message Duplicate(
+            this IMessageGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MessageCommon)((IMessageGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1364,37 +1375,37 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMessageGetter? lhs,
             IMessageGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.Description) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.INAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.INAM) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.INAM.Span, rhs.INAM.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.Quest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.DisplayTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.DisplayTime) ?? true))
             {
                 if (lhs.DisplayTime != rhs.DisplayTime) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.MenuButtons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.MenuButtons) ?? true))
             {
-                if (!lhs.MenuButtons.SequenceEqual(rhs.MenuButtons, (l, r) => ((MessageButtonCommon)((IMessageButtonGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Message_FieldIndex.MenuButtons)))) return false;
+                if (!lhs.MenuButtons.SequenceEqual(rhs.MenuButtons, (l, r) => ((MessageButtonCommon)((IMessageButtonGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Message_FieldIndex.MenuButtons)))) return false;
             }
             return true;
         }
@@ -1402,23 +1413,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMessageGetter?)lhs,
                 rhs: rhs as IMessageGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMessageGetter?)lhs,
                 rhs: rhs as IMessageGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMessageGetter item)
@@ -2173,12 +2184,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMessageGetter rhs) return false;
-            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMessageGetter? obj)
         {
-            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MessageCommon)((IMessageGetter)this).CommonInstance()!).GetHashCode(this);

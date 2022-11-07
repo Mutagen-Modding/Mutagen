@@ -80,12 +80,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISoundLoopAndRumbleGetter rhs) return false;
-            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundLoopAndRumbleGetter? obj)
         {
-            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -927,22 +927,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISoundLoopAndRumbleGetter? lhs,
             ISoundLoopAndRumbleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.Loop) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.Loop) ?? true))
             {
                 if (lhs.Loop != rhs.Loop) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.Sidechain) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.Sidechain) ?? true))
             {
                 if (lhs.Sidechain != rhs.Sidechain) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.RumbleValues) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.RumbleValues) ?? true))
             {
                 if (lhs.RumbleValues != rhs.RumbleValues) return false;
             }
@@ -1290,12 +1290,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISoundLoopAndRumbleGetter rhs) return false;
-            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundLoopAndRumbleGetter? obj)
         {
-            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).GetHashCode(this);

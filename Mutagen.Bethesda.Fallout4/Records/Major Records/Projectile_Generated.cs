@@ -1662,12 +1662,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IProjectileGetter rhs) return false;
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IProjectileGetter? obj)
         {
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1924,7 +1924,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1998,6 +1998,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Projectile Duplicate(
+            this IProjectileGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -2587,155 +2598,155 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IProjectileGetter? lhs,
             IProjectileGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Projectile_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Projectile_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Projectile_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Projectile_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Projectile_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Projectile_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Unused) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.Unused, rhs.Unused)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Gravity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Gravity) ?? true))
             {
                 if (!lhs.Gravity.EqualsWithin(rhs.Gravity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Speed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Speed) ?? true))
             {
                 if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Range) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Range) ?? true))
             {
                 if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
             {
                 if (!lhs.Light.Equals(rhs.Light)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlash) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlash) ?? true))
             {
                 if (!lhs.MuzzleFlash.Equals(rhs.MuzzleFlash)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerProximity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerProximity) ?? true))
             {
                 if (!lhs.ExplosionAltTriggerProximity.EqualsWithin(rhs.ExplosionAltTriggerProximity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerTimer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerTimer) ?? true))
             {
                 if (!lhs.ExplosionAltTriggerTimer.EqualsWithin(rhs.ExplosionAltTriggerTimer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
             {
                 if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
             {
                 if (!lhs.MuzzleFlashDuration.EqualsWithin(rhs.MuzzleFlashDuration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.FadeDuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.FadeDuration) ?? true))
             {
                 if (!lhs.FadeDuration.EqualsWithin(rhs.FadeDuration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ImpactForce) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ImpactForce) ?? true))
             {
                 if (!lhs.ImpactForce.EqualsWithin(rhs.ImpactForce)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
             {
                 if (!lhs.CountdownSound.Equals(rhs.CountdownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DisaleSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DisaleSound) ?? true))
             {
                 if (!lhs.DisaleSound.Equals(rhs.DisaleSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
             {
                 if (!lhs.DefaultWeaponSource.Equals(rhs.DefaultWeaponSource)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ConeSpread) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ConeSpread) ?? true))
             {
                 if (!lhs.ConeSpread.EqualsWithin(rhs.ConeSpread)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionRadius) ?? true))
             {
                 if (!lhs.CollisionRadius.EqualsWithin(rhs.CollisionRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Lifetime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Lifetime) ?? true))
             {
                 if (!lhs.Lifetime.EqualsWithin(rhs.Lifetime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.RelaunchInterval) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.RelaunchInterval) ?? true))
             {
                 if (!lhs.RelaunchInterval.EqualsWithin(rhs.RelaunchInterval)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DecalData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DecalData) ?? true))
             {
                 if (!lhs.DecalData.Equals(rhs.DecalData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionLayer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionLayer) ?? true))
             {
                 if (!lhs.CollisionLayer.Equals(rhs.CollisionLayer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.TracerFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.TracerFrequency) ?? true))
             {
                 if (lhs.TracerFrequency != rhs.TracerFrequency) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.VATSProjectile) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.VATSProjectile) ?? true))
             {
                 if (!lhs.VATSProjectile.Equals(rhs.VATSProjectile)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
             {
                 if (!string.Equals(lhs.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.SoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.SoundLevel) ?? true))
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
@@ -2745,23 +2756,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IProjectileGetter?)lhs,
                 rhs: rhs as IProjectileGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IProjectileGetter?)lhs,
                 rhs: rhs as IProjectileGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IProjectileGetter item)
@@ -4048,12 +4059,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IProjectileGetter rhs) return false;
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IProjectileGetter? obj)
         {
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).GetHashCode(this);

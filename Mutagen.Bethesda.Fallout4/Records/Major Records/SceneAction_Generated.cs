@@ -448,12 +448,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISceneActionGetter rhs) return false;
-            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneActionGetter? obj)
         {
-            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2473,7 +2473,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SceneActionCommon)((ISceneActionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -3225,186 +3225,186 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISceneActionGetter? lhs,
             ISceneActionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Type) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Type, rhs.Type, out var lhsType, out var rhsType, out var isTypeEqual))
                 {
-                    if (!((ASceneActionTypeCommon)((IASceneActionTypeGetter)lhsType).CommonInstance()!).Equals(lhsType, rhsType, crystal?.GetSubCrystal((int)SceneAction_FieldIndex.Type))) return false;
+                    if (!((ASceneActionTypeCommon)((IASceneActionTypeGetter)lhsType).CommonInstance()!).Equals(lhsType, rhsType, equalsMask?.GetSubCrystal((int)SceneAction_FieldIndex.Type))) return false;
                 }
                 else if (!isTypeEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.ActorID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.ActorID) ?? true))
             {
                 if (lhs.ActorID != rhs.ActorID) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.StartPhase) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.StartPhase) ?? true))
             {
                 if (lhs.StartPhase != rhs.StartPhase) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.EndPhase) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.EndPhase) ?? true))
             {
                 if (lhs.EndPhase != rhs.EndPhase) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.TimerMaxSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.TimerMaxSeconds) ?? true))
             {
                 if (!lhs.TimerMaxSeconds.EqualsWithin(rhs.TimerMaxSeconds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.SetParentQuestStage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.SetParentQuestStage) ?? true))
             {
                 if (lhs.SetParentQuestStage != rhs.SetParentQuestStage) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.TimerMinSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.TimerMinSeconds) ?? true))
             {
                 if (!lhs.TimerMinSeconds.EqualsWithin(rhs.TimerMinSeconds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.STSC) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.STSC) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.STSC, rhs.STSC)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.StartScenes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.StartScenes) ?? true))
             {
-                if (!lhs.StartScenes.SequenceEqual(rhs.StartScenes, (l, r) => ((StartSceneCommon)((IStartSceneGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SceneAction_FieldIndex.StartScenes)))) return false;
+                if (!lhs.StartScenes.SequenceEqual(rhs.StartScenes, (l, r) => ((StartSceneCommon)((IStartSceneGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SceneAction_FieldIndex.StartScenes)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerPositiveResponse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerPositiveResponse) ?? true))
             {
                 if (!lhs.PlayerPositiveResponse.Equals(rhs.PlayerPositiveResponse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerNegativeResponse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerNegativeResponse) ?? true))
             {
                 if (!lhs.PlayerNegativeResponse.Equals(rhs.PlayerNegativeResponse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerNeutralResponse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerNeutralResponse) ?? true))
             {
                 if (!lhs.PlayerNeutralResponse.Equals(rhs.PlayerNeutralResponse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerQuestionResponse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerQuestionResponse) ?? true))
             {
                 if (!lhs.PlayerQuestionResponse.Equals(rhs.PlayerQuestionResponse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerPositiveSubtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerPositiveSubtype) ?? true))
             {
                 if (!lhs.PlayerPositiveSubtype.Equals(rhs.PlayerPositiveSubtype)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerNegativeSubtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerNegativeSubtype) ?? true))
             {
                 if (!lhs.PlayerNegativeSubtype.Equals(rhs.PlayerNegativeSubtype)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerNeutralSubtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerNeutralSubtype) ?? true))
             {
                 if (!lhs.PlayerNeutralSubtype.Equals(rhs.PlayerNeutralSubtype)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerQuestionSubtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerQuestionSubtype) ?? true))
             {
                 if (!lhs.PlayerQuestionSubtype.Equals(rhs.PlayerQuestionSubtype)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcHeadtrackingActorIds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcHeadtrackingActorIds) ?? true))
             {
                 if (!lhs.NpcHeadtrackingActorIds.SequenceEqualNullable(rhs.NpcHeadtrackingActorIds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcPositiveResponse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcPositiveResponse) ?? true))
             {
                 if (!lhs.NpcPositiveResponse.Equals(rhs.NpcPositiveResponse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcNegativeResponse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcNegativeResponse) ?? true))
             {
                 if (!lhs.NpcNegativeResponse.Equals(rhs.NpcNegativeResponse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcNeutralResponse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcNeutralResponse) ?? true))
             {
                 if (!lhs.NpcNeutralResponse.Equals(rhs.NpcNeutralResponse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcQuestionResponse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcQuestionResponse) ?? true))
             {
                 if (!lhs.NpcQuestionResponse.Equals(rhs.NpcQuestionResponse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcPositiveSubtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcPositiveSubtype) ?? true))
             {
                 if (!lhs.NpcPositiveSubtype.Equals(rhs.NpcPositiveSubtype)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcNegativeSubtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcNegativeSubtype) ?? true))
             {
                 if (!lhs.NpcNegativeSubtype.Equals(rhs.NpcNegativeSubtype)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcNeutralSubtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcNeutralSubtype) ?? true))
             {
                 if (!lhs.NpcNeutralSubtype.Equals(rhs.NpcNeutralSubtype)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcQuestionSubtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.NpcQuestionSubtype) ?? true))
             {
                 if (!lhs.NpcQuestionSubtype.Equals(rhs.NpcQuestionSubtype)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.DialogueTargetActorId) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.DialogueTargetActorId) ?? true))
             {
                 if (lhs.DialogueTargetActorId != rhs.DialogueTargetActorId) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Packages) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Packages) ?? true))
             {
                 if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Topic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Topic) ?? true))
             {
                 if (!lhs.Topic.Equals(rhs.Topic)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.LoopingMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.LoopingMax) ?? true))
             {
                 if (!lhs.LoopingMax.EqualsWithin(rhs.LoopingMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.LoopingMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.LoopingMin) ?? true))
             {
                 if (!lhs.LoopingMin.EqualsWithin(rhs.LoopingMin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Camera) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Camera) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Camera, rhs.Camera, out var lhsCamera, out var rhsCamera, out var isCameraEqual))
                 {
-                    if (!((SceneCameraCommon)((ISceneCameraGetter)lhsCamera).CommonInstance()!).Equals(lhsCamera, rhsCamera, crystal?.GetSubCrystal((int)SceneAction_FieldIndex.Camera))) return false;
+                    if (!((SceneCameraCommon)((ISceneCameraGetter)lhsCamera).CommonInstance()!).Equals(lhsCamera, rhsCamera, equalsMask?.GetSubCrystal((int)SceneAction_FieldIndex.Camera))) return false;
                 }
                 else if (!isCameraEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Emotion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Emotion) ?? true))
             {
                 if (lhs.Emotion != rhs.Emotion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.EmotionValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.EmotionValue) ?? true))
             {
                 if (lhs.EmotionValue != rhs.EmotionValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.PlayerHeadTrackingActorIds) ?? true))
             {
                 if (!lhs.PlayerHeadTrackingActorIds.SequenceEqualNullable(rhs.PlayerHeadTrackingActorIds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.DialogueSubtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.DialogueSubtype) ?? true))
             {
                 if (!lhs.DialogueSubtype.Equals(rhs.DialogueSubtype)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.AnimArchType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.AnimArchType) ?? true))
             {
                 if (!lhs.AnimArchType.Equals(rhs.AnimArchType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.AudioOutputOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.AudioOutputOverride) ?? true))
             {
                 if (!lhs.AudioOutputOverride.Equals(rhs.AudioOutputOverride)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Unused) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Unused, rhs.Unused, out var lhsUnused, out var rhsUnused, out var isUnusedEqual))
                 {
-                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused).CommonInstance()!).Equals(lhsUnused, rhsUnused, crystal?.GetSubCrystal((int)SceneAction_FieldIndex.Unused))) return false;
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused).CommonInstance()!).Equals(lhsUnused, rhsUnused, equalsMask?.GetSubCrystal((int)SceneAction_FieldIndex.Unused))) return false;
                 }
                 else if (!isUnusedEqual) return false;
             }
@@ -5418,12 +5418,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISceneActionGetter rhs) return false;
-            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneActionGetter? obj)
         {
-            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).GetHashCode(this);

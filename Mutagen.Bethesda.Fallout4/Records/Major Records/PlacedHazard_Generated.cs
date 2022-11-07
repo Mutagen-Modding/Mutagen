@@ -459,12 +459,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedHazardGetter rhs) return false;
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedHazardGetter? obj)
         {
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).GetHashCode(this);
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PlacedHazardCommon)((IPlacedHazardGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -690,6 +690,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static PlacedHazard Duplicate(
+            this IPlacedHazardGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1127,11 +1138,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPlacedHazardGetter? lhs,
             IPlacedHazardGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
             {
                 if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
             }
@@ -1141,34 +1152,34 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAPlacedTrapGetter? lhs,
             IAPlacedTrapGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedHazardGetter?)lhs,
                 rhs: rhs as IPlacedHazardGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedHazardGetter?)lhs,
                 rhs: rhs as IPlacedHazardGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedHazardGetter?)lhs,
                 rhs: rhs as IPlacedHazardGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPlacedHazardGetter item)
@@ -1706,12 +1717,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedHazardGetter rhs) return false;
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedHazardGetter? obj)
         {
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).GetHashCode(this);

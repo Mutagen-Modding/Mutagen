@@ -400,12 +400,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IActionRecordGetter rhs) return false;
-            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActionRecordGetter? obj)
         {
-            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -626,6 +626,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static ActionRecord Duplicate(
+            this IActionRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -942,11 +953,11 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IActionRecordGetter? lhs,
             IActionRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ActionRecord_FieldIndex.Color) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
@@ -956,23 +967,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IActionRecordGetter?)lhs,
                 rhs: rhs as IActionRecordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IActionRecordGetter?)lhs,
                 rhs: rhs as IActionRecordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IActionRecordGetter item)
@@ -1515,12 +1526,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IActionRecordGetter rhs) return false;
-            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActionRecordGetter? obj)
         {
-            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).GetHashCode(this);

@@ -182,12 +182,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IHeadDataGetter rhs) return false;
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHeadDataGetter? obj)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1662,46 +1662,46 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IHeadDataGetter? lhs,
             IHeadDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.HeadParts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.HeadParts) ?? true))
             {
-                if (!lhs.HeadParts.SequenceEqual(rhs.HeadParts, (l, r) => ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.HeadParts)))) return false;
+                if (!lhs.HeadParts.SequenceEqual(rhs.HeadParts, (l, r) => ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.HeadParts)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableMorphs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableMorphs) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AvailableMorphs, rhs.AvailableMorphs, out var lhsAvailableMorphs, out var rhsAvailableMorphs, out var isAvailableMorphsEqual))
                 {
-                    if (!((AvailableMorphsCommon)((IAvailableMorphsGetter)lhsAvailableMorphs).CommonInstance()!).Equals(lhsAvailableMorphs, rhsAvailableMorphs, crystal?.GetSubCrystal((int)HeadData_FieldIndex.AvailableMorphs))) return false;
+                    if (!((AvailableMorphsCommon)((IAvailableMorphsGetter)lhsAvailableMorphs).CommonInstance()!).Equals(lhsAvailableMorphs, rhsAvailableMorphs, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.AvailableMorphs))) return false;
                 }
                 else if (!isAvailableMorphsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
             {
                 if (!lhs.RacePresets.SequenceEqualNullable(rhs.RacePresets)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableHairColors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableHairColors) ?? true))
             {
                 if (!lhs.AvailableHairColors.SequenceEqualNullable(rhs.AvailableHairColors)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.FaceDetails) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.FaceDetails) ?? true))
             {
                 if (!lhs.FaceDetails.SequenceEqualNullable(rhs.FaceDetails)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
             {
                 if (!lhs.DefaultFaceTexture.Equals(rhs.DefaultFaceTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
             {
-                if (!lhs.TintMasks.SequenceEqual(rhs.TintMasks, (l, r) => ((TintAssetsCommon)((ITintAssetsGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.TintMasks)))) return false;
+                if (!lhs.TintMasks.SequenceEqual(rhs.TintMasks, (l, r) => ((TintAssetsCommon)((ITintAssetsGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.TintMasks)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)HeadData_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
@@ -2519,12 +2519,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IHeadDataGetter rhs) return false;
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHeadDataGetter? obj)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);

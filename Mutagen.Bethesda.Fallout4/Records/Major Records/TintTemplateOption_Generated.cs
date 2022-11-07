@@ -174,12 +174,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITintTemplateOptionGetter rhs) return false;
-            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITintTemplateOptionGetter? obj)
         {
-            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1533,46 +1533,46 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ITintTemplateOptionGetter? lhs,
             ITintTemplateOptionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Slot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Slot) ?? true))
             {
                 if (lhs.Slot != rhs.Slot) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TintTemplateOption_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TintTemplateOption_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Textures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Textures) ?? true))
             {
                 if (!lhs.Textures.SequenceEqualNullable(rhs.Textures)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.BlendOperation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.BlendOperation) ?? true))
             {
                 if (lhs.BlendOperation != rhs.BlendOperation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.TemplateColors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.TemplateColors) ?? true))
             {
-                if (!lhs.TemplateColors.SequenceEqualNullable(rhs.TemplateColors, (l, r) => ((TintTemplateColorCommon)((ITintTemplateColorGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TintTemplateOption_FieldIndex.TemplateColors)))) return false;
+                if (!lhs.TemplateColors.SequenceEqualNullable(rhs.TemplateColors, (l, r) => ((TintTemplateColorCommon)((ITintTemplateColorGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TintTemplateOption_FieldIndex.TemplateColors)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Default) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Default) ?? true))
             {
                 if (!lhs.Default.EqualsWithin(rhs.Default)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.TETIDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.TETIDataTypeState) ?? true))
             {
                 if (lhs.TETIDataTypeState != rhs.TETIDataTypeState) return false;
             }
@@ -2292,12 +2292,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITintTemplateOptionGetter rhs) return false;
-            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITintTemplateOptionGetter? obj)
         {
-            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).GetHashCode(this);

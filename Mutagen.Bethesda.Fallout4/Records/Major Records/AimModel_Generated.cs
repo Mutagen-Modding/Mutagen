@@ -922,12 +922,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAimModelGetter rhs) return false;
-            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAimModelGetter? obj)
         {
-            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AimModelCommon)((IAimModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1178,6 +1178,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static AimModel Duplicate(
+            this IAimModelGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AimModelCommon)((IAimModelGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1605,75 +1616,75 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAimModelGetter? lhs,
             IAimModelGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMinAngle) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMinAngle) ?? true))
             {
                 if (!lhs.ConeOfFireMinAngle.EqualsWithin(rhs.ConeOfFireMinAngle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMaxAngle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMaxAngle) ?? true))
             {
                 if (!lhs.ConeOfFireMaxAngle.EqualsWithin(rhs.ConeOfFireMaxAngle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerShot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerShot) ?? true))
             {
                 if (!lhs.ConeOfFireIncreasePerShot.EqualsWithin(rhs.ConeOfFireIncreasePerShot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerSec) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerSec) ?? true))
             {
                 if (!lhs.ConeOfFireIncreasePerSec.EqualsWithin(rhs.ConeOfFireIncreasePerSec)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDecreaseDelayMilliseconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDecreaseDelayMilliseconds) ?? true))
             {
                 if (lhs.ConeOfFireDecreaseDelayMilliseconds != rhs.ConeOfFireDecreaseDelayMilliseconds) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireSneakMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireSneakMult) ?? true))
             {
                 if (!lhs.ConeOfFireSneakMult.EqualsWithin(rhs.ConeOfFireSneakMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSpringForce) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSpringForce) ?? true))
             {
                 if (!lhs.RecoilDiminishSpringForce.EqualsWithin(rhs.RecoilDiminishSpringForce)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSightsMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSightsMult) ?? true))
             {
                 if (!lhs.RecoilDiminishSightsMult.EqualsWithin(rhs.RecoilDiminishSightsMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMaxPerShot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMaxPerShot) ?? true))
             {
                 if (!lhs.RecoilMaxPerShot.EqualsWithin(rhs.RecoilMaxPerShot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMinPerShot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMinPerShot) ?? true))
             {
                 if (!lhs.RecoilMinPerShot.EqualsWithin(rhs.RecoilMinPerShot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilHipMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilHipMult) ?? true))
             {
                 if (!lhs.RecoilHipMult.EqualsWithin(rhs.RecoilHipMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RunawayRecoilShots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RunawayRecoilShots) ?? true))
             {
                 if (lhs.RunawayRecoilShots != rhs.RunawayRecoilShots) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArc) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArc) ?? true))
             {
                 if (!lhs.RecoilArc.EqualsWithin(rhs.RecoilArc)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArcRotate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArcRotate) ?? true))
             {
                 if (!lhs.RecoilArcRotate.EqualsWithin(rhs.RecoilArcRotate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIronSightsMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIronSightsMult) ?? true))
             {
                 if (!lhs.ConeOfFireIronSightsMult.EqualsWithin(rhs.ConeOfFireIronSightsMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.BaseStability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.BaseStability) ?? true))
             {
                 if (!lhs.BaseStability.EqualsWithin(rhs.BaseStability)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.DNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
@@ -1683,23 +1694,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAimModelGetter?)lhs,
                 rhs: rhs as IAimModelGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAimModelGetter?)lhs,
                 rhs: rhs as IAimModelGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAimModelGetter item)
@@ -2490,12 +2501,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAimModelGetter rhs) return false;
-            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAimModelGetter? obj)
         {
-            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).GetHashCode(this);

@@ -91,12 +91,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IDialogResponseDataGetter rhs) return false;
-            return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogResponseDataGetter? obj)
         {
-            return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DialogResponseDataCommon)((IDialogResponseDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -977,26 +977,26 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IDialogResponseDataGetter? lhs,
             IDialogResponseDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Emotion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Emotion) ?? true))
             {
                 if (lhs.Emotion != rhs.Emotion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponseData_FieldIndex.EmotionValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.EmotionValue) ?? true))
             {
                 if (lhs.EmotionValue != rhs.EmotionValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponseData_FieldIndex.ResponseNumber) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.ResponseNumber) ?? true))
             {
                 if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unknown2) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
             }
@@ -1354,12 +1354,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IDialogResponseDataGetter rhs) return false;
-            return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogResponseDataGetter? obj)
         {
-            return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).GetHashCode(this);

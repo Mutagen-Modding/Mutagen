@@ -77,12 +77,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageDataLocationGetter rhs) return false;
-            return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageDataLocationGetter? obj)
         {
-            return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageDataLocationCommon)((IPackageDataLocationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -823,15 +823,15 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPackageDataLocationGetter? lhs,
             IPackageDataLocationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PackageDataLocation_FieldIndex.Location) ?? true))
+            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PackageDataLocation_FieldIndex.Location) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Location, rhs.Location, out var lhsLocation, out var rhsLocation, out var isLocationEqual))
                 {
-                    if (!((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, crystal?.GetSubCrystal((int)PackageDataLocation_FieldIndex.Location))) return false;
+                    if (!((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, equalsMask?.GetSubCrystal((int)PackageDataLocation_FieldIndex.Location))) return false;
                 }
                 else if (!isLocationEqual) return false;
             }
@@ -841,12 +841,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IAPackageDataGetter? lhs,
             IAPackageDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackageDataLocationGetter?)lhs,
                 rhs: rhs as IPackageDataLocationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPackageDataLocationGetter item)
@@ -1245,12 +1245,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageDataLocationGetter rhs) return false;
-            return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageDataLocationGetter? obj)
         {
-            return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).GetHashCode(this);

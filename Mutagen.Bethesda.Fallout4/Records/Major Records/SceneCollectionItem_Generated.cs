@@ -84,12 +84,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISceneCollectionItemGetter rhs) return false;
-            return ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneCollectionItemGetter? obj)
         {
-            return ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -861,14 +861,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISceneCollectionItemGetter? lhs,
             ISceneCollectionItemGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SceneCollectionItem_FieldIndex.Scene) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneCollectionItem_FieldIndex.Scene) ?? true))
             {
                 if (!lhs.Scene.Equals(rhs.Scene)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneCollectionItem_FieldIndex.XNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneCollectionItem_FieldIndex.XNAM) ?? true))
             {
                 if (lhs.XNAM != rhs.XNAM) return false;
             }
@@ -1257,12 +1257,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISceneCollectionItemGetter rhs) return false;
-            return ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneCollectionItemGetter? obj)
         {
-            return ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)this).CommonInstance()!).GetHashCode(this);

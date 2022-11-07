@@ -90,12 +90,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkScriptFragmentsGetter rhs) return false;
-            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkScriptFragmentsGetter? obj)
         {
-            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -965,20 +965,20 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPerkScriptFragmentsGetter? lhs,
             IPerkScriptFragmentsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.ExtraBindDataVersion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.ExtraBindDataVersion) ?? true))
             {
                 if (lhs.ExtraBindDataVersion != rhs.ExtraBindDataVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.FileName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.FileName) ?? true))
             {
                 if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.Fragments) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.Fragments) ?? true))
             {
-                if (!lhs.Fragments.SequenceEqual(rhs.Fragments, (l, r) => ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PerkScriptFragments_FieldIndex.Fragments)))) return false;
+                if (!lhs.Fragments.SequenceEqual(rhs.Fragments, (l, r) => ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PerkScriptFragments_FieldIndex.Fragments)))) return false;
             }
             return true;
         }
@@ -1352,12 +1352,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkScriptFragmentsGetter rhs) return false;
-            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkScriptFragmentsGetter? obj)
         {
-            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);

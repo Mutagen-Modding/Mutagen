@@ -92,12 +92,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IVendorValuesGetter rhs) return false;
-            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IVendorValuesGetter? obj)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1095,38 +1095,38 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IVendorValuesGetter? lhs,
             IVendorValuesGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.StartHour) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.StartHour) ?? true))
             {
                 if (lhs.StartHour != rhs.StartHour) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.EndHour) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.EndHour) ?? true))
             {
                 if (lhs.EndHour != rhs.EndHour) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.Radius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Radius) ?? true))
             {
                 if (lhs.Radius != rhs.Radius) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.BuysStolenItems) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.BuysStolenItems) ?? true))
             {
                 if (lhs.BuysStolenItems != rhs.BuysStolenItems) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.BuySellEverythingNotInList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.BuySellEverythingNotInList) ?? true))
             {
                 if (lhs.BuySellEverythingNotInList != rhs.BuySellEverythingNotInList) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.BuysNonStolenItems) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.BuysNonStolenItems) ?? true))
             {
                 if (lhs.BuysNonStolenItems != rhs.BuysNonStolenItems) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
@@ -1501,12 +1501,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IVendorValuesGetter rhs) return false;
-            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IVendorValuesGetter? obj)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).GetHashCode(this);

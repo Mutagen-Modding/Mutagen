@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPlacedObjectLightingGetter rhs) return false;
-            return ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedObjectLightingGetter? obj)
         {
-            return ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1062,34 +1062,34 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPlacedObjectLightingGetter? lhs,
             IPlacedObjectLightingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Fov90PlusMinus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Fov90PlusMinus) ?? true))
             {
                 if (!lhs.Fov90PlusMinus.EqualsWithin(rhs.Fov90PlusMinus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Fade1PlusMinus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.Fade1PlusMinus) ?? true))
             {
                 if (!lhs.Fade1PlusMinus.EqualsWithin(rhs.Fade1PlusMinus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.EndDistanceCap) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.EndDistanceCap) ?? true))
             {
                 if (!lhs.EndDistanceCap.EqualsWithin(rhs.EndDistanceCap)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.ShadowDepthBias) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.ShadowDepthBias) ?? true))
             {
                 if (!lhs.ShadowDepthBias.EqualsWithin(rhs.ShadowDepthBias)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.NearClip) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.NearClip) ?? true))
             {
                 if (!lhs.NearClip.EqualsWithin(rhs.NearClip)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.VolumetricIntensity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectLighting_FieldIndex.VolumetricIntensity) ?? true))
             {
                 if (!lhs.VolumetricIntensity.EqualsWithin(rhs.VolumetricIntensity)) return false;
             }
@@ -1491,12 +1491,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPlacedObjectLightingGetter rhs) return false;
-            return ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedObjectLightingGetter? obj)
         {
-            return ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectLightingCommon)((IPlacedObjectLightingGetter)this).CommonInstance()!).GetHashCode(this);

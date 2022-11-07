@@ -474,12 +474,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAssociationTypeGetter rhs) return false;
-            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAssociationTypeGetter? obj)
         {
-            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -704,6 +704,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static AssociationType Duplicate(
+            this IAssociationTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1048,19 +1059,19 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAssociationTypeGetter? lhs,
             IAssociationTypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.ParentTitle) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AssociationType_FieldIndex.ParentTitle) ?? true))
             {
                 if (!Equals(lhs.ParentTitle, rhs.ParentTitle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.Title) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AssociationType_FieldIndex.Title) ?? true))
             {
                 if (!Equals(lhs.Title, rhs.Title)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
             {
                 if (lhs.IsFamily != rhs.IsFamily) return false;
             }
@@ -1070,23 +1081,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAssociationTypeGetter?)lhs,
                 rhs: rhs as IAssociationTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAssociationTypeGetter?)lhs,
                 rhs: rhs as IAssociationTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAssociationTypeGetter item)
@@ -1724,12 +1735,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAssociationTypeGetter rhs) return false;
-            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAssociationTypeGetter? obj)
         {
-            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).GetHashCode(this);

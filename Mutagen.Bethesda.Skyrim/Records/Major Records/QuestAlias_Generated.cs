@@ -341,12 +341,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestAliasGetter rhs) return false;
-            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestAliasGetter? obj)
         {
-            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestAliasCommon)((IQuestAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2620,126 +2620,126 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IQuestAliasGetter? lhs,
             IQuestAliasGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.ID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.ID) ?? true))
             {
                 if (lhs.ID != rhs.ID) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled) ?? true))
             {
                 if (lhs.AliasIDToForceIntoWhenFilled != rhs.AliasIDToForceIntoWhenFilled) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpecificLocation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpecificLocation) ?? true))
             {
                 if (!lhs.SpecificLocation.Equals(rhs.SpecificLocation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.ForcedReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.ForcedReference) ?? true))
             {
                 if (!lhs.ForcedReference.Equals(rhs.ForcedReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.UniqueActor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.UniqueActor) ?? true))
             {
                 if (!lhs.UniqueActor.Equals(rhs.UniqueActor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Location) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Location, rhs.Location, out var lhsLocation, out var rhsLocation, out var isLocationEqual))
                 {
-                    if (!((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.Location))) return false;
+                    if (!((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, equalsMask?.GetSubCrystal((int)QuestAlias_FieldIndex.Location))) return false;
                 }
                 else if (!isLocationEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.External) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.External) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.External, rhs.External, out var lhsExternal, out var rhsExternal, out var isExternalEqual))
                 {
-                    if (!((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)lhsExternal).CommonInstance()!).Equals(lhsExternal, rhsExternal, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.External))) return false;
+                    if (!((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)lhsExternal).CommonInstance()!).Equals(lhsExternal, rhsExternal, equalsMask?.GetSubCrystal((int)QuestAlias_FieldIndex.External))) return false;
                 }
                 else if (!isExternalEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.CreateReferenceToObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.CreateReferenceToObject) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CreateReferenceToObject, rhs.CreateReferenceToObject, out var lhsCreateReferenceToObject, out var rhsCreateReferenceToObject, out var isCreateReferenceToObjectEqual))
                 {
-                    if (!((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)lhsCreateReferenceToObject).CommonInstance()!).Equals(lhsCreateReferenceToObject, rhsCreateReferenceToObject, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.CreateReferenceToObject))) return false;
+                    if (!((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)lhsCreateReferenceToObject).CommonInstance()!).Equals(lhsCreateReferenceToObject, rhsCreateReferenceToObject, equalsMask?.GetSubCrystal((int)QuestAlias_FieldIndex.CreateReferenceToObject))) return false;
                 }
                 else if (!isCreateReferenceToObjectEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FindMatchingRefNearAlias, rhs.FindMatchingRefNearAlias, out var lhsFindMatchingRefNearAlias, out var rhsFindMatchingRefNearAlias, out var isFindMatchingRefNearAliasEqual))
                 {
-                    if (!((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)lhsFindMatchingRefNearAlias).CommonInstance()!).Equals(lhsFindMatchingRefNearAlias, rhsFindMatchingRefNearAlias, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias))) return false;
+                    if (!((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)lhsFindMatchingRefNearAlias).CommonInstance()!).Equals(lhsFindMatchingRefNearAlias, rhsFindMatchingRefNearAlias, equalsMask?.GetSubCrystal((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias))) return false;
                 }
                 else if (!isFindMatchingRefNearAliasEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FindMatchingRefFromEvent, rhs.FindMatchingRefFromEvent, out var lhsFindMatchingRefFromEvent, out var rhsFindMatchingRefFromEvent, out var isFindMatchingRefFromEventEqual))
                 {
-                    if (!((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)lhsFindMatchingRefFromEvent).CommonInstance()!).Equals(lhsFindMatchingRefFromEvent, rhsFindMatchingRefFromEvent, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent))) return false;
+                    if (!((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)lhsFindMatchingRefFromEvent).CommonInstance()!).Equals(lhsFindMatchingRefFromEvent, rhsFindMatchingRefFromEvent, equalsMask?.GetSubCrystal((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent))) return false;
                 }
                 else if (!isFindMatchingRefFromEventEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestAlias_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Items) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.Items)))) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestAlias_FieldIndex.Items)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpectatorOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
                 if (!lhs.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
             {
                 if (!lhs.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.GuardWarnOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.GuardWarnOverridePackageList) ?? true))
             {
                 if (!lhs.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.CombatOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.CombatOverridePackageList) ?? true))
             {
                 if (!lhs.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.DisplayName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.DisplayName) ?? true))
             {
                 if (!lhs.DisplayName.Equals(rhs.DisplayName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Spells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Spells) ?? true))
             {
                 if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Factions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Factions) ?? true))
             {
                 if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.PackageData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.PackageData) ?? true))
             {
                 if (!lhs.PackageData.SequenceEqualNullable(rhs.PackageData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.VoiceTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.VoiceTypes) ?? true))
             {
                 if (!lhs.VoiceTypes.Equals(rhs.VoiceTypes)) return false;
             }
@@ -4195,12 +4195,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestAliasGetter rhs) return false;
-            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestAliasGetter? obj)
         {
-            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).GetHashCode(this);

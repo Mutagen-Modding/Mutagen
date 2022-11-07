@@ -120,12 +120,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITerminalMenuItemGetter rhs) return false;
-            return ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITerminalMenuItemGetter? obj)
         {
-            return ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1220,40 +1220,40 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ITerminalMenuItemGetter? lhs,
             ITerminalMenuItemGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ItemText) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ItemText) ?? true))
             {
                 if (!object.Equals(lhs.ItemText, rhs.ItemText)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ResponseText) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ResponseText) ?? true))
             {
                 if (!object.Equals(lhs.ResponseText, rhs.ResponseText)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ItemId) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ItemId) ?? true))
             {
                 if (lhs.ItemId != rhs.ItemId) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.DisplayText) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.DisplayText) ?? true))
             {
                 if (!object.Equals(lhs.DisplayText, rhs.DisplayText)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ImageFile) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ImageFile) ?? true))
             {
                 if (!string.Equals(lhs.ImageFile, rhs.ImageFile)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.Submenu) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.Submenu) ?? true))
             {
                 if (!lhs.Submenu.Equals(rhs.Submenu)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TerminalMenuItem_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TerminalMenuItem_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1857,12 +1857,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITerminalMenuItemGetter rhs) return false;
-            return ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITerminalMenuItemGetter? obj)
         {
-            return ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)this).CommonInstance()!).GetHashCode(this);

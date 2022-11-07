@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILocationTargetRadiusGetter rhs) return false;
-            return ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationTargetRadiusGetter? obj)
         {
-            return ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)this).CommonInstance()!).GetHashCode(this);
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -844,18 +844,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILocationTargetRadiusGetter? lhs,
             ILocationTargetRadiusGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Target) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Target) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Target, rhs.Target, out var lhsTarget, out var rhsTarget, out var isTargetEqual))
                 {
-                    if (!((ALocationTargetCommon)((IALocationTargetGetter)lhsTarget).CommonInstance()!).Equals(lhsTarget, rhsTarget, crystal?.GetSubCrystal((int)LocationTargetRadius_FieldIndex.Target))) return false;
+                    if (!((ALocationTargetCommon)((IALocationTargetGetter)lhsTarget).CommonInstance()!).Equals(lhsTarget, rhsTarget, equalsMask?.GetSubCrystal((int)LocationTargetRadius_FieldIndex.Target))) return false;
                 }
                 else if (!isTargetEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Radius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Radius) ?? true))
             {
                 if (lhs.Radius != rhs.Radius) return false;
             }
@@ -1225,12 +1225,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILocationTargetRadiusGetter rhs) return false;
-            return ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationTargetRadiusGetter? obj)
         {
-            return ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)this).CommonInstance()!).GetHashCode(this);

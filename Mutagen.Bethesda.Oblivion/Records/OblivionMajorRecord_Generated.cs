@@ -414,12 +414,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IOblivionMajorRecordGetter rhs) return false;
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOblivionMajorRecordGetter? obj)
         {
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -834,6 +834,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static OblivionMajorRecord Duplicate(
+            this IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1177,11 +1188,11 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags) ?? true))
+            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags) ?? true))
             {
                 if (lhs.OblivionMajorRecordFlags != rhs.OblivionMajorRecordFlags) return false;
             }
@@ -1191,12 +1202,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IOblivionMajorRecordGetter?)lhs,
                 rhs: rhs as IOblivionMajorRecordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IOblivionMajorRecordGetter item)
@@ -1644,12 +1655,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IOblivionMajorRecordGetter rhs) return false;
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOblivionMajorRecordGetter? obj)
         {
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);

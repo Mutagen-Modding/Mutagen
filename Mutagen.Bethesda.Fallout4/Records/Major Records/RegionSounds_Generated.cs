@@ -106,12 +106,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionSoundsGetter rhs) return false;
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionSoundsGetter? obj)
         {
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((RegionSoundsCommon)((IRegionSoundsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1049,23 +1049,23 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IRegionSoundsGetter? lhs,
             IRegionSoundsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)RegionSounds_FieldIndex.Music) ?? true))
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Music) ?? true))
             {
                 if (!lhs.Music.Equals(rhs.Music)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RegionSounds_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((RegionSoundCommon)((IRegionSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)RegionSounds_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((RegionSoundCommon)((IRegionSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)RegionSounds_FieldIndex.Sounds)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RegionSounds_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
             {
                 if (!lhs.LodDisplayDistanceMultiplier.EqualsWithin(rhs.LodDisplayDistanceMultiplier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RegionSounds_FieldIndex.OcclusionAccuracyDist) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.OcclusionAccuracyDist) ?? true))
             {
                 if (!lhs.OcclusionAccuracyDist.EqualsWithin(rhs.OcclusionAccuracyDist)) return false;
             }
@@ -1075,12 +1075,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IRegionDataGetter? lhs,
             IRegionDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRegionSoundsGetter?)lhs,
                 rhs: rhs as IRegionSoundsGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRegionSoundsGetter item)
@@ -1606,12 +1606,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionSoundsGetter rhs) return false;
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionSoundsGetter? obj)
         {
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).GetHashCode(this);

@@ -779,12 +779,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IStaticCollectionGetter rhs) return false;
-            return ((StaticCollectionCommon)((IStaticCollectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StaticCollectionCommon)((IStaticCollectionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStaticCollectionGetter? obj)
         {
-            return ((StaticCollectionCommon)((IStaticCollectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StaticCollectionCommon)((IStaticCollectionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StaticCollectionCommon)((IStaticCollectionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1004,7 +1004,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((StaticCollectionCommon)((IStaticCollectionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1078,6 +1078,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static StaticCollection Duplicate(
+            this IStaticCollectionGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((StaticCollectionCommon)((IStaticCollectionGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1475,49 +1486,49 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IStaticCollectionGetter? lhs,
             IStaticCollectionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)StaticCollection_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)StaticCollection_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)StaticCollection_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)StaticCollection_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StaticCollection_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StaticCollection_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)StaticCollection_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)StaticCollection_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StaticCollection_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StaticCollection_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StaticCollection_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StaticCollection_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)StaticCollection_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)StaticCollection_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StaticCollection_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StaticCollection_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StaticCollection_FieldIndex.Filter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StaticCollection_FieldIndex.Filter) ?? true))
             {
                 if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StaticCollection_FieldIndex.Parts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StaticCollection_FieldIndex.Parts) ?? true))
             {
-                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((StaticPartCommon)((IStaticPartGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)StaticCollection_FieldIndex.Parts)))) return false;
+                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((StaticPartCommon)((IStaticPartGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)StaticCollection_FieldIndex.Parts)))) return false;
             }
             return true;
         }
@@ -1525,23 +1536,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStaticCollectionGetter?)lhs,
                 rhs: rhs as IStaticCollectionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStaticCollectionGetter?)lhs,
                 rhs: rhs as IStaticCollectionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IStaticCollectionGetter item)
@@ -2405,12 +2416,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IStaticCollectionGetter rhs) return false;
-            return ((StaticCollectionCommon)((IStaticCollectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StaticCollectionCommon)((IStaticCollectionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStaticCollectionGetter? obj)
         {
-            return ((StaticCollectionCommon)((IStaticCollectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StaticCollectionCommon)((IStaticCollectionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StaticCollectionCommon)((IStaticCollectionGetter)this).CommonInstance()!).GetHashCode(this);

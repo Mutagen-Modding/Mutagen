@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IBoundingGetter rhs) return false;
-            return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBoundingGetter? obj)
         {
-            return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BoundingCommon)((IBoundingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1042,34 +1042,34 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IBoundingGetter? lhs,
             IBoundingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Bounding_FieldIndex.Width) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Bounding_FieldIndex.Width) ?? true))
             {
                 if (!lhs.Width.EqualsWithin(rhs.Width)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Bounding_FieldIndex.Height) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Bounding_FieldIndex.Height) ?? true))
             {
                 if (!lhs.Height.EqualsWithin(rhs.Height)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Bounding_FieldIndex.Position) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Bounding_FieldIndex.Position) ?? true))
             {
                 if (!lhs.Position.Equals(rhs.Position)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Bounding_FieldIndex.RotationQ1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Bounding_FieldIndex.RotationQ1) ?? true))
             {
                 if (!lhs.RotationQ1.EqualsWithin(rhs.RotationQ1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Bounding_FieldIndex.RotationQ2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Bounding_FieldIndex.RotationQ2) ?? true))
             {
                 if (!lhs.RotationQ2.EqualsWithin(rhs.RotationQ2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Bounding_FieldIndex.RotationQ3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Bounding_FieldIndex.RotationQ3) ?? true))
             {
                 if (!lhs.RotationQ3.EqualsWithin(rhs.RotationQ3)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Bounding_FieldIndex.RotationQ4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Bounding_FieldIndex.RotationQ4) ?? true))
             {
                 if (!lhs.RotationQ4.EqualsWithin(rhs.RotationQ4)) return false;
             }
@@ -1443,12 +1443,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IBoundingGetter rhs) return false;
-            return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBoundingGetter? obj)
         {
-            return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).GetHashCode(this);

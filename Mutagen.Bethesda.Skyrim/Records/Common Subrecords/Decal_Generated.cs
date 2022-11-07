@@ -102,12 +102,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IDecalGetter rhs) return false;
-            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDecalGetter? obj)
         {
-            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DecalCommon)((IDecalGetter)this).CommonInstance()!).GetHashCode(this);
@@ -835,7 +835,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DecalCommon)((IDecalGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1222,50 +1222,50 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IDecalGetter? lhs,
             IDecalGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.MinWidth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.MinWidth) ?? true))
             {
                 if (!lhs.MinWidth.EqualsWithin(rhs.MinWidth)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.MaxWidth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.MaxWidth) ?? true))
             {
                 if (!lhs.MaxWidth.EqualsWithin(rhs.MaxWidth)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.MinHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.MinHeight) ?? true))
             {
                 if (!lhs.MinHeight.EqualsWithin(rhs.MinHeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.MaxHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.MaxHeight) ?? true))
             {
                 if (!lhs.MaxHeight.EqualsWithin(rhs.MaxHeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.Depth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.Depth) ?? true))
             {
                 if (!lhs.Depth.EqualsWithin(rhs.Depth)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.Shininess) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.Shininess) ?? true))
             {
                 if (!lhs.Shininess.EqualsWithin(rhs.Shininess)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.ParallaxScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.ParallaxScale) ?? true))
             {
                 if (!lhs.ParallaxScale.EqualsWithin(rhs.ParallaxScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.ParallaxPasses) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.ParallaxPasses) ?? true))
             {
                 if (lhs.ParallaxPasses != rhs.ParallaxPasses) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Decal_FieldIndex.Color) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
@@ -1685,12 +1685,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IDecalGetter rhs) return false;
-            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDecalGetter? obj)
         {
-            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DecalCommon)((IDecalGetter)this).CommonInstance()!).GetHashCode(this);

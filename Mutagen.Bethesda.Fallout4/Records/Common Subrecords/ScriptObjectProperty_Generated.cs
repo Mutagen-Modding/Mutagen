@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptObjectPropertyGetter rhs) return false;
-            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptObjectPropertyGetter? obj)
         {
-            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).GetHashCode(this);
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -894,19 +894,19 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IScriptObjectPropertyGetter? lhs,
             IScriptObjectPropertyGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Object) ?? true))
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Object) ?? true))
             {
                 if (!lhs.Object.Equals(rhs.Object)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Alias) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Alias) ?? true))
             {
                 if (lhs.Alias != rhs.Alias) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
@@ -916,12 +916,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IScriptPropertyGetter? lhs,
             IScriptPropertyGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IScriptObjectPropertyGetter?)lhs,
                 rhs: rhs as IScriptObjectPropertyGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IScriptObjectPropertyGetter item)
@@ -1275,12 +1275,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptObjectPropertyGetter rhs) return false;
-            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptObjectPropertyGetter? obj)
         {
-            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).GetHashCode(this);

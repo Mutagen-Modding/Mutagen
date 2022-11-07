@@ -506,12 +506,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMaterialSwapGetter rhs) return false;
-            return ((MaterialSwapCommon)((IMaterialSwapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MaterialSwapCommon)((IMaterialSwapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMaterialSwapGetter? obj)
         {
-            return ((MaterialSwapCommon)((IMaterialSwapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MaterialSwapCommon)((IMaterialSwapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MaterialSwapCommon)((IMaterialSwapGetter)this).CommonInstance()!).GetHashCode(this);
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MaterialSwapCommon)((IMaterialSwapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -740,6 +740,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static MaterialSwap Duplicate(
+            this IMaterialSwapGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MaterialSwapCommon)((IMaterialSwapGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1079,17 +1090,17 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMaterialSwapGetter? lhs,
             IMaterialSwapGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MaterialSwap_FieldIndex.TreeFolder) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MaterialSwap_FieldIndex.TreeFolder) ?? true))
             {
                 if (!string.Equals(lhs.TreeFolder, rhs.TreeFolder)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialSwap_FieldIndex.Substitutions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialSwap_FieldIndex.Substitutions) ?? true))
             {
-                if (!lhs.Substitutions.SequenceEqual(rhs.Substitutions, (l, r) => ((MaterialSubstitutionCommon)((IMaterialSubstitutionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MaterialSwap_FieldIndex.Substitutions)))) return false;
+                if (!lhs.Substitutions.SequenceEqual(rhs.Substitutions, (l, r) => ((MaterialSubstitutionCommon)((IMaterialSubstitutionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MaterialSwap_FieldIndex.Substitutions)))) return false;
             }
             return true;
         }
@@ -1097,23 +1108,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMaterialSwapGetter?)lhs,
                 rhs: rhs as IMaterialSwapGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMaterialSwapGetter?)lhs,
                 rhs: rhs as IMaterialSwapGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMaterialSwapGetter item)
@@ -1798,12 +1809,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMaterialSwapGetter rhs) return false;
-            return ((MaterialSwapCommon)((IMaterialSwapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MaterialSwapCommon)((IMaterialSwapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMaterialSwapGetter? obj)
         {
-            return ((MaterialSwapCommon)((IMaterialSwapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MaterialSwapCommon)((IMaterialSwapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MaterialSwapCommon)((IMaterialSwapGetter)this).CommonInstance()!).GetHashCode(this);

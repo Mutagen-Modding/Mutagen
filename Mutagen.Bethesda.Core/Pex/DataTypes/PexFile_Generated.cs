@@ -109,12 +109,12 @@ namespace Mutagen.Bethesda.Pex
         public override bool Equals(object? obj)
         {
             if (obj is not IPexFileGetter rhs) return false;
-            return ((PexFileCommon)((IPexFileGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PexFileCommon)((IPexFileGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPexFileGetter? obj)
         {
-            return ((PexFileCommon)((IPexFileGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PexFileCommon)((IPexFileGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PexFileCommon)((IPexFileGetter)this).CommonInstance()!).GetHashCode(this);
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Pex
             return ((PexFileCommon)((IPexFileGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1268,50 +1268,50 @@ namespace Mutagen.Bethesda.Pex
         public virtual bool Equals(
             IPexFileGetter? lhs,
             IPexFileGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.MajorVersion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexFile_FieldIndex.MajorVersion) ?? true))
             {
                 if (lhs.MajorVersion != rhs.MajorVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.MinorVersion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexFile_FieldIndex.MinorVersion) ?? true))
             {
                 if (lhs.MinorVersion != rhs.MinorVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.GameId) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexFile_FieldIndex.GameId) ?? true))
             {
                 if (lhs.GameId != rhs.GameId) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.CompilationTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexFile_FieldIndex.CompilationTime) ?? true))
             {
                 if (lhs.CompilationTime != rhs.CompilationTime) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.SourceFileName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexFile_FieldIndex.SourceFileName) ?? true))
             {
                 if (!string.Equals(lhs.SourceFileName, rhs.SourceFileName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.Username) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexFile_FieldIndex.Username) ?? true))
             {
                 if (!string.Equals(lhs.Username, rhs.Username)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.MachineName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexFile_FieldIndex.MachineName) ?? true))
             {
                 if (!string.Equals(lhs.MachineName, rhs.MachineName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.DebugInfo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexFile_FieldIndex.DebugInfo) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DebugInfo, rhs.DebugInfo, out var lhsDebugInfo, out var rhsDebugInfo, out var isDebugInfoEqual))
                 {
-                    if (!((DebugInfoCommon)((IDebugInfoGetter)lhsDebugInfo).CommonInstance()!).Equals(lhsDebugInfo, rhsDebugInfo, crystal?.GetSubCrystal((int)PexFile_FieldIndex.DebugInfo))) return false;
+                    if (!((DebugInfoCommon)((IDebugInfoGetter)lhsDebugInfo).CommonInstance()!).Equals(lhsDebugInfo, rhsDebugInfo, equalsMask?.GetSubCrystal((int)PexFile_FieldIndex.DebugInfo))) return false;
                 }
                 else if (!isDebugInfoEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.Objects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexFile_FieldIndex.Objects) ?? true))
             {
-                if (!lhs.Objects.SequenceEqual(rhs.Objects, (l, r) => ((PexObjectCommon)((IPexObjectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexFile_FieldIndex.Objects)))) return false;
+                if (!lhs.Objects.SequenceEqual(rhs.Objects, (l, r) => ((PexObjectCommon)((IPexObjectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PexFile_FieldIndex.Objects)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.UserFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexFile_FieldIndex.UserFlags) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual<String>(lhs.UserFlags.Span!, rhs.UserFlags.Span!)) return false;
             }

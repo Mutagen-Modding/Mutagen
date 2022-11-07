@@ -113,12 +113,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ICreatureDataGetter rhs) return false;
-            return ((CreatureDataCommon)((ICreatureDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CreatureDataCommon)((ICreatureDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICreatureDataGetter? obj)
         {
-            return ((CreatureDataCommon)((ICreatureDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CreatureDataCommon)((ICreatureDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CreatureDataCommon)((ICreatureDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CreatureDataCommon)((ICreatureDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1389,66 +1389,66 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ICreatureDataGetter? lhs,
             ICreatureDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.CombatSkill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.CombatSkill) ?? true))
             {
                 if (lhs.CombatSkill != rhs.CombatSkill) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.MagicSkill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.MagicSkill) ?? true))
             {
                 if (lhs.MagicSkill != rhs.MagicSkill) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.StealthSkill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.StealthSkill) ?? true))
             {
                 if (lhs.StealthSkill != rhs.StealthSkill) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.SoulLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.SoulLevel) ?? true))
             {
                 if (lhs.SoulLevel != rhs.SoulLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.Health) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Health) ?? true))
             {
                 if (lhs.Health != rhs.Health) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.AttackDamage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.AttackDamage) ?? true))
             {
                 if (lhs.AttackDamage != rhs.AttackDamage) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.Strength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Strength) ?? true))
             {
                 if (lhs.Strength != rhs.Strength) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.Intelligence) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Intelligence) ?? true))
             {
                 if (lhs.Intelligence != rhs.Intelligence) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.Willpower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Willpower) ?? true))
             {
                 if (lhs.Willpower != rhs.Willpower) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.Agility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Agility) ?? true))
             {
                 if (lhs.Agility != rhs.Agility) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.Speed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Speed) ?? true))
             {
                 if (lhs.Speed != rhs.Speed) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.Endurance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Endurance) ?? true))
             {
                 if (lhs.Endurance != rhs.Endurance) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.Personality) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Personality) ?? true))
             {
                 if (lhs.Personality != rhs.Personality) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureData_FieldIndex.Luck) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Luck) ?? true))
             {
                 if (lhs.Luck != rhs.Luck) return false;
             }
@@ -1889,12 +1889,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ICreatureDataGetter rhs) return false;
-            return ((CreatureDataCommon)((ICreatureDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CreatureDataCommon)((ICreatureDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICreatureDataGetter? obj)
         {
-            return ((CreatureDataCommon)((ICreatureDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CreatureDataCommon)((ICreatureDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CreatureDataCommon)((ICreatureDataGetter)this).CommonInstance()!).GetHashCode(this);

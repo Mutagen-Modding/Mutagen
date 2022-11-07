@@ -42,6 +42,26 @@ public class DuplicateModule : GenerationModule
             }
         }
         sb.AppendLine();
+        
+        using (var args = sb.Function(
+                   $"public static {obj.ObjectName} Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
+        {
+            args.Wheres.AddRange(obj.GenericTypeMaskWheres(LoquiInterfaceType.IGetter, MaskType.Normal, MaskType.NormalGetter));
+            args.Add($"this {obj.Interface(obj.GetGenericTypes(MaskType.NormalGetter), getter: true, internalInterface: true)} item");
+            args.Add($"{nameof(FormKey)} formKey");
+            args.Add($"{nameof(TranslationCrystal)}? copyMask");
+        }
+        using (sb.CurlyBrace())
+        {
+            using (var args = sb.Call(
+                       $"return {obj.CommonClassInstance("item", LoquiInterfaceType.IGetter, CommonGenerics.Functions, MaskType.NormalGetter)}.Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter, MaskType.Translation)}"))
+            {
+                args.AddPassArg("item");
+                args.AddPassArg("formKey");
+                args.AddPassArg("copyMask");
+            }
+        }
+        sb.AppendLine();
     }
 
     public override async Task GenerateInCommon(ObjectGeneration obj, StructuredStringBuilder sb, MaskTypeSet maskTypes)

@@ -83,12 +83,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ISkillDataGetter rhs) return false;
-            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISkillDataGetter? obj)
         {
-            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -969,26 +969,26 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ISkillDataGetter? lhs,
             ISkillDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SkillData_FieldIndex.Action) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkillData_FieldIndex.Action) ?? true))
             {
                 if (lhs.Action != rhs.Action) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SkillData_FieldIndex.Attribute) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkillData_FieldIndex.Attribute) ?? true))
             {
                 if (lhs.Attribute != rhs.Attribute) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SkillData_FieldIndex.Specialization) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkillData_FieldIndex.Specialization) ?? true))
             {
                 if (lhs.Specialization != rhs.Specialization) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SkillData_FieldIndex.UseValueFirst) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkillData_FieldIndex.UseValueFirst) ?? true))
             {
                 if (!lhs.UseValueFirst.EqualsWithin(rhs.UseValueFirst)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SkillData_FieldIndex.UseValueSecond) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkillData_FieldIndex.UseValueSecond) ?? true))
             {
                 if (!lhs.UseValueSecond.EqualsWithin(rhs.UseValueSecond)) return false;
             }
@@ -1358,12 +1358,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ISkillDataGetter rhs) return false;
-            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISkillDataGetter? obj)
         {
-            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).GetHashCode(this);

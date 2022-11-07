@@ -83,12 +83,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IScenePhaseFragmentGetter rhs) return false;
-            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScenePhaseFragmentGetter? obj)
         {
-            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -958,26 +958,26 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IScenePhaseFragmentGetter? lhs,
             IScenePhaseFragmentGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScenePhaseFragment_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhaseFragment_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhaseFragment_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhaseFragment_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhaseFragment_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhaseFragment_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhaseFragment_FieldIndex.ScriptName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhaseFragment_FieldIndex.ScriptName) ?? true))
             {
                 if (!string.Equals(lhs.ScriptName, rhs.ScriptName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhaseFragment_FieldIndex.FragmentName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhaseFragment_FieldIndex.FragmentName) ?? true))
             {
                 if (!string.Equals(lhs.FragmentName, rhs.FragmentName)) return false;
             }
@@ -1344,12 +1344,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IScenePhaseFragmentGetter rhs) return false;
-            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScenePhaseFragmentGetter? obj)
         {
-            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).GetHashCode(this);

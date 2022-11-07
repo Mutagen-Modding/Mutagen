@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkEntryPointAddLeveledItemGetter rhs) return false;
-            return ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkEntryPointAddLeveledItemGetter? obj)
         {
-            return ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -867,11 +867,11 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPerkEntryPointAddLeveledItemGetter? lhs,
             IPerkEntryPointAddLeveledItemGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddLeveledItem_FieldIndex.Item) ?? true))
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddLeveledItem_FieldIndex.Item) ?? true))
             {
                 if (!lhs.Item.Equals(rhs.Item)) return false;
             }
@@ -881,23 +881,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IAPerkEntryPointEffectGetter? lhs,
             IAPerkEntryPointEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkEntryPointAddLeveledItemGetter?)lhs,
                 rhs: rhs as IPerkEntryPointAddLeveledItemGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
             IAPerkEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkEntryPointAddLeveledItemGetter?)lhs,
                 rhs: rhs as IPerkEntryPointAddLeveledItemGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPerkEntryPointAddLeveledItemGetter item)
@@ -1272,12 +1272,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkEntryPointAddLeveledItemGetter rhs) return false;
-            return ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkEntryPointAddLeveledItemGetter? obj)
         {
-            return ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointAddLeveledItemCommon)((IPerkEntryPointAddLeveledItemGetter)this).CommonInstance()!).GetHashCode(this);

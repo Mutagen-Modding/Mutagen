@@ -86,12 +86,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IEffectGetter rhs) return false;
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEffectGetter? obj)
         {
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EffectCommon)((IEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EffectCommon)((IEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -881,22 +881,22 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IEffectGetter? lhs,
             IEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((EffectDataCommon)((IEffectDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Effect_FieldIndex.Data))) return false;
+                    if (!((EffectDataCommon)((IEffectDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Effect_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.ScriptEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Effect_FieldIndex.ScriptEffect) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ScriptEffect, rhs.ScriptEffect, out var lhsScriptEffect, out var rhsScriptEffect, out var isScriptEffectEqual))
                 {
-                    if (!((ScriptEffectCommon)((IScriptEffectGetter)lhsScriptEffect).CommonInstance()!).Equals(lhsScriptEffect, rhsScriptEffect, crystal?.GetSubCrystal((int)Effect_FieldIndex.ScriptEffect))) return false;
+                    if (!((ScriptEffectCommon)((IScriptEffectGetter)lhsScriptEffect).CommonInstance()!).Equals(lhsScriptEffect, rhsScriptEffect, equalsMask?.GetSubCrystal((int)Effect_FieldIndex.ScriptEffect))) return false;
                 }
                 else if (!isScriptEffectEqual) return false;
             }
@@ -1385,12 +1385,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IEffectGetter rhs) return false;
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEffectGetter? obj)
         {
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EffectCommon)((IEffectGetter)this).CommonInstance()!).GetHashCode(this);

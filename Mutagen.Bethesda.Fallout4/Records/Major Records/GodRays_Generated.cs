@@ -692,12 +692,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IGodRaysGetter rhs) return false;
-            return ((GodRaysCommon)((IGodRaysGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GodRaysCommon)((IGodRaysGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGodRaysGetter? obj)
         {
-            return ((GodRaysCommon)((IGodRaysGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GodRaysCommon)((IGodRaysGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GodRaysCommon)((IGodRaysGetter)this).CommonInstance()!).GetHashCode(this);
@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((GodRaysCommon)((IGodRaysGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -934,6 +934,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static GodRays Duplicate(
+            this IGodRaysGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((GodRaysCommon)((IGodRaysGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1312,47 +1323,47 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IGodRaysGetter? lhs,
             IGodRaysGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.BackColor) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.BackColor) ?? true))
             {
                 if (!lhs.BackColor.ColorOnlyEquals(rhs.BackColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardColor) ?? true))
             {
                 if (!lhs.ForwardColor.ColorOnlyEquals(rhs.ForwardColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.Intensity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.Intensity) ?? true))
             {
                 if (!lhs.Intensity.EqualsWithin(rhs.Intensity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.AirColorScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.AirColorScale) ?? true))
             {
                 if (!lhs.AirColorScale.EqualsWithin(rhs.AirColorScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.BackColorScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.BackColorScale) ?? true))
             {
                 if (!lhs.BackColorScale.EqualsWithin(rhs.BackColorScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardColorScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardColorScale) ?? true))
             {
                 if (!lhs.ForwardColorScale.EqualsWithin(rhs.ForwardColorScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.BackPhase) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.BackPhase) ?? true))
             {
                 if (!lhs.BackPhase.EqualsWithin(rhs.BackPhase)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.AirColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.AirColor) ?? true))
             {
                 if (!lhs.AirColor.ColorOnlyEquals(rhs.AirColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardPhase) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardPhase) ?? true))
             {
                 if (!lhs.ForwardPhase.EqualsWithin(rhs.ForwardPhase)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)GodRays_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1362,23 +1373,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGodRaysGetter?)lhs,
                 rhs: rhs as IGodRaysGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGodRaysGetter?)lhs,
                 rhs: rhs as IGodRaysGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IGodRaysGetter item)
@@ -2071,12 +2082,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IGodRaysGetter rhs) return false;
-            return ((GodRaysCommon)((IGodRaysGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GodRaysCommon)((IGodRaysGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGodRaysGetter? obj)
         {
-            return ((GodRaysCommon)((IGodRaysGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GodRaysCommon)((IGodRaysGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GodRaysCommon)((IGodRaysGetter)this).CommonInstance()!).GetHashCode(this);

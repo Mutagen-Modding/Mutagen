@@ -466,12 +466,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAudioEffectChainGetter rhs) return false;
-            return ((AudioEffectChainCommon)((IAudioEffectChainGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AudioEffectChainCommon)((IAudioEffectChainGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAudioEffectChainGetter? obj)
         {
-            return ((AudioEffectChainCommon)((IAudioEffectChainGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AudioEffectChainCommon)((IAudioEffectChainGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AudioEffectChainCommon)((IAudioEffectChainGetter)this).CommonInstance()!).GetHashCode(this);
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AudioEffectChainCommon)((IAudioEffectChainGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -690,6 +690,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static AudioEffectChain Duplicate(
+            this IAudioEffectChainGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AudioEffectChainCommon)((IAudioEffectChainGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1018,13 +1029,13 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAudioEffectChainGetter? lhs,
             IAudioEffectChainGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AudioEffectChain_FieldIndex.Effects) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AudioEffectChain_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((AAudioEffectCommon)((IAAudioEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)AudioEffectChain_FieldIndex.Effects)))) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((AAudioEffectCommon)((IAAudioEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AudioEffectChain_FieldIndex.Effects)))) return false;
             }
             return true;
         }
@@ -1032,23 +1043,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAudioEffectChainGetter?)lhs,
                 rhs: rhs as IAudioEffectChainGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAudioEffectChainGetter?)lhs,
                 rhs: rhs as IAudioEffectChainGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAudioEffectChainGetter item)
@@ -1634,12 +1645,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAudioEffectChainGetter rhs) return false;
-            return ((AudioEffectChainCommon)((IAudioEffectChainGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AudioEffectChainCommon)((IAudioEffectChainGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAudioEffectChainGetter? obj)
         {
-            return ((AudioEffectChainCommon)((IAudioEffectChainGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AudioEffectChainCommon)((IAudioEffectChainGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AudioEffectChainCommon)((IAudioEffectChainGetter)this).CommonInstance()!).GetHashCode(this);

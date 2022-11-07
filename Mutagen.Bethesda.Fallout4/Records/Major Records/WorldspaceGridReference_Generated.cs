@@ -87,12 +87,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWorldspaceGridReferenceGetter rhs) return false;
-            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceGridReferenceGetter? obj)
         {
-            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -942,16 +942,16 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWorldspaceGridReferenceGetter? lhs,
             IWorldspaceGridReferenceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.GridPosition) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.GridPosition) ?? true))
             {
                 if (!lhs.GridPosition.Equals(rhs.GridPosition)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.References) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.References) ?? true))
             {
-                if (!lhs.References.SequenceEqual(rhs.References, (l, r) => ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)WorldspaceGridReference_FieldIndex.References)))) return false;
+                if (!lhs.References.SequenceEqual(rhs.References, (l, r) => ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)WorldspaceGridReference_FieldIndex.References)))) return false;
             }
             return true;
         }
@@ -1321,12 +1321,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWorldspaceGridReferenceGetter rhs) return false;
-            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceGridReferenceGetter? obj)
         {
-            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).GetHashCode(this);

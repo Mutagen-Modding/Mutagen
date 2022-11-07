@@ -2245,12 +2245,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ICombatStyleGetter rhs) return false;
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleGetter? obj)
         {
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2511,7 +2511,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2585,6 +2585,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static CombatStyle Duplicate(
+            this ICombatStyleGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -3290,227 +3301,227 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ICombatStyleGetter? lhs,
             ICombatStyleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.OffensiveMult) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.OffensiveMult) ?? true))
             {
                 if (!lhs.OffensiveMult.EqualsWithin(rhs.OffensiveMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.DefensiveMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DefensiveMult) ?? true))
             {
                 if (!lhs.DefensiveMult.EqualsWithin(rhs.DefensiveMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupOffensiveMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupOffensiveMult) ?? true))
             {
                 if (!lhs.GroupOffensiveMult.EqualsWithin(rhs.GroupOffensiveMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMelee) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMelee) ?? true))
             {
                 if (!lhs.EquipmentScoreMultMelee.EqualsWithin(rhs.EquipmentScoreMultMelee)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMagic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMagic) ?? true))
             {
                 if (!lhs.EquipmentScoreMultMagic.EqualsWithin(rhs.EquipmentScoreMultMagic)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultRanged) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultRanged) ?? true))
             {
                 if (!lhs.EquipmentScoreMultRanged.EqualsWithin(rhs.EquipmentScoreMultRanged)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultShout) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultShout) ?? true))
             {
                 if (!lhs.EquipmentScoreMultShout.EqualsWithin(rhs.EquipmentScoreMultShout)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed) ?? true))
             {
                 if (!lhs.EquipmentScoreMultUnarmed.EqualsWithin(rhs.EquipmentScoreMultUnarmed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultStaff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultStaff) ?? true))
             {
                 if (!lhs.EquipmentScoreMultStaff.EqualsWithin(rhs.EquipmentScoreMultStaff)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.AvoidThreatChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AvoidThreatChance) ?? true))
             {
                 if (!lhs.AvoidThreatChance.EqualsWithin(rhs.AvoidThreatChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeThreadChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeThreadChance) ?? true))
             {
                 if (!lhs.DodgeThreadChance.EqualsWithin(rhs.DodgeThreadChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EvadeThreatChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EvadeThreatChance) ?? true))
             {
                 if (!lhs.EvadeThreatChance.EqualsWithin(rhs.EvadeThreatChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMD) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.CSMD, rhs.CSMD)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackStaggeredMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackStaggeredMult) ?? true))
             {
                 if (!lhs.MeleeAttackStaggeredMult.EqualsWithin(rhs.MeleeAttackStaggeredMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleePowerAttackStaggeredMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleePowerAttackStaggeredMult) ?? true))
             {
                 if (!lhs.MeleePowerAttackStaggeredMult.EqualsWithin(rhs.MeleePowerAttackStaggeredMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleePowerAttackBlockingMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleePowerAttackBlockingMult) ?? true))
             {
                 if (!lhs.MeleePowerAttackBlockingMult.EqualsWithin(rhs.MeleePowerAttackBlockingMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashMult) ?? true))
             {
                 if (!lhs.MeleeBashMult.EqualsWithin(rhs.MeleeBashMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashRecoilMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashRecoilMult) ?? true))
             {
                 if (!lhs.MeleeBashRecoilMult.EqualsWithin(rhs.MeleeBashRecoilMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashAttackMult) ?? true))
             {
                 if (!lhs.MeleeBashAttackMult.EqualsWithin(rhs.MeleeBashAttackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashPowerAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashPowerAttackMult) ?? true))
             {
                 if (!lhs.MeleeBashPowerAttackMult.EqualsWithin(rhs.MeleeBashPowerAttackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeSpecialAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeSpecialAttackMult) ?? true))
             {
                 if (!lhs.MeleeSpecialAttackMult.EqualsWithin(rhs.MeleeSpecialAttackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBlockWhenStaggeredMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBlockWhenStaggeredMult) ?? true))
             {
                 if (!lhs.MeleeBlockWhenStaggeredMult.EqualsWithin(rhs.MeleeBlockWhenStaggeredMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackWhenStaggeredMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackWhenStaggeredMult) ?? true))
             {
                 if (!lhs.MeleeAttackWhenStaggeredMult.EqualsWithin(rhs.MeleeAttackWhenStaggeredMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedAccuracyMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedAccuracyMult) ?? true))
             {
                 if (!lhs.RangedAccuracyMult.EqualsWithin(rhs.RangedAccuracyMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingCircleMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingCircleMult) ?? true))
             {
                 if (!lhs.CloseRangeDuelingCircleMult.EqualsWithin(rhs.CloseRangeDuelingCircleMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingFallbackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingFallbackMult) ?? true))
             {
                 if (!lhs.CloseRangeDuelingFallbackMult.EqualsWithin(rhs.CloseRangeDuelingFallbackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankDistance) ?? true))
             {
                 if (!lhs.CloseRangeFlankDistance.EqualsWithin(rhs.CloseRangeFlankDistance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankingStalkTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankingStalkTime) ?? true))
             {
                 if (!lhs.CloseRangeFlankingStalkTime.EqualsWithin(rhs.CloseRangeFlankingStalkTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargeDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargeDistance) ?? true))
             {
                 if (!lhs.CloseRangeChargeDistance.EqualsWithin(rhs.CloseRangeChargeDistance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingThrowProbability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingThrowProbability) ?? true))
             {
                 if (!lhs.CloseRangeChargingThrowProbability.EqualsWithin(rhs.CloseRangeChargingThrowProbability)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingSprintFastProbability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingSprintFastProbability) ?? true))
             {
                 if (!lhs.CloseRangeChargingSprintFastProbability.EqualsWithin(rhs.CloseRangeChargingSprintFastProbability)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingSideswipeProbability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingSideswipeProbability) ?? true))
             {
                 if (!lhs.CloseRangeChargingSideswipeProbability.EqualsWithin(rhs.CloseRangeChargingSideswipeProbability)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingDisengageProbability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingDisengageProbability) ?? true))
             {
                 if (!lhs.CloseRangeChargingDisengageProbability.EqualsWithin(rhs.CloseRangeChargingDisengageProbability)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingThrowMaxTargets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingThrowMaxTargets) ?? true))
             {
                 if (lhs.CloseRangeChargingThrowMaxTargets != rhs.CloseRangeChargingThrowMaxTargets) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankingVariance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankingVariance) ?? true))
             {
                 if (!lhs.CloseRangeFlankingVariance.EqualsWithin(rhs.CloseRangeFlankingVariance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeStrafeMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeStrafeMult) ?? true))
             {
                 if (!lhs.LongRangeStrafeMult.EqualsWithin(rhs.LongRangeStrafeMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeAdjustRangeMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeAdjustRangeMult) ?? true))
             {
                 if (!lhs.LongRangeAdjustRangeMult.EqualsWithin(rhs.LongRangeAdjustRangeMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeCrouchMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeCrouchMult) ?? true))
             {
                 if (!lhs.LongRangeCrouchMult.EqualsWithin(rhs.LongRangeCrouchMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeWaitMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeWaitMult) ?? true))
             {
                 if (!lhs.LongRangeWaitMult.EqualsWithin(rhs.LongRangeWaitMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRangeMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRangeMult) ?? true))
             {
                 if (!lhs.LongRangeRangeMult.EqualsWithin(rhs.LongRangeRangeMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CoverSearchDistanceMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CoverSearchDistanceMult) ?? true))
             {
                 if (!lhs.CoverSearchDistanceMult.EqualsWithin(rhs.CoverSearchDistanceMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverChance) ?? true))
             {
                 if (!lhs.HoverChance.EqualsWithin(rhs.HoverChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.DiveBombChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DiveBombChance) ?? true))
             {
                 if (!lhs.DiveBombChance.EqualsWithin(rhs.DiveBombChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackChance) ?? true))
             {
                 if (!lhs.GroundAttackChance.EqualsWithin(rhs.GroundAttackChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverTime) ?? true))
             {
                 if (!lhs.HoverTime.EqualsWithin(rhs.HoverTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackTime) ?? true))
             {
                 if (!lhs.GroundAttackTime.EqualsWithin(rhs.GroundAttackTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackChance) ?? true))
             {
                 if (!lhs.PerchAttackChance.EqualsWithin(rhs.PerchAttackChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackTime) ?? true))
             {
                 if (!lhs.PerchAttackTime.EqualsWithin(rhs.PerchAttackTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlyingAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlyingAttackChance) ?? true))
             {
                 if (!lhs.FlyingAttackChance.EqualsWithin(rhs.FlyingAttackChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDDataTypeState) ?? true))
             {
                 if (lhs.CSGDDataTypeState != rhs.CSGDDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMEDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMEDataTypeState) ?? true))
             {
                 if (lhs.CSMEDataTypeState != rhs.CSMEDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCRDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCRDataTypeState) ?? true))
             {
                 if (lhs.CSCRDataTypeState != rhs.CSCRDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRDataTypeState) ?? true))
             {
                 if (lhs.CSLRDataTypeState != rhs.CSLRDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSFLDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSFLDataTypeState) ?? true))
             {
                 if (lhs.CSFLDataTypeState != rhs.CSFLDataTypeState) return false;
             }
@@ -3520,23 +3531,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICombatStyleGetter?)lhs,
                 rhs: rhs as ICombatStyleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICombatStyleGetter?)lhs,
                 rhs: rhs as ICombatStyleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ICombatStyleGetter item)
@@ -5020,12 +5031,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ICombatStyleGetter rhs) return false;
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleGetter? obj)
         {
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);

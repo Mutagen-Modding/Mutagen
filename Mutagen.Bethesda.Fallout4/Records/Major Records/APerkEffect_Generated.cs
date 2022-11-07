@@ -96,12 +96,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAPerkEffectGetter rhs) return false;
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAPerkEffectGetter? obj)
         {
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((APerkEffectCommon)((IAPerkEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1017,22 +1017,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAPerkEffectGetter? lhs,
             IAPerkEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.Rank) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Rank) ?? true))
             {
                 if (lhs.Rank != rhs.Rank) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.Priority) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Priority) ?? true))
             {
                 if (lhs.Priority != rhs.Priority) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((PerkConditionCommon)((IPerkConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)APerkEffect_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((PerkConditionCommon)((IPerkConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)APerkEffect_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.PRKEDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.PRKEDataTypeState) ?? true))
             {
                 if (lhs.PRKEDataTypeState != rhs.PRKEDataTypeState) return false;
             }
@@ -1422,12 +1422,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAPerkEffectGetter rhs) return false;
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAPerkEffectGetter? obj)
         {
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).GetHashCode(this);

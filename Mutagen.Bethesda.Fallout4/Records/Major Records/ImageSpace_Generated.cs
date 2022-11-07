@@ -1289,12 +1289,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IImageSpaceGetter rhs) return false;
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceGetter? obj)
         {
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1565,6 +1565,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static ImageSpace Duplicate(
+            this IImageSpaceGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -2068,115 +2079,115 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IImageSpaceGetter? lhs,
             IImageSpaceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrEyeAdaptSpeed) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrEyeAdaptSpeed) ?? true))
             {
                 if (!lhs.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrTonemapE) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrTonemapE) ?? true))
             {
                 if (!lhs.HdrTonemapE.EqualsWithin(rhs.HdrTonemapE)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrBloomThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrBloomThreshold) ?? true))
             {
                 if (!lhs.HdrBloomThreshold.EqualsWithin(rhs.HdrBloomThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrBloomScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrBloomScale) ?? true))
             {
                 if (!lhs.HdrBloomScale.EqualsWithin(rhs.HdrBloomScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrAutoExposureMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrAutoExposureMax) ?? true))
             {
                 if (!lhs.HdrAutoExposureMax.EqualsWithin(rhs.HdrAutoExposureMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrAutoExposureMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrAutoExposureMin) ?? true))
             {
                 if (!lhs.HdrAutoExposureMin.EqualsWithin(rhs.HdrAutoExposureMin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrSunlightScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrSunlightScale) ?? true))
             {
                 if (!lhs.HdrSunlightScale.EqualsWithin(rhs.HdrSunlightScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrSkyScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrSkyScale) ?? true))
             {
                 if (!lhs.HdrSkyScale.EqualsWithin(rhs.HdrSkyScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrMiddleGray) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HdrMiddleGray) ?? true))
             {
                 if (!lhs.HdrMiddleGray.EqualsWithin(rhs.HdrMiddleGray)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicSaturation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicSaturation) ?? true))
             {
                 if (!lhs.CinematicSaturation.EqualsWithin(rhs.CinematicSaturation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicBrightness) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicBrightness) ?? true))
             {
                 if (!lhs.CinematicBrightness.EqualsWithin(rhs.CinematicBrightness)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicContrast) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CinematicContrast) ?? true))
             {
                 if (!lhs.CinematicContrast.EqualsWithin(rhs.CinematicContrast)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.TintAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.TintAmount) ?? true))
             {
                 if (!lhs.TintAmount.EqualsWithin(rhs.TintAmount)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.TintColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.TintColor) ?? true))
             {
                 if (!lhs.TintColor.ColorOnlyEquals(rhs.TintColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldStrength) ?? true))
             {
                 if (!lhs.DepthOfFieldStrength.EqualsWithin(rhs.DepthOfFieldStrength)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldDistance) ?? true))
             {
                 if (!lhs.DepthOfFieldDistance.EqualsWithin(rhs.DepthOfFieldDistance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldRange) ?? true))
             {
                 if (!lhs.DepthOfFieldRange.EqualsWithin(rhs.DepthOfFieldRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldUnused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldUnused) ?? true))
             {
                 if (lhs.DepthOfFieldUnused != rhs.DepthOfFieldUnused) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldBlurRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldBlurRadius) ?? true))
             {
                 if (lhs.DepthOfFieldBlurRadius != rhs.DepthOfFieldBlurRadius) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldSky) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldSky) ?? true))
             {
                 if (lhs.DepthOfFieldSky != rhs.DepthOfFieldSky) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldVignetteRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldVignetteRadius) ?? true))
             {
                 if (!lhs.DepthOfFieldVignetteRadius.EqualsWithin(rhs.DepthOfFieldVignetteRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldVignetteStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfFieldVignetteStrength) ?? true))
             {
                 if (!lhs.DepthOfFieldVignetteStrength.EqualsWithin(rhs.DepthOfFieldVignetteStrength)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Lut) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Lut) ?? true))
             {
                 if (!string.Equals(lhs.Lut, rhs.Lut)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.HNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HNAMDataTypeState) ?? true))
             {
                 if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.CNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CNAMDataTypeState) ?? true))
             {
                 if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.TNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.TNAMDataTypeState) ?? true))
             {
                 if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
@@ -2186,23 +2197,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImageSpaceGetter?)lhs,
                 rhs: rhs as IImageSpaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImageSpaceGetter?)lhs,
                 rhs: rhs as IImageSpaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IImageSpaceGetter item)
@@ -3247,12 +3258,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IImageSpaceGetter rhs) return false;
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceGetter? obj)
         {
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).GetHashCode(this);

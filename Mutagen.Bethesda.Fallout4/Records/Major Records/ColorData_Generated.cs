@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IColorDataGetter rhs) return false;
-            return ((ColorDataCommon)((IColorDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ColorDataCommon)((IColorDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IColorDataGetter? obj)
         {
-            return ((ColorDataCommon)((IColorDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ColorDataCommon)((IColorDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ColorDataCommon)((IColorDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ColorDataCommon)((IColorDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -773,11 +773,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IColorDataGetter? lhs,
             IColorDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAColorRecordDataGetter)lhs, (IAColorRecordDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ColorData_FieldIndex.Color) ?? true))
+            if (!base.Equals((IAColorRecordDataGetter)lhs, (IAColorRecordDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ColorData_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
@@ -787,12 +787,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAColorRecordDataGetter? lhs,
             IAColorRecordDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IColorDataGetter?)lhs,
                 rhs: rhs as IColorDataGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IColorDataGetter item)
@@ -1118,12 +1118,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IColorDataGetter rhs) return false;
-            return ((ColorDataCommon)((IColorDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ColorDataCommon)((IColorDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IColorDataGetter? obj)
         {
-            return ((ColorDataCommon)((IColorDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ColorDataCommon)((IColorDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ColorDataCommon)((IColorDataGetter)this).CommonInstance()!).GetHashCode(this);

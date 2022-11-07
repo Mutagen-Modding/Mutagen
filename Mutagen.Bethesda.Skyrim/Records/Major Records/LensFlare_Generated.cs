@@ -350,12 +350,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILensFlareGetter rhs) return false;
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILensFlareGetter? obj)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).GetHashCode(this);
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -572,6 +572,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static LensFlare Duplicate(
+            this ILensFlareGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -877,33 +888,33 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILensFlareGetter? lhs,
             ILensFlareGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILensFlareGetter?)lhs,
                 rhs: rhs as ILensFlareGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILensFlareGetter?)lhs,
                 rhs: rhs as ILensFlareGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILensFlareGetter item)
@@ -1359,12 +1370,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILensFlareGetter rhs) return false;
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILensFlareGetter? obj)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).GetHashCode(this);

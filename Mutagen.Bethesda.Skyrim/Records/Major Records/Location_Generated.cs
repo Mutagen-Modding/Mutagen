@@ -2578,12 +2578,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILocationGetter rhs) return false;
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationGetter? obj)
         {
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2806,7 +2806,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2880,6 +2880,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Location Duplicate(
+            this ILocationGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -3648,107 +3659,107 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILocationGetter? lhs,
             ILocationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
             {
-                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellPersistentReferences)))) return false;
+                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellPersistentReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
             {
-                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellPersistentReferences)))) return false;
+                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellPersistentReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
             {
                 if (!lhs.ReferenceCellPersistentReferences.SequenceEqualNullable(rhs.ReferenceCellPersistentReferences)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
             {
-                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellUniques)))) return false;
+                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellUniques)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
             {
-                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellUniques)))) return false;
+                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellUniques)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
             {
                 if (!lhs.ReferenceCellUnique.SequenceEqualNullable(rhs.ReferenceCellUnique)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
             {
-                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellStaticReferences)))) return false;
+                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellStaticReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
             {
-                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellStaticReferences)))) return false;
+                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellStaticReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
             {
                 if (!lhs.ReferenceCellStaticReferences.SequenceEqualNullable(rhs.ReferenceCellStaticReferences)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
             {
-                if (!lhs.ActorCellEncounterCell.SequenceEqual(rhs.ActorCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellEncounterCell)))) return false;
+                if (!lhs.ActorCellEncounterCell.SequenceEqual(rhs.ActorCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellEncounterCell)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
             {
-                if (!lhs.LocationCellEncounterCell.SequenceEqual(rhs.LocationCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellEncounterCell)))) return false;
+                if (!lhs.LocationCellEncounterCell.SequenceEqual(rhs.LocationCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellEncounterCell)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
             {
-                if (!lhs.ReferenceCellEncounterCell.SequenceEqual(rhs.ReferenceCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellEncounterCell)))) return false;
+                if (!lhs.ReferenceCellEncounterCell.SequenceEqual(rhs.ReferenceCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellEncounterCell)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
             {
                 if (!lhs.ActorCellMarkerReference.SequenceEqualNullable(rhs.ActorCellMarkerReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
             {
                 if (!lhs.LocationCellMarkerReference.SequenceEqualNullable(rhs.LocationCellMarkerReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
             {
-                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellEnablePoint)))) return false;
+                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellEnablePoint)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
             {
-                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellEnablePoint)))) return false;
+                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellEnablePoint)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
             {
                 if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
             {
                 if (!lhs.Music.Equals(rhs.Music)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
                 if (!lhs.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
             {
                 if (!lhs.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
             {
                 if (!lhs.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
             {
                 if (!lhs.HorseMarkerRef.Equals(rhs.HorseMarkerRef)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
@@ -3758,23 +3769,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILocationGetter?)lhs,
                 rhs: rhs as ILocationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILocationGetter?)lhs,
                 rhs: rhs as ILocationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILocationGetter item)
@@ -5737,12 +5748,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILocationGetter rhs) return false;
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationGetter? obj)
         {
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);

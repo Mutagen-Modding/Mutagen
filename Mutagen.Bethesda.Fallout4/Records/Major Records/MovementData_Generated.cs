@@ -115,12 +115,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IMovementDataGetter rhs) return false;
-            return ((MovementDataCommon)((IMovementDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MovementDataCommon)((IMovementDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMovementDataGetter? obj)
         {
-            return ((MovementDataCommon)((IMovementDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MovementDataCommon)((IMovementDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MovementDataCommon)((IMovementDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MovementDataCommon)((IMovementDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1142,66 +1142,66 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMovementDataGetter? lhs,
             IMovementDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)MovementData_FieldIndex.Left) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementData_FieldIndex.Left) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Left, rhs.Left, out var lhsLeft, out var rhsLeft, out var isLeftEqual))
                 {
-                    if (!((MovementDirectionDataCommon)((IMovementDirectionDataGetter)lhsLeft).CommonInstance()!).Equals(lhsLeft, rhsLeft, crystal?.GetSubCrystal((int)MovementData_FieldIndex.Left))) return false;
+                    if (!((MovementDirectionDataCommon)((IMovementDirectionDataGetter)lhsLeft).CommonInstance()!).Equals(lhsLeft, rhsLeft, equalsMask?.GetSubCrystal((int)MovementData_FieldIndex.Left))) return false;
                 }
                 else if (!isLeftEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementData_FieldIndex.Right) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementData_FieldIndex.Right) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Right, rhs.Right, out var lhsRight, out var rhsRight, out var isRightEqual))
                 {
-                    if (!((MovementDirectionDataCommon)((IMovementDirectionDataGetter)lhsRight).CommonInstance()!).Equals(lhsRight, rhsRight, crystal?.GetSubCrystal((int)MovementData_FieldIndex.Right))) return false;
+                    if (!((MovementDirectionDataCommon)((IMovementDirectionDataGetter)lhsRight).CommonInstance()!).Equals(lhsRight, rhsRight, equalsMask?.GetSubCrystal((int)MovementData_FieldIndex.Right))) return false;
                 }
                 else if (!isRightEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementData_FieldIndex.Forward) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementData_FieldIndex.Forward) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Forward, rhs.Forward, out var lhsForward, out var rhsForward, out var isForwardEqual))
                 {
-                    if (!((MovementDirectionDataCommon)((IMovementDirectionDataGetter)lhsForward).CommonInstance()!).Equals(lhsForward, rhsForward, crystal?.GetSubCrystal((int)MovementData_FieldIndex.Forward))) return false;
+                    if (!((MovementDirectionDataCommon)((IMovementDirectionDataGetter)lhsForward).CommonInstance()!).Equals(lhsForward, rhsForward, equalsMask?.GetSubCrystal((int)MovementData_FieldIndex.Forward))) return false;
                 }
                 else if (!isForwardEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementData_FieldIndex.Back) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementData_FieldIndex.Back) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Back, rhs.Back, out var lhsBack, out var rhsBack, out var isBackEqual))
                 {
-                    if (!((MovementDirectionDataCommon)((IMovementDirectionDataGetter)lhsBack).CommonInstance()!).Equals(lhsBack, rhsBack, crystal?.GetSubCrystal((int)MovementData_FieldIndex.Back))) return false;
+                    if (!((MovementDirectionDataCommon)((IMovementDirectionDataGetter)lhsBack).CommonInstance()!).Equals(lhsBack, rhsBack, equalsMask?.GetSubCrystal((int)MovementData_FieldIndex.Back))) return false;
                 }
                 else if (!isBackEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementData_FieldIndex.Pitch) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementData_FieldIndex.Pitch) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Pitch, rhs.Pitch, out var lhsPitch, out var rhsPitch, out var isPitchEqual))
                 {
-                    if (!((MovementRotationDataCommon)((IMovementRotationDataGetter)lhsPitch).CommonInstance()!).Equals(lhsPitch, rhsPitch, crystal?.GetSubCrystal((int)MovementData_FieldIndex.Pitch))) return false;
+                    if (!((MovementRotationDataCommon)((IMovementRotationDataGetter)lhsPitch).CommonInstance()!).Equals(lhsPitch, rhsPitch, equalsMask?.GetSubCrystal((int)MovementData_FieldIndex.Pitch))) return false;
                 }
                 else if (!isPitchEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementData_FieldIndex.Roll) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementData_FieldIndex.Roll) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Roll, rhs.Roll, out var lhsRoll, out var rhsRoll, out var isRollEqual))
                 {
-                    if (!((MovementRotationDataCommon)((IMovementRotationDataGetter)lhsRoll).CommonInstance()!).Equals(lhsRoll, rhsRoll, crystal?.GetSubCrystal((int)MovementData_FieldIndex.Roll))) return false;
+                    if (!((MovementRotationDataCommon)((IMovementRotationDataGetter)lhsRoll).CommonInstance()!).Equals(lhsRoll, rhsRoll, equalsMask?.GetSubCrystal((int)MovementData_FieldIndex.Roll))) return false;
                 }
                 else if (!isRollEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementData_FieldIndex.Yaw) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementData_FieldIndex.Yaw) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Yaw, rhs.Yaw, out var lhsYaw, out var rhsYaw, out var isYawEqual))
                 {
-                    if (!((MovementRotationDataCommon)((IMovementRotationDataGetter)lhsYaw).CommonInstance()!).Equals(lhsYaw, rhsYaw, crystal?.GetSubCrystal((int)MovementData_FieldIndex.Yaw))) return false;
+                    if (!((MovementRotationDataCommon)((IMovementRotationDataGetter)lhsYaw).CommonInstance()!).Equals(lhsYaw, rhsYaw, equalsMask?.GetSubCrystal((int)MovementData_FieldIndex.Yaw))) return false;
                 }
                 else if (!isYawEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementData_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementData_FieldIndex.Unused) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
             }
@@ -1718,12 +1718,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IMovementDataGetter rhs) return false;
-            return ((MovementDataCommon)((IMovementDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MovementDataCommon)((IMovementDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMovementDataGetter? obj)
         {
-            return ((MovementDataCommon)((IMovementDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MovementDataCommon)((IMovementDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MovementDataCommon)((IMovementDataGetter)this).CommonInstance()!).GetHashCode(this);

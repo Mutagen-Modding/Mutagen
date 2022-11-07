@@ -1125,12 +1125,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISpellGetter rhs) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISpellGetter? obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1355,7 +1355,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1429,6 +1429,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Spell Duplicate(
+            this ISpellGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1892,75 +1903,75 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISpellGetter? lhs,
             ISpellGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Spell_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Spell_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
             {
                 if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.BaseCost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.BaseCost) ?? true))
             {
                 if (lhs.BaseCost != rhs.BaseCost) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.ChargeTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.ChargeTime) ?? true))
             {
                 if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.CastType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.CastType) ?? true))
             {
                 if (lhs.CastType != rhs.CastType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.TargetType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.TargetType) ?? true))
             {
                 if (lhs.TargetType != rhs.TargetType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.CastDuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.CastDuration) ?? true))
             {
                 if (!lhs.CastDuration.EqualsWithin(rhs.CastDuration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Range) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Range) ?? true))
             {
                 if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.CastingPerk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.CastingPerk) ?? true))
             {
                 if (!lhs.CastingPerk.Equals(rhs.CastingPerk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Spell_FieldIndex.Effects)))) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Spell_FieldIndex.Effects)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.SPITDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.SPITDataTypeState) ?? true))
             {
                 if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
             }
@@ -1970,23 +1981,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISpellGetter?)lhs,
                 rhs: rhs as ISpellGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISpellGetter?)lhs,
                 rhs: rhs as ISpellGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISpellGetter item)
@@ -2969,12 +2980,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISpellGetter rhs) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISpellGetter? obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);

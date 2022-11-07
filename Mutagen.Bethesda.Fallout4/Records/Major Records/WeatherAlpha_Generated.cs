@@ -100,12 +100,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherAlphaGetter rhs) return false;
-            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherAlphaGetter? obj)
         {
-            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).GetHashCode(this);
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WeatherAlphaCommon)((IWeatherAlphaGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1092,38 +1092,38 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWeatherAlphaGetter? lhs,
             IWeatherAlphaGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Sunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Sunrise) ?? true))
             {
                 if (!lhs.Sunrise.EqualsWithin(rhs.Sunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Day) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Day) ?? true))
             {
                 if (!lhs.Day.EqualsWithin(rhs.Day)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Sunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Sunset) ?? true))
             {
                 if (!lhs.Sunset.EqualsWithin(rhs.Sunset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Night) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Night) ?? true))
             {
                 if (!lhs.Night.EqualsWithin(rhs.Night)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.EarlySunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.EarlySunrise) ?? true))
             {
                 if (!lhs.EarlySunrise.EqualsWithin(rhs.EarlySunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.LateSunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.LateSunrise) ?? true))
             {
                 if (!lhs.LateSunrise.EqualsWithin(rhs.LateSunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.EarlySunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.EarlySunset) ?? true))
             {
                 if (!lhs.EarlySunset.EqualsWithin(rhs.EarlySunset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.LateSunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.LateSunset) ?? true))
             {
                 if (!lhs.LateSunset.EqualsWithin(rhs.LateSunset)) return false;
             }
@@ -1507,12 +1507,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherAlphaGetter rhs) return false;
-            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherAlphaGetter? obj)
         {
-            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).GetHashCode(this);

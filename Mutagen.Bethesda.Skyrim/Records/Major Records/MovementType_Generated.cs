@@ -870,12 +870,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMovementTypeGetter rhs) return false;
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMovementTypeGetter? obj)
         {
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MovementTypeCommon)((IMovementTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1132,6 +1132,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static MovementType Duplicate(
+            this IMovementTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MovementTypeCommon)((IMovementTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1546,67 +1557,67 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMovementTypeGetter? lhs,
             IMovementTypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.Name) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.LeftWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.LeftWalk) ?? true))
             {
                 if (!lhs.LeftWalk.EqualsWithin(rhs.LeftWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.LeftRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.LeftRun) ?? true))
             {
                 if (!lhs.LeftRun.EqualsWithin(rhs.LeftRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RightWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RightWalk) ?? true))
             {
                 if (!lhs.RightWalk.EqualsWithin(rhs.RightWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RightRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RightRun) ?? true))
             {
                 if (!lhs.RightRun.EqualsWithin(rhs.RightRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardWalk) ?? true))
             {
                 if (!lhs.ForwardWalk.EqualsWithin(rhs.ForwardWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardRun) ?? true))
             {
                 if (!lhs.ForwardRun.EqualsWithin(rhs.ForwardRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.BackWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.BackWalk) ?? true))
             {
                 if (!lhs.BackWalk.EqualsWithin(rhs.BackWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.BackRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.BackRun) ?? true))
             {
                 if (!lhs.BackRun.EqualsWithin(rhs.BackRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RotateInPlaceWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RotateInPlaceWalk) ?? true))
             {
                 if (!lhs.RotateInPlaceWalk.EqualsWithin(rhs.RotateInPlaceWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RotateInPlaceRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RotateInPlaceRun) ?? true))
             {
                 if (!lhs.RotateInPlaceRun.EqualsWithin(rhs.RotateInPlaceRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RotateWhileMovingRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RotateWhileMovingRun) ?? true))
             {
                 if (!lhs.RotateWhileMovingRun.EqualsWithin(rhs.RotateWhileMovingRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.AnimationChangeThresholds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.AnimationChangeThresholds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AnimationChangeThresholds, rhs.AnimationChangeThresholds, out var lhsAnimationChangeThresholds, out var rhsAnimationChangeThresholds, out var isAnimationChangeThresholdsEqual))
                 {
-                    if (!((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)lhsAnimationChangeThresholds).CommonInstance()!).Equals(lhsAnimationChangeThresholds, rhsAnimationChangeThresholds, crystal?.GetSubCrystal((int)MovementType_FieldIndex.AnimationChangeThresholds))) return false;
+                    if (!((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)lhsAnimationChangeThresholds).CommonInstance()!).Equals(lhsAnimationChangeThresholds, rhsAnimationChangeThresholds, equalsMask?.GetSubCrystal((int)MovementType_FieldIndex.AnimationChangeThresholds))) return false;
                 }
                 else if (!isAnimationChangeThresholdsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.SPEDDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.SPEDDataTypeState) ?? true))
             {
                 if (lhs.SPEDDataTypeState != rhs.SPEDDataTypeState) return false;
             }
@@ -1616,23 +1627,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMovementTypeGetter?)lhs,
                 rhs: rhs as IMovementTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMovementTypeGetter?)lhs,
                 rhs: rhs as IMovementTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMovementTypeGetter item)
@@ -2459,12 +2470,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMovementTypeGetter rhs) return false;
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMovementTypeGetter? obj)
         {
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);

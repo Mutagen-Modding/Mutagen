@@ -672,12 +672,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMoveableStaticGetter rhs) return false;
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMoveableStaticGetter? obj)
         {
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).GetHashCode(this);
@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -962,6 +962,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static MoveableStatic Duplicate(
+            this IMoveableStaticGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MoveableStaticCommon)((IMoveableStaticGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1363,43 +1374,43 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMoveableStaticGetter? lhs,
             IMoveableStaticGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)MoveableStatic_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)MoveableStatic_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)MoveableStatic_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)MoveableStatic_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)MoveableStatic_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)MoveableStatic_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MoveableStatic_FieldIndex.LoopingSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.LoopingSound) ?? true))
             {
                 if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
             }
@@ -1409,23 +1420,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMoveableStaticGetter?)lhs,
                 rhs: rhs as IMoveableStaticGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMoveableStaticGetter?)lhs,
                 rhs: rhs as IMoveableStaticGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMoveableStaticGetter item)
@@ -2232,12 +2243,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMoveableStaticGetter rhs) return false;
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMoveableStaticGetter? obj)
         {
-            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).GetHashCode(this);

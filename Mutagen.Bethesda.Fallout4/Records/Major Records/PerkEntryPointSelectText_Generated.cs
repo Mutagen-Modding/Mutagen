@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkEntryPointSelectTextGetter rhs) return false;
-            return ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkEntryPointSelectTextGetter? obj)
         {
-            return ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)this).CommonInstance()!).GetHashCode(this);
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -856,11 +856,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPerkEntryPointSelectTextGetter? lhs,
             IPerkEntryPointSelectTextGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PerkEntryPointSelectText_FieldIndex.Text) ?? true))
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointSelectText_FieldIndex.Text) ?? true))
             {
                 if (!string.Equals(lhs.Text, rhs.Text)) return false;
             }
@@ -870,23 +870,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAPerkEntryPointEffectGetter? lhs,
             IAPerkEntryPointEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkEntryPointSelectTextGetter?)lhs,
                 rhs: rhs as IPerkEntryPointSelectTextGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
             IAPerkEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkEntryPointSelectTextGetter?)lhs,
                 rhs: rhs as IPerkEntryPointSelectTextGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPerkEntryPointSelectTextGetter item)
@@ -1268,12 +1268,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkEntryPointSelectTextGetter rhs) return false;
-            return ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkEntryPointSelectTextGetter? obj)
         {
-            return ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointSelectTextCommon)((IPerkEntryPointSelectTextGetter)this).CommonInstance()!).GetHashCode(this);

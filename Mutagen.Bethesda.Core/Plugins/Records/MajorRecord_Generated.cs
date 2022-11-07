@@ -521,12 +521,12 @@ namespace Mutagen.Bethesda.Plugins.Records
                 return formLink.Equals(this);
             }
             if (obj is not IMajorRecordGetter rhs) return false;
-            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMajorRecordGetter? obj)
         {
-            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -978,6 +978,17 @@ namespace Mutagen.Bethesda.Plugins.Records
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static MajorRecord Duplicate(
+            this IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1288,22 +1299,22 @@ namespace Mutagen.Bethesda.Plugins.Records
         public virtual bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw) ?? true))
             {
                 if (lhs.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
             {
                 if (lhs.FormKey != rhs.FormKey) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MajorRecord_FieldIndex.VersionControl) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.VersionControl) ?? true))
             {
                 if (lhs.VersionControl != rhs.VersionControl) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MajorRecord_FieldIndex.EditorID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.EditorID) ?? true))
             {
                 if (!string.Equals(lhs.EditorID, rhs.EditorID)) return false;
             }
@@ -1783,12 +1794,12 @@ namespace Mutagen.Bethesda.Plugins.Records
                 return formLink.Equals(this);
             }
             if (obj is not IMajorRecordGetter rhs) return false;
-            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMajorRecordGetter? obj)
         {
-            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);

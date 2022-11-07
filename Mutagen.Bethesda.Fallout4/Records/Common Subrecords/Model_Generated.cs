@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IModelGetter rhs) return false;
-            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IModelGetter? obj)
         {
-            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ModelCommon)((IModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ModelCommon)((IModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -825,11 +825,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IModelGetter? lhs,
             IModelGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISimpleModelGetter)lhs, (ISimpleModelGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Model_FieldIndex.Unknown) ?? true))
+            if (!base.Equals((ISimpleModelGetter)lhs, (ISimpleModelGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.Unknown) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
             }
@@ -839,12 +839,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             ISimpleModelGetter? lhs,
             ISimpleModelGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IModelGetter?)lhs,
                 rhs: rhs as IModelGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IModelGetter item)
@@ -1246,12 +1246,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IModelGetter rhs) return false;
-            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IModelGetter? obj)
         {
-            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ModelCommon)((IModelGetter)this).CommonInstance()!).GetHashCode(this);

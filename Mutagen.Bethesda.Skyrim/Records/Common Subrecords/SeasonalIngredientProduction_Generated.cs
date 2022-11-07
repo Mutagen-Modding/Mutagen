@@ -80,12 +80,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ISeasonalIngredientProductionGetter rhs) return false;
-            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISeasonalIngredientProductionGetter? obj)
         {
-            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -927,22 +927,22 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISeasonalIngredientProductionGetter? lhs,
             ISeasonalIngredientProductionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Spring) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Spring) ?? true))
             {
                 if (lhs.Spring != rhs.Spring) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Summer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Summer) ?? true))
             {
                 if (lhs.Summer != rhs.Summer) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Fall) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Fall) ?? true))
             {
                 if (lhs.Fall != rhs.Fall) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Winter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Winter) ?? true))
             {
                 if (lhs.Winter != rhs.Winter) return false;
             }
@@ -1285,12 +1285,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ISeasonalIngredientProductionGetter rhs) return false;
-            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISeasonalIngredientProductionGetter? obj)
         {
-            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).GetHashCode(this);

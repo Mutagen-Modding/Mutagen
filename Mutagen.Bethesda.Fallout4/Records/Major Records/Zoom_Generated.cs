@@ -536,12 +536,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IZoomGetter rhs) return false;
-            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IZoomGetter? obj)
         {
-            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).GetHashCode(this);
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ZoomCommon)((IZoomGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -770,6 +770,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Zoom Duplicate(
+            this IZoomGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ZoomCommon)((IZoomGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1114,27 +1125,27 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IZoomGetter? lhs,
             IZoomGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Zoom_FieldIndex.FovMult) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.FovMult) ?? true))
             {
                 if (!lhs.FovMult.EqualsWithin(rhs.FovMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Zoom_FieldIndex.Overlay) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.Overlay) ?? true))
             {
                 if (lhs.Overlay != rhs.Overlay) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Zoom_FieldIndex.ImagespaceModifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.ImagespaceModifier) ?? true))
             {
                 if (!lhs.ImagespaceModifier.Equals(rhs.ImagespaceModifier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Zoom_FieldIndex.CameraOffset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.CameraOffset) ?? true))
             {
                 if (!lhs.CameraOffset.Equals(rhs.CameraOffset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Zoom_FieldIndex.GNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.GNAMDataTypeState) ?? true))
             {
                 if (lhs.GNAMDataTypeState != rhs.GNAMDataTypeState) return false;
             }
@@ -1144,23 +1155,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IZoomGetter?)lhs,
                 rhs: rhs as IZoomGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IZoomGetter?)lhs,
                 rhs: rhs as IZoomGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IZoomGetter item)
@@ -1780,12 +1791,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IZoomGetter rhs) return false;
-            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IZoomGetter? obj)
         {
-            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ZoomCommon)((IZoomGetter)this).CommonInstance()!).GetHashCode(this);

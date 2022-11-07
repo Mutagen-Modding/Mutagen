@@ -533,12 +533,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IUnknownObjectModificationGetter rhs) return false;
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IUnknownObjectModificationGetter? obj)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -771,6 +771,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static UnknownObjectModification Duplicate(
+            this IUnknownObjectModificationGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1186,15 +1197,15 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IUnknownObjectModificationGetter? lhs,
             IUnknownObjectModificationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.Properties) ?? true))
+            if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<AObjectModification.NoneProperty>)((IAObjectModPropertyGetter<AObjectModification.NoneProperty>)l).CommonInstance(typeof(AObjectModification.NoneProperty))!).Equals(l, r, crystal?.GetSubCrystal((int)UnknownObjectModification_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<AObjectModification.NoneProperty>)((IAObjectModPropertyGetter<AObjectModification.NoneProperty>)l).CommonInstance(typeof(AObjectModification.NoneProperty))!).Equals(l, r, equalsMask?.GetSubCrystal((int)UnknownObjectModification_FieldIndex.Properties)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.ModificationType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.ModificationType) ?? true))
             {
                 if (lhs.ModificationType != rhs.ModificationType) return false;
             }
@@ -1204,34 +1215,34 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAObjectModificationGetter? lhs,
             IAObjectModificationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IUnknownObjectModificationGetter?)lhs,
                 rhs: rhs as IUnknownObjectModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IUnknownObjectModificationGetter?)lhs,
                 rhs: rhs as IUnknownObjectModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IUnknownObjectModificationGetter?)lhs,
                 rhs: rhs as IUnknownObjectModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IUnknownObjectModificationGetter item)
@@ -1798,12 +1809,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IUnknownObjectModificationGetter rhs) return false;
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IUnknownObjectModificationGetter? obj)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);

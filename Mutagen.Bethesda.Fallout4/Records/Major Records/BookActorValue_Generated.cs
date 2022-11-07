@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IBookActorValueGetter rhs) return false;
-            return ((BookActorValueCommon)((IBookActorValueGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BookActorValueCommon)((IBookActorValueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBookActorValueGetter? obj)
         {
-            return ((BookActorValueCommon)((IBookActorValueGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BookActorValueCommon)((IBookActorValueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BookActorValueCommon)((IBookActorValueGetter)this).CommonInstance()!).GetHashCode(this);
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((BookActorValueCommon)((IBookActorValueGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -789,11 +789,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IBookActorValueGetter? lhs,
             IBookActorValueGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)BookActorValue_FieldIndex.ActorValue) ?? true))
+            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)BookActorValue_FieldIndex.ActorValue) ?? true))
             {
                 if (!lhs.ActorValue.Equals(rhs.ActorValue)) return false;
             }
@@ -803,12 +803,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IBookTeachTargetGetter? lhs,
             IBookTeachTargetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBookActorValueGetter?)lhs,
                 rhs: rhs as IBookActorValueGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IBookActorValueGetter item)
@@ -1140,12 +1140,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IBookActorValueGetter rhs) return false;
-            return ((BookActorValueCommon)((IBookActorValueGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BookActorValueCommon)((IBookActorValueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBookActorValueGetter? obj)
         {
-            return ((BookActorValueCommon)((IBookActorValueGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BookActorValueCommon)((IBookActorValueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BookActorValueCommon)((IBookActorValueGetter)this).CommonInstance()!).GetHashCode(this);

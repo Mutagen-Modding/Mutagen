@@ -426,12 +426,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ISoundGetter rhs) return false;
-            return ((SoundCommon)((ISoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundCommon)((ISoundGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundGetter? obj)
         {
-            return ((SoundCommon)((ISoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundCommon)((ISoundGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundCommon)((ISoundGetter)this).CommonInstance()!).GetHashCode(this);
@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SoundCommon)((ISoundGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -652,6 +652,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Sound Duplicate(
+            this ISoundGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SoundCommon)((ISoundGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -979,19 +990,19 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ISoundGetter? lhs,
             ISoundGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Sound_FieldIndex.File) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Sound_FieldIndex.File) ?? true))
             {
                 if (!string.Equals(lhs.File, rhs.File)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Sound_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Sound_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((SoundDataCommon)((ISoundDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Sound_FieldIndex.Data))) return false;
+                    if (!((SoundDataCommon)((ISoundDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Sound_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
@@ -1001,23 +1012,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundGetter?)lhs,
                 rhs: rhs as ISoundGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundGetter?)lhs,
                 rhs: rhs as ISoundGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoundGetter item)
@@ -1642,12 +1653,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ISoundGetter rhs) return false;
-            return ((SoundCommon)((ISoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundCommon)((ISoundGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundGetter? obj)
         {
-            return ((SoundCommon)((ISoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundCommon)((ISoundGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundCommon)((ISoundGetter)this).CommonInstance()!).GetHashCode(this);

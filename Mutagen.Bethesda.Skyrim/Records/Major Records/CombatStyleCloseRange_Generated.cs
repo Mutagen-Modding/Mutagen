@@ -83,12 +83,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICombatStyleCloseRangeGetter rhs) return false;
-            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleCloseRangeGetter? obj)
         {
-            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -977,26 +977,26 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ICombatStyleCloseRangeGetter? lhs,
             ICombatStyleCloseRangeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.CircleMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.CircleMult) ?? true))
             {
                 if (!lhs.CircleMult.EqualsWithin(rhs.CircleMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.FallbackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.FallbackMult) ?? true))
             {
                 if (!lhs.FallbackMult.EqualsWithin(rhs.FallbackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.FlankDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.FlankDistance) ?? true))
             {
                 if (!lhs.FlankDistance.EqualsWithin(rhs.FlankDistance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.StalkTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.StalkTime) ?? true))
             {
                 if (!lhs.StalkTime.EqualsWithin(rhs.StalkTime)) return false;
             }
@@ -1365,12 +1365,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICombatStyleCloseRangeGetter rhs) return false;
-            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleCloseRangeGetter? obj)
         {
-            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).GetHashCode(this);

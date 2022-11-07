@@ -701,12 +701,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IActorValueInformationGetter rhs) return false;
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActorValueInformationGetter? obj)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -953,6 +953,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static ActorValueInformation Duplicate(
+            this IActorValueInformationGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1338,37 +1349,37 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IActorValueInformationGetter? lhs,
             IActorValueInformationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
             {
                 if (!string.Equals(lhs.Abbreviation, rhs.Abbreviation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.CNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.CNAM) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.CNAM, rhs.CNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Skill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Skill) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Skill, rhs.Skill, out var lhsSkill, out var rhsSkill, out var isSkillEqual))
                 {
-                    if (!((ActorValueSkillCommon)((IActorValueSkillGetter)lhsSkill).CommonInstance()!).Equals(lhsSkill, rhsSkill, crystal?.GetSubCrystal((int)ActorValueInformation_FieldIndex.Skill))) return false;
+                    if (!((ActorValueSkillCommon)((IActorValueSkillGetter)lhsSkill).CommonInstance()!).Equals(lhsSkill, rhsSkill, equalsMask?.GetSubCrystal((int)ActorValueInformation_FieldIndex.Skill))) return false;
                 }
                 else if (!isSkillEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.PerkTree) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.PerkTree) ?? true))
             {
-                if (!lhs.PerkTree.SequenceEqual(rhs.PerkTree, (l, r) => ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ActorValueInformation_FieldIndex.PerkTree)))) return false;
+                if (!lhs.PerkTree.SequenceEqual(rhs.PerkTree, (l, r) => ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ActorValueInformation_FieldIndex.PerkTree)))) return false;
             }
             return true;
         }
@@ -1376,23 +1387,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IActorValueInformationGetter?)lhs,
                 rhs: rhs as IActorValueInformationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IActorValueInformationGetter?)lhs,
                 rhs: rhs as IActorValueInformationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IActorValueInformationGetter item)
@@ -2156,12 +2167,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IActorValueInformationGetter rhs) return false;
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActorValueInformationGetter? obj)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).GetHashCode(this);

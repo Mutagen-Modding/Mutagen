@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageRootGetter rhs) return false;
-            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageRootGetter? obj)
         {
-            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PackageRootCommon)((IPackageRootGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -832,14 +832,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPackageRootGetter? lhs,
             IPackageRootGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PackageRoot_FieldIndex.BranchCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageRoot_FieldIndex.BranchCount) ?? true))
             {
                 if (lhs.BranchCount != rhs.BranchCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageRoot_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageRoot_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
@@ -1164,12 +1164,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageRootGetter rhs) return false;
-            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageRootGetter? obj)
         {
-            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).GetHashCode(this);

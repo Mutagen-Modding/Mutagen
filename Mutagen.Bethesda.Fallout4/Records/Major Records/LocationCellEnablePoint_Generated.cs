@@ -92,12 +92,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILocationCellEnablePointGetter rhs) return false;
-            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationCellEnablePointGetter? obj)
         {
-            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).GetHashCode(this);
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -898,18 +898,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILocationCellEnablePointGetter? lhs,
             ILocationCellEnablePointGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Actor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Actor) ?? true))
             {
                 if (!lhs.Actor.Equals(rhs.Actor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Ref) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Ref) ?? true))
             {
                 if (!lhs.Ref.Equals(rhs.Ref)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Grid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Grid) ?? true))
             {
                 if (!lhs.Grid.Equals(rhs.Grid)) return false;
             }
@@ -1249,12 +1249,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILocationCellEnablePointGetter rhs) return false;
-            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationCellEnablePointGetter? obj)
         {
-            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).GetHashCode(this);

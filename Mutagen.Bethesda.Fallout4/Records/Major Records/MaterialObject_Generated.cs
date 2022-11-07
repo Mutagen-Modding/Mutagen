@@ -861,12 +861,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMaterialObjectGetter rhs) return false;
-            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMaterialObjectGetter? obj)
         {
-            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MaterialObjectCommon)((IMaterialObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1117,6 +1117,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static MaterialObject Duplicate(
+            this IMaterialObjectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1526,55 +1537,55 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMaterialObjectGetter? lhs,
             IMaterialObjectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.Model) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)MaterialObject_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)MaterialObject_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.DNAMs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.DNAMs) ?? true))
             {
                 if (!lhs.DNAMs.SequenceEqualNullable(rhs.DNAMs)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffScale) ?? true))
             {
                 if (!lhs.FalloffScale.EqualsWithin(rhs.FalloffScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffBias) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffBias) ?? true))
             {
                 if (!lhs.FalloffBias.EqualsWithin(rhs.FalloffBias)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.NoiseUvScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.NoiseUvScale) ?? true))
             {
                 if (!lhs.NoiseUvScale.EqualsWithin(rhs.NoiseUvScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.MaterialUvScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.MaterialUvScale) ?? true))
             {
                 if (!lhs.MaterialUvScale.EqualsWithin(rhs.MaterialUvScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.ProjectionVector) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.ProjectionVector) ?? true))
             {
                 if (!lhs.ProjectionVector.Equals(rhs.ProjectionVector)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.NormalDampener) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.NormalDampener) ?? true))
             {
                 if (!lhs.NormalDampener.EqualsWithin(rhs.NormalDampener)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.SinglePassColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.SinglePassColor) ?? true))
             {
                 if (!lhs.SinglePassColor.ColorOnlyEquals(rhs.SinglePassColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.IsSinglePass) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.IsSinglePass) ?? true))
             {
                 if (lhs.IsSinglePass != rhs.IsSinglePass) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1584,23 +1595,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMaterialObjectGetter?)lhs,
                 rhs: rhs as IMaterialObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMaterialObjectGetter?)lhs,
                 rhs: rhs as IMaterialObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMaterialObjectGetter item)
@@ -2417,12 +2428,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMaterialObjectGetter rhs) return false;
-            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMaterialObjectGetter? obj)
         {
-            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).GetHashCode(this);

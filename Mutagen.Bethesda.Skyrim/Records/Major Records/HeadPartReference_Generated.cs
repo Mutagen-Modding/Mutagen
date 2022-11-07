@@ -84,12 +84,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IHeadPartReferenceGetter rhs) return false;
-            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHeadPartReferenceGetter? obj)
         {
-            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -859,14 +859,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IHeadPartReferenceGetter? lhs,
             IHeadPartReferenceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Number) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Number) ?? true))
             {
                 if (lhs.Number != rhs.Number) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Head) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Head) ?? true))
             {
                 if (!lhs.Head.Equals(rhs.Head)) return false;
             }
@@ -1260,12 +1260,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IHeadPartReferenceGetter rhs) return false;
-            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHeadPartReferenceGetter? obj)
         {
-            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).GetHashCode(this);

@@ -602,12 +602,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMaterialTypeGetter rhs) return false;
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMaterialTypeGetter? obj)
         {
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -850,6 +850,17 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static MaterialType Duplicate(
+            this IMaterialTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1211,31 +1222,31 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMaterialTypeGetter? lhs,
             IMaterialTypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
             {
                 if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokDisplayColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokDisplayColor) ?? true))
             {
                 if (!lhs.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.Buoyancy) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Buoyancy) ?? true))
             {
                 if (!lhs.Buoyancy.EqualsWithin(rhs.Buoyancy)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
             {
                 if (!lhs.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet)) return false;
             }
@@ -1245,23 +1256,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMaterialTypeGetter?)lhs,
                 rhs: rhs as IMaterialTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMaterialTypeGetter?)lhs,
                 rhs: rhs as IMaterialTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMaterialTypeGetter item)
@@ -1953,12 +1964,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMaterialTypeGetter rhs) return false;
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMaterialTypeGetter? obj)
         {
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).GetHashCode(this);

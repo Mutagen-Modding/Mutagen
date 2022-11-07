@@ -609,12 +609,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IEncounterZoneGetter rhs) return false;
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEncounterZoneGetter? obj)
         {
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).GetHashCode(this);
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((EncounterZoneCommon)((IEncounterZoneGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -847,6 +847,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static EncounterZone Duplicate(
+            this IEncounterZoneGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1206,35 +1217,35 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IEncounterZoneGetter? lhs,
             IEncounterZoneGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
             {
                 if (!lhs.Owner.Equals(rhs.Owner)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
             {
                 if (lhs.Rank != rhs.Rank) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.MinLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MinLevel) ?? true))
             {
                 if (lhs.MinLevel != rhs.MinLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.MaxLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MaxLevel) ?? true))
             {
                 if (lhs.MaxLevel != rhs.MaxLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1244,23 +1255,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IEncounterZoneGetter?)lhs,
                 rhs: rhs as IEncounterZoneGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IEncounterZoneGetter?)lhs,
                 rhs: rhs as IEncounterZoneGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IEncounterZoneGetter item)
@@ -1905,12 +1916,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IEncounterZoneGetter rhs) return false;
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEncounterZoneGetter? obj)
         {
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).GetHashCode(this);

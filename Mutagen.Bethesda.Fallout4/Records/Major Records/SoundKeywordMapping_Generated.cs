@@ -748,12 +748,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISoundKeywordMappingGetter rhs) return false;
-            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundKeywordMappingGetter? obj)
         {
-            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -920,7 +920,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -994,6 +994,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static SoundKeywordMapping Duplicate(
+            this ISoundKeywordMappingGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1381,33 +1392,33 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISoundKeywordMappingGetter? lhs,
             ISoundKeywordMappingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.PrimaryDescriptor) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.PrimaryDescriptor) ?? true))
             {
                 if (!lhs.PrimaryDescriptor.Equals(rhs.PrimaryDescriptor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.ExteriorTail) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.ExteriorTail) ?? true))
             {
                 if (!lhs.ExteriorTail.Equals(rhs.ExteriorTail)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.VatsDescriptor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.VatsDescriptor) ?? true))
             {
                 if (!lhs.VatsDescriptor.Equals(rhs.VatsDescriptor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.VatsThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.VatsThreshold) ?? true))
             {
                 if (!lhs.VatsThreshold.EqualsWithin(rhs.VatsThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((MappingSoundCommon)((IMappingSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SoundKeywordMapping_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((MappingSoundCommon)((IMappingSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SoundKeywordMapping_FieldIndex.Sounds)))) return false;
             }
             return true;
         }
@@ -1415,23 +1426,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundKeywordMappingGetter?)lhs,
                 rhs: rhs as ISoundKeywordMappingGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundKeywordMappingGetter?)lhs,
                 rhs: rhs as ISoundKeywordMappingGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoundKeywordMappingGetter item)
@@ -2186,12 +2197,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISoundKeywordMappingGetter rhs) return false;
-            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundKeywordMappingGetter? obj)
         {
-            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).GetHashCode(this);

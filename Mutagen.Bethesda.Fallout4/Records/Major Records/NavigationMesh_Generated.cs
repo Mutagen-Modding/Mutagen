@@ -601,12 +601,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not INavigationMeshGetter rhs) return false;
-            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavigationMeshGetter? obj)
         {
-            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -841,6 +841,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static NavigationMesh Duplicate(
+            this INavigationMeshGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1204,29 +1215,29 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INavigationMeshGetter? lhs,
             INavigationMeshGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NavmeshGeometry) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NavmeshGeometry) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NavmeshGeometry, rhs.NavmeshGeometry, out var lhsNavmeshGeometry, out var rhsNavmeshGeometry, out var isNavmeshGeometryEqual))
                 {
-                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, crystal?.GetSubCrystal((int)NavigationMesh_FieldIndex.NavmeshGeometry))) return false;
+                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, equalsMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.NavmeshGeometry))) return false;
                 }
                 else if (!isNavmeshGeometryEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.ONAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.ONAM) ?? true))
             {
                 if (!lhs.ONAM.Equals(rhs.ONAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NNAM) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.NNAM, rhs.NNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMesh_FieldIndex.PreCutMapEntries) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.PreCutMapEntries) ?? true))
             {
-                if (!lhs.PreCutMapEntries.SequenceEqualNullable(rhs.PreCutMapEntries, (l, r) => ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavigationMesh_FieldIndex.PreCutMapEntries)))) return false;
+                if (!lhs.PreCutMapEntries.SequenceEqualNullable(rhs.PreCutMapEntries, (l, r) => ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.PreCutMapEntries)))) return false;
             }
             return true;
         }
@@ -1234,23 +1245,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INavigationMeshGetter?)lhs,
                 rhs: rhs as INavigationMeshGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INavigationMeshGetter?)lhs,
                 rhs: rhs as INavigationMeshGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(INavigationMeshGetter item)
@@ -1980,12 +1991,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not INavigationMeshGetter rhs) return false;
-            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavigationMeshGetter? obj)
         {
-            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);

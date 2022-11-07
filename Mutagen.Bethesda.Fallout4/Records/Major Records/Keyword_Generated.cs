@@ -617,12 +617,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IKeywordGetter rhs) return false;
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IKeywordGetter? obj)
         {
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -887,6 +887,17 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Keyword Duplicate(
+            this IKeywordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1248,31 +1259,31 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IKeywordGetter? lhs,
             IKeywordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Color) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Notes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Notes) ?? true))
             {
                 if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.AttractionRule) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.AttractionRule) ?? true))
             {
                 if (!lhs.AttractionRule.Equals(rhs.AttractionRule)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.DisplayName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.DisplayName) ?? true))
             {
                 if (!string.Equals(lhs.DisplayName, rhs.DisplayName)) return false;
             }
@@ -1282,23 +1293,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IKeywordGetter?)lhs,
                 rhs: rhs as IKeywordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IKeywordGetter?)lhs,
                 rhs: rhs as IKeywordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IKeywordGetter item)
@@ -2001,12 +2012,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IKeywordGetter rhs) return false;
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IKeywordGetter? obj)
         {
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);
