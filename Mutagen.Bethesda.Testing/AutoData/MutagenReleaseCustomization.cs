@@ -17,5 +17,6 @@ public class MutagenReleaseCustomization : ICustomization
         var modBuilder = new ModMocksBuilder(_release);
         fixture.Customizations.Add(modBuilder);
         fixture.Customizations.Add(new GameReleaseBuilder(_release));
+        fixture.Customize(new MajorRecordPostProcessCustomization(_release));
     }
 }

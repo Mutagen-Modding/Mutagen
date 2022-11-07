@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Plugins.Records;
+
 namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Fallout4MajorRecord
@@ -23,6 +25,10 @@ public partial class Fallout4MajorRecord
     }
 
     protected override ushort? FormVersionAbstract => this.FormVersion;
+}
+
+public partial interface IFallout4MajorRecord : IFormVersionSetter
+{
 }
 
 internal partial class Fallout4MajorRecordBinaryOverlay
