@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.AutoData;

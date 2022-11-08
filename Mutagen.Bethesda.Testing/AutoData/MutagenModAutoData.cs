@@ -2,7 +2,7 @@
 using AutoFixture.Xunit2;
 using Mutagen.Bethesda.Testing.AutoData;
 
-namespace Mutagen.Bethesda.UnitTests.AutoData;
+namespace Mutagen.Bethesda.Testing.AutoData;
 
 public class MutagenModAutoDataAttribute : AutoDataAttribute
 {

@@ -4,7 +4,7 @@ using System.IO.Abstractions.TestingHelpers;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;
-using Mutagen.Bethesda.UnitTests.AutoData;
+using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators;

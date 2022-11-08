@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Order.DI;
-using Mutagen.Bethesda.UnitTests.AutoData;
+using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order;
