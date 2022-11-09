@@ -17,4 +17,4 @@ jobs:
         uses: cmbrose/github-docs-to-wiki@v0.24
         with:
           githubToken: ${{ secrets.ACCESS_TOKEN }}
-          defaultBranch: "docs/"
+          rootDocsFolder: "docs/"
