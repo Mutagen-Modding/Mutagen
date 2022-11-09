@@ -1,3 +1,13 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [ResolveAll](#resolveall)
+- [ResolveAllContexts](#resolveallcontexts)
+- [Lazy Enumeration](#lazy-enumeration)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 A lot of functionality like [Record Lookup](Record-Lookup) or [Winning Overrides](Winning-Overrides) deals with the "winning" version of a record, as in the record as it exists in the last Mod to override it on the Load Order.
 
 LinkCache offers an easy way to dig deeper into the load order and access the non-winning versions of records from previous mods.

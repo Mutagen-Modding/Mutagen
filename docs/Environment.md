@@ -1,3 +1,14 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Typical Single Game Usage](#typical-single-game-usage)
+- [GameEnvironmentState](#gameenvironmentstate)
+- [Advanced Usage](#advanced-usage)
+- [Synthesis Usage](#synthesis-usage)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 When writing a program that is going to interact with Bethesda mods, there are several things you typically want to interact with.  Mutagen comes with a convenience bootstrapper object that constructs them all for a typical installation and exposes them all in one place:
 
 # Typical Single Game Usage

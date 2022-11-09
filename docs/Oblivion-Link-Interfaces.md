@@ -1,3 +1,21 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Link Interfaces](#link-interfaces)
+  - [Interfaces to Concrete Classes](#interfaces-to-concrete-classes)
+    - [IOwner](#iowner)
+    - [IPlaced](#iplaced)
+  - [Concrete Classes to Interfaces](#concrete-classes-to-interfaces)
+    - [Faction](#faction)
+    - [Landscape](#landscape)
+    - [Npc](#npc)
+    - [PlacedCreature](#placedcreature)
+    - [PlacedNpc](#placednpc)
+    - [PlacedObject](#placedobject)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Link Interfaces
 Link Interfaces are used by FormLinks to point to several record types at once.  For example, a Container record might be able to contain Armors, Weapons, Ingredients, etc.
 

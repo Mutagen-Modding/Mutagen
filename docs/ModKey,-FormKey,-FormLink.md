@@ -1,3 +1,26 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [ModKey](#modkey)
+  - [Construction](#construction)
+    - [Basic Constructor](#basic-constructor)
+    - [Factory Construction](#factory-construction)
+- [FormKey](#formkey)
+  - [Why does Mutagen use FormKeys instead of FormIDs?](#why-does-mutagen-use-formkeys-instead-of-formids)
+    - [FormKeys Avoid Master Mismatch Bugs](#formkeys-avoid-master-mismatch-bugs)
+    - [FormKeys Remove the 255 Mod Limit](#formkeys-remove-the-255-mod-limit)
+  - [Construction](#construction-1)
+    - [Basic Constructor](#basic-constructor-1)
+    - [Try Factory](#try-factory)
+- [FormLink](#formlink)
+  - [Resolves](#resolves)
+    - [Scoping a Resolve](#scoping-a-resolve)
+  - [SetTo](#setto)
+  - [Construction](#construction-2)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 This article covers three fundamental identifiers:
 - **[ModKey](#modkey)** _(a unique identifier for a mod)_
 - **[FormKey](#formkey)** _(FormID)_

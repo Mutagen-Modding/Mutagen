@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [What Are Namespaces](#what-are-namespaces)
+- [Namespaces, Intellisense, and Compiling](#namespaces-intellisense-and-compiling)
+  - [Adding a Namespace](#adding-a-namespace)
+    - [Add the Namespace Import Yourself](#add-the-namespace-import-yourself)
+    - [Let the IDE add the Namespace](#let-the-ide-add-the-namespace)
+  - [Show Types From Other Namespaces in Intellisense](#show-types-from-other-namespaces-in-intellisense)
+- [Namespaces Help With Collisions](#namespaces-help-with-collisions)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # What Are Namespaces
 Namespaces are "sections" of code that you can opt to import so that you have access to.  They help organize things and prevent naming collisions.   
 

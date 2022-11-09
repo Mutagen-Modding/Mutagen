@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Looping and Modifying the Same Record Types](#looping-and-modifying-the-same-record-types)
+- [Modifying a Collection Being Enumerated](#modifying-a-collection-being-enumerated)
+- [Avoiding the Exceptions](#avoiding-the-exceptions)
+  - [Create a Temporary Collection](#create-a-temporary-collection)
+  - [Stop looping after modification](#stop-looping-after-modification)
+- [Applying it to Mutagen](#applying-it-to-mutagen)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Looping and Modifying the Same Record Types
 Consider this:
 ```cs

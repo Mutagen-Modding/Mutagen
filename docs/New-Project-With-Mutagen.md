@@ -1,3 +1,13 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Create a New Project](#create-a-new-project)
+- [Add Mutagen via NuGet](#add-mutagen-via-nuget)
+- [Starter Project Automatically Added](#starter-project-automatically-added)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Create a New Project
 At this point, you should have Visual Studio installed and open.
 

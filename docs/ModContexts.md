@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Retrieving a ModContext](#retrieving-a-modcontext)
+  - [By Looping WinningOverrides](#by-looping-winningoverrides)
+  - [By LinkCache Lookups](#by-linkcache-lookups)
+- [Parent Concepts](#parent-concepts)
+- [Deep Record Insertion and Duplication](#deep-record-insertion-and-duplication)
+- [Complex Call Signature](#complex-call-signature)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 Mod Contexts are an opt-in advanced feature of most LinkCache functionality.  They act as storage for contextual information and the wiring and logic needed to perform certain actions in a context aware manner.
 
 `ModContext`s contain:

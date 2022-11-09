@@ -1,3 +1,13 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Complication](#complication)
+- [Best Practice](#best-practice)
+- [Why](#why)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Complication
 `FormLinks` are `FormKeys` with typing information mixed in as to which record type they should associate with.  As such, they require you specify the typing you want to target.  Assuming you just wanted to target Npcs, there are still a few options:
 - `Npc` -> The direct class

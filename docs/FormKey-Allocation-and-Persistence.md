@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Mapping Records Via EditorID](#mapping-records-via-editorid)
+- [Keep EditorIDs Unique](#keep-editorids-unique)
+- [Persistence and Allocation](#persistence-and-allocation)
+  - [Setting a Mod's Allocator](#setting-a-mods-allocator)
+  - [Text File Allocators](#text-file-allocators)
+    - [TextFileFormKeyAllocator](#textfileformkeyallocator)
+    - [TextFileSharedFormKeyAllocator](#textfilesharedformkeyallocator)
+    - [Sqlite](#sqlite)
+  - [Saving Allocation State](#saving-allocation-state)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 It is common that tooling that is generating new records when creating plugins wants to keep their FormKeys consistent across several runs.  The same records should get the same FormKeys.
 
 There are some challenges with fulfilling this:

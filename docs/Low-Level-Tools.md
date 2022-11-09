@@ -1,3 +1,13 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Reasoning and Typical Applications of Low Level Tooling](#reasoning-and-typical-applications-of-low-level-tooling)
+  - [Cross-game Processing](#cross-game-processing)
+  - [Testing the Record Suite Itself](#testing-the-record-suite-itself)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 The API and tools listed in the [[Plugin Record Suite]] are intended to expose Bethesda records in an organized, strongly typed, and (hopefully) less error prone fashion.  However, some tasks and some users require a less safe and more direct approach to get the job done.
 
 This section is about some of the mechanics and tools under the hood, and are recommended for more advanced users.

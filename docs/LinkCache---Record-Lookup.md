@@ -1,3 +1,18 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Creating a LinkCache](#creating-a-linkcache)
+- [Querying a LinkCache](#querying-a-linkcache)
+  - [Lookup Optimizations](#lookup-optimizations)
+    - [Lazy Lookup and Caching](#lazy-lookup-and-caching)
+    - [Short Circuiting on Type](#short-circuiting-on-type)
+    - [Short Circuiting on Depth](#short-circuiting-on-depth)
+  - [Cache Lifetime Control](#cache-lifetime-control)
+  - [Modification Safety](#modification-safety)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 Records commonly have "pointers" to other records via [FormLink](ModKey%2C-FormKey%2C-FormLink#formlinks) members, which are an enhancement wrapper around a FormID.  To look up the record being referenced requires two things:
 - **A relative context to look up against**.  Is the lookup relative to a single `Mod`, or a `LoadOrder`?
 - **Work to be done** to iterate over all records in a `Mod` or `LoadOrder`, so that it can be determined if the record is present.

@@ -1,3 +1,22 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Getting a Load Order](#getting-a-load-order)
+- [ModListings](#modlistings)
+- [Interacting with LoadOrder](#interacting-with-loadorder)
+  - [Priority vs Listed Ordering](#priority-vs-listed-ordering)
+  - [Filtering Listings](#filtering-listings)
+  - [Accessing Specific Listings](#accessing-specific-listings)
+- [Reading a Load Order](#reading-a-load-order)
+  - [Getting Listings](#getting-listings)
+  - [Importing Mods](#importing-mods)
+    - [Specifying Getter vs Setter](#specifying-getter-vs-setter)
+- [Writing a Load Order](#writing-a-load-order)
+- [PluginListings and CreationClubListings](#pluginlistings-and-creationclublistings)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 A Load Order represents a set of mods in a given order, where the mods loaded later "win" and override the records from previous mods.
 
 # Getting a Load Order

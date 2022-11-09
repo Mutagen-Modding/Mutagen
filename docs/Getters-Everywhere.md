@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Overview](#overview)
+- [Best Practices](#best-practices)
+- [Reasoning](#reasoning)
+  - [Readonly Increases Speed](#readonly-increases-speed)
+  - [Adds Clearer Intention to Modifications](#adds-clearer-intention-to-modifications)
+    - [A Fully Mutable Ecosystem Has Easy Pitfalls](#a-fully-mutable-ecosystem-has-easy-pitfalls)
+    - [Initially Immutable Environment Encourages Clearer Intentions](#initially-immutable-environment-encourages-clearer-intentions)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Overview
 Mutagen offers up records in several ways.  Consider dealing with an Npc, it would offer:
 - `Npc` class.   A class with all the fields an Npc has

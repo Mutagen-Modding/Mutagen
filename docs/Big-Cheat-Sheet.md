@@ -1,3 +1,33 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Overview](#overview)
+  - [Related Reading](#related-reading)
+  - [Target Game](#target-game)
+  - [Preparing the Examples](#preparing-the-examples)
+  - [Missing Namespaces](#missing-namespaces)
+- [Construct an Environment](#construct-an-environment)
+- [Retrieve a Mod From a Load Order](#retrieve-a-mod-from-a-load-order)
+- [Construct a ModKey](#construct-a-modkey)
+- [Get List of Masters From A Mod](#get-list-of-masters-from-a-mod)
+  - [Via MasterReferenceCollection](#via-masterreferencecollection)
+  - [Via Mod Object](#via-mod-object)
+- [Get Access to Record Data](#get-access-to-record-data)
+- [Convert FormKey to FormID](#convert-formkey-to-formid)
+  - [Via MasterReferenceCollection](#via-masterreferencecollection-1)
+- [Convert FormKey to FormLink](#convert-formkey-to-formlink)
+- [Convert MajorRecord to FormLink](#convert-majorrecord-to-formlink)
+- [Iterate Winning Overrides](#iterate-winning-overrides)
+- [Iterate Records' Original Definitions](#iterate-records-original-definitions)
+- [Check If A FormLink Points to a Specific Record](#check-if-a-formlink-points-to-a-specific-record)
+  - [By FormKey](#by-formkey)
+  - [By FormLink](#by-formlink)
+  - [Using FormKey Mapping Library](#using-formkey-mapping-library)
+- [Duplicate a Record](#duplicate-a-record)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Overview
 A massive list of code snippets without much contextual explanation.
 

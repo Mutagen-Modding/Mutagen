@@ -1,3 +1,13 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Global Import](#global-import)
+- [Non-Global Import](#non-global-import)
+- [Work In Progress](#work-in-progress)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 `Mutagen.WPF` is built with style-less controls.  This means the controls are just logic, and you can add your own look exactly how you want it.
 
 Typically though a default look is provided, and `Mutagen.WPF` does this as well.  It is built on top of [MahApps](https://mahapps.com/), and other reusable libraries.  

@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Context](#context)
+- [Mutability](#mutability)
+  - [Immutable Link Caches](#immutable-link-caches)
+  - [Mutable Link Caches](#mutable-link-caches)
+- [Memory Usage](#memory-usage)
+  - [Identifier Only Caches](#identifier-only-caches)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 The LinkCache is the record lookup engine.  It powers a lot of functionality, such as:
 - Looking up records by [FormKey/FormLink](https://github.com/Mutagen-Modding/Mutagen/wiki/ModKey%2C-FormKey%2C-FormLink#resolves)
 - Finding the [Winning Override](Winning-Overrides) in a [Load Order](Load-Order)

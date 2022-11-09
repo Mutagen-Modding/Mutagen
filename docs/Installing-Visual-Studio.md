@@ -1,3 +1,20 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Downloading Visual Studio](#downloading-visual-studio)
+- [Installation Options](#installation-options)
+  - [C&#035; Desktop Development Modules](#c-desktop-development-modules)
+  - [Ensure .NET Standard 2.1 is Installed](#ensure-net-standard-21-is-installed)
+  - [Let It Install, Start It Up](#let-it-install-start-it-up)
+- [Initial Setup](#initial-setup)
+  - [Skip Creating/Opening a Project For Now](#skip-creatingopening-a-project-for-now)
+  - [Dark Mode](#dark-mode)
+  - [Keybinds](#keybinds)
+  - [Good to Go](#good-to-go)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 Visual Studio is the typical IDE (Integrated Development Environment) used for C#.  It is used for writing code, error checking, building, running, debugging, etc.  There are alternatives such as Rider, or VSCode, but VS will be used in this 101 tutorial.
 
 # Downloading Visual Studio

@@ -1,3 +1,13 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Plugin Record Suite](#plugin-record-suite)
+- [Code is Generated](#code-is-generated)
+- [Explore](#explore)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ### Plugin Record Suite
 Mutagen offers custom classes, interfaces, and functionality for each Bethesda record type.  For example, if you want to deal with and modify Potions in a mod you can read/write using a `Potion` class which has members for every stat and field.  It comes with a suite of functionality alongside, such as how to print to string, how to compare equality, how to write itself, etc.
 

@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Reading](#reading)
+  - [Archive Reader](#archive-reader)
+    - [File Enumeration](#file-enumeration)
+    - [Folder Lookup](#folder-lookup)
+- [Finding Applicable Archives](#finding-applicable-archives)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 Certain Bethesda files like textures, meshes, and similar assets are often stored in zipped up files with extensions like `.bsa` or `b2a`.
 
 Mutagen calls these `Archives` and offers API to read the contents from those.   Writing new Archives is not something Mutagen can currently do, but is on the list of features to eventually be added.

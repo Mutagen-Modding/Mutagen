@@ -1,3 +1,12 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Winning Overrides](#winning-overrides)
+- [Winning Context Overrides](#winning-context-overrides)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Winning Overrides
 It is very common task to retrieve the "winning override" version of each record.  These are the versions of each record as they exist in the mod with the highest priority, and will thus be what's used by the game when running.
 

@@ -1,3 +1,23 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [FormKeys and FormLinks](#formkeys-and-formlinks)
+- [Record Types](#record-types)
+    - [Four Character Headers](#four-character-headers)
+    - [Alternate Headers](#alternate-headers)
+- [List Mechanics](#list-mechanics)
+  - [Item Storage](#item-storage)
+  - [Count Subrecords](#count-subrecords)
+- [Global/Gamesetting types](#globalgamesetting-types)
+- [Markers](#markers)
+- [PathGrid Point Zipping](#pathgrid-point-zipping)
+- [Multiple Flag Consolidation](#multiple-flag-consolidation)
+- [GenderedItem](#gendereditem)
+- [Pseudo Enum Dictionaries](#pseudo-enum-dictionaries)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 Bethesda's binary format contains a lot implementation complexities that are unrelated to the actual content of the records.  A lot of times the exposure of these details are a source of confusion, and don't add much upside in the way of flexibility or power into the hands of the user.  Mutagen attempts to abstract these complexities away so that the end user is dealing with the distilled record content more directly, rather than wading through the gritty specifics that only matter in the context of their binary format on disk.
 
 # FormKeys and FormLinks

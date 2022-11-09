@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [What is Abstract Subclassing](#what-is-abstract-subclassing)
+- [Why is it Needed?](#why-is-it-needed)
+- [Setting an Abstract Subclass Member](#setting-an-abstract-subclass-member)
+- [Reading an Abstract Subclass Member](#reading-an-abstract-subclass-member)
+- [Summary](#summary)
+- [Other Records with Abstract Subclassing](#other-records-with-abstract-subclassing)
+- [Documentation](#documentation)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # What is Abstract Subclassing
 Occasionally records will have an Abstract subobject.   
 

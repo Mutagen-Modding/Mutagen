@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Equality](#equality)
+- [DeepCopy(In)](#deepcopyin)
+- [Translation Mask Construction](#translation-mask-construction)
+  - [defaultOn Parameter](#defaulton-parameter)
+  - [Subobjects](#subobjects)
+  - [onOverall Parameter](#onoverall-parameter)
+- [Subobject Shorthand](#subobject-shorthand)
+- [Best Practices](#best-practices)
+  - [Create Once, Use Many](#create-once-use-many)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 Several functionalities such as Equality, DeepCopy, and a few others have support for a concept called Translation Masks.  These allow for customization of what members are involved in those operations.
 
 # Equality

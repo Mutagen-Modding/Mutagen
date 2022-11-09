@@ -1,3 +1,11 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Record Navigation Using Header Structs](#record-navigation-using-header-structs)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Record Navigation Using Header Structs
 The following code will open a _simple_ mod file from disk, and print all EditorIDs. 
 

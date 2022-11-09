@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Use Environments When Possible](#use-environments-when-possible)
+- [Game Locations](#game-locations)
+  - [Game Folder vs Data Folder](#game-folder-vs-data-folder)
+- [Get__Folder](#get__folder)
+- [Sources](#sources)
+- [AdHoc Installations](#adhoc-installations)
+- [GetGameFolders](#getgamefolders)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Use Environments When Possible
 Game location concepts are somewhat unnecessary to interact with, since usually the preferred entry point is via [Environments](Environment)
 

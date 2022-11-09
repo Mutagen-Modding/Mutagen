@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Direct Access](#direct-access)
+  - [Mutagen Example](#mutagen-example)
+  - [Generic C&#035; Example](#generic-c-example)
+- [TryGet Patterns Instead](#tryget-patterns-instead)
+  - [Mutagen Example](#mutagen-example-1)
+  - [Generic C&#035; Example](#generic-c-example-1)
+- [Summary](#summary)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 There are many concepts within Mutagen that are optional, nullable, or may not link up at runtime.
 
 It is good practice to code in a way that is able to handle both situations:
