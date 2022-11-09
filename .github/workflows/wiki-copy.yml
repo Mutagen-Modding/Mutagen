@@ -10,6 +10,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+          token: ${{ secrets.ACCESS_TOKEN }}
       # Additional steps to generate documentation in "Documentation" directory
       - name: github-docs-to-wiki
         uses: cmbrose/github-docs-to-wiki@v0.24
