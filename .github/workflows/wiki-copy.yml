@@ -3,6 +3,9 @@ name: Wiki
 on:
   push:
     branches: [ dev ]
+    paths:
+      - 'README.md'
+      - 'docs/**'
 
 jobs:
   run:

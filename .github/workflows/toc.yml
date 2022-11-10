@@ -2,6 +2,9 @@ on:
   push:
     branches:
       - dev
+    paths:
+      - 'README.md'
+      - 'docs/**'
 name: TOC Generator
 jobs:
   generateTOC:
