@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case ScriptProperty_FieldIndex.Flags:
                     return (ScriptObjectListProperty_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         

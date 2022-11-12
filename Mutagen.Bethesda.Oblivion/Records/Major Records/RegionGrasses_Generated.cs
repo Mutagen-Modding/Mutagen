@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RegionData_FieldIndex.Header:
                     return (RegionGrasses_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         

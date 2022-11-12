@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Fallout4
             switch (index)
             {
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         

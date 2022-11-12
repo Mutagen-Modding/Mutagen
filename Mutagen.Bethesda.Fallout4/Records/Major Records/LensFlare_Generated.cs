@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (LensFlare_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (LensFlare_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         

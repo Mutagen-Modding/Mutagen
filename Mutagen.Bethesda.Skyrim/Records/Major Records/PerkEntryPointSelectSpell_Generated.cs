@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
                     return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case APerkEffect_FieldIndex.PRKEDataTypeState:
                     return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         

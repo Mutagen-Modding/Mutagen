@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case APerkEntryPointEffect_FieldIndex.PerkEntryID:
                     return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case APerkEffect_FieldIndex.PRKEDataTypeState:
                     return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         

@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetEventData_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         

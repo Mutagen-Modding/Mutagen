@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (VolumetricLighting_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (VolumetricLighting_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         

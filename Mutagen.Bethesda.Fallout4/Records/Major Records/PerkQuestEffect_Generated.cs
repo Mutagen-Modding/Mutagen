@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case APerkEffect_FieldIndex.PRKEDataTypeState:
                     return (PerkQuestEffect_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         

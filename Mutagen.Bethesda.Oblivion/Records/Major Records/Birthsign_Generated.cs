@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Birthsign_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Birthsign_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
