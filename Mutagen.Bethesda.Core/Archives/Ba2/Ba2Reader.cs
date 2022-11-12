@@ -10,10 +10,6 @@ namespace Mutagen.Bethesda.Archives.Ba2;
 
 class Ba2Reader : IArchiveReader
 {
-    private readonly uint _version;
-    private readonly string _headerMagic;
-    private readonly Ba2EntryType _type;
-    private readonly uint _numFiles;
     private readonly ulong _nameTableOffset;
     internal Func<Stream> _streamFactory;
     public bool UseATIFourCC { get; set; } = false;
@@ -30,31 +26,27 @@ class Ba2Reader : IArchiveReader
         _streamFactory = streamGetter;
         using var reader = new BinaryReader(_streamFactory(), Encoding.UTF8);
 
-        _headerMagic = Encoding.ASCII.GetString(reader.ReadBytes(4));
+        var headerMagic = Encoding.ASCII.GetString(reader.ReadBytes(4));
 
-        if (_headerMagic != "BTDX")
-            throw new InvalidDataException("Unknown header type: " + _headerMagic);
+        if (headerMagic != "BTDX")
+            throw new InvalidDataException($"Unknown header type: {headerMagic}");
 
-        _version = reader.ReadUInt32();
+        var version = reader.ReadUInt32();
 
         string fourcc = Encoding.ASCII.GetString(reader.ReadBytes(4));
 
-        if (Enum.TryParse(fourcc, out Ba2EntryType entryType))
-        {
-            _type = entryType;
-        }
-        else
+        if (!Enum.TryParse(fourcc, out Ba2EntryType entryType))
         {
             throw new InvalidDataException($"Can't parse entry types of {fourcc}");
         }
 
-        _numFiles = reader.ReadUInt32();
+        var numFiles = reader.ReadUInt32();
         _nameTableOffset = reader.ReadUInt64();
 
         var files = new List<IArchiveFile>();
-        for (var idx = 0; idx < _numFiles; idx += 1)
+        for (var idx = 0; idx < numFiles; idx += 1)
         {
-            switch (_type)
+            switch (entryType)
             {
                 case Ba2EntryType.GNRL:
                     files.Add(new BA2FileEntry(this, idx, reader));
