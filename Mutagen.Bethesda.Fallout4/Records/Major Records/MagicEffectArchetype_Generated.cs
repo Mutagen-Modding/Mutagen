@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectArchetypeGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.AssociationKey.AsLink<IFallout4MajorRecordGetter>());
+            yield return FormLinkInformation.Factory(obj.AssociationKey.ToLink<IFallout4MajorRecordGetter>());
             yield return FormLinkInformation.Factory(obj.ActorValue);
             yield break;
         }

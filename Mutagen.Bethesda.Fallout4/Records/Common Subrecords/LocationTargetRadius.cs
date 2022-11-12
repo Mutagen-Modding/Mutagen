@@ -40,17 +40,17 @@ partial class LocationTargetRadiusBinaryCreateTranslation
             case LocationTargetRadius.LocationType.NearReference:
                 return new LocationTarget()
                 {
-                    Link = FormKeyBinaryTranslation.Instance.Parse(frame).AsLink<ILocationTargetableGetter>()
+                    Link = FormKeyBinaryTranslation.Instance.Parse(frame).ToLink<ILocationTargetableGetter>()
                 };
             case LocationTargetRadius.LocationType.InCell:
                 return new LocationCell()
                 {
-                    Link = FormKeyBinaryTranslation.Instance.Parse(frame).AsLink<ICellGetter>()
+                    Link = FormKeyBinaryTranslation.Instance.Parse(frame).ToLink<ICellGetter>()
                 };
             case LocationTargetRadius.LocationType.ObjectID:
                 return new LocationObjectId()
                 {
-                    Link = FormKeyBinaryTranslation.Instance.Parse(frame).AsLink<IObjectIdGetter>()
+                    Link = FormKeyBinaryTranslation.Instance.Parse(frame).ToLink<IObjectIdGetter>()
                 };
             case LocationTargetRadius.LocationType.ObjectType:
                 return new LocationObjectType()
@@ -60,7 +60,7 @@ partial class LocationTargetRadiusBinaryCreateTranslation
             case LocationTargetRadius.LocationType.LinkedReference:
                 return new LocationKeyword()
                 {
-                    Link = FormKeyBinaryTranslation.Instance.Parse(frame).AsLink<IKeywordGetter>()
+                    Link = FormKeyBinaryTranslation.Instance.Parse(frame).ToLink<IKeywordGetter>()
                 };
             default:
                 return new LocationFallback()

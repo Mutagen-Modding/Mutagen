@@ -920,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectArchetypeGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.AssociationKey.AsLink<ISkyrimMajorRecordGetter>());
+            yield return FormLinkInformation.Factory(obj.AssociationKey.ToLink<ISkyrimMajorRecordGetter>());
             yield break;
         }
         

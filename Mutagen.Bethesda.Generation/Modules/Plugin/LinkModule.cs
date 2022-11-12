@@ -155,12 +155,12 @@ public class LinkModule : GenerationModule
                             sb.AppendLine($"if (obj.{field.Name} != null)");
                             using (sb.CurlyBrace())
                             {
-                                sb.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.AsLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
+                                sb.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.ToLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
                             }
                         }
                         else
                         {
-                            sb.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.AsLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
+                            sb.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.ToLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
                         }
                     }
                     else if (field is LoquiType loqui)

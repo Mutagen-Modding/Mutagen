@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class MagicEffectCloakArchetype
 {
-    public FormLink<ISpellGetter> Association => this.AssociationKey.AsLink<ISpellGetter>();
+    public FormLink<ISpellGetter> Association => this.AssociationKey.ToLink<ISpellGetter>();
 
     IFormLink<ISpellGetter> IMagicEffectCloakArchetype.Association => this.Association;
     IFormLinkGetter<ISpellGetter> IMagicEffectCloakArchetypeGetter.Association => this.Association;
@@ -27,5 +27,5 @@ public partial interface IMagicEffectCloakArchetypeGetter
 
 internal partial class MagicEffectCloakArchetypeBinaryOverlay
 {
-    public IFormLinkGetter<ISpellGetter> Association => this.AssociationKey.AsLink<ISpellGetter>();
+    public IFormLinkGetter<ISpellGetter> Association => this.AssociationKey.ToLink<ISpellGetter>();
 }

@@ -211,9 +211,9 @@ public class Api
         Perk direct = new Perk(TestConstants.Form2, SkyrimRelease.SkyrimLE);
         IPerk setter = new Perk(TestConstants.Form2, SkyrimRelease.SkyrimLE);
         IFormLink<IPerkGetter> formLink = new FormLink<IPerkGetter>();
-        formLink = getter.AsLink();
-        formLink = direct.AsLink();
-        formLink = setter.AsLink();
+        formLink = getter.ToLink();
+        formLink = direct.ToLink();
+        formLink = setter.ToLink();
         formLink.SetTo(direct);
         formLink.SetTo(getter);
         formLink.SetTo(setter);
