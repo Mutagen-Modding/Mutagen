@@ -39,6 +39,14 @@ public interface IGameDirectoryLookup
     /// <param name="path">The game directory, if located</param>
     /// <returns>True if located</returns>
     bool TryGet(GameRelease release, GameInstallMode installMode, [MaybeNullWhen(false)] out DirectoryPath path);
+
+    /// <summary>
+    /// Given a release, tries to retrieve the preferred game directory (not the data directory within)
+    /// </summary>
+    /// <param name="release">Release to query</param>
+    /// <param name="installMode">Install mode to query</param>
+    /// <returns>The game directory, if located</returns>
+    DirectoryPath? TryGet(GameRelease release, GameInstallMode installMode);
         
     /// <summary>
     /// Given a release, tries to retrieve the preferred game directory (not the data directory within)

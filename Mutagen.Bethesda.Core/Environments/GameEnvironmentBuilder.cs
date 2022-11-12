@@ -149,6 +149,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             new CreationClubEnabledProvider(category),
             new GameDirectoryProvider(
                 Release,
+                gameLocator,
                 gameLocator));
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
@@ -349,6 +350,7 @@ public sealed record GameEnvironmentBuilder
             new CreationClubEnabledProvider(category),
             new GameDirectoryProvider(
                 Release,
+                gameLocator,
                 gameLocator));
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,

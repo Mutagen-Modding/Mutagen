@@ -24,8 +24,8 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.10" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2" /> 
     <PackageVersion Include="Microsoft.Reactive.Testing" Version="5.0.0" /> 
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" /> 
-	<PackageVersion Include="Noggog.Autofac" Version="2.51.0.1-dev" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageVersion Include="Noggog.Autofac" Version="2.51.0.1-dev" />
     <PackageVersion Include="Noggog.CSharpExt" Version="2.51.0.1-dev" /> 
     <PackageVersion Include="Noggog.Testing" Version="2.51.0.1-dev" /> 
     <PackageVersion Include="Noggog.WPF" Version="2.51.0.1-dev" /> 

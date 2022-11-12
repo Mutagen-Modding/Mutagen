@@ -290,6 +290,16 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
         return TryGetDataDirectory(release, installMode, out path);
     }
 
+    DirectoryPath? IGameDirectoryLookup.TryGet(GameRelease release, GameInstallMode installMode)
+    {
+        if (TryGetDataDirectory(release, installMode, out var dir))
+        {
+            return dir;
+        }
+
+        return null;
+    }
+
     IEnumerable<DirectoryPath> IGameInstallProvider.GetAll(GameRelease release)
     {
         return GetAllGameDirectories(release);

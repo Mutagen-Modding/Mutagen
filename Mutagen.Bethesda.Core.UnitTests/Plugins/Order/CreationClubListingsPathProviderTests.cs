@@ -33,7 +33,7 @@ public class CreationClubListingsPathProviderTests
         {
             gameCategoryContext.Category.Returns(category);
             sut.Path
-                .Should().Be(new FilePath(Path.Combine(gameDir.Path, $"{category}.ccc")));
+                .Should().Be(new FilePath(Path.Combine(gameDir.Path!, $"{category}.ccc")));
         }
     }
 }
