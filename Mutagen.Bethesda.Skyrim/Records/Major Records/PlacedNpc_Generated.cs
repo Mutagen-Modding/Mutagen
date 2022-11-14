@@ -380,6 +380,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Base,
                 TItem EncounterZone,
@@ -415,7 +416,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Base = Base;
@@ -2030,35 +2032,36 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Base = 7,
-        EncounterZone = 8,
-        RagdollData = 9,
-        RagdollBipedData = 10,
-        Patrol = 11,
-        LevelModifier = 12,
-        MerchantContainer = 13,
-        Count = 14,
-        Radius = 15,
-        Health = 16,
-        LinkedReferences = 17,
-        ActivateParents = 18,
-        LinkedReferenceColor = 19,
-        PersistentLocation = 20,
-        LocationReference = 21,
-        IsIgnoredBySandbox = 22,
-        LocationRefTypes = 23,
-        HeadTrackingWeight = 24,
-        Horse = 25,
-        FavorCost = 26,
-        EnableParent = 27,
-        Owner = 28,
-        FactionRank = 29,
-        Emittance = 30,
-        MultiboundReference = 31,
-        IsIgnoredBySandbox2 = 32,
-        Scale = 33,
-        Placement = 34,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Base = 8,
+        EncounterZone = 9,
+        RagdollData = 10,
+        RagdollBipedData = 11,
+        Patrol = 12,
+        LevelModifier = 13,
+        MerchantContainer = 14,
+        Count = 15,
+        Radius = 16,
+        Health = 17,
+        LinkedReferences = 18,
+        ActivateParents = 19,
+        LinkedReferenceColor = 20,
+        PersistentLocation = 21,
+        LocationReference = 22,
+        IsIgnoredBySandbox = 23,
+        LocationRefTypes = 24,
+        HeadTrackingWeight = 25,
+        Horse = 26,
+        FavorCost = 27,
+        EnableParent = 28,
+        Owner = 29,
+        FactionRank = 30,
+        Emittance = 31,
+        MultiboundReference = 32,
+        IsIgnoredBySandbox2 = 33,
+        Scale = 34,
+        Placement = 35,
     }
     #endregion
 
@@ -2078,7 +2081,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 29;
 
-        public const ushort FieldCount = 35;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(PlacedNpc.Mask<>);
 
@@ -2613,6 +2616,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (PlacedNpc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (PlacedNpc_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (PlacedNpc_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

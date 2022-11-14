@@ -105,6 +105,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Parent,
                 TItem PreviousSibling,
                 TItem Conditions,
@@ -118,6 +119,7 @@ namespace Mutagen.Bethesda.Fallout4
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags,
                 Parent: Parent,
                 PreviousSibling: PreviousSibling,
                 Conditions: Conditions)
@@ -741,12 +743,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        PreviousSibling = 7,
-        Conditions = 8,
-        Flags = 9,
-        MaxConcurrentQuests = 10,
-        Type = 11,
+        Fallout4MajorRecordFlags = 6,
+        Parent = 7,
+        PreviousSibling = 8,
+        Conditions = 9,
+        Flags = 10,
+        MaxConcurrentQuests = 11,
+        Type = 12,
     }
     #endregion
 
@@ -766,7 +769,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(StoryManagerEventNode.Mask<>);
 
@@ -1077,6 +1080,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return (StoryManagerEventNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.Version2:
                     return (StoryManagerEventNode_FieldIndex)((int)index);
+                case AStoryManagerNode_FieldIndex.Fallout4MajorRecordFlags:
+                    return (StoryManagerEventNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.Parent:
                     return (StoryManagerEventNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.PreviousSibling:
@@ -1103,6 +1108,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (StoryManagerEventNode_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (StoryManagerEventNode_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (StoryManagerEventNode_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

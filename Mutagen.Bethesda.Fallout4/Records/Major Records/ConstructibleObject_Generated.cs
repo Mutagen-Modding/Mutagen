@@ -246,6 +246,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem PickUpSound,
                 TItem PutDownSound,
                 TItem Components,
@@ -265,7 +266,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.PickUpSound = PickUpSound;
                 this.PutDownSound = PutDownSound;
@@ -1458,19 +1460,20 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        PickUpSound = 6,
-        PutDownSound = 7,
-        Components = 8,
-        Description = 9,
-        Conditions = 10,
-        CreatedObject = 11,
-        WorkbenchKeyword = 12,
-        NAM1 = 13,
-        NAM2 = 14,
-        NAM3 = 15,
-        MenuArtObject = 16,
-        Categories = 17,
-        CreatedObjectCounts = 18,
+        Fallout4MajorRecordFlags = 6,
+        PickUpSound = 7,
+        PutDownSound = 8,
+        Components = 9,
+        Description = 10,
+        Conditions = 11,
+        CreatedObject = 12,
+        WorkbenchKeyword = 13,
+        NAM1 = 14,
+        NAM2 = 15,
+        NAM3 = 16,
+        MenuArtObject = 17,
+        Categories = 18,
+        CreatedObjectCounts = 19,
     }
     #endregion
 
@@ -1490,7 +1493,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(ConstructibleObject.Mask<>);
 
@@ -1877,6 +1880,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (ConstructibleObject_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (ConstructibleObject_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (ConstructibleObject_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

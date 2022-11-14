@@ -452,6 +452,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ActorCellPersistentReferences,
                 TItem LocationCellPersistentReferences,
                 TItem ReferenceCellPersistentReferences,
@@ -483,7 +484,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ActorCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(ActorCellPersistentReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
                 this.LocationCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(LocationCellPersistentReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
@@ -2926,31 +2928,32 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ActorCellPersistentReferences = 6,
-        LocationCellPersistentReferences = 7,
-        ReferenceCellPersistentReferences = 8,
-        ActorCellUniques = 9,
-        LocationCellUniques = 10,
-        ReferenceCellUnique = 11,
-        ActorCellStaticReferences = 12,
-        LocationCellStaticReferences = 13,
-        ReferenceCellStaticReferences = 14,
-        ActorCellEncounterCell = 15,
-        LocationCellEncounterCell = 16,
-        ReferenceCellEncounterCell = 17,
-        ActorCellMarkerReference = 18,
-        LocationCellMarkerReference = 19,
-        ActorCellEnablePoint = 20,
-        LocationCellEnablePoint = 21,
-        Name = 22,
-        Keywords = 23,
-        ParentLocation = 24,
-        Music = 25,
-        UnreportedCrimeFaction = 26,
-        WorldLocationMarkerRef = 27,
-        WorldLocationRadius = 28,
-        ActorFadeMult = 29,
-        Color = 30,
+        Fallout4MajorRecordFlags = 6,
+        ActorCellPersistentReferences = 7,
+        LocationCellPersistentReferences = 8,
+        ReferenceCellPersistentReferences = 9,
+        ActorCellUniques = 10,
+        LocationCellUniques = 11,
+        ReferenceCellUnique = 12,
+        ActorCellStaticReferences = 13,
+        LocationCellStaticReferences = 14,
+        ReferenceCellStaticReferences = 15,
+        ActorCellEncounterCell = 16,
+        LocationCellEncounterCell = 17,
+        ReferenceCellEncounterCell = 18,
+        ActorCellMarkerReference = 19,
+        LocationCellMarkerReference = 20,
+        ActorCellEnablePoint = 21,
+        LocationCellEnablePoint = 22,
+        Name = 23,
+        Keywords = 24,
+        ParentLocation = 25,
+        Music = 26,
+        UnreportedCrimeFaction = 27,
+        WorldLocationMarkerRef = 28,
+        WorldLocationRadius = 29,
+        ActorFadeMult = 30,
+        Color = 31,
     }
     #endregion
 
@@ -2970,7 +2973,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 25;
 
-        public const ushort FieldCount = 31;
+        public const ushort FieldCount = 32;
 
         public static readonly Type MaskType = typeof(Location.Mask<>);
 
@@ -3634,6 +3637,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Location_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Location_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Location_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

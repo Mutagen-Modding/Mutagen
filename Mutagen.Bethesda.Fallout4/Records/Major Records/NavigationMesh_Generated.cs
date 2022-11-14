@@ -138,6 +138,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem NavmeshGeometry,
                 TItem ONAM,
                 TItem NNAM,
@@ -148,7 +149,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
                 this.ONAM = ONAM;
@@ -886,10 +888,11 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        NavmeshGeometry = 6,
-        ONAM = 7,
-        NNAM = 8,
-        PreCutMapEntries = 9,
+        Fallout4MajorRecordFlags = 6,
+        NavmeshGeometry = 7,
+        ONAM = 8,
+        NNAM = 9,
+        PreCutMapEntries = 10,
     }
     #endregion
 
@@ -909,7 +912,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(NavigationMesh.Mask<>);
 
@@ -1188,6 +1191,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (NavigationMesh_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (NavigationMesh_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (NavigationMesh_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

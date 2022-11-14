@@ -177,6 +177,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem LeftWalk,
                 TItem LeftRun,
@@ -197,7 +198,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.LeftWalk = LeftWalk;
@@ -1177,20 +1179,21 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        LeftWalk = 7,
-        LeftRun = 8,
-        RightWalk = 9,
-        RightRun = 10,
-        ForwardWalk = 11,
-        ForwardRun = 12,
-        BackWalk = 13,
-        BackRun = 14,
-        RotateInPlaceWalk = 15,
-        RotateInPlaceRun = 16,
-        RotateWhileMovingRun = 17,
-        AnimationChangeThresholds = 18,
-        SPEDDataTypeState = 19,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        LeftWalk = 8,
+        LeftRun = 9,
+        RightWalk = 10,
+        RightRun = 11,
+        ForwardWalk = 12,
+        ForwardRun = 13,
+        BackWalk = 14,
+        BackRun = 15,
+        RotateInPlaceWalk = 16,
+        RotateInPlaceRun = 17,
+        RotateWhileMovingRun = 18,
+        AnimationChangeThresholds = 19,
+        SPEDDataTypeState = 20,
     }
     #endregion
 
@@ -1210,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(MovementType.Mask<>);
 
@@ -1530,6 +1533,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (MovementType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (MovementType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (MovementType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

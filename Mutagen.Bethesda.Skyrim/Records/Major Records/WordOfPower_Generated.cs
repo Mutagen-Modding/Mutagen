@@ -131,6 +131,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem Translation)
             : base(
@@ -139,7 +140,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.Translation = Translation;
@@ -753,8 +755,9 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Translation = 7,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        Translation = 8,
     }
     #endregion
 
@@ -774,7 +777,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(WordOfPower.Mask<>);
 
@@ -1016,6 +1019,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (WordOfPower_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (WordOfPower_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (WordOfPower_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -130,6 +130,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Description,
                 TItem Index,
                 TItem DebugColor,
@@ -142,7 +143,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Description = Description;
                 this.Index = Index;
@@ -934,12 +936,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Description = 6,
-        Index = 7,
-        DebugColor = 8,
-        Flags = 9,
-        Name = 10,
-        CollidesWith = 11,
+        Fallout4MajorRecordFlags = 6,
+        Description = 7,
+        Index = 8,
+        DebugColor = 9,
+        Flags = 10,
+        Name = 11,
+        CollidesWith = 12,
     }
     #endregion
 
@@ -959,7 +962,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(CollisionLayer.Mask<>);
 
@@ -1244,6 +1247,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (CollisionLayer_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (CollisionLayer_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (CollisionLayer_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

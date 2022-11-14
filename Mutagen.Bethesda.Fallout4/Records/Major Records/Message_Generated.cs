@@ -184,6 +184,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Description,
                 TItem Name,
                 TItem INAM,
@@ -199,7 +200,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Description = Description;
                 this.Name = Name;
@@ -1085,15 +1087,16 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Description = 6,
-        Name = 7,
-        INAM = 8,
-        OwnerQuest = 9,
-        Flags = 10,
-        DisplayTime = 11,
-        Swf = 12,
-        ShortTitle = 13,
-        MenuButtons = 14,
+        Fallout4MajorRecordFlags = 6,
+        Description = 7,
+        Name = 8,
+        INAM = 9,
+        OwnerQuest = 10,
+        Flags = 11,
+        DisplayTime = 12,
+        Swf = 13,
+        ShortTitle = 14,
+        MenuButtons = 15,
     }
     #endregion
 
@@ -1113,7 +1116,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Message.Mask<>);
 
@@ -1425,6 +1428,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Message_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Message_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Message_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

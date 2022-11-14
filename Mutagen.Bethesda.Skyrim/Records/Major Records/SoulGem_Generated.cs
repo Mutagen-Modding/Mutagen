@@ -273,6 +273,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
@@ -293,7 +294,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -1430,20 +1432,21 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Model = 8,
-        Icons = 9,
-        Destructible = 10,
-        PickUpSound = 11,
-        PutDownSound = 12,
-        Keywords = 13,
-        Value = 14,
-        Weight = 15,
-        ContainedSoul = 16,
-        MaximumCapacity = 17,
-        LinkedTo = 18,
-        DATADataTypeState = 19,
+        SkyrimMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        Icons = 10,
+        Destructible = 11,
+        PickUpSound = 12,
+        PutDownSound = 13,
+        Keywords = 14,
+        Value = 15,
+        Weight = 16,
+        ContainedSoul = 17,
+        MaximumCapacity = 18,
+        LinkedTo = 19,
+        DATADataTypeState = 20,
     }
     #endregion
 
@@ -1463,7 +1466,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(SoulGem.Mask<>);
 
@@ -1868,6 +1871,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (SoulGem_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (SoulGem_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (SoulGem_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

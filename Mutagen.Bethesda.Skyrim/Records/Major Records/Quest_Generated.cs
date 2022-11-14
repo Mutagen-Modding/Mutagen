@@ -275,6 +275,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Name,
                 TItem Flags,
@@ -298,7 +299,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(VirtualMachineAdapter, new QuestAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
@@ -1778,23 +1780,24 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Name = 7,
-        Flags = 8,
-        Priority = 9,
-        QuestFormVersion = 10,
-        Unknown = 11,
-        Type = 12,
-        Event = 13,
-        TextDisplayGlobals = 14,
-        Filter = 15,
-        DialogConditions = 16,
-        UnusedConditions = 17,
-        Stages = 18,
-        Objectives = 19,
-        Aliases = 20,
-        Description = 21,
-        DNAMDataTypeState = 22,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        Flags = 9,
+        Priority = 10,
+        QuestFormVersion = 11,
+        Unknown = 12,
+        Type = 13,
+        Event = 14,
+        TextDisplayGlobals = 15,
+        Filter = 16,
+        DialogConditions = 17,
+        UnusedConditions = 18,
+        Stages = 19,
+        Objectives = 20,
+        Aliases = 21,
+        Description = 22,
+        DNAMDataTypeState = 23,
     }
     #endregion
 
@@ -1814,7 +1817,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(Quest.Mask<>);
 
@@ -2314,6 +2317,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Quest_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Quest_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Quest_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

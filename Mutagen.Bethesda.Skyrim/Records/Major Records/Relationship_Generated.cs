@@ -137,6 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Parent,
                 TItem Child,
                 TItem Rank,
@@ -150,7 +151,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Parent = Parent;
                 this.Child = Child;
@@ -919,13 +921,14 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        Child = 7,
-        Rank = 8,
-        Unknown = 9,
-        Flags = 10,
-        AssociationType = 11,
-        DATADataTypeState = 12,
+        SkyrimMajorRecordFlags = 6,
+        Parent = 7,
+        Child = 8,
+        Rank = 9,
+        Unknown = 10,
+        Flags = 11,
+        AssociationType = 12,
+        DATADataTypeState = 13,
     }
     #endregion
 
@@ -945,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Relationship.Mask<>);
 
@@ -1218,6 +1221,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Relationship_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Relationship_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Relationship_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

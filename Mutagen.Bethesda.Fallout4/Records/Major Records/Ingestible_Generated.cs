@@ -344,6 +344,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
                 TItem Name,
@@ -371,7 +372,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.PreviewTransform = PreviewTransform;
@@ -1779,27 +1781,28 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        PreviewTransform = 7,
-        Name = 8,
-        Keywords = 9,
-        Model = 10,
-        Icons = 11,
-        PickUpSound = 12,
-        PutDownSound = 13,
-        EquipmentType = 14,
-        CraftingSound = 15,
-        Destructible = 16,
-        Description = 17,
-        Weight = 18,
-        Value = 19,
-        Flags = 20,
-        Addiction = 21,
-        AddictionChance = 22,
-        ConsumeSound = 23,
-        AddictionName = 24,
-        Effects = 25,
-        ENITDataTypeState = 26,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        PreviewTransform = 8,
+        Name = 9,
+        Keywords = 10,
+        Model = 11,
+        Icons = 12,
+        PickUpSound = 13,
+        PutDownSound = 14,
+        EquipmentType = 15,
+        CraftingSound = 16,
+        Destructible = 17,
+        Description = 18,
+        Weight = 19,
+        Value = 20,
+        Flags = 21,
+        Addiction = 22,
+        AddictionChance = 23,
+        ConsumeSound = 24,
+        AddictionName = 25,
+        Effects = 26,
+        ENITDataTypeState = 27,
     }
     #endregion
 
@@ -1819,7 +1822,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(Ingestible.Mask<>);
 
@@ -2260,6 +2263,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Ingestible_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Ingestible_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Ingestible_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

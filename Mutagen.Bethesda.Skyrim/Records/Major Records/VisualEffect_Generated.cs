@@ -118,6 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem EffectArt,
                 TItem Shader,
                 TItem Flags,
@@ -128,7 +129,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.EffectArt = EffectArt;
                 this.Shader = Shader;
@@ -794,10 +796,11 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        EffectArt = 6,
-        Shader = 7,
-        Flags = 8,
-        DATADataTypeState = 9,
+        SkyrimMajorRecordFlags = 6,
+        EffectArt = 7,
+        Shader = 8,
+        Flags = 9,
+        DATADataTypeState = 10,
     }
     #endregion
 
@@ -817,7 +820,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(VisualEffect.Mask<>);
 
@@ -1071,6 +1074,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (VisualEffect_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (VisualEffect_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (VisualEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

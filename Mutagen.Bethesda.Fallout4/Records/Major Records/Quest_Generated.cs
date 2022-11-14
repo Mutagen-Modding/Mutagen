@@ -352,6 +352,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Name,
                 TItem Data,
@@ -379,7 +380,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(VirtualMachineAdapter, new QuestAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
@@ -2424,27 +2426,28 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Name = 7,
-        Data = 8,
-        Event = 9,
-        Location = 10,
-        QuestCompletionXp = 11,
-        TextDisplayGlobals = 12,
-        Filter = 13,
-        DialogConditions = 14,
-        UnusedConditions = 15,
-        Stages = 16,
-        Objectives = 17,
-        Aliases = 18,
-        Description = 19,
-        QuestGroup = 20,
-        SwfFile = 21,
-        Timestamp = 22,
-        Unknown = 23,
-        DialogBranches = 24,
-        DialogTopics = 25,
-        Scenes = 26,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        Data = 9,
+        Event = 10,
+        Location = 11,
+        QuestCompletionXp = 12,
+        TextDisplayGlobals = 13,
+        Filter = 14,
+        DialogConditions = 15,
+        UnusedConditions = 16,
+        Stages = 17,
+        Objectives = 18,
+        Aliases = 19,
+        Description = 20,
+        QuestGroup = 21,
+        SwfFile = 22,
+        Timestamp = 23,
+        Unknown = 24,
+        DialogBranches = 25,
+        DialogTopics = 26,
+        Scenes = 27,
     }
     #endregion
 
@@ -2464,7 +2467,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(Quest.Mask<>);
 
@@ -3201,6 +3204,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Quest_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Quest_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Quest_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

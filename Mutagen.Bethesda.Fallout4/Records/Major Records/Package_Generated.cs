@@ -311,6 +311,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Flags,
                 TItem Type,
@@ -346,7 +347,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, PackageAdapter.Mask<TItem>?>(VirtualMachineAdapter, new PackageAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Flags = Flags;
@@ -2026,35 +2028,36 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Flags = 7,
-        Type = 8,
-        InterruptOverride = 9,
-        PreferredSpeed = 10,
-        Unknown = 11,
-        InteruptFlags = 12,
-        Unknown2 = 13,
-        ScheduleMonth = 14,
-        ScheduleDayOfWeek = 15,
-        ScheduleDate = 16,
-        ScheduleHour = 17,
-        ScheduleMinute = 18,
-        Unknown3 = 19,
-        ScheduleDurationInMinutes = 20,
-        Conditions = 21,
-        IdleAnimations = 22,
-        CombatStyle = 23,
-        OwnerQuest = 24,
-        PackageTemplate = 25,
-        DataInputVersion = 26,
-        Data = 27,
-        XnamMarker = 28,
-        ProcedureTree = 29,
-        OnBegin = 30,
-        OnEnd = 31,
-        OnChange = 32,
-        PKDTDataTypeState = 33,
-        PSDTDataTypeState = 34,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Flags = 8,
+        Type = 9,
+        InterruptOverride = 10,
+        PreferredSpeed = 11,
+        Unknown = 12,
+        InteruptFlags = 13,
+        Unknown2 = 14,
+        ScheduleMonth = 15,
+        ScheduleDayOfWeek = 16,
+        ScheduleDate = 17,
+        ScheduleHour = 18,
+        ScheduleMinute = 19,
+        Unknown3 = 20,
+        ScheduleDurationInMinutes = 21,
+        Conditions = 22,
+        IdleAnimations = 23,
+        CombatStyle = 24,
+        OwnerQuest = 25,
+        PackageTemplate = 26,
+        DataInputVersion = 27,
+        Data = 28,
+        XnamMarker = 29,
+        ProcedureTree = 30,
+        OnBegin = 31,
+        OnEnd = 32,
+        OnChange = 33,
+        PKDTDataTypeState = 34,
+        PSDTDataTypeState = 35,
     }
     #endregion
 
@@ -2074,7 +2077,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 29;
 
-        public const ushort FieldCount = 35;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(Package.Mask<>);
 
@@ -2576,6 +2579,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Package_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Package_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Package_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

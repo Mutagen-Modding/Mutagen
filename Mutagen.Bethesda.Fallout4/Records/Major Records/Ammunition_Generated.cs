@@ -303,6 +303,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
                 TItem Name,
@@ -329,7 +330,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.PreviewTransform = PreviewTransform;
@@ -1629,26 +1631,27 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        PreviewTransform = 7,
-        Name = 8,
-        Model = 9,
-        Destructible = 10,
-        PickUpSound = 11,
-        PutDownSound = 12,
-        Description = 13,
-        Keywords = 14,
-        Value = 15,
-        Weight = 16,
-        Projectile = 17,
-        Flags = 18,
-        Damage = 19,
-        Health = 20,
-        ShortName = 21,
-        CasingModel = 22,
-        ModelInfo = 23,
-        DATADataTypeState = 24,
-        DNAMDataTypeState = 25,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        PreviewTransform = 8,
+        Name = 9,
+        Model = 10,
+        Destructible = 11,
+        PickUpSound = 12,
+        PutDownSound = 13,
+        Description = 14,
+        Keywords = 15,
+        Value = 16,
+        Weight = 17,
+        Projectile = 18,
+        Flags = 19,
+        Damage = 20,
+        Health = 21,
+        ShortName = 22,
+        CasingModel = 23,
+        ModelInfo = 24,
+        DATADataTypeState = 25,
+        DNAMDataTypeState = 26,
     }
     #endregion
 
@@ -1668,7 +1671,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Ammunition.Mask<>);
 
@@ -2076,6 +2079,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Ammunition_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Ammunition_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Ammunition_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

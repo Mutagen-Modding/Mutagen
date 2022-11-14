@@ -177,6 +177,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Flags,
                 TItem Parent,
@@ -191,7 +192,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Flags = Flags;
@@ -982,14 +984,15 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Flags = 7,
-        Parent = 8,
-        MenuSlider = 9,
-        StaticVolumeMultiplier = 10,
-        DefaultMenuVolume = 11,
-        MinFrequencyMultiplier = 12,
-        SidechainTargetMultiplier = 13,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Flags = 8,
+        Parent = 9,
+        MenuSlider = 10,
+        StaticVolumeMultiplier = 11,
+        DefaultMenuVolume = 12,
+        MinFrequencyMultiplier = 13,
+        SidechainTargetMultiplier = 14,
     }
     #endregion
 
@@ -1009,7 +1012,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(SoundCategory.Mask<>);
 
@@ -1299,6 +1302,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (SoundCategory_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (SoundCategory_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (SoundCategory_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

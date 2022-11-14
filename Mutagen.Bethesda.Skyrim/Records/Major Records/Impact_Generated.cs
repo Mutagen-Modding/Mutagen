@@ -213,6 +213,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Model,
                 TItem Duration,
                 TItem Orientation,
@@ -235,7 +236,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Duration = Duration;
@@ -1286,22 +1288,23 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Model = 6,
-        Duration = 7,
-        Orientation = 8,
-        AngleThreshold = 9,
-        PlacementRadius = 10,
-        SoundLevel = 11,
-        NoDecalData = 12,
-        Result = 13,
-        Unknown = 14,
-        Decal = 15,
-        TextureSet = 16,
-        SecondaryTextureSet = 17,
-        Sound1 = 18,
-        Sound2 = 19,
-        Hazard = 20,
-        DATADataTypeState = 21,
+        SkyrimMajorRecordFlags = 6,
+        Model = 7,
+        Duration = 8,
+        Orientation = 9,
+        AngleThreshold = 10,
+        PlacementRadius = 11,
+        SoundLevel = 12,
+        NoDecalData = 13,
+        Result = 14,
+        Unknown = 15,
+        Decal = 16,
+        TextureSet = 17,
+        SecondaryTextureSet = 18,
+        Sound1 = 19,
+        Sound2 = 20,
+        Hazard = 21,
+        DATADataTypeState = 22,
     }
     #endregion
 
@@ -1321,7 +1324,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(Impact.Mask<>);
 
@@ -1690,6 +1693,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Impact_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Impact_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Impact_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

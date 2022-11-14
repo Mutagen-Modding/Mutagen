@@ -199,6 +199,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem BodyTemplate,
                 TItem Race,
                 TItem Priority,
@@ -222,7 +223,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(BodyTemplate, new BodyTemplate.Mask<TItem>(BodyTemplate));
                 this.Race = Race;
@@ -1398,23 +1400,24 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        BodyTemplate = 6,
-        Race = 7,
-        Priority = 8,
-        WeightSliderEnabled = 9,
-        Unknown = 10,
-        DetectionSoundValue = 11,
-        Unknown2 = 12,
-        WeaponAdjust = 13,
-        WorldModel = 14,
-        FirstPersonModel = 15,
-        SkinTexture = 16,
-        TextureSwapList = 17,
-        AdditionalRaces = 18,
-        FootstepSound = 19,
-        ArtObject = 20,
-        BoneData = 21,
-        DNAMDataTypeState = 22,
+        Fallout4MajorRecordFlags = 6,
+        BodyTemplate = 7,
+        Race = 8,
+        Priority = 9,
+        WeightSliderEnabled = 10,
+        Unknown = 11,
+        DetectionSoundValue = 12,
+        Unknown2 = 13,
+        WeaponAdjust = 14,
+        WorldModel = 15,
+        FirstPersonModel = 16,
+        SkinTexture = 17,
+        TextureSwapList = 18,
+        AdditionalRaces = 19,
+        FootstepSound = 20,
+        ArtObject = 21,
+        BoneData = 22,
+        DNAMDataTypeState = 23,
     }
     #endregion
 
@@ -1434,7 +1437,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(ArmorAddon.Mask<>);
 
@@ -1913,6 +1916,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (ArmorAddon_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (ArmorAddon_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (ArmorAddon_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

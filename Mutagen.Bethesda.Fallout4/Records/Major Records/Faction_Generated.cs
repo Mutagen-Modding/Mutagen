@@ -300,6 +300,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Relations,
                 TItem Flags,
@@ -322,7 +323,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
@@ -1571,22 +1573,23 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Relations = 7,
-        Flags = 8,
-        ExteriorJailMarker = 9,
-        FollowerWaitMarker = 10,
-        StolenGoodsContainer = 11,
-        PlayerInventoryContainer = 12,
-        SharedCrimeFactionList = 13,
-        JailOutfit = 14,
-        CrimeValues = 15,
-        Ranks = 16,
-        VendorBuySellList = 17,
-        MerchantContainer = 18,
-        VendorValues = 19,
-        VendorLocation = 20,
-        Conditions = 21,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Relations = 8,
+        Flags = 9,
+        ExteriorJailMarker = 10,
+        FollowerWaitMarker = 11,
+        StolenGoodsContainer = 12,
+        PlayerInventoryContainer = 13,
+        SharedCrimeFactionList = 14,
+        JailOutfit = 15,
+        CrimeValues = 16,
+        Ranks = 17,
+        VendorBuySellList = 18,
+        MerchantContainer = 19,
+        VendorValues = 20,
+        VendorLocation = 21,
+        Conditions = 22,
     }
     #endregion
 
@@ -1606,7 +1609,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(Faction.Mask<>);
 
@@ -2018,6 +2021,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Faction_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Faction_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Faction_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

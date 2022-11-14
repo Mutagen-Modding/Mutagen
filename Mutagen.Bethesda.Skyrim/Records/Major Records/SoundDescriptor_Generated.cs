@@ -202,6 +202,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Type,
                 TItem Category,
                 TItem AlternateSoundFor,
@@ -222,7 +223,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Type = Type;
                 this.Category = Category;
@@ -1332,20 +1334,21 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Type = 6,
-        Category = 7,
-        AlternateSoundFor = 8,
-        SoundFiles = 9,
-        OutputModel = 10,
-        String = 11,
-        Conditions = 12,
-        LoopAndRumble = 13,
-        PercentFrequencyShift = 14,
-        PercentFrequencyVariance = 15,
-        Priority = 16,
-        Variance = 17,
-        StaticAttenuation = 18,
-        BNAMDataTypeState = 19,
+        SkyrimMajorRecordFlags = 6,
+        Type = 7,
+        Category = 8,
+        AlternateSoundFor = 9,
+        SoundFiles = 10,
+        OutputModel = 11,
+        String = 12,
+        Conditions = 13,
+        LoopAndRumble = 14,
+        PercentFrequencyShift = 15,
+        PercentFrequencyVariance = 16,
+        Priority = 17,
+        Variance = 18,
+        StaticAttenuation = 19,
+        BNAMDataTypeState = 20,
     }
     #endregion
 
@@ -1365,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(SoundDescriptor.Mask<>);
 
@@ -1743,6 +1746,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (SoundDescriptor_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (SoundDescriptor_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (SoundDescriptor_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

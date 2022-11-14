@@ -114,6 +114,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ColorInfluence,
                 TItem FadeDistanceRadiusScale,
                 TItem Sprites)
@@ -123,7 +124,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ColorInfluence = ColorInfluence;
                 this.FadeDistanceRadiusScale = FadeDistanceRadiusScale;
@@ -809,9 +811,10 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ColorInfluence = 6,
-        FadeDistanceRadiusScale = 7,
-        Sprites = 8,
+        Fallout4MajorRecordFlags = 6,
+        ColorInfluence = 7,
+        FadeDistanceRadiusScale = 8,
+        Sprites = 9,
     }
     #endregion
 
@@ -831,7 +834,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(LensFlare.Mask<>);
 
@@ -1097,6 +1100,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (LensFlare_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (LensFlare_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (LensFlare_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

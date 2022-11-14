@@ -166,6 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Flags,
                 TItem VertexNormals,
                 TItem VertexHeightMap,
@@ -178,7 +179,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Flags = Flags;
                 this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexNormals, Enumerable.Empty<(P2Int Index, TItem Value)>());
@@ -1171,12 +1173,13 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Flags = 6,
-        VertexNormals = 7,
-        VertexHeightMap = 8,
-        VertexColors = 9,
-        Layers = 10,
-        Textures = 11,
+        SkyrimMajorRecordFlags = 6,
+        Flags = 7,
+        VertexNormals = 8,
+        VertexHeightMap = 9,
+        VertexColors = 10,
+        Layers = 11,
+        Textures = 12,
     }
     #endregion
 
@@ -1196,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Landscape.Mask<>);
 
@@ -1529,6 +1532,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Landscape_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Landscape_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Landscape_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

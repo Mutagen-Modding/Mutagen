@@ -136,6 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Data,
                 TItem ONAM,
                 TItem PNAM,
@@ -146,7 +147,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Data = new MaskItem<TItem, NavigationMeshData.Mask<TItem>?>(Data, new NavigationMeshData.Mask<TItem>(Data));
                 this.ONAM = ONAM;
@@ -826,10 +828,11 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Data = 6,
-        ONAM = 7,
-        PNAM = 8,
-        NNAM = 9,
+        SkyrimMajorRecordFlags = 6,
+        Data = 7,
+        ONAM = 8,
+        PNAM = 9,
+        NNAM = 10,
     }
     #endregion
 
@@ -849,7 +852,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(NavigationMesh.Mask<>);
 
@@ -1114,6 +1117,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (NavigationMesh_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (NavigationMesh_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (NavigationMesh_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -267,6 +267,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem DATA,
                 TItem Flags,
@@ -288,7 +289,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>(VirtualMachineAdapter, new DialogResponsesAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.DATA = DATA;
@@ -1578,21 +1580,22 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        DATA = 7,
-        Flags = 8,
-        Topic = 9,
-        PreviousDialog = 10,
-        FavorLevel = 11,
-        LinkTo = 12,
-        ResponseData = 13,
-        Responses = 14,
-        Conditions = 15,
-        UnknownData = 16,
-        Prompt = 17,
-        Speaker = 18,
-        WalkAwayTopic = 19,
-        AudioOutputOverride = 20,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        DATA = 8,
+        Flags = 9,
+        Topic = 10,
+        PreviousDialog = 11,
+        FavorLevel = 12,
+        LinkTo = 13,
+        ResponseData = 14,
+        Responses = 15,
+        Conditions = 16,
+        UnknownData = 17,
+        Prompt = 18,
+        Speaker = 19,
+        WalkAwayTopic = 20,
+        AudioOutputOverride = 21,
     }
     #endregion
 
@@ -1612,7 +1615,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(DialogResponses.Mask<>);
 
@@ -2052,6 +2055,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (DialogResponses_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (DialogResponses_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (DialogResponses_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

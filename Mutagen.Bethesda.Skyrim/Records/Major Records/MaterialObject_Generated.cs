@@ -210,6 +210,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Model,
                 TItem DNAMs,
                 TItem FalloffScale,
@@ -228,7 +229,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.DNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DNAMs, Enumerable.Empty<(int Index, TItem Value)>());
@@ -1224,18 +1226,19 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Model = 6,
-        DNAMs = 7,
-        FalloffScale = 8,
-        FalloffBias = 9,
-        NoiseUvScale = 10,
-        MaterialUvScale = 11,
-        ProjectionVector = 12,
-        NormalDampener = 13,
-        SinglePassColor = 14,
-        Flags = 15,
-        HasSnow = 16,
-        DATADataTypeState = 17,
+        SkyrimMajorRecordFlags = 6,
+        Model = 7,
+        DNAMs = 8,
+        FalloffScale = 9,
+        FalloffBias = 10,
+        NoiseUvScale = 11,
+        MaterialUvScale = 12,
+        ProjectionVector = 13,
+        NormalDampener = 14,
+        SinglePassColor = 15,
+        Flags = 16,
+        HasSnow = 17,
+        DATADataTypeState = 18,
     }
     #endregion
 
@@ -1255,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(MaterialObject.Mask<>);
 
@@ -1598,6 +1601,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (MaterialObject_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (MaterialObject_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (MaterialObject_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

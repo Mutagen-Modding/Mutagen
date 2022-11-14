@@ -198,6 +198,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem Priority,
                 TItem Branch,
@@ -216,7 +217,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.Priority = Priority;
@@ -1458,18 +1460,19 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Priority = 7,
-        Branch = 8,
-        Quest = 9,
-        TopicFlags = 10,
-        Category = 11,
-        Subtype = 12,
-        SubtypeName = 13,
-        Timestamp = 14,
-        Unknown = 15,
-        Responses = 16,
-        DATADataTypeState = 17,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        Priority = 8,
+        Branch = 9,
+        Quest = 10,
+        TopicFlags = 11,
+        Category = 12,
+        Subtype = 13,
+        SubtypeName = 14,
+        Timestamp = 15,
+        Unknown = 16,
+        Responses = 17,
+        DATADataTypeState = 18,
     }
     #endregion
 
@@ -1489,7 +1492,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(DialogTopic.Mask<>);
 
@@ -1926,6 +1929,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (DialogTopic_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (DialogTopic_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (DialogTopic_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

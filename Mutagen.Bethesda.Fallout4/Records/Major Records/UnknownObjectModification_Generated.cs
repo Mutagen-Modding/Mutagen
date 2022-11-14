@@ -108,6 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Description,
                 TItem Model,
@@ -132,6 +133,7 @@ namespace Mutagen.Bethesda.Fallout4
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags,
                 Name: Name,
                 Description: Description,
                 Model: Model,
@@ -816,23 +818,24 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Description = 7,
-        Model = 8,
-        Unknown = 9,
-        MaxRank = 10,
-        LevelTierScaledOffset = 11,
-        AttachPoint = 12,
-        AttachParentSlots = 13,
-        Items = 14,
-        Includes = 15,
-        TargetOmodKeywords = 16,
-        FilterKeywords = 17,
-        LooseMod = 18,
-        Priority = 19,
-        Filter = 20,
-        Properties = 21,
-        ModificationType = 22,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Description = 8,
+        Model = 9,
+        Unknown = 10,
+        MaxRank = 11,
+        LevelTierScaledOffset = 12,
+        AttachPoint = 13,
+        AttachParentSlots = 14,
+        Items = 15,
+        Includes = 16,
+        TargetOmodKeywords = 17,
+        FilterKeywords = 18,
+        LooseMod = 19,
+        Priority = 20,
+        Filter = 21,
+        Properties = 22,
+        ModificationType = 23,
     }
     #endregion
 
@@ -852,7 +855,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(UnknownObjectModification.Mask<>);
 
@@ -1120,6 +1123,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Version2:
                     return (UnknownObjectModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Fallout4MajorRecordFlags:
+                    return (UnknownObjectModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Name:
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Description:
@@ -1170,6 +1175,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (UnknownObjectModification_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

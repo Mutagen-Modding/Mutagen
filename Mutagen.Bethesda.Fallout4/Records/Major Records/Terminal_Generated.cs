@@ -359,6 +359,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -384,7 +385,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapterIndexed.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapterIndexed.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1969,25 +1971,26 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        HeaderText = 9,
-        WelcomeText = 10,
-        Name = 11,
-        Model = 12,
-        Keywords = 13,
-        Properties = 14,
-        PNAM = 15,
-        LoopingSound = 16,
-        FNAM = 17,
-        Holotapes = 18,
-        Flags = 19,
-        WorkbenchData = 20,
-        MarkerModel = 21,
-        MarkerParameters = 22,
-        BodyTexts = 23,
-        MenuItems = 24,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        HeaderText = 10,
+        WelcomeText = 11,
+        Name = 12,
+        Model = 13,
+        Keywords = 14,
+        Properties = 15,
+        PNAM = 16,
+        LoopingSound = 17,
+        FNAM = 18,
+        Holotapes = 19,
+        Flags = 20,
+        WorkbenchData = 21,
+        MarkerModel = 22,
+        MarkerParameters = 23,
+        BodyTexts = 24,
+        MenuItems = 25,
     }
     #endregion
 
@@ -2007,7 +2010,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 25;
+        public const ushort FieldCount = 26;
 
         public static readonly Type MaskType = typeof(Terminal.Mask<>);
 
@@ -2495,6 +2498,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Terminal_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Terminal_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Terminal_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

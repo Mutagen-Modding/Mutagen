@@ -91,6 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.FormVersion = initialValue;
                 this.Version2 = initialValue;
+                this.SkyrimMajorRecordFlags = initialValue;
             }
 
             public Mask(
@@ -99,7 +100,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem SkyrimMajorRecordFlags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -108,6 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.FormVersion = FormVersion;
                 this.Version2 = Version2;
+                this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
             }
 
             #pragma warning disable CS8618
@@ -121,6 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public TItem FormVersion;
             public TItem Version2;
+            public TItem SkyrimMajorRecordFlags;
             #endregion
 
             #region Equals
@@ -136,6 +140,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.FormVersion, rhs.FormVersion)) return false;
                 if (!object.Equals(this.Version2, rhs.Version2)) return false;
+                if (!object.Equals(this.SkyrimMajorRecordFlags, rhs.SkyrimMajorRecordFlags)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -143,6 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.FormVersion);
                 hash.Add(this.Version2);
+                hash.Add(this.SkyrimMajorRecordFlags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -155,6 +161,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.All(eval)) return false;
                 if (!eval(this.FormVersion)) return false;
                 if (!eval(this.Version2)) return false;
+                if (!eval(this.SkyrimMajorRecordFlags)) return false;
                 return true;
             }
             #endregion
@@ -165,6 +172,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (base.Any(eval)) return true;
                 if (eval(this.FormVersion)) return true;
                 if (eval(this.Version2)) return true;
+                if (eval(this.SkyrimMajorRecordFlags)) return true;
                 return false;
             }
             #endregion
@@ -182,6 +190,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 obj.FormVersion = eval(this.FormVersion);
                 obj.Version2 = eval(this.Version2);
+                obj.SkyrimMajorRecordFlags = eval(this.SkyrimMajorRecordFlags);
             }
             #endregion
 
@@ -208,6 +217,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Version2, "Version2");
                     }
+                    if (printMask?.SkyrimMajorRecordFlags ?? true)
+                    {
+                        sb.AppendItem(SkyrimMajorRecordFlags, "SkyrimMajorRecordFlags");
+                    }
                 }
             }
             #endregion
@@ -221,6 +234,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public Exception? FormVersion;
             public Exception? Version2;
+            public Exception? SkyrimMajorRecordFlags;
             #endregion
 
             #region IErrorMask
@@ -233,6 +247,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return FormVersion;
                     case SkyrimMajorRecord_FieldIndex.Version2:
                         return Version2;
+                    case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                        return SkyrimMajorRecordFlags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -248,6 +264,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMajorRecord_FieldIndex.Version2:
                         this.Version2 = ex;
+                        break;
+                    case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                        this.SkyrimMajorRecordFlags = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -266,6 +285,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMajorRecord_FieldIndex.Version2:
                         this.Version2 = (Exception?)obj;
                         break;
+                    case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                        this.SkyrimMajorRecordFlags = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -277,6 +299,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (FormVersion != null) return true;
                 if (Version2 != null) return true;
+                if (SkyrimMajorRecordFlags != null) return true;
                 return false;
             }
             #endregion
@@ -309,6 +332,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Version2, "Version2");
                 }
+                {
+                    sb.AppendItem(SkyrimMajorRecordFlags, "SkyrimMajorRecordFlags");
+                }
             }
             #endregion
 
@@ -319,6 +345,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.FormVersion = this.FormVersion.Combine(rhs.FormVersion);
                 ret.Version2 = this.Version2.Combine(rhs.Version2);
+                ret.SkyrimMajorRecordFlags = this.SkyrimMajorRecordFlags.Combine(rhs.SkyrimMajorRecordFlags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -343,6 +370,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public bool FormVersion;
             public bool Version2;
+            public bool SkyrimMajorRecordFlags;
             #endregion
 
             #region Ctors
@@ -353,6 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.FormVersion = defaultOn;
                 this.Version2 = defaultOn;
+                this.SkyrimMajorRecordFlags = defaultOn;
             }
 
             #endregion
@@ -362,6 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((FormVersion, null));
                 ret.Add((Version2, null));
+                ret.Add((SkyrimMajorRecordFlags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -524,6 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new UInt16 FormVersion { get; set; }
         new UInt16 Version2 { get; set; }
+        new SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags { get; set; }
     }
 
     public partial interface ISkyrimMajorRecordInternal :
@@ -547,6 +578,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => SkyrimMajorRecord_Registration.Instance;
         UInt16 FormVersion { get; }
         UInt16 Version2 { get; }
+        SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags { get; }
 
     }
 
@@ -934,6 +966,7 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        SkyrimMajorRecordFlags = 6,
     }
     #endregion
 
@@ -951,9 +984,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "7fb2c257-4be7-4aaf-a3c8-4e7f76deaa60";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(SkyrimMajorRecord.Mask<>);
 
@@ -1023,6 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.FormVersion = default;
             item.Version2 = default;
+            item.SkyrimMajorRecordFlags = default;
             base.Clear(item);
         }
         
@@ -1170,6 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ret.FormVersion = item.FormVersion == rhs.FormVersion;
             ret.Version2 = item.Version2 == rhs.Version2;
+            ret.SkyrimMajorRecordFlags = item.SkyrimMajorRecordFlags == rhs.SkyrimMajorRecordFlags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1227,6 +1262,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Version2, "Version2");
             }
+            if (printMask?.SkyrimMajorRecordFlags ?? true)
+            {
+                sb.AppendItem(item.SkyrimMajorRecordFlags, "SkyrimMajorRecordFlags");
+            }
         }
         
         public static SkyrimMajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -1262,6 +1301,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Version2 != rhs.Version2) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags) ?? true))
+            {
+                if (lhs.SkyrimMajorRecordFlags != rhs.SkyrimMajorRecordFlags) return false;
+            }
             return true;
         }
         
@@ -1281,6 +1324,7 @@ namespace Mutagen.Bethesda.Skyrim
             var hash = new HashCode();
             hash.Add(item.FormVersion);
             hash.Add(item.Version2);
+            hash.Add(item.SkyrimMajorRecordFlags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1440,6 +1484,10 @@ namespace Mutagen.Bethesda.Skyrim
             if ((copyMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.Version2) ?? true))
             {
                 item.Version2 = rhs.Version2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags) ?? true))
+            {
+                item.SkyrimMajorRecordFlags = rhs.SkyrimMajorRecordFlags;
             }
         }
         

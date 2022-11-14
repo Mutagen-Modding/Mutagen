@@ -34,4 +34,9 @@ public partial interface ISkyrimMajorRecord : IFormVersionSetter
 partial class SkyrimMajorRecordBinaryOverlay
 {
     protected override ushort? FormVersionAbstract => this.FormVersion;
+
+    public SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags
+    {
+        get => (SkyrimMajorRecord.SkyrimMajorRecordFlag)this.MajorRecordFlagsRaw;
+    }
 }

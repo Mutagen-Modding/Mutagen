@@ -147,6 +147,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Data,
                 TItem Type,
                 TItem StaticAttenuation,
@@ -159,7 +160,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Data = new MaskItem<TItem, SoundOutputData.Mask<TItem>?>(Data, new SoundOutputData.Mask<TItem>(Data));
                 this.Type = Type;
@@ -889,12 +891,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Data = 6,
-        Type = 7,
-        StaticAttenuation = 8,
-        OutputChannels = 9,
-        DynamicAttentuation = 10,
-        EffectChain = 11,
+        Fallout4MajorRecordFlags = 6,
+        Data = 7,
+        Type = 8,
+        StaticAttenuation = 9,
+        OutputChannels = 10,
+        DynamicAttentuation = 11,
+        EffectChain = 12,
     }
     #endregion
 
@@ -914,7 +917,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(SoundOutputModel.Mask<>);
 
@@ -1201,6 +1204,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (SoundOutputModel_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (SoundOutputModel_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (SoundOutputModel_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

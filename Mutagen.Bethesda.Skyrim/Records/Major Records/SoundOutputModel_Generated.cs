@@ -165,6 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Data,
                 TItem FNAM,
                 TItem Type,
@@ -178,7 +179,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Data = new MaskItem<TItem, SoundOutputData.Mask<TItem>?>(Data, new SoundOutputData.Mask<TItem>(Data));
                 this.FNAM = FNAM;
@@ -941,13 +943,14 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Data = 6,
-        FNAM = 7,
-        Type = 8,
-        CNAM = 9,
-        SNAM = 10,
-        OutputChannels = 11,
-        Attenuation = 12,
+        SkyrimMajorRecordFlags = 6,
+        Data = 7,
+        FNAM = 8,
+        Type = 9,
+        CNAM = 10,
+        SNAM = 11,
+        OutputChannels = 12,
+        Attenuation = 13,
     }
     #endregion
 
@@ -967,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(SoundOutputModel.Mask<>);
 
@@ -1262,6 +1265,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (SoundOutputModel_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (SoundOutputModel_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (SoundOutputModel_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

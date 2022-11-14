@@ -195,6 +195,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem MapColor,
                 TItem Worldspace,
                 TItem RegionAreas,
@@ -210,7 +211,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.MapColor = MapColor;
                 this.Worldspace = Worldspace;
@@ -1137,15 +1139,16 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        MapColor = 6,
-        Worldspace = 7,
-        RegionAreas = 8,
-        Objects = 9,
-        Weather = 10,
-        Map = 11,
-        Land = 12,
-        Grasses = 13,
-        Sounds = 14,
+        SkyrimMajorRecordFlags = 6,
+        MapColor = 7,
+        Worldspace = 8,
+        RegionAreas = 9,
+        Objects = 10,
+        Weather = 11,
+        Map = 12,
+        Land = 13,
+        Grasses = 14,
+        Sounds = 15,
     }
     #endregion
 
@@ -1165,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Region.Mask<>);
 
@@ -1563,6 +1566,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Region_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Region_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Region_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

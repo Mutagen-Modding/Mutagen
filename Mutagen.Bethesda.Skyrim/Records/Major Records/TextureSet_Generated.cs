@@ -179,6 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Diffuse,
                 TItem NormalOrGloss,
@@ -196,7 +197,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Diffuse = Diffuse;
@@ -1095,17 +1097,18 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Diffuse = 7,
-        NormalOrGloss = 8,
-        EnvironmentMaskOrSubsurfaceTint = 9,
-        GlowOrDetailMap = 10,
-        Height = 11,
-        Environment = 12,
-        Multilayer = 13,
-        BacklightMaskOrSpecular = 14,
-        Decal = 15,
-        Flags = 16,
+        SkyrimMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Diffuse = 8,
+        NormalOrGloss = 9,
+        EnvironmentMaskOrSubsurfaceTint = 10,
+        GlowOrDetailMap = 11,
+        Height = 12,
+        Environment = 13,
+        Multilayer = 14,
+        BacklightMaskOrSpecular = 15,
+        Decal = 16,
+        Flags = 17,
     }
     #endregion
 
@@ -1125,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(TextureSet.Mask<>);
 
@@ -1497,6 +1500,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (TextureSet_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (TextureSet_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (TextureSet_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

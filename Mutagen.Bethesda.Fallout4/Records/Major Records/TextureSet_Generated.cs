@@ -179,6 +179,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Diffuse,
                 TItem NormalOrGloss,
@@ -197,7 +198,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Diffuse = Diffuse;
@@ -1114,18 +1116,19 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Diffuse = 7,
-        NormalOrGloss = 8,
-        Glow = 9,
-        Height = 10,
-        Environment = 11,
-        Wrinkles = 12,
-        Multilayer = 13,
-        SmoothSpec = 14,
-        Decal = 15,
-        Flags = 16,
-        Material = 17,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Diffuse = 8,
+        NormalOrGloss = 9,
+        Glow = 10,
+        Height = 11,
+        Environment = 12,
+        Wrinkles = 13,
+        Multilayer = 14,
+        SmoothSpec = 15,
+        Decal = 16,
+        Flags = 17,
+        Material = 18,
     }
     #endregion
 
@@ -1145,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(TextureSet.Mask<>);
 
@@ -1470,6 +1473,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (TextureSet_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (TextureSet_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (TextureSet_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

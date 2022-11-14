@@ -296,6 +296,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Flags,
                 TItem Phases,
@@ -321,7 +322,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, SceneAdapter.Mask<TItem>?>(VirtualMachineAdapter, new SceneAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Flags = Flags;
@@ -1789,25 +1791,26 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Flags = 7,
-        Phases = 8,
-        Actors = 9,
-        Actions = 10,
-        Unused = 11,
-        Unused2 = 12,
-        Quest = 13,
-        LastActionIndex = 14,
-        VNAM = 15,
-        CameraDistanceOverride = 16,
-        DialogueDistanceOverride = 17,
-        FovOverride = 18,
-        Keywords = 19,
-        Conditions = 20,
-        SetParentQuestStage = 21,
-        Notes = 22,
-        Template = 23,
-        Index = 24,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Flags = 8,
+        Phases = 9,
+        Actors = 10,
+        Actions = 11,
+        Unused = 12,
+        Unused2 = 13,
+        Quest = 14,
+        LastActionIndex = 15,
+        VNAM = 16,
+        CameraDistanceOverride = 17,
+        DialogueDistanceOverride = 18,
+        FovOverride = 19,
+        Keywords = 20,
+        Conditions = 21,
+        SetParentQuestStage = 22,
+        Notes = 23,
+        Template = 24,
+        Index = 25,
     }
     #endregion
 
@@ -1827,7 +1830,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 25;
+        public const ushort FieldCount = 26;
 
         public static readonly Type MaskType = typeof(Scene.Mask<>);
 
@@ -2332,6 +2335,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Scene_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Scene_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Scene_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

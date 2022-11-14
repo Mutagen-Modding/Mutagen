@@ -115,6 +115,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Radius,
                 TItem MinDelay,
                 TItem MaxDelay,
@@ -128,7 +129,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Radius = Radius;
                 this.MinDelay = MinDelay;
@@ -873,13 +875,14 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Radius = 6,
-        MinDelay = 7,
-        MaxDelay = 8,
-        RequiresLineOfSight = 9,
-        IsCombatTarget = 10,
-        Unused = 11,
-        AOR2DataTypeState = 12,
+        Fallout4MajorRecordFlags = 6,
+        Radius = 7,
+        MinDelay = 8,
+        MaxDelay = 9,
+        RequiresLineOfSight = 10,
+        IsCombatTarget = 11,
+        Unused = 12,
+        AOR2DataTypeState = 13,
     }
     #endregion
 
@@ -899,7 +902,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(AttractionRule.Mask<>);
 
@@ -1169,6 +1172,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (AttractionRule_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (AttractionRule_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (AttractionRule_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

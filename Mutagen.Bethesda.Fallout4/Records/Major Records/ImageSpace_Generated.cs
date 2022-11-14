@@ -219,6 +219,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem HdrEyeAdaptSpeed,
                 TItem HdrTonemapE,
                 TItem HdrBloomThreshold,
@@ -252,7 +253,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.HdrEyeAdaptSpeed = HdrEyeAdaptSpeed;
                 this.HdrTonemapE = HdrTonemapE;
@@ -1610,33 +1612,34 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        HdrEyeAdaptSpeed = 6,
-        HdrTonemapE = 7,
-        HdrBloomThreshold = 8,
-        HdrBloomScale = 9,
-        HdrAutoExposureMax = 10,
-        HdrAutoExposureMin = 11,
-        HdrSunlightScale = 12,
-        HdrSkyScale = 13,
-        HdrMiddleGray = 14,
-        CinematicSaturation = 15,
-        CinematicBrightness = 16,
-        CinematicContrast = 17,
-        TintAmount = 18,
-        TintColor = 19,
-        DepthOfFieldStrength = 20,
-        DepthOfFieldDistance = 21,
-        DepthOfFieldRange = 22,
-        DepthOfFieldUnused = 23,
-        DepthOfFieldBlurRadius = 24,
-        DepthOfFieldSky = 25,
-        DepthOfFieldVignetteRadius = 26,
-        DepthOfFieldVignetteStrength = 27,
-        Lut = 28,
-        HNAMDataTypeState = 29,
-        CNAMDataTypeState = 30,
-        TNAMDataTypeState = 31,
-        DNAMDataTypeState = 32,
+        Fallout4MajorRecordFlags = 6,
+        HdrEyeAdaptSpeed = 7,
+        HdrTonemapE = 8,
+        HdrBloomThreshold = 9,
+        HdrBloomScale = 10,
+        HdrAutoExposureMax = 11,
+        HdrAutoExposureMin = 12,
+        HdrSunlightScale = 13,
+        HdrSkyScale = 14,
+        HdrMiddleGray = 15,
+        CinematicSaturation = 16,
+        CinematicBrightness = 17,
+        CinematicContrast = 18,
+        TintAmount = 19,
+        TintColor = 20,
+        DepthOfFieldStrength = 21,
+        DepthOfFieldDistance = 22,
+        DepthOfFieldRange = 23,
+        DepthOfFieldUnused = 24,
+        DepthOfFieldBlurRadius = 25,
+        DepthOfFieldSky = 26,
+        DepthOfFieldVignetteRadius = 27,
+        DepthOfFieldVignetteStrength = 28,
+        Lut = 29,
+        HNAMDataTypeState = 30,
+        CNAMDataTypeState = 31,
+        TNAMDataTypeState = 32,
+        DNAMDataTypeState = 33,
     }
     #endregion
 
@@ -1656,7 +1659,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 33;
+        public const ushort FieldCount = 34;
 
         public static readonly Type MaskType = typeof(ImageSpace.Mask<>);
 
@@ -2052,6 +2055,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (ImageSpace_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (ImageSpace_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (ImageSpace_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

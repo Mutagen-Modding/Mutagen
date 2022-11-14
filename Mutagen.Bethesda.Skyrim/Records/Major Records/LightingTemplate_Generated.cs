@@ -220,6 +220,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem AmbientColor,
                 TItem DirectionalColor,
                 TItem FogNearColor,
@@ -244,7 +245,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.AmbientColor = AmbientColor;
                 this.DirectionalColor = DirectionalColor;
@@ -1337,24 +1339,25 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        AmbientColor = 6,
-        DirectionalColor = 7,
-        FogNearColor = 8,
-        FogNear = 9,
-        FogFar = 10,
-        DirectionalRotationXY = 11,
-        DirectionalRotationZ = 12,
-        DirectionalFade = 13,
-        FogClipDistance = 14,
-        FogPower = 15,
-        AmbientColors = 16,
-        FogFarColor = 17,
-        FogMax = 18,
-        LightFadeStartDistance = 19,
-        LightFadeEndDistance = 20,
-        Unknown = 21,
-        DirectionalAmbientColors = 22,
-        DATADataTypeState = 23,
+        SkyrimMajorRecordFlags = 6,
+        AmbientColor = 7,
+        DirectionalColor = 8,
+        FogNearColor = 9,
+        FogNear = 10,
+        FogFar = 11,
+        DirectionalRotationXY = 12,
+        DirectionalRotationZ = 13,
+        DirectionalFade = 14,
+        FogClipDistance = 15,
+        FogPower = 16,
+        AmbientColors = 17,
+        FogFarColor = 18,
+        FogMax = 19,
+        LightFadeStartDistance = 20,
+        LightFadeEndDistance = 21,
+        Unknown = 22,
+        DirectionalAmbientColors = 23,
+        DATADataTypeState = 24,
     }
     #endregion
 
@@ -1374,7 +1377,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(LightingTemplate.Mask<>);
 
@@ -1716,6 +1719,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (LightingTemplate_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (LightingTemplate_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (LightingTemplate_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

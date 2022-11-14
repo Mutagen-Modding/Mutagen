@@ -511,6 +511,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Name,
                 TItem MenuDisplayObject,
@@ -563,7 +564,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
@@ -2793,52 +2795,53 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Name = 7,
-        MenuDisplayObject = 8,
-        Keywords = 9,
-        Flags = 10,
-        BaseCost = 11,
-        MagicSkill = 12,
-        ResistValue = 13,
-        CounterEffectCount = 14,
-        Unknown1 = 15,
-        CastingLight = 16,
-        TaperWeight = 17,
-        HitShader = 18,
-        EnchantShader = 19,
-        MinimumSkillLevel = 20,
-        SpellmakingArea = 21,
-        SpellmakingCastingTime = 22,
-        TaperCurve = 23,
-        TaperDuration = 24,
-        SecondActorValueWeight = 25,
-        Archetype = 26,
-        Projectile = 27,
-        Explosion = 28,
-        CastType = 29,
-        TargetType = 30,
-        SecondActorValue = 31,
-        CastingArt = 32,
-        HitEffectArt = 33,
-        ImpactData = 34,
-        SkillUsageMultiplier = 35,
-        DualCastArt = 36,
-        DualCastScale = 37,
-        EnchantArt = 38,
-        HitVisuals = 39,
-        EnchantVisuals = 40,
-        EquipAbility = 41,
-        ImageSpaceModifier = 42,
-        PerkToApply = 43,
-        CastingSoundLevel = 44,
-        ScriptEffectAIScore = 45,
-        ScriptEffectAIDelayTime = 46,
-        CounterEffects = 47,
-        Sounds = 48,
-        Description = 49,
-        Conditions = 50,
-        DATADataTypeState = 51,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        MenuDisplayObject = 9,
+        Keywords = 10,
+        Flags = 11,
+        BaseCost = 12,
+        MagicSkill = 13,
+        ResistValue = 14,
+        CounterEffectCount = 15,
+        Unknown1 = 16,
+        CastingLight = 17,
+        TaperWeight = 18,
+        HitShader = 19,
+        EnchantShader = 20,
+        MinimumSkillLevel = 21,
+        SpellmakingArea = 22,
+        SpellmakingCastingTime = 23,
+        TaperCurve = 24,
+        TaperDuration = 25,
+        SecondActorValueWeight = 26,
+        Archetype = 27,
+        Projectile = 28,
+        Explosion = 29,
+        CastType = 30,
+        TargetType = 31,
+        SecondActorValue = 32,
+        CastingArt = 33,
+        HitEffectArt = 34,
+        ImpactData = 35,
+        SkillUsageMultiplier = 36,
+        DualCastArt = 37,
+        DualCastScale = 38,
+        EnchantArt = 39,
+        HitVisuals = 40,
+        EnchantVisuals = 41,
+        EquipAbility = 42,
+        ImageSpaceModifier = 43,
+        PerkToApply = 44,
+        CastingSoundLevel = 45,
+        ScriptEffectAIScore = 46,
+        ScriptEffectAIDelayTime = 47,
+        CounterEffects = 48,
+        Sounds = 49,
+        Description = 50,
+        Conditions = 51,
+        DATADataTypeState = 52,
     }
     #endregion
 
@@ -2858,7 +2861,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 46;
 
-        public const ushort FieldCount = 52;
+        public const ushort FieldCount = 53;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -3460,6 +3463,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (MagicEffect_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (MagicEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

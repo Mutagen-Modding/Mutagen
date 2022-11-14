@@ -157,6 +157,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Conditions,
                 TItem Filename,
                 TItem AnimationEvent,
@@ -173,7 +174,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Filename = Filename;
@@ -1158,16 +1160,17 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Conditions = 6,
-        Filename = 7,
-        AnimationEvent = 8,
-        RelatedIdles = 9,
-        LoopingSecondsMin = 10,
-        LoopingSecondsMax = 11,
-        Flags = 12,
-        AnimationGroupSection = 13,
-        ReplayDelay = 14,
-        DATADataTypeState = 15,
+        SkyrimMajorRecordFlags = 6,
+        Conditions = 7,
+        Filename = 8,
+        AnimationEvent = 9,
+        RelatedIdles = 10,
+        LoopingSecondsMin = 11,
+        LoopingSecondsMax = 12,
+        Flags = 13,
+        AnimationGroupSection = 14,
+        ReplayDelay = 15,
+        DATADataTypeState = 16,
     }
     #endregion
 
@@ -1187,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(IdleAnimation.Mask<>);
 
@@ -1530,6 +1533,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (IdleAnimation_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (IdleAnimation_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (IdleAnimation_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

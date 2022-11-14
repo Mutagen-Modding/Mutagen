@@ -153,6 +153,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Quest,
                 TItem Branches,
                 TItem TNAMs,
@@ -164,7 +165,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Quest = Quest;
                 this.Branches = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Branches, Enumerable.Empty<(int Index, TItem Value)>());
@@ -983,11 +985,12 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Quest = 6,
-        Branches = 7,
-        TNAMs = 8,
-        ENAM = 9,
-        DNAM = 10,
+        Fallout4MajorRecordFlags = 6,
+        Quest = 7,
+        Branches = 8,
+        TNAMs = 9,
+        ENAM = 10,
+        DNAM = 11,
     }
     #endregion
 
@@ -1007,7 +1010,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(DialogView.Mask<>);
 
@@ -1299,6 +1302,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (DialogView_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (DialogView_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (DialogView_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

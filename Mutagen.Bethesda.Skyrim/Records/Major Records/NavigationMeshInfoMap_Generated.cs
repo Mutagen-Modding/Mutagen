@@ -133,6 +133,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem NavMeshVersion,
                 TItem MapInfos,
                 TItem PreferredPathing,
@@ -143,7 +144,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.NavMeshVersion = NavMeshVersion;
                 this.MapInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(MapInfos, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>());
@@ -875,10 +877,11 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        NavMeshVersion = 6,
-        MapInfos = 7,
-        PreferredPathing = 8,
-        NVSI = 9,
+        SkyrimMajorRecordFlags = 6,
+        NavMeshVersion = 7,
+        MapInfos = 8,
+        PreferredPathing = 9,
+        NVSI = 10,
     }
     #endregion
 
@@ -898,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(NavigationMeshInfoMap.Mask<>);
 
@@ -1175,6 +1178,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (NavigationMeshInfoMap_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (NavigationMeshInfoMap_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (NavigationMeshInfoMap_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

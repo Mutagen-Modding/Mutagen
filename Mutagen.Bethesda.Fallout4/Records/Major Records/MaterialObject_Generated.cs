@@ -192,6 +192,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Model,
                 TItem DNAMs,
                 TItem FalloffScale,
@@ -209,7 +210,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.DNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DNAMs, Enumerable.Empty<(int Index, TItem Value)>());
@@ -1162,17 +1164,18 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Model = 6,
-        DNAMs = 7,
-        FalloffScale = 8,
-        FalloffBias = 9,
-        NoiseUvScale = 10,
-        MaterialUvScale = 11,
-        ProjectionVector = 12,
-        NormalDampener = 13,
-        SinglePassColor = 14,
-        IsSinglePass = 15,
-        DATADataTypeState = 16,
+        Fallout4MajorRecordFlags = 6,
+        Model = 7,
+        DNAMs = 8,
+        FalloffScale = 9,
+        FalloffBias = 10,
+        NoiseUvScale = 11,
+        MaterialUvScale = 12,
+        ProjectionVector = 13,
+        NormalDampener = 14,
+        SinglePassColor = 15,
+        IsSinglePass = 16,
+        DATADataTypeState = 17,
     }
     #endregion
 
@@ -1192,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(MaterialObject.Mask<>);
 
@@ -1510,6 +1513,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (MaterialObject_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (MaterialObject_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (MaterialObject_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

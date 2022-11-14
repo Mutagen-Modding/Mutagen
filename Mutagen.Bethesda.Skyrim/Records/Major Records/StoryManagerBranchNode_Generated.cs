@@ -99,6 +99,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Parent,
                 TItem PreviousSibling,
                 TItem Conditions,
@@ -111,6 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 Parent: Parent,
                 PreviousSibling: PreviousSibling,
                 Conditions: Conditions)
@@ -711,11 +713,12 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        PreviousSibling = 7,
-        Conditions = 8,
-        Flags = 9,
-        MaxConcurrentQuests = 10,
+        SkyrimMajorRecordFlags = 6,
+        Parent = 7,
+        PreviousSibling = 8,
+        Conditions = 9,
+        Flags = 10,
+        MaxConcurrentQuests = 11,
     }
     #endregion
 
@@ -735,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(StoryManagerBranchNode.Mask<>);
 
@@ -995,6 +998,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return (StoryManagerBranchNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.Version2:
                     return (StoryManagerBranchNode_FieldIndex)((int)index);
+                case AStoryManagerNode_FieldIndex.SkyrimMajorRecordFlags:
+                    return (StoryManagerBranchNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.Parent:
                     return (StoryManagerBranchNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.PreviousSibling:
@@ -1021,6 +1026,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (StoryManagerBranchNode_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (StoryManagerBranchNode_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

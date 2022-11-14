@@ -491,6 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Name,
                 TItem MenuDisplayObject,
@@ -542,7 +543,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
@@ -2754,51 +2756,52 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Name = 7,
-        MenuDisplayObject = 8,
-        Keywords = 9,
-        Flags = 10,
-        BaseCost = 11,
-        MagicSkill = 12,
-        ResistValue = 13,
-        Unknown1 = 14,
-        CastingLight = 15,
-        TaperWeight = 16,
-        HitShader = 17,
-        EnchantShader = 18,
-        MinimumSkillLevel = 19,
-        SpellmakingArea = 20,
-        SpellmakingCastingTime = 21,
-        TaperCurve = 22,
-        TaperDuration = 23,
-        SecondActorValueWeight = 24,
-        Archetype = 25,
-        Projectile = 26,
-        Explosion = 27,
-        CastType = 28,
-        TargetType = 29,
-        SecondActorValue = 30,
-        CastingArt = 31,
-        HitEffectArt = 32,
-        ImpactData = 33,
-        SkillUsageMultiplier = 34,
-        DualCastArt = 35,
-        DualCastScale = 36,
-        EnchantArt = 37,
-        HitVisuals = 38,
-        EnchantVisuals = 39,
-        EquipAbility = 40,
-        ImageSpaceModifier = 41,
-        PerkToApply = 42,
-        CastingSoundLevel = 43,
-        ScriptEffectAIScore = 44,
-        ScriptEffectAIDelayTime = 45,
-        CounterEffects = 46,
-        Sounds = 47,
-        Description = 48,
-        Conditions = 49,
-        DATADataTypeState = 50,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        MenuDisplayObject = 9,
+        Keywords = 10,
+        Flags = 11,
+        BaseCost = 12,
+        MagicSkill = 13,
+        ResistValue = 14,
+        Unknown1 = 15,
+        CastingLight = 16,
+        TaperWeight = 17,
+        HitShader = 18,
+        EnchantShader = 19,
+        MinimumSkillLevel = 20,
+        SpellmakingArea = 21,
+        SpellmakingCastingTime = 22,
+        TaperCurve = 23,
+        TaperDuration = 24,
+        SecondActorValueWeight = 25,
+        Archetype = 26,
+        Projectile = 27,
+        Explosion = 28,
+        CastType = 29,
+        TargetType = 30,
+        SecondActorValue = 31,
+        CastingArt = 32,
+        HitEffectArt = 33,
+        ImpactData = 34,
+        SkillUsageMultiplier = 35,
+        DualCastArt = 36,
+        DualCastScale = 37,
+        EnchantArt = 38,
+        HitVisuals = 39,
+        EnchantVisuals = 40,
+        EquipAbility = 41,
+        ImageSpaceModifier = 42,
+        PerkToApply = 43,
+        CastingSoundLevel = 44,
+        ScriptEffectAIScore = 45,
+        ScriptEffectAIDelayTime = 46,
+        CounterEffects = 47,
+        Sounds = 48,
+        Description = 49,
+        Conditions = 50,
+        DATADataTypeState = 51,
     }
     #endregion
 
@@ -2818,7 +2821,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 45;
 
-        public const ushort FieldCount = 51;
+        public const ushort FieldCount = 52;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -3432,6 +3435,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (MagicEffect_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (MagicEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

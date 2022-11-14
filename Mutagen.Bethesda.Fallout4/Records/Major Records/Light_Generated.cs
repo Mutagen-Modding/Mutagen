@@ -419,6 +419,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -456,7 +457,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -2182,37 +2184,38 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        Model = 9,
-        Keywords = 10,
-        Destructible = 11,
-        Properties = 12,
-        Name = 13,
-        Icons = 14,
-        Time = 15,
-        Radius = 16,
-        Color = 17,
-        Flags = 18,
-        FalloffExponent = 19,
-        FOV = 20,
-        NearClip = 21,
-        FlickerPeriod = 22,
-        FlickerIntensityAmplitude = 23,
-        FlickerMovementAmplitude = 24,
-        Constant = 25,
-        Scalar = 26,
-        Exponent = 27,
-        GodRaysNearClip = 28,
-        Value = 29,
-        Weight = 30,
-        FadeValue = 31,
-        Gobo = 32,
-        Lens = 33,
-        GodRays = 34,
-        Sound = 35,
-        DATADataTypeState = 36,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        Model = 10,
+        Keywords = 11,
+        Destructible = 12,
+        Properties = 13,
+        Name = 14,
+        Icons = 15,
+        Time = 16,
+        Radius = 17,
+        Color = 18,
+        Flags = 19,
+        FalloffExponent = 20,
+        FOV = 21,
+        NearClip = 22,
+        FlickerPeriod = 23,
+        FlickerIntensityAmplitude = 24,
+        FlickerMovementAmplitude = 25,
+        Constant = 26,
+        Scalar = 27,
+        Exponent = 28,
+        GodRaysNearClip = 29,
+        Value = 30,
+        Weight = 31,
+        FadeValue = 32,
+        Gobo = 33,
+        Lens = 34,
+        GodRays = 35,
+        Sound = 36,
+        DATADataTypeState = 37,
     }
     #endregion
 
@@ -2232,7 +2235,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 38;
 
         public static readonly Type MaskType = typeof(Light.Mask<>);
 
@@ -2732,6 +2735,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Light_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Light_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Light_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

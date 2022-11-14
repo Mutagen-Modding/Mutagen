@@ -168,6 +168,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Weathers,
                 TItem SunTexture,
                 TItem SunGlareTexture,
@@ -186,7 +187,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(Weathers, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
                 this.SunTexture = SunTexture;
@@ -1165,18 +1167,19 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Weathers = 6,
-        SunTexture = 7,
-        SunGlareTexture = 8,
-        Model = 9,
-        SunriseBeginRaw = 10,
-        SunriseEndRaw = 11,
-        SunsetBeginRaw = 12,
-        SunsetEndRaw = 13,
-        Volatility = 14,
-        Moons = 15,
-        PhaseLength = 16,
-        TNAMDataTypeState = 17,
+        Fallout4MajorRecordFlags = 6,
+        Weathers = 7,
+        SunTexture = 8,
+        SunGlareTexture = 9,
+        Model = 10,
+        SunriseBeginRaw = 11,
+        SunriseEndRaw = 12,
+        SunsetBeginRaw = 13,
+        SunsetEndRaw = 14,
+        Volatility = 15,
+        Moons = 16,
+        PhaseLength = 17,
+        TNAMDataTypeState = 18,
     }
     #endregion
 
@@ -1196,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Climate.Mask<>);
 
@@ -1526,6 +1529,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Climate_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Climate_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Climate_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

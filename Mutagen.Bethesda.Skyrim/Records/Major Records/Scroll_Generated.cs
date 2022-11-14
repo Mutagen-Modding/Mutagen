@@ -327,6 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Keywords,
@@ -357,7 +358,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -1837,30 +1839,31 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Keywords = 8,
-        MenuDisplayObject = 9,
-        EquipmentType = 10,
-        Description = 11,
-        Model = 12,
-        Destructible = 13,
-        PickUpSound = 14,
-        PutDownSound = 15,
-        Value = 16,
-        Weight = 17,
-        BaseCost = 18,
-        Flags = 19,
-        Type = 20,
-        ChargeTime = 21,
-        CastType = 22,
-        TargetType = 23,
-        CastDuration = 24,
-        Range = 25,
-        HalfCostPerk = 26,
-        Effects = 27,
-        DATADataTypeState = 28,
-        SPITDataTypeState = 29,
+        SkyrimMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Keywords = 9,
+        MenuDisplayObject = 10,
+        EquipmentType = 11,
+        Description = 12,
+        Model = 13,
+        Destructible = 14,
+        PickUpSound = 15,
+        PutDownSound = 16,
+        Value = 17,
+        Weight = 18,
+        BaseCost = 19,
+        Flags = 20,
+        Type = 21,
+        ChargeTime = 22,
+        CastType = 23,
+        TargetType = 24,
+        CastDuration = 25,
+        Range = 26,
+        HalfCostPerk = 27,
+        Effects = 28,
+        DATADataTypeState = 29,
+        SPITDataTypeState = 30,
     }
     #endregion
 
@@ -1880,7 +1883,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 30;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(Scroll.Mask<>);
 
@@ -2349,6 +2352,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Scroll_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Scroll_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Scroll_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

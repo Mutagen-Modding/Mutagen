@@ -147,6 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ENAM,
                 TItem Hdr,
                 TItem Cinematic,
@@ -158,7 +159,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ENAM = ENAM;
                 this.Hdr = new MaskItem<TItem, ImageSpaceHdr.Mask<TItem>?>(Hdr, new ImageSpaceHdr.Mask<TItem>(Hdr));
@@ -866,11 +868,12 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ENAM = 6,
-        Hdr = 7,
-        Cinematic = 8,
-        Tint = 9,
-        DepthOfField = 10,
+        SkyrimMajorRecordFlags = 6,
+        ENAM = 7,
+        Hdr = 8,
+        Cinematic = 9,
+        Tint = 10,
+        DepthOfField = 11,
     }
     #endregion
 
@@ -890,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(ImageSpace.Mask<>);
 
@@ -1173,6 +1176,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (ImageSpace_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (ImageSpace_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (ImageSpace_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

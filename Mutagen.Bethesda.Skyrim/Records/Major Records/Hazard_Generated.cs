@@ -252,6 +252,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
@@ -273,7 +274,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -1324,21 +1326,22 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Model = 8,
-        ImageSpaceModifier = 9,
-        Limit = 10,
-        Radius = 11,
-        Lifetime = 12,
-        ImageSpaceRadius = 13,
-        TargetInterval = 14,
-        Flags = 15,
-        Spell = 16,
-        Light = 17,
-        ImpactDataSet = 18,
-        Sound = 19,
-        DATADataTypeState = 20,
+        SkyrimMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        ImageSpaceModifier = 10,
+        Limit = 11,
+        Radius = 12,
+        Lifetime = 13,
+        ImageSpaceRadius = 14,
+        TargetInterval = 15,
+        Flags = 16,
+        Spell = 17,
+        Light = 18,
+        ImpactDataSet = 19,
+        Sound = 20,
+        DATADataTypeState = 21,
     }
     #endregion
 
@@ -1358,7 +1361,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Hazard.Mask<>);
 
@@ -1714,6 +1717,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Hazard_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Hazard_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Hazard_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

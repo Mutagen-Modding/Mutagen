@@ -125,6 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Flags,
                 TItem Data,
                 TItem FadeDuration,
@@ -135,7 +136,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Flags = Flags;
                 this.Data = new MaskItem<TItem, MusicTypeData.Mask<TItem>?>(Data, new MusicTypeData.Mask<TItem>(Data));
@@ -869,10 +871,11 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Flags = 6,
-        Data = 7,
-        FadeDuration = 8,
-        Tracks = 9,
+        SkyrimMajorRecordFlags = 6,
+        Flags = 7,
+        Data = 8,
+        FadeDuration = 9,
+        Tracks = 10,
     }
     #endregion
 
@@ -892,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(MusicType.Mask<>);
 
@@ -1168,6 +1171,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (MusicType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (MusicType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (MusicType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem BackColor,
                 TItem ForwardColor,
                 TItem Intensity,
@@ -144,7 +145,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.BackColor = BackColor;
                 this.ForwardColor = ForwardColor;
@@ -979,16 +981,17 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        BackColor = 6,
-        ForwardColor = 7,
-        Intensity = 8,
-        AirColorScale = 9,
-        BackColorScale = 10,
-        ForwardColorScale = 11,
-        BackPhase = 12,
-        AirColor = 13,
-        ForwardPhase = 14,
-        DATADataTypeState = 15,
+        Fallout4MajorRecordFlags = 6,
+        BackColor = 7,
+        ForwardColor = 8,
+        Intensity = 9,
+        AirColorScale = 10,
+        BackColorScale = 11,
+        ForwardColorScale = 12,
+        BackPhase = 13,
+        AirColor = 14,
+        ForwardPhase = 15,
+        DATADataTypeState = 16,
     }
     #endregion
 
@@ -1008,7 +1011,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(GodRays.Mask<>);
 
@@ -1296,6 +1299,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (GodRays_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (GodRays_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (GodRays_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

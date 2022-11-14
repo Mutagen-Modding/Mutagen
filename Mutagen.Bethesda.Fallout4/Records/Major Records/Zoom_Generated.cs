@@ -115,6 +115,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem FovMult,
                 TItem Overlay,
                 TItem ImagespaceModifier,
@@ -126,7 +127,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.FovMult = FovMult;
                 this.Overlay = Overlay;
@@ -815,11 +817,12 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        FovMult = 6,
-        Overlay = 7,
-        ImagespaceModifier = 8,
-        CameraOffset = 9,
-        GNAMDataTypeState = 10,
+        Fallout4MajorRecordFlags = 6,
+        FovMult = 7,
+        Overlay = 8,
+        ImagespaceModifier = 9,
+        CameraOffset = 10,
+        GNAMDataTypeState = 11,
     }
     #endregion
 
@@ -839,7 +842,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Zoom.Mask<>);
 
@@ -1098,6 +1101,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Zoom_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Zoom_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Zoom_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

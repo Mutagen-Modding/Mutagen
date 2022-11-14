@@ -366,6 +366,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
@@ -404,7 +405,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -1974,38 +1976,39 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Model = 8,
-        Destructible = 9,
-        Flags = 10,
-        Type = 11,
-        Gravity = 12,
-        Speed = 13,
-        Range = 14,
-        Light = 15,
-        MuzzleFlash = 16,
-        TracerChance = 17,
-        ExplosionAltTriggerProximity = 18,
-        ExplosionAltTriggerTimer = 19,
-        Explosion = 20,
-        Sound = 21,
-        MuzzleFlashDuration = 22,
-        FadeDuration = 23,
-        ImpactForce = 24,
-        CountdownSound = 25,
-        DisaleSound = 26,
-        DefaultWeaponSource = 27,
-        ConeSpread = 28,
-        CollisionRadius = 29,
-        Lifetime = 30,
-        RelaunchInterval = 31,
-        DecalData = 32,
-        CollisionLayer = 33,
-        MuzzleFlashModel = 34,
-        TextureFilesHashes = 35,
-        SoundLevel = 36,
-        DATADataTypeState = 37,
+        SkyrimMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        Destructible = 10,
+        Flags = 11,
+        Type = 12,
+        Gravity = 13,
+        Speed = 14,
+        Range = 15,
+        Light = 16,
+        MuzzleFlash = 17,
+        TracerChance = 18,
+        ExplosionAltTriggerProximity = 19,
+        ExplosionAltTriggerTimer = 20,
+        Explosion = 21,
+        Sound = 22,
+        MuzzleFlashDuration = 23,
+        FadeDuration = 24,
+        ImpactForce = 25,
+        CountdownSound = 26,
+        DisaleSound = 27,
+        DefaultWeaponSource = 28,
+        ConeSpread = 29,
+        CollisionRadius = 30,
+        Lifetime = 31,
+        RelaunchInterval = 32,
+        DecalData = 33,
+        CollisionLayer = 34,
+        MuzzleFlashModel = 35,
+        TextureFilesHashes = 36,
+        SoundLevel = 37,
+        DATADataTypeState = 38,
     }
     #endregion
 
@@ -2025,7 +2028,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 32;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 39;
 
         public static readonly Type MaskType = typeof(Projectile.Mask<>);
 
@@ -2509,6 +2512,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Projectile_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Projectile_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Projectile_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

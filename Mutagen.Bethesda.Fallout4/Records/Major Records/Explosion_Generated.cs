@@ -311,6 +311,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
@@ -342,7 +343,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -1681,31 +1683,32 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Model = 8,
-        ObjectEffect = 9,
-        ImageSpaceModifier = 10,
-        Light = 11,
-        Sound1 = 12,
-        Sound2 = 13,
-        ImpactDataSet = 14,
-        PlacedObject = 15,
-        SpawnProjectile = 16,
-        Force = 17,
-        Damage = 18,
-        InnerRadius = 19,
-        OuterRadius = 20,
-        ISRadius = 21,
-        VerticalOffsetMult = 22,
-        Flags = 23,
-        SoundLevel = 24,
-        PlacedObjectAutoFadeDelay = 25,
-        Stagger = 26,
-        SpawnPosition = 27,
-        SpawnSpreadDegrees = 28,
-        SpawnCount = 29,
-        DATADataTypeState = 30,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        ObjectEffect = 10,
+        ImageSpaceModifier = 11,
+        Light = 12,
+        Sound1 = 13,
+        Sound2 = 14,
+        ImpactDataSet = 15,
+        PlacedObject = 16,
+        SpawnProjectile = 17,
+        Force = 18,
+        Damage = 19,
+        InnerRadius = 20,
+        OuterRadius = 21,
+        ISRadius = 22,
+        VerticalOffsetMult = 23,
+        Flags = 24,
+        SoundLevel = 25,
+        PlacedObjectAutoFadeDelay = 26,
+        Stagger = 27,
+        SpawnPosition = 28,
+        SpawnSpreadDegrees = 29,
+        SpawnCount = 30,
+        DATADataTypeState = 31,
     }
     #endregion
 
@@ -1725,7 +1728,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 25;
 
-        public const ushort FieldCount = 31;
+        public const ushort FieldCount = 32;
 
         public static readonly Type MaskType = typeof(Explosion.Mask<>);
 
@@ -2126,6 +2129,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Explosion_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Explosion_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Explosion_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

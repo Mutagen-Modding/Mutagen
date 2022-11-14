@@ -176,6 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Type,
                 TItem Duration,
                 TItem FadeOut,
@@ -191,7 +192,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Type = Type;
                 this.Duration = Duration;
@@ -1212,15 +1214,16 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Type = 6,
-        Duration = 7,
-        FadeOut = 8,
-        TrackFilename = 9,
-        FinaleFilename = 10,
-        LoopData = 11,
-        CuePoints = 12,
-        Conditions = 13,
-        Tracks = 14,
+        SkyrimMajorRecordFlags = 6,
+        Type = 7,
+        Duration = 8,
+        FadeOut = 9,
+        TrackFilename = 10,
+        FinaleFilename = 11,
+        LoopData = 12,
+        CuePoints = 13,
+        Conditions = 14,
+        Tracks = 15,
     }
     #endregion
 
@@ -1240,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(MusicTrack.Mask<>);
 
@@ -1610,6 +1613,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (MusicTrack_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (MusicTrack_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (MusicTrack_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

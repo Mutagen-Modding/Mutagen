@@ -141,6 +141,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Quest,
                 TItem Scenes,
                 TItem VNAM,
@@ -152,7 +153,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Quest = Quest;
                 this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneCollectionItem.Mask<TItem>?>>?>(Scenes, Enumerable.Empty<MaskItemIndexed<TItem, SceneCollectionItem.Mask<TItem>?>>());
@@ -969,11 +971,12 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Quest = 6,
-        Scenes = 7,
-        VNAM = 8,
-        XNAMs = 9,
-        VNAM2 = 10,
+        Fallout4MajorRecordFlags = 6,
+        Quest = 7,
+        Scenes = 8,
+        VNAM = 9,
+        XNAMs = 10,
+        VNAM2 = 11,
     }
     #endregion
 
@@ -993,7 +996,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(SceneCollection.Mask<>);
 
@@ -1284,6 +1287,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (SceneCollection_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (SceneCollection_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (SceneCollection_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

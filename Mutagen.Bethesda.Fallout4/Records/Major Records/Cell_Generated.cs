@@ -533,6 +533,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Flags,
                 TItem PreVisFilesTimestamp,
@@ -581,7 +582,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Flags = Flags;
@@ -3160,48 +3162,49 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Flags = 7,
-        PreVisFilesTimestamp = 8,
-        InPreVisFileOf = 9,
-        PreCombinedFilesTimestamp = 10,
-        Grid = 11,
-        Lighting = 12,
-        PrecombinedObjectLevelXY = 13,
-        PrecombinedObjectLevelZ = 14,
-        TVDT = 15,
-        MaxHeightData = 16,
-        LightingTemplate = 17,
-        WaterHeight = 18,
-        Regions = 19,
-        Location = 20,
-        XWCN = 21,
-        WaterVelocity = 22,
-        Water = 23,
-        Ownership = 24,
-        FactionRank = 25,
-        LockList = 26,
-        ExteriorLod = 27,
-        WaterEnvironmentMap = 28,
-        SkyAndWeatherFromRegion = 29,
-        AcousticSpace = 30,
-        EncounterZone = 31,
-        Music = 32,
-        ImageSpace = 33,
-        GodRays = 34,
-        PhysicsReferences = 35,
-        CombinedMeshes = 36,
-        CombinedMeshReferences = 37,
-        Landscape = 38,
-        NavigationMeshes = 39,
-        Timestamp = 40,
-        UnknownGroupData = 41,
-        PersistentTimestamp = 42,
-        PersistentUnknownGroupData = 43,
-        Persistent = 44,
-        TemporaryTimestamp = 45,
-        TemporaryUnknownGroupData = 46,
-        Temporary = 47,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Flags = 8,
+        PreVisFilesTimestamp = 9,
+        InPreVisFileOf = 10,
+        PreCombinedFilesTimestamp = 11,
+        Grid = 12,
+        Lighting = 13,
+        PrecombinedObjectLevelXY = 14,
+        PrecombinedObjectLevelZ = 15,
+        TVDT = 16,
+        MaxHeightData = 17,
+        LightingTemplate = 18,
+        WaterHeight = 19,
+        Regions = 20,
+        Location = 21,
+        XWCN = 22,
+        WaterVelocity = 23,
+        Water = 24,
+        Ownership = 25,
+        FactionRank = 26,
+        LockList = 27,
+        ExteriorLod = 28,
+        WaterEnvironmentMap = 29,
+        SkyAndWeatherFromRegion = 30,
+        AcousticSpace = 31,
+        EncounterZone = 32,
+        Music = 33,
+        ImageSpace = 34,
+        GodRays = 35,
+        PhysicsReferences = 36,
+        CombinedMeshes = 37,
+        CombinedMeshReferences = 38,
+        Landscape = 39,
+        NavigationMeshes = 40,
+        Timestamp = 41,
+        UnknownGroupData = 42,
+        PersistentTimestamp = 43,
+        PersistentUnknownGroupData = 44,
+        Persistent = 45,
+        TemporaryTimestamp = 46,
+        TemporaryUnknownGroupData = 47,
+        Temporary = 48,
     }
     #endregion
 
@@ -3221,7 +3224,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 42;
 
-        public const ushort FieldCount = 48;
+        public const ushort FieldCount = 49;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -4099,6 +4102,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Cell_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Cell_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Cell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -407,6 +407,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Base,
                 TItem EncounterZone,
@@ -448,7 +449,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Base = Base;
@@ -2295,41 +2297,42 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Base = 7,
-        EncounterZone = 8,
-        RagdollData = 9,
-        RagdollBipedData = 10,
-        Patrol = 11,
-        LevelModifier = 12,
-        Count = 13,
-        Radius = 14,
-        Health = 15,
-        LinkedReferences = 16,
-        ActivateParents = 17,
-        IsActivationPoint = 18,
-        IsLinkedRefTransient = 19,
-        ReferenceGroup = 20,
-        Layer = 21,
-        MaterialSwap = 22,
-        PersistentLocation = 23,
-        LocationReference = 24,
-        LocationRefTypes = 25,
-        IsIgnoredBySandbox = 26,
-        SplineConnections = 27,
-        HeadTrackingWeight = 28,
-        FavorCost = 29,
-        EnableParent = 30,
-        Ownership = 31,
-        FactionRank = 32,
-        Emittance = 33,
-        MultiboundReference = 34,
-        IsIgnoredBySandbox2 = 35,
-        Scale = 36,
-        Position = 37,
-        Rotation = 38,
-        Comments = 39,
-        DATADataTypeState = 40,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Base = 8,
+        EncounterZone = 9,
+        RagdollData = 10,
+        RagdollBipedData = 11,
+        Patrol = 12,
+        LevelModifier = 13,
+        Count = 14,
+        Radius = 15,
+        Health = 16,
+        LinkedReferences = 17,
+        ActivateParents = 18,
+        IsActivationPoint = 19,
+        IsLinkedRefTransient = 20,
+        ReferenceGroup = 21,
+        Layer = 22,
+        MaterialSwap = 23,
+        PersistentLocation = 24,
+        LocationReference = 25,
+        LocationRefTypes = 26,
+        IsIgnoredBySandbox = 27,
+        SplineConnections = 28,
+        HeadTrackingWeight = 29,
+        FavorCost = 30,
+        EnableParent = 31,
+        Ownership = 32,
+        FactionRank = 33,
+        Emittance = 34,
+        MultiboundReference = 35,
+        IsIgnoredBySandbox2 = 36,
+        Scale = 37,
+        Position = 38,
+        Rotation = 39,
+        Comments = 40,
+        DATADataTypeState = 41,
     }
     #endregion
 
@@ -2349,7 +2352,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 35;
 
-        public const ushort FieldCount = 41;
+        public const ushort FieldCount = 42;
 
         public static readonly Type MaskType = typeof(PlacedNpc.Mask<>);
 
@@ -2913,6 +2916,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (PlacedNpc_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (PlacedNpc_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (PlacedNpc_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

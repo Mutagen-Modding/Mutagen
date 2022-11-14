@@ -169,6 +169,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem GravityVelocity,
                 TItem RotationVelocity,
                 TItem ParticleSizeX,
@@ -189,7 +190,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.GravityVelocity = GravityVelocity;
                 this.RotationVelocity = RotationVelocity;
@@ -1157,20 +1159,21 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        GravityVelocity = 6,
-        RotationVelocity = 7,
-        ParticleSizeX = 8,
-        ParticleSizeY = 9,
-        CenterOffsetMin = 10,
-        CenterOffsetMax = 11,
-        InitialRotationRange = 12,
-        NumSubtexturesX = 13,
-        NumSubtexturesY = 14,
-        Type = 15,
-        BoxSize = 16,
-        ParticleDensity = 17,
-        ParticleTexture = 18,
-        DATADataTypeState = 19,
+        SkyrimMajorRecordFlags = 6,
+        GravityVelocity = 7,
+        RotationVelocity = 8,
+        ParticleSizeX = 9,
+        ParticleSizeY = 10,
+        CenterOffsetMin = 11,
+        CenterOffsetMax = 12,
+        InitialRotationRange = 13,
+        NumSubtexturesX = 14,
+        NumSubtexturesY = 15,
+        Type = 16,
+        BoxSize = 17,
+        ParticleDensity = 18,
+        ParticleTexture = 19,
+        DATADataTypeState = 20,
     }
     #endregion
 
@@ -1190,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(ShaderParticleGeometry.Mask<>);
 
@@ -1523,6 +1526,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (ShaderParticleGeometry_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -382,6 +382,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -409,7 +410,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1881,27 +1883,28 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        AnimationSound = 9,
-        Name = 10,
-        Model = 11,
-        Destructible = 12,
-        Keywords = 13,
-        Properties = 14,
-        NativeTerminal = 15,
-        ForcedLocRefType = 16,
-        MarkerColor = 17,
-        LoopingSound = 18,
-        ActivationSound = 19,
-        WaterType = 20,
-        ActivateTextOverride = 21,
-        Flags = 22,
-        InteractionKeyword = 23,
-        RadioReceiver = 24,
-        Conditions = 25,
-        NavmeshGeometry = 26,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        AnimationSound = 10,
+        Name = 11,
+        Model = 12,
+        Destructible = 13,
+        Keywords = 14,
+        Properties = 15,
+        NativeTerminal = 16,
+        ForcedLocRefType = 17,
+        MarkerColor = 18,
+        LoopingSound = 19,
+        ActivationSound = 20,
+        WaterType = 21,
+        ActivateTextOverride = 22,
+        Flags = 23,
+        InteractionKeyword = 24,
+        RadioReceiver = 25,
+        Conditions = 26,
+        NavmeshGeometry = 27,
     }
     #endregion
 
@@ -1921,7 +1924,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(Activator.Mask<>);
 
@@ -2397,6 +2400,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Activator_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Activator_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Activator_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

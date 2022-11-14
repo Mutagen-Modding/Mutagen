@@ -288,6 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Model,
@@ -315,7 +316,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1605,27 +1607,28 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Model = 8,
-        Destructible = 9,
-        Name = 10,
-        Icons = 11,
-        Time = 12,
-        Radius = 13,
-        Color = 14,
-        Flags = 15,
-        FalloffExponent = 16,
-        FOV = 17,
-        NearClip = 18,
-        FlickerPeriod = 19,
-        FlickerIntensityAmplitude = 20,
-        FlickerMovementAmplitude = 21,
-        Value = 22,
-        Weight = 23,
-        FadeValue = 24,
-        Sound = 25,
-        DATADataTypeState = 26,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Model = 9,
+        Destructible = 10,
+        Name = 11,
+        Icons = 12,
+        Time = 13,
+        Radius = 14,
+        Color = 15,
+        Flags = 16,
+        FalloffExponent = 17,
+        FOV = 18,
+        NearClip = 19,
+        FlickerPeriod = 20,
+        FlickerIntensityAmplitude = 21,
+        FlickerMovementAmplitude = 22,
+        Value = 23,
+        Weight = 24,
+        FadeValue = 25,
+        Sound = 26,
+        DATADataTypeState = 27,
     }
     #endregion
 
@@ -1645,7 +1648,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(Light.Mask<>);
 
@@ -2081,6 +2084,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Light_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Light_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Light_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -376,6 +376,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem EncounterZone,
                 TItem HeadTrackingWeight,
@@ -411,7 +412,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.EncounterZone = EncounterZone;
@@ -2115,35 +2117,36 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        EncounterZone = 7,
-        HeadTrackingWeight = 8,
-        FavorCost = 9,
-        Reflections = 10,
-        LinkedReferences = 11,
-        ActivateParents = 12,
-        UnknownReference = 13,
-        XATP = 14,
-        AmmoCount = 15,
-        IsLinkedRefTransient = 16,
-        Layer = 17,
-        MaterialSwap = 18,
-        ReferenceGroup = 19,
-        XCVR = 20,
-        EnableParent = 21,
-        Ownership = 22,
-        FactionRank = 23,
-        Emittance = 24,
-        MultiBoundReference = 25,
-        IsIgnoredBySandbox = 26,
-        LocationRefTypes = 27,
-        LocationReference = 28,
-        Scale = 29,
-        DistantLodData = 30,
-        Position = 31,
-        Rotation = 32,
-        Comments = 33,
-        DATADataTypeState = 34,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        EncounterZone = 8,
+        HeadTrackingWeight = 9,
+        FavorCost = 10,
+        Reflections = 11,
+        LinkedReferences = 12,
+        ActivateParents = 13,
+        UnknownReference = 14,
+        XATP = 15,
+        AmmoCount = 16,
+        IsLinkedRefTransient = 17,
+        Layer = 18,
+        MaterialSwap = 19,
+        ReferenceGroup = 20,
+        XCVR = 21,
+        EnableParent = 22,
+        Ownership = 23,
+        FactionRank = 24,
+        Emittance = 25,
+        MultiBoundReference = 26,
+        IsIgnoredBySandbox = 27,
+        LocationRefTypes = 28,
+        LocationReference = 29,
+        Scale = 30,
+        DistantLodData = 31,
+        Position = 32,
+        Rotation = 33,
+        Comments = 34,
+        DATADataTypeState = 35,
     }
     #endregion
 
@@ -2163,7 +2166,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 29;
 
-        public const ushort FieldCount = 35;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(APlacedTrap.Mask<>);
 
@@ -2731,6 +2734,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (APlacedTrap_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (APlacedTrap_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (APlacedTrap_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -175,6 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem Description,
                 TItem Icon,
@@ -193,7 +194,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.Description = Description;
@@ -1313,18 +1315,19 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Description = 7,
-        Icon = 8,
-        Unknown = 9,
-        Teaches = 10,
-        MaxTrainingLevel = 11,
-        SkillWeights = 12,
-        BleedoutDefault = 13,
-        VoicePoints = 14,
-        StatWeights = 15,
-        Unknown2 = 16,
-        DATADataTypeState = 17,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        Description = 8,
+        Icon = 9,
+        Unknown = 10,
+        Teaches = 11,
+        MaxTrainingLevel = 12,
+        SkillWeights = 13,
+        BleedoutDefault = 14,
+        VoicePoints = 15,
+        StatWeights = 16,
+        Unknown2 = 17,
+        DATADataTypeState = 18,
     }
     #endregion
 
@@ -1344,7 +1347,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Class.Mask<>);
 
@@ -1677,6 +1680,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Class_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Class_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Class_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

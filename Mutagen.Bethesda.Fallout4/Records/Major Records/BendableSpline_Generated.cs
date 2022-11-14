@@ -158,6 +158,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem DefaultNumberOfTiles,
                 TItem DefaultNumberOfSlices,
@@ -173,7 +174,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DefaultNumberOfTiles = DefaultNumberOfTiles;
@@ -1002,15 +1004,16 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        DefaultNumberOfTiles = 7,
-        DefaultNumberOfSlices = 8,
-        DefaultNumberOfTilesIsRelativeToLength = 9,
-        DefaultColor = 10,
-        WindSensibility = 11,
-        WindFlexibility = 12,
-        Texture = 13,
-        DNAMDataTypeState = 14,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        DefaultNumberOfTiles = 8,
+        DefaultNumberOfSlices = 9,
+        DefaultNumberOfTilesIsRelativeToLength = 10,
+        DefaultColor = 11,
+        WindSensibility = 12,
+        WindFlexibility = 13,
+        Texture = 14,
+        DNAMDataTypeState = 15,
     }
     #endregion
 
@@ -1030,7 +1033,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(BendableSpline.Mask<>);
 
@@ -1320,6 +1323,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (BendableSpline_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (BendableSpline_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (BendableSpline_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

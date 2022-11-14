@@ -455,6 +455,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem LeftStanding,
                 TItem LeftWalk,
@@ -494,7 +495,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.LeftStanding = LeftStanding;
@@ -2039,39 +2041,40 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        LeftStanding = 7,
-        LeftWalk = 8,
-        LeftRun = 9,
-        LeftSprint = 10,
-        RightStanding = 11,
-        RightWalk = 12,
-        RightRun = 13,
-        RightSprint = 14,
-        ForwardStanding = 15,
-        ForwardWalk = 16,
-        ForwardRun = 17,
-        ForwardSprint = 18,
-        BackStanding = 19,
-        BackWalk = 20,
-        BackRun = 21,
-        BackSprint = 22,
-        PitchStanding = 23,
-        PitchWalk = 24,
-        PitchRun = 25,
-        PitchSprint = 26,
-        RollStanding = 27,
-        RollWalk = 28,
-        RollRun = 29,
-        RollSprint = 30,
-        YawStanding = 31,
-        YawWalk = 32,
-        YawRun = 33,
-        YawSprint = 34,
-        AnimationChangeThresholds = 35,
-        FloatHeight = 36,
-        FlightAngleGain = 37,
-        SPEDDataTypeState = 38,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        LeftStanding = 8,
+        LeftWalk = 9,
+        LeftRun = 10,
+        LeftSprint = 11,
+        RightStanding = 12,
+        RightWalk = 13,
+        RightRun = 14,
+        RightSprint = 15,
+        ForwardStanding = 16,
+        ForwardWalk = 17,
+        ForwardRun = 18,
+        ForwardSprint = 19,
+        BackStanding = 20,
+        BackWalk = 21,
+        BackRun = 22,
+        BackSprint = 23,
+        PitchStanding = 24,
+        PitchWalk = 25,
+        PitchRun = 26,
+        PitchSprint = 27,
+        RollStanding = 28,
+        RollWalk = 29,
+        RollRun = 30,
+        RollSprint = 31,
+        YawStanding = 32,
+        YawWalk = 33,
+        YawRun = 34,
+        YawSprint = 35,
+        AnimationChangeThresholds = 36,
+        FloatHeight = 37,
+        FlightAngleGain = 38,
+        SPEDDataTypeState = 39,
     }
     #endregion
 
@@ -2091,7 +2094,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 39;
+        public const ushort FieldCount = 40;
 
         public static readonly Type MaskType = typeof(MovementType.Mask<>);
 
@@ -2529,6 +2532,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (MovementType_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (MovementType_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (MovementType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

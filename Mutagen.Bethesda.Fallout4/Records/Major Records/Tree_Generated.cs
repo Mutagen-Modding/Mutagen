@@ -273,6 +273,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Model,
@@ -299,7 +300,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1526,26 +1528,27 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Model = 8,
-        Ingredient = 9,
-        HarvestSound = 10,
-        Production = 11,
-        Name = 12,
-        TrunkFlexibility = 13,
-        BranchFlexibility = 14,
-        TrunkAmplitude = 15,
-        FrontAmplitude = 16,
-        BackAmplitude = 17,
-        SideAmplitude = 18,
-        FrontFrequency = 19,
-        BackFrequency = 20,
-        SideFrequency = 21,
-        LeafFlexibility = 22,
-        LeafAmplitude = 23,
-        LeafFrequency = 24,
-        CNAMDataTypeState = 25,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Model = 9,
+        Ingredient = 10,
+        HarvestSound = 11,
+        Production = 12,
+        Name = 13,
+        TrunkFlexibility = 14,
+        BranchFlexibility = 15,
+        TrunkAmplitude = 16,
+        FrontAmplitude = 17,
+        BackAmplitude = 18,
+        SideAmplitude = 19,
+        FrontFrequency = 20,
+        BackFrequency = 21,
+        SideFrequency = 22,
+        LeafFlexibility = 23,
+        LeafAmplitude = 24,
+        LeafFrequency = 25,
+        CNAMDataTypeState = 26,
     }
     #endregion
 
@@ -1565,7 +1568,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Tree.Mask<>);
 
@@ -1944,6 +1947,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Tree_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Tree_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Tree_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

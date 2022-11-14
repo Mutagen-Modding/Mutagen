@@ -130,6 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Description,
                 TItem Index,
                 TItem DebugColor,
@@ -142,7 +143,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Description = Description;
                 this.Index = Index;
@@ -941,12 +943,13 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Description = 6,
-        Index = 7,
-        DebugColor = 8,
-        Flags = 9,
-        Name = 10,
-        CollidesWith = 11,
+        SkyrimMajorRecordFlags = 6,
+        Description = 7,
+        Index = 8,
+        DebugColor = 9,
+        Flags = 10,
+        Name = 11,
+        CollidesWith = 12,
     }
     #endregion
 
@@ -966,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(CollisionLayer.Mask<>);
 
@@ -1251,6 +1254,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (CollisionLayer_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (CollisionLayer_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (CollisionLayer_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

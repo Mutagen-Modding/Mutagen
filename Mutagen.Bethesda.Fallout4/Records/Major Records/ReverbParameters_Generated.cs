@@ -143,6 +143,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem DecayMilliseconds,
                 TItem HfReferenceHertz,
                 TItem RoomFilter,
@@ -163,7 +164,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.DecayMilliseconds = DecayMilliseconds;
                 this.HfReferenceHertz = HfReferenceHertz;
@@ -1118,20 +1120,21 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        DecayMilliseconds = 6,
-        HfReferenceHertz = 7,
-        RoomFilter = 8,
-        RoomHfFilter = 9,
-        Reflections = 10,
-        ReverbAmp = 11,
-        DecayHfRatio = 12,
-        ReflectDelayMS = 13,
-        ReverbDelayMS = 14,
-        DiffusionPercent = 15,
-        DensityPercent = 16,
-        Unknown = 17,
-        ReverbClass = 18,
-        DATADataTypeState = 19,
+        Fallout4MajorRecordFlags = 6,
+        DecayMilliseconds = 7,
+        HfReferenceHertz = 8,
+        RoomFilter = 9,
+        RoomHfFilter = 10,
+        Reflections = 11,
+        ReverbAmp = 12,
+        DecayHfRatio = 13,
+        ReflectDelayMS = 14,
+        ReverbDelayMS = 15,
+        DiffusionPercent = 16,
+        DensityPercent = 17,
+        Unknown = 18,
+        ReverbClass = 19,
+        DATADataTypeState = 20,
     }
     #endregion
 
@@ -1151,7 +1154,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(ReverbParameters.Mask<>);
 
@@ -1464,6 +1467,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (ReverbParameters_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (ReverbParameters_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (ReverbParameters_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

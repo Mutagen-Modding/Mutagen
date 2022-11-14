@@ -432,6 +432,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem LargeReferences,
                 TItem MaxHeight,
                 TItem Name,
@@ -475,7 +476,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(LargeReferences, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>());
                 this.MaxHeight = new MaskItem<TItem, WorldspaceMaxHeight.Mask<TItem>?>(MaxHeight, new WorldspaceMaxHeight.Mask<TItem>(MaxHeight));
@@ -2581,43 +2583,44 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        LargeReferences = 6,
-        MaxHeight = 7,
-        Name = 8,
-        FixedDimensionsCenterCell = 9,
-        InteriorLighting = 10,
-        EncounterZone = 11,
-        Location = 12,
-        Parent = 13,
-        Climate = 14,
-        Water = 15,
-        LodWater = 16,
-        LodWaterHeight = 17,
-        LandDefaults = 18,
-        MapImage = 19,
-        CloudModel = 20,
-        MapData = 21,
-        WorldMapOffsetScale = 22,
-        WorldMapCellOffset = 23,
-        DistantLodMultiplier = 24,
-        Flags = 25,
-        ObjectBoundsMin = 26,
-        ObjectBoundsMax = 27,
-        Music = 28,
-        CanopyShadow = 29,
-        WaterEnvironmentMap = 30,
-        HdLodDiffuseTexture = 31,
-        HdLodNormalTexture = 32,
-        DefaultLevelData = 33,
-        OffsetData = 34,
-        CellSizeData = 35,
-        TopCell = 36,
-        SubCellsTimestamp = 37,
-        SubCellsUnknown = 38,
-        SubCells = 39,
-        ONAMDataTypeState = 40,
-        NAM0DataTypeState = 41,
-        NAM9DataTypeState = 42,
+        Fallout4MajorRecordFlags = 6,
+        LargeReferences = 7,
+        MaxHeight = 8,
+        Name = 9,
+        FixedDimensionsCenterCell = 10,
+        InteriorLighting = 11,
+        EncounterZone = 12,
+        Location = 13,
+        Parent = 14,
+        Climate = 15,
+        Water = 16,
+        LodWater = 17,
+        LodWaterHeight = 18,
+        LandDefaults = 19,
+        MapImage = 20,
+        CloudModel = 21,
+        MapData = 22,
+        WorldMapOffsetScale = 23,
+        WorldMapCellOffset = 24,
+        DistantLodMultiplier = 25,
+        Flags = 26,
+        ObjectBoundsMin = 27,
+        ObjectBoundsMax = 28,
+        Music = 29,
+        CanopyShadow = 30,
+        WaterEnvironmentMap = 31,
+        HdLodDiffuseTexture = 32,
+        HdLodNormalTexture = 33,
+        DefaultLevelData = 34,
+        OffsetData = 35,
+        CellSizeData = 36,
+        TopCell = 37,
+        SubCellsTimestamp = 38,
+        SubCellsUnknown = 39,
+        SubCells = 40,
+        ONAMDataTypeState = 41,
+        NAM0DataTypeState = 42,
+        NAM9DataTypeState = 43,
     }
     #endregion
 
@@ -2637,7 +2640,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 37;
 
-        public const ushort FieldCount = 43;
+        public const ushort FieldCount = 44;
 
         public static readonly Type MaskType = typeof(Worldspace.Mask<>);
 
@@ -3614,6 +3617,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Worldspace_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Worldspace_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Worldspace_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

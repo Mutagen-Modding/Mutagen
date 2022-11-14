@@ -231,6 +231,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Name,
                 TItem Description,
@@ -250,7 +251,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, PerkAdapter.Mask<TItem>?>(VirtualMachineAdapter, new PerkAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
@@ -1376,19 +1378,20 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Name = 7,
-        Description = 8,
-        Icons = 9,
-        Conditions = 10,
-        Trait = 11,
-        Level = 12,
-        NumRanks = 13,
-        Playable = 14,
-        Hidden = 15,
-        NextPerk = 16,
-        Effects = 17,
-        DATADataTypeState = 18,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        Description = 9,
+        Icons = 10,
+        Conditions = 11,
+        Trait = 12,
+        Level = 13,
+        NumRanks = 14,
+        Playable = 15,
+        Hidden = 16,
+        NextPerk = 17,
+        Effects = 18,
+        DATADataTypeState = 19,
     }
     #endregion
 
@@ -1408,7 +1411,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Perk.Mask<>);
 
@@ -1797,6 +1800,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Perk_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Perk_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Perk_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

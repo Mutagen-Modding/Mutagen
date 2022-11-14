@@ -163,6 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Intensity,
                 TItem CustomColorContribution,
                 TItem ColorR,
@@ -181,7 +182,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Intensity = Intensity;
                 this.CustomColorContribution = CustomColorContribution;
@@ -1079,18 +1081,19 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Intensity = 6,
-        CustomColorContribution = 7,
-        ColorR = 8,
-        ColorG = 9,
-        ColorB = 10,
-        DensityContribution = 11,
-        DensitySize = 12,
-        DensityWindSpeed = 13,
-        DensityFallingSpeed = 14,
-        PhaseFunctionContribution = 15,
-        PhaseFunctionScattering = 16,
-        SamplingRepartitionRangeFactor = 17,
+        SkyrimMajorRecordFlags = 6,
+        Intensity = 7,
+        CustomColorContribution = 8,
+        ColorR = 9,
+        ColorG = 10,
+        ColorB = 11,
+        DensityContribution = 12,
+        DensitySize = 13,
+        DensityWindSpeed = 14,
+        DensityFallingSpeed = 15,
+        PhaseFunctionContribution = 16,
+        PhaseFunctionScattering = 17,
+        SamplingRepartitionRangeFactor = 18,
     }
     #endregion
 
@@ -1110,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(VolumetricLighting.Mask<>);
 
@@ -1433,6 +1436,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (VolumetricLighting_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (VolumetricLighting_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (VolumetricLighting_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

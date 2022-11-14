@@ -415,6 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem LargeReferences,
                 TItem MaxHeight,
                 TItem Name,
@@ -457,7 +458,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(LargeReferences, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>());
                 this.MaxHeight = new MaskItem<TItem, WorldspaceMaxHeight.Mask<TItem>?>(MaxHeight, new WorldspaceMaxHeight.Mask<TItem>(MaxHeight));
@@ -2535,42 +2537,43 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        LargeReferences = 6,
-        MaxHeight = 7,
-        Name = 8,
-        FixedDimensionsCenterCell = 9,
-        InteriorLighting = 10,
-        EncounterZone = 11,
-        Location = 12,
-        Parent = 13,
-        Climate = 14,
-        Water = 15,
-        LodWater = 16,
-        LodWaterHeight = 17,
-        LandDefaults = 18,
-        MapImage = 19,
-        CloudModel = 20,
-        MapData = 21,
-        WorldMapOffsetScale = 22,
-        WorldMapCellOffset = 23,
-        DistantLodMultiplier = 24,
-        Flags = 25,
-        ObjectBoundsMin = 26,
-        ObjectBoundsMax = 27,
-        Music = 28,
-        CanopyShadow = 29,
-        WaterNoiseTexture = 30,
-        HdLodDiffuseTexture = 31,
-        HdLodNormalTexture = 32,
-        WaterEnvironmentMap = 33,
-        OffsetData = 34,
-        TopCell = 35,
-        SubCellsTimestamp = 36,
-        SubCellsUnknown = 37,
-        SubCells = 38,
-        ONAMDataTypeState = 39,
-        NAM0DataTypeState = 40,
-        NAM9DataTypeState = 41,
+        SkyrimMajorRecordFlags = 6,
+        LargeReferences = 7,
+        MaxHeight = 8,
+        Name = 9,
+        FixedDimensionsCenterCell = 10,
+        InteriorLighting = 11,
+        EncounterZone = 12,
+        Location = 13,
+        Parent = 14,
+        Climate = 15,
+        Water = 16,
+        LodWater = 17,
+        LodWaterHeight = 18,
+        LandDefaults = 19,
+        MapImage = 20,
+        CloudModel = 21,
+        MapData = 22,
+        WorldMapOffsetScale = 23,
+        WorldMapCellOffset = 24,
+        DistantLodMultiplier = 25,
+        Flags = 26,
+        ObjectBoundsMin = 27,
+        ObjectBoundsMax = 28,
+        Music = 29,
+        CanopyShadow = 30,
+        WaterNoiseTexture = 31,
+        HdLodDiffuseTexture = 32,
+        HdLodNormalTexture = 33,
+        WaterEnvironmentMap = 34,
+        OffsetData = 35,
+        TopCell = 36,
+        SubCellsTimestamp = 37,
+        SubCellsUnknown = 38,
+        SubCells = 39,
+        ONAMDataTypeState = 40,
+        NAM0DataTypeState = 41,
+        NAM9DataTypeState = 42,
     }
     #endregion
 
@@ -2590,7 +2593,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 36;
 
-        public const ushort FieldCount = 42;
+        public const ushort FieldCount = 43;
 
         public static readonly Type MaskType = typeof(Worldspace.Mask<>);
 
@@ -3552,6 +3555,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Worldspace_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Worldspace_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Worldspace_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

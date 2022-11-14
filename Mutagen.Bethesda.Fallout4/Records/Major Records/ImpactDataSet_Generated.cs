@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Impacts)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -110,7 +111,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(Impacts, Enumerable.Empty<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>());
             }
@@ -740,7 +742,8 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Impacts = 6,
+        Fallout4MajorRecordFlags = 6,
+        Impacts = 7,
     }
     #endregion
 
@@ -760,7 +763,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(ImpactDataSet.Mask<>);
 
@@ -1008,6 +1011,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (ImpactDataSet_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (ImpactDataSet_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (ImpactDataSet_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

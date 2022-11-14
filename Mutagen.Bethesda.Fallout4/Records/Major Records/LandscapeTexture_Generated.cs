@@ -141,6 +141,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem TextureSet,
                 TItem MaterialType,
                 TItem HavokFriction,
@@ -154,7 +155,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.TextureSet = TextureSet;
                 this.MaterialType = MaterialType;
@@ -972,13 +974,14 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        TextureSet = 6,
-        MaterialType = 7,
-        HavokFriction = 8,
-        HavokRestitution = 9,
-        TextureSpecularExponent = 10,
-        Grasses = 11,
-        HNAMDataTypeState = 12,
+        Fallout4MajorRecordFlags = 6,
+        TextureSet = 7,
+        MaterialType = 8,
+        HavokFriction = 9,
+        HavokRestitution = 10,
+        TextureSpecularExponent = 11,
+        Grasses = 12,
+        HNAMDataTypeState = 13,
     }
     #endregion
 
@@ -998,7 +1001,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(LandscapeTexture.Mask<>);
 
@@ -1288,6 +1291,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (LandscapeTexture_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (LandscapeTexture_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (LandscapeTexture_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

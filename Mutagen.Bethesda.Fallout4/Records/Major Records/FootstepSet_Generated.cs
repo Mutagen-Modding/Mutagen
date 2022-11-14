@@ -163,6 +163,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem WalkFootsteps,
                 TItem RunFootsteps,
                 TItem SprintFootsteps,
@@ -174,7 +175,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
                 this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
@@ -1194,11 +1196,12 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        WalkFootsteps = 6,
-        RunFootsteps = 7,
-        SprintFootsteps = 8,
-        SneakFootsteps = 9,
-        SwimFootsteps = 10,
+        Fallout4MajorRecordFlags = 6,
+        WalkFootsteps = 7,
+        RunFootsteps = 8,
+        SprintFootsteps = 9,
+        SneakFootsteps = 10,
+        SwimFootsteps = 11,
     }
     #endregion
 
@@ -1218,7 +1221,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(FootstepSet.Mask<>);
 
@@ -1546,6 +1549,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (FootstepSet_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (FootstepSet_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (FootstepSet_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

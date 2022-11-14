@@ -109,6 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem SlotParents,
                 TItem UseAllParents)
             : base(
@@ -117,7 +118,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SlotParents, Enumerable.Empty<(int Index, TItem Value)>());
                 this.UseAllParents = UseAllParents;
@@ -786,8 +788,9 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        SlotParents = 6,
-        UseAllParents = 7,
+        SkyrimMajorRecordFlags = 6,
+        SlotParents = 7,
+        UseAllParents = 8,
     }
     #endregion
 
@@ -807,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(EquipType.Mask<>);
 
@@ -1064,6 +1067,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (EquipType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (EquipType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (EquipType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

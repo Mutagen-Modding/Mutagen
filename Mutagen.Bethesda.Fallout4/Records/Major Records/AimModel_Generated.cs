@@ -155,6 +155,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ConeOfFireMinAngle,
                 TItem ConeOfFireMaxAngle,
                 TItem ConeOfFireIncreasePerShot,
@@ -178,7 +179,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ConeOfFireMinAngle = ConeOfFireMinAngle;
                 this.ConeOfFireMaxAngle = ConeOfFireMaxAngle;
@@ -1223,23 +1225,24 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ConeOfFireMinAngle = 6,
-        ConeOfFireMaxAngle = 7,
-        ConeOfFireIncreasePerShot = 8,
-        ConeOfFireIncreasePerSec = 9,
-        ConeOfFireDecreaseDelayMilliseconds = 10,
-        ConeOfFireSneakMult = 11,
-        RecoilDiminishSpringForce = 12,
-        RecoilDiminishSightsMult = 13,
-        RecoilMaxPerShot = 14,
-        RecoilMinPerShot = 15,
-        RecoilHipMult = 16,
-        RunawayRecoilShots = 17,
-        RecoilArc = 18,
-        RecoilArcRotate = 19,
-        ConeOfFireIronSightsMult = 20,
-        BaseStability = 21,
-        DNAMDataTypeState = 22,
+        Fallout4MajorRecordFlags = 6,
+        ConeOfFireMinAngle = 7,
+        ConeOfFireMaxAngle = 8,
+        ConeOfFireIncreasePerShot = 9,
+        ConeOfFireIncreasePerSec = 10,
+        ConeOfFireDecreaseDelayMilliseconds = 11,
+        ConeOfFireSneakMult = 12,
+        RecoilDiminishSpringForce = 13,
+        RecoilDiminishSightsMult = 14,
+        RecoilMaxPerShot = 15,
+        RecoilMinPerShot = 16,
+        RecoilHipMult = 17,
+        RunawayRecoilShots = 18,
+        RecoilArc = 19,
+        RecoilArcRotate = 20,
+        ConeOfFireIronSightsMult = 21,
+        BaseStability = 22,
+        DNAMDataTypeState = 23,
     }
     #endregion
 
@@ -1259,7 +1262,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(AimModel.Mask<>);
 
@@ -1589,6 +1592,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (AimModel_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (AimModel_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (AimModel_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

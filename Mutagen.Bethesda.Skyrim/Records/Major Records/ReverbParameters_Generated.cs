@@ -139,6 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem DecayMilliseconds,
                 TItem HfReferenceHertz,
                 TItem RoomFilter,
@@ -158,7 +159,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.DecayMilliseconds = DecayMilliseconds;
                 this.HfReferenceHertz = HfReferenceHertz;
@@ -1090,19 +1092,20 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        DecayMilliseconds = 6,
-        HfReferenceHertz = 7,
-        RoomFilter = 8,
-        RoomHfFilter = 9,
-        Reflections = 10,
-        ReverbAmp = 11,
-        DecayHfRatio = 12,
-        ReflectDelayMS = 13,
-        ReverbDelayMS = 14,
-        DiffusionPercent = 15,
-        DensityPercent = 16,
-        Unknown = 17,
-        DATADataTypeState = 18,
+        SkyrimMajorRecordFlags = 6,
+        DecayMilliseconds = 7,
+        HfReferenceHertz = 8,
+        RoomFilter = 9,
+        RoomHfFilter = 10,
+        Reflections = 11,
+        ReverbAmp = 12,
+        DecayHfRatio = 13,
+        ReflectDelayMS = 14,
+        ReverbDelayMS = 15,
+        DiffusionPercent = 16,
+        DensityPercent = 17,
+        Unknown = 18,
+        DATADataTypeState = 19,
     }
     #endregion
 
@@ -1122,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(ReverbParameters.Mask<>);
 
@@ -1428,6 +1431,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (ReverbParameters_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (ReverbParameters_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (ReverbParameters_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

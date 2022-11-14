@@ -223,6 +223,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Flags,
                 TItem Phases,
@@ -240,7 +241,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, SceneAdapter.Mask<TItem>?>(VirtualMachineAdapter, new SceneAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Flags = Flags;
@@ -1398,17 +1400,18 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Flags = 7,
-        Phases = 8,
-        Actors = 9,
-        Actions = 10,
-        Unused = 11,
-        Unused2 = 12,
-        Quest = 13,
-        LastActionIndex = 14,
-        VNAM = 15,
-        Conditions = 16,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Flags = 8,
+        Phases = 9,
+        Actors = 10,
+        Actions = 11,
+        Unused = 12,
+        Unused2 = 13,
+        Quest = 14,
+        LastActionIndex = 15,
+        VNAM = 16,
+        Conditions = 17,
     }
     #endregion
 
@@ -1428,7 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(Scene.Mask<>);
 
@@ -1848,6 +1851,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Scene_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Scene_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Scene_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

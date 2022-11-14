@@ -179,6 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Icons,
                 TItem Description,
                 TItem Conditions,
@@ -194,7 +195,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.Description = Description;
@@ -1109,15 +1111,16 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Icons = 6,
-        Description = 7,
-        Conditions = 8,
-        LoadingScreenNif = 9,
-        InitialScale = 10,
-        InitialRotation = 11,
-        RotationOffsetConstraints = 12,
-        InitialTranslationOffset = 13,
-        CameraPath = 14,
+        SkyrimMajorRecordFlags = 6,
+        Icons = 7,
+        Description = 8,
+        Conditions = 9,
+        LoadingScreenNif = 10,
+        InitialScale = 11,
+        InitialRotation = 12,
+        RotationOffsetConstraints = 13,
+        InitialTranslationOffset = 14,
+        CameraPath = 15,
     }
     #endregion
 
@@ -1137,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(LoadScreen.Mask<>);
 
@@ -1485,6 +1488,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (LoadScreen_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (LoadScreen_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (LoadScreen_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

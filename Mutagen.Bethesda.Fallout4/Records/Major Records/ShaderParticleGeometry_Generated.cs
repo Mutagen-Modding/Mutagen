@@ -193,6 +193,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem GravityVelocity,
                 TItem Unknown1,
                 TItem RotationVelocity,
@@ -225,7 +226,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.GravityVelocity = GravityVelocity;
                 this.Unknown1 = Unknown1;
@@ -1540,32 +1542,33 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        GravityVelocity = 6,
-        Unknown1 = 7,
-        RotationVelocity = 8,
-        Unknown2 = 9,
-        ParticleSizeX = 10,
-        Unknown3 = 11,
-        ParticleSizeY = 12,
-        Unknown4 = 13,
-        CenterOffsetMin = 14,
-        Unknown5 = 15,
-        CenterOffsetMax = 16,
-        Unknown6 = 17,
-        InitialRotation = 18,
-        Unknown7 = 19,
-        NumSubtexturesX = 20,
-        Unknown8 = 21,
-        NumSubtexturesY = 22,
-        Unknown9 = 23,
-        Type = 24,
-        Unknown10 = 25,
-        BoxSize = 26,
-        Unknown11 = 27,
-        ParticleDensity = 28,
-        Unknown12 = 29,
-        ParticleTexture = 30,
-        DATADataTypeState = 31,
+        Fallout4MajorRecordFlags = 6,
+        GravityVelocity = 7,
+        Unknown1 = 8,
+        RotationVelocity = 9,
+        Unknown2 = 10,
+        ParticleSizeX = 11,
+        Unknown3 = 12,
+        ParticleSizeY = 13,
+        Unknown4 = 14,
+        CenterOffsetMin = 15,
+        Unknown5 = 16,
+        CenterOffsetMax = 17,
+        Unknown6 = 18,
+        InitialRotation = 19,
+        Unknown7 = 20,
+        NumSubtexturesX = 21,
+        Unknown8 = 22,
+        NumSubtexturesY = 23,
+        Unknown9 = 24,
+        Type = 25,
+        Unknown10 = 26,
+        BoxSize = 27,
+        Unknown11 = 28,
+        ParticleDensity = 29,
+        Unknown12 = 30,
+        ParticleTexture = 31,
+        DATADataTypeState = 32,
     }
     #endregion
 
@@ -1585,7 +1588,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 26;
 
-        public const ushort FieldCount = 32;
+        public const ushort FieldCount = 33;
 
         public static readonly Type MaskType = typeof(ShaderParticleGeometry.Mask<>);
 
@@ -1971,6 +1974,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (ShaderParticleGeometry_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

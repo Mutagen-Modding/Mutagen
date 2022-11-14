@@ -211,6 +211,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Notes,
                 TItem Data,
                 TItem Category,
@@ -227,7 +228,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Notes = Notes;
                 this.Data = new MaskItem<TItem, ASoundDescriptor.Mask<TItem>?>(Data, new ASoundDescriptor.Mask<TItem>(Data));
@@ -1338,16 +1340,17 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Notes = 6,
-        Data = 7,
-        Category = 8,
-        AlternateSoundFor = 9,
-        SoundFiles = 10,
-        OutputModel = 11,
-        Conditions = 12,
-        LoopAndRumble = 13,
-        Descriptors = 14,
-        RatesOfFire = 15,
+        Fallout4MajorRecordFlags = 6,
+        Notes = 7,
+        Data = 8,
+        Category = 9,
+        AlternateSoundFor = 10,
+        SoundFiles = 11,
+        OutputModel = 12,
+        Conditions = 13,
+        LoopAndRumble = 14,
+        Descriptors = 15,
+        RatesOfFire = 16,
     }
     #endregion
 
@@ -1367,7 +1370,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(SoundDescriptor.Mask<>);
 
@@ -1741,6 +1744,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (SoundDescriptor_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (SoundDescriptor_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (SoundDescriptor_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

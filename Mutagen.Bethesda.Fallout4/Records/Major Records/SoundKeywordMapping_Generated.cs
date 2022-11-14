@@ -170,6 +170,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem PrimaryDescriptor,
                 TItem ExteriorTail,
                 TItem VatsDescriptor,
@@ -182,7 +183,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.PrimaryDescriptor = PrimaryDescriptor;
                 this.ExteriorTail = ExteriorTail;
@@ -1039,12 +1041,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        PrimaryDescriptor = 6,
-        ExteriorTail = 7,
-        VatsDescriptor = 8,
-        VatsThreshold = 9,
-        Keywords = 10,
-        Sounds = 11,
+        Fallout4MajorRecordFlags = 6,
+        PrimaryDescriptor = 7,
+        ExteriorTail = 8,
+        VatsDescriptor = 9,
+        VatsThreshold = 10,
+        Keywords = 11,
+        Sounds = 12,
     }
     #endregion
 
@@ -1064,7 +1067,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(SoundKeywordMapping.Mask<>);
 
@@ -1365,6 +1368,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (SoundKeywordMapping_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (SoundKeywordMapping_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (SoundKeywordMapping_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

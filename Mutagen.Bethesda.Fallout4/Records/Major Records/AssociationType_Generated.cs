@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ParentTitle,
                 TItem Title,
                 TItem IsFamily)
@@ -112,7 +113,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ParentTitle = new MaskItem<TItem, GenderedItem<TItem>?>(ParentTitle, default);
                 this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(Title, default);
@@ -749,9 +751,10 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ParentTitle = 6,
-        Title = 7,
-        IsFamily = 8,
+        Fallout4MajorRecordFlags = 6,
+        ParentTitle = 7,
+        Title = 8,
+        IsFamily = 9,
     }
     #endregion
 
@@ -771,7 +774,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(AssociationType.Mask<>);
 
@@ -1032,6 +1035,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (AssociationType_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (AssociationType_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (AssociationType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

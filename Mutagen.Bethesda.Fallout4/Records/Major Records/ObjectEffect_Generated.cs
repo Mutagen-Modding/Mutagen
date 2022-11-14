@@ -217,6 +217,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem EnchantmentCost,
@@ -236,7 +237,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -1266,19 +1268,20 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        EnchantmentCost = 8,
-        Flags = 9,
-        CastType = 10,
-        EnchantmentAmount = 11,
-        TargetType = 12,
-        EnchantType = 13,
-        ChargeTime = 14,
-        BaseEnchantment = 15,
-        WornRestrictions = 16,
-        Effects = 17,
-        ENITDataTypeState = 18,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        EnchantmentCost = 9,
+        Flags = 10,
+        CastType = 11,
+        EnchantmentAmount = 12,
+        TargetType = 13,
+        EnchantType = 14,
+        ChargeTime = 15,
+        BaseEnchantment = 16,
+        WornRestrictions = 17,
+        Effects = 18,
+        ENITDataTypeState = 19,
     }
     #endregion
 
@@ -1298,7 +1301,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(ObjectEffect.Mask<>);
 
@@ -1628,6 +1631,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (ObjectEffect_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (ObjectEffect_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (ObjectEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

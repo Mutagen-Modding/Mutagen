@@ -385,6 +385,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
@@ -425,7 +426,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -2043,40 +2045,41 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Model = 8,
-        Destructible = 9,
-        Unused = 10,
-        Flags = 11,
-        Type = 12,
-        Gravity = 13,
-        Speed = 14,
-        Range = 15,
-        Light = 16,
-        MuzzleFlash = 17,
-        ExplosionAltTriggerProximity = 18,
-        ExplosionAltTriggerTimer = 19,
-        Explosion = 20,
-        Sound = 21,
-        MuzzleFlashDuration = 22,
-        FadeDuration = 23,
-        ImpactForce = 24,
-        CountdownSound = 25,
-        DisaleSound = 26,
-        DefaultWeaponSource = 27,
-        ConeSpread = 28,
-        CollisionRadius = 29,
-        Lifetime = 30,
-        RelaunchInterval = 31,
-        DecalData = 32,
-        CollisionLayer = 33,
-        TracerFrequency = 34,
-        VATSProjectile = 35,
-        MuzzleFlashModel = 36,
-        TextureFilesHashes = 37,
-        SoundLevel = 38,
-        DNAMDataTypeState = 39,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        Destructible = 10,
+        Unused = 11,
+        Flags = 12,
+        Type = 13,
+        Gravity = 14,
+        Speed = 15,
+        Range = 16,
+        Light = 17,
+        MuzzleFlash = 18,
+        ExplosionAltTriggerProximity = 19,
+        ExplosionAltTriggerTimer = 20,
+        Explosion = 21,
+        Sound = 22,
+        MuzzleFlashDuration = 23,
+        FadeDuration = 24,
+        ImpactForce = 25,
+        CountdownSound = 26,
+        DisaleSound = 27,
+        DefaultWeaponSource = 28,
+        ConeSpread = 29,
+        CollisionRadius = 30,
+        Lifetime = 31,
+        RelaunchInterval = 32,
+        DecalData = 33,
+        CollisionLayer = 34,
+        TracerFrequency = 35,
+        VATSProjectile = 36,
+        MuzzleFlashModel = 37,
+        TextureFilesHashes = 38,
+        SoundLevel = 39,
+        DNAMDataTypeState = 40,
     }
     #endregion
 
@@ -2096,7 +2099,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 34;
 
-        public const ushort FieldCount = 40;
+        public const ushort FieldCount = 41;
 
         public static readonly Type MaskType = typeof(Projectile.Mask<>);
 
@@ -2571,6 +2574,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Projectile_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Projectile_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Projectile_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

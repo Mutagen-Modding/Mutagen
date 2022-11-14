@@ -634,6 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Configuration,
@@ -685,7 +686,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -3288,51 +3290,52 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Configuration = 8,
-        Factions = 9,
-        DeathItem = 10,
-        Voice = 11,
-        Template = 12,
-        Race = 13,
-        ActorEffect = 14,
-        Destructible = 15,
-        WornArmor = 16,
-        FarAwayModel = 17,
-        AttackRace = 18,
-        Attacks = 19,
-        SpectatorOverridePackageList = 20,
-        ObserveDeadBodyOverridePackageList = 21,
-        GuardWarnOverridePackageList = 22,
-        CombatOverridePackageList = 23,
-        Perks = 24,
-        Items = 25,
-        AIData = 26,
-        Packages = 27,
-        Keywords = 28,
-        Class = 29,
-        Name = 30,
-        ShortName = 31,
-        PlayerSkills = 32,
-        HeadParts = 33,
-        HairColor = 34,
-        CombatStyle = 35,
-        GiftFilter = 36,
-        NAM5 = 37,
-        Height = 38,
-        Weight = 39,
-        SoundLevel = 40,
-        Sound = 41,
-        DefaultOutfit = 42,
-        SleepingOutfit = 43,
-        DefaultPackageList = 44,
-        CrimeFaction = 45,
-        HeadTexture = 46,
-        TextureLighting = 47,
-        FaceMorph = 48,
-        FaceParts = 49,
-        TintLayers = 50,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Configuration = 9,
+        Factions = 10,
+        DeathItem = 11,
+        Voice = 12,
+        Template = 13,
+        Race = 14,
+        ActorEffect = 15,
+        Destructible = 16,
+        WornArmor = 17,
+        FarAwayModel = 18,
+        AttackRace = 19,
+        Attacks = 20,
+        SpectatorOverridePackageList = 21,
+        ObserveDeadBodyOverridePackageList = 22,
+        GuardWarnOverridePackageList = 23,
+        CombatOverridePackageList = 24,
+        Perks = 25,
+        Items = 26,
+        AIData = 27,
+        Packages = 28,
+        Keywords = 29,
+        Class = 30,
+        Name = 31,
+        ShortName = 32,
+        PlayerSkills = 33,
+        HeadParts = 34,
+        HairColor = 35,
+        CombatStyle = 36,
+        GiftFilter = 37,
+        NAM5 = 38,
+        Height = 39,
+        Weight = 40,
+        SoundLevel = 41,
+        Sound = 42,
+        DefaultOutfit = 43,
+        SleepingOutfit = 44,
+        DefaultPackageList = 45,
+        CrimeFaction = 46,
+        HeadTexture = 47,
+        TextureLighting = 48,
+        FaceMorph = 49,
+        FaceParts = 50,
+        TintLayers = 51,
     }
     #endregion
 
@@ -3352,7 +3355,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 45;
 
-        public const ushort FieldCount = 51;
+        public const ushort FieldCount = 52;
 
         public static readonly Type MaskType = typeof(Npc.Mask<>);
 
@@ -4125,6 +4128,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Npc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Npc_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Npc_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

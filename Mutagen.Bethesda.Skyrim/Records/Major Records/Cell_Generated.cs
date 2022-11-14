@@ -459,6 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem Flags,
                 TItem Grid,
@@ -500,7 +501,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.Flags = Flags;
@@ -2667,41 +2669,42 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Flags = 7,
-        Grid = 8,
-        Lighting = 9,
-        OcclusionData = 10,
-        MaxHeightData = 11,
-        LightingTemplate = 12,
-        LNAM = 13,
-        WaterHeight = 14,
-        WaterNoiseTexture = 15,
-        Regions = 16,
-        Location = 17,
-        XWCN = 18,
-        XWCS = 19,
-        WaterVelocity = 20,
-        Water = 21,
-        Owner = 22,
-        FactionRank = 23,
-        LockList = 24,
-        WaterEnvironmentMap = 25,
-        SkyAndWeatherFromRegion = 26,
-        AcousticSpace = 27,
-        EncounterZone = 28,
-        Music = 29,
-        ImageSpace = 30,
-        Landscape = 31,
-        NavigationMeshes = 32,
-        Timestamp = 33,
-        UnknownGroupData = 34,
-        PersistentTimestamp = 35,
-        PersistentUnknownGroupData = 36,
-        Persistent = 37,
-        TemporaryTimestamp = 38,
-        TemporaryUnknownGroupData = 39,
-        Temporary = 40,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        Flags = 8,
+        Grid = 9,
+        Lighting = 10,
+        OcclusionData = 11,
+        MaxHeightData = 12,
+        LightingTemplate = 13,
+        LNAM = 14,
+        WaterHeight = 15,
+        WaterNoiseTexture = 16,
+        Regions = 17,
+        Location = 18,
+        XWCN = 19,
+        XWCS = 20,
+        WaterVelocity = 21,
+        Water = 22,
+        Owner = 23,
+        FactionRank = 24,
+        LockList = 25,
+        WaterEnvironmentMap = 26,
+        SkyAndWeatherFromRegion = 27,
+        AcousticSpace = 28,
+        EncounterZone = 29,
+        Music = 30,
+        ImageSpace = 31,
+        Landscape = 32,
+        NavigationMeshes = 33,
+        Timestamp = 34,
+        UnknownGroupData = 35,
+        PersistentTimestamp = 36,
+        PersistentUnknownGroupData = 37,
+        Persistent = 38,
+        TemporaryTimestamp = 39,
+        TemporaryUnknownGroupData = 40,
+        Temporary = 41,
     }
     #endregion
 
@@ -2721,7 +2724,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 35;
 
-        public const ushort FieldCount = 41;
+        public const ushort FieldCount = 42;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -3483,6 +3486,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Cell_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Cell_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Cell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -182,6 +182,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ChanceNone,
                 TItem MaxCount,
@@ -196,7 +197,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ChanceNone = ChanceNone;
@@ -1137,14 +1139,15 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        ChanceNone = 7,
-        MaxCount = 8,
-        Flags = 9,
-        Global = 10,
-        Entries = 11,
-        FilterKeywordChances = 12,
-        Model = 13,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        ChanceNone = 8,
+        MaxCount = 9,
+        Flags = 10,
+        Global = 11,
+        Entries = 12,
+        FilterKeywordChances = 13,
+        Model = 14,
     }
     #endregion
 
@@ -1164,7 +1167,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(LeveledNpc.Mask<>);
 
@@ -1489,6 +1492,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (LeveledNpc_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (LeveledNpc_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (LeveledNpc_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

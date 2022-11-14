@@ -207,6 +207,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Priority,
                 TItem Branch,
@@ -226,7 +227,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Priority = Priority;
@@ -1484,19 +1486,20 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Priority = 7,
-        Branch = 8,
-        Quest = 9,
-        Keyword = 10,
-        TopicFlags = 11,
-        Category = 12,
-        Subtype = 13,
-        SubtypeName = 14,
-        Timestamp = 15,
-        Unknown = 16,
-        Responses = 17,
-        DATADataTypeState = 18,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Priority = 8,
+        Branch = 9,
+        Quest = 10,
+        Keyword = 11,
+        TopicFlags = 12,
+        Category = 13,
+        Subtype = 14,
+        SubtypeName = 15,
+        Timestamp = 16,
+        Unknown = 17,
+        Responses = 18,
+        DATADataTypeState = 19,
     }
     #endregion
 
@@ -1516,7 +1519,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(DialogTopic.Mask<>);
 
@@ -1953,6 +1956,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (DialogTopic_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (DialogTopic_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (DialogTopic_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

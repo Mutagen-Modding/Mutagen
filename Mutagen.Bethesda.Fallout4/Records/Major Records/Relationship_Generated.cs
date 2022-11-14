@@ -137,6 +137,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Parent,
                 TItem Child,
                 TItem Rank,
@@ -150,7 +151,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Parent = Parent;
                 this.Child = Child;
@@ -899,13 +901,14 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        Child = 7,
-        Rank = 8,
-        Unknown = 9,
-        Flags = 10,
-        AssociationType = 11,
-        DATADataTypeState = 12,
+        Fallout4MajorRecordFlags = 6,
+        Parent = 7,
+        Child = 8,
+        Rank = 9,
+        Unknown = 10,
+        Flags = 11,
+        AssociationType = 12,
+        DATADataTypeState = 13,
     }
     #endregion
 
@@ -925,7 +928,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Relationship.Mask<>);
 
@@ -1198,6 +1201,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Relationship_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Relationship_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Relationship_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

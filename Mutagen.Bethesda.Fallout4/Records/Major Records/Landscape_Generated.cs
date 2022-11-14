@@ -187,6 +187,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem DATA,
                 TItem VertexNormals,
                 TItem VertexHeightMap,
@@ -200,7 +201,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.DATA = DATA;
                 this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexNormals, Enumerable.Empty<(P2Int Index, TItem Value)>());
@@ -1283,13 +1285,14 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        DATA = 6,
-        VertexNormals = 7,
-        VertexHeightMap = 8,
-        VertexColors = 9,
-        Layers = 10,
-        Textures = 11,
-        MPCDs = 12,
+        Fallout4MajorRecordFlags = 6,
+        DATA = 7,
+        VertexNormals = 8,
+        VertexHeightMap = 9,
+        VertexColors = 10,
+        Layers = 11,
+        Textures = 12,
+        MPCDs = 13,
     }
     #endregion
 
@@ -1309,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Landscape.Mask<>);
 
@@ -1662,6 +1665,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Landscape_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Landscape_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Landscape_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

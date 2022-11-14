@@ -496,6 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Name,
@@ -533,7 +534,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -2216,37 +2218,38 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Name = 8,
-        Model = 9,
-        Icons = 10,
-        ObjectEffect = 11,
-        EnchantmentAmount = 12,
-        Destructible = 13,
-        EquipmentType = 14,
-        BlockBashImpact = 15,
-        AlternateBlockMaterial = 16,
-        PickUpSound = 17,
-        PutDownSound = 18,
-        Keywords = 19,
-        Description = 20,
-        ScopeModel = 21,
-        Unused = 22,
-        ImpactDataSet = 23,
-        FirstPersonModel = 24,
-        AttackSound = 25,
-        AttackSound2D = 26,
-        AttackLoopSound = 27,
-        AttackFailSound = 28,
-        IdleSound = 29,
-        EquipSound = 30,
-        UnequipSound = 31,
-        BasicStats = 32,
-        Data = 33,
-        Critical = 34,
-        DetectionSoundLevel = 35,
-        Template = 36,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Name = 9,
+        Model = 10,
+        Icons = 11,
+        ObjectEffect = 12,
+        EnchantmentAmount = 13,
+        Destructible = 14,
+        EquipmentType = 15,
+        BlockBashImpact = 16,
+        AlternateBlockMaterial = 17,
+        PickUpSound = 18,
+        PutDownSound = 19,
+        Keywords = 20,
+        Description = 21,
+        ScopeModel = 22,
+        Unused = 23,
+        ImpactDataSet = 24,
+        FirstPersonModel = 25,
+        AttackSound = 26,
+        AttackSound2D = 27,
+        AttackLoopSound = 28,
+        AttackFailSound = 29,
+        IdleSound = 30,
+        EquipSound = 31,
+        UnequipSound = 32,
+        BasicStats = 33,
+        Data = 34,
+        Critical = 35,
+        DetectionSoundLevel = 36,
+        Template = 37,
     }
     #endregion
 
@@ -2266,7 +2269,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 38;
 
         public static readonly Type MaskType = typeof(Weapon.Mask<>);
 
@@ -2861,6 +2864,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Weapon_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Weapon_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Weapon_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

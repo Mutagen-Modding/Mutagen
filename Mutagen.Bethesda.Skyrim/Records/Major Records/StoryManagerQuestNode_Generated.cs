@@ -127,6 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Parent,
                 TItem PreviousSibling,
                 TItem Conditions,
@@ -143,6 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 Parent: Parent,
                 PreviousSibling: PreviousSibling,
                 Conditions: Conditions)
@@ -936,15 +938,16 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        PreviousSibling = 7,
-        Conditions = 8,
-        Flags = 9,
-        QuestFlags = 10,
-        MaxConcurrentQuests = 11,
-        MaxNumQuestsToRun = 12,
-        Quests = 13,
-        DNAMDataTypeState = 14,
+        SkyrimMajorRecordFlags = 6,
+        Parent = 7,
+        PreviousSibling = 8,
+        Conditions = 9,
+        Flags = 10,
+        QuestFlags = 11,
+        MaxConcurrentQuests = 12,
+        MaxNumQuestsToRun = 13,
+        Quests = 14,
+        DNAMDataTypeState = 15,
     }
     #endregion
 
@@ -964,7 +967,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(StoryManagerQuestNode.Mask<>);
 
@@ -1267,6 +1270,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.Version2:
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
+                case AStoryManagerNode_FieldIndex.SkyrimMajorRecordFlags:
+                    return (StoryManagerQuestNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.Parent:
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.PreviousSibling:
@@ -1293,6 +1298,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (StoryManagerQuestNode_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

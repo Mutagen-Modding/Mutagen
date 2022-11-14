@@ -141,6 +141,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Conditions,
                 TItem RelatedPaths,
                 TItem Zoom,
@@ -152,7 +153,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.RelatedPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedPaths, Enumerable.Empty<(int Index, TItem Value)>());
@@ -1043,11 +1045,12 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Conditions = 6,
-        RelatedPaths = 7,
-        Zoom = 8,
-        ZoomMustHaveCameraShots = 9,
-        Shots = 10,
+        SkyrimMajorRecordFlags = 6,
+        Conditions = 7,
+        RelatedPaths = 8,
+        Zoom = 9,
+        ZoomMustHaveCameraShots = 10,
+        Shots = 11,
     }
     #endregion
 
@@ -1067,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(CameraPath.Mask<>);
 
@@ -1372,6 +1375,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (CameraPath_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (CameraPath_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (CameraPath_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -299,6 +299,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Flags,
                 TItem Topic,
@@ -326,7 +327,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>(VirtualMachineAdapter, new DialogResponsesAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Flags = new MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>(Flags, new DialogResponseFlags.Mask<TItem>(Flags));
@@ -1655,27 +1657,28 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Flags = 7,
-        Topic = 8,
-        PreviousDialog = 9,
-        SharedDialog = 10,
-        DialogGroup = 11,
-        OverrideFileName = 12,
-        Responses = 13,
-        Conditions = 14,
-        Prompt = 15,
-        Speaker = 16,
-        StartScene = 17,
-        INTV = 18,
-        ForcedAlias = 19,
-        AudioOutputOverride = 20,
-        GreetDistance = 21,
-        SetParentQuestStage = 22,
-        StartScenePhase = 23,
-        Challenge = 24,
-        ResetGlobal = 25,
-        SubtitlePriority = 26,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Flags = 8,
+        Topic = 9,
+        PreviousDialog = 10,
+        SharedDialog = 11,
+        DialogGroup = 12,
+        OverrideFileName = 13,
+        Responses = 14,
+        Conditions = 15,
+        Prompt = 16,
+        Speaker = 17,
+        StartScene = 18,
+        INTV = 19,
+        ForcedAlias = 20,
+        AudioOutputOverride = 21,
+        GreetDistance = 22,
+        SetParentQuestStage = 23,
+        StartScenePhase = 24,
+        Challenge = 25,
+        ResetGlobal = 26,
+        SubtitlePriority = 27,
     }
     #endregion
 
@@ -1695,7 +1698,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(DialogResponses.Mask<>);
 
@@ -2142,6 +2145,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (DialogResponses_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (DialogResponses_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (DialogResponses_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

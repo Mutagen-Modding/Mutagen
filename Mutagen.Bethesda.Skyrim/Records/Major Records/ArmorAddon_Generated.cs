@@ -196,6 +196,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem BodyTemplate,
                 TItem Race,
                 TItem Priority,
@@ -218,7 +219,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(BodyTemplate, new BodyTemplate.Mask<TItem>(BodyTemplate));
                 this.Race = Race;
@@ -1361,22 +1363,23 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        BodyTemplate = 6,
-        Race = 7,
-        Priority = 8,
-        WeightSliderEnabled = 9,
-        Unknown = 10,
-        DetectionSoundValue = 11,
-        Unknown2 = 12,
-        WeaponAdjust = 13,
-        WorldModel = 14,
-        FirstPersonModel = 15,
-        SkinTexture = 16,
-        TextureSwapList = 17,
-        AdditionalRaces = 18,
-        FootstepSound = 19,
-        ArtObject = 20,
-        DNAMDataTypeState = 21,
+        SkyrimMajorRecordFlags = 6,
+        BodyTemplate = 7,
+        Race = 8,
+        Priority = 9,
+        WeightSliderEnabled = 10,
+        Unknown = 11,
+        DetectionSoundValue = 12,
+        Unknown2 = 13,
+        WeaponAdjust = 14,
+        WorldModel = 15,
+        FirstPersonModel = 16,
+        SkinTexture = 17,
+        TextureSwapList = 18,
+        AdditionalRaces = 19,
+        FootstepSound = 20,
+        ArtObject = 21,
+        DNAMDataTypeState = 22,
     }
     #endregion
 
@@ -1396,7 +1399,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(ArmorAddon.Mask<>);
 
@@ -1864,6 +1867,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (ArmorAddon_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (ArmorAddon_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (ArmorAddon_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

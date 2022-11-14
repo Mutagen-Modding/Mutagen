@@ -173,6 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Projectile,
                 TItem Explosion,
@@ -187,7 +188,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Projectile = Projectile;
@@ -990,14 +992,15 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Projectile = 7,
-        Explosion = 8,
-        EffectShader = 9,
-        HitEffectArt = 10,
-        ImpactDataSet = 11,
-        InheritScale = 12,
-        DATADataTypeState = 13,
+        SkyrimMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Projectile = 8,
+        Explosion = 9,
+        EffectShader = 10,
+        HitEffectArt = 11,
+        ImpactDataSet = 12,
+        InheritScale = 13,
+        DATADataTypeState = 14,
     }
     #endregion
 
@@ -1017,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(DualCastData.Mask<>);
 
@@ -1299,6 +1302,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (DualCastData_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (DualCastData_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (DualCastData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

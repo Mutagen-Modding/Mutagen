@@ -443,6 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -476,7 +477,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -2457,33 +2459,34 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        Name = 9,
-        Model = 10,
-        Destructible = 11,
-        Keywords = 12,
-        Properties = 13,
-        NativeTerminal = 14,
-        ForcedLocRefType = 15,
-        PNAM = 16,
-        DrinkingWater = 17,
-        ActivateTextOverride = 18,
-        Flags = 19,
-        Conditions = 20,
-        Items = 21,
-        BenchType = 22,
-        UsesSkill = 23,
-        AssociatedForm = 24,
-        EnabledEntryPoints = 25,
-        MarkerEntryPoints = 26,
-        MarkerModel = 27,
-        MarkerParameters = 28,
-        AttachParentSlots = 29,
-        ObjectTemplates = 30,
-        NavmeshGeometry = 31,
-        WBDTDataTypeState = 32,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        Name = 10,
+        Model = 11,
+        Destructible = 12,
+        Keywords = 13,
+        Properties = 14,
+        NativeTerminal = 15,
+        ForcedLocRefType = 16,
+        PNAM = 17,
+        DrinkingWater = 18,
+        ActivateTextOverride = 19,
+        Flags = 20,
+        Conditions = 21,
+        Items = 22,
+        BenchType = 23,
+        UsesSkill = 24,
+        AssociatedForm = 25,
+        EnabledEntryPoints = 26,
+        MarkerEntryPoints = 27,
+        MarkerModel = 28,
+        MarkerParameters = 29,
+        AttachParentSlots = 30,
+        ObjectTemplates = 31,
+        NavmeshGeometry = 32,
+        WBDTDataTypeState = 33,
     }
     #endregion
 
@@ -2503,7 +2506,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 33;
+        public const ushort FieldCount = 34;
 
         public static readonly Type MaskType = typeof(Furniture.Mask<>);
 
@@ -3092,6 +3095,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Furniture_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Furniture_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Furniture_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

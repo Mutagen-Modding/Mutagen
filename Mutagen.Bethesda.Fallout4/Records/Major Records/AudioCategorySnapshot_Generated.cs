@@ -109,6 +109,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Priority,
                 TItem Multipliers)
             : base(
@@ -117,7 +118,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Priority = Priority;
                 this.Multipliers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>?>(Multipliers, Enumerable.Empty<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>());
@@ -777,8 +779,9 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Priority = 6,
-        Multipliers = 7,
+        Fallout4MajorRecordFlags = 6,
+        Priority = 7,
+        Multipliers = 8,
     }
     #endregion
 
@@ -798,7 +801,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(AudioCategorySnapshot.Mask<>);
 
@@ -1054,6 +1057,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (AudioCategorySnapshot_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (AudioCategorySnapshot_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (AudioCategorySnapshot_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

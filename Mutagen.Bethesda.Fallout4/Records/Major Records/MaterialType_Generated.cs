@@ -167,6 +167,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Parent,
                 TItem Name,
                 TItem HavokDisplayColor,
@@ -181,7 +182,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Parent = Parent;
                 this.Name = Name;
@@ -968,14 +970,15 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        Name = 7,
-        HavokDisplayColor = 8,
-        Buoyancy = 9,
-        Flags = 10,
-        HavokImpactDataSet = 11,
-        BreakableFX = 12,
-        ModelData = 13,
+        Fallout4MajorRecordFlags = 6,
+        Parent = 7,
+        Name = 8,
+        HavokDisplayColor = 9,
+        Buoyancy = 10,
+        Flags = 11,
+        HavokImpactDataSet = 12,
+        BreakableFX = 13,
+        ModelData = 14,
     }
     #endregion
 
@@ -995,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(MaterialType.Mask<>);
 
@@ -1286,6 +1289,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (MaterialType_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (MaterialType_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (MaterialType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

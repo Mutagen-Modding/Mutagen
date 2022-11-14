@@ -248,6 +248,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Keywords,
@@ -270,7 +271,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -1474,22 +1476,23 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Keywords = 8,
-        EquipmentType = 9,
-        Description = 10,
-        BaseCost = 11,
-        Flags = 12,
-        Type = 13,
-        ChargeTime = 14,
-        CastType = 15,
-        TargetType = 16,
-        CastDuration = 17,
-        Range = 18,
-        CastingPerk = 19,
-        Effects = 20,
-        SPITDataTypeState = 21,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Keywords = 9,
+        EquipmentType = 10,
+        Description = 11,
+        BaseCost = 12,
+        Flags = 13,
+        Type = 14,
+        ChargeTime = 15,
+        CastType = 16,
+        TargetType = 17,
+        CastDuration = 18,
+        Range = 19,
+        CastingPerk = 20,
+        Effects = 21,
+        SPITDataTypeState = 22,
     }
     #endregion
 
@@ -1509,7 +1512,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(Spell.Mask<>);
 
@@ -1876,6 +1879,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Spell_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Spell_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Spell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

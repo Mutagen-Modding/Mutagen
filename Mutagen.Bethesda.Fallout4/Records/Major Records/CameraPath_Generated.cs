@@ -137,6 +137,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Conditions,
                 TItem RelatedPaths,
                 TItem Zoom,
@@ -147,7 +148,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.RelatedPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedPaths, Enumerable.Empty<(int Index, TItem Value)>());
@@ -1001,10 +1003,11 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Conditions = 6,
-        RelatedPaths = 7,
-        Zoom = 8,
-        Shots = 9,
+        Fallout4MajorRecordFlags = 6,
+        Conditions = 7,
+        RelatedPaths = 8,
+        Zoom = 9,
+        Shots = 10,
     }
     #endregion
 
@@ -1024,7 +1027,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(CameraPath.Mask<>);
 
@@ -1323,6 +1326,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (CameraPath_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (CameraPath_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (CameraPath_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

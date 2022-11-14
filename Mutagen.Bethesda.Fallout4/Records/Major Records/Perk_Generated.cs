@@ -233,6 +233,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Name,
                 TItem Description,
@@ -254,7 +255,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, PerkAdapter.Mask<TItem>?>(VirtualMachineAdapter, new PerkAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
@@ -1415,21 +1417,22 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Name = 7,
-        Description = 8,
-        Icon = 9,
-        Conditions = 10,
-        Trait = 11,
-        Level = 12,
-        NumRanks = 13,
-        Playable = 14,
-        Hidden = 15,
-        Sound = 16,
-        NextPerk = 17,
-        Swf = 18,
-        Effects = 19,
-        DATADataTypeState = 20,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        Description = 9,
+        Icon = 10,
+        Conditions = 11,
+        Trait = 12,
+        Level = 13,
+        NumRanks = 14,
+        Playable = 15,
+        Hidden = 16,
+        Sound = 17,
+        NextPerk = 18,
+        Swf = 19,
+        Effects = 20,
+        DATADataTypeState = 21,
     }
     #endregion
 
@@ -1449,7 +1452,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Perk.Mask<>);
 
@@ -1820,6 +1823,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Perk_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Perk_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Perk_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

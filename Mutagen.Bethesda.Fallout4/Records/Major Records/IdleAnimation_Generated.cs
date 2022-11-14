@@ -160,6 +160,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Conditions,
                 TItem BehaviorGraph,
                 TItem AnimationEvent,
@@ -177,7 +178,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.BehaviorGraph = BehaviorGraph;
@@ -1180,17 +1182,18 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Conditions = 6,
-        BehaviorGraph = 7,
-        AnimationEvent = 8,
-        RelatedIdles = 9,
-        LoopingSecondsMin = 10,
-        LoopingSecondsMax = 11,
-        Flags = 12,
-        AnimationGroupSection = 13,
-        ReplayDelay = 14,
-        AnimationFile = 15,
-        DATADataTypeState = 16,
+        Fallout4MajorRecordFlags = 6,
+        Conditions = 7,
+        BehaviorGraph = 8,
+        AnimationEvent = 9,
+        RelatedIdles = 10,
+        LoopingSecondsMin = 11,
+        LoopingSecondsMax = 12,
+        Flags = 13,
+        AnimationGroupSection = 14,
+        ReplayDelay = 15,
+        AnimationFile = 16,
+        DATADataTypeState = 17,
     }
     #endregion
 
@@ -1210,7 +1213,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(IdleAnimation.Mask<>);
 
@@ -1542,6 +1545,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (IdleAnimation_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (IdleAnimation_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (IdleAnimation_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

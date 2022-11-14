@@ -433,6 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Opacity,
                 TItem Flags,
@@ -491,7 +492,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Opacity = Opacity;
@@ -2624,58 +2626,59 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Opacity = 7,
-        Flags = 8,
-        Material = 9,
-        OpenSound = 10,
-        ConsumeSpell = 11,
-        ContactSpell = 12,
-        ImageSpace = 13,
-        DATA = 14,
-        FogDepthAmount = 15,
-        FogShallowCo_rlor = 16,
-        FogDeepColor = 17,
-        FogColorShallowRange = 18,
-        FogColorDeepRange = 19,
-        FogShallowAlpha = 20,
-        FogDeepAlpha = 21,
-        FogAlphaShallowRange = 22,
-        FogAlphaDeepRange = 23,
-        FogUnderwaterColor = 24,
-        FogUnderwaterAmount = 25,
-        FogUnderwaterNear = 26,
-        FogUnderwaterFar = 27,
-        PhysicalNormalMagnitude = 28,
-        PhysicalShallowNormalFalloff = 29,
-        PhysicalDeepNormalFalloff = 30,
-        PhysicalReflectivityAmount = 31,
-        PhysicalFresnelAmount = 32,
-        PhysicalSurfaceEffectFalloff = 33,
-        PhysicalDisplacementSimulatorForce = 34,
-        PhysicalDisplacementSimulatorVelocity = 35,
-        PhysicalDisplacementSimulatorFalloff = 36,
-        PhysicalDisplacementSimulatorDampener = 37,
-        PhysicalDisplacementSimulatorStartingSize = 38,
-        PhysicalReflectionColor = 39,
-        SpecularSunSpecularPower = 40,
-        SpecularSunSpecularMagnitude = 41,
-        SpecularSunSparklePower = 42,
-        SpecularSunSparkleMagnitude = 43,
-        SpecularInteriorSpecularRadius = 44,
-        SpecularInteriorSpecularBrightness = 45,
-        SpecularInteriorSpecularPower = 46,
-        SiltAmount = 47,
-        SiltLightColor = 48,
-        SiltDarkColor = 49,
-        ScreenSpaceReflections = 50,
-        NoiseLayerOne = 51,
-        NoiseLayerTwo = 52,
-        NoiseLayerThree = 53,
-        GNAM = 54,
-        LinearVelocity = 55,
-        AngularVelocity = 56,
-        DNAMDataTypeState = 57,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Opacity = 8,
+        Flags = 9,
+        Material = 10,
+        OpenSound = 11,
+        ConsumeSpell = 12,
+        ContactSpell = 13,
+        ImageSpace = 14,
+        DATA = 15,
+        FogDepthAmount = 16,
+        FogShallowCo_rlor = 17,
+        FogDeepColor = 18,
+        FogColorShallowRange = 19,
+        FogColorDeepRange = 20,
+        FogShallowAlpha = 21,
+        FogDeepAlpha = 22,
+        FogAlphaShallowRange = 23,
+        FogAlphaDeepRange = 24,
+        FogUnderwaterColor = 25,
+        FogUnderwaterAmount = 26,
+        FogUnderwaterNear = 27,
+        FogUnderwaterFar = 28,
+        PhysicalNormalMagnitude = 29,
+        PhysicalShallowNormalFalloff = 30,
+        PhysicalDeepNormalFalloff = 31,
+        PhysicalReflectivityAmount = 32,
+        PhysicalFresnelAmount = 33,
+        PhysicalSurfaceEffectFalloff = 34,
+        PhysicalDisplacementSimulatorForce = 35,
+        PhysicalDisplacementSimulatorVelocity = 36,
+        PhysicalDisplacementSimulatorFalloff = 37,
+        PhysicalDisplacementSimulatorDampener = 38,
+        PhysicalDisplacementSimulatorStartingSize = 39,
+        PhysicalReflectionColor = 40,
+        SpecularSunSpecularPower = 41,
+        SpecularSunSpecularMagnitude = 42,
+        SpecularSunSparklePower = 43,
+        SpecularSunSparkleMagnitude = 44,
+        SpecularInteriorSpecularRadius = 45,
+        SpecularInteriorSpecularBrightness = 46,
+        SpecularInteriorSpecularPower = 47,
+        SiltAmount = 48,
+        SiltLightColor = 49,
+        SiltDarkColor = 50,
+        ScreenSpaceReflections = 51,
+        NoiseLayerOne = 52,
+        NoiseLayerTwo = 53,
+        NoiseLayerThree = 54,
+        GNAM = 55,
+        LinearVelocity = 56,
+        AngularVelocity = 57,
+        DNAMDataTypeState = 58,
     }
     #endregion
 
@@ -2695,7 +2698,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 52;
 
-        public const ushort FieldCount = 58;
+        public const ushort FieldCount = 59;
 
         public static readonly Type MaskType = typeof(Water.Mask<>);
 
@@ -3260,6 +3263,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Water_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Water_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Water_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

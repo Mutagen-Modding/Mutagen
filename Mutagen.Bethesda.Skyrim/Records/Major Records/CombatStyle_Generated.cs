@@ -273,6 +273,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem OffensiveMult,
                 TItem DefensiveMult,
                 TItem GroupOffensiveMult,
@@ -296,7 +297,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.OffensiveMult = OffensiveMult;
                 this.DefensiveMult = DefensiveMult;
@@ -1378,23 +1380,24 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        OffensiveMult = 6,
-        DefensiveMult = 7,
-        GroupOffensiveMult = 8,
-        EquipmentScoreMultMelee = 9,
-        EquipmentScoreMultMagic = 10,
-        EquipmentScoreMultRanged = 11,
-        EquipmentScoreMultShout = 12,
-        EquipmentScoreMultUnarmed = 13,
-        EquipmentScoreMultStaff = 14,
-        AvoidThreatChance = 15,
-        CSMD = 16,
-        Melee = 17,
-        CloseRange = 18,
-        LongRangeStrafeMult = 19,
-        Flight = 20,
-        Flags = 21,
-        CSGDDataTypeState = 22,
+        SkyrimMajorRecordFlags = 6,
+        OffensiveMult = 7,
+        DefensiveMult = 8,
+        GroupOffensiveMult = 9,
+        EquipmentScoreMultMelee = 10,
+        EquipmentScoreMultMagic = 11,
+        EquipmentScoreMultRanged = 12,
+        EquipmentScoreMultShout = 13,
+        EquipmentScoreMultUnarmed = 14,
+        EquipmentScoreMultStaff = 15,
+        AvoidThreatChance = 16,
+        CSMD = 17,
+        Melee = 18,
+        CloseRange = 19,
+        LongRangeStrafeMult = 20,
+        Flight = 21,
+        Flags = 22,
+        CSGDDataTypeState = 23,
     }
     #endregion
 
@@ -1414,7 +1417,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(CombatStyle.Mask<>);
 
@@ -1768,6 +1771,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (CombatStyle_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (CombatStyle_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (CombatStyle_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

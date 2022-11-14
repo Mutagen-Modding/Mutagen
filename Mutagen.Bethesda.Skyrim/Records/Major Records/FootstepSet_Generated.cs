@@ -163,6 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem WalkForwardFootsteps,
                 TItem RunForwardFootsteps,
                 TItem WalkForwardAlternateFootsteps,
@@ -174,7 +175,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.WalkForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
                 this.RunForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunForwardFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
@@ -1201,11 +1203,12 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        WalkForwardFootsteps = 6,
-        RunForwardFootsteps = 7,
-        WalkForwardAlternateFootsteps = 8,
-        RunForwardAlternateFootsteps = 9,
-        WalkForwardAlternateFootsteps2 = 10,
+        SkyrimMajorRecordFlags = 6,
+        WalkForwardFootsteps = 7,
+        RunForwardFootsteps = 8,
+        WalkForwardAlternateFootsteps = 9,
+        RunForwardAlternateFootsteps = 10,
+        WalkForwardAlternateFootsteps2 = 11,
     }
     #endregion
 
@@ -1225,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(FootstepSet.Mask<>);
 
@@ -1553,6 +1556,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (FootstepSet_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (FootstepSet_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (FootstepSet_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

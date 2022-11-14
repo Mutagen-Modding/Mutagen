@@ -234,6 +234,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Model,
                 TItem Flags,
@@ -250,7 +251,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
@@ -1326,16 +1328,17 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Model = 7,
-        Flags = 8,
-        Type = 9,
-        ExtraParts = 10,
-        Parts = 11,
-        TextureSet = 12,
-        Color = 13,
-        ValidRaces = 14,
-        Conditions = 15,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Model = 8,
+        Flags = 9,
+        Type = 10,
+        ExtraParts = 11,
+        Parts = 12,
+        TextureSet = 13,
+        Color = 14,
+        ValidRaces = 15,
+        Conditions = 16,
     }
     #endregion
 
@@ -1355,7 +1358,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(HeadPart.Mask<>);
 
@@ -1710,6 +1713,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (HeadPart_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (HeadPart_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (HeadPart_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

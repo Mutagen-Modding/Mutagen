@@ -314,6 +314,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Name,
@@ -337,7 +338,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1638,23 +1640,24 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Name = 8,
-        Keywords = 9,
-        Model = 10,
-        Icons = 11,
-        Destructible = 12,
-        EquipType = 13,
-        PickUpSound = 14,
-        PutDownSound = 15,
-        Value = 16,
-        Weight = 17,
-        IngredientValue = 18,
-        Flags = 19,
-        Effects = 20,
-        DATADataTypeState = 21,
-        ENITDataTypeState = 22,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Name = 9,
+        Keywords = 10,
+        Model = 11,
+        Icons = 12,
+        Destructible = 13,
+        EquipType = 14,
+        PickUpSound = 15,
+        PutDownSound = 16,
+        Value = 17,
+        Weight = 18,
+        IngredientValue = 19,
+        Flags = 20,
+        Effects = 21,
+        DATADataTypeState = 22,
+        ENITDataTypeState = 23,
     }
     #endregion
 
@@ -1674,7 +1677,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(Ingredient.Mask<>);
 
@@ -2126,6 +2129,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Ingredient_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Ingredient_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Ingredient_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

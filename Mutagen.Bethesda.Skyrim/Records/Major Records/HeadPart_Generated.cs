@@ -221,6 +221,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem Model,
                 TItem Flags,
@@ -236,7 +237,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
@@ -1229,15 +1231,16 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Model = 7,
-        Flags = 8,
-        Type = 9,
-        ExtraParts = 10,
-        Parts = 11,
-        TextureSet = 12,
-        Color = 13,
-        ValidRaces = 14,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        Model = 8,
+        Flags = 9,
+        Type = 10,
+        ExtraParts = 11,
+        Parts = 12,
+        TextureSet = 13,
+        Color = 14,
+        ValidRaces = 15,
     }
     #endregion
 
@@ -1257,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(HeadPart.Mask<>);
 
@@ -1613,6 +1616,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (HeadPart_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (HeadPart_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (HeadPart_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

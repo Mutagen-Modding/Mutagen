@@ -118,6 +118,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem EffectArt,
                 TItem Shader,
                 TItem Flags,
@@ -128,7 +129,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.EffectArt = EffectArt;
                 this.Shader = Shader;
@@ -787,10 +789,11 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        EffectArt = 6,
-        Shader = 7,
-        Flags = 8,
-        DATADataTypeState = 9,
+        Fallout4MajorRecordFlags = 6,
+        EffectArt = 7,
+        Shader = 8,
+        Flags = 9,
+        DATADataTypeState = 10,
     }
     #endregion
 
@@ -810,7 +813,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(VisualEffect.Mask<>);
 
@@ -1064,6 +1067,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (VisualEffect_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (VisualEffect_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (VisualEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

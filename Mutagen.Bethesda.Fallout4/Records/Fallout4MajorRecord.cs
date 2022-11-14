@@ -34,4 +34,9 @@ public partial interface IFallout4MajorRecord : IFormVersionSetter
 internal partial class Fallout4MajorRecordBinaryOverlay
 {
     protected override ushort? FormVersionAbstract => this.FormVersion;
+
+    public Fallout4MajorRecord.Fallout4MajorRecordFlag Fallout4MajorRecordFlags
+    {
+        get => (Fallout4MajorRecord.Fallout4MajorRecordFlag)this.MajorRecordFlagsRaw;
+    }
 }

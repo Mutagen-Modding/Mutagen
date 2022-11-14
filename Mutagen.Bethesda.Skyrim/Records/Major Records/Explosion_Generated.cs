@@ -342,6 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Name,
@@ -368,7 +369,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1586,26 +1588,27 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Name = 8,
-        Model = 9,
-        ObjectEffect = 10,
-        ImageSpaceModifier = 11,
-        Light = 12,
-        Sound1 = 13,
-        Sound2 = 14,
-        ImpactDataSet = 15,
-        PlacedObject = 16,
-        SpawnProjectile = 17,
-        Force = 18,
-        Damage = 19,
-        Radius = 20,
-        ISRadius = 21,
-        VerticalOffsetMult = 22,
-        Flags = 23,
-        SoundLevel = 24,
-        DATADataTypeState = 25,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Name = 9,
+        Model = 10,
+        ObjectEffect = 11,
+        ImageSpaceModifier = 12,
+        Light = 13,
+        Sound1 = 14,
+        Sound2 = 15,
+        ImpactDataSet = 16,
+        PlacedObject = 17,
+        SpawnProjectile = 18,
+        Force = 19,
+        Damage = 20,
+        Radius = 21,
+        ISRadius = 22,
+        VerticalOffsetMult = 23,
+        Flags = 24,
+        SoundLevel = 25,
+        DATADataTypeState = 26,
     }
     #endregion
 
@@ -1625,7 +1628,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Explosion.Mask<>);
 
@@ -2031,6 +2034,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Explosion_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Explosion_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Explosion_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

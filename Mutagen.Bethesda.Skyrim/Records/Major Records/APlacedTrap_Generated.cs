@@ -301,6 +301,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem EncounterZone,
                 TItem Owner,
@@ -325,7 +326,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.EncounterZone = EncounterZone;
@@ -1705,24 +1707,25 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        EncounterZone = 7,
-        Owner = 8,
-        FactionRank = 9,
-        HeadTrackingWeight = 10,
-        FavorCost = 11,
-        Reflections = 12,
-        LinkedReferences = 13,
-        ActivateParents = 14,
-        EnableParent = 15,
-        Emittance = 16,
-        MultiBoundReference = 17,
-        IgnoredBySandbox = 18,
-        LocationRefTypes = 19,
-        LocationReference = 20,
-        DistantLodData = 21,
-        Scale = 22,
-        Placement = 23,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        EncounterZone = 8,
+        Owner = 9,
+        FactionRank = 10,
+        HeadTrackingWeight = 11,
+        FavorCost = 12,
+        Reflections = 13,
+        LinkedReferences = 14,
+        ActivateParents = 15,
+        EnableParent = 16,
+        Emittance = 17,
+        MultiBoundReference = 18,
+        IgnoredBySandbox = 19,
+        LocationRefTypes = 20,
+        LocationReference = 21,
+        DistantLodData = 22,
+        Scale = 23,
+        Placement = 24,
     }
     #endregion
 
@@ -1742,7 +1745,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(APlacedTrap.Mask<>);
 
@@ -2242,6 +2245,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (APlacedTrap_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (APlacedTrap_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (APlacedTrap_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

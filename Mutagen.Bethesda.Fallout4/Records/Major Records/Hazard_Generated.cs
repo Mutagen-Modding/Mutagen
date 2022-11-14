@@ -262,6 +262,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
@@ -286,7 +287,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -1419,24 +1421,25 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Model = 8,
-        ImageSpaceModifier = 9,
-        Limit = 10,
-        Radius = 11,
-        Lifetime = 12,
-        ImageSpaceRadius = 13,
-        TargetInterval = 14,
-        Flags = 15,
-        Effect = 16,
-        Light = 17,
-        ImpactDataSet = 18,
-        Sound = 19,
-        TaperFullEffectRadius = 20,
-        TaperWeight = 21,
-        TaperCurse = 22,
-        DNAMDataTypeState = 23,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        ImageSpaceModifier = 10,
+        Limit = 11,
+        Radius = 12,
+        Lifetime = 13,
+        ImageSpaceRadius = 14,
+        TargetInterval = 15,
+        Flags = 16,
+        Effect = 17,
+        Light = 18,
+        ImpactDataSet = 19,
+        Sound = 20,
+        TaperFullEffectRadius = 21,
+        TaperWeight = 22,
+        TaperCurse = 23,
+        DNAMDataTypeState = 24,
     }
     #endregion
 
@@ -1456,7 +1459,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(Hazard.Mask<>);
 
@@ -1811,6 +1814,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Hazard_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Hazard_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Hazard_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

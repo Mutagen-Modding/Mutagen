@@ -225,6 +225,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Model,
                 TItem Conditions,
                 TItem Action,
@@ -249,7 +250,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
@@ -1410,24 +1412,25 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Model = 6,
-        Conditions = 7,
-        Action = 8,
-        Location = 9,
-        Target = 10,
-        Flags = 11,
-        TimeMultiplierPlayer = 12,
-        TimeMultiplierTarget = 13,
-        TimeMultiplierGlobal = 14,
-        MaxTime = 15,
-        MinTime = 16,
-        TargetPercentBetweenActors = 17,
-        NearTargetDistance = 18,
-        LocationSpring = 19,
-        TargetSpring = 20,
-        RotationOffset = 21,
-        ImageSpaceModifier = 22,
-        DATADataTypeState = 23,
+        Fallout4MajorRecordFlags = 6,
+        Model = 7,
+        Conditions = 8,
+        Action = 9,
+        Location = 10,
+        Target = 11,
+        Flags = 12,
+        TimeMultiplierPlayer = 13,
+        TimeMultiplierTarget = 14,
+        TimeMultiplierGlobal = 15,
+        MaxTime = 16,
+        MinTime = 17,
+        TargetPercentBetweenActors = 18,
+        NearTargetDistance = 19,
+        LocationSpring = 20,
+        TargetSpring = 21,
+        RotationOffset = 22,
+        ImageSpaceModifier = 23,
+        DATADataTypeState = 24,
     }
     #endregion
 
@@ -1447,7 +1450,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(CameraShot.Mask<>);
 
@@ -1812,6 +1815,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (CameraShot_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (CameraShot_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (CameraShot_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

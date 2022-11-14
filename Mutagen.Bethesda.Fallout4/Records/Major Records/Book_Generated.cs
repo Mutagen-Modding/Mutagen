@@ -346,6 +346,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -374,7 +375,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1759,28 +1761,29 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        Name = 9,
-        Model = 10,
-        Icons = 11,
-        BookText = 12,
-        Destructible = 13,
-        PickUpSound = 14,
-        PutDownSound = 15,
-        Keywords = 16,
-        FeaturedItemMessage = 17,
-        Value = 18,
-        Weight = 19,
-        Flags = 20,
-        Teaches = 21,
-        TextOffsetX = 22,
-        TextOffsetY = 23,
-        Description = 24,
-        InventoryArt = 25,
-        DATADataTypeState = 26,
-        DNAMDataTypeState = 27,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        Name = 10,
+        Model = 11,
+        Icons = 12,
+        BookText = 13,
+        Destructible = 14,
+        PickUpSound = 15,
+        PutDownSound = 16,
+        Keywords = 17,
+        FeaturedItemMessage = 18,
+        Value = 19,
+        Weight = 20,
+        Flags = 21,
+        Teaches = 22,
+        TextOffsetX = 23,
+        TextOffsetY = 24,
+        Description = 25,
+        InventoryArt = 26,
+        DATADataTypeState = 27,
+        DNAMDataTypeState = 28,
     }
     #endregion
 
@@ -1800,7 +1803,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 22;
 
-        public const ushort FieldCount = 28;
+        public const ushort FieldCount = 29;
 
         public static readonly Type MaskType = typeof(Book.Mask<>);
 
@@ -2239,6 +2242,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Book_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Book_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Book_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

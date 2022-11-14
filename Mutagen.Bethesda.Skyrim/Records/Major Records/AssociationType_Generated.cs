@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ParentTitle,
                 TItem Title,
                 TItem IsFamily)
@@ -112,7 +113,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ParentTitle = new MaskItem<TItem, GenderedItem<TItem>?>(ParentTitle, default);
                 this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(Title, default);
@@ -756,9 +758,10 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ParentTitle = 6,
-        Title = 7,
-        IsFamily = 8,
+        SkyrimMajorRecordFlags = 6,
+        ParentTitle = 7,
+        Title = 8,
+        IsFamily = 9,
     }
     #endregion
 
@@ -778,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(AssociationType.Mask<>);
 
@@ -1039,6 +1042,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (AssociationType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (AssociationType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (AssociationType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -166,6 +166,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Color,
                 TItem Notes,
                 TItem Type,
@@ -178,7 +179,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Color = Color;
                 this.Notes = Notes;
@@ -932,12 +934,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Color = 6,
-        Notes = 7,
-        Type = 8,
-        AttractionRule = 9,
-        Name = 10,
-        DisplayName = 11,
+        Fallout4MajorRecordFlags = 6,
+        Color = 7,
+        Notes = 8,
+        Type = 9,
+        AttractionRule = 10,
+        Name = 11,
+        DisplayName = 12,
     }
     #endregion
 
@@ -957,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Keyword.Mask<>);
 
@@ -1232,6 +1235,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
                     return (Keyword_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
+                    return (Keyword_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
                     return (Keyword_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -179,6 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Model,
                 TItem Action,
                 TItem Location,
@@ -199,7 +200,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Action = Action;
@@ -1186,20 +1188,21 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Model = 6,
-        Action = 7,
-        Location = 8,
-        Target = 9,
-        Flags = 10,
-        TimeMultiplierPlayer = 11,
-        TimeMultiplierTarget = 12,
-        TimeMultiplierGlobal = 13,
-        MaxTime = 14,
-        MinTime = 15,
-        TargetPercentBetweenActors = 16,
-        NearTargetDistance = 17,
-        ImageSpaceModifier = 18,
-        DATADataTypeState = 19,
+        SkyrimMajorRecordFlags = 6,
+        Model = 7,
+        Action = 8,
+        Location = 9,
+        Target = 10,
+        Flags = 11,
+        TimeMultiplierPlayer = 12,
+        TimeMultiplierTarget = 13,
+        TimeMultiplierGlobal = 14,
+        MaxTime = 15,
+        MinTime = 16,
+        TargetPercentBetweenActors = 17,
+        NearTargetDistance = 18,
+        ImageSpaceModifier = 19,
+        DATADataTypeState = 20,
     }
     #endregion
 
@@ -1219,7 +1222,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(CameraShot.Mask<>);
 
@@ -1562,6 +1565,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (CameraShot_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (CameraShot_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (CameraShot_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

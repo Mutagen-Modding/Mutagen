@@ -319,6 +319,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Flags,
                 TItem Type,
@@ -355,7 +356,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, PackageAdapter.Mask<TItem>?>(VirtualMachineAdapter, new PackageAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Flags = Flags;
@@ -2077,36 +2079,37 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Flags = 7,
-        Type = 8,
-        InterruptOverride = 9,
-        PreferredSpeed = 10,
-        Unknown = 11,
-        InteruptFlags = 12,
-        Unknown2 = 13,
-        ScheduleMonth = 14,
-        ScheduleDayOfWeek = 15,
-        ScheduleDate = 16,
-        ScheduleHour = 17,
-        ScheduleMinute = 18,
-        Unknown3 = 19,
-        ScheduleDurationInMinutes = 20,
-        Conditions = 21,
-        Unknown4 = 22,
-        IdleAnimations = 23,
-        CombatStyle = 24,
-        OwnerQuest = 25,
-        PackageTemplate = 26,
-        DataInputVersion = 27,
-        Data = 28,
-        XnamMarker = 29,
-        ProcedureTree = 30,
-        OnBegin = 31,
-        OnEnd = 32,
-        OnChange = 33,
-        PKDTDataTypeState = 34,
-        PSDTDataTypeState = 35,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Flags = 8,
+        Type = 9,
+        InterruptOverride = 10,
+        PreferredSpeed = 11,
+        Unknown = 12,
+        InteruptFlags = 13,
+        Unknown2 = 14,
+        ScheduleMonth = 15,
+        ScheduleDayOfWeek = 16,
+        ScheduleDate = 17,
+        ScheduleHour = 18,
+        ScheduleMinute = 19,
+        Unknown3 = 20,
+        ScheduleDurationInMinutes = 21,
+        Conditions = 22,
+        Unknown4 = 23,
+        IdleAnimations = 24,
+        CombatStyle = 25,
+        OwnerQuest = 26,
+        PackageTemplate = 27,
+        DataInputVersion = 28,
+        Data = 29,
+        XnamMarker = 30,
+        ProcedureTree = 31,
+        OnBegin = 32,
+        OnEnd = 33,
+        OnChange = 34,
+        PKDTDataTypeState = 35,
+        PSDTDataTypeState = 36,
     }
     #endregion
 
@@ -2126,7 +2129,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 30;
 
-        public const ushort FieldCount = 36;
+        public const ushort FieldCount = 37;
 
         public static readonly Type MaskType = typeof(Package.Mask<>);
 
@@ -2658,6 +2661,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Package_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Package_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Package_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
