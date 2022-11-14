@@ -291,32 +291,6 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
         return new FormLink<TMajorGetter>(this);
     }
 
-    [Obsolete("Use ToNullableLink instead")]
-    public FormLinkNullable<TMajorGetter> AsNullableLink<TMajorGetter>()
-        where TMajorGetter : class, IMajorRecordGetter
-    {
-        return new FormLinkNullable<TMajorGetter>(this);
-    }
-
-    public FormLinkNullable<TMajorGetter> ToNullableLink<TMajorGetter>()
-        where TMajorGetter : class, IMajorRecordGetter
-    {
-        return new FormLinkNullable<TMajorGetter>(this);
-    }
-
-    [Obsolete("Use ToNullableLinkGetter instead")]
-    public IFormLinkNullableGetter<TMajorGetter> AsNullableLinkGetter<TMajorGetter>()
-        where TMajorGetter : class, IMajorRecordGetter
-    {
-        return new FormLinkNullable<TMajorGetter>(this);
-    }
-
-    public IFormLinkNullableGetter<TMajorGetter> ToNullableLinkGetter<TMajorGetter>()
-        where TMajorGetter : class, IMajorRecordGetter
-    {
-        return new FormLinkNullable<TMajorGetter>(this);
-    }
-
     public static bool operator ==(FormKey? a, FormKey? b)
     {
         return EqualityComparer<FormKey?>.Default.Equals(a, b);

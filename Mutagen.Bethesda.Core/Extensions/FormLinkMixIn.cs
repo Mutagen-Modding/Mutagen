@@ -314,6 +314,32 @@ public static class FormLinkMixIn
         return link;
     }
 
+    [Obsolete("Use ToNullableLink instead")]
+    public static FormLinkNullable<TMajorGetter> AsNullableLink<TMajorGetter>(this FormKey? formKey)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLinkNullable<TMajorGetter>(formKey);
+    }
+
+    public static FormLinkNullable<TMajorGetter> ToNullableLink<TMajorGetter>(this FormKey? formKey)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLinkNullable<TMajorGetter>(formKey);
+    }
+
+    [Obsolete("Use ToNullableLinkGetter instead")]
+    public static IFormLinkNullableGetter<TMajorGetter> AsNullableLinkGetter<TMajorGetter>(this FormKey? formKey)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLinkNullable<TMajorGetter>(formKey);
+    }
+
+    public static IFormLinkNullableGetter<TMajorGetter> ToNullableLinkGetter<TMajorGetter>(this FormKey? formKey)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLinkNullable<TMajorGetter>(formKey);
+    }
+
     public static bool Contains<TGetter>(this IReadOnlyCollection<IFormLinkGetter<TGetter>> coll, TGetter record)
         where TGetter : class, IMajorRecordGetter
     {
