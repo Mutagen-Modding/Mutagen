@@ -19,7 +19,7 @@ public class EqualityTests
                 Damage = 5
             },
             Unused = new byte[] {1, 2, 3},
-            AttackSound = TestConstants.Form2.AsNullableLink<ISoundDescriptorGetter>()
+            AttackSound = TestConstants.Form2.ToNullableLink<ISoundDescriptorGetter>()
         };
     }
         
