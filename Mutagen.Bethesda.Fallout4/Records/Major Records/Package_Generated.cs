@@ -242,12 +242,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPackageEventGetter? IPackageGetter.OnChange => this.OnChange;
         #endregion
-        #region PKDTDataTypeState
-        public Package.PKDTDataType PKDTDataTypeState { get; set; } = default;
-        #endregion
-        #region PSDTDataTypeState
-        public Package.PSDTDataType PSDTDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -300,8 +294,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OnBegin = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
                 this.OnEnd = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
                 this.OnChange = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
-                this.PKDTDataTypeState = initialValue;
-                this.PSDTDataTypeState = initialValue;
             }
 
             public Mask(
@@ -338,9 +330,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ProcedureTree,
                 TItem OnBegin,
                 TItem OnEnd,
-                TItem OnChange,
-                TItem PKDTDataTypeState,
-                TItem PSDTDataTypeState)
+                TItem OnChange)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -377,8 +367,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OnBegin = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnBegin, new PackageEvent.Mask<TItem>(OnBegin));
                 this.OnEnd = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnEnd, new PackageEvent.Mask<TItem>(OnEnd));
                 this.OnChange = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnChange, new PackageEvent.Mask<TItem>(OnChange));
-                this.PKDTDataTypeState = PKDTDataTypeState;
-                this.PSDTDataTypeState = PSDTDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -417,8 +405,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnBegin { get; set; }
             public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnEnd { get; set; }
             public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnChange { get; set; }
-            public TItem PKDTDataTypeState;
-            public TItem PSDTDataTypeState;
             #endregion
 
             #region Equals
@@ -459,8 +445,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.OnBegin, rhs.OnBegin)) return false;
                 if (!object.Equals(this.OnEnd, rhs.OnEnd)) return false;
                 if (!object.Equals(this.OnChange, rhs.OnChange)) return false;
-                if (!object.Equals(this.PKDTDataTypeState, rhs.PKDTDataTypeState)) return false;
-                if (!object.Equals(this.PSDTDataTypeState, rhs.PSDTDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -493,8 +477,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.OnBegin);
                 hash.Add(this.OnEnd);
                 hash.Add(this.OnChange);
-                hash.Add(this.PKDTDataTypeState);
-                hash.Add(this.PSDTDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -588,8 +570,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.OnChange.Overall)) return false;
                     if (this.OnChange.Specific != null && !this.OnChange.Specific.All(eval)) return false;
                 }
-                if (!eval(this.PKDTDataTypeState)) return false;
-                if (!eval(this.PSDTDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -681,8 +661,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.OnChange.Overall)) return true;
                     if (this.OnChange.Specific != null && this.OnChange.Specific.Any(eval)) return true;
                 }
-                if (eval(this.PKDTDataTypeState)) return true;
-                if (eval(this.PSDTDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -765,8 +743,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.OnBegin = this.OnBegin == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnBegin.Overall), this.OnBegin.Specific?.Translate(eval));
                 obj.OnEnd = this.OnEnd == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnEnd.Overall), this.OnEnd.Specific?.Translate(eval));
                 obj.OnChange = this.OnChange == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnChange.Overall), this.OnChange.Specific?.Translate(eval));
-                obj.PKDTDataTypeState = eval(this.PKDTDataTypeState);
-                obj.PSDTDataTypeState = eval(this.PSDTDataTypeState);
             }
             #endregion
 
@@ -956,14 +932,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         OnChange?.Print(sb);
                     }
-                    if (printMask?.PKDTDataTypeState ?? true)
-                    {
-                        sb.AppendItem(PKDTDataTypeState, "PKDTDataTypeState");
-                    }
-                    if (printMask?.PSDTDataTypeState ?? true)
-                    {
-                        sb.AppendItem(PSDTDataTypeState, "PSDTDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1002,8 +970,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnBegin;
             public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnEnd;
             public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnChange;
-            public Exception? PKDTDataTypeState;
-            public Exception? PSDTDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1066,10 +1032,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return OnEnd;
                     case Package_FieldIndex.OnChange:
                         return OnChange;
-                    case Package_FieldIndex.PKDTDataTypeState:
-                        return PKDTDataTypeState;
-                    case Package_FieldIndex.PSDTDataTypeState:
-                        return PSDTDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1160,12 +1122,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Package_FieldIndex.OnChange:
                         this.OnChange = new MaskItem<Exception?, PackageEvent.ErrorMask?>(ex, null);
-                        break;
-                    case Package_FieldIndex.PKDTDataTypeState:
-                        this.PKDTDataTypeState = ex;
-                        break;
-                    case Package_FieldIndex.PSDTDataTypeState:
-                        this.PSDTDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1259,12 +1215,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Package_FieldIndex.OnChange:
                         this.OnChange = (MaskItem<Exception?, PackageEvent.ErrorMask?>?)obj;
                         break;
-                    case Package_FieldIndex.PKDTDataTypeState:
-                        this.PKDTDataTypeState = (Exception?)obj;
-                        break;
-                    case Package_FieldIndex.PSDTDataTypeState:
-                        this.PSDTDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1301,8 +1251,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (OnBegin != null) return true;
                 if (OnEnd != null) return true;
                 if (OnChange != null) return true;
-                if (PKDTDataTypeState != null) return true;
-                if (PSDTDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1463,12 +1411,6 @@ namespace Mutagen.Bethesda.Fallout4
                 OnBegin?.Print(sb);
                 OnEnd?.Print(sb);
                 OnChange?.Print(sb);
-                {
-                    sb.AppendItem(PKDTDataTypeState, "PKDTDataTypeState");
-                }
-                {
-                    sb.AppendItem(PSDTDataTypeState, "PSDTDataTypeState");
-                }
             }
             #endregion
 
@@ -1504,8 +1446,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.OnBegin = this.OnBegin.Combine(rhs.OnBegin, (l, r) => l.Combine(r));
                 ret.OnEnd = this.OnEnd.Combine(rhs.OnEnd, (l, r) => l.Combine(r));
                 ret.OnChange = this.OnChange.Combine(rhs.OnChange, (l, r) => l.Combine(r));
-                ret.PKDTDataTypeState = this.PKDTDataTypeState.Combine(rhs.PKDTDataTypeState);
-                ret.PSDTDataTypeState = this.PSDTDataTypeState.Combine(rhs.PSDTDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1555,8 +1495,6 @@ namespace Mutagen.Bethesda.Fallout4
             public PackageEvent.TranslationMask? OnBegin;
             public PackageEvent.TranslationMask? OnEnd;
             public PackageEvent.TranslationMask? OnChange;
-            public bool PKDTDataTypeState;
-            public bool PSDTDataTypeState;
             #endregion
 
             #region Ctors
@@ -1584,8 +1522,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PackageTemplate = defaultOn;
                 this.DataInputVersion = defaultOn;
                 this.XnamMarker = defaultOn;
-                this.PKDTDataTypeState = defaultOn;
-                this.PSDTDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1620,8 +1556,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((OnBegin != null ? OnBegin.OnOverall : DefaultOn, OnBegin?.GetCrystal()));
                 ret.Add((OnEnd != null ? OnEnd.OnOverall : DefaultOn, OnEnd?.GetCrystal()));
                 ret.Add((OnChange != null ? OnChange.OnOverall : DefaultOn, OnChange?.GetCrystal()));
-                ret.Add((PKDTDataTypeState, null));
-                ret.Add((PSDTDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1678,14 +1612,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IPackage);
 
-        [Flags]
-        public enum PKDTDataType
-        {
-        }
-        [Flags]
-        public enum PSDTDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1797,8 +1723,6 @@ namespace Mutagen.Bethesda.Fallout4
         new PackageEvent? OnBegin { get; set; }
         new PackageEvent? OnEnd { get; set; }
         new PackageEvent? OnChange { get; set; }
-        new Package.PKDTDataType PKDTDataTypeState { get; set; }
-        new Package.PSDTDataType PSDTDataTypeState { get; set; }
     }
 
     public partial interface IPackageInternal :
@@ -1851,8 +1775,6 @@ namespace Mutagen.Bethesda.Fallout4
         IPackageEventGetter? OnBegin { get; }
         IPackageEventGetter? OnEnd { get; }
         IPackageEventGetter? OnChange { get; }
-        Package.PKDTDataType PKDTDataTypeState { get; }
-        Package.PSDTDataType PSDTDataTypeState { get; }
 
     }
 
@@ -2056,8 +1978,6 @@ namespace Mutagen.Bethesda.Fallout4
         OnBegin = 31,
         OnEnd = 32,
         OnChange = 33,
-        PKDTDataTypeState = 34,
-        PSDTDataTypeState = 35,
     }
     #endregion
 
@@ -2075,9 +1995,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "04e6122f-851d-4177-afc4-9f645560c389";
 
-        public const ushort AdditionalFieldCount = 29;
+        public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 36;
+        public const ushort FieldCount = 34;
 
         public static readonly Type MaskType = typeof(Package.Mask<>);
 
@@ -2206,8 +2126,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.OnBegin = null;
             item.OnEnd = null;
             item.OnChange = null;
-            item.PKDTDataTypeState = default;
-            item.PSDTDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2359,8 +2277,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.OnChange,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PKDTDataTypeState = item.PKDTDataTypeState == rhs.PKDTDataTypeState;
-            ret.PSDTDataTypeState = item.PSDTDataTypeState == rhs.PSDTDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2554,14 +2470,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 OnChangeItem?.Print(sb, "OnChange");
             }
-            if (printMask?.PKDTDataTypeState ?? true)
-            {
-                sb.AppendItem(item.PKDTDataTypeState, "PKDTDataTypeState");
-            }
-            if (printMask?.PSDTDataTypeState ?? true)
-            {
-                sb.AppendItem(item.PSDTDataTypeState, "PSDTDataTypeState");
-            }
         }
         
         public static Package_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2740,14 +2648,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isOnChangeEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.PKDTDataTypeState) ?? true))
-            {
-                if (lhs.PKDTDataTypeState != rhs.PKDTDataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.PSDTDataTypeState) ?? true))
-            {
-                if (lhs.PSDTDataTypeState != rhs.PSDTDataTypeState) return false;
-            }
             return true;
         }
         
@@ -2818,8 +2718,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(OnChangeitem);
             }
-            hash.Add(item.PKDTDataTypeState);
-            hash.Add(item.PSDTDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3247,14 +3145,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PKDTDataTypeState) ?? true))
-            {
-                item.PKDTDataTypeState = rhs.PKDTDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PSDTDataTypeState) ?? true))
-            {
-                item.PSDTDataTypeState = rhs.PSDTDataTypeState;
             }
         }
         
@@ -3849,7 +3739,6 @@ namespace Mutagen.Bethesda.Fallout4
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         private RangeInt32? _PKDTLocation;
-        public Package.PKDTDataType PKDTDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _PKDTLocation!.Value.Min;
         private bool _Flags_IsSet => _PKDTLocation.HasValue;
@@ -3886,7 +3775,6 @@ namespace Mutagen.Bethesda.Fallout4
         public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default;
         #endregion
         private RangeInt32? _PSDTLocation;
-        public Package.PSDTDataType PSDTDataTypeState { get; private set; }
         #region ScheduleMonth
         private int _ScheduleMonthLocation => _PSDTLocation!.Value.Min;
         private bool _ScheduleMonth_IsSet => _PSDTLocation.HasValue;

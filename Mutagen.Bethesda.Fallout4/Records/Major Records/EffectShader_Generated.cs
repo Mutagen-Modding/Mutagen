@@ -280,9 +280,6 @@ namespace Mutagen.Bethesda.Fallout4
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region DNAMDataTypeState
-        public EffectShader.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -360,7 +357,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FillTextureScaleV = initialValue;
                 this.Unknown6 = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -422,8 +418,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem FillTextureScaleU,
                 TItem FillTextureScaleV,
                 TItem Unknown6,
-                TItem Model,
-                TItem DNAMDataTypeState)
+                TItem Model)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -485,7 +480,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FillTextureScaleV = FillTextureScaleV;
                 this.Unknown6 = Unknown6;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -549,7 +543,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem FillTextureScaleV;
             public TItem Unknown6;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -615,7 +608,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.FillTextureScaleV, rhs.FillTextureScaleV)) return false;
                 if (!object.Equals(this.Unknown6, rhs.Unknown6)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -673,7 +665,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.FillTextureScaleV);
                 hash.Add(this.Unknown6);
                 hash.Add(this.Model);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -740,7 +731,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -805,7 +795,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -873,7 +862,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.FillTextureScaleV = eval(this.FillTextureScaleV);
                 obj.Unknown6 = eval(this.Unknown6);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -1100,10 +1088,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1167,7 +1151,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? FillTextureScaleV;
             public Exception? Unknown6;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1280,8 +1263,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Unknown6;
                     case EffectShader_FieldIndex.Model:
                         return Model;
-                    case EffectShader_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1447,9 +1428,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case EffectShader_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
-                        break;
-                    case EffectShader_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1618,9 +1596,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case EffectShader_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1682,7 +1657,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (FillTextureScaleV != null) return true;
                 if (Unknown6 != null) return true;
                 if (Model != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1863,9 +1837,6 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Unknown6, "Unknown6");
                 }
                 Model?.Print(sb);
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1926,7 +1897,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.FillTextureScaleV = this.FillTextureScaleV.Combine(rhs.FillTextureScaleV);
                 ret.Unknown6 = this.Unknown6.Combine(rhs.Unknown6);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2001,7 +1971,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool FillTextureScaleV;
             public bool Unknown6;
             public Model.TranslationMask? Model;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -2061,7 +2030,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FillTextureScaleU = defaultOn;
                 this.FillTextureScaleV = defaultOn;
                 this.Unknown6 = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -2121,7 +2089,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((FillTextureScaleV, null));
                 ret.Add((Unknown6, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2178,10 +2145,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IEffectShader);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2322,7 +2285,6 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new EffectShader.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IEffectShaderInternal :
@@ -2399,7 +2361,6 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        EffectShader.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -2628,7 +2589,6 @@ namespace Mutagen.Bethesda.Fallout4
         FillTextureScaleV = 56,
         Unknown6 = 57,
         Model = 58,
-        DNAMDataTypeState = 59,
     }
     #endregion
 
@@ -2646,9 +2606,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "998828d0-071f-422e-b81d-7897d9765458";
 
-        public const ushort AdditionalFieldCount = 53;
+        public const ushort AdditionalFieldCount = 52;
 
-        public const ushort FieldCount = 60;
+        public const ushort FieldCount = 59;
 
         public static readonly Type MaskType = typeof(EffectShader.Mask<>);
 
@@ -2788,7 +2748,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.FillTextureScaleV = default;
             item.Unknown6 = default;
             item.Model = null;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2931,7 +2890,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3196,10 +3154,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static EffectShader_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -3462,10 +3416,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -3567,7 +3517,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3916,10 +3865,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -4067,15 +4012,6 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryWriteTranslator
     {
         public new static readonly EffectShaderBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IEffectShaderGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IEffectShaderGetter item,
@@ -4290,7 +4226,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -4350,15 +4286,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EFSH;
-        public static void FillBinaryStructs(
-            IEffectShaderInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IEffectShaderInternal item,
             MutagenFrame frame,
@@ -4632,7 +4559,6 @@ namespace Mutagen.Bethesda.Fallout4
         public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         private RangeInt32? _DNAMLocation;
-        public EffectShader.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value < 106;

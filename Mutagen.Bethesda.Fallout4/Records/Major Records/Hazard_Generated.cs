@@ -207,9 +207,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region TaperCurse
         public Single TaperCurse { get; set; } = default;
         #endregion
-        #region DNAMDataTypeState
-        public Hazard.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -252,7 +249,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TaperFullEffectRadius = initialValue;
                 this.TaperWeight = initialValue;
                 this.TaperCurse = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -279,8 +275,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Sound,
                 TItem TaperFullEffectRadius,
                 TItem TaperWeight,
-                TItem TaperCurse,
-                TItem DNAMDataTypeState)
+                TItem TaperCurse)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -307,7 +302,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TaperFullEffectRadius = TaperFullEffectRadius;
                 this.TaperWeight = TaperWeight;
                 this.TaperCurse = TaperCurse;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -336,7 +330,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem TaperFullEffectRadius;
             public TItem TaperWeight;
             public TItem TaperCurse;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -367,7 +360,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.TaperFullEffectRadius, rhs.TaperFullEffectRadius)) return false;
                 if (!object.Equals(this.TaperWeight, rhs.TaperWeight)) return false;
                 if (!object.Equals(this.TaperCurse, rhs.TaperCurse)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -390,7 +382,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.TaperFullEffectRadius);
                 hash.Add(this.TaperWeight);
                 hash.Add(this.TaperCurse);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -426,7 +417,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.TaperFullEffectRadius)) return false;
                 if (!eval(this.TaperWeight)) return false;
                 if (!eval(this.TaperCurse)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -460,7 +450,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.TaperFullEffectRadius)) return true;
                 if (eval(this.TaperWeight)) return true;
                 if (eval(this.TaperCurse)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -493,7 +482,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.TaperFullEffectRadius = eval(this.TaperFullEffectRadius);
                 obj.TaperWeight = eval(this.TaperWeight);
                 obj.TaperCurse = eval(this.TaperCurse);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -580,10 +568,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(TaperCurse, "TaperCurse");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -612,7 +596,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? TaperFullEffectRadius;
             public Exception? TaperWeight;
             public Exception? TaperCurse;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -655,8 +638,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return TaperWeight;
                     case Hazard_FieldIndex.TaperCurse:
                         return TaperCurse;
-                    case Hazard_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -717,9 +698,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Hazard_FieldIndex.TaperCurse:
                         this.TaperCurse = ex;
-                        break;
-                    case Hazard_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -783,9 +761,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Hazard_FieldIndex.TaperCurse:
                         this.TaperCurse = (Exception?)obj;
                         break;
-                    case Hazard_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -812,7 +787,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (TaperFullEffectRadius != null) return true;
                 if (TaperWeight != null) return true;
                 if (TaperCurse != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -886,9 +860,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(TaperCurse, "TaperCurse");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -914,7 +885,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.TaperFullEffectRadius = this.TaperFullEffectRadius.Combine(rhs.TaperFullEffectRadius);
                 ret.TaperWeight = this.TaperWeight.Combine(rhs.TaperWeight);
                 ret.TaperCurse = this.TaperCurse.Combine(rhs.TaperCurse);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -954,7 +924,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool TaperFullEffectRadius;
             public bool TaperWeight;
             public bool TaperCurse;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -978,7 +947,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TaperFullEffectRadius = defaultOn;
                 this.TaperWeight = defaultOn;
                 this.TaperCurse = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1003,7 +971,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((TaperFullEffectRadius, null));
                 ret.Add((TaperWeight, null));
                 ret.Add((TaperCurse, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1060,10 +1027,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IHazard);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1184,7 +1147,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single TaperFullEffectRadius { get; set; }
         new Single TaperWeight { get; set; }
         new Single TaperCurse { get; set; }
-        new Hazard.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IHazardInternal :
@@ -1245,7 +1207,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single TaperFullEffectRadius { get; }
         Single TaperWeight { get; }
         Single TaperCurse { get; }
-        Hazard.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -1439,7 +1400,6 @@ namespace Mutagen.Bethesda.Fallout4
         TaperFullEffectRadius = 21,
         TaperWeight = 22,
         TaperCurse = 23,
-        DNAMDataTypeState = 24,
     }
     #endregion
 
@@ -1457,9 +1417,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "d61b1bde-1cf4-40d1-9eec-63626d1f147a";
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 25;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(Hazard.Mask<>);
 
@@ -1561,7 +1521,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.TaperFullEffectRadius = default;
             item.TaperWeight = default;
             item.TaperCurse = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1673,7 +1632,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.TaperFullEffectRadius = item.TaperFullEffectRadius.EqualsWithin(rhs.TaperFullEffectRadius);
             ret.TaperWeight = item.TaperWeight.EqualsWithin(rhs.TaperWeight);
             ret.TaperCurse = item.TaperCurse.EqualsWithin(rhs.TaperCurse);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1792,10 +1750,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.TaperCurse ?? true)
             {
                 sb.AppendItem(item.TaperCurse, "TaperCurse");
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -1923,10 +1877,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.TaperCurse.EqualsWithin(rhs.TaperCurse)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -1978,7 +1928,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.TaperFullEffectRadius);
             hash.Add(item.TaperWeight);
             hash.Add(item.TaperCurse);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2205,10 +2154,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.TaperCurse = rhs.TaperCurse;
             }
-            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2357,15 +2302,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly HazardBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IHazardGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IHazardGetter item,
             MutagenWriter writer,
@@ -2451,7 +2387,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2511,15 +2447,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly HazardBinaryCreateTranslation Instance = new HazardBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.HAZD;
-        public static void FillBinaryStructs(
-            IHazardInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IHazardInternal item,
             MutagenFrame frame,
@@ -2678,7 +2605,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Hazard.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Limit
         private int _LimitLocation => _DNAMLocation!.Value.Min;
         private bool _Limit_IsSet => _DNAMLocation.HasValue;

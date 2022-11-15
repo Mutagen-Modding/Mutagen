@@ -284,12 +284,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IBookGetter.InventoryArt => this.InventoryArt;
         #endregion
-        #region DATADataTypeState
-        public Book.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
-        #region DNAMDataTypeState
-        public Book.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -335,8 +329,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextOffsetY = initialValue;
                 this.Description = initialValue;
                 this.InventoryArt = initialValue;
-                this.DATADataTypeState = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -366,9 +358,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem TextOffsetX,
                 TItem TextOffsetY,
                 TItem Description,
-                TItem InventoryArt,
-                TItem DATADataTypeState,
-                TItem DNAMDataTypeState)
+                TItem InventoryArt)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -398,8 +388,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextOffsetY = TextOffsetY;
                 this.Description = Description;
                 this.InventoryArt = InventoryArt;
-                this.DATADataTypeState = DATADataTypeState;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -431,8 +419,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem TextOffsetY;
             public TItem Description;
             public TItem InventoryArt;
-            public TItem DATADataTypeState;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -466,8 +452,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.TextOffsetY, rhs.TextOffsetY)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.InventoryArt, rhs.InventoryArt)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -493,8 +477,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.TextOffsetY);
                 hash.Add(this.Description);
                 hash.Add(this.InventoryArt);
-                hash.Add(this.DATADataTypeState);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -559,8 +541,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.TextOffsetY)) return false;
                 if (!eval(this.Description)) return false;
                 if (!eval(this.InventoryArt)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -623,8 +603,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.TextOffsetY)) return true;
                 if (eval(this.Description)) return true;
                 if (eval(this.InventoryArt)) return true;
-                if (eval(this.DATADataTypeState)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -673,8 +651,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.TextOffsetY = eval(this.TextOffsetY);
                 obj.Description = eval(this.Description);
                 obj.InventoryArt = eval(this.InventoryArt);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -790,14 +766,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(InventoryArt, "InventoryArt");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -829,8 +797,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? TextOffsetY;
             public Exception? Description;
             public Exception? InventoryArt;
-            public Exception? DATADataTypeState;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -879,10 +845,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Description;
                     case Book_FieldIndex.InventoryArt:
                         return InventoryArt;
-                    case Book_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
-                    case Book_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -952,12 +914,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Book_FieldIndex.InventoryArt:
                         this.InventoryArt = ex;
-                        break;
-                    case Book_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
-                    case Book_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1030,12 +986,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Book_FieldIndex.InventoryArt:
                         this.InventoryArt = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
-                    case Book_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1065,8 +1015,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (TextOffsetY != null) return true;
                 if (Description != null) return true;
                 if (InventoryArt != null) return true;
-                if (DATADataTypeState != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1158,12 +1106,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(InventoryArt, "InventoryArt");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1192,8 +1134,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.TextOffsetY = this.TextOffsetY.Combine(rhs.TextOffsetY);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.InventoryArt = this.InventoryArt.Combine(rhs.InventoryArt);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1236,8 +1176,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool TextOffsetY;
             public bool Description;
             public bool InventoryArt;
-            public bool DATADataTypeState;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1260,8 +1198,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextOffsetY = defaultOn;
                 this.Description = defaultOn;
                 this.InventoryArt = defaultOn;
-                this.DATADataTypeState = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1289,8 +1225,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((TextOffsetY, null));
                 ret.Add((Description, null));
                 ret.Add((InventoryArt, null));
-                ret.Add((DATADataTypeState, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1347,14 +1281,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IBook);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1495,8 +1421,6 @@ namespace Mutagen.Bethesda.Fallout4
         new UInt32 TextOffsetY { get; set; }
         new TranslatedString? Description { get; set; }
         new IFormLinkNullable<IStaticGetter> InventoryArt { get; set; }
-        new Book.DATADataType DATADataTypeState { get; set; }
-        new Book.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IBookInternal :
@@ -1584,8 +1508,6 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32 TextOffsetY { get; }
         ITranslatedStringGetter? Description { get; }
         IFormLinkNullableGetter<IStaticGetter> InventoryArt { get; }
-        Book.DATADataType DATADataTypeState { get; }
-        Book.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -1782,8 +1704,6 @@ namespace Mutagen.Bethesda.Fallout4
         TextOffsetY = 24,
         Description = 25,
         InventoryArt = 26,
-        DATADataTypeState = 27,
-        DNAMDataTypeState = 28,
     }
     #endregion
 
@@ -1801,9 +1721,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "c56f0c8d-eb97-4ab3-9fd8-1eb891d6ac5a";
 
-        public const ushort AdditionalFieldCount = 22;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 29;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Book.Mask<>);
 
@@ -1929,8 +1849,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.TextOffsetY = default;
             item.Description = default;
             item.InventoryArt.Clear();
-            item.DATADataTypeState = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2068,8 +1986,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.TextOffsetY = item.TextOffsetY == rhs.TextOffsetY;
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.InventoryArt = item.InventoryArt.Equals(rhs.InventoryArt);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2216,14 +2132,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.InventoryArt ?? true)
             {
                 sb.AppendItem(item.InventoryArt.FormKeyNullable, "InventoryArt");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -2379,14 +2287,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.InventoryArt.Equals(rhs.InventoryArt)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -2456,8 +2356,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.InventoryArt);
-            hash.Add(item.DATADataTypeState);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2847,14 +2745,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.InventoryArt.SetTo(rhs.InventoryArt.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -3002,15 +2892,6 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryWriteTranslator
     {
         public new static readonly BookBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IBookGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IBookGetter item,
@@ -3161,7 +3042,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3221,15 +3102,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly BookBinaryCreateTranslation Instance = new BookBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BOOK;
-        public static void FillBinaryStructs(
-            IBookInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IBookInternal item,
             MutagenFrame frame,
@@ -3505,7 +3377,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage => _FeaturedItemMessageLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FeaturedItemMessageLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
         #endregion
         private RangeInt32? _DATALocation;
-        public Book.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
@@ -3517,7 +3388,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Book.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         public partial Book.Flag GetFlagsCustom();

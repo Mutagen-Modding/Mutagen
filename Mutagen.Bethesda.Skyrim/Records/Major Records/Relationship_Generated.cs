@@ -93,9 +93,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType;
         #endregion
-        #region DATADataTypeState
-        public Relationship.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -127,7 +124,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = initialValue;
                 this.Flags = initialValue;
                 this.AssociationType = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -143,8 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Rank,
                 TItem Unknown,
                 TItem Flags,
-                TItem AssociationType,
-                TItem DATADataTypeState)
+                TItem AssociationType)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -160,7 +155,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = Unknown;
                 this.Flags = Flags;
                 this.AssociationType = AssociationType;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -178,7 +172,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Unknown;
             public TItem Flags;
             public TItem AssociationType;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -198,7 +191,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.AssociationType, rhs.AssociationType)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -210,7 +202,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Unknown);
                 hash.Add(this.Flags);
                 hash.Add(this.AssociationType);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -227,7 +218,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.AssociationType)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -242,7 +232,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Unknown)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.AssociationType)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -264,7 +253,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Unknown = eval(this.Unknown);
                 obj.Flags = eval(this.Flags);
                 obj.AssociationType = eval(this.AssociationType);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -307,10 +295,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(AssociationType, "AssociationType");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -328,7 +312,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Unknown;
             public Exception? Flags;
             public Exception? AssociationType;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -349,8 +332,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Flags;
                     case Relationship_FieldIndex.AssociationType:
                         return AssociationType;
-                    case Relationship_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -378,9 +359,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Relationship_FieldIndex.AssociationType:
                         this.AssociationType = ex;
-                        break;
-                    case Relationship_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -411,9 +389,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Relationship_FieldIndex.AssociationType:
                         this.AssociationType = (Exception?)obj;
                         break;
-                    case Relationship_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -429,7 +404,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Unknown != null) return true;
                 if (Flags != null) return true;
                 if (AssociationType != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -474,9 +448,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(AssociationType, "AssociationType");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -491,7 +462,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.AssociationType = this.AssociationType.Combine(rhs.AssociationType);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -520,7 +490,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Unknown;
             public bool Flags;
             public bool AssociationType;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -535,7 +504,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = defaultOn;
                 this.Flags = defaultOn;
                 this.AssociationType = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -549,7 +517,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Unknown, null));
                 ret.Add((Flags, null));
                 ret.Add((AssociationType, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -617,10 +584,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum DATADataType
-        {
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -712,7 +675,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte Unknown { get; set; }
         new Relationship.Flag Flags { get; set; }
         new IFormLink<IAssociationTypeGetter> AssociationType { get; set; }
-        new Relationship.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Relationship.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -741,7 +703,6 @@ namespace Mutagen.Bethesda.Skyrim
         Byte Unknown { get; }
         Relationship.Flag Flags { get; }
         IFormLinkGetter<IAssociationTypeGetter> AssociationType { get; }
-        Relationship.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         Relationship.MajorFlag MajorFlags { get; }
@@ -928,7 +889,6 @@ namespace Mutagen.Bethesda.Skyrim
         Unknown = 10,
         Flags = 11,
         AssociationType = 12,
-        DATADataTypeState = 13,
     }
     #endregion
 
@@ -946,9 +906,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "8d5e6837-c926-4b13-9d68-132c96ca3319";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Relationship.Mask<>);
 
@@ -1032,7 +992,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Unknown = default;
             item.Flags = default;
             item.AssociationType.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1126,7 +1085,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Flags = item.Flags == rhs.Flags;
             ret.AssociationType = item.AssociationType.Equals(rhs.AssociationType);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1199,10 +1157,6 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.AssociationType ?? true)
             {
                 sb.AppendItem(item.AssociationType.FormKey, "AssociationType");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1278,10 +1232,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.AssociationType.Equals(rhs.AssociationType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1316,7 +1266,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Unknown);
             hash.Add(item.Flags);
             hash.Add(item.AssociationType);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1446,10 +1395,6 @@ namespace Mutagen.Bethesda.Skyrim
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
                 item.AssociationType.SetTo(rhs.AssociationType.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -1599,15 +1544,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly RelationshipBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IRelationshipGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IRelationshipGetter item,
             MutagenWriter writer,
@@ -1651,7 +1587,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1711,15 +1647,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly RelationshipBinaryCreateTranslation Instance = new RelationshipBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.RELA;
-        public static void FillBinaryStructs(
-            IRelationshipInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IRelationshipInternal item,
             MutagenFrame frame,
@@ -1815,7 +1742,6 @@ namespace Mutagen.Bethesda.Skyrim
         public Relationship.MajorFlag MajorFlags => (Relationship.MajorFlag)this.MajorRecordFlagsRaw;
 
         private RangeInt32? _DATALocation;
-        public Relationship.DATADataType DATADataTypeState { get; private set; }
         #region Parent
         private int _ParentLocation => _DATALocation!.Value.Min;
         private bool _Parent_IsSet => _DATALocation.HasValue;

@@ -314,9 +314,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region SoundLevel
         public UInt32 SoundLevel { get; set; } = default;
         #endregion
-        #region DNAMDataTypeState
-        public Projectile.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -375,7 +372,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MuzzleFlashModel = initialValue;
                 this.TextureFilesHashes = initialValue;
                 this.SoundLevel = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -418,8 +414,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VATSProjectile,
                 TItem MuzzleFlashModel,
                 TItem TextureFilesHashes,
-                TItem SoundLevel,
-                TItem DNAMDataTypeState)
+                TItem SoundLevel)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -462,7 +457,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MuzzleFlashModel = MuzzleFlashModel;
                 this.TextureFilesHashes = TextureFilesHashes;
                 this.SoundLevel = SoundLevel;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -507,7 +501,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem MuzzleFlashModel;
             public TItem TextureFilesHashes;
             public TItem SoundLevel;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -554,7 +547,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
                 if (!object.Equals(this.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
                 if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -593,7 +585,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.MuzzleFlashModel);
                 hash.Add(this.TextureFilesHashes);
                 hash.Add(this.SoundLevel);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -649,7 +640,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.MuzzleFlashModel)) return false;
                 if (!eval(this.TextureFilesHashes)) return false;
                 if (!eval(this.SoundLevel)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -703,7 +693,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.MuzzleFlashModel)) return true;
                 if (eval(this.TextureFilesHashes)) return true;
                 if (eval(this.SoundLevel)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -752,7 +741,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.MuzzleFlashModel = eval(this.MuzzleFlashModel);
                 obj.TextureFilesHashes = eval(this.TextureFilesHashes);
                 obj.SoundLevel = eval(this.SoundLevel);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -903,10 +891,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(SoundLevel, "SoundLevel");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -951,7 +935,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? MuzzleFlashModel;
             public Exception? TextureFilesHashes;
             public Exception? SoundLevel;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1026,8 +1009,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return TextureFilesHashes;
                     case Projectile_FieldIndex.SoundLevel:
                         return SoundLevel;
-                    case Projectile_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1136,9 +1117,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Projectile_FieldIndex.SoundLevel:
                         this.SoundLevel = ex;
-                        break;
-                    case Projectile_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1250,9 +1228,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Projectile_FieldIndex.SoundLevel:
                         this.SoundLevel = (Exception?)obj;
                         break;
-                    case Projectile_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1295,7 +1270,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (MuzzleFlashModel != null) return true;
                 if (TextureFilesHashes != null) return true;
                 if (SoundLevel != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1415,9 +1389,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(SoundLevel, "SoundLevel");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1459,7 +1430,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MuzzleFlashModel = this.MuzzleFlashModel.Combine(rhs.MuzzleFlashModel);
                 ret.TextureFilesHashes = this.TextureFilesHashes.Combine(rhs.TextureFilesHashes);
                 ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1515,7 +1485,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool MuzzleFlashModel;
             public bool TextureFilesHashes;
             public bool SoundLevel;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1554,7 +1523,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MuzzleFlashModel = defaultOn;
                 this.TextureFilesHashes = defaultOn;
                 this.SoundLevel = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1595,7 +1563,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((MuzzleFlashModel, null));
                 ret.Add((TextureFilesHashes, null));
                 ret.Add((SoundLevel, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1652,10 +1619,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IProjectile);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1792,7 +1755,6 @@ namespace Mutagen.Bethesda.Fallout4
         new String MuzzleFlashModel { get; set; }
         new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new UInt32 SoundLevel { get; set; }
-        new Projectile.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IProjectileInternal :
@@ -1869,7 +1831,6 @@ namespace Mutagen.Bethesda.Fallout4
         String MuzzleFlashModel { get; }
         ReadOnlyMemorySlice<Byte>? TextureFilesHashes { get; }
         UInt32 SoundLevel { get; }
-        Projectile.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -2079,7 +2040,6 @@ namespace Mutagen.Bethesda.Fallout4
         MuzzleFlashModel = 37,
         TextureFilesHashes = 38,
         SoundLevel = 39,
-        DNAMDataTypeState = 40,
     }
     #endregion
 
@@ -2097,9 +2057,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "12c18f9e-ca09-4481-b659-f8d7c4498b9e";
 
-        public const ushort AdditionalFieldCount = 34;
+        public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 41;
+        public const ushort FieldCount = 40;
 
         public static readonly Type MaskType = typeof(Projectile.Mask<>);
 
@@ -2228,7 +2188,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.MuzzleFlashModel = string.Empty;
             item.TextureFilesHashes = default;
             item.SoundLevel = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2366,7 +2325,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.MuzzleFlashModel = string.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
             ret.TextureFilesHashes = MemorySliceExt.SequenceEqual(item.TextureFilesHashes, rhs.TextureFilesHashes);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2552,10 +2510,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.SoundLevel ?? true)
             {
                 sb.AppendItem(item.SoundLevel, "SoundLevel");
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -2751,10 +2705,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -2831,7 +2781,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(TextureFilesHashesItem);
             }
             hash.Add(item.SoundLevel);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3167,10 +3116,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.SoundLevel = rhs.SoundLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -3319,15 +3264,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ProjectileBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IProjectileGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IProjectileGetter item,
             MutagenWriter writer,
@@ -3470,7 +3406,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3530,15 +3466,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ProjectileBinaryCreateTranslation Instance = new ProjectileBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PROJ;
-        public static void FillBinaryStructs(
-            IProjectileInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IProjectileInternal item,
             MutagenFrame frame,
@@ -3758,7 +3685,6 @@ namespace Mutagen.Bethesda.Fallout4
         public ReadOnlyMemorySlice<Byte>? Unused => _UnusedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnusedLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Projectile.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;

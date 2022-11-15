@@ -114,14 +114,12 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem PRKEDataTypeState,
                 TItem Quest,
                 TItem Stage)
             : base(
                 Rank: Rank,
                 Priority: Priority,
-                Conditions: Conditions,
-                PRKEDataTypeState: PRKEDataTypeState)
+                Conditions: Conditions)
             {
                 this.Quest = Quest;
                 this.Stage = Stage;
@@ -616,9 +614,8 @@ namespace Mutagen.Bethesda.Fallout4
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        PRKEDataTypeState = 3,
-        Quest = 4,
-        Stage = 5,
+        Quest = 3,
+        Stage = 4,
     }
     #endregion
 
@@ -638,7 +635,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(PerkQuestEffect.Mask<>);
 
@@ -855,8 +852,6 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PerkQuestEffect_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
                     return (PerkQuestEffect_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return (PerkQuestEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1062,9 +1057,6 @@ namespace Mutagen.Bethesda.Fallout4
             IPerkQuestEffectGetter item,
             MutagenWriter writer)
         {
-            APerkEffectBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Quest);
@@ -1117,9 +1109,6 @@ namespace Mutagen.Bethesda.Fallout4
             IPerkQuestEffect item,
             MutagenFrame frame)
         {
-            APerkEffectBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
             item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Stage = frame.ReadUInt16();
         }

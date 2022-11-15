@@ -216,9 +216,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region LeafFrequency
         public Single LeafFrequency { get; set; } = default;
         #endregion
-        #region CNAMDataTypeState
-        public Tree.CNAMDataType CNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -263,7 +260,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LeafFlexibility = initialValue;
                 this.LeafAmplitude = initialValue;
                 this.LeafFrequency = initialValue;
-                this.CNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -292,8 +288,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem SideFrequency,
                 TItem LeafFlexibility,
                 TItem LeafAmplitude,
-                TItem LeafFrequency,
-                TItem CNAMDataTypeState)
+                TItem LeafFrequency)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -322,7 +317,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LeafFlexibility = LeafFlexibility;
                 this.LeafAmplitude = LeafAmplitude;
                 this.LeafFrequency = LeafFrequency;
-                this.CNAMDataTypeState = CNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -353,7 +347,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem LeafFlexibility;
             public TItem LeafAmplitude;
             public TItem LeafFrequency;
-            public TItem CNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -386,7 +379,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.LeafFlexibility, rhs.LeafFlexibility)) return false;
                 if (!object.Equals(this.LeafAmplitude, rhs.LeafAmplitude)) return false;
                 if (!object.Equals(this.LeafFrequency, rhs.LeafFrequency)) return false;
-                if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -411,7 +403,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.LeafFlexibility);
                 hash.Add(this.LeafAmplitude);
                 hash.Add(this.LeafFrequency);
-                hash.Add(this.CNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -457,7 +448,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.LeafFlexibility)) return false;
                 if (!eval(this.LeafAmplitude)) return false;
                 if (!eval(this.LeafFrequency)) return false;
-                if (!eval(this.CNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -501,7 +491,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.LeafFlexibility)) return true;
                 if (eval(this.LeafAmplitude)) return true;
                 if (eval(this.LeafFrequency)) return true;
-                if (eval(this.CNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -536,7 +525,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.LeafFlexibility = eval(this.LeafFlexibility);
                 obj.LeafAmplitude = eval(this.LeafAmplitude);
                 obj.LeafFrequency = eval(this.LeafFrequency);
-                obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
             }
             #endregion
 
@@ -631,10 +619,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(LeafFrequency, "LeafFrequency");
                     }
-                    if (printMask?.CNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -665,7 +649,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? LeafFlexibility;
             public Exception? LeafAmplitude;
             public Exception? LeafFrequency;
-            public Exception? CNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -712,8 +695,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return LeafAmplitude;
                     case Tree_FieldIndex.LeafFrequency:
                         return LeafFrequency;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        return CNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -780,9 +761,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Tree_FieldIndex.LeafFrequency:
                         this.LeafFrequency = ex;
-                        break;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -852,9 +830,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Tree_FieldIndex.LeafFrequency:
                         this.LeafFrequency = (Exception?)obj;
                         break;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -883,7 +858,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (LeafFlexibility != null) return true;
                 if (LeafAmplitude != null) return true;
                 if (LeafFrequency != null) return true;
-                if (CNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -959,9 +933,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(LeafFrequency, "LeafFrequency");
                 }
-                {
-                    sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -989,7 +960,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.LeafFlexibility = this.LeafFlexibility.Combine(rhs.LeafFlexibility);
                 ret.LeafAmplitude = this.LeafAmplitude.Combine(rhs.LeafAmplitude);
                 ret.LeafFrequency = this.LeafFrequency.Combine(rhs.LeafFrequency);
-                ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1031,7 +1001,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool LeafFlexibility;
             public bool LeafAmplitude;
             public bool LeafFrequency;
-            public bool CNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1055,7 +1024,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LeafFlexibility = defaultOn;
                 this.LeafAmplitude = defaultOn;
                 this.LeafFrequency = defaultOn;
-                this.CNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1082,7 +1050,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((LeafFlexibility, null));
                 ret.Add((LeafAmplitude, null));
                 ret.Add((LeafFrequency, null));
-                ret.Add((CNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1143,10 +1110,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum CNAMDataType
-        {
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -1274,7 +1237,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single LeafFlexibility { get; set; }
         new Single LeafAmplitude { get; set; }
         new Single LeafFrequency { get; set; }
-        new Tree.CNAMDataType CNAMDataTypeState { get; set; }
         #region Mutagen
         new Tree.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1348,7 +1310,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single LeafFlexibility { get; }
         Single LeafAmplitude { get; }
         Single LeafFrequency { get; }
-        Tree.CNAMDataType CNAMDataTypeState { get; }
 
         #region Mutagen
         Tree.MajorFlag MajorFlags { get; }
@@ -1548,7 +1509,6 @@ namespace Mutagen.Bethesda.Fallout4
         LeafFlexibility = 23,
         LeafAmplitude = 24,
         LeafFrequency = 25,
-        CNAMDataTypeState = 26,
     }
     #endregion
 
@@ -1566,9 +1526,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "0cc3a259-8223-4da7-9ef5-9fcb393486a2";
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 26;
 
         public static readonly Type MaskType = typeof(Tree.Mask<>);
 
@@ -1676,7 +1636,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.LeafFlexibility = default;
             item.LeafAmplitude = default;
             item.LeafFrequency = default;
-            item.CNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1796,7 +1755,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.LeafFlexibility = item.LeafFlexibility.EqualsWithin(rhs.LeafFlexibility);
             ret.LeafAmplitude = item.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude);
             ret.LeafFrequency = item.LeafFrequency.EqualsWithin(rhs.LeafFrequency);
-            ret.CNAMDataTypeState = item.CNAMDataTypeState == rhs.CNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1925,10 +1883,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.LeafFrequency ?? true)
             {
                 sb.AppendItem(item.LeafFrequency, "LeafFrequency");
-            }
-            if (printMask?.CNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
             }
         }
         
@@ -2072,10 +2026,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.LeafFrequency.EqualsWithin(rhs.LeafFrequency)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -2135,7 +2085,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.LeafFlexibility);
             hash.Add(item.LeafAmplitude);
             hash.Add(item.LeafFrequency);
-            hash.Add(item.CNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2421,10 +2370,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.LeafFrequency = rhs.LeafFrequency;
             }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                item.CNAMDataTypeState = rhs.CNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2573,15 +2518,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly TreeBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ITreeGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ITreeGetter item,
             MutagenWriter writer,
@@ -2683,7 +2619,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2743,15 +2679,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TREE;
-        public static void FillBinaryStructs(
-            ITreeInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ITreeInternal item,
             MutagenFrame frame,
@@ -2944,7 +2871,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         private RangeInt32? _CNAMLocation;
-        public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
         #region TrunkFlexibility
         private int _TrunkFlexibilityLocation => _CNAMLocation!.Value.Min;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;

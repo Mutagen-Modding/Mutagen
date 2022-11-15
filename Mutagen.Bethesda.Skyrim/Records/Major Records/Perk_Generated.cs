@@ -181,9 +181,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region DATADataTypeState
-        public Perk.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -221,7 +218,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Hidden = initialValue;
                 this.NextPerk = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>());
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -243,8 +239,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Playable,
                 TItem Hidden,
                 TItem NextPerk,
-                TItem Effects,
-                TItem DATADataTypeState)
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -266,7 +261,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Hidden = Hidden;
                 this.NextPerk = NextPerk;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>());
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -290,7 +284,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Hidden;
             public TItem NextPerk;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>? Effects;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -316,7 +309,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Hidden, rhs.Hidden)) return false;
                 if (!object.Equals(this.NextPerk, rhs.NextPerk)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -334,7 +326,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Hidden);
                 hash.Add(this.NextPerk);
                 hash.Add(this.Effects);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -387,7 +378,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -438,7 +428,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -494,7 +483,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -591,10 +579,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -618,7 +602,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Hidden;
             public Exception? NextPerk;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>? Effects;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -651,8 +634,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return NextPerk;
                     case Perk_FieldIndex.Effects:
                         return Effects;
-                    case Perk_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -698,9 +679,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Perk_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Perk_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -749,9 +727,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Perk_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>)obj;
                         break;
-                    case Perk_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -773,7 +748,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Hidden != null) return true;
                 if (NextPerk != null) return true;
                 if (Effects != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -862,9 +836,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -885,7 +856,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Hidden = this.Hidden.Combine(rhs.Hidden);
                 ret.NextPerk = this.NextPerk.Combine(rhs.NextPerk);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -920,7 +890,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Hidden;
             public bool NextPerk;
             public APerkEffect.TranslationMask? Effects;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -937,7 +906,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Playable = defaultOn;
                 this.Hidden = defaultOn;
                 this.NextPerk = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -957,7 +925,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Hidden, null));
                 ret.Add((NextPerk, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1025,10 +992,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum DATADataType
-        {
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PerkCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => PerkSetterCommon.Instance.EnumerateListedAssetLinks(this);
@@ -1141,7 +1104,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Boolean Hidden { get; set; }
         new IFormLinkNullable<IPerkGetter> NextPerk { get; set; }
         new ExtendedList<APerkEffect> Effects { get; }
-        new Perk.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Perk.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1198,7 +1160,6 @@ namespace Mutagen.Bethesda.Skyrim
         Boolean Hidden { get; }
         IFormLinkNullableGetter<IPerkGetter> NextPerk { get; }
         IReadOnlyList<IAPerkEffectGetter> Effects { get; }
-        Perk.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         Perk.MajorFlag MajorFlags { get; }
@@ -1391,7 +1352,6 @@ namespace Mutagen.Bethesda.Skyrim
         Hidden = 16,
         NextPerk = 17,
         Effects = 18,
-        DATADataTypeState = 19,
     }
     #endregion
 
@@ -1409,9 +1369,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "dd36c48f-42dc-4b8d-82d7-4e1b3eb9dc3c";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Perk.Mask<>);
 
@@ -1513,7 +1473,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Hidden = default;
             item.NextPerk.Clear();
             item.Effects.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1658,7 +1617,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1779,10 +1737,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Perk_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1889,10 +1843,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((APerkEffectCommon)((IAPerkEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Perk_FieldIndex.Effects)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1942,7 +1892,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Hidden);
             hash.Add(item.NextPerk);
             hash.Add(item.Effects);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2225,10 +2174,6 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2377,15 +2322,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly PerkBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IPerkGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IPerkGetter item,
             MutagenWriter writer,
@@ -2473,7 +2409,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2533,15 +2469,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly PerkBinaryCreateTranslation Instance = new PerkBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PERK;
-        public static void FillBinaryStructs(
-            IPerkInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IPerkInternal item,
             MutagenFrame frame,
@@ -2720,7 +2647,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IIconsGetter? Icons { get; private set; }
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         private RangeInt32? _DATALocation;
-        public Perk.DATADataType DATADataTypeState { get; private set; }
         #region Trait
         private int _TraitLocation => _DATALocation!.Value.Min;
         private bool _Trait_IsSet => _DATALocation.HasValue;

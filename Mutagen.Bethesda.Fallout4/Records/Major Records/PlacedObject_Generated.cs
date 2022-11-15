@@ -729,9 +729,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IPlacedObjectGetter.Comments => this.Comments;
         #endregion
-        #region DATADataTypeState
-        public PlacedObject.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -830,7 +827,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Position = initialValue;
                 this.Rotation = initialValue;
                 this.Comments = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -913,8 +909,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem DistantLodData,
                 TItem Position,
                 TItem Rotation,
-                TItem Comments,
-                TItem DATADataTypeState)
+                TItem Comments)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -997,7 +992,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Position = Position;
                 this.Rotation = Rotation;
                 this.Comments = Comments;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -1082,7 +1076,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Position;
             public TItem Rotation;
             public TItem Comments;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -1169,7 +1162,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Position, rhs.Position)) return false;
                 if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
                 if (!object.Equals(this.Comments, rhs.Comments)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1248,7 +1240,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Position);
                 hash.Add(this.Rotation);
                 hash.Add(this.Comments);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1488,7 +1479,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Position)) return false;
                 if (!eval(this.Rotation)) return false;
                 if (!eval(this.Comments)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -1726,7 +1716,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Position)) return true;
                 if (eval(this.Rotation)) return true;
                 if (eval(this.Comments)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1923,7 +1912,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Position = eval(this.Position);
                 obj.Rotation = eval(this.Rotation);
                 obj.Comments = eval(this.Comments);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -2362,10 +2350,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Comments, "Comments");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -2450,7 +2434,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Position;
             public Exception? Rotation;
             public Exception? Comments;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -2605,8 +2588,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Rotation;
                     case PlacedObject_FieldIndex.Comments:
                         return Comments;
-                    case PlacedObject_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -2835,9 +2816,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case PlacedObject_FieldIndex.Comments:
                         this.Comments = ex;
-                        break;
-                    case PlacedObject_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -3069,9 +3047,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case PlacedObject_FieldIndex.Comments:
                         this.Comments = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -3154,7 +3129,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Position != null) return true;
                 if (Rotation != null) return true;
                 if (Comments != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -3492,9 +3466,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Comments, "Comments");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -3576,7 +3547,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Position = this.Position.Combine(rhs.Position);
                 ret.Rotation = this.Rotation.Combine(rhs.Rotation);
                 ret.Comments = this.Comments.Combine(rhs.Comments);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3672,7 +3642,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Position;
             public bool Rotation;
             public bool Comments;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -3732,7 +3701,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Position = defaultOn;
                 this.Rotation = defaultOn;
                 this.Comments = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -3813,7 +3781,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Position, null));
                 ret.Add((Rotation, null));
                 ret.Add((Comments, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3870,10 +3837,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IPlacedObject);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -4043,7 +4006,6 @@ namespace Mutagen.Bethesda.Fallout4
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
         new String? Comments { get; set; }
-        new PlacedObject.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IPlacedObjectInternal :
@@ -4150,7 +4112,6 @@ namespace Mutagen.Bethesda.Fallout4
         P3Float Position { get; }
         P3Float Rotation { get; }
         String? Comments { get; }
-        PlacedObject.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -4400,7 +4361,6 @@ namespace Mutagen.Bethesda.Fallout4
         Position = 77,
         Rotation = 78,
         Comments = 79,
-        DATADataTypeState = 80,
     }
     #endregion
 
@@ -4418,9 +4378,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9f17225a-a9f1-4e82-a287-6e1b20a495ed";
 
-        public const ushort AdditionalFieldCount = 74;
+        public const ushort AdditionalFieldCount = 73;
 
-        public const ushort FieldCount = 81;
+        public const ushort FieldCount = 80;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -4643,7 +4603,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Position = default;
             item.Rotation = default;
             item.Comments = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -4932,7 +4891,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.Comments = string.Equals(item.Comments, rhs.Comments);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -5396,10 +5354,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(CommentsItem, "Comments");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static PlacedObject_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -5814,10 +5768,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!string.Equals(lhs.Comments, rhs.Comments)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -6033,7 +5983,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(Commentsitem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -7213,10 +7162,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Comments) ?? true))
             {
                 item.Comments = rhs.Comments;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -8648,7 +8593,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         public IReadOnlyList<Single>? DistantLodData { get; private set; }
         private RangeInt32? _DATALocation;
-        public PlacedObject.DATADataType DATADataTypeState { get; private set; }
         #region Position
         private int _PositionLocation => _DATALocation!.Value.Min;
         private bool _Position_IsSet => _DATALocation.HasValue;

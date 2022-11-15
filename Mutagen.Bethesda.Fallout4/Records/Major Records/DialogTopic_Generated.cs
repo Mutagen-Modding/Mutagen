@@ -157,9 +157,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region DATADataTypeState
-        public DialogTopic.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -197,7 +194,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Timestamp = initialValue;
                 this.Unknown = initialValue;
                 this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -219,8 +215,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem SubtypeName,
                 TItem Timestamp,
                 TItem Unknown,
-                TItem Responses,
-                TItem DATADataTypeState)
+                TItem Responses)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -242,7 +237,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Timestamp = Timestamp;
                 this.Unknown = Unknown;
                 this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -266,7 +260,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Timestamp;
             public TItem Unknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>? Responses;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -292,7 +285,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Responses, rhs.Responses)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -310,7 +302,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Timestamp);
                 hash.Add(this.Unknown);
                 hash.Add(this.Responses);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -344,7 +335,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -376,7 +366,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -418,7 +407,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -500,10 +488,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -527,7 +511,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Timestamp;
             public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>? Responses;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -560,8 +543,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Unknown;
                     case DialogTopic_FieldIndex.Responses:
                         return Responses;
-                    case DialogTopic_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -607,9 +588,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case DialogTopic_FieldIndex.Responses:
                         this.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(ex, null);
-                        break;
-                    case DialogTopic_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -658,9 +636,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case DialogTopic_FieldIndex.Responses:
                         this.Responses = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>)obj;
                         break;
-                    case DialogTopic_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -682,7 +657,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Timestamp != null) return true;
                 if (Unknown != null) return true;
                 if (Responses != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -760,9 +734,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -783,7 +754,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -818,7 +788,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Timestamp;
             public bool Unknown;
             public DialogResponses.TranslationMask? Responses;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -838,7 +807,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SubtypeName = defaultOn;
                 this.Timestamp = defaultOn;
                 this.Unknown = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -858,7 +826,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Timestamp, null));
                 ret.Add((Unknown, null));
                 ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -927,10 +894,6 @@ namespace Mutagen.Bethesda.Fallout4
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
-        [Flags]
-        public enum DATADataType
-        {
-        }
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -1057,7 +1020,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
         new ExtendedList<DialogResponses> Responses { get; }
-        new DialogTopic.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IDialogTopicInternal :
@@ -1098,7 +1060,6 @@ namespace Mutagen.Bethesda.Fallout4
         Int32 Timestamp { get; }
         Int32 Unknown { get; }
         IReadOnlyList<IDialogResponsesGetter> Responses { get; }
-        DialogTopic.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1499,7 +1460,6 @@ namespace Mutagen.Bethesda.Fallout4
         Timestamp = 16,
         Unknown = 17,
         Responses = 18,
-        DATADataTypeState = 19,
     }
     #endregion
 
@@ -1517,9 +1477,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "6a26c9a6-9cd4-4df5-a158-bcdfa4977cd6";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(DialogTopic.Mask<>);
 
@@ -1649,7 +1609,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Timestamp = default;
             item.Unknown = default;
             item.Responses.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1826,7 +1785,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Responses,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1935,10 +1893,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static DialogTopic_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2037,10 +1991,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponsesCommon)((IDialogResponsesGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Responses)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -2084,7 +2034,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Timestamp);
             hash.Add(item.Unknown);
             hash.Add(item.Responses);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2493,10 +2442,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -3004,7 +2949,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IKeywordGetter> Keyword => _KeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _KeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
         #endregion
         private RangeInt32? _DATALocation;
-        public DialogTopic.DATADataType DATADataTypeState { get; private set; }
         #region TopicFlags
         private int _TopicFlagsLocation => _DATALocation!.Value.Min;
         private bool _TopicFlags_IsSet => _DATALocation.HasValue;

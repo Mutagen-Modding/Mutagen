@@ -110,13 +110,11 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem PRKEDataTypeState,
                 TItem Ability)
             : base(
                 Rank: Rank,
                 Priority: Priority,
-                Conditions: Conditions,
-                PRKEDataTypeState: PRKEDataTypeState)
+                Conditions: Conditions)
             {
                 this.Ability = Ability;
             }
@@ -581,8 +579,7 @@ namespace Mutagen.Bethesda.Fallout4
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        PRKEDataTypeState = 3,
-        Ability = 4,
+        Ability = 3,
     }
     #endregion
 
@@ -602,7 +599,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(PerkAbilityEffect.Mask<>);
 
@@ -813,8 +810,6 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PerkAbilityEffect_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
                     return (PerkAbilityEffect_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return (PerkAbilityEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1011,9 +1006,6 @@ namespace Mutagen.Bethesda.Fallout4
             IPerkAbilityEffectGetter item,
             MutagenWriter writer)
         {
-            APerkEffectBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Ability);
@@ -1065,9 +1057,6 @@ namespace Mutagen.Bethesda.Fallout4
             IPerkAbilityEffect item,
             MutagenFrame frame)
         {
-            APerkEffectBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
             item.Ability.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 

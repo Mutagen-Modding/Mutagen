@@ -222,9 +222,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoulGemGetter> ISoulGemGetter.LinkedTo => this.LinkedTo;
         #endregion
-        #region DATADataTypeState
-        public SoulGem.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -263,7 +260,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ContainedSoul = initialValue;
                 this.MaximumCapacity = initialValue;
                 this.LinkedTo = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -286,8 +282,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Weight,
                 TItem ContainedSoul,
                 TItem MaximumCapacity,
-                TItem LinkedTo,
-                TItem DATADataTypeState)
+                TItem LinkedTo)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -310,7 +305,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ContainedSoul = ContainedSoul;
                 this.MaximumCapacity = MaximumCapacity;
                 this.LinkedTo = LinkedTo;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -335,7 +329,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem ContainedSoul;
             public TItem MaximumCapacity;
             public TItem LinkedTo;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -362,7 +355,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ContainedSoul, rhs.ContainedSoul)) return false;
                 if (!object.Equals(this.MaximumCapacity, rhs.MaximumCapacity)) return false;
                 if (!object.Equals(this.LinkedTo, rhs.LinkedTo)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -381,7 +373,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ContainedSoul);
                 hash.Add(this.MaximumCapacity);
                 hash.Add(this.LinkedTo);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -431,7 +422,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.ContainedSoul)) return false;
                 if (!eval(this.MaximumCapacity)) return false;
                 if (!eval(this.LinkedTo)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -479,7 +469,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.ContainedSoul)) return true;
                 if (eval(this.MaximumCapacity)) return true;
                 if (eval(this.LinkedTo)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -521,7 +510,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ContainedSoul = eval(this.ContainedSoul);
                 obj.MaximumCapacity = eval(this.MaximumCapacity);
                 obj.LinkedTo = eval(this.LinkedTo);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -609,10 +597,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(LinkedTo, "LinkedTo");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -637,7 +621,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? ContainedSoul;
             public Exception? MaximumCapacity;
             public Exception? LinkedTo;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -672,8 +655,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return MaximumCapacity;
                     case SoulGem_FieldIndex.LinkedTo:
                         return LinkedTo;
-                    case SoulGem_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -722,9 +703,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SoulGem_FieldIndex.LinkedTo:
                         this.LinkedTo = ex;
-                        break;
-                    case SoulGem_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -776,9 +754,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case SoulGem_FieldIndex.LinkedTo:
                         this.LinkedTo = (Exception?)obj;
                         break;
-                    case SoulGem_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -801,7 +776,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ContainedSoul != null) return true;
                 if (MaximumCapacity != null) return true;
                 if (LinkedTo != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -876,9 +850,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(LinkedTo, "LinkedTo");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -900,7 +871,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ContainedSoul = this.ContainedSoul.Combine(rhs.ContainedSoul);
                 ret.MaximumCapacity = this.MaximumCapacity.Combine(rhs.MaximumCapacity);
                 ret.LinkedTo = this.LinkedTo.Combine(rhs.LinkedTo);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -936,7 +906,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ContainedSoul;
             public bool MaximumCapacity;
             public bool LinkedTo;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -954,7 +923,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ContainedSoul = defaultOn;
                 this.MaximumCapacity = defaultOn;
                 this.LinkedTo = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -975,7 +943,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ContainedSoul, null));
                 ret.Add((MaximumCapacity, null));
                 ret.Add((LinkedTo, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1043,10 +1010,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum DATADataType
-        {
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SoulGemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SoulGemSetterCommon.Instance.EnumerateListedAssetLinks(this);
@@ -1177,7 +1140,6 @@ namespace Mutagen.Bethesda.Skyrim
         new SoulGem.Level ContainedSoul { get; set; }
         new SoulGem.Level MaximumCapacity { get; set; }
         new IFormLinkNullable<ISoulGemGetter> LinkedTo { get; set; }
-        new SoulGem.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new SoulGem.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1252,7 +1214,6 @@ namespace Mutagen.Bethesda.Skyrim
         SoulGem.Level ContainedSoul { get; }
         SoulGem.Level MaximumCapacity { get; }
         IFormLinkNullableGetter<ISoulGemGetter> LinkedTo { get; }
-        SoulGem.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         SoulGem.MajorFlag MajorFlags { get; }
@@ -1446,7 +1407,6 @@ namespace Mutagen.Bethesda.Skyrim
         ContainedSoul = 17,
         MaximumCapacity = 18,
         LinkedTo = 19,
-        DATADataTypeState = 20,
     }
     #endregion
 
@@ -1464,9 +1424,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "1d5e8cdd-e010-45ed-aca9-7d332b1eb235";
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(SoulGem.Mask<>);
 
@@ -1571,7 +1531,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.ContainedSoul = default;
             item.MaximumCapacity = default;
             item.LinkedTo.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1732,7 +1691,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.ContainedSoul = item.ContainedSoul == rhs.ContainedSoul;
             ret.MaximumCapacity = item.MaximumCapacity == rhs.MaximumCapacity;
             ret.LinkedTo = item.LinkedTo.Equals(rhs.LinkedTo);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1849,10 +1807,6 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.LinkedTo ?? true)
             {
                 sb.AppendItem(item.LinkedTo.FormKeyNullable, "LinkedTo");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1972,10 +1926,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.LinkedTo.Equals(rhs.LinkedTo)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -2032,7 +1982,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.ContainedSoul);
             hash.Add(item.MaximumCapacity);
             hash.Add(item.LinkedTo);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2365,10 +2314,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.LinkedTo.SetTo(rhs.LinkedTo.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2517,15 +2462,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly SoulGemBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ISoulGemGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ISoulGemGetter item,
             MutagenWriter writer,
@@ -2623,7 +2559,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2683,15 +2619,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly SoulGemBinaryCreateTranslation Instance = new SoulGemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SLGM;
-        public static void FillBinaryStructs(
-            ISoulGemInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISoulGemInternal item,
             MutagenFrame frame,
@@ -2891,7 +2818,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private RangeInt32? _DATALocation;
-        public SoulGem.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;

@@ -66,9 +66,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IWorldDefaultLevelDataGetter.Data => this.Data;
         #endregion
-        #region WLEVDataTypeState
-        public WorldDefaultLevelData.WLEVDataType WLEVDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -111,19 +108,16 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NorthwestCellCoords = initialValue;
                 this.NorthwestCellSize = initialValue;
                 this.Data = initialValue;
-                this.WLEVDataTypeState = initialValue;
             }
 
             public Mask(
                 TItem NorthwestCellCoords,
                 TItem NorthwestCellSize,
-                TItem Data,
-                TItem WLEVDataTypeState)
+                TItem Data)
             {
                 this.NorthwestCellCoords = NorthwestCellCoords;
                 this.NorthwestCellSize = NorthwestCellSize;
                 this.Data = Data;
-                this.WLEVDataTypeState = WLEVDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -138,7 +132,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem NorthwestCellCoords;
             public TItem NorthwestCellSize;
             public TItem Data;
-            public TItem WLEVDataTypeState;
             #endregion
 
             #region Equals
@@ -154,7 +147,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.NorthwestCellCoords, rhs.NorthwestCellCoords)) return false;
                 if (!object.Equals(this.NorthwestCellSize, rhs.NorthwestCellSize)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
-                if (!object.Equals(this.WLEVDataTypeState, rhs.WLEVDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -163,7 +155,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.NorthwestCellCoords);
                 hash.Add(this.NorthwestCellSize);
                 hash.Add(this.Data);
-                hash.Add(this.WLEVDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -175,7 +166,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.NorthwestCellCoords)) return false;
                 if (!eval(this.NorthwestCellSize)) return false;
                 if (!eval(this.Data)) return false;
-                if (!eval(this.WLEVDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -186,7 +176,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.NorthwestCellCoords)) return true;
                 if (eval(this.NorthwestCellSize)) return true;
                 if (eval(this.Data)) return true;
-                if (eval(this.WLEVDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -204,7 +193,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.NorthwestCellCoords = eval(this.NorthwestCellCoords);
                 obj.NorthwestCellSize = eval(this.NorthwestCellSize);
                 obj.Data = eval(this.Data);
-                obj.WLEVDataTypeState = eval(this.WLEVDataTypeState);
             }
             #endregion
 
@@ -235,10 +223,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Data, "Data");
                     }
-                    if (printMask?.WLEVDataTypeState ?? true)
-                    {
-                        sb.AppendItem(WLEVDataTypeState, "WLEVDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -266,7 +250,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? NorthwestCellCoords;
             public Exception? NorthwestCellSize;
             public Exception? Data;
-            public Exception? WLEVDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -281,8 +264,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return NorthwestCellSize;
                     case WorldDefaultLevelData_FieldIndex.Data:
                         return Data;
-                    case WorldDefaultLevelData_FieldIndex.WLEVDataTypeState:
-                        return WLEVDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -301,9 +282,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case WorldDefaultLevelData_FieldIndex.Data:
                         this.Data = ex;
-                        break;
-                    case WorldDefaultLevelData_FieldIndex.WLEVDataTypeState:
-                        this.WLEVDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -324,9 +302,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case WorldDefaultLevelData_FieldIndex.Data:
                         this.Data = (Exception?)obj;
                         break;
-                    case WorldDefaultLevelData_FieldIndex.WLEVDataTypeState:
-                        this.WLEVDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -338,7 +313,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (NorthwestCellCoords != null) return true;
                 if (NorthwestCellSize != null) return true;
                 if (Data != null) return true;
-                if (WLEVDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -373,9 +347,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Data, "Data");
                 }
-                {
-                    sb.AppendItem(WLEVDataTypeState, "WLEVDataTypeState");
-                }
             }
             #endregion
 
@@ -387,7 +358,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.NorthwestCellCoords = this.NorthwestCellCoords.Combine(rhs.NorthwestCellCoords);
                 ret.NorthwestCellSize = this.NorthwestCellSize.Combine(rhs.NorthwestCellSize);
                 ret.Data = this.Data.Combine(rhs.Data);
-                ret.WLEVDataTypeState = this.WLEVDataTypeState.Combine(rhs.WLEVDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -414,7 +384,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool NorthwestCellCoords;
             public bool NorthwestCellSize;
             public bool Data;
-            public bool WLEVDataTypeState;
             #endregion
 
             #region Ctors
@@ -427,7 +396,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NorthwestCellCoords = defaultOn;
                 this.NorthwestCellSize = defaultOn;
                 this.Data = defaultOn;
-                this.WLEVDataTypeState = defaultOn;
             }
 
             #endregion
@@ -446,7 +414,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((NorthwestCellCoords, null));
                 ret.Add((NorthwestCellSize, null));
                 ret.Add((Data, null));
-                ret.Add((WLEVDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -454,13 +421,6 @@ namespace Mutagen.Bethesda.Fallout4
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
-        }
-        #endregion
-
-        #region Mutagen
-        [Flags]
-        public enum WLEVDataType
-        {
         }
         #endregion
 
@@ -529,7 +489,6 @@ namespace Mutagen.Bethesda.Fallout4
         new P2UInt8 NorthwestCellCoords { get; set; }
         new P2UInt8 NorthwestCellSize { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
-        new WorldDefaultLevelData.WLEVDataType WLEVDataTypeState { get; set; }
     }
 
     public partial interface IWorldDefaultLevelDataGetter :
@@ -547,7 +506,6 @@ namespace Mutagen.Bethesda.Fallout4
         P2UInt8 NorthwestCellCoords { get; }
         P2UInt8 NorthwestCellSize { get; }
         ReadOnlyMemorySlice<Byte>? Data { get; }
-        WorldDefaultLevelData.WLEVDataType WLEVDataTypeState { get; }
 
     }
 
@@ -720,7 +678,6 @@ namespace Mutagen.Bethesda.Fallout4
         NorthwestCellCoords = 0,
         NorthwestCellSize = 1,
         Data = 2,
-        WLEVDataTypeState = 3,
     }
     #endregion
 
@@ -738,9 +695,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "40c8c9de-51f2-488e-b290-c9dc65e380d1";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(WorldDefaultLevelData.Mask<>);
 
@@ -821,7 +778,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.NorthwestCellCoords = default;
             item.NorthwestCellSize = default;
             item.Data = default;
-            item.WLEVDataTypeState = default;
         }
         
         #region Mutagen
@@ -841,7 +797,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: WorldDefaultLevelDataBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: WorldDefaultLevelDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -875,7 +830,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.NorthwestCellCoords = item.NorthwestCellCoords.Equals(rhs.NorthwestCellCoords);
             ret.NorthwestCellSize = item.NorthwestCellSize.Equals(rhs.NorthwestCellSize);
             ret.Data = MemorySliceExt.SequenceEqual(item.Data, rhs.Data);
-            ret.WLEVDataTypeState = item.WLEVDataTypeState == rhs.WLEVDataTypeState;
         }
         
         public string Print(
@@ -933,10 +887,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
             }
-            if (printMask?.WLEVDataTypeState ?? true)
-            {
-                sb.AppendItem(item.WLEVDataTypeState, "WLEVDataTypeState");
-            }
         }
         
         #region Equals and Hash
@@ -958,10 +908,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.Data, rhs.Data)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WorldDefaultLevelData_FieldIndex.WLEVDataTypeState) ?? true))
-            {
-                if (lhs.WLEVDataTypeState != rhs.WLEVDataTypeState) return false;
-            }
             return true;
         }
         
@@ -974,7 +920,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(DataItem);
             }
-            hash.Add(item.WLEVDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1025,10 +970,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     item.Data = default;
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)WorldDefaultLevelData_FieldIndex.WLEVDataTypeState) ?? true))
-            {
-                item.WLEVDataTypeState = rhs.WLEVDataTypeState;
             }
         }
         
@@ -1122,12 +1063,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static readonly WorldDefaultLevelDataBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IWorldDefaultLevelDataGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IWorldDefaultLevelDataGetter item,
             MutagenWriter writer,
@@ -1154,9 +1089,6 @@ namespace Mutagen.Bethesda.Fallout4
             IWorldDefaultLevelDataGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1179,12 +1111,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class WorldDefaultLevelDataBinaryCreateTranslation
     {
         public static readonly WorldDefaultLevelDataBinaryCreateTranslation Instance = new WorldDefaultLevelDataBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IWorldDefaultLevelData item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IWorldDefaultLevelData item,
@@ -1313,7 +1239,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         private RangeInt32? _WLEVLocation;
-        public WorldDefaultLevelData.WLEVDataType WLEVDataTypeState { get; private set; }
         #region NorthwestCellCoords
         private int _NorthwestCellCoordsLocation => _WLEVLocation!.Value.Min;
         private bool _NorthwestCellCoords_IsSet => _WLEVLocation.HasValue;

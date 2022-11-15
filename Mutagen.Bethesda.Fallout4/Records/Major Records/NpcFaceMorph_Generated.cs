@@ -70,9 +70,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown2
         public Single Unknown2 { get; set; } = default;
         #endregion
-        #region FMRSDataTypeState
-        public NpcFaceMorph.FMRSDataType FMRSDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -118,7 +115,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Scale = initialValue;
                 this.Unknown1 = initialValue;
                 this.Unknown2 = initialValue;
-                this.FMRSDataTypeState = initialValue;
             }
 
             public Mask(
@@ -127,8 +123,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Rotation,
                 TItem Scale,
                 TItem Unknown1,
-                TItem Unknown2,
-                TItem FMRSDataTypeState)
+                TItem Unknown2)
             {
                 this.Index = Index;
                 this.Position = Position;
@@ -136,7 +131,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Scale = Scale;
                 this.Unknown1 = Unknown1;
                 this.Unknown2 = Unknown2;
-                this.FMRSDataTypeState = FMRSDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -154,7 +148,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Scale;
             public TItem Unknown1;
             public TItem Unknown2;
-            public TItem FMRSDataTypeState;
             #endregion
 
             #region Equals
@@ -173,7 +166,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
                 if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.FMRSDataTypeState, rhs.FMRSDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -185,7 +177,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Scale);
                 hash.Add(this.Unknown1);
                 hash.Add(this.Unknown2);
-                hash.Add(this.FMRSDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -200,7 +191,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Scale)) return false;
                 if (!eval(this.Unknown1)) return false;
                 if (!eval(this.Unknown2)) return false;
-                if (!eval(this.FMRSDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -214,7 +204,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Scale)) return true;
                 if (eval(this.Unknown1)) return true;
                 if (eval(this.Unknown2)) return true;
-                if (eval(this.FMRSDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -235,7 +224,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Scale = eval(this.Scale);
                 obj.Unknown1 = eval(this.Unknown1);
                 obj.Unknown2 = eval(this.Unknown2);
-                obj.FMRSDataTypeState = eval(this.FMRSDataTypeState);
             }
             #endregion
 
@@ -278,10 +266,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Unknown2, "Unknown2");
                     }
-                    if (printMask?.FMRSDataTypeState ?? true)
-                    {
-                        sb.AppendItem(FMRSDataTypeState, "FMRSDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -312,7 +296,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Scale;
             public Exception? Unknown1;
             public Exception? Unknown2;
-            public Exception? FMRSDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -333,8 +316,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Unknown1;
                     case NpcFaceMorph_FieldIndex.Unknown2:
                         return Unknown2;
-                    case NpcFaceMorph_FieldIndex.FMRSDataTypeState:
-                        return FMRSDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -362,9 +343,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case NpcFaceMorph_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
-                        break;
-                    case NpcFaceMorph_FieldIndex.FMRSDataTypeState:
-                        this.FMRSDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -394,9 +372,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case NpcFaceMorph_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
                         break;
-                    case NpcFaceMorph_FieldIndex.FMRSDataTypeState:
-                        this.FMRSDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -411,7 +386,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Scale != null) return true;
                 if (Unknown1 != null) return true;
                 if (Unknown2 != null) return true;
-                if (FMRSDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -455,9 +429,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Unknown2, "Unknown2");
                 }
-                {
-                    sb.AppendItem(FMRSDataTypeState, "FMRSDataTypeState");
-                }
             }
             #endregion
 
@@ -472,7 +443,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Scale = this.Scale.Combine(rhs.Scale);
                 ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.FMRSDataTypeState = this.FMRSDataTypeState.Combine(rhs.FMRSDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -502,7 +472,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Scale;
             public bool Unknown1;
             public bool Unknown2;
-            public bool FMRSDataTypeState;
             #endregion
 
             #region Ctors
@@ -518,7 +487,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Scale = defaultOn;
                 this.Unknown1 = defaultOn;
                 this.Unknown2 = defaultOn;
-                this.FMRSDataTypeState = defaultOn;
             }
 
             #endregion
@@ -540,7 +508,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Scale, null));
                 ret.Add((Unknown1, null));
                 ret.Add((Unknown2, null));
-                ret.Add((FMRSDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -548,13 +515,6 @@ namespace Mutagen.Bethesda.Fallout4
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
-        }
-        #endregion
-
-        #region Mutagen
-        [Flags]
-        public enum FMRSDataType
-        {
         }
         #endregion
 
@@ -627,7 +587,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single Scale { get; set; }
         new Single Unknown1 { get; set; }
         new Single Unknown2 { get; set; }
-        new NpcFaceMorph.FMRSDataType FMRSDataTypeState { get; set; }
     }
 
     public partial interface INpcFaceMorphGetter :
@@ -649,7 +608,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single Scale { get; }
         Single Unknown1 { get; }
         Single Unknown2 { get; }
-        NpcFaceMorph.FMRSDataType FMRSDataTypeState { get; }
 
     }
 
@@ -825,7 +783,6 @@ namespace Mutagen.Bethesda.Fallout4
         Scale = 3,
         Unknown1 = 4,
         Unknown2 = 5,
-        FMRSDataTypeState = 6,
     }
     #endregion
 
@@ -843,9 +800,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "0b6b61e7-5220-4cd0-8c94-3aa0a874e44e";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(NpcFaceMorph.Mask<>);
 
@@ -927,7 +884,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Scale = default;
             item.Unknown1 = default;
             item.Unknown2 = default;
-            item.FMRSDataTypeState = default;
         }
         
         #region Mutagen
@@ -947,7 +903,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: NpcFaceMorphBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: NpcFaceMorphBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -984,7 +939,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
             ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
-            ret.FMRSDataTypeState = item.FMRSDataTypeState == rhs.FMRSDataTypeState;
         }
         
         public string Print(
@@ -1054,10 +1008,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Unknown2, "Unknown2");
             }
-            if (printMask?.FMRSDataTypeState ?? true)
-            {
-                sb.AppendItem(item.FMRSDataTypeState, "FMRSDataTypeState");
-            }
         }
         
         #region Equals and Hash
@@ -1091,10 +1041,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.FMRSDataTypeState) ?? true))
-            {
-                if (lhs.FMRSDataTypeState != rhs.FMRSDataTypeState) return false;
-            }
             return true;
         }
         
@@ -1110,7 +1056,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Scale);
             hash.Add(item.Unknown1);
             hash.Add(item.Unknown2);
-            hash.Add(item.FMRSDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1166,10 +1111,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
-            }
-            if ((copyMask?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.FMRSDataTypeState) ?? true))
-            {
-                item.FMRSDataTypeState = rhs.FMRSDataTypeState;
             }
         }
         
@@ -1263,12 +1204,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static readonly NpcFaceMorphBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            INpcFaceMorphGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             INpcFaceMorphGetter item,
             MutagenWriter writer,
@@ -1303,9 +1238,6 @@ namespace Mutagen.Bethesda.Fallout4
             INpcFaceMorphGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1328,12 +1260,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class NpcFaceMorphBinaryCreateTranslation
     {
         public static readonly NpcFaceMorphBinaryCreateTranslation Instance = new NpcFaceMorphBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            INpcFaceMorph item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             INpcFaceMorph item,
@@ -1444,7 +1370,6 @@ namespace Mutagen.Bethesda.Fallout4
         public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         private RangeInt32? _FMRSLocation;
-        public NpcFaceMorph.FMRSDataType FMRSDataTypeState { get; private set; }
         #region Position
         private int _PositionLocation => _FMRSLocation!.Value.Min;
         private bool _Position_IsSet => _FMRSLocation.HasValue;

@@ -205,9 +205,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region LeafFrequency
         public Single LeafFrequency { get; set; } = default;
         #endregion
-        #region CNAMDataTypeState
-        public Tree.CNAMDataType CNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -245,7 +242,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = initialValue;
                 this.LeafAmplitude = initialValue;
                 this.LeafFrequency = initialValue;
-                this.CNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -267,8 +263,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem BranchFlexibility,
                 TItem Unknown,
                 TItem LeafAmplitude,
-                TItem LeafFrequency,
-                TItem CNAMDataTypeState)
+                TItem LeafFrequency)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -290,7 +285,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = Unknown;
                 this.LeafAmplitude = LeafAmplitude;
                 this.LeafFrequency = LeafFrequency;
-                this.CNAMDataTypeState = CNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -314,7 +308,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Unknown;
             public TItem LeafAmplitude;
             public TItem LeafFrequency;
-            public TItem CNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -340,7 +333,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.LeafAmplitude, rhs.LeafAmplitude)) return false;
                 if (!object.Equals(this.LeafFrequency, rhs.LeafFrequency)) return false;
-                if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -358,7 +350,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Unknown);
                 hash.Add(this.LeafAmplitude);
                 hash.Add(this.LeafFrequency);
-                hash.Add(this.CNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -397,7 +388,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.LeafAmplitude)) return false;
                 if (!eval(this.LeafFrequency)) return false;
-                if (!eval(this.CNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -434,7 +424,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Unknown)) return true;
                 if (eval(this.LeafAmplitude)) return true;
                 if (eval(this.LeafFrequency)) return true;
-                if (eval(this.CNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -462,7 +451,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Unknown = eval(this.Unknown);
                 obj.LeafAmplitude = eval(this.LeafAmplitude);
                 obj.LeafFrequency = eval(this.LeafFrequency);
-                obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
             }
             #endregion
 
@@ -529,10 +517,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(LeafFrequency, "LeafFrequency");
                     }
-                    if (printMask?.CNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -556,7 +540,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Unknown;
             public Exception? LeafAmplitude;
             public Exception? LeafFrequency;
-            public Exception? CNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -589,8 +572,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return LeafAmplitude;
                     case Tree_FieldIndex.LeafFrequency:
                         return LeafFrequency;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        return CNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -636,9 +617,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Tree_FieldIndex.LeafFrequency:
                         this.LeafFrequency = ex;
-                        break;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -687,9 +665,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Tree_FieldIndex.LeafFrequency:
                         this.LeafFrequency = (Exception?)obj;
                         break;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -711,7 +686,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Unknown != null) return true;
                 if (LeafAmplitude != null) return true;
                 if (LeafFrequency != null) return true;
-                if (CNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -766,9 +740,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(LeafFrequency, "LeafFrequency");
                 }
-                {
-                    sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -789,7 +760,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.LeafAmplitude = this.LeafAmplitude.Combine(rhs.LeafAmplitude);
                 ret.LeafFrequency = this.LeafFrequency.Combine(rhs.LeafFrequency);
-                ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -824,7 +794,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Unknown;
             public bool LeafAmplitude;
             public bool LeafFrequency;
-            public bool CNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -841,7 +810,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = defaultOn;
                 this.LeafAmplitude = defaultOn;
                 this.LeafFrequency = defaultOn;
-                this.CNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -861,7 +829,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Unknown, null));
                 ret.Add((LeafAmplitude, null));
                 ret.Add((LeafFrequency, null));
-                ret.Add((CNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -929,10 +896,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum CNAMDataType
-        {
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => TreeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => TreeSetterCommon.Instance.EnumerateListedAssetLinks(this);
@@ -1057,7 +1020,6 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte> Unknown { get; set; }
         new Single LeafAmplitude { get; set; }
         new Single LeafFrequency { get; set; }
-        new Tree.CNAMDataType CNAMDataTypeState { get; set; }
         #region Mutagen
         new Tree.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1125,7 +1087,6 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> Unknown { get; }
         Single LeafAmplitude { get; }
         Single LeafFrequency { get; }
-        Tree.CNAMDataType CNAMDataTypeState { get; }
 
         #region Mutagen
         Tree.MajorFlag MajorFlags { get; }
@@ -1318,7 +1279,6 @@ namespace Mutagen.Bethesda.Skyrim
         Unknown = 16,
         LeafAmplitude = 17,
         LeafFrequency = 18,
-        CNAMDataTypeState = 19,
     }
     #endregion
 
@@ -1336,9 +1296,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "5353e43a-3c33-49d9-b5a7-fc971ba96d88";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Tree.Mask<>);
 
@@ -1436,7 +1396,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Unknown = new byte[32];
             item.LeafAmplitude = default;
             item.LeafFrequency = default;
-            item.CNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1579,7 +1538,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
             ret.LeafAmplitude = item.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude);
             ret.LeafFrequency = item.LeafFrequency.EqualsWithin(rhs.LeafFrequency);
-            ret.CNAMDataTypeState = item.CNAMDataTypeState == rhs.CNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1680,10 +1638,6 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.LeafFrequency ?? true)
             {
                 sb.AppendItem(item.LeafFrequency, "LeafFrequency");
-            }
-            if (printMask?.CNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
             }
         }
         
@@ -1799,10 +1753,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.LeafFrequency.EqualsWithin(rhs.LeafFrequency)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -1855,7 +1805,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Unknown);
             hash.Add(item.LeafAmplitude);
             hash.Add(item.LeafFrequency);
-            hash.Add(item.CNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2139,10 +2088,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.LeafFrequency = rhs.LeafFrequency;
             }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                item.CNAMDataTypeState = rhs.CNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2291,15 +2236,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly TreeBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ITreeGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ITreeGetter item,
             MutagenWriter writer,
@@ -2380,7 +2316,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2440,15 +2376,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TREE;
-        public static void FillBinaryStructs(
-            ITreeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ITreeInternal item,
             MutagenFrame frame,
@@ -2624,7 +2551,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         private RangeInt32? _CNAMLocation;
-        public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
         #region TrunkFlexibility
         private int _TrunkFlexibilityLocation => _CNAMLocation!.Value.Min;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;

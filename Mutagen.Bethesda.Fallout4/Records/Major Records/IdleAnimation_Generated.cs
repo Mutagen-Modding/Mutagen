@@ -112,9 +112,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IIdleAnimationGetter.AnimationFile => this.AnimationFile;
         #endregion
-        #region DATADataTypeState
-        public IdleAnimation.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -150,7 +147,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AnimationGroupSection = initialValue;
                 this.ReplayDelay = initialValue;
                 this.AnimationFile = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -170,8 +166,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Flags,
                 TItem AnimationGroupSection,
                 TItem ReplayDelay,
-                TItem AnimationFile,
-                TItem DATADataTypeState)
+                TItem AnimationFile)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -191,7 +186,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AnimationGroupSection = AnimationGroupSection;
                 this.ReplayDelay = ReplayDelay;
                 this.AnimationFile = AnimationFile;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -213,7 +207,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem AnimationGroupSection;
             public TItem ReplayDelay;
             public TItem AnimationFile;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -237,7 +230,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.AnimationGroupSection, rhs.AnimationGroupSection)) return false;
                 if (!object.Equals(this.ReplayDelay, rhs.ReplayDelay)) return false;
                 if (!object.Equals(this.AnimationFile, rhs.AnimationFile)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -253,7 +245,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.AnimationGroupSection);
                 hash.Add(this.ReplayDelay);
                 hash.Add(this.AnimationFile);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -295,7 +286,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.AnimationGroupSection)) return false;
                 if (!eval(this.ReplayDelay)) return false;
                 if (!eval(this.AnimationFile)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -335,7 +325,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.AnimationGroupSection)) return true;
                 if (eval(this.ReplayDelay)) return true;
                 if (eval(this.AnimationFile)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -388,7 +377,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AnimationGroupSection = eval(this.AnimationGroupSection);
                 obj.ReplayDelay = eval(this.ReplayDelay);
                 obj.AnimationFile = eval(this.AnimationFile);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -479,10 +467,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(AnimationFile, "AnimationFile");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -504,7 +488,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? AnimationGroupSection;
             public Exception? ReplayDelay;
             public Exception? AnimationFile;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -533,8 +516,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return ReplayDelay;
                     case IdleAnimation_FieldIndex.AnimationFile:
                         return AnimationFile;
-                    case IdleAnimation_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -574,9 +555,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case IdleAnimation_FieldIndex.AnimationFile:
                         this.AnimationFile = ex;
-                        break;
-                    case IdleAnimation_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -619,9 +597,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case IdleAnimation_FieldIndex.AnimationFile:
                         this.AnimationFile = (Exception?)obj;
                         break;
-                    case IdleAnimation_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -641,7 +616,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (AnimationGroupSection != null) return true;
                 if (ReplayDelay != null) return true;
                 if (AnimationFile != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -730,9 +704,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(AnimationFile, "AnimationFile");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -751,7 +722,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AnimationGroupSection = this.AnimationGroupSection.Combine(rhs.AnimationGroupSection);
                 ret.ReplayDelay = this.ReplayDelay.Combine(rhs.ReplayDelay);
                 ret.AnimationFile = this.AnimationFile.Combine(rhs.AnimationFile);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -784,7 +754,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool AnimationGroupSection;
             public bool ReplayDelay;
             public bool AnimationFile;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -802,7 +771,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AnimationGroupSection = defaultOn;
                 this.ReplayDelay = defaultOn;
                 this.AnimationFile = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -820,7 +788,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((AnimationGroupSection, null));
                 ret.Add((ReplayDelay, null));
                 ret.Add((AnimationFile, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -877,10 +844,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IIdleAnimation);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -976,7 +939,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Byte AnimationGroupSection { get; set; }
         new UInt16 ReplayDelay { get; set; }
         new String? AnimationFile { get; set; }
-        new IdleAnimation.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IIdleAnimationInternal :
@@ -1006,7 +968,6 @@ namespace Mutagen.Bethesda.Fallout4
         Byte AnimationGroupSection { get; }
         UInt16 ReplayDelay { get; }
         String? AnimationFile { get; }
-        IdleAnimation.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1193,7 +1154,6 @@ namespace Mutagen.Bethesda.Fallout4
         AnimationGroupSection = 14,
         ReplayDelay = 15,
         AnimationFile = 16,
-        DATADataTypeState = 17,
     }
     #endregion
 
@@ -1211,9 +1171,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "62b9bc11-4e8a-46aa-ad46-be6516201220";
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(IdleAnimation.Mask<>);
 
@@ -1308,7 +1268,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.AnimationGroupSection = default;
             item.ReplayDelay = default;
             item.AnimationFile = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1411,7 +1370,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AnimationGroupSection = item.AnimationGroupSection == rhs.AnimationGroupSection;
             ret.ReplayDelay = item.ReplayDelay == rhs.ReplayDelay;
             ret.AnimationFile = string.Equals(item.AnimationFile, rhs.AnimationFile);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1524,10 +1482,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(AnimationFileItem, "AnimationFile");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static IdleAnimation_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1618,10 +1572,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!string.Equals(lhs.AnimationFile, rhs.AnimationFile)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1669,7 +1619,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(AnimationFileitem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1857,10 +1806,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.AnimationFile = rhs.AnimationFile;
             }
-            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2009,15 +1954,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly IdleAnimationBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IIdleAnimationGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IIdleAnimationGetter item,
             MutagenWriter writer,
@@ -2087,7 +2023,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2147,15 +2083,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly IdleAnimationBinaryCreateTranslation Instance = new IdleAnimationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IDLE;
-        public static void FillBinaryStructs(
-            IIdleAnimationInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IIdleAnimationInternal item,
             MutagenFrame frame,
@@ -2299,7 +2226,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         public IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; private set; } = Array.Empty<IFormLinkGetter<IIdleRelationGetter>>();
         private RangeInt32? _DATALocation;
-        public IdleAnimation.DATADataType DATADataTypeState { get; private set; }
         #region LoopingSecondsMin
         private int _LoopingSecondsMinLocation => _DATALocation!.Value.Min;
         private bool _LoopingSecondsMin_IsSet => _DATALocation.HasValue;

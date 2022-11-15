@@ -202,9 +202,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IContainerGetter.CloseSound => this.CloseSound;
         #endregion
-        #region DATADataTypeState
-        public Container.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -240,7 +237,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = initialValue;
                 this.OpenSound = initialValue;
                 this.CloseSound = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -260,8 +256,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Flags,
                 TItem Weight,
                 TItem OpenSound,
-                TItem CloseSound,
-                TItem DATADataTypeState)
+                TItem CloseSound)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -281,7 +276,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = Weight;
                 this.OpenSound = OpenSound;
                 this.CloseSound = CloseSound;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -303,7 +297,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Weight;
             public TItem OpenSound;
             public TItem CloseSound;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -327,7 +320,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
                 if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -343,7 +335,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Weight);
                 hash.Add(this.OpenSound);
                 hash.Add(this.CloseSound);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -391,7 +382,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Weight)) return false;
                 if (!eval(this.OpenSound)) return false;
                 if (!eval(this.CloseSound)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -437,7 +427,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Weight)) return true;
                 if (eval(this.OpenSound)) return true;
                 if (eval(this.CloseSound)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -477,7 +466,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Weight = eval(this.Weight);
                 obj.OpenSound = eval(this.OpenSound);
                 obj.CloseSound = eval(this.CloseSound);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -551,10 +539,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(CloseSound, "CloseSound");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -576,7 +560,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Weight;
             public Exception? OpenSound;
             public Exception? CloseSound;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -605,8 +588,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return OpenSound;
                     case Container_FieldIndex.CloseSound:
                         return CloseSound;
-                    case Container_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -646,9 +627,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Container_FieldIndex.CloseSound:
                         this.CloseSound = ex;
-                        break;
-                    case Container_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -691,9 +669,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Container_FieldIndex.CloseSound:
                         this.CloseSound = (Exception?)obj;
                         break;
-                    case Container_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -713,7 +688,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Weight != null) return true;
                 if (OpenSound != null) return true;
                 if (CloseSound != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -777,9 +751,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(CloseSound, "CloseSound");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -798,7 +769,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
                 ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -831,7 +801,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Weight;
             public bool OpenSound;
             public bool CloseSound;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -845,7 +814,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = defaultOn;
                 this.OpenSound = defaultOn;
                 this.CloseSound = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -863,7 +831,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Weight, null));
                 ret.Add((OpenSound, null));
                 ret.Add((CloseSound, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -931,10 +898,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum DATADataType
-        {
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ContainerCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ContainerSetterCommon.Instance.EnumerateListedAssetLinks(this);
@@ -1056,7 +1019,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Weight { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
-        new Container.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Container.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1121,7 +1083,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single Weight { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound { get; }
-        Container.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         Container.MajorFlag MajorFlags { get; }
@@ -1312,7 +1273,6 @@ namespace Mutagen.Bethesda.Skyrim
         Weight = 14,
         OpenSound = 15,
         CloseSound = 16,
-        DATADataTypeState = 17,
     }
     #endregion
 
@@ -1330,9 +1290,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "9adb9b58-0aef-4cee-a346-0639dd924acd";
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(Container.Mask<>);
 
@@ -1433,7 +1393,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Weight = default;
             item.OpenSound.Clear();
             item.CloseSound.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1587,7 +1546,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
             ret.CloseSound = item.CloseSound.Equals(rhs.CloseSound);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1691,10 +1649,6 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.CloseSound ?? true)
             {
                 sb.AppendItem(item.CloseSound.FormKeyNullable, "CloseSound");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1802,10 +1756,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.CloseSound.Equals(rhs.CloseSound)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1856,7 +1806,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Weight);
             hash.Add(item.OpenSound);
             hash.Add(item.CloseSound);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2182,10 +2131,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.CloseSound.SetTo(rhs.CloseSound.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2334,15 +2279,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly ContainerBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IContainerGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IContainerGetter item,
             MutagenWriter writer,
@@ -2428,7 +2364,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2488,15 +2424,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ContainerBinaryCreateTranslation Instance = new ContainerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CONT;
-        public static void FillBinaryStructs(
-            IContainerInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IContainerInternal item,
             MutagenFrame frame,
@@ -2677,7 +2604,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         private RangeInt32? _DATALocation;
-        public Container.DATADataType DATADataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;

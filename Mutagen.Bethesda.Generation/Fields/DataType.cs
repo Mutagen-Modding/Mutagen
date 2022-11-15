@@ -149,4 +149,27 @@ public class DataType : SetMarkerType
             };
         }
     }
+
+    public List<string> GetEnumTypes()
+    {
+        var enumTypes = new List<string>();
+        int breaks = 0;
+        int ranges = 0;
+        foreach (var node in Node.Element(XName.Get(Loqui.Generation.Constants.FIELDS, LoquiGenerator.Namespace)).Elements())
+        {
+            switch (node.Name.LocalName)
+            {
+                case DataType.BREAK:
+                    enumTypes.Add("Break" + breaks++);
+                    break;
+                case DataType.RANGE:
+                    enumTypes.Add("Range" + ranges++);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return enumTypes;
+    }
 }

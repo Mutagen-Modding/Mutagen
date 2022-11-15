@@ -104,7 +104,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem PRKEDataTypeState,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
                 TItem Text)
@@ -112,7 +111,6 @@ namespace Mutagen.Bethesda.Skyrim
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
-                PRKEDataTypeState: PRKEDataTypeState,
                 EntryPoint: EntryPoint,
                 PerkConditionTabCount: PerkConditionTabCount)
             {
@@ -572,10 +570,9 @@ namespace Mutagen.Bethesda.Skyrim
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        PRKEDataTypeState = 3,
-        EntryPoint = 4,
-        PerkConditionTabCount = 5,
-        Text = 6,
+        EntryPoint = 3,
+        PerkConditionTabCount = 4,
+        Text = 5,
     }
     #endregion
 
@@ -595,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(PerkEntryPointSetText.Mask<>);
 
@@ -821,8 +818,6 @@ namespace Mutagen.Bethesda.Skyrim
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.PRKEDataTypeState:
-                    return (PerkEntryPointSetText_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
@@ -841,8 +836,6 @@ namespace Mutagen.Bethesda.Skyrim
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
-                    return (PerkEntryPointSetText_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -243,12 +243,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IAmmunitionGetter.ModelInfo => this.ModelInfo;
         #endregion
-        #region DATADataTypeState
-        public Ammunition.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
-        #region DNAMDataTypeState
-        public Ammunition.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -292,8 +286,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ShortName = initialValue;
                 this.CasingModel = initialValue;
                 this.ModelInfo = initialValue;
-                this.DATADataTypeState = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -321,9 +313,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Health,
                 TItem ShortName,
                 TItem CasingModel,
-                TItem ModelInfo,
-                TItem DATADataTypeState,
-                TItem DNAMDataTypeState)
+                TItem ModelInfo)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -351,8 +341,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ShortName = ShortName;
                 this.CasingModel = CasingModel;
                 this.ModelInfo = ModelInfo;
-                this.DATADataTypeState = DATADataTypeState;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -382,8 +370,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem ShortName;
             public TItem CasingModel;
             public TItem ModelInfo;
-            public TItem DATADataTypeState;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -415,8 +401,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
                 if (!object.Equals(this.CasingModel, rhs.CasingModel)) return false;
                 if (!object.Equals(this.ModelInfo, rhs.ModelInfo)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -440,8 +424,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ShortName);
                 hash.Add(this.CasingModel);
                 hash.Add(this.ModelInfo);
-                hash.Add(this.DATADataTypeState);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -492,8 +474,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.ShortName)) return false;
                 if (!eval(this.CasingModel)) return false;
                 if (!eval(this.ModelInfo)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -542,8 +522,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.ShortName)) return true;
                 if (eval(this.CasingModel)) return true;
                 if (eval(this.ModelInfo)) return true;
-                if (eval(this.DATADataTypeState)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -590,8 +568,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ShortName = eval(this.ShortName);
                 obj.CasingModel = eval(this.CasingModel);
                 obj.ModelInfo = eval(this.ModelInfo);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -699,14 +675,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(ModelInfo, "ModelInfo");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -736,8 +704,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? ShortName;
             public Exception? CasingModel;
             public Exception? ModelInfo;
-            public Exception? DATADataTypeState;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -782,10 +748,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return CasingModel;
                     case Ammunition_FieldIndex.ModelInfo:
                         return ModelInfo;
-                    case Ammunition_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
-                    case Ammunition_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -849,12 +811,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Ammunition_FieldIndex.ModelInfo:
                         this.ModelInfo = ex;
-                        break;
-                    case Ammunition_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
-                    case Ammunition_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -921,12 +877,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Ammunition_FieldIndex.ModelInfo:
                         this.ModelInfo = (Exception?)obj;
                         break;
-                    case Ammunition_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
-                    case Ammunition_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -954,8 +904,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ShortName != null) return true;
                 if (CasingModel != null) return true;
                 if (ModelInfo != null) return true;
-                if (DATADataTypeState != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1047,12 +995,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(ModelInfo, "ModelInfo");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1079,8 +1021,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
                 ret.CasingModel = this.CasingModel.Combine(rhs.CasingModel);
                 ret.ModelInfo = this.ModelInfo.Combine(rhs.ModelInfo);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1121,8 +1061,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool ShortName;
             public bool CasingModel;
             public bool ModelInfo;
-            public bool DATADataTypeState;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1146,8 +1084,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ShortName = defaultOn;
                 this.CasingModel = defaultOn;
                 this.ModelInfo = defaultOn;
-                this.DATADataTypeState = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1173,8 +1109,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ShortName, null));
                 ret.Add((CasingModel, null));
                 ret.Add((ModelInfo, null));
-                ret.Add((DATADataTypeState, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1235,14 +1169,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum DATADataType
-        {
-        }
-        [Flags]
-        public enum DNAMDataType
-        {
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -1373,8 +1299,6 @@ namespace Mutagen.Bethesda.Fallout4
         new TranslatedString? ShortName { get; set; }
         new String? CasingModel { get; set; }
         new MemorySlice<Byte>? ModelInfo { get; set; }
-        new Ammunition.DATADataType DATADataTypeState { get; set; }
-        new Ammunition.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
         new Ammunition.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1450,8 +1374,6 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? ShortName { get; }
         String? CasingModel { get; }
         ReadOnlyMemorySlice<Byte>? ModelInfo { get; }
-        Ammunition.DATADataType DATADataTypeState { get; }
-        Ammunition.DNAMDataType DNAMDataTypeState { get; }
 
         #region Mutagen
         Ammunition.MajorFlag MajorFlags { get; }
@@ -1650,8 +1572,6 @@ namespace Mutagen.Bethesda.Fallout4
         ShortName = 22,
         CasingModel = 23,
         ModelInfo = 24,
-        DATADataTypeState = 25,
-        DNAMDataTypeState = 26,
     }
     #endregion
 
@@ -1669,9 +1589,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "e57765cc-e2e1-43c7-a220-8db84c93b1f1";
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(Ammunition.Mask<>);
 
@@ -1791,8 +1711,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.ShortName = default;
             item.CasingModel = default;
             item.ModelInfo = default;
-            item.DATADataTypeState = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1913,8 +1831,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
             ret.CasingModel = string.Equals(item.CasingModel, rhs.CasingModel);
             ret.ModelInfo = MemorySliceExt.SequenceEqual(item.ModelInfo, rhs.ModelInfo);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2054,14 +1970,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"ModelInfo => {SpanExt.ToHexString(ModelInfoItem)}");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static Ammunition_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2196,14 +2104,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.ModelInfo, rhs.ModelInfo)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -2271,8 +2171,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(ModelInfoItem);
             }
-            hash.Add(item.DATADataTypeState);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2574,14 +2472,6 @@ namespace Mutagen.Bethesda.Fallout4
                     item.ModelInfo = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2730,15 +2620,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly AmmunitionBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IAmmunitionGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IAmmunitionGetter item,
             MutagenWriter writer,
@@ -2852,7 +2733,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2912,15 +2793,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly AmmunitionBinaryCreateTranslation Instance = new AmmunitionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AMMO;
-        public static void FillBinaryStructs(
-            IAmmunitionInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAmmunitionInternal item,
             MutagenFrame frame,
@@ -3160,7 +3032,6 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private RangeInt32? _DATALocation;
-        public Ammunition.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
@@ -3172,7 +3043,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Ammunition.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Projectile
         private int _ProjectileLocation => _DNAMLocation!.Value.Min;
         private bool _Projectile_IsSet => _DNAMLocation.HasValue;

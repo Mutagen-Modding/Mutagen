@@ -116,15 +116,13 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem PRKEDataTypeState,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
                 TItem PerkEntryID)
             : base(
                 Rank: Rank,
                 Priority: Priority,
-                Conditions: Conditions,
-                PRKEDataTypeState: PRKEDataTypeState)
+                Conditions: Conditions)
             {
                 this.EntryPoint = EntryPoint;
                 this.PerkConditionTabCount = PerkConditionTabCount;
@@ -629,10 +627,9 @@ namespace Mutagen.Bethesda.Fallout4
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        PRKEDataTypeState = 3,
-        EntryPoint = 4,
-        PerkConditionTabCount = 5,
-        PerkEntryID = 6,
+        EntryPoint = 3,
+        PerkConditionTabCount = 4,
+        PerkEntryID = 5,
     }
     #endregion
 
@@ -652,7 +649,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(APerkEntryPointEffect.Mask<>);
 
@@ -879,8 +876,6 @@ namespace Mutagen.Bethesda.Fallout4
                     return (APerkEntryPointEffect_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
                     return (APerkEntryPointEffect_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return (APerkEntryPointEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1097,9 +1092,6 @@ namespace Mutagen.Bethesda.Fallout4
             IAPerkEntryPointEffectGetter item,
             MutagenWriter writer)
         {
-            APerkEffectBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
             EnumBinaryTranslation<APerkEntryPointEffect.EntryType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.EntryPoint,
@@ -1184,9 +1176,6 @@ namespace Mutagen.Bethesda.Fallout4
             IAPerkEntryPointEffect item,
             MutagenFrame frame)
         {
-            APerkEffectBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
             item.EntryPoint = EnumBinaryTranslation<APerkEntryPointEffect.EntryType, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 1);

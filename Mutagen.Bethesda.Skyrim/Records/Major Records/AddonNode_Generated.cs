@@ -114,9 +114,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region AlwaysLoaded
         public Boolean AlwaysLoaded { get; set; } = default;
         #endregion
-        #region DNAMDataTypeState
-        public AddonNode.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -148,7 +145,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sound = initialValue;
                 this.MasterParticleSystemCap = initialValue;
                 this.AlwaysLoaded = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -164,8 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem NodeIndex,
                 TItem Sound,
                 TItem MasterParticleSystemCap,
-                TItem AlwaysLoaded,
-                TItem DNAMDataTypeState)
+                TItem AlwaysLoaded)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -181,7 +176,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sound = Sound;
                 this.MasterParticleSystemCap = MasterParticleSystemCap;
                 this.AlwaysLoaded = AlwaysLoaded;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -199,7 +193,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Sound;
             public TItem MasterParticleSystemCap;
             public TItem AlwaysLoaded;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -219,7 +212,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
                 if (!object.Equals(this.MasterParticleSystemCap, rhs.MasterParticleSystemCap)) return false;
                 if (!object.Equals(this.AlwaysLoaded, rhs.AlwaysLoaded)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -231,7 +223,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Sound);
                 hash.Add(this.MasterParticleSystemCap);
                 hash.Add(this.AlwaysLoaded);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -256,7 +247,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Sound)) return false;
                 if (!eval(this.MasterParticleSystemCap)) return false;
                 if (!eval(this.AlwaysLoaded)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -279,7 +269,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Sound)) return true;
                 if (eval(this.MasterParticleSystemCap)) return true;
                 if (eval(this.AlwaysLoaded)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -301,7 +290,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Sound = eval(this.Sound);
                 obj.MasterParticleSystemCap = eval(this.MasterParticleSystemCap);
                 obj.AlwaysLoaded = eval(this.AlwaysLoaded);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -344,10 +332,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(AlwaysLoaded, "AlwaysLoaded");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -365,7 +349,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Sound;
             public Exception? MasterParticleSystemCap;
             public Exception? AlwaysLoaded;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -386,8 +369,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return MasterParticleSystemCap;
                     case AddonNode_FieldIndex.AlwaysLoaded:
                         return AlwaysLoaded;
-                    case AddonNode_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -415,9 +396,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case AddonNode_FieldIndex.AlwaysLoaded:
                         this.AlwaysLoaded = ex;
-                        break;
-                    case AddonNode_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -448,9 +426,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case AddonNode_FieldIndex.AlwaysLoaded:
                         this.AlwaysLoaded = (Exception?)obj;
                         break;
-                    case AddonNode_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -466,7 +441,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Sound != null) return true;
                 if (MasterParticleSystemCap != null) return true;
                 if (AlwaysLoaded != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -507,9 +481,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(AlwaysLoaded, "AlwaysLoaded");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -524,7 +495,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Sound = this.Sound.Combine(rhs.Sound);
                 ret.MasterParticleSystemCap = this.MasterParticleSystemCap.Combine(rhs.MasterParticleSystemCap);
                 ret.AlwaysLoaded = this.AlwaysLoaded.Combine(rhs.AlwaysLoaded);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -553,7 +523,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Sound;
             public bool MasterParticleSystemCap;
             public bool AlwaysLoaded;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -566,7 +535,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sound = defaultOn;
                 this.MasterParticleSystemCap = defaultOn;
                 this.AlwaysLoaded = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -580,7 +548,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Sound, null));
                 ret.Add((MasterParticleSystemCap, null));
                 ret.Add((AlwaysLoaded, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -644,10 +611,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IAddonNode);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AddonNodeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AddonNodeSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AddonNodeSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -751,7 +714,6 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new UInt16 MasterParticleSystemCap { get; set; }
         new Boolean AlwaysLoaded { get; set; }
-        new AddonNode.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IAddonNodeInternal :
@@ -790,7 +752,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
         UInt16 MasterParticleSystemCap { get; }
         Boolean AlwaysLoaded { get; }
-        AddonNode.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -973,7 +934,6 @@ namespace Mutagen.Bethesda.Skyrim
         Sound = 10,
         MasterParticleSystemCap = 11,
         AlwaysLoaded = 12,
-        DNAMDataTypeState = 13,
     }
     #endregion
 
@@ -991,9 +951,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "accc5d3b-3755-4b84-9898-244c0613d575";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(AddonNode.Mask<>);
 
@@ -1081,7 +1041,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Sound.Clear();
             item.MasterParticleSystemCap = default;
             item.AlwaysLoaded = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1200,7 +1159,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.MasterParticleSystemCap = item.MasterParticleSystemCap == rhs.MasterParticleSystemCap;
             ret.AlwaysLoaded = item.AlwaysLoaded == rhs.AlwaysLoaded;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1274,10 +1232,6 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.AlwaysLoaded ?? true)
             {
                 sb.AppendItem(item.AlwaysLoaded, "AlwaysLoaded");
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -1361,10 +1315,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.AlwaysLoaded != rhs.AlwaysLoaded) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -1402,7 +1352,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Sound);
             hash.Add(item.MasterParticleSystemCap);
             hash.Add(item.AlwaysLoaded);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1600,10 +1549,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.AlwaysLoaded = rhs.AlwaysLoaded;
             }
-            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1752,15 +1697,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly AddonNodeBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IAddonNodeGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IAddonNodeGetter item,
             MutagenWriter writer,
@@ -1823,7 +1759,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1883,15 +1819,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly AddonNodeBinaryCreateTranslation Instance = new AddonNodeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ADDN;
-        public static void FillBinaryStructs(
-            IAddonNodeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAddonNodeInternal item,
             MutagenFrame frame,
@@ -2018,7 +1945,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         private RangeInt32? _DNAMLocation;
-        public AddonNode.DNAMDataType DNAMDataTypeState { get; private set; }
         #region MasterParticleSystemCap
         private int _MasterParticleSystemCapLocation => _DNAMLocation!.Value.Min;
         private bool _MasterParticleSystemCap_IsSet => _DNAMLocation.HasValue;

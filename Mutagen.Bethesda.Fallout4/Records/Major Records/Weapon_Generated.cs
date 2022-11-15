@@ -639,12 +639,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Weapon.MeleeSpeeds? IWeaponGetter.MeleeSpeed => this.MeleeSpeed;
         #endregion
-        #region DNAMDataTypeState
-        public Weapon.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
-        #region CRDTDataTypeState
-        public Weapon.CRDTDataType CRDTDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -741,8 +735,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>());
                 this.Filter = initialValue;
                 this.MeleeSpeed = initialValue;
-                this.DNAMDataTypeState = initialValue;
-                this.CRDTDataTypeState = initialValue;
             }
 
             public Mask(
@@ -823,9 +815,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Template,
                 TItem DamageTypes,
                 TItem Filter,
-                TItem MeleeSpeed,
-                TItem DNAMDataTypeState,
-                TItem CRDTDataTypeState)
+                TItem MeleeSpeed)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -906,8 +896,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>(DamageTypes, Enumerable.Empty<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>());
                 this.Filter = Filter;
                 this.MeleeSpeed = MeleeSpeed;
-                this.DNAMDataTypeState = DNAMDataTypeState;
-                this.CRDTDataTypeState = CRDTDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -990,8 +978,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>? DamageTypes;
             public TItem Filter;
             public TItem MeleeSpeed;
-            public TItem DNAMDataTypeState;
-            public TItem CRDTDataTypeState;
             #endregion
 
             #region Equals
@@ -1076,8 +1062,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.DamageTypes, rhs.DamageTypes)) return false;
                 if (!object.Equals(this.Filter, rhs.Filter)) return false;
                 if (!object.Equals(this.MeleeSpeed, rhs.MeleeSpeed)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
-                if (!object.Equals(this.CRDTDataTypeState, rhs.CRDTDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1154,8 +1138,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.DamageTypes);
                 hash.Add(this.Filter);
                 hash.Add(this.MeleeSpeed);
-                hash.Add(this.DNAMDataTypeState);
-                hash.Add(this.CRDTDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1307,8 +1289,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (!eval(this.Filter)) return false;
                 if (!eval(this.MeleeSpeed)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
-                if (!eval(this.CRDTDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -1458,8 +1438,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (eval(this.Filter)) return true;
                 if (eval(this.MeleeSpeed)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
-                if (eval(this.CRDTDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1600,8 +1578,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 obj.Filter = eval(this.Filter);
                 obj.MeleeSpeed = eval(this.MeleeSpeed);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
-                obj.CRDTDataTypeState = eval(this.CRDTDataTypeState);
             }
             #endregion
 
@@ -1968,14 +1944,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(MeleeSpeed, "MeleeSpeed");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
-                    if (printMask?.CRDTDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CRDTDataTypeState, "CRDTDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -2058,8 +2026,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>? DamageTypes;
             public Exception? Filter;
             public Exception? MeleeSpeed;
-            public Exception? DNAMDataTypeState;
-            public Exception? CRDTDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -2210,10 +2176,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Filter;
                     case Weapon_FieldIndex.MeleeSpeed:
                         return MeleeSpeed;
-                    case Weapon_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
-                    case Weapon_FieldIndex.CRDTDataTypeState:
-                        return CRDTDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -2436,12 +2398,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Weapon_FieldIndex.MeleeSpeed:
                         this.MeleeSpeed = ex;
-                        break;
-                    case Weapon_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
-                        break;
-                    case Weapon_FieldIndex.CRDTDataTypeState:
-                        this.CRDTDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -2667,12 +2623,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Weapon_FieldIndex.MeleeSpeed:
                         this.MeleeSpeed = (Exception?)obj;
                         break;
-                    case Weapon_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
-                    case Weapon_FieldIndex.CRDTDataTypeState:
-                        this.CRDTDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -2753,8 +2703,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (DamageTypes != null) return true;
                 if (Filter != null) return true;
                 if (MeleeSpeed != null) return true;
-                if (DNAMDataTypeState != null) return true;
-                if (CRDTDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -3044,12 +2992,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(MeleeSpeed, "MeleeSpeed");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
-                {
-                    sb.AppendItem(CRDTDataTypeState, "CRDTDataTypeState");
-                }
             }
             #endregion
 
@@ -3129,8 +3071,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.DamageTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DamageTypes?.Overall, rhs.DamageTypes?.Overall), Noggog.ExceptionExt.Combine(this.DamageTypes?.Specific, rhs.DamageTypes?.Specific));
                 ret.Filter = this.Filter.Combine(rhs.Filter);
                 ret.MeleeSpeed = this.MeleeSpeed.Combine(rhs.MeleeSpeed);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
-                ret.CRDTDataTypeState = this.CRDTDataTypeState.Combine(rhs.CRDTDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3224,8 +3164,6 @@ namespace Mutagen.Bethesda.Fallout4
             public WeaponDamageType.TranslationMask? DamageTypes;
             public bool Filter;
             public bool MeleeSpeed;
-            public bool DNAMDataTypeState;
-            public bool CRDTDataTypeState;
             #endregion
 
             #region Ctors
@@ -3296,8 +3234,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Template = defaultOn;
                 this.Filter = defaultOn;
                 this.MeleeSpeed = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
-                this.CRDTDataTypeState = defaultOn;
             }
 
             #endregion
@@ -3376,8 +3312,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((DamageTypes == null ? DefaultOn : !DamageTypes.GetCrystal().CopyNothing, DamageTypes?.GetCrystal()));
                 ret.Add((Filter, null));
                 ret.Add((MeleeSpeed, null));
-                ret.Add((DNAMDataTypeState, null));
-                ret.Add((CRDTDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3438,14 +3372,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
-        [Flags]
-        public enum CRDTDataType
-        {
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -3638,8 +3564,6 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<WeaponDamageType>? DamageTypes { get; set; }
         new String? Filter { get; set; }
         new Weapon.MeleeSpeeds? MeleeSpeed { get; set; }
-        new Weapon.DNAMDataType DNAMDataTypeState { get; set; }
-        new Weapon.CRDTDataType CRDTDataTypeState { get; set; }
         #region Mutagen
         new Weapon.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -3782,8 +3706,6 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IWeaponDamageTypeGetter>? DamageTypes { get; }
         String? Filter { get; }
         Weapon.MeleeSpeeds? MeleeSpeed { get; }
-        Weapon.DNAMDataType DNAMDataTypeState { get; }
-        Weapon.CRDTDataType CRDTDataTypeState { get; }
 
         #region Mutagen
         Weapon.MajorFlag MajorFlags { get; }
@@ -4035,8 +3957,6 @@ namespace Mutagen.Bethesda.Fallout4
         DamageTypes = 75,
         Filter = 76,
         MeleeSpeed = 77,
-        DNAMDataTypeState = 78,
-        CRDTDataTypeState = 79,
     }
     #endregion
 
@@ -4054,9 +3974,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "ea1189a0-716d-4099-ad06-721ccd313caa";
 
-        public const ushort AdditionalFieldCount = 73;
+        public const ushort AdditionalFieldCount = 71;
 
-        public const ushort FieldCount = 80;
+        public const ushort FieldCount = 78;
 
         public static readonly Type MaskType = typeof(Weapon.Mask<>);
 
@@ -4270,8 +4190,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.DamageTypes = null;
             item.Filter = default;
             item.MeleeSpeed = default;
-            item.DNAMDataTypeState = default;
-            item.CRDTDataTypeState = default;
             base.Clear(item);
         }
         
@@ -4499,8 +4417,6 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Filter = string.Equals(item.Filter, rhs.Filter);
             ret.MeleeSpeed = item.MeleeSpeed == rhs.MeleeSpeed;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
-            ret.CRDTDataTypeState = item.CRDTDataTypeState == rhs.CRDTDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -4890,14 +4806,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(MeleeSpeedItem, "MeleeSpeed");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
-            if (printMask?.CRDTDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CRDTDataTypeState, "CRDTDataTypeState");
-            }
         }
         
         public static Weapon_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -5260,14 +5168,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.MeleeSpeed != rhs.MeleeSpeed) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.CRDTDataTypeState) ?? true))
-            {
-                if (lhs.CRDTDataTypeState != rhs.CRDTDataTypeState) return false;
-            }
             return true;
         }
         
@@ -5403,8 +5303,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(MeleeSpeeditem);
             }
-            hash.Add(item.DNAMDataTypeState);
-            hash.Add(item.CRDTDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -6179,14 +6077,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.MeleeSpeed = rhs.MeleeSpeed;
             }
-            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.CRDTDataTypeState) ?? true))
-            {
-                item.CRDTDataTypeState = rhs.CRDTDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -6334,15 +6224,6 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryWriteTranslator
     {
         public new static readonly WeaponBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IWeaponGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IWeaponGetter item,
@@ -6667,7 +6548,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -6727,15 +6608,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly WeaponBinaryCreateTranslation Instance = new WeaponBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WEAP;
-        public static void FillBinaryStructs(
-            IWeaponInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IWeaponInternal item,
             MutagenFrame frame,
@@ -7240,7 +7112,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Int32? MO4F => _MO4FLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MO4FLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Weapon.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Ammo
         private int _AmmoLocation => _DNAMLocation!.Value.Min;
         private bool _Ammo_IsSet => _DNAMLocation.HasValue;
@@ -7426,7 +7297,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IWeaponExtraDataGetter? ExtraData => _ExtraDataLocation.HasValue ? WeaponExtraDataBinaryOverlay.WeaponExtraDataFactory(_recordData.Slice(_ExtraDataLocation!.Value.Min), _package) : default;
         #endregion
         private RangeInt32? _CRDTLocation;
-        public Weapon.CRDTDataType CRDTDataTypeState { get; private set; }
         #region CritDamageMult
         private int _CritDamageMultLocation => _CRDTLocation!.Value.Min;
         private bool _CritDamageMult_IsSet => _CRDTLocation.HasValue;

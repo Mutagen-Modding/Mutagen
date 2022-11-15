@@ -831,15 +831,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? INpcGetter.ActivateTextOverride => this.ActivateTextOverride;
         #endregion
-        #region ACBSDataTypeState
-        public Npc.ACBSDataType ACBSDataTypeState { get; set; } = default;
-        #endregion
-        #region AIDTDataTypeState
-        public Npc.AIDTDataType AIDTDataTypeState { get; set; } = default;
-        #endregion
-        #region DNAMDataTypeState
-        public Npc.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -953,9 +944,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>());
                 this.FacialMorphIntensity = initialValue;
                 this.ActivateTextOverride = initialValue;
-                this.ACBSDataTypeState = initialValue;
-                this.AIDTDataTypeState = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -1053,10 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem BodyMorphRegionValues,
                 TItem FaceMorphs,
                 TItem FacialMorphIntensity,
-                TItem ActivateTextOverride,
-                TItem ACBSDataTypeState,
-                TItem AIDTDataTypeState,
-                TItem DNAMDataTypeState)
+                TItem ActivateTextOverride)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -1154,9 +1139,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>?>(FaceMorphs, Enumerable.Empty<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>());
                 this.FacialMorphIntensity = FacialMorphIntensity;
                 this.ActivateTextOverride = ActivateTextOverride;
-                this.ACBSDataTypeState = ACBSDataTypeState;
-                this.AIDTDataTypeState = AIDTDataTypeState;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -1256,9 +1238,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>?>? FaceMorphs;
             public TItem FacialMorphIntensity;
             public TItem ActivateTextOverride;
-            public TItem ACBSDataTypeState;
-            public TItem AIDTDataTypeState;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -1360,9 +1339,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.FaceMorphs, rhs.FaceMorphs)) return false;
                 if (!object.Equals(this.FacialMorphIntensity, rhs.FacialMorphIntensity)) return false;
                 if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
-                if (!object.Equals(this.ACBSDataTypeState, rhs.ACBSDataTypeState)) return false;
-                if (!object.Equals(this.AIDTDataTypeState, rhs.AIDTDataTypeState)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1456,9 +1432,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.FaceMorphs);
                 hash.Add(this.FacialMorphIntensity);
                 hash.Add(this.ActivateTextOverride);
-                hash.Add(this.ACBSDataTypeState);
-                hash.Add(this.AIDTDataTypeState);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1745,9 +1718,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (!eval(this.FacialMorphIntensity)) return false;
                 if (!eval(this.ActivateTextOverride)) return false;
-                if (!eval(this.ACBSDataTypeState)) return false;
-                if (!eval(this.AIDTDataTypeState)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -2032,9 +2002,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (eval(this.FacialMorphIntensity)) return true;
                 if (eval(this.ActivateTextOverride)) return true;
-                if (eval(this.ACBSDataTypeState)) return true;
-                if (eval(this.AIDTDataTypeState)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -2343,9 +2310,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 obj.FacialMorphIntensity = eval(this.FacialMorphIntensity);
                 obj.ActivateTextOverride = eval(this.ActivateTextOverride);
-                obj.ACBSDataTypeState = eval(this.ACBSDataTypeState);
-                obj.AIDTDataTypeState = eval(this.AIDTDataTypeState);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -2951,18 +2915,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                     }
-                    if (printMask?.ACBSDataTypeState ?? true)
-                    {
-                        sb.AppendItem(ACBSDataTypeState, "ACBSDataTypeState");
-                    }
-                    if (printMask?.AIDTDataTypeState ?? true)
-                    {
-                        sb.AppendItem(AIDTDataTypeState, "AIDTDataTypeState");
-                    }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -3062,9 +3014,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>? FaceMorphs;
             public Exception? FacialMorphIntensity;
             public Exception? ActivateTextOverride;
-            public Exception? ACBSDataTypeState;
-            public Exception? AIDTDataTypeState;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -3249,12 +3198,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return FacialMorphIntensity;
                     case Npc_FieldIndex.ActivateTextOverride:
                         return ActivateTextOverride;
-                    case Npc_FieldIndex.ACBSDataTypeState:
-                        return ACBSDataTypeState;
-                    case Npc_FieldIndex.AIDTDataTypeState:
-                        return AIDTDataTypeState;
-                    case Npc_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -3528,15 +3471,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Npc_FieldIndex.ActivateTextOverride:
                         this.ActivateTextOverride = ex;
-                        break;
-                    case Npc_FieldIndex.ACBSDataTypeState:
-                        this.ACBSDataTypeState = ex;
-                        break;
-                    case Npc_FieldIndex.AIDTDataTypeState:
-                        this.AIDTDataTypeState = ex;
-                        break;
-                    case Npc_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -3813,15 +3747,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Npc_FieldIndex.ActivateTextOverride:
                         this.ActivateTextOverride = (Exception?)obj;
                         break;
-                    case Npc_FieldIndex.ACBSDataTypeState:
-                        this.ACBSDataTypeState = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.AIDTDataTypeState:
-                        this.AIDTDataTypeState = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -3919,9 +3844,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (FaceMorphs != null) return true;
                 if (FacialMorphIntensity != null) return true;
                 if (ActivateTextOverride != null) return true;
-                if (ACBSDataTypeState != null) return true;
-                if (AIDTDataTypeState != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -4433,15 +4355,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                 }
-                {
-                    sb.AppendItem(ACBSDataTypeState, "ACBSDataTypeState");
-                }
-                {
-                    sb.AppendItem(AIDTDataTypeState, "AIDTDataTypeState");
-                }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -4538,9 +4451,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), Noggog.ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
                 ret.FacialMorphIntensity = this.FacialMorphIntensity.Combine(rhs.FacialMorphIntensity);
                 ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
-                ret.ACBSDataTypeState = this.ACBSDataTypeState.Combine(rhs.ACBSDataTypeState);
-                ret.AIDTDataTypeState = this.AIDTDataTypeState.Combine(rhs.AIDTDataTypeState);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4651,9 +4561,6 @@ namespace Mutagen.Bethesda.Fallout4
             public NpcFaceMorph.TranslationMask? FaceMorphs;
             public bool FacialMorphIntensity;
             public bool ActivateTextOverride;
-            public bool ACBSDataTypeState;
-            public bool AIDTDataTypeState;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -4733,9 +4640,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextureLighting = defaultOn;
                 this.FacialMorphIntensity = defaultOn;
                 this.ActivateTextOverride = defaultOn;
-                this.ACBSDataTypeState = defaultOn;
-                this.AIDTDataTypeState = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -4831,9 +4735,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((FaceMorphs == null ? DefaultOn : !FaceMorphs.GetCrystal().CopyNothing, FaceMorphs?.GetCrystal()));
                 ret.Add((FacialMorphIntensity, null));
                 ret.Add((ActivateTextOverride, null));
-                ret.Add((ACBSDataTypeState, null));
-                ret.Add((AIDTDataTypeState, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4894,18 +4795,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum ACBSDataType
-        {
-        }
-        [Flags]
-        public enum AIDTDataType
-        {
-        }
-        [Flags]
-        public enum DNAMDataType
-        {
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -5105,9 +4994,6 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<NpcFaceMorph> FaceMorphs { get; }
         new Single? FacialMorphIntensity { get; set; }
         new TranslatedString? ActivateTextOverride { get; set; }
-        new Npc.ACBSDataType ACBSDataTypeState { get; set; }
-        new Npc.AIDTDataType AIDTDataTypeState { get; set; }
-        new Npc.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
         new Npc.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -5253,9 +5139,6 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<INpcFaceMorphGetter> FaceMorphs { get; }
         Single? FacialMorphIntensity { get; }
         ITranslatedStringGetter? ActivateTextOverride { get; }
-        Npc.ACBSDataType ACBSDataTypeState { get; }
-        Npc.AIDTDataType AIDTDataTypeState { get; }
-        Npc.DNAMDataType DNAMDataTypeState { get; }
 
         #region Mutagen
         Npc.MajorFlag MajorFlags { get; }
@@ -5524,9 +5407,6 @@ namespace Mutagen.Bethesda.Fallout4
         FaceMorphs = 92,
         FacialMorphIntensity = 93,
         ActivateTextOverride = 94,
-        ACBSDataTypeState = 95,
-        AIDTDataTypeState = 96,
-        DNAMDataTypeState = 97,
     }
     #endregion
 
@@ -5544,9 +5424,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "8074d783-8164-453f-bdd2-f39627cf7a6b";
 
-        public const ushort AdditionalFieldCount = 91;
+        public const ushort AdditionalFieldCount = 88;
 
-        public const ushort FieldCount = 98;
+        public const ushort FieldCount = 95;
 
         public static readonly Type MaskType = typeof(Npc.Mask<>);
 
@@ -5804,9 +5684,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.FaceMorphs.Clear();
             item.FacialMorphIntensity = default;
             item.ActivateTextOverride = default;
-            item.ACBSDataTypeState = default;
-            item.AIDTDataTypeState = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -6090,9 +5967,6 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.FacialMorphIntensity = item.FacialMorphIntensity.EqualsWithin(rhs.FacialMorphIntensity);
             ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
-            ret.ACBSDataTypeState = item.ACBSDataTypeState == rhs.ACBSDataTypeState;
-            ret.AIDTDataTypeState = item.AIDTDataTypeState == rhs.AIDTDataTypeState;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -6665,18 +6539,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
             }
-            if (printMask?.ACBSDataTypeState ?? true)
-            {
-                sb.AppendItem(item.ACBSDataTypeState, "ACBSDataTypeState");
-            }
-            if (printMask?.AIDTDataTypeState ?? true)
-            {
-                sb.AppendItem(item.AIDTDataTypeState, "AIDTDataTypeState");
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static Npc_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -7107,18 +6969,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ACBSDataTypeState) ?? true))
-            {
-                if (lhs.ACBSDataTypeState != rhs.ACBSDataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.AIDTDataTypeState) ?? true))
-            {
-                if (lhs.AIDTDataTypeState != rhs.AIDTDataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -7274,9 +7124,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(ActivateTextOverrideitem);
             }
-            hash.Add(item.ACBSDataTypeState);
-            hash.Add(item.AIDTDataTypeState);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -8445,18 +8292,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ActivateTextOverride) ?? true))
             {
                 item.ActivateTextOverride = rhs.ActivateTextOverride?.DeepCopy();
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ACBSDataTypeState) ?? true))
-            {
-                item.ACBSDataTypeState = rhs.ACBSDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AIDTDataTypeState) ?? true))
-            {
-                item.AIDTDataTypeState = rhs.AIDTDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
             }
         }
         
@@ -9868,7 +9703,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
         #endregion
         private RangeInt32? _ACBSLocation;
-        public Npc.ACBSDataType ACBSDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _ACBSLocation!.Value.Min;
         public partial Npc.Flag GetFlagsCustom();
@@ -9994,7 +9828,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         private RangeInt32? _AIDTLocation;
-        public Npc.AIDTDataType AIDTDataTypeState { get; private set; }
         #region Aggression
         private int _AggressionLocation => _AIDTLocation!.Value.Min;
         private bool _Aggression_IsSet => _AIDTLocation.HasValue;
@@ -10078,7 +9911,6 @@ namespace Mutagen.Bethesda.Fallout4
         public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Npc.DNAMDataType DNAMDataTypeState { get; private set; }
         #region BaseHealth
         private int _BaseHealthLocation => _DNAMLocation!.Value.Min;
         private bool _BaseHealth_IsSet => _DNAMLocation.HasValue;

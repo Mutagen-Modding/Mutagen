@@ -89,9 +89,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         public Byte Unknown { get; set; } = default;
         #endregion
-        #region DATADataTypeState
-        public ReverbParameters.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -129,7 +126,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DiffusionPercent = initialValue;
                 this.DensityPercent = initialValue;
                 this.Unknown = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -151,8 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ReverbDelayMS,
                 TItem DiffusionPercent,
                 TItem DensityPercent,
-                TItem Unknown,
-                TItem DATADataTypeState)
+                TItem Unknown)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -174,7 +169,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DiffusionPercent = DiffusionPercent;
                 this.DensityPercent = DensityPercent;
                 this.Unknown = Unknown;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -198,7 +192,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem DiffusionPercent;
             public TItem DensityPercent;
             public TItem Unknown;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -224,7 +217,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.DiffusionPercent, rhs.DiffusionPercent)) return false;
                 if (!object.Equals(this.DensityPercent, rhs.DensityPercent)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -242,7 +234,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.DiffusionPercent);
                 hash.Add(this.DensityPercent);
                 hash.Add(this.Unknown);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -265,7 +256,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.DiffusionPercent)) return false;
                 if (!eval(this.DensityPercent)) return false;
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -286,7 +276,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.DiffusionPercent)) return true;
                 if (eval(this.DensityPercent)) return true;
                 if (eval(this.Unknown)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -314,7 +303,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DiffusionPercent = eval(this.DiffusionPercent);
                 obj.DensityPercent = eval(this.DensityPercent);
                 obj.Unknown = eval(this.Unknown);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -381,10 +369,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -408,7 +392,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? DiffusionPercent;
             public Exception? DensityPercent;
             public Exception? Unknown;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -441,8 +424,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return DensityPercent;
                     case ReverbParameters_FieldIndex.Unknown:
                         return Unknown;
-                    case ReverbParameters_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -488,9 +469,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case ReverbParameters_FieldIndex.Unknown:
                         this.Unknown = ex;
-                        break;
-                    case ReverbParameters_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -539,9 +517,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case ReverbParameters_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case ReverbParameters_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -563,7 +538,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (DiffusionPercent != null) return true;
                 if (DensityPercent != null) return true;
                 if (Unknown != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -626,9 +600,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Unknown, "Unknown");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -649,7 +620,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DiffusionPercent = this.DiffusionPercent.Combine(rhs.DiffusionPercent);
                 ret.DensityPercent = this.DensityPercent.Combine(rhs.DensityPercent);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -684,7 +654,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool DiffusionPercent;
             public bool DensityPercent;
             public bool Unknown;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -705,7 +674,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DiffusionPercent = defaultOn;
                 this.DensityPercent = defaultOn;
                 this.Unknown = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -725,7 +693,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DiffusionPercent, null));
                 ret.Add((DensityPercent, null));
                 ret.Add((Unknown, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -787,10 +754,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IReverbParameters);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -886,7 +849,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Percent DiffusionPercent { get; set; }
         new Percent DensityPercent { get; set; }
         new Byte Unknown { get; set; }
-        new ReverbParameters.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IReverbParametersInternal :
@@ -916,7 +878,6 @@ namespace Mutagen.Bethesda.Skyrim
         Percent DiffusionPercent { get; }
         Percent DensityPercent { get; }
         Byte Unknown { get; }
-        ReverbParameters.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1105,7 +1066,6 @@ namespace Mutagen.Bethesda.Skyrim
         DiffusionPercent = 16,
         DensityPercent = 17,
         Unknown = 18,
-        DATADataTypeState = 19,
     }
     #endregion
 
@@ -1123,9 +1083,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "17f23f33-dc99-49b9-a085-54538d98e9f4";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(ReverbParameters.Mask<>);
 
@@ -1215,7 +1175,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.DiffusionPercent = default;
             item.DensityPercent = default;
             item.Unknown = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1312,7 +1271,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.DiffusionPercent = item.DiffusionPercent.Equals(rhs.DiffusionPercent);
             ret.DensityPercent = item.DensityPercent.Equals(rhs.DensityPercent);
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1409,10 +1367,6 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.Unknown ?? true)
             {
                 sb.AppendItem(item.Unknown, "Unknown");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1512,10 +1466,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1556,7 +1506,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.DiffusionPercent);
             hash.Add(item.DensityPercent);
             hash.Add(item.Unknown);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1708,10 +1657,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1860,15 +1805,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly ReverbParametersBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IReverbParametersGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IReverbParametersGetter item,
             MutagenWriter writer,
@@ -1916,7 +1852,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1976,15 +1912,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ReverbParametersBinaryCreateTranslation Instance = new ReverbParametersBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REVB;
-        public static void FillBinaryStructs(
-            IReverbParametersInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IReverbParametersInternal item,
             MutagenFrame frame,
@@ -2093,7 +2020,6 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         private RangeInt32? _DATALocation;
-        public ReverbParameters.DATADataType DATADataTypeState { get; private set; }
         #region DecayMilliseconds
         private int _DecayMillisecondsLocation => _DATALocation!.Value.Min;
         private bool _DecayMilliseconds_IsSet => _DATALocation.HasValue;

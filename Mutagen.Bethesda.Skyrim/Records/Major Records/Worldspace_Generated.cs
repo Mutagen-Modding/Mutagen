@@ -336,15 +336,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region ONAMDataTypeState
-        public Worldspace.ONAMDataType ONAMDataTypeState { get; set; } = default;
-        #endregion
-        #region NAM0DataTypeState
-        public Worldspace.NAM0DataType NAM0DataTypeState { get; set; } = default;
-        #endregion
-        #region NAM9DataTypeState
-        public Worldspace.NAM9DataType NAM9DataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -403,9 +394,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SubCellsTimestamp = initialValue;
                 this.SubCellsUnknown = initialValue;
                 this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
-                this.ONAMDataTypeState = initialValue;
-                this.NAM0DataTypeState = initialValue;
-                this.NAM9DataTypeState = initialValue;
             }
 
             public Mask(
@@ -448,10 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem TopCell,
                 TItem SubCellsTimestamp,
                 TItem SubCellsUnknown,
-                TItem SubCells,
-                TItem ONAMDataTypeState,
-                TItem NAM0DataTypeState,
-                TItem NAM9DataTypeState)
+                TItem SubCells)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -494,9 +479,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SubCellsTimestamp = SubCellsTimestamp;
                 this.SubCellsUnknown = SubCellsUnknown;
                 this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
-                this.ONAMDataTypeState = ONAMDataTypeState;
-                this.NAM0DataTypeState = NAM0DataTypeState;
-                this.NAM9DataTypeState = NAM9DataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -541,9 +523,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem SubCellsTimestamp;
             public TItem SubCellsUnknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>? SubCells;
-            public TItem ONAMDataTypeState;
-            public TItem NAM0DataTypeState;
-            public TItem NAM9DataTypeState;
             #endregion
 
             #region Equals
@@ -590,9 +569,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
                 if (!object.Equals(this.SubCellsUnknown, rhs.SubCellsUnknown)) return false;
                 if (!object.Equals(this.SubCells, rhs.SubCells)) return false;
-                if (!object.Equals(this.ONAMDataTypeState, rhs.ONAMDataTypeState)) return false;
-                if (!object.Equals(this.NAM0DataTypeState, rhs.NAM0DataTypeState)) return false;
-                if (!object.Equals(this.NAM9DataTypeState, rhs.NAM9DataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -631,9 +607,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.SubCellsTimestamp);
                 hash.Add(this.SubCellsUnknown);
                 hash.Add(this.SubCells);
-                hash.Add(this.ONAMDataTypeState);
-                hash.Add(this.NAM0DataTypeState);
-                hash.Add(this.NAM9DataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -723,9 +696,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.ONAMDataTypeState)) return false;
-                if (!eval(this.NAM0DataTypeState)) return false;
-                if (!eval(this.NAM9DataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -813,9 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.ONAMDataTypeState)) return true;
-                if (eval(this.NAM0DataTypeState)) return true;
-                if (eval(this.NAM9DataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -892,9 +859,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.ONAMDataTypeState = eval(this.ONAMDataTypeState);
-                obj.NAM0DataTypeState = eval(this.NAM0DataTypeState);
-                obj.NAM9DataTypeState = eval(this.NAM9DataTypeState);
             }
             #endregion
 
@@ -1075,18 +1039,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.ONAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(ONAMDataTypeState, "ONAMDataTypeState");
-                    }
-                    if (printMask?.NAM0DataTypeState ?? true)
-                    {
-                        sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
-                    }
-                    if (printMask?.NAM9DataTypeState ?? true)
-                    {
-                        sb.AppendItem(NAM9DataTypeState, "NAM9DataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1131,9 +1083,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? SubCellsTimestamp;
             public Exception? SubCellsUnknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>? SubCells;
-            public Exception? ONAMDataTypeState;
-            public Exception? NAM0DataTypeState;
-            public Exception? NAM9DataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1208,12 +1157,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return SubCellsUnknown;
                     case Worldspace_FieldIndex.SubCells:
                         return SubCells;
-                    case Worldspace_FieldIndex.ONAMDataTypeState:
-                        return ONAMDataTypeState;
-                    case Worldspace_FieldIndex.NAM0DataTypeState:
-                        return NAM0DataTypeState;
-                    case Worldspace_FieldIndex.NAM9DataTypeState:
-                        return NAM9DataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1322,15 +1265,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Worldspace_FieldIndex.SubCells:
                         this.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Worldspace_FieldIndex.ONAMDataTypeState:
-                        this.ONAMDataTypeState = ex;
-                        break;
-                    case Worldspace_FieldIndex.NAM0DataTypeState:
-                        this.NAM0DataTypeState = ex;
-                        break;
-                    case Worldspace_FieldIndex.NAM9DataTypeState:
-                        this.NAM9DataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1442,15 +1376,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Worldspace_FieldIndex.SubCells:
                         this.SubCells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>)obj;
                         break;
-                    case Worldspace_FieldIndex.ONAMDataTypeState:
-                        this.ONAMDataTypeState = (Exception?)obj;
-                        break;
-                    case Worldspace_FieldIndex.NAM0DataTypeState:
-                        this.NAM0DataTypeState = (Exception?)obj;
-                        break;
-                    case Worldspace_FieldIndex.NAM9DataTypeState:
-                        this.NAM9DataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1493,9 +1418,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (SubCellsTimestamp != null) return true;
                 if (SubCellsUnknown != null) return true;
                 if (SubCells != null) return true;
-                if (ONAMDataTypeState != null) return true;
-                if (NAM0DataTypeState != null) return true;
-                if (NAM9DataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1639,15 +1561,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(ONAMDataTypeState, "ONAMDataTypeState");
-                }
-                {
-                    sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
-                }
-                {
-                    sb.AppendItem(NAM9DataTypeState, "NAM9DataTypeState");
-                }
             }
             #endregion
 
@@ -1689,9 +1602,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
                 ret.SubCellsUnknown = this.SubCellsUnknown.Combine(rhs.SubCellsUnknown);
                 ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), Noggog.ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
-                ret.ONAMDataTypeState = this.ONAMDataTypeState.Combine(rhs.ONAMDataTypeState);
-                ret.NAM0DataTypeState = this.NAM0DataTypeState.Combine(rhs.NAM0DataTypeState);
-                ret.NAM9DataTypeState = this.NAM9DataTypeState.Combine(rhs.NAM9DataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1747,9 +1657,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool SubCellsTimestamp;
             public bool SubCellsUnknown;
             public WorldspaceBlock.TranslationMask? SubCells;
-            public bool ONAMDataTypeState;
-            public bool NAM0DataTypeState;
-            public bool NAM9DataTypeState;
             #endregion
 
             #region Ctors
@@ -1783,9 +1690,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OffsetData = defaultOn;
                 this.SubCellsTimestamp = defaultOn;
                 this.SubCellsUnknown = defaultOn;
-                this.ONAMDataTypeState = defaultOn;
-                this.NAM0DataTypeState = defaultOn;
-                this.NAM9DataTypeState = defaultOn;
             }
 
             #endregion
@@ -1826,9 +1730,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SubCellsTimestamp, null));
                 ret.Add((SubCellsUnknown, null));
                 ret.Add((SubCells == null ? DefaultOn : !SubCells.GetCrystal().CopyNothing, SubCells?.GetCrystal()));
-                ret.Add((ONAMDataTypeState, null));
-                ret.Add((NAM0DataTypeState, null));
-                ret.Add((NAM9DataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1908,18 +1809,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum ONAMDataType
-        {
-        }
-        [Flags]
-        public enum NAM0DataType
-        {
-        }
-        [Flags]
-        public enum NAM9DataType
-        {
         }
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
@@ -2073,9 +1962,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 SubCellsTimestamp { get; set; }
         new Int32 SubCellsUnknown { get; set; }
         new ExtendedList<WorldspaceBlock> SubCells { get; }
-        new Worldspace.ONAMDataType ONAMDataTypeState { get; set; }
-        new Worldspace.NAM0DataType NAM0DataTypeState { get; set; }
-        new Worldspace.NAM9DataType NAM9DataTypeState { get; set; }
         #region Mutagen
         new Worldspace.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2143,9 +2029,6 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 SubCellsTimestamp { get; }
         Int32 SubCellsUnknown { get; }
         IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; }
-        Worldspace.ONAMDataType ONAMDataTypeState { get; }
-        Worldspace.NAM0DataType NAM0DataTypeState { get; }
-        Worldspace.NAM9DataType NAM9DataTypeState { get; }
 
         #region Mutagen
         Worldspace.MajorFlag MajorFlags { get; }
@@ -2571,9 +2454,6 @@ namespace Mutagen.Bethesda.Skyrim
         SubCellsTimestamp = 37,
         SubCellsUnknown = 38,
         SubCells = 39,
-        ONAMDataTypeState = 40,
-        NAM0DataTypeState = 41,
-        NAM9DataTypeState = 42,
     }
     #endregion
 
@@ -2591,9 +2471,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "2ee9dfa0-e46f-43fe-b3e3-acc2314e4bce";
 
-        public const ushort AdditionalFieldCount = 36;
+        public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 43;
+        public const ushort FieldCount = 40;
 
         public static readonly Type MaskType = typeof(Worldspace.Mask<>);
 
@@ -2772,9 +2652,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.SubCellsTimestamp = default;
             item.SubCellsUnknown = default;
             item.SubCells.Clear();
-            item.ONAMDataTypeState = default;
-            item.NAM0DataTypeState = default;
-            item.NAM9DataTypeState = default;
             base.Clear(item);
         }
         
@@ -3305,9 +3182,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.SubCells,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ONAMDataTypeState = item.ONAMDataTypeState == rhs.ONAMDataTypeState;
-            ret.NAM0DataTypeState = item.NAM0DataTypeState == rhs.NAM0DataTypeState;
-            ret.NAM9DataTypeState = item.NAM9DataTypeState == rhs.NAM9DataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3526,18 +3400,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.ONAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.ONAMDataTypeState, "ONAMDataTypeState");
-            }
-            if (printMask?.NAM0DataTypeState ?? true)
-            {
-                sb.AppendItem(item.NAM0DataTypeState, "NAM0DataTypeState");
-            }
-            if (printMask?.NAM9DataTypeState ?? true)
-            {
-                sb.AppendItem(item.NAM9DataTypeState, "NAM9DataTypeState");
-            }
         }
         
         public static Worldspace_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -3744,18 +3606,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.SubCells.SequenceEqual(rhs.SubCells, (l, r) => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ONAMDataTypeState) ?? true))
-            {
-                if (lhs.ONAMDataTypeState != rhs.ONAMDataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM0DataTypeState) ?? true))
-            {
-                if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM9DataTypeState) ?? true))
-            {
-                if (lhs.NAM9DataTypeState != rhs.NAM9DataTypeState) return false;
-            }
             return true;
         }
         
@@ -3868,9 +3718,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.SubCellsTimestamp);
             hash.Add(item.SubCellsUnknown);
             hash.Add(item.SubCells);
-            hash.Add(item.ONAMDataTypeState);
-            hash.Add(item.NAM0DataTypeState);
-            hash.Add(item.NAM9DataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -5057,18 +4904,6 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ONAMDataTypeState) ?? true))
-            {
-                item.ONAMDataTypeState = rhs.ONAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM0DataTypeState) ?? true))
-            {
-                item.NAM0DataTypeState = rhs.NAM0DataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM9DataTypeState) ?? true))
-            {
-                item.NAM9DataTypeState = rhs.NAM9DataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -5878,7 +5713,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IWorldspaceMapGetter? MapData => _MapDataLocation.HasValue ? WorldspaceMapBinaryOverlay.WorldspaceMapFactory(_recordData.Slice(_MapDataLocation!.Value.Min), _package) : default;
         #endregion
         private RangeInt32? _ONAMLocation;
-        public Worldspace.ONAMDataType ONAMDataTypeState { get; private set; }
         #region WorldMapOffsetScale
         private int _WorldMapOffsetScaleLocation => _ONAMLocation!.Value.Min;
         private bool _WorldMapOffsetScale_IsSet => _ONAMLocation.HasValue;
@@ -5898,7 +5732,6 @@ namespace Mutagen.Bethesda.Skyrim
         public Worldspace.Flag Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Worldspace.Flag);
         #endregion
         private RangeInt32? _NAM0Location;
-        public Worldspace.NAM0DataType NAM0DataTypeState { get; private set; }
         #region ObjectBoundsMin
         private int _ObjectBoundsMinLocation => _NAM0Location!.Value.Min;
         public partial P2Float GetObjectBoundsMinCustom();
@@ -5906,7 +5739,6 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomObjectBoundsMinEndPos();
         #endregion
         private RangeInt32? _NAM9Location;
-        public Worldspace.NAM9DataType NAM9DataTypeState { get; private set; }
         #region ObjectBoundsMax
         private int _ObjectBoundsMaxLocation => _NAM9Location!.Value.Min;
         public partial P2Float GetObjectBoundsMaxCustom();

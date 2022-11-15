@@ -85,9 +85,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         public Byte Unknown { get; set; } = default;
         #endregion
-        #region TNAMDataTypeState
-        public PlacedObjectMapMarker.TNAMDataType TNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -131,21 +128,18 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Name = initialValue;
                 this.Type = initialValue;
                 this.Unknown = initialValue;
-                this.TNAMDataTypeState = initialValue;
             }
 
             public Mask(
                 TItem Flags,
                 TItem Name,
                 TItem Type,
-                TItem Unknown,
-                TItem TNAMDataTypeState)
+                TItem Unknown)
             {
                 this.Flags = Flags;
                 this.Name = Name;
                 this.Type = Type;
                 this.Unknown = Unknown;
-                this.TNAMDataTypeState = TNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -161,7 +155,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Name;
             public TItem Type;
             public TItem Unknown;
-            public TItem TNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -178,7 +171,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.TNAMDataTypeState, rhs.TNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -188,7 +180,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Name);
                 hash.Add(this.Type);
                 hash.Add(this.Unknown);
-                hash.Add(this.TNAMDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -201,7 +192,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Type)) return false;
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.TNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -213,7 +203,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Name)) return true;
                 if (eval(this.Type)) return true;
                 if (eval(this.Unknown)) return true;
-                if (eval(this.TNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -232,7 +221,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Name = eval(this.Name);
                 obj.Type = eval(this.Type);
                 obj.Unknown = eval(this.Unknown);
-                obj.TNAMDataTypeState = eval(this.TNAMDataTypeState);
             }
             #endregion
 
@@ -267,10 +255,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.TNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -299,7 +283,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Name;
             public Exception? Type;
             public Exception? Unknown;
-            public Exception? TNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -316,8 +299,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Type;
                     case PlacedObjectMapMarker_FieldIndex.Unknown:
                         return Unknown;
-                    case PlacedObjectMapMarker_FieldIndex.TNAMDataTypeState:
-                        return TNAMDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -339,9 +320,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case PlacedObjectMapMarker_FieldIndex.Unknown:
                         this.Unknown = ex;
-                        break;
-                    case PlacedObjectMapMarker_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -365,9 +343,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case PlacedObjectMapMarker_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case PlacedObjectMapMarker_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -380,7 +355,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Name != null) return true;
                 if (Type != null) return true;
                 if (Unknown != null) return true;
-                if (TNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -418,9 +392,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Unknown, "Unknown");
                 }
-                {
-                    sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -433,7 +404,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.TNAMDataTypeState = this.TNAMDataTypeState.Combine(rhs.TNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -461,7 +431,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Name;
             public bool Type;
             public bool Unknown;
-            public bool TNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -475,7 +444,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Name = defaultOn;
                 this.Type = defaultOn;
                 this.Unknown = defaultOn;
-                this.TNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -495,7 +463,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Name, null));
                 ret.Add((Type, null));
                 ret.Add((Unknown, null));
-                ret.Add((TNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -503,13 +470,6 @@ namespace Mutagen.Bethesda.Fallout4
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
-        }
-        #endregion
-
-        #region Mutagen
-        [Flags]
-        public enum TNAMDataType
-        {
         }
         #endregion
 
@@ -584,7 +544,6 @@ namespace Mutagen.Bethesda.Fallout4
         new TranslatedString Name { get; set; }
         new PlacedObjectMapMarker.Types Type { get; set; }
         new Byte Unknown { get; set; }
-        new PlacedObjectMapMarker.TNAMDataType TNAMDataTypeState { get; set; }
     }
 
     public partial interface IPlacedObjectMapMarkerGetter :
@@ -610,7 +569,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         PlacedObjectMapMarker.Types Type { get; }
         Byte Unknown { get; }
-        PlacedObjectMapMarker.TNAMDataType TNAMDataTypeState { get; }
 
     }
 
@@ -784,7 +742,6 @@ namespace Mutagen.Bethesda.Fallout4
         Name = 1,
         Type = 2,
         Unknown = 3,
-        TNAMDataTypeState = 4,
     }
     #endregion
 
@@ -802,9 +759,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "a2bde384-d1b4-4065-883f-6f4181960d02";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(PlacedObjectMapMarker.Mask<>);
 
@@ -887,7 +844,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Name.Clear();
             item.Type = default;
             item.Unknown = default;
-            item.TNAMDataTypeState = default;
         }
         
         #region Mutagen
@@ -907,7 +863,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PlacedObjectMapMarkerBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: PlacedObjectMapMarkerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -942,7 +897,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Type = item.Type == rhs.Type;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.TNAMDataTypeState = item.TNAMDataTypeState == rhs.TNAMDataTypeState;
         }
         
         public string Print(
@@ -1003,10 +957,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Unknown, "Unknown");
             }
-            if (printMask?.TNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
-            }
         }
         
         #region Equals and Hash
@@ -1032,10 +982,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.TNAMDataTypeState) ?? true))
-            {
-                if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -1046,7 +992,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Name);
             hash.Add(item.Type);
             hash.Add(item.Unknown);
-            hash.Add(item.TNAMDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1094,10 +1039,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObjectMapMarker_FieldIndex.TNAMDataTypeState) ?? true))
-            {
-                item.TNAMDataTypeState = rhs.TNAMDataTypeState;
             }
         }
         
@@ -1191,12 +1132,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static readonly PlacedObjectMapMarkerBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IPlacedObjectMapMarkerGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IPlacedObjectMapMarkerGetter item,
             MutagenWriter writer,
@@ -1228,9 +1163,6 @@ namespace Mutagen.Bethesda.Fallout4
             IPlacedObjectMapMarkerGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1253,12 +1185,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class PlacedObjectMapMarkerBinaryCreateTranslation
     {
         public static readonly PlacedObjectMapMarkerBinaryCreateTranslation Instance = new PlacedObjectMapMarkerBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IPlacedObjectMapMarker item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IPlacedObjectMapMarker item,
@@ -1383,7 +1309,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         private RangeInt32? _TNAMLocation;
-        public PlacedObjectMapMarker.TNAMDataType TNAMDataTypeState { get; private set; }
         #region Type
         private int _TypeLocation => _TNAMLocation!.Value.Min;
         private bool _Type_IsSet => _TNAMLocation.HasValue;

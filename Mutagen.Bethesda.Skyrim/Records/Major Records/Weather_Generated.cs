@@ -439,12 +439,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region NAM0DataTypeState
         public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default;
         #endregion
-        #region FNAMDataTypeState
-        public Weather.FNAMDataType FNAMDataTypeState { get; set; } = default;
-        #endregion
-        #region DATADataTypeState
-        public Weather.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -531,8 +525,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.SunGlareLensFlare = initialValue;
                 this.NAM0DataTypeState = initialValue;
-                this.FNAMDataTypeState = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -603,9 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem NAM3,
                 TItem Aurora,
                 TItem SunGlareLensFlare,
-                TItem NAM0DataTypeState,
-                TItem FNAMDataTypeState,
-                TItem DATADataTypeState)
+                TItem NAM0DataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -676,8 +666,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(Aurora, new Model.Mask<TItem>(Aurora));
                 this.SunGlareLensFlare = SunGlareLensFlare;
                 this.NAM0DataTypeState = NAM0DataTypeState;
-                this.FNAMDataTypeState = FNAMDataTypeState;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -750,8 +738,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Model.Mask<TItem>?>? Aurora { get; set; }
             public TItem SunGlareLensFlare;
             public TItem NAM0DataTypeState;
-            public TItem FNAMDataTypeState;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -826,8 +812,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Aurora, rhs.Aurora)) return false;
                 if (!object.Equals(this.SunGlareLensFlare, rhs.SunGlareLensFlare)) return false;
                 if (!object.Equals(this.NAM0DataTypeState, rhs.NAM0DataTypeState)) return false;
-                if (!object.Equals(this.FNAMDataTypeState, rhs.FNAMDataTypeState)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -894,8 +878,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Aurora);
                 hash.Add(this.SunGlareLensFlare);
                 hash.Add(this.NAM0DataTypeState);
-                hash.Add(this.FNAMDataTypeState);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1093,8 +1075,6 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.SunGlareLensFlare)) return false;
                 if (!eval(this.NAM0DataTypeState)) return false;
-                if (!eval(this.FNAMDataTypeState)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -1290,8 +1270,6 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (eval(this.SunGlareLensFlare)) return true;
                 if (eval(this.NAM0DataTypeState)) return true;
-                if (eval(this.FNAMDataTypeState)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1422,8 +1400,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Aurora = this.Aurora == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Aurora.Overall), this.Aurora.Specific?.Translate(eval));
                 obj.SunGlareLensFlare = eval(this.SunGlareLensFlare);
                 obj.NAM0DataTypeState = eval(this.NAM0DataTypeState);
-                obj.FNAMDataTypeState = eval(this.FNAMDataTypeState);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -1750,14 +1726,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
                     }
-                    if (printMask?.FNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1830,8 +1798,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Model.ErrorMask?>? Aurora;
             public Exception? SunGlareLensFlare;
             public Exception? NAM0DataTypeState;
-            public Exception? FNAMDataTypeState;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1962,10 +1928,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return SunGlareLensFlare;
                     case Weather_FieldIndex.NAM0DataTypeState:
                         return NAM0DataTypeState;
-                    case Weather_FieldIndex.FNAMDataTypeState:
-                        return FNAMDataTypeState;
-                    case Weather_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -2158,12 +2120,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Weather_FieldIndex.NAM0DataTypeState:
                         this.NAM0DataTypeState = ex;
-                        break;
-                    case Weather_FieldIndex.FNAMDataTypeState:
-                        this.FNAMDataTypeState = ex;
-                        break;
-                    case Weather_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -2359,12 +2315,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.NAM0DataTypeState:
                         this.NAM0DataTypeState = (Exception?)obj;
                         break;
-                    case Weather_FieldIndex.FNAMDataTypeState:
-                        this.FNAMDataTypeState = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -2435,8 +2385,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Aurora != null) return true;
                 if (SunGlareLensFlare != null) return true;
                 if (NAM0DataTypeState != null) return true;
-                if (FNAMDataTypeState != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -2668,12 +2616,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
                 }
-                {
-                    sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
-                }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -2743,8 +2685,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Aurora = this.Aurora.Combine(rhs.Aurora, (l, r) => l.Combine(r));
                 ret.SunGlareLensFlare = this.SunGlareLensFlare.Combine(rhs.SunGlareLensFlare);
                 ret.NAM0DataTypeState = this.NAM0DataTypeState.Combine(rhs.NAM0DataTypeState);
-                ret.FNAMDataTypeState = this.FNAMDataTypeState.Combine(rhs.FNAMDataTypeState);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2828,8 +2768,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Model.TranslationMask? Aurora;
             public bool SunGlareLensFlare;
             public bool NAM0DataTypeState;
-            public bool FNAMDataTypeState;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -2876,8 +2814,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NAM3 = defaultOn;
                 this.SunGlareLensFlare = defaultOn;
                 this.NAM0DataTypeState = defaultOn;
-                this.FNAMDataTypeState = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -2946,8 +2882,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Aurora != null ? Aurora.OnOverall : DefaultOn, Aurora?.GetCrystal()));
                 ret.Add((SunGlareLensFlare, null));
                 ret.Add((NAM0DataTypeState, null));
-                ret.Add((FNAMDataTypeState, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3016,14 +2950,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1,
             Break1 = 2
-        }
-        [Flags]
-        public enum FNAMDataType
-        {
-        }
-        [Flags]
-        public enum DATADataType
-        {
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WeatherCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WeatherSetterCommon.Instance.EnumerateListedAssetLinks(this);
@@ -3174,8 +3100,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Aurora { get; set; }
         new IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; }
         new Weather.NAM0DataType NAM0DataTypeState { get; set; }
-        new Weather.FNAMDataType FNAMDataTypeState { get; set; }
-        new Weather.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IWeatherInternal :
@@ -3256,8 +3180,6 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Aurora { get; }
         IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare { get; }
         Weather.NAM0DataType NAM0DataTypeState { get; }
-        Weather.FNAMDataType FNAMDataTypeState { get; }
-        Weather.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -3495,8 +3417,6 @@ namespace Mutagen.Bethesda.Skyrim
         Aurora = 65,
         SunGlareLensFlare = 66,
         NAM0DataTypeState = 67,
-        FNAMDataTypeState = 68,
-        DATADataTypeState = 69,
     }
     #endregion
 
@@ -3514,9 +3434,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "2a067384-8f2a-4245-9c26-092e2a0351f0";
 
-        public const ushort AdditionalFieldCount = 63;
+        public const ushort AdditionalFieldCount = 61;
 
-        public const ushort FieldCount = 70;
+        public const ushort FieldCount = 68;
 
         public static readonly Type MaskType = typeof(Weather.Mask<>);
 
@@ -3679,8 +3599,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Aurora = null;
             item.SunGlareLensFlare.Clear();
             item.NAM0DataTypeState = default;
-            item.FNAMDataTypeState = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -3891,8 +3809,6 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
             ret.SunGlareLensFlare = item.SunGlareLensFlare.Equals(rhs.SunGlareLensFlare);
             ret.NAM0DataTypeState = item.NAM0DataTypeState == rhs.NAM0DataTypeState;
-            ret.FNAMDataTypeState = item.FNAMDataTypeState == rhs.FNAMDataTypeState;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -4237,14 +4153,6 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.NAM0DataTypeState ?? true)
             {
                 sb.AppendItem(item.NAM0DataTypeState, "NAM0DataTypeState");
-            }
-            if (printMask?.FNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -4624,14 +4532,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
-            {
-                if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -4757,8 +4657,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
             hash.Add(item.SunGlareLensFlare);
             hash.Add(item.NAM0DataTypeState);
-            hash.Add(item.FNAMDataTypeState);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -5658,14 +5556,6 @@ namespace Mutagen.Bethesda.Skyrim
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {
                 item.NAM0DataTypeState = rhs.NAM0DataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
-            {
-                item.FNAMDataTypeState = rhs.FNAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -6860,7 +6750,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IWeatherColorGetter MoonGlareColor => _MoonGlareColor ?? new WeatherColor();
         #endregion
         private RangeInt32? _FNAMLocation;
-        public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
         #region FogDistanceDayNear
         private int _FogDistanceDayNearLocation => _FNAMLocation!.Value.Min;
         private bool _FogDistanceDayNear_IsSet => _FNAMLocation.HasValue;
@@ -6902,7 +6791,6 @@ namespace Mutagen.Bethesda.Skyrim
         public Single FogDistanceNightMax => _FogDistanceNightMax_IsSet ? _recordData.Slice(_FogDistanceNightMaxLocation, 4).Float() : default;
         #endregion
         private RangeInt32? _DATALocation;
-        public Weather.DATADataType DATADataTypeState { get; private set; }
         #region WindSpeed
         private int _WindSpeedLocation => _DATALocation!.Value.Min;
         private bool _WindSpeed_IsSet => _DATALocation.HasValue;

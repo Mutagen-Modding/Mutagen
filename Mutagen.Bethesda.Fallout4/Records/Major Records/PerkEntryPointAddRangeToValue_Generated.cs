@@ -106,7 +106,6 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem PRKEDataTypeState,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
                 TItem PerkEntryID,
@@ -116,7 +115,6 @@ namespace Mutagen.Bethesda.Fallout4
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
-                PRKEDataTypeState: PRKEDataTypeState,
                 EntryPoint: EntryPoint,
                 PerkConditionTabCount: PerkConditionTabCount,
                 PerkEntryID: PerkEntryID)
@@ -607,12 +605,11 @@ namespace Mutagen.Bethesda.Fallout4
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        PRKEDataTypeState = 3,
-        EntryPoint = 4,
-        PerkConditionTabCount = 5,
-        PerkEntryID = 6,
-        From = 7,
-        To = 8,
+        EntryPoint = 3,
+        PerkConditionTabCount = 4,
+        PerkEntryID = 5,
+        From = 6,
+        To = 7,
     }
     #endregion
 
@@ -632,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(PerkEntryPointAddRangeToValue.Mask<>);
 
@@ -864,8 +861,6 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.PRKEDataTypeState:
-                    return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
@@ -886,8 +881,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
-                    return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

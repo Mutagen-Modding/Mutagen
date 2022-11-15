@@ -358,9 +358,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IBodyPartGetter.TwistVariablePrefix => this.TwistVariablePrefix;
         #endregion
-        #region BPNDDataTypeState
-        public BodyPart.BPNDDataType BPNDDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -449,7 +446,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MeatCapTextureSet = initialValue;
                 this.CollarTextureSet = initialValue;
                 this.TwistVariablePrefix = initialValue;
-                this.BPNDDataTypeState = initialValue;
             }
 
             public Mask(
@@ -501,8 +497,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem OnCrippleBloodImpactMaterialType,
                 TItem MeatCapTextureSet,
                 TItem CollarTextureSet,
-                TItem TwistVariablePrefix,
-                TItem BPNDDataTypeState)
+                TItem TwistVariablePrefix)
             {
                 this.Name = Name;
                 this.PartNode = PartNode;
@@ -553,7 +548,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MeatCapTextureSet = MeatCapTextureSet;
                 this.CollarTextureSet = CollarTextureSet;
                 this.TwistVariablePrefix = TwistVariablePrefix;
-                this.BPNDDataTypeState = BPNDDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -614,7 +608,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem MeatCapTextureSet;
             public TItem CollarTextureSet;
             public TItem TwistVariablePrefix;
-            public TItem BPNDDataTypeState;
             #endregion
 
             #region Equals
@@ -676,7 +669,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.MeatCapTextureSet, rhs.MeatCapTextureSet)) return false;
                 if (!object.Equals(this.CollarTextureSet, rhs.CollarTextureSet)) return false;
                 if (!object.Equals(this.TwistVariablePrefix, rhs.TwistVariablePrefix)) return false;
-                if (!object.Equals(this.BPNDDataTypeState, rhs.BPNDDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -731,7 +723,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.MeatCapTextureSet);
                 hash.Add(this.CollarTextureSet);
                 hash.Add(this.TwistVariablePrefix);
-                hash.Add(this.BPNDDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -789,7 +780,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.MeatCapTextureSet)) return false;
                 if (!eval(this.CollarTextureSet)) return false;
                 if (!eval(this.TwistVariablePrefix)) return false;
-                if (!eval(this.BPNDDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -846,7 +836,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.MeatCapTextureSet)) return true;
                 if (eval(this.CollarTextureSet)) return true;
                 if (eval(this.TwistVariablePrefix)) return true;
-                if (eval(this.BPNDDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -910,7 +899,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.MeatCapTextureSet = eval(this.MeatCapTextureSet);
                 obj.CollarTextureSet = eval(this.CollarTextureSet);
                 obj.TwistVariablePrefix = eval(this.TwistVariablePrefix);
-                obj.BPNDDataTypeState = eval(this.BPNDDataTypeState);
             }
             #endregion
 
@@ -1125,10 +1113,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(TwistVariablePrefix, "TwistVariablePrefix");
                     }
-                    if (printMask?.BPNDDataTypeState ?? true)
-                    {
-                        sb.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1202,7 +1186,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? MeatCapTextureSet;
             public Exception? CollarTextureSet;
             public Exception? TwistVariablePrefix;
-            public Exception? BPNDDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1309,8 +1292,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return CollarTextureSet;
                     case BodyPart_FieldIndex.TwistVariablePrefix:
                         return TwistVariablePrefix;
-                    case BodyPart_FieldIndex.BPNDDataTypeState:
-                        return BPNDDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1467,9 +1448,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case BodyPart_FieldIndex.TwistVariablePrefix:
                         this.TwistVariablePrefix = ex;
-                        break;
-                    case BodyPart_FieldIndex.BPNDDataTypeState:
-                        this.BPNDDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1628,9 +1606,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case BodyPart_FieldIndex.TwistVariablePrefix:
                         this.TwistVariablePrefix = (Exception?)obj;
                         break;
-                    case BodyPart_FieldIndex.BPNDDataTypeState:
-                        this.BPNDDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1688,7 +1663,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (MeatCapTextureSet != null) return true;
                 if (CollarTextureSet != null) return true;
                 if (TwistVariablePrefix != null) return true;
-                if (BPNDDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1861,9 +1835,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(TwistVariablePrefix, "TwistVariablePrefix");
                 }
-                {
-                    sb.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
-                }
             }
             #endregion
 
@@ -1921,7 +1892,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MeatCapTextureSet = this.MeatCapTextureSet.Combine(rhs.MeatCapTextureSet);
                 ret.CollarTextureSet = this.CollarTextureSet.Combine(rhs.CollarTextureSet);
                 ret.TwistVariablePrefix = this.TwistVariablePrefix.Combine(rhs.TwistVariablePrefix);
-                ret.BPNDDataTypeState = this.BPNDDataTypeState.Combine(rhs.BPNDDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1994,7 +1964,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool MeatCapTextureSet;
             public bool CollarTextureSet;
             public bool TwistVariablePrefix;
-            public bool BPNDDataTypeState;
             #endregion
 
             #region Ctors
@@ -2053,7 +2022,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MeatCapTextureSet = defaultOn;
                 this.CollarTextureSet = defaultOn;
                 this.TwistVariablePrefix = defaultOn;
-                this.BPNDDataTypeState = defaultOn;
             }
 
             #endregion
@@ -2118,7 +2086,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((MeatCapTextureSet, null));
                 ret.Add((CollarTextureSet, null));
                 ret.Add((TwistVariablePrefix, null));
-                ret.Add((BPNDDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2132,10 +2099,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartSetterCommon.Instance.RemapLinks(this, mapping);
-        [Flags]
-        public enum BPNDDataType
-        {
-        }
         #endregion
 
         #region Binary Translation
@@ -2257,7 +2220,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ITextureSetGetter> MeatCapTextureSet { get; set; }
         new IFormLinkNullable<ITextureSetGetter> CollarTextureSet { get; set; }
         new String? TwistVariablePrefix { get; set; }
-        new BodyPart.BPNDDataType BPNDDataTypeState { get; set; }
     }
 
     public partial interface IBodyPartGetter :
@@ -2331,7 +2293,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ITextureSetGetter> MeatCapTextureSet { get; }
         IFormLinkNullableGetter<ITextureSetGetter> CollarTextureSet { get; }
         String? TwistVariablePrefix { get; }
-        BodyPart.BPNDDataType BPNDDataTypeState { get; }
 
     }
 
@@ -2550,7 +2511,6 @@ namespace Mutagen.Bethesda.Fallout4
         MeatCapTextureSet = 46,
         CollarTextureSet = 47,
         TwistVariablePrefix = 48,
-        BPNDDataTypeState = 49,
     }
     #endregion
 
@@ -2568,9 +2528,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "776b6f1c-d6fa-47db-a84a-450e3a2d36a4";
 
-        public const ushort AdditionalFieldCount = 50;
+        public const ushort AdditionalFieldCount = 49;
 
-        public const ushort FieldCount = 50;
+        public const ushort FieldCount = 49;
 
         public static readonly Type MaskType = typeof(BodyPart.Mask<>);
 
@@ -2711,7 +2671,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.MeatCapTextureSet.Clear();
             item.CollarTextureSet.Clear();
             item.TwistVariablePrefix = default;
-            item.BPNDDataTypeState = default;
         }
         
         #region Mutagen
@@ -2747,7 +2706,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: BodyPartBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: BodyPartBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -2827,7 +2785,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.MeatCapTextureSet = item.MeatCapTextureSet.Equals(rhs.MeatCapTextureSet);
             ret.CollarTextureSet = item.CollarTextureSet.Equals(rhs.CollarTextureSet);
             ret.TwistVariablePrefix = string.Equals(item.TwistVariablePrefix, rhs.TwistVariablePrefix);
-            ret.BPNDDataTypeState = item.BPNDDataTypeState == rhs.BPNDDataTypeState;
         }
         
         public string Print(
@@ -3073,10 +3030,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(TwistVariablePrefixItem, "TwistVariablePrefix");
             }
-            if (printMask?.BPNDDataTypeState ?? true)
-            {
-                sb.AppendItem(item.BPNDDataTypeState, "BPNDDataTypeState");
-            }
         }
         
         #region Equals and Hash
@@ -3282,10 +3235,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!string.Equals(lhs.TwistVariablePrefix, rhs.TwistVariablePrefix)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.BPNDDataTypeState) ?? true))
-            {
-                if (lhs.BPNDDataTypeState != rhs.BPNDDataTypeState) return false;
-            }
             return true;
         }
         
@@ -3356,7 +3305,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(TwistVariablePrefixitem);
             }
-            hash.Add(item.BPNDDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -3623,10 +3571,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.TwistVariablePrefix = rhs.TwistVariablePrefix;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.BPNDDataTypeState) ?? true))
-            {
-                item.BPNDDataTypeState = rhs.BPNDDataTypeState;
-            }
         }
         
         #endregion
@@ -3718,12 +3662,6 @@ namespace Mutagen.Bethesda.Fallout4
     public partial class BodyPartBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public static readonly BodyPartBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IBodyPartGetter item,
-            MutagenWriter writer)
-        {
-        }
 
         public static void WriteRecordTypes(
             IBodyPartGetter item,
@@ -3904,9 +3842,6 @@ namespace Mutagen.Bethesda.Fallout4
             IBodyPartGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -3929,12 +3864,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class BodyPartBinaryCreateTranslation
     {
         public static readonly BodyPartBinaryCreateTranslation Instance = new BodyPartBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IBodyPart item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IBodyPart item,
@@ -4233,7 +4162,6 @@ namespace Mutagen.Bethesda.Fallout4
         public String VatsTarget => _VatsTargetLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VatsTargetLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         private RangeInt32? _BPNDLocation;
-        public BodyPart.BPNDDataType BPNDDataTypeState { get; private set; }
         #region DamageMult
         private int _DamageMultLocation => _BPNDLocation!.Value.Min;
         private bool _DamageMult_IsSet => _BPNDLocation.HasValue;

@@ -263,9 +263,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region ENITDataTypeState
-        public Ingestible.ENITDataType ENITDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -308,7 +305,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AddictionChance = initialValue;
                 this.ConsumeSound = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.ENITDataTypeState = initialValue;
             }
 
             public Mask(
@@ -335,8 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Addiction,
                 TItem AddictionChance,
                 TItem ConsumeSound,
-                TItem Effects,
-                TItem ENITDataTypeState)
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -363,7 +358,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AddictionChance = AddictionChance;
                 this.ConsumeSound = ConsumeSound;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.ENITDataTypeState = ENITDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -392,7 +386,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem AddictionChance;
             public TItem ConsumeSound;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
-            public TItem ENITDataTypeState;
             #endregion
 
             #region Equals
@@ -423,7 +416,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.AddictionChance, rhs.AddictionChance)) return false;
                 if (!object.Equals(this.ConsumeSound, rhs.ConsumeSound)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
-                if (!object.Equals(this.ENITDataTypeState, rhs.ENITDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -446,7 +438,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.AddictionChance);
                 hash.Add(this.ConsumeSound);
                 hash.Add(this.Effects);
-                hash.Add(this.ENITDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -511,7 +502,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.ENITDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -574,7 +564,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.ENITDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -634,7 +623,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.ENITDataTypeState = eval(this.ENITDataTypeState);
             }
             #endregion
 
@@ -753,10 +741,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.ENITDataTypeState ?? true)
-                    {
-                        sb.AppendItem(ENITDataTypeState, "ENITDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -785,7 +769,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? AddictionChance;
             public Exception? ConsumeSound;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
-            public Exception? ENITDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -828,8 +811,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return ConsumeSound;
                     case Ingestible_FieldIndex.Effects:
                         return Effects;
-                    case Ingestible_FieldIndex.ENITDataTypeState:
-                        return ENITDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -890,9 +871,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Ingestible_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Ingestible_FieldIndex.ENITDataTypeState:
-                        this.ENITDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -956,9 +934,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Ingestible_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
-                    case Ingestible_FieldIndex.ENITDataTypeState:
-                        this.ENITDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -985,7 +960,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (AddictionChance != null) return true;
                 if (ConsumeSound != null) return true;
                 if (Effects != null) return true;
-                if (ENITDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1087,9 +1061,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(ENITDataTypeState, "ENITDataTypeState");
-                }
             }
             #endregion
 
@@ -1115,7 +1086,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.AddictionChance = this.AddictionChance.Combine(rhs.AddictionChance);
                 ret.ConsumeSound = this.ConsumeSound.Combine(rhs.ConsumeSound);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-                ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1155,7 +1125,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool AddictionChance;
             public bool ConsumeSound;
             public Effect.TranslationMask? Effects;
-            public bool ENITDataTypeState;
             #endregion
 
             #region Ctors
@@ -1176,7 +1145,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Addiction = defaultOn;
                 this.AddictionChance = defaultOn;
                 this.ConsumeSound = defaultOn;
-                this.ENITDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1201,7 +1169,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((AddictionChance, null));
                 ret.Add((ConsumeSound, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
-                ret.Add((ENITDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1269,10 +1236,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum ENITDataType
-        {
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => IngestibleCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => IngestibleSetterCommon.Instance.EnumerateListedAssetLinks(this);
@@ -1409,7 +1372,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AddictionChance { get; set; }
         new IFormLink<ISoundDescriptorGetter> ConsumeSound { get; set; }
         new ExtendedList<Effect> Effects { get; }
-        new Ingestible.ENITDataType ENITDataTypeState { get; set; }
         #region Mutagen
         new Ingestible.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1490,7 +1452,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single AddictionChance { get; }
         IFormLinkGetter<ISoundDescriptorGetter> ConsumeSound { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
-        Ingestible.ENITDataType ENITDataTypeState { get; }
 
         #region Mutagen
         Ingestible.MajorFlag MajorFlags { get; }
@@ -1688,7 +1649,6 @@ namespace Mutagen.Bethesda.Skyrim
         AddictionChance = 21,
         ConsumeSound = 22,
         Effects = 23,
-        ENITDataTypeState = 24,
     }
     #endregion
 
@@ -1706,9 +1666,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "f04a4e71-fb0c-4416-8623-5a6ac42fefb4";
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 25;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(Ingestible.Mask<>);
 
@@ -1822,7 +1782,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.AddictionChance = default;
             item.ConsumeSound.Clear();
             item.Effects.Clear();
-            item.ENITDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1989,7 +1948,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ENITDataTypeState = item.ENITDataTypeState == rhs.ENITDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2133,10 +2091,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.ENITDataTypeState ?? true)
-            {
-                sb.AppendItem(item.ENITDataTypeState, "ENITDataTypeState");
-            }
         }
         
         public static Ingestible_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2271,10 +2225,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.Effects)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ENITDataTypeState) ?? true))
-            {
-                if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
-            }
             return true;
         }
         
@@ -2335,7 +2285,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.AddictionChance);
             hash.Add(item.ConsumeSound);
             hash.Add(item.Effects);
-            hash.Add(item.ENITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2706,10 +2655,6 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ENITDataTypeState) ?? true))
-            {
-                item.ENITDataTypeState = rhs.ENITDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2858,15 +2803,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly IngestibleBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IIngestibleGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IIngestibleGetter item,
             MutagenWriter writer,
@@ -2983,7 +2919,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3043,15 +2979,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly IngestibleBinaryCreateTranslation Instance = new IngestibleBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ALCH;
-        public static void FillBinaryStructs(
-            IIngestibleInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IIngestibleInternal item,
             MutagenFrame frame,
@@ -3283,7 +3210,6 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         private RangeInt32? _ENITLocation;
-        public Ingestible.ENITDataType ENITDataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _ENITLocation!.Value.Min;
         private bool _Value_IsSet => _ENITLocation.HasValue;

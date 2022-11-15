@@ -66,9 +66,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region NoCrime
         public Boolean NoCrime { get; set; } = default;
         #endregion
-        #region XOWNDataTypeState
-        public Ownership.XOWNDataType XOWNDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -111,19 +108,16 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Owner = initialValue;
                 this.Unknown = initialValue;
                 this.NoCrime = initialValue;
-                this.XOWNDataTypeState = initialValue;
             }
 
             public Mask(
                 TItem Owner,
                 TItem Unknown,
-                TItem NoCrime,
-                TItem XOWNDataTypeState)
+                TItem NoCrime)
             {
                 this.Owner = Owner;
                 this.Unknown = Unknown;
                 this.NoCrime = NoCrime;
-                this.XOWNDataTypeState = XOWNDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -138,7 +132,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Owner;
             public TItem Unknown;
             public TItem NoCrime;
-            public TItem XOWNDataTypeState;
             #endregion
 
             #region Equals
@@ -154,7 +147,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Owner, rhs.Owner)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.NoCrime, rhs.NoCrime)) return false;
-                if (!object.Equals(this.XOWNDataTypeState, rhs.XOWNDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -163,7 +155,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Owner);
                 hash.Add(this.Unknown);
                 hash.Add(this.NoCrime);
-                hash.Add(this.XOWNDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -175,7 +166,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Owner)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.NoCrime)) return false;
-                if (!eval(this.XOWNDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -186,7 +176,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Owner)) return true;
                 if (eval(this.Unknown)) return true;
                 if (eval(this.NoCrime)) return true;
-                if (eval(this.XOWNDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -204,7 +193,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Owner = eval(this.Owner);
                 obj.Unknown = eval(this.Unknown);
                 obj.NoCrime = eval(this.NoCrime);
-                obj.XOWNDataTypeState = eval(this.XOWNDataTypeState);
             }
             #endregion
 
@@ -235,10 +223,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(NoCrime, "NoCrime");
                     }
-                    if (printMask?.XOWNDataTypeState ?? true)
-                    {
-                        sb.AppendItem(XOWNDataTypeState, "XOWNDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -266,7 +250,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Owner;
             public Exception? Unknown;
             public Exception? NoCrime;
-            public Exception? XOWNDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -281,8 +264,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Unknown;
                     case Ownership_FieldIndex.NoCrime:
                         return NoCrime;
-                    case Ownership_FieldIndex.XOWNDataTypeState:
-                        return XOWNDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -301,9 +282,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Ownership_FieldIndex.NoCrime:
                         this.NoCrime = ex;
-                        break;
-                    case Ownership_FieldIndex.XOWNDataTypeState:
-                        this.XOWNDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -324,9 +302,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Ownership_FieldIndex.NoCrime:
                         this.NoCrime = (Exception?)obj;
                         break;
-                    case Ownership_FieldIndex.XOWNDataTypeState:
-                        this.XOWNDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -338,7 +313,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Owner != null) return true;
                 if (Unknown != null) return true;
                 if (NoCrime != null) return true;
-                if (XOWNDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -373,9 +347,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(NoCrime, "NoCrime");
                 }
-                {
-                    sb.AppendItem(XOWNDataTypeState, "XOWNDataTypeState");
-                }
             }
             #endregion
 
@@ -387,7 +358,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Owner = this.Owner.Combine(rhs.Owner);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.NoCrime = this.NoCrime.Combine(rhs.NoCrime);
-                ret.XOWNDataTypeState = this.XOWNDataTypeState.Combine(rhs.XOWNDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -414,7 +384,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Owner;
             public bool Unknown;
             public bool NoCrime;
-            public bool XOWNDataTypeState;
             #endregion
 
             #region Ctors
@@ -427,7 +396,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Owner = defaultOn;
                 this.Unknown = defaultOn;
                 this.NoCrime = defaultOn;
-                this.XOWNDataTypeState = defaultOn;
             }
 
             #endregion
@@ -446,7 +414,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Owner, null));
                 ret.Add((Unknown, null));
                 ret.Add((NoCrime, null));
-                ret.Add((XOWNDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -460,10 +427,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OwnershipCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OwnershipSetterCommon.Instance.RemapLinks(this, mapping);
-        [Flags]
-        public enum XOWNDataType
-        {
-        }
         #endregion
 
         #region Binary Translation
@@ -532,7 +495,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLink<IOwnerGetter> Owner { get; set; }
         new Int32 Unknown { get; set; }
         new Boolean NoCrime { get; set; }
-        new Ownership.XOWNDataType XOWNDataTypeState { get; set; }
     }
 
     public partial interface IOwnershipGetter :
@@ -551,7 +513,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IOwnerGetter> Owner { get; }
         Int32 Unknown { get; }
         Boolean NoCrime { get; }
-        Ownership.XOWNDataType XOWNDataTypeState { get; }
 
     }
 
@@ -724,7 +685,6 @@ namespace Mutagen.Bethesda.Fallout4
         Owner = 0,
         Unknown = 1,
         NoCrime = 2,
-        XOWNDataTypeState = 3,
     }
     #endregion
 
@@ -742,9 +702,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "818a652b-094d-4aef-8854-d66f76b2037e";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(Ownership.Mask<>);
 
@@ -822,7 +782,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Owner.Clear();
             item.Unknown = default;
             item.NoCrime = default;
-            item.XOWNDataTypeState = default;
         }
         
         #region Mutagen
@@ -843,7 +802,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: OwnershipBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: OwnershipBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -877,7 +835,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Owner = item.Owner.Equals(rhs.Owner);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.NoCrime = item.NoCrime == rhs.NoCrime;
-            ret.XOWNDataTypeState = item.XOWNDataTypeState == rhs.XOWNDataTypeState;
         }
         
         public string Print(
@@ -934,10 +891,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.NoCrime, "NoCrime");
             }
-            if (printMask?.XOWNDataTypeState ?? true)
-            {
-                sb.AppendItem(item.XOWNDataTypeState, "XOWNDataTypeState");
-            }
         }
         
         #region Equals and Hash
@@ -959,10 +912,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.NoCrime != rhs.NoCrime) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Ownership_FieldIndex.XOWNDataTypeState) ?? true))
-            {
-                if (lhs.XOWNDataTypeState != rhs.XOWNDataTypeState) return false;
-            }
             return true;
         }
         
@@ -972,7 +921,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Owner);
             hash.Add(item.Unknown);
             hash.Add(item.NoCrime);
-            hash.Add(item.XOWNDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1017,10 +965,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.NoCrime) ?? true))
             {
                 item.NoCrime = rhs.NoCrime;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.XOWNDataTypeState) ?? true))
-            {
-                item.XOWNDataTypeState = rhs.XOWNDataTypeState;
             }
         }
         
@@ -1114,12 +1058,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static readonly OwnershipBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IOwnershipGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IOwnershipGetter item,
             MutagenWriter writer,
@@ -1140,9 +1078,6 @@ namespace Mutagen.Bethesda.Fallout4
             IOwnershipGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1165,12 +1100,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class OwnershipBinaryCreateTranslation
     {
         public static readonly OwnershipBinaryCreateTranslation Instance = new OwnershipBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IOwnership item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IOwnership item,
@@ -1270,7 +1199,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         private RangeInt32? _XOWNLocation;
-        public Ownership.XOWNDataType XOWNDataTypeState { get; private set; }
         #region Owner
         private int _OwnerLocation => _XOWNLocation!.Value.Min;
         private bool _Owner_IsSet => _XOWNLocation.HasValue;

@@ -266,9 +266,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IBookGetter.Description => this.Description;
         #endregion
-        #region DATADataTypeState
-        public Book.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -312,7 +309,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = initialValue;
                 this.InventoryArt = initialValue;
                 this.Description = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -340,8 +336,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Value,
                 TItem Weight,
                 TItem InventoryArt,
-                TItem Description,
-                TItem DATADataTypeState)
+                TItem Description)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -369,7 +364,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = Weight;
                 this.InventoryArt = InventoryArt;
                 this.Description = Description;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -399,7 +393,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Weight;
             public TItem InventoryArt;
             public TItem Description;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -431,7 +424,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.InventoryArt, rhs.InventoryArt)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -455,7 +447,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Weight);
                 hash.Add(this.InventoryArt);
                 hash.Add(this.Description);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -518,7 +509,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Weight)) return false;
                 if (!eval(this.InventoryArt)) return false;
                 if (!eval(this.Description)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -579,7 +569,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Weight)) return true;
                 if (eval(this.InventoryArt)) return true;
                 if (eval(this.Description)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -626,7 +615,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Weight = eval(this.Weight);
                 obj.InventoryArt = eval(this.InventoryArt);
                 obj.Description = eval(this.Description);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -734,10 +722,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Description, "Description");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -767,7 +751,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Weight;
             public Exception? InventoryArt;
             public Exception? Description;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -812,8 +795,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return InventoryArt;
                     case Book_FieldIndex.Description:
                         return Description;
-                    case Book_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -877,9 +858,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Book_FieldIndex.Description:
                         this.Description = ex;
-                        break;
-                    case Book_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -946,9 +924,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Book_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -976,7 +951,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Weight != null) return true;
                 if (InventoryArt != null) return true;
                 if (Description != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1062,9 +1036,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Description, "Description");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -1091,7 +1062,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.InventoryArt = this.InventoryArt.Combine(rhs.InventoryArt);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1132,7 +1102,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Weight;
             public bool InventoryArt;
             public bool Description;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1153,7 +1122,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = defaultOn;
                 this.InventoryArt = defaultOn;
                 this.Description = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1179,7 +1147,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Weight, null));
                 ret.Add((InventoryArt, null));
                 ret.Add((Description, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1243,10 +1210,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IBook);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BookCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BookSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BookSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -1386,7 +1349,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Weight { get; set; }
         new IFormLinkNullable<IStaticGetter> InventoryArt { get; set; }
         new TranslatedString? Description { get; set; }
-        new Book.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IBookInternal :
@@ -1470,7 +1432,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single Weight { get; }
         IFormLinkNullableGetter<IStaticGetter> InventoryArt { get; }
         ITranslatedStringGetter? Description { get; }
-        Book.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1665,7 +1626,6 @@ namespace Mutagen.Bethesda.Skyrim
         Weight = 22,
         InventoryArt = 23,
         Description = 24,
-        DATADataTypeState = 25,
     }
     #endregion
 
@@ -1683,9 +1643,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "75309913-652c-4e97-9cf4-6ccb493d3143";
 
-        public const ushort AdditionalFieldCount = 19;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(Book.Mask<>);
 
@@ -1797,7 +1757,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Weight = default;
             item.InventoryArt.Clear();
             item.Description = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1977,7 +1936,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.InventoryArt = item.InventoryArt.Equals(rhs.InventoryArt);
             ret.Description = object.Equals(item.Description, rhs.Description);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2116,10 +2074,6 @@ namespace Mutagen.Bethesda.Skyrim
                 && item.Description is {} DescriptionItem)
             {
                 sb.AppendItem(DescriptionItem, "Description");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2267,10 +2221,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -2338,7 +2288,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(Descriptionitem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2760,10 +2709,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Description = rhs.Description?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2912,15 +2857,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly BookBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IBookGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IBookGetter item,
             MutagenWriter writer,
@@ -3062,7 +2998,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3122,15 +3058,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly BookBinaryCreateTranslation Instance = new BookBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BOOK;
-        public static void FillBinaryStructs(
-            IBookInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IBookInternal item,
             MutagenFrame frame,
@@ -3374,7 +3301,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private RangeInt32? _DATALocation;
-        public Book.DATADataType DATADataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         public partial Book.Flag GetFlagsCustom();

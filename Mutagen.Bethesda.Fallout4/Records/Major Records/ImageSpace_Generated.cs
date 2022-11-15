@@ -146,15 +146,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IImageSpaceGetter.Lut => this.Lut;
         #endregion
-        #region HNAMDataTypeState
-        public ImageSpace.HNAMDataType HNAMDataTypeState { get; set; } = default;
-        #endregion
-        #region CNAMDataTypeState
-        public ImageSpace.CNAMDataType CNAMDataTypeState { get; set; } = default;
-        #endregion
-        #region TNAMDataTypeState
-        public ImageSpace.TNAMDataType TNAMDataTypeState { get; set; } = default;
-        #endregion
         #region DNAMDataTypeState
         public ImageSpace.DNAMDataType DNAMDataTypeState { get; set; } = default;
         #endregion
@@ -206,9 +197,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DepthOfFieldVignetteRadius = initialValue;
                 this.DepthOfFieldVignetteStrength = initialValue;
                 this.Lut = initialValue;
-                this.HNAMDataTypeState = initialValue;
-                this.CNAMDataTypeState = initialValue;
-                this.TNAMDataTypeState = initialValue;
                 this.DNAMDataTypeState = initialValue;
             }
 
@@ -243,9 +231,6 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem DepthOfFieldVignetteRadius,
                 TItem DepthOfFieldVignetteStrength,
                 TItem Lut,
-                TItem HNAMDataTypeState,
-                TItem CNAMDataTypeState,
-                TItem TNAMDataTypeState,
                 TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -279,9 +264,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DepthOfFieldVignetteRadius = DepthOfFieldVignetteRadius;
                 this.DepthOfFieldVignetteStrength = DepthOfFieldVignetteStrength;
                 this.Lut = Lut;
-                this.HNAMDataTypeState = HNAMDataTypeState;
-                this.CNAMDataTypeState = CNAMDataTypeState;
-                this.TNAMDataTypeState = TNAMDataTypeState;
                 this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
@@ -317,9 +299,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem DepthOfFieldVignetteRadius;
             public TItem DepthOfFieldVignetteStrength;
             public TItem Lut;
-            public TItem HNAMDataTypeState;
-            public TItem CNAMDataTypeState;
-            public TItem TNAMDataTypeState;
             public TItem DNAMDataTypeState;
             #endregion
 
@@ -357,9 +336,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.DepthOfFieldVignetteRadius, rhs.DepthOfFieldVignetteRadius)) return false;
                 if (!object.Equals(this.DepthOfFieldVignetteStrength, rhs.DepthOfFieldVignetteStrength)) return false;
                 if (!object.Equals(this.Lut, rhs.Lut)) return false;
-                if (!object.Equals(this.HNAMDataTypeState, rhs.HNAMDataTypeState)) return false;
-                if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
-                if (!object.Equals(this.TNAMDataTypeState, rhs.TNAMDataTypeState)) return false;
                 if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -389,9 +365,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.DepthOfFieldVignetteRadius);
                 hash.Add(this.DepthOfFieldVignetteStrength);
                 hash.Add(this.Lut);
-                hash.Add(this.HNAMDataTypeState);
-                hash.Add(this.CNAMDataTypeState);
-                hash.Add(this.TNAMDataTypeState);
                 hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -426,9 +399,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.DepthOfFieldVignetteRadius)) return false;
                 if (!eval(this.DepthOfFieldVignetteStrength)) return false;
                 if (!eval(this.Lut)) return false;
-                if (!eval(this.HNAMDataTypeState)) return false;
-                if (!eval(this.CNAMDataTypeState)) return false;
-                if (!eval(this.TNAMDataTypeState)) return false;
                 if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -461,9 +431,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.DepthOfFieldVignetteRadius)) return true;
                 if (eval(this.DepthOfFieldVignetteStrength)) return true;
                 if (eval(this.Lut)) return true;
-                if (eval(this.HNAMDataTypeState)) return true;
-                if (eval(this.CNAMDataTypeState)) return true;
-                if (eval(this.TNAMDataTypeState)) return true;
                 if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
@@ -503,9 +470,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.DepthOfFieldVignetteRadius = eval(this.DepthOfFieldVignetteRadius);
                 obj.DepthOfFieldVignetteStrength = eval(this.DepthOfFieldVignetteStrength);
                 obj.Lut = eval(this.Lut);
-                obj.HNAMDataTypeState = eval(this.HNAMDataTypeState);
-                obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
-                obj.TNAMDataTypeState = eval(this.TNAMDataTypeState);
                 obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
@@ -617,18 +581,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Lut, "Lut");
                     }
-                    if (printMask?.HNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
-                    }
-                    if (printMask?.CNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                    }
-                    if (printMask?.TNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
-                    }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
                         sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
@@ -667,9 +619,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? DepthOfFieldVignetteRadius;
             public Exception? DepthOfFieldVignetteStrength;
             public Exception? Lut;
-            public Exception? HNAMDataTypeState;
-            public Exception? CNAMDataTypeState;
-            public Exception? TNAMDataTypeState;
             public Exception? DNAMDataTypeState;
             #endregion
 
@@ -725,12 +674,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return DepthOfFieldVignetteStrength;
                     case ImageSpace_FieldIndex.Lut:
                         return Lut;
-                    case ImageSpace_FieldIndex.HNAMDataTypeState:
-                        return HNAMDataTypeState;
-                    case ImageSpace_FieldIndex.CNAMDataTypeState:
-                        return CNAMDataTypeState;
-                    case ImageSpace_FieldIndex.TNAMDataTypeState:
-                        return TNAMDataTypeState;
                     case ImageSpace_FieldIndex.DNAMDataTypeState:
                         return DNAMDataTypeState;
                     default:
@@ -811,15 +754,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case ImageSpace_FieldIndex.Lut:
                         this.Lut = ex;
-                        break;
-                    case ImageSpace_FieldIndex.HNAMDataTypeState:
-                        this.HNAMDataTypeState = ex;
-                        break;
-                    case ImageSpace_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = ex;
-                        break;
-                    case ImageSpace_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = ex;
                         break;
                     case ImageSpace_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = ex;
@@ -904,15 +838,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case ImageSpace_FieldIndex.Lut:
                         this.Lut = (Exception?)obj;
                         break;
-                    case ImageSpace_FieldIndex.HNAMDataTypeState:
-                        this.HNAMDataTypeState = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = (Exception?)obj;
-                        break;
                     case ImageSpace_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = (Exception?)obj;
                         break;
@@ -948,9 +873,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (DepthOfFieldVignetteRadius != null) return true;
                 if (DepthOfFieldVignetteStrength != null) return true;
                 if (Lut != null) return true;
-                if (HNAMDataTypeState != null) return true;
-                if (CNAMDataTypeState != null) return true;
-                if (TNAMDataTypeState != null) return true;
                 if (DNAMDataTypeState != null) return true;
                 return false;
             }
@@ -1048,15 +970,6 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Lut, "Lut");
                 }
                 {
-                    sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
-                }
-                {
-                    sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                }
-                {
-                    sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
-                }
-                {
                     sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                 }
             }
@@ -1090,9 +1003,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.DepthOfFieldVignetteRadius = this.DepthOfFieldVignetteRadius.Combine(rhs.DepthOfFieldVignetteRadius);
                 ret.DepthOfFieldVignetteStrength = this.DepthOfFieldVignetteStrength.Combine(rhs.DepthOfFieldVignetteStrength);
                 ret.Lut = this.Lut.Combine(rhs.Lut);
-                ret.HNAMDataTypeState = this.HNAMDataTypeState.Combine(rhs.HNAMDataTypeState);
-                ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
-                ret.TNAMDataTypeState = this.TNAMDataTypeState.Combine(rhs.TNAMDataTypeState);
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
@@ -1139,9 +1049,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool DepthOfFieldVignetteRadius;
             public bool DepthOfFieldVignetteStrength;
             public bool Lut;
-            public bool HNAMDataTypeState;
-            public bool CNAMDataTypeState;
-            public bool TNAMDataTypeState;
             public bool DNAMDataTypeState;
             #endregion
 
@@ -1174,9 +1081,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DepthOfFieldVignetteRadius = defaultOn;
                 this.DepthOfFieldVignetteStrength = defaultOn;
                 this.Lut = defaultOn;
-                this.HNAMDataTypeState = defaultOn;
-                this.CNAMDataTypeState = defaultOn;
-                this.TNAMDataTypeState = defaultOn;
                 this.DNAMDataTypeState = defaultOn;
             }
 
@@ -1208,9 +1112,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((DepthOfFieldVignetteRadius, null));
                 ret.Add((DepthOfFieldVignetteStrength, null));
                 ret.Add((Lut, null));
-                ret.Add((HNAMDataTypeState, null));
-                ret.Add((CNAMDataTypeState, null));
-                ret.Add((TNAMDataTypeState, null));
                 ret.Add((DNAMDataTypeState, null));
             }
 
@@ -1266,18 +1167,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IImageSpace);
 
-        [Flags]
-        public enum HNAMDataType
-        {
-        }
-        [Flags]
-        public enum CNAMDataType
-        {
-        }
-        [Flags]
-        public enum TNAMDataType
-        {
-        }
         [Flags]
         public enum DNAMDataType
         {
@@ -1389,9 +1278,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single DepthOfFieldVignetteRadius { get; set; }
         new Single DepthOfFieldVignetteStrength { get; set; }
         new String? Lut { get; set; }
-        new ImageSpace.HNAMDataType HNAMDataTypeState { get; set; }
-        new ImageSpace.CNAMDataType CNAMDataTypeState { get; set; }
-        new ImageSpace.TNAMDataType TNAMDataTypeState { get; set; }
         new ImageSpace.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
@@ -1433,9 +1319,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single DepthOfFieldVignetteRadius { get; }
         Single DepthOfFieldVignetteStrength { get; }
         String? Lut { get; }
-        ImageSpace.HNAMDataType HNAMDataTypeState { get; }
-        ImageSpace.CNAMDataType CNAMDataTypeState { get; }
-        ImageSpace.TNAMDataType TNAMDataTypeState { get; }
         ImageSpace.DNAMDataType DNAMDataTypeState { get; }
 
     }
@@ -1636,10 +1519,7 @@ namespace Mutagen.Bethesda.Fallout4
         DepthOfFieldVignetteRadius = 27,
         DepthOfFieldVignetteStrength = 28,
         Lut = 29,
-        HNAMDataTypeState = 30,
-        CNAMDataTypeState = 31,
-        TNAMDataTypeState = 32,
-        DNAMDataTypeState = 33,
+        DNAMDataTypeState = 30,
     }
     #endregion
 
@@ -1657,9 +1537,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "3b3264aa-9b31-4ee5-939a-eb664fa1b35a";
 
-        public const ushort AdditionalFieldCount = 27;
+        public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 34;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(ImageSpace.Mask<>);
 
@@ -1765,9 +1645,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.DepthOfFieldVignetteRadius = default;
             item.DepthOfFieldVignetteStrength = default;
             item.Lut = default;
-            item.HNAMDataTypeState = default;
-            item.CNAMDataTypeState = default;
-            item.TNAMDataTypeState = default;
             item.DNAMDataTypeState = default;
             base.Clear(item);
         }
@@ -1876,9 +1753,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.DepthOfFieldVignetteRadius = item.DepthOfFieldVignetteRadius.EqualsWithin(rhs.DepthOfFieldVignetteRadius);
             ret.DepthOfFieldVignetteStrength = item.DepthOfFieldVignetteStrength.EqualsWithin(rhs.DepthOfFieldVignetteStrength);
             ret.Lut = string.Equals(item.Lut, rhs.Lut);
-            ret.HNAMDataTypeState = item.HNAMDataTypeState == rhs.HNAMDataTypeState;
-            ret.CNAMDataTypeState = item.CNAMDataTypeState == rhs.CNAMDataTypeState;
-            ret.TNAMDataTypeState = item.TNAMDataTypeState == rhs.TNAMDataTypeState;
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -2021,18 +1895,6 @@ namespace Mutagen.Bethesda.Fallout4
                 && item.Lut is {} LutItem)
             {
                 sb.AppendItem(LutItem, "Lut");
-            }
-            if (printMask?.HNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
-            }
-            if (printMask?.CNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
-            }
-            if (printMask?.TNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
@@ -2180,18 +2042,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!string.Equals(lhs.Lut, rhs.Lut)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HNAMDataTypeState) ?? true))
-            {
-                if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.TNAMDataTypeState) ?? true))
-            {
-                if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
@@ -2250,9 +2100,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(Lutitem);
             }
-            hash.Add(item.HNAMDataTypeState);
-            hash.Add(item.CNAMDataTypeState);
-            hash.Add(item.TNAMDataTypeState);
             hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2448,18 +2295,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Lut) ?? true))
             {
                 item.Lut = rhs.Lut;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.HNAMDataTypeState) ?? true))
-            {
-                item.HNAMDataTypeState = rhs.HNAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                item.CNAMDataTypeState = rhs.CNAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.TNAMDataTypeState) ?? true))
-            {
-                item.TNAMDataTypeState = rhs.TNAMDataTypeState;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -3029,7 +2864,6 @@ namespace Mutagen.Bethesda.Fallout4
             int offset);
         #endregion
         private RangeInt32? _HNAMLocation;
-        public ImageSpace.HNAMDataType HNAMDataTypeState { get; private set; }
         #region HdrEyeAdaptSpeed
         private int _HdrEyeAdaptSpeedLocation => _HNAMLocation!.Value.Min;
         private bool _HdrEyeAdaptSpeed_IsSet => _HNAMLocation.HasValue;
@@ -3076,7 +2910,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single HdrMiddleGray => _HdrMiddleGray_IsSet ? _recordData.Slice(_HdrMiddleGrayLocation, 4).Float() : default;
         #endregion
         private RangeInt32? _CNAMLocation;
-        public ImageSpace.CNAMDataType CNAMDataTypeState { get; private set; }
         #region CinematicSaturation
         private int _CinematicSaturationLocation => _CNAMLocation!.Value.Min;
         private bool _CinematicSaturation_IsSet => _CNAMLocation.HasValue;
@@ -3093,7 +2926,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single CinematicContrast => _CinematicContrast_IsSet ? _recordData.Slice(_CinematicContrastLocation, 4).Float() : default;
         #endregion
         private RangeInt32? _TNAMLocation;
-        public ImageSpace.TNAMDataType TNAMDataTypeState { get; private set; }
         #region TintAmount
         private int _TintAmountLocation => _TNAMLocation!.Value.Min;
         private bool _TintAmount_IsSet => _TNAMLocation.HasValue;

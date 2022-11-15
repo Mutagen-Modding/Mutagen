@@ -263,12 +263,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region DATADataTypeState
-        public Scroll.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
-        #region SPITDataTypeState
-        public Scroll.SPITDataType SPITDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -316,8 +310,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Range = initialValue;
                 this.HalfCostPerk = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.DATADataTypeState = initialValue;
-                this.SPITDataTypeState = initialValue;
             }
 
             public Mask(
@@ -349,9 +341,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem CastDuration,
                 TItem Range,
                 TItem HalfCostPerk,
-                TItem Effects,
-                TItem DATADataTypeState,
-                TItem SPITDataTypeState)
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -383,8 +373,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Range = Range;
                 this.HalfCostPerk = HalfCostPerk;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.DATADataTypeState = DATADataTypeState;
-                this.SPITDataTypeState = SPITDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -418,8 +406,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Range;
             public TItem HalfCostPerk;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
-            public TItem DATADataTypeState;
-            public TItem SPITDataTypeState;
             #endregion
 
             #region Equals
@@ -455,8 +441,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Range, rhs.Range)) return false;
                 if (!object.Equals(this.HalfCostPerk, rhs.HalfCostPerk)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-                if (!object.Equals(this.SPITDataTypeState, rhs.SPITDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -484,8 +468,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Range);
                 hash.Add(this.HalfCostPerk);
                 hash.Add(this.Effects);
-                hash.Add(this.DATADataTypeState);
-                hash.Add(this.SPITDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -551,8 +533,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.DATADataTypeState)) return false;
-                if (!eval(this.SPITDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -616,8 +596,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.DATADataTypeState)) return true;
-                if (eval(this.SPITDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -682,8 +660,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
-                obj.SPITDataTypeState = eval(this.SPITDataTypeState);
             }
             #endregion
 
@@ -822,14 +798,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
-                    if (printMask?.SPITDataTypeState ?? true)
-                    {
-                        sb.AppendItem(SPITDataTypeState, "SPITDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -863,8 +831,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Range;
             public Exception? HalfCostPerk;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
-            public Exception? DATADataTypeState;
-            public Exception? SPITDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -917,10 +883,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return HalfCostPerk;
                     case Scroll_FieldIndex.Effects:
                         return Effects;
-                    case Scroll_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
-                    case Scroll_FieldIndex.SPITDataTypeState:
-                        return SPITDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -996,12 +958,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Scroll_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Scroll_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
-                    case Scroll_FieldIndex.SPITDataTypeState:
-                        this.SPITDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1080,12 +1036,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Scroll_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
-                    case Scroll_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
-                    case Scroll_FieldIndex.SPITDataTypeState:
-                        this.SPITDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1117,8 +1067,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Range != null) return true;
                 if (HalfCostPerk != null) return true;
                 if (Effects != null) return true;
-                if (DATADataTypeState != null) return true;
-                if (SPITDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1237,12 +1185,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
-                {
-                    sb.AppendItem(SPITDataTypeState, "SPITDataTypeState");
-                }
             }
             #endregion
 
@@ -1273,8 +1215,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Range = this.Range.Combine(rhs.Range);
                 ret.HalfCostPerk = this.HalfCostPerk.Combine(rhs.HalfCostPerk);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-                ret.SPITDataTypeState = this.SPITDataTypeState.Combine(rhs.SPITDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1319,8 +1259,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Range;
             public bool HalfCostPerk;
             public Effect.TranslationMask? Effects;
-            public bool DATADataTypeState;
-            public bool SPITDataTypeState;
             #endregion
 
             #region Ctors
@@ -1347,8 +1285,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CastDuration = defaultOn;
                 this.Range = defaultOn;
                 this.HalfCostPerk = defaultOn;
-                this.DATADataTypeState = defaultOn;
-                this.SPITDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1378,8 +1314,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Range, null));
                 ret.Add((HalfCostPerk, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
-                ret.Add((SPITDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1443,14 +1377,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IScroll);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
-        [Flags]
-        public enum SPITDataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ScrollCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ScrollSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ScrollSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -1586,8 +1512,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Range { get; set; }
         new IFormLink<IPerkGetter> HalfCostPerk { get; set; }
         new ExtendedList<Effect> Effects { get; }
-        new Scroll.DATADataType DATADataTypeState { get; set; }
-        new Scroll.SPITDataType SPITDataTypeState { get; set; }
     }
 
     public partial interface IScrollInternal :
@@ -1662,8 +1586,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single Range { get; }
         IFormLinkGetter<IPerkGetter> HalfCostPerk { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
-        Scroll.DATADataType DATADataTypeState { get; }
-        Scroll.SPITDataType SPITDataTypeState { get; }
 
     }
 
@@ -1862,8 +1784,6 @@ namespace Mutagen.Bethesda.Skyrim
         Range = 26,
         HalfCostPerk = 27,
         Effects = 28,
-        DATADataTypeState = 29,
-        SPITDataTypeState = 30,
     }
     #endregion
 
@@ -1881,9 +1801,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "966367fb-9898-41f3-a250-d453749a138b";
 
-        public const ushort AdditionalFieldCount = 24;
+        public const ushort AdditionalFieldCount = 22;
 
-        public const ushort FieldCount = 31;
+        public const ushort FieldCount = 29;
 
         public static readonly Type MaskType = typeof(Scroll.Mask<>);
 
@@ -2002,8 +1922,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Range = default;
             item.HalfCostPerk.Clear();
             item.Effects.Clear();
-            item.DATADataTypeState = default;
-            item.SPITDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2163,8 +2081,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
-            ret.SPITDataTypeState = item.SPITDataTypeState == rhs.SPITDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2327,14 +2243,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
-            if (printMask?.SPITDataTypeState ?? true)
-            {
-                sb.AppendItem(item.SPITDataTypeState, "SPITDataTypeState");
-            }
         }
         
         public static Scroll_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2485,14 +2393,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Scroll_FieldIndex.Effects)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Scroll_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Scroll_FieldIndex.SPITDataTypeState) ?? true))
-            {
-                if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
-            }
             return true;
         }
         
@@ -2555,8 +2455,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Range);
             hash.Add(item.HalfCostPerk);
             hash.Add(item.Effects);
-            hash.Add(item.DATADataTypeState);
-            hash.Add(item.SPITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2921,14 +2819,6 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.SPITDataTypeState) ?? true))
-            {
-                item.SPITDataTypeState = rhs.SPITDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -3077,15 +2967,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly ScrollBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IScrollGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IScrollGetter item,
             MutagenWriter writer,
@@ -3217,7 +3098,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3277,15 +3158,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ScrollBinaryCreateTranslation Instance = new ScrollBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SCRL;
-        public static void FillBinaryStructs(
-            IScrollInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IScrollInternal item,
             MutagenFrame frame,
@@ -3532,7 +3404,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         private RangeInt32? _DATALocation;
-        public Scroll.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
@@ -3544,7 +3415,6 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         private RangeInt32? _SPITLocation;
-        public Scroll.SPITDataType SPITDataTypeState { get; private set; }
         #region BaseCost
         private int _BaseCostLocation => _SPITLocation!.Value.Min;
         private bool _BaseCost_IsSet => _SPITLocation.HasValue;

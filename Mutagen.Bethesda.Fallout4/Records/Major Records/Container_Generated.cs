@@ -285,9 +285,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IContainerGetter.FilterList => this.FilterList;
         #endregion
-        #region DATADataTypeState
-        public Container.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -330,7 +327,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CloseSound = initialValue;
                 this.TakeAllSound = initialValue;
                 this.FilterList = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -357,8 +353,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem OpenSound,
                 TItem CloseSound,
                 TItem TakeAllSound,
-                TItem FilterList,
-                TItem DATADataTypeState)
+                TItem FilterList)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -385,7 +380,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CloseSound = CloseSound;
                 this.TakeAllSound = TakeAllSound;
                 this.FilterList = FilterList;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -414,7 +408,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem CloseSound;
             public TItem TakeAllSound;
             public TItem FilterList;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -445,7 +438,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
                 if (!object.Equals(this.TakeAllSound, rhs.TakeAllSound)) return false;
                 if (!object.Equals(this.FilterList, rhs.FilterList)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -468,7 +460,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.CloseSound);
                 hash.Add(this.TakeAllSound);
                 hash.Add(this.FilterList);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -544,7 +535,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.CloseSound)) return false;
                 if (!eval(this.TakeAllSound)) return false;
                 if (!eval(this.FilterList)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -618,7 +608,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.CloseSound)) return true;
                 if (eval(this.TakeAllSound)) return true;
                 if (eval(this.FilterList)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -692,7 +681,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.CloseSound = eval(this.CloseSound);
                 obj.TakeAllSound = eval(this.TakeAllSound);
                 obj.FilterList = eval(this.FilterList);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -826,10 +814,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(FilterList, "FilterList");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -858,7 +842,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? CloseSound;
             public Exception? TakeAllSound;
             public Exception? FilterList;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -901,8 +884,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return TakeAllSound;
                     case Container_FieldIndex.FilterList:
                         return FilterList;
-                    case Container_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -963,9 +944,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Container_FieldIndex.FilterList:
                         this.FilterList = ex;
-                        break;
-                    case Container_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1029,9 +1007,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Container_FieldIndex.FilterList:
                         this.FilterList = (Exception?)obj;
                         break;
-                    case Container_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1058,7 +1033,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (CloseSound != null) return true;
                 if (TakeAllSound != null) return true;
                 if (FilterList != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1175,9 +1149,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(FilterList, "FilterList");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -1203,7 +1174,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
                 ret.TakeAllSound = this.TakeAllSound.Combine(rhs.TakeAllSound);
                 ret.FilterList = this.FilterList.Combine(rhs.FilterList);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1243,7 +1213,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool CloseSound;
             public bool TakeAllSound;
             public bool FilterList;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1263,7 +1232,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CloseSound = defaultOn;
                 this.TakeAllSound = defaultOn;
                 this.FilterList = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1288,7 +1256,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((CloseSound, null));
                 ret.Add((TakeAllSound, null));
                 ret.Add((FilterList, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1349,10 +1316,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum DATADataType
-        {
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -1483,7 +1446,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> TakeAllSound { get; set; }
         new IFormLinkNullable<IFormListGetter> FilterList { get; set; }
-        new Container.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Container.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1562,7 +1524,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> TakeAllSound { get; }
         IFormLinkNullableGetter<IFormListGetter> FilterList { get; }
-        Container.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         Container.MajorFlag MajorFlags { get; }
@@ -1760,7 +1721,6 @@ namespace Mutagen.Bethesda.Fallout4
         CloseSound = 21,
         TakeAllSound = 22,
         FilterList = 23,
-        DATADataTypeState = 24,
     }
     #endregion
 
@@ -1778,9 +1738,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "d5eebb15-76fe-43cd-9ba9-7ad6eac2b785";
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 25;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(Container.Mask<>);
 
@@ -1904,7 +1864,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.CloseSound.Clear();
             item.TakeAllSound.Clear();
             item.FilterList.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -2040,7 +1999,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.CloseSound = item.CloseSound.Equals(rhs.CloseSound);
             ret.TakeAllSound = item.TakeAllSound.Equals(rhs.TakeAllSound);
             ret.FilterList = item.FilterList.Equals(rhs.FilterList);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2195,10 +2153,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.FilterList.FormKeyNullable, "FilterList");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Container_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2333,10 +2287,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.FilterList.Equals(rhs.FilterList)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -2394,7 +2344,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.CloseSound);
             hash.Add(item.TakeAllSound);
             hash.Add(item.FilterList);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2800,10 +2749,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FilterList.SetTo(rhs.FilterList.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2952,15 +2897,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ContainerBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IContainerGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IContainerGetter item,
             MutagenWriter writer,
@@ -3090,7 +3026,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3150,15 +3086,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ContainerBinaryCreateTranslation Instance = new ContainerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CONT;
-        public static void FillBinaryStructs(
-            IContainerInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IContainerInternal item,
             MutagenFrame frame,
@@ -3403,7 +3330,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         private RangeInt32? _DATALocation;
-        public Container.DATADataType DATADataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;

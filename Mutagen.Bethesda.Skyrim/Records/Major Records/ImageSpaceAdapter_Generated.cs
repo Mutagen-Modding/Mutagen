@@ -838,9 +838,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region DNAMDataTypeState
-        public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -926,7 +923,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CinematicContrastAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.Unknown14 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.Unknown54 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -996,8 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem CinematicContrastMult,
                 TItem CinematicContrastAdd,
                 TItem Unknown14,
-                TItem Unknown54,
-                TItem DNAMDataTypeState)
+                TItem Unknown54)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -1067,7 +1062,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CinematicContrastAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicContrastAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.Unknown14 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown14, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
                 this.Unknown54 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown54, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -1139,7 +1133,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? CinematicContrastAdd;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown14;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown54;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -1213,7 +1206,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.CinematicContrastAdd, rhs.CinematicContrastAdd)) return false;
                 if (!object.Equals(this.Unknown14, rhs.Unknown14)) return false;
                 if (!object.Equals(this.Unknown54, rhs.Unknown54)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1279,7 +1271,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.CinematicContrastAdd);
                 hash.Add(this.Unknown14);
                 hash.Add(this.Unknown54);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1955,7 +1946,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -2629,7 +2619,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -3475,7 +3464,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -4559,10 +4547,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -4634,7 +4618,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? CinematicContrastAdd;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown14;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown54;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -4763,8 +4746,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Unknown14;
                     case ImageSpaceAdapter_FieldIndex.Unknown54:
                         return Unknown54;
-                    case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -4954,9 +4935,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case ImageSpaceAdapter_FieldIndex.Unknown54:
                         this.Unknown54 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
-                        break;
-                    case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -5149,9 +5127,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case ImageSpaceAdapter_FieldIndex.Unknown54:
                         this.Unknown54 = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
                         break;
-                    case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -5221,7 +5196,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (CinematicContrastAdd != null) return true;
                 if (Unknown14 != null) return true;
                 if (Unknown54 != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -6253,9 +6227,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -6324,7 +6295,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.CinematicContrastAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CinematicContrastAdd?.Overall, rhs.CinematicContrastAdd?.Overall), Noggog.ExceptionExt.Combine(this.CinematicContrastAdd?.Specific, rhs.CinematicContrastAdd?.Specific));
                 ret.Unknown14 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown14?.Overall, rhs.Unknown14?.Overall), Noggog.ExceptionExt.Combine(this.Unknown14?.Specific, rhs.Unknown14?.Specific));
                 ret.Unknown54 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown54?.Overall, rhs.Unknown54?.Overall), Noggog.ExceptionExt.Combine(this.Unknown54?.Specific, rhs.Unknown54?.Specific));
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -6407,7 +6377,6 @@ namespace Mutagen.Bethesda.Skyrim
             public KeyFrame.TranslationMask? CinematicContrastAdd;
             public KeyFrame.TranslationMask? Unknown14;
             public KeyFrame.TranslationMask? Unknown54;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -6421,7 +6390,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.RadialBlurUseTarget = defaultOn;
                 this.RadialBlurCenter = defaultOn;
                 this.DepthOfFieldFlags = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -6489,7 +6457,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((CinematicContrastAdd == null ? DefaultOn : !CinematicContrastAdd.GetCrystal().CopyNothing, CinematicContrastAdd?.GetCrystal()));
                 ret.Add((Unknown14 == null ? DefaultOn : !Unknown14.GetCrystal().CopyNothing, Unknown14?.GetCrystal()));
                 ret.Add((Unknown54 == null ? DefaultOn : !Unknown54.GetCrystal().CopyNothing, Unknown54?.GetCrystal()));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -6551,10 +6518,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IImageSpaceAdapter);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -6698,7 +6661,6 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<KeyFrame>? CinematicContrastAdd { get; set; }
         new ExtendedList<KeyFrame>? Unknown14 { get; set; }
         new ExtendedList<KeyFrame>? Unknown54 { get; set; }
-        new ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IImageSpaceAdapterInternal :
@@ -6776,7 +6738,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IKeyFrameGetter>? CinematicContrastAdd { get; }
         IReadOnlyList<IKeyFrameGetter>? Unknown14 { get; }
         IReadOnlyList<IKeyFrameGetter>? Unknown54 { get; }
-        ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -7013,7 +6974,6 @@ namespace Mutagen.Bethesda.Skyrim
         CinematicContrastAdd = 64,
         Unknown14 = 65,
         Unknown54 = 66,
-        DNAMDataTypeState = 67,
     }
     #endregion
 
@@ -7031,9 +6991,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "b65ec92e-e1e5-4524-91a3-9dc25d0cafed";
 
-        public const ushort AdditionalFieldCount = 61;
+        public const ushort AdditionalFieldCount = 60;
 
-        public const ushort FieldCount = 68;
+        public const ushort FieldCount = 67;
 
         public static readonly Type MaskType = typeof(ImageSpaceAdapter.Mask<>);
 
@@ -7226,7 +7186,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.CinematicContrastAdd = null;
             item.Unknown14 = null;
             item.Unknown54 = null;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -7536,7 +7495,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Unknown54,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -8431,10 +8389,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static ImageSpaceAdapter_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -8725,10 +8679,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Unknown54.SequenceEqualNullable(rhs.Unknown54, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown54)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -8817,7 +8767,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.CinematicContrastAdd);
             hash.Add(item.Unknown14);
             hash.Add(item.Unknown54);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -10701,10 +10650,6 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -10852,15 +10797,6 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryWriteTranslator
     {
         public new static readonly ImageSpaceAdapterBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IImageSpaceAdapterGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IImageSpaceAdapterGetter item,
@@ -11607,7 +11543,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -11667,15 +11603,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ImageSpaceAdapterBinaryCreateTranslation Instance = new ImageSpaceAdapterBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IMAD;
-        public static void FillBinaryStructs(
-            IImageSpaceAdapterInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IImageSpaceAdapterInternal item,
             MutagenFrame frame,
@@ -12343,7 +12270,6 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         private RangeInt32? _DNAMLocation;
-        public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Animatable
         private int _AnimatableLocation => _DNAMLocation!.Value.Min;
         private bool _Animatable_IsSet => _DNAMLocation.HasValue;

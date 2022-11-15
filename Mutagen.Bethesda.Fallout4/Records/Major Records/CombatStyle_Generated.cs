@@ -248,20 +248,11 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         CombatStyle.Flag? ICombatStyleGetter.Flags => this.Flags;
         #endregion
-        #region CSGDDataTypeState
-        public CombatStyle.CSGDDataType CSGDDataTypeState { get; set; } = default;
-        #endregion
         #region CSMEDataTypeState
         public CombatStyle.CSMEDataType CSMEDataTypeState { get; set; } = default;
         #endregion
-        #region CSCRDataTypeState
-        public CombatStyle.CSCRDataType CSCRDataTypeState { get; set; } = default;
-        #endregion
         #region CSLRDataTypeState
         public CombatStyle.CSLRDataType CSLRDataTypeState { get; set; } = default;
-        #endregion
-        #region CSFLDataTypeState
-        public CombatStyle.CSFLDataType CSFLDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -338,11 +329,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PerchAttackTime = initialValue;
                 this.FlyingAttackChance = initialValue;
                 this.Flags = initialValue;
-                this.CSGDDataTypeState = initialValue;
                 this.CSMEDataTypeState = initialValue;
-                this.CSCRDataTypeState = initialValue;
                 this.CSLRDataTypeState = initialValue;
-                this.CSFLDataTypeState = initialValue;
             }
 
             public Mask(
@@ -403,11 +391,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem PerchAttackTime,
                 TItem FlyingAttackChance,
                 TItem Flags,
-                TItem CSGDDataTypeState,
                 TItem CSMEDataTypeState,
-                TItem CSCRDataTypeState,
-                TItem CSLRDataTypeState,
-                TItem CSFLDataTypeState)
+                TItem CSLRDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -467,11 +452,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PerchAttackTime = PerchAttackTime;
                 this.FlyingAttackChance = FlyingAttackChance;
                 this.Flags = Flags;
-                this.CSGDDataTypeState = CSGDDataTypeState;
                 this.CSMEDataTypeState = CSMEDataTypeState;
-                this.CSCRDataTypeState = CSCRDataTypeState;
                 this.CSLRDataTypeState = CSLRDataTypeState;
-                this.CSFLDataTypeState = CSFLDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -533,11 +515,8 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem PerchAttackTime;
             public TItem FlyingAttackChance;
             public TItem Flags;
-            public TItem CSGDDataTypeState;
             public TItem CSMEDataTypeState;
-            public TItem CSCRDataTypeState;
             public TItem CSLRDataTypeState;
-            public TItem CSFLDataTypeState;
             #endregion
 
             #region Equals
@@ -601,11 +580,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.PerchAttackTime, rhs.PerchAttackTime)) return false;
                 if (!object.Equals(this.FlyingAttackChance, rhs.FlyingAttackChance)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.CSGDDataTypeState, rhs.CSGDDataTypeState)) return false;
                 if (!object.Equals(this.CSMEDataTypeState, rhs.CSMEDataTypeState)) return false;
-                if (!object.Equals(this.CSCRDataTypeState, rhs.CSCRDataTypeState)) return false;
                 if (!object.Equals(this.CSLRDataTypeState, rhs.CSLRDataTypeState)) return false;
-                if (!object.Equals(this.CSFLDataTypeState, rhs.CSFLDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -661,11 +637,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.PerchAttackTime);
                 hash.Add(this.FlyingAttackChance);
                 hash.Add(this.Flags);
-                hash.Add(this.CSGDDataTypeState);
                 hash.Add(this.CSMEDataTypeState);
-                hash.Add(this.CSCRDataTypeState);
                 hash.Add(this.CSLRDataTypeState);
-                hash.Add(this.CSFLDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -726,11 +699,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.PerchAttackTime)) return false;
                 if (!eval(this.FlyingAttackChance)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.CSGDDataTypeState)) return false;
                 if (!eval(this.CSMEDataTypeState)) return false;
-                if (!eval(this.CSCRDataTypeState)) return false;
                 if (!eval(this.CSLRDataTypeState)) return false;
-                if (!eval(this.CSFLDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -789,11 +759,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.PerchAttackTime)) return true;
                 if (eval(this.FlyingAttackChance)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.CSGDDataTypeState)) return true;
                 if (eval(this.CSMEDataTypeState)) return true;
-                if (eval(this.CSCRDataTypeState)) return true;
                 if (eval(this.CSLRDataTypeState)) return true;
-                if (eval(this.CSFLDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -859,11 +826,8 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.PerchAttackTime = eval(this.PerchAttackTime);
                 obj.FlyingAttackChance = eval(this.FlyingAttackChance);
                 obj.Flags = eval(this.Flags);
-                obj.CSGDDataTypeState = eval(this.CSGDDataTypeState);
                 obj.CSMEDataTypeState = eval(this.CSMEDataTypeState);
-                obj.CSCRDataTypeState = eval(this.CSCRDataTypeState);
                 obj.CSLRDataTypeState = eval(this.CSLRDataTypeState);
-                obj.CSFLDataTypeState = eval(this.CSFLDataTypeState);
             }
             #endregion
 
@@ -1082,25 +1046,13 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.CSGDDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
-                    }
                     if (printMask?.CSMEDataTypeState ?? true)
                     {
                         sb.AppendItem(CSMEDataTypeState, "CSMEDataTypeState");
                     }
-                    if (printMask?.CSCRDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CSCRDataTypeState, "CSCRDataTypeState");
-                    }
                     if (printMask?.CSLRDataTypeState ?? true)
                     {
                         sb.AppendItem(CSLRDataTypeState, "CSLRDataTypeState");
-                    }
-                    if (printMask?.CSFLDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CSFLDataTypeState, "CSFLDataTypeState");
                     }
                 }
             }
@@ -1163,11 +1115,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? PerchAttackTime;
             public Exception? FlyingAttackChance;
             public Exception? Flags;
-            public Exception? CSGDDataTypeState;
             public Exception? CSMEDataTypeState;
-            public Exception? CSCRDataTypeState;
             public Exception? CSLRDataTypeState;
-            public Exception? CSFLDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1276,16 +1225,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return FlyingAttackChance;
                     case CombatStyle_FieldIndex.Flags:
                         return Flags;
-                    case CombatStyle_FieldIndex.CSGDDataTypeState:
-                        return CSGDDataTypeState;
                     case CombatStyle_FieldIndex.CSMEDataTypeState:
                         return CSMEDataTypeState;
-                    case CombatStyle_FieldIndex.CSCRDataTypeState:
-                        return CSCRDataTypeState;
                     case CombatStyle_FieldIndex.CSLRDataTypeState:
                         return CSLRDataTypeState;
-                    case CombatStyle_FieldIndex.CSFLDataTypeState:
-                        return CSFLDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1446,20 +1389,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case CombatStyle_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSGDDataTypeState:
-                        this.CSGDDataTypeState = ex;
-                        break;
                     case CombatStyle_FieldIndex.CSMEDataTypeState:
                         this.CSMEDataTypeState = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSCRDataTypeState:
-                        this.CSCRDataTypeState = ex;
-                        break;
                     case CombatStyle_FieldIndex.CSLRDataTypeState:
                         this.CSLRDataTypeState = ex;
-                        break;
-                    case CombatStyle_FieldIndex.CSFLDataTypeState:
-                        this.CSFLDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1622,20 +1556,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case CombatStyle_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSGDDataTypeState:
-                        this.CSGDDataTypeState = (Exception?)obj;
-                        break;
                     case CombatStyle_FieldIndex.CSMEDataTypeState:
                         this.CSMEDataTypeState = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSCRDataTypeState:
-                        this.CSCRDataTypeState = (Exception?)obj;
-                        break;
                     case CombatStyle_FieldIndex.CSLRDataTypeState:
                         this.CSLRDataTypeState = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.CSFLDataTypeState:
-                        this.CSFLDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1696,11 +1621,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (PerchAttackTime != null) return true;
                 if (FlyingAttackChance != null) return true;
                 if (Flags != null) return true;
-                if (CSGDDataTypeState != null) return true;
                 if (CSMEDataTypeState != null) return true;
-                if (CSCRDataTypeState != null) return true;
                 if (CSLRDataTypeState != null) return true;
-                if (CSFLDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1878,19 +1800,10 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
-                }
-                {
                     sb.AppendItem(CSMEDataTypeState, "CSMEDataTypeState");
                 }
                 {
-                    sb.AppendItem(CSCRDataTypeState, "CSCRDataTypeState");
-                }
-                {
                     sb.AppendItem(CSLRDataTypeState, "CSLRDataTypeState");
-                }
-                {
-                    sb.AppendItem(CSFLDataTypeState, "CSFLDataTypeState");
                 }
             }
             #endregion
@@ -1950,11 +1863,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PerchAttackTime = this.PerchAttackTime.Combine(rhs.PerchAttackTime);
                 ret.FlyingAttackChance = this.FlyingAttackChance.Combine(rhs.FlyingAttackChance);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.CSGDDataTypeState = this.CSGDDataTypeState.Combine(rhs.CSGDDataTypeState);
                 ret.CSMEDataTypeState = this.CSMEDataTypeState.Combine(rhs.CSMEDataTypeState);
-                ret.CSCRDataTypeState = this.CSCRDataTypeState.Combine(rhs.CSCRDataTypeState);
                 ret.CSLRDataTypeState = this.CSLRDataTypeState.Combine(rhs.CSLRDataTypeState);
-                ret.CSFLDataTypeState = this.CSFLDataTypeState.Combine(rhs.CSFLDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2027,11 +1937,8 @@ namespace Mutagen.Bethesda.Fallout4
             public bool PerchAttackTime;
             public bool FlyingAttackChance;
             public bool Flags;
-            public bool CSGDDataTypeState;
             public bool CSMEDataTypeState;
-            public bool CSCRDataTypeState;
             public bool CSLRDataTypeState;
-            public bool CSFLDataTypeState;
             #endregion
 
             #region Ctors
@@ -2090,11 +1997,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PerchAttackTime = defaultOn;
                 this.FlyingAttackChance = defaultOn;
                 this.Flags = defaultOn;
-                this.CSGDDataTypeState = defaultOn;
                 this.CSMEDataTypeState = defaultOn;
-                this.CSCRDataTypeState = defaultOn;
                 this.CSLRDataTypeState = defaultOn;
-                this.CSFLDataTypeState = defaultOn;
             }
 
             #endregion
@@ -2152,11 +2056,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((PerchAttackTime, null));
                 ret.Add((FlyingAttackChance, null));
                 ret.Add((Flags, null));
-                ret.Add((CSGDDataTypeState, null));
                 ret.Add((CSMEDataTypeState, null));
-                ret.Add((CSCRDataTypeState, null));
                 ret.Add((CSLRDataTypeState, null));
-                ret.Add((CSFLDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2217,27 +2118,15 @@ namespace Mutagen.Bethesda.Fallout4
             set => this.MajorRecordFlagsRaw = (int)value;
         }
         [Flags]
-        public enum CSGDDataType
-        {
-        }
-        [Flags]
         public enum CSMEDataType
         {
             Break0 = 1
-        }
-        [Flags]
-        public enum CSCRDataType
-        {
         }
         [Flags]
         public enum CSLRDataType
         {
             Break0 = 1,
             Break1 = 2
-        }
-        [Flags]
-        public enum CSFLDataType
-        {
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -2372,11 +2261,8 @@ namespace Mutagen.Bethesda.Fallout4
         new Single PerchAttackTime { get; set; }
         new Single FlyingAttackChance { get; set; }
         new CombatStyle.Flag? Flags { get; set; }
-        new CombatStyle.CSGDDataType CSGDDataTypeState { get; set; }
         new CombatStyle.CSMEDataType CSMEDataTypeState { get; set; }
-        new CombatStyle.CSCRDataType CSCRDataTypeState { get; set; }
         new CombatStyle.CSLRDataType CSLRDataTypeState { get; set; }
-        new CombatStyle.CSFLDataType CSFLDataTypeState { get; set; }
         #region Mutagen
         new CombatStyle.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2448,11 +2334,8 @@ namespace Mutagen.Bethesda.Fallout4
         Single PerchAttackTime { get; }
         Single FlyingAttackChance { get; }
         CombatStyle.Flag? Flags { get; }
-        CombatStyle.CSGDDataType CSGDDataTypeState { get; }
         CombatStyle.CSMEDataType CSMEDataTypeState { get; }
-        CombatStyle.CSCRDataType CSCRDataTypeState { get; }
         CombatStyle.CSLRDataType CSLRDataTypeState { get; }
-        CombatStyle.CSFLDataType CSFLDataTypeState { get; }
 
         #region Mutagen
         CombatStyle.MajorFlag MajorFlags { get; }
@@ -2683,11 +2566,8 @@ namespace Mutagen.Bethesda.Fallout4
         PerchAttackTime = 54,
         FlyingAttackChance = 55,
         Flags = 56,
-        CSGDDataTypeState = 57,
-        CSMEDataTypeState = 58,
-        CSCRDataTypeState = 59,
-        CSLRDataTypeState = 60,
-        CSFLDataTypeState = 61,
+        CSMEDataTypeState = 57,
+        CSLRDataTypeState = 58,
     }
     #endregion
 
@@ -2705,9 +2585,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "f0309e97-d6cd-4bf1-8365-bd51a94e5c36";
 
-        public const ushort AdditionalFieldCount = 55;
+        public const ushort AdditionalFieldCount = 52;
 
-        public const ushort FieldCount = 62;
+        public const ushort FieldCount = 59;
 
         public static readonly Type MaskType = typeof(CombatStyle.Mask<>);
 
@@ -2843,11 +2723,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.PerchAttackTime = default;
             item.FlyingAttackChance = default;
             item.Flags = default;
-            item.CSGDDataTypeState = default;
             item.CSMEDataTypeState = default;
-            item.CSCRDataTypeState = default;
             item.CSLRDataTypeState = default;
-            item.CSFLDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2982,11 +2859,8 @@ namespace Mutagen.Bethesda.Fallout4
             ret.PerchAttackTime = item.PerchAttackTime.EqualsWithin(rhs.PerchAttackTime);
             ret.FlyingAttackChance = item.FlyingAttackChance.EqualsWithin(rhs.FlyingAttackChance);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.CSGDDataTypeState = item.CSGDDataTypeState == rhs.CSGDDataTypeState;
             ret.CSMEDataTypeState = item.CSMEDataTypeState == rhs.CSMEDataTypeState;
-            ret.CSCRDataTypeState = item.CSCRDataTypeState == rhs.CSCRDataTypeState;
             ret.CSLRDataTypeState = item.CSLRDataTypeState == rhs.CSLRDataTypeState;
-            ret.CSFLDataTypeState = item.CSFLDataTypeState == rhs.CSFLDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3240,25 +3114,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.CSGDDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CSGDDataTypeState, "CSGDDataTypeState");
-            }
             if (printMask?.CSMEDataTypeState ?? true)
             {
                 sb.AppendItem(item.CSMEDataTypeState, "CSMEDataTypeState");
             }
-            if (printMask?.CSCRDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CSCRDataTypeState, "CSCRDataTypeState");
-            }
             if (printMask?.CSLRDataTypeState ?? true)
             {
                 sb.AppendItem(item.CSLRDataTypeState, "CSLRDataTypeState");
-            }
-            if (printMask?.CSFLDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CSFLDataTypeState, "CSFLDataTypeState");
             }
         }
         
@@ -3510,25 +3372,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDDataTypeState) ?? true))
-            {
-                if (lhs.CSGDDataTypeState != rhs.CSGDDataTypeState) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMEDataTypeState) ?? true))
             {
                 if (lhs.CSMEDataTypeState != rhs.CSMEDataTypeState) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCRDataTypeState) ?? true))
-            {
-                if (lhs.CSCRDataTypeState != rhs.CSCRDataTypeState) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRDataTypeState) ?? true))
             {
                 if (lhs.CSLRDataTypeState != rhs.CSLRDataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSFLDataTypeState) ?? true))
-            {
-                if (lhs.CSFLDataTypeState != rhs.CSFLDataTypeState) return false;
             }
             return true;
         }
@@ -3620,11 +3470,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(Flagsitem);
             }
-            hash.Add(item.CSGDDataTypeState);
             hash.Add(item.CSMEDataTypeState);
-            hash.Add(item.CSCRDataTypeState);
             hash.Add(item.CSLRDataTypeState);
-            hash.Add(item.CSFLDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3935,25 +3782,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDDataTypeState) ?? true))
-            {
-                item.CSGDDataTypeState = rhs.CSGDDataTypeState;
-            }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMEDataTypeState) ?? true))
             {
                 item.CSMEDataTypeState = rhs.CSMEDataTypeState;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCRDataTypeState) ?? true))
-            {
-                item.CSCRDataTypeState = rhs.CSCRDataTypeState;
-            }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRDataTypeState) ?? true))
             {
                 item.CSLRDataTypeState = rhs.CSLRDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSFLDataTypeState) ?? true))
-            {
-                item.CSFLDataTypeState = rhs.CSFLDataTypeState;
             }
         }
         
@@ -4615,7 +4450,6 @@ namespace Mutagen.Bethesda.Fallout4
         public CombatStyle.MajorFlag MajorFlags => (CombatStyle.MajorFlag)this.MajorRecordFlagsRaw;
 
         private RangeInt32? _CSGDLocation;
-        public CombatStyle.CSGDDataType CSGDDataTypeState { get; private set; }
         #region OffensiveMult
         private int _OffensiveMultLocation => _CSGDLocation!.Value.Min;
         private bool _OffensiveMult_IsSet => _CSGDLocation.HasValue;
@@ -4737,7 +4571,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single? RangedAccuracyMult => _RangedAccuracyMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RangedAccuracyMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         private RangeInt32? _CSCRLocation;
-        public CombatStyle.CSCRDataType CSCRDataTypeState { get; private set; }
         #region CloseRangeDuelingCircleMult
         private int _CloseRangeDuelingCircleMultLocation => _CSCRLocation!.Value.Min;
         private bool _CloseRangeDuelingCircleMult_IsSet => _CSCRLocation.HasValue;
@@ -4825,7 +4658,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single? CoverSearchDistanceMult => _CoverSearchDistanceMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CoverSearchDistanceMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         private RangeInt32? _CSFLLocation;
-        public CombatStyle.CSFLDataType CSFLDataTypeState { get; private set; }
         #region HoverChance
         private int _HoverChanceLocation => _CSFLLocation!.Value.Min;
         private bool _HoverChance_IsSet => _CSFLLocation.HasValue;

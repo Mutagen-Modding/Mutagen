@@ -249,9 +249,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region SpawnCount
         public UInt32 SpawnCount { get; set; } = default;
         #endregion
-        #region DATADataTypeState
-        public Explosion.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -301,7 +298,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SpawnPosition = initialValue;
                 this.SpawnSpreadDegrees = initialValue;
                 this.SpawnCount = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -335,8 +331,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Stagger,
                 TItem SpawnPosition,
                 TItem SpawnSpreadDegrees,
-                TItem SpawnCount,
-                TItem DATADataTypeState)
+                TItem SpawnCount)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -370,7 +365,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SpawnPosition = SpawnPosition;
                 this.SpawnSpreadDegrees = SpawnSpreadDegrees;
                 this.SpawnCount = SpawnCount;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -406,7 +400,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem SpawnPosition;
             public TItem SpawnSpreadDegrees;
             public TItem SpawnCount;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -444,7 +437,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.SpawnPosition, rhs.SpawnPosition)) return false;
                 if (!object.Equals(this.SpawnSpreadDegrees, rhs.SpawnSpreadDegrees)) return false;
                 if (!object.Equals(this.SpawnCount, rhs.SpawnCount)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -474,7 +466,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.SpawnPosition);
                 hash.Add(this.SpawnSpreadDegrees);
                 hash.Add(this.SpawnCount);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -517,7 +508,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.SpawnPosition)) return false;
                 if (!eval(this.SpawnSpreadDegrees)) return false;
                 if (!eval(this.SpawnCount)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -558,7 +548,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.SpawnPosition)) return true;
                 if (eval(this.SpawnSpreadDegrees)) return true;
                 if (eval(this.SpawnCount)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -598,7 +587,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.SpawnPosition = eval(this.SpawnPosition);
                 obj.SpawnSpreadDegrees = eval(this.SpawnSpreadDegrees);
                 obj.SpawnCount = eval(this.SpawnCount);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -713,10 +701,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(SpawnCount, "SpawnCount");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -752,7 +736,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? SpawnPosition;
             public Exception? SpawnSpreadDegrees;
             public Exception? SpawnCount;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -809,8 +792,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return SpawnSpreadDegrees;
                     case Explosion_FieldIndex.SpawnCount:
                         return SpawnCount;
-                    case Explosion_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -892,9 +873,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Explosion_FieldIndex.SpawnCount:
                         this.SpawnCount = ex;
-                        break;
-                    case Explosion_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -979,9 +957,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Explosion_FieldIndex.SpawnCount:
                         this.SpawnCount = (Exception?)obj;
                         break;
-                    case Explosion_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1015,7 +990,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (SpawnPosition != null) return true;
                 if (SpawnSpreadDegrees != null) return true;
                 if (SpawnCount != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1110,9 +1084,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(SpawnCount, "SpawnCount");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -1145,7 +1116,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.SpawnPosition = this.SpawnPosition.Combine(rhs.SpawnPosition);
                 ret.SpawnSpreadDegrees = this.SpawnSpreadDegrees.Combine(rhs.SpawnSpreadDegrees);
                 ret.SpawnCount = this.SpawnCount.Combine(rhs.SpawnCount);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1192,7 +1162,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool SpawnPosition;
             public bool SpawnSpreadDegrees;
             public bool SpawnCount;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1223,7 +1192,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SpawnPosition = defaultOn;
                 this.SpawnSpreadDegrees = defaultOn;
                 this.SpawnCount = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1255,7 +1223,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((SpawnPosition, null));
                 ret.Add((SpawnSpreadDegrees, null));
                 ret.Add((SpawnCount, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1312,10 +1279,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IExplosion);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1441,7 +1404,6 @@ namespace Mutagen.Bethesda.Fallout4
         new P3Float SpawnPosition { get; set; }
         new Single SpawnSpreadDegrees { get; set; }
         new UInt32 SpawnCount { get; set; }
-        new Explosion.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IExplosionInternal :
@@ -1507,7 +1469,6 @@ namespace Mutagen.Bethesda.Fallout4
         P3Float SpawnPosition { get; }
         Single SpawnSpreadDegrees { get; }
         UInt32 SpawnCount { get; }
-        Explosion.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1708,7 +1669,6 @@ namespace Mutagen.Bethesda.Fallout4
         SpawnPosition = 28,
         SpawnSpreadDegrees = 29,
         SpawnCount = 30,
-        DATADataTypeState = 31,
     }
     #endregion
 
@@ -1726,9 +1686,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "6a469e1c-3dbf-4c21-ba4b-7c0acd6819b2";
 
-        public const ushort AdditionalFieldCount = 25;
+        public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 32;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(Explosion.Mask<>);
 
@@ -1838,7 +1798,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.SpawnPosition = default;
             item.SpawnSpreadDegrees = default;
             item.SpawnCount = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1960,7 +1919,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.SpawnPosition = item.SpawnPosition.Equals(rhs.SpawnPosition);
             ret.SpawnSpreadDegrees = item.SpawnSpreadDegrees.EqualsWithin(rhs.SpawnSpreadDegrees);
             ret.SpawnCount = item.SpawnCount == rhs.SpawnCount;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2107,10 +2065,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.SpawnCount ?? true)
             {
                 sb.AppendItem(item.SpawnCount, "SpawnCount");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2266,10 +2220,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.SpawnCount != rhs.SpawnCount) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -2328,7 +2278,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.SpawnPosition);
             hash.Add(item.SpawnSpreadDegrees);
             hash.Add(item.SpawnCount);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2589,10 +2538,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.SpawnCount = rhs.SpawnCount;
             }
-            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2741,15 +2686,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ExplosionBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IExplosionGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IExplosionGetter item,
             MutagenWriter writer,
@@ -2877,7 +2813,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2937,15 +2873,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ExplosionBinaryCreateTranslation Instance = new ExplosionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EXPL;
-        public static void FillBinaryStructs(
-            IExplosionInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IExplosionInternal item,
             MutagenFrame frame,
@@ -3148,7 +3075,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         private RangeInt32? _DATALocation;
-        public Explosion.DATADataType DATADataTypeState { get; private set; }
         #region Light
         private int _LightLocation => _DATALocation!.Value.Min;
         private bool _Light_IsSet => _DATALocation.HasValue;

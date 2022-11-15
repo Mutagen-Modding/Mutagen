@@ -85,9 +85,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         #endregion
-        #region TETIDataTypeState
-        public NpcFaceTintingLayer.TETIDataType TETIDataTypeState { get; set; } = default;
-        #endregion
         #region TENDDataTypeState
         public NpcFaceTintingLayer.TENDDataType TENDDataTypeState { get; set; } = default;
         #endregion
@@ -135,7 +132,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Value = initialValue;
                 this.Color = initialValue;
                 this.TemplateColorIndex = initialValue;
-                this.TETIDataTypeState = initialValue;
                 this.TENDDataTypeState = initialValue;
             }
 
@@ -145,7 +141,6 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Value,
                 TItem Color,
                 TItem TemplateColorIndex,
-                TItem TETIDataTypeState,
                 TItem TENDDataTypeState)
             {
                 this.DataType = DataType;
@@ -153,7 +148,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Value = Value;
                 this.Color = Color;
                 this.TemplateColorIndex = TemplateColorIndex;
-                this.TETIDataTypeState = TETIDataTypeState;
                 this.TENDDataTypeState = TENDDataTypeState;
             }
 
@@ -171,7 +165,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Value;
             public TItem Color;
             public TItem TemplateColorIndex;
-            public TItem TETIDataTypeState;
             public TItem TENDDataTypeState;
             #endregion
 
@@ -190,7 +183,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Value, rhs.Value)) return false;
                 if (!object.Equals(this.Color, rhs.Color)) return false;
                 if (!object.Equals(this.TemplateColorIndex, rhs.TemplateColorIndex)) return false;
-                if (!object.Equals(this.TETIDataTypeState, rhs.TETIDataTypeState)) return false;
                 if (!object.Equals(this.TENDDataTypeState, rhs.TENDDataTypeState)) return false;
                 return true;
             }
@@ -202,7 +194,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Value);
                 hash.Add(this.Color);
                 hash.Add(this.TemplateColorIndex);
-                hash.Add(this.TETIDataTypeState);
                 hash.Add(this.TENDDataTypeState);
                 return hash.ToHashCode();
             }
@@ -217,7 +208,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Value)) return false;
                 if (!eval(this.Color)) return false;
                 if (!eval(this.TemplateColorIndex)) return false;
-                if (!eval(this.TETIDataTypeState)) return false;
                 if (!eval(this.TENDDataTypeState)) return false;
                 return true;
             }
@@ -231,7 +221,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Value)) return true;
                 if (eval(this.Color)) return true;
                 if (eval(this.TemplateColorIndex)) return true;
-                if (eval(this.TETIDataTypeState)) return true;
                 if (eval(this.TENDDataTypeState)) return true;
                 return false;
             }
@@ -252,7 +241,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Value = eval(this.Value);
                 obj.Color = eval(this.Color);
                 obj.TemplateColorIndex = eval(this.TemplateColorIndex);
-                obj.TETIDataTypeState = eval(this.TETIDataTypeState);
                 obj.TENDDataTypeState = eval(this.TENDDataTypeState);
             }
             #endregion
@@ -292,10 +280,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(TemplateColorIndex, "TemplateColorIndex");
                     }
-                    if (printMask?.TETIDataTypeState ?? true)
-                    {
-                        sb.AppendItem(TETIDataTypeState, "TETIDataTypeState");
-                    }
                     if (printMask?.TENDDataTypeState ?? true)
                     {
                         sb.AppendItem(TENDDataTypeState, "TENDDataTypeState");
@@ -329,7 +313,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Value;
             public Exception? Color;
             public Exception? TemplateColorIndex;
-            public Exception? TETIDataTypeState;
             public Exception? TENDDataTypeState;
             #endregion
 
@@ -349,8 +332,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Color;
                     case NpcFaceTintingLayer_FieldIndex.TemplateColorIndex:
                         return TemplateColorIndex;
-                    case NpcFaceTintingLayer_FieldIndex.TETIDataTypeState:
-                        return TETIDataTypeState;
                     case NpcFaceTintingLayer_FieldIndex.TENDDataTypeState:
                         return TENDDataTypeState;
                     default:
@@ -377,9 +358,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case NpcFaceTintingLayer_FieldIndex.TemplateColorIndex:
                         this.TemplateColorIndex = ex;
-                        break;
-                    case NpcFaceTintingLayer_FieldIndex.TETIDataTypeState:
-                        this.TETIDataTypeState = ex;
                         break;
                     case NpcFaceTintingLayer_FieldIndex.TENDDataTypeState:
                         this.TENDDataTypeState = ex;
@@ -409,9 +387,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case NpcFaceTintingLayer_FieldIndex.TemplateColorIndex:
                         this.TemplateColorIndex = (Exception?)obj;
                         break;
-                    case NpcFaceTintingLayer_FieldIndex.TETIDataTypeState:
-                        this.TETIDataTypeState = (Exception?)obj;
-                        break;
                     case NpcFaceTintingLayer_FieldIndex.TENDDataTypeState:
                         this.TENDDataTypeState = (Exception?)obj;
                         break;
@@ -428,7 +403,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Value != null) return true;
                 if (Color != null) return true;
                 if (TemplateColorIndex != null) return true;
-                if (TETIDataTypeState != null) return true;
                 if (TENDDataTypeState != null) return true;
                 return false;
             }
@@ -471,9 +445,6 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(TemplateColorIndex, "TemplateColorIndex");
                 }
                 {
-                    sb.AppendItem(TETIDataTypeState, "TETIDataTypeState");
-                }
-                {
                     sb.AppendItem(TENDDataTypeState, "TENDDataTypeState");
                 }
             }
@@ -489,7 +460,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Color = this.Color.Combine(rhs.Color);
                 ret.TemplateColorIndex = this.TemplateColorIndex.Combine(rhs.TemplateColorIndex);
-                ret.TETIDataTypeState = this.TETIDataTypeState.Combine(rhs.TETIDataTypeState);
                 ret.TENDDataTypeState = this.TENDDataTypeState.Combine(rhs.TENDDataTypeState);
                 return ret;
             }
@@ -519,7 +489,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Value;
             public bool Color;
             public bool TemplateColorIndex;
-            public bool TETIDataTypeState;
             public bool TENDDataTypeState;
             #endregion
 
@@ -535,7 +504,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Value = defaultOn;
                 this.Color = defaultOn;
                 this.TemplateColorIndex = defaultOn;
-                this.TETIDataTypeState = defaultOn;
                 this.TENDDataTypeState = defaultOn;
             }
 
@@ -557,7 +525,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Value, null));
                 ret.Add((Color, null));
                 ret.Add((TemplateColorIndex, null));
-                ret.Add((TETIDataTypeState, null));
                 ret.Add((TENDDataTypeState, null));
             }
 
@@ -570,10 +537,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        [Flags]
-        public enum TETIDataType
-        {
-        }
         [Flags]
         public enum TENDDataType
         {
@@ -648,7 +611,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single Value { get; set; }
         new Color Color { get; set; }
         new Int16 TemplateColorIndex { get; set; }
-        new NpcFaceTintingLayer.TETIDataType TETIDataTypeState { get; set; }
         new NpcFaceTintingLayer.TENDDataType TENDDataTypeState { get; set; }
     }
 
@@ -669,7 +631,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single Value { get; }
         Color Color { get; }
         Int16 TemplateColorIndex { get; }
-        NpcFaceTintingLayer.TETIDataType TETIDataTypeState { get; }
         NpcFaceTintingLayer.TENDDataType TENDDataTypeState { get; }
 
     }
@@ -845,8 +806,7 @@ namespace Mutagen.Bethesda.Fallout4
         Value = 2,
         Color = 3,
         TemplateColorIndex = 4,
-        TETIDataTypeState = 5,
-        TENDDataTypeState = 6,
+        TENDDataTypeState = 5,
     }
     #endregion
 
@@ -864,9 +824,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "e0af3cb4-0181-4e98-b6e0-f18875696958";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(NpcFaceTintingLayer.Mask<>);
 
@@ -949,7 +909,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Value = default;
             item.Color = default;
             item.TemplateColorIndex = default;
-            item.TETIDataTypeState = default;
             item.TENDDataTypeState = default;
         }
         
@@ -1006,7 +965,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Value = item.Value.EqualsWithin(rhs.Value);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             ret.TemplateColorIndex = item.TemplateColorIndex == rhs.TemplateColorIndex;
-            ret.TETIDataTypeState = item.TETIDataTypeState == rhs.TETIDataTypeState;
             ret.TENDDataTypeState = item.TENDDataTypeState == rhs.TENDDataTypeState;
         }
         
@@ -1072,10 +1030,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.TemplateColorIndex, "TemplateColorIndex");
             }
-            if (printMask?.TETIDataTypeState ?? true)
-            {
-                sb.AppendItem(item.TETIDataTypeState, "TETIDataTypeState");
-            }
             if (printMask?.TENDDataTypeState ?? true)
             {
                 sb.AppendItem(item.TENDDataTypeState, "TENDDataTypeState");
@@ -1109,10 +1063,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.TemplateColorIndex != rhs.TemplateColorIndex) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TETIDataTypeState) ?? true))
-            {
-                if (lhs.TETIDataTypeState != rhs.TETIDataTypeState) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TENDDataTypeState) ?? true))
             {
                 if (lhs.TENDDataTypeState != rhs.TENDDataTypeState) return false;
@@ -1128,7 +1078,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Value);
             hash.Add(item.Color);
             hash.Add(item.TemplateColorIndex);
-            hash.Add(item.TETIDataTypeState);
             hash.Add(item.TENDDataTypeState);
             return hash.ToHashCode();
         }
@@ -1181,10 +1130,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TemplateColorIndex) ?? true))
             {
                 item.TemplateColorIndex = rhs.TemplateColorIndex;
-            }
-            if ((copyMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TETIDataTypeState) ?? true))
-            {
-                item.TETIDataTypeState = rhs.TETIDataTypeState;
             }
             if ((copyMask?.GetShouldTranslate((int)NpcFaceTintingLayer_FieldIndex.TENDDataTypeState) ?? true))
             {
@@ -1469,7 +1414,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         private RangeInt32? _TETILocation;
-        public NpcFaceTintingLayer.TETIDataType TETIDataTypeState { get; private set; }
         #region DataType
         private int _DataTypeLocation => _TETILocation!.Value.Min;
         private bool _DataType_IsSet => _TETILocation.HasValue;

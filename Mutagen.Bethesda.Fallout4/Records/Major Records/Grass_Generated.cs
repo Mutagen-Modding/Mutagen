@@ -140,9 +140,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IGrassGetter.Unknown3 => this.Unknown3;
         #endregion
-        #region DATADataTypeState
-        public Grass.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -183,7 +180,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.WavePeriod = initialValue;
                 this.Flags = initialValue;
                 this.Unknown3 = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -208,8 +204,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ColorRange,
                 TItem WavePeriod,
                 TItem Flags,
-                TItem Unknown3,
-                TItem DATADataTypeState)
+                TItem Unknown3)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -234,7 +229,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.WavePeriod = WavePeriod;
                 this.Flags = Flags;
                 this.Unknown3 = Unknown3;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -261,7 +255,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem WavePeriod;
             public TItem Flags;
             public TItem Unknown3;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -290,7 +283,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.WavePeriod, rhs.WavePeriod)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -311,7 +303,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.WavePeriod);
                 hash.Add(this.Flags);
                 hash.Add(this.Unknown3);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -345,7 +336,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.WavePeriod)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Unknown3)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -377,7 +367,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.WavePeriod)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.Unknown3)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -408,7 +397,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.WavePeriod = eval(this.WavePeriod);
                 obj.Flags = eval(this.Flags);
                 obj.Unknown3 = eval(this.Unknown3);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -487,10 +475,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Unknown3, "Unknown3");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -517,7 +501,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? WavePeriod;
             public Exception? Flags;
             public Exception? Unknown3;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -556,8 +539,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Flags;
                     case Grass_FieldIndex.Unknown3:
                         return Unknown3;
-                    case Grass_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -612,9 +593,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Grass_FieldIndex.Unknown3:
                         this.Unknown3 = ex;
-                        break;
-                    case Grass_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -672,9 +650,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Grass_FieldIndex.Unknown3:
                         this.Unknown3 = (Exception?)obj;
                         break;
-                    case Grass_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -699,7 +674,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (WavePeriod != null) return true;
                 if (Flags != null) return true;
                 if (Unknown3 != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -767,9 +741,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Unknown3, "Unknown3");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -793,7 +764,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.WavePeriod = this.WavePeriod.Combine(rhs.WavePeriod);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -831,7 +801,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool WavePeriod;
             public bool Flags;
             public bool Unknown3;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -853,7 +822,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.WavePeriod = defaultOn;
                 this.Flags = defaultOn;
                 this.Unknown3 = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -876,7 +844,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((WavePeriod, null));
                 ret.Add((Flags, null));
                 ret.Add((Unknown3, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -933,10 +900,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IGrass);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1045,7 +1008,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single WavePeriod { get; set; }
         new Grass.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown3 { get; set; }
-        new Grass.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IGrassInternal :
@@ -1092,7 +1054,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single WavePeriod { get; }
         Grass.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown3 { get; }
-        Grass.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1284,7 +1245,6 @@ namespace Mutagen.Bethesda.Fallout4
         WavePeriod = 19,
         Flags = 20,
         Unknown3 = 21,
-        DATADataTypeState = 22,
     }
     #endregion
 
@@ -1302,9 +1262,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "1c394d4c-178d-4ee4-be0e-06aa0f5d85f6";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Grass.Mask<>);
 
@@ -1402,7 +1362,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.WavePeriod = default;
             item.Flags = default;
             item.Unknown3 = new byte[3];
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1507,7 +1466,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.WavePeriod = item.WavePeriod.EqualsWithin(rhs.WavePeriod);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unknown3 = MemoryExtensions.SequenceEqual(item.Unknown3.Span, rhs.Unknown3.Span);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1617,10 +1575,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Unknown3 ?? true)
             {
                 sb.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1740,10 +1694,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1790,7 +1740,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.WavePeriod);
             hash.Add(item.Flags);
             hash.Add(item.Unknown3);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2001,10 +1950,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Unknown3 = rhs.Unknown3.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2153,15 +2098,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly GrassBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IGrassGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IGrassGetter item,
             MutagenWriter writer,
@@ -2228,7 +2164,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2288,15 +2224,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly GrassBinaryCreateTranslation Instance = new GrassBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GRAS;
-        public static void FillBinaryStructs(
-            IGrassInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IGrassInternal item,
             MutagenFrame frame,
@@ -2425,7 +2352,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _DATALocation;
-        public Grass.DATADataType DATADataTypeState { get; private set; }
         #region Density
         private int _DensityLocation => _DATALocation!.Value.Min;
         private bool _Density_IsSet => _DATALocation.HasValue;

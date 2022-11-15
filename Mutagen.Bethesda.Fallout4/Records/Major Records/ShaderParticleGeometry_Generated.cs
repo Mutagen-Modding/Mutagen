@@ -130,9 +130,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IShaderParticleGeometryGetter.ParticleTexture => this.ParticleTexture;
         #endregion
-        #region DATADataTypeState
-        public ShaderParticleGeometry.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -183,7 +180,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ParticleDensity = initialValue;
                 this.Unknown12 = initialValue;
                 this.ParticleTexture = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -218,8 +214,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Unknown11,
                 TItem ParticleDensity,
                 TItem Unknown12,
-                TItem ParticleTexture,
-                TItem DATADataTypeState)
+                TItem ParticleTexture)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -254,7 +249,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ParticleDensity = ParticleDensity;
                 this.Unknown12 = Unknown12;
                 this.ParticleTexture = ParticleTexture;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -291,7 +285,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem ParticleDensity;
             public TItem Unknown12;
             public TItem ParticleTexture;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -330,7 +323,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ParticleDensity, rhs.ParticleDensity)) return false;
                 if (!object.Equals(this.Unknown12, rhs.Unknown12)) return false;
                 if (!object.Equals(this.ParticleTexture, rhs.ParticleTexture)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -361,7 +353,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ParticleDensity);
                 hash.Add(this.Unknown12);
                 hash.Add(this.ParticleTexture);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -397,7 +388,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.ParticleDensity)) return false;
                 if (!eval(this.Unknown12)) return false;
                 if (!eval(this.ParticleTexture)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -431,7 +421,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.ParticleDensity)) return true;
                 if (eval(this.Unknown12)) return true;
                 if (eval(this.ParticleTexture)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -472,7 +461,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ParticleDensity = eval(this.ParticleDensity);
                 obj.Unknown12 = eval(this.Unknown12);
                 obj.ParticleTexture = eval(this.ParticleTexture);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -591,10 +579,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(ParticleTexture, "ParticleTexture");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -631,7 +615,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? ParticleDensity;
             public Exception? Unknown12;
             public Exception? ParticleTexture;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -690,8 +673,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Unknown12;
                     case ShaderParticleGeometry_FieldIndex.ParticleTexture:
                         return ParticleTexture;
-                    case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -776,9 +757,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case ShaderParticleGeometry_FieldIndex.ParticleTexture:
                         this.ParticleTexture = ex;
-                        break;
-                    case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -866,9 +844,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case ShaderParticleGeometry_FieldIndex.ParticleTexture:
                         this.ParticleTexture = (Exception?)obj;
                         break;
-                    case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -903,7 +878,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ParticleDensity != null) return true;
                 if (Unknown12 != null) return true;
                 if (ParticleTexture != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1005,9 +979,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(ParticleTexture, "ParticleTexture");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -1041,7 +1012,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ParticleDensity = this.ParticleDensity.Combine(rhs.ParticleDensity);
                 ret.Unknown12 = this.Unknown12.Combine(rhs.Unknown12);
                 ret.ParticleTexture = this.ParticleTexture.Combine(rhs.ParticleTexture);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1089,7 +1059,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool ParticleDensity;
             public bool Unknown12;
             public bool ParticleTexture;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1123,7 +1092,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ParticleDensity = defaultOn;
                 this.Unknown12 = defaultOn;
                 this.ParticleTexture = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1156,7 +1124,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ParticleDensity, null));
                 ret.Add((Unknown12, null));
                 ret.Add((ParticleTexture, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1211,10 +1178,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IShaderParticleGeometry);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1323,7 +1286,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single ParticleDensity { get; set; }
         new Single Unknown12 { get; set; }
         new String? ParticleTexture { get; set; }
-        new ShaderParticleGeometry.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IShaderParticleGeometryInternal :
@@ -1366,7 +1328,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single ParticleDensity { get; }
         Single Unknown12 { get; }
         String? ParticleTexture { get; }
-        ShaderParticleGeometry.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1568,7 +1529,6 @@ namespace Mutagen.Bethesda.Fallout4
         ParticleDensity = 29,
         Unknown12 = 30,
         ParticleTexture = 31,
-        DATADataTypeState = 32,
     }
     #endregion
 
@@ -1586,9 +1546,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "a37c06ab-6966-4331-90d1-c9cffbd53eca";
 
-        public const ushort AdditionalFieldCount = 26;
+        public const ushort AdditionalFieldCount = 25;
 
-        public const ushort FieldCount = 33;
+        public const ushort FieldCount = 32;
 
         public static readonly Type MaskType = typeof(ShaderParticleGeometry.Mask<>);
 
@@ -1692,7 +1652,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.ParticleDensity = default;
             item.Unknown12 = default;
             item.ParticleTexture = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1802,7 +1761,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.ParticleDensity = item.ParticleDensity.EqualsWithin(rhs.ParticleDensity);
             ret.Unknown12 = item.Unknown12.EqualsWithin(rhs.Unknown12);
             ret.ParticleTexture = string.Equals(item.ParticleTexture, rhs.ParticleTexture);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1952,10 +1910,6 @@ namespace Mutagen.Bethesda.Fallout4
                 && item.ParticleTexture is {} ParticleTextureItem)
             {
                 sb.AppendItem(ParticleTextureItem, "ParticleTexture");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2107,10 +2061,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!string.Equals(lhs.ParticleTexture, rhs.ParticleTexture)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -2167,7 +2117,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(ParticleTextureitem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2371,10 +2320,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.ParticleTexture = rhs.ParticleTexture;
             }
-            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2523,15 +2468,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ShaderParticleGeometryBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IShaderParticleGeometryGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IShaderParticleGeometryGetter item,
             MutagenWriter writer,
@@ -2633,7 +2569,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2693,15 +2629,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ShaderParticleGeometryBinaryCreateTranslation Instance = new ShaderParticleGeometryBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SPGD;
-        public static void FillBinaryStructs(
-            IShaderParticleGeometryInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IShaderParticleGeometryInternal item,
             MutagenFrame frame,
@@ -2837,7 +2764,6 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         private RangeInt32? _DATALocation;
-        public ShaderParticleGeometry.DATADataType DATADataTypeState { get; private set; }
         #region GravityVelocity
         private int _GravityVelocityLocation => _DATALocation!.Value.Min;
         private bool _GravityVelocity_IsSet => _DATALocation.HasValue;

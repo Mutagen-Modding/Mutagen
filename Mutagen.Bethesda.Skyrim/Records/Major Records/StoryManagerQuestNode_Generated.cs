@@ -84,9 +84,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region DNAMDataTypeState
-        public StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -117,7 +114,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MaxConcurrentQuests = initialValue;
                 this.MaxNumQuestsToRun = initialValue;
                 this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>());
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -135,8 +131,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem QuestFlags,
                 TItem MaxConcurrentQuests,
                 TItem MaxNumQuestsToRun,
-                TItem Quests,
-                TItem DNAMDataTypeState)
+                TItem Quests)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -154,7 +149,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MaxConcurrentQuests = MaxConcurrentQuests;
                 this.MaxNumQuestsToRun = MaxNumQuestsToRun;
                 this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(Quests, Enumerable.Empty<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>());
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -171,7 +165,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem MaxConcurrentQuests;
             public TItem MaxNumQuestsToRun;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>? Quests;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -190,7 +183,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.MaxConcurrentQuests, rhs.MaxConcurrentQuests)) return false;
                 if (!object.Equals(this.MaxNumQuestsToRun, rhs.MaxNumQuestsToRun)) return false;
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -201,7 +193,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.MaxConcurrentQuests);
                 hash.Add(this.MaxNumQuestsToRun);
                 hash.Add(this.Quests);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -228,7 +219,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -253,7 +243,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -288,7 +277,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -342,10 +330,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -362,7 +346,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? MaxConcurrentQuests;
             public Exception? MaxNumQuestsToRun;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>? Quests;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -381,8 +364,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return MaxNumQuestsToRun;
                     case StoryManagerQuestNode_FieldIndex.Quests:
                         return Quests;
-                    case StoryManagerQuestNode_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -407,9 +388,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case StoryManagerQuestNode_FieldIndex.Quests:
                         this.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(ex, null);
-                        break;
-                    case StoryManagerQuestNode_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -437,9 +415,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case StoryManagerQuestNode_FieldIndex.Quests:
                         this.Quests = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>)obj;
                         break;
-                    case StoryManagerQuestNode_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -454,7 +429,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (MaxConcurrentQuests != null) return true;
                 if (MaxNumQuestsToRun != null) return true;
                 if (Quests != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -511,9 +485,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -527,7 +498,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.MaxConcurrentQuests = this.MaxConcurrentQuests.Combine(rhs.MaxConcurrentQuests);
                 ret.MaxNumQuestsToRun = this.MaxNumQuestsToRun.Combine(rhs.MaxNumQuestsToRun);
                 ret.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), Noggog.ExceptionExt.Combine(this.Quests?.Specific, rhs.Quests?.Specific));
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -555,7 +525,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool MaxConcurrentQuests;
             public bool MaxNumQuestsToRun;
             public StoryManagerQuest.TranslationMask? Quests;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -568,7 +537,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.QuestFlags = defaultOn;
                 this.MaxConcurrentQuests = defaultOn;
                 this.MaxNumQuestsToRun = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -581,7 +549,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MaxConcurrentQuests, null));
                 ret.Add((MaxNumQuestsToRun, null));
                 ret.Add((Quests == null ? DefaultOn : !Quests.GetCrystal().CopyNothing, Quests?.GetCrystal()));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -645,10 +612,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IStoryManagerQuestNode);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -738,7 +701,6 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32? MaxConcurrentQuests { get; set; }
         new UInt32? MaxNumQuestsToRun { get; set; }
         new ExtendedList<StoryManagerQuest> Quests { get; }
-        new StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IStoryManagerQuestNodeInternal :
@@ -762,7 +724,6 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32? MaxConcurrentQuests { get; }
         UInt32? MaxNumQuestsToRun { get; }
         IReadOnlyList<IStoryManagerQuestGetter> Quests { get; }
-        StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -947,7 +908,6 @@ namespace Mutagen.Bethesda.Skyrim
         MaxConcurrentQuests = 12,
         MaxNumQuestsToRun = 13,
         Quests = 14,
-        DNAMDataTypeState = 15,
     }
     #endregion
 
@@ -965,9 +925,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "2f1031e5-dcff-4f22-aad3-7472e3300692";
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(StoryManagerQuestNode.Mask<>);
 
@@ -1056,7 +1016,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.MaxConcurrentQuests = default;
             item.MaxNumQuestsToRun = default;
             item.Quests.Clear();
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1166,7 +1125,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Quests,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1247,10 +1205,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -1351,10 +1305,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Quests.SequenceEqual(rhs.Quests, (l, r) => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)StoryManagerQuestNode_FieldIndex.Quests)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -1405,7 +1355,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(MaxNumQuestsToRunitem);
             }
             hash.Add(item.Quests);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1568,10 +1517,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
             }
         }
         
@@ -1751,15 +1696,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly StoryManagerQuestNodeBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IStoryManagerQuestNodeGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IStoryManagerQuestNodeGetter item,
             MutagenWriter writer,
@@ -1814,7 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1885,15 +1821,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly StoryManagerQuestNodeBinaryCreateTranslation Instance = new StoryManagerQuestNodeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SMQN;
-        public static void FillBinaryStructs(
-            IStoryManagerQuestNodeInternal item,
-            MutagenFrame frame)
-        {
-            AStoryManagerNodeBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IStoryManagerQuestNodeInternal item,
             MutagenFrame frame,
@@ -2007,7 +1934,6 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         private RangeInt32? _DNAMLocation;
-        public StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;

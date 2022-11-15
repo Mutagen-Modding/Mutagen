@@ -160,9 +160,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHazardGetter> IImpactGetter.Hazard => this.Hazard;
         #endregion
-        #region DATADataTypeState
-        public Impact.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -203,7 +200,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sound1 = initialValue;
                 this.Sound2 = initialValue;
                 this.Hazard = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -228,8 +224,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SecondaryTextureSet,
                 TItem Sound1,
                 TItem Sound2,
-                TItem Hazard,
-                TItem DATADataTypeState)
+                TItem Hazard)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -254,7 +249,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sound1 = Sound1;
                 this.Sound2 = Sound2;
                 this.Hazard = Hazard;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -281,7 +275,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Sound1;
             public TItem Sound2;
             public TItem Hazard;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -310,7 +303,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Sound1, rhs.Sound1)) return false;
                 if (!object.Equals(this.Sound2, rhs.Sound2)) return false;
                 if (!object.Equals(this.Hazard, rhs.Hazard)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -331,7 +323,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Sound1);
                 hash.Add(this.Sound2);
                 hash.Add(this.Hazard);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -365,7 +356,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Sound1)) return false;
                 if (!eval(this.Sound2)) return false;
                 if (!eval(this.Hazard)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -397,7 +387,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Sound1)) return true;
                 if (eval(this.Sound2)) return true;
                 if (eval(this.Hazard)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -428,7 +417,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Sound1 = eval(this.Sound1);
                 obj.Sound2 = eval(this.Sound2);
                 obj.Hazard = eval(this.Hazard);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -507,10 +495,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Hazard, "Hazard");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -537,7 +521,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Sound1;
             public Exception? Sound2;
             public Exception? Hazard;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -576,8 +559,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Sound2;
                     case Impact_FieldIndex.Hazard:
                         return Hazard;
-                    case Impact_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -632,9 +613,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Impact_FieldIndex.Hazard:
                         this.Hazard = ex;
-                        break;
-                    case Impact_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -692,9 +670,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Impact_FieldIndex.Hazard:
                         this.Hazard = (Exception?)obj;
                         break;
-                    case Impact_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -719,7 +694,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Sound1 != null) return true;
                 if (Sound2 != null) return true;
                 if (Hazard != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -787,9 +761,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Hazard, "Hazard");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -813,7 +784,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Sound1 = this.Sound1.Combine(rhs.Sound1);
                 ret.Sound2 = this.Sound2.Combine(rhs.Sound2);
                 ret.Hazard = this.Hazard.Combine(rhs.Hazard);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -851,7 +821,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Sound1;
             public bool Sound2;
             public bool Hazard;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -873,7 +842,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sound1 = defaultOn;
                 this.Sound2 = defaultOn;
                 this.Hazard = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -896,7 +864,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Sound1, null));
                 ret.Add((Sound2, null));
                 ret.Add((Hazard, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -960,10 +927,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IImpact);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ImpactCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ImpactSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ImpactSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -1071,7 +1034,6 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<ISoundGetter> Sound1 { get; set; }
         new IFormLinkNullable<ISoundGetter> Sound2 { get; set; }
         new IFormLinkNullable<IHazardGetter> Hazard { get; set; }
-        new Impact.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IImpactInternal :
@@ -1112,7 +1074,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundGetter> Sound1 { get; }
         IFormLinkNullableGetter<ISoundGetter> Sound2 { get; }
         IFormLinkNullableGetter<IHazardGetter> Hazard { get; }
-        Impact.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1304,7 +1265,6 @@ namespace Mutagen.Bethesda.Skyrim
         Sound1 = 19,
         Sound2 = 20,
         Hazard = 21,
-        DATADataTypeState = 22,
     }
     #endregion
 
@@ -1322,9 +1282,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "d508129e-9303-4d72-bbb5-dc4abc363372";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Impact.Mask<>);
 
@@ -1424,7 +1384,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Sound1.Clear();
             item.Sound2.Clear();
             item.Hazard.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1560,7 +1519,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Sound1 = item.Sound1.Equals(rhs.Sound1);
             ret.Sound2 = item.Sound2.Equals(rhs.Sound2);
             ret.Hazard = item.Hazard.Equals(rhs.Hazard);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1671,10 +1629,6 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.Hazard ?? true)
             {
                 sb.AppendItem(item.Hazard.FormKeyNullable, "Hazard");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1794,10 +1748,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1847,7 +1797,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Sound1);
             hash.Add(item.Sound2);
             hash.Add(item.Hazard);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2101,10 +2050,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Hazard.SetTo(rhs.Hazard.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2253,15 +2198,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly ImpactBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IImpactGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IImpactGetter item,
             MutagenWriter writer,
@@ -2344,7 +2280,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2404,15 +2340,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ImpactBinaryCreateTranslation Instance = new ImpactBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IPCT;
-        public static void FillBinaryStructs(
-            IImpactInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IImpactInternal item,
             MutagenFrame frame,
@@ -2557,7 +2484,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _DATALocation;
-        public Impact.DATADataType DATADataTypeState { get; private set; }
         #region Duration
         private int _DurationLocation => _DATALocation!.Value.Min;
         private bool _Duration_IsSet => _DATALocation.HasValue;

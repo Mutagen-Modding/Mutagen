@@ -77,9 +77,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         public VisualEffect.Flag Flags { get; set; } = default;
         #endregion
-        #region DATADataTypeState
-        public VisualEffect.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -108,7 +105,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EffectArt = initialValue;
                 this.Shader = initialValue;
                 this.Flags = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -121,8 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SkyrimMajorRecordFlags,
                 TItem EffectArt,
                 TItem Shader,
-                TItem Flags,
-                TItem DATADataTypeState)
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -135,7 +130,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EffectArt = EffectArt;
                 this.Shader = Shader;
                 this.Flags = Flags;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -150,7 +144,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem EffectArt;
             public TItem Shader;
             public TItem Flags;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -167,7 +160,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.EffectArt, rhs.EffectArt)) return false;
                 if (!object.Equals(this.Shader, rhs.Shader)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -176,7 +168,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.EffectArt);
                 hash.Add(this.Shader);
                 hash.Add(this.Flags);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -190,7 +181,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.EffectArt)) return false;
                 if (!eval(this.Shader)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -202,7 +192,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.EffectArt)) return true;
                 if (eval(this.Shader)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -221,7 +210,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.EffectArt = eval(this.EffectArt);
                 obj.Shader = eval(this.Shader);
                 obj.Flags = eval(this.Flags);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -252,10 +240,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -270,7 +254,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? EffectArt;
             public Exception? Shader;
             public Exception? Flags;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -285,8 +268,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Shader;
                     case VisualEffect_FieldIndex.Flags:
                         return Flags;
-                    case VisualEffect_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -305,9 +286,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case VisualEffect_FieldIndex.Flags:
                         this.Flags = ex;
-                        break;
-                    case VisualEffect_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -329,9 +307,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case VisualEffect_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case VisualEffect_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -344,7 +319,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (EffectArt != null) return true;
                 if (Shader != null) return true;
                 if (Flags != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -380,9 +354,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -394,7 +365,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.EffectArt = this.EffectArt.Combine(rhs.EffectArt);
                 ret.Shader = this.Shader.Combine(rhs.Shader);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -420,7 +390,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool EffectArt;
             public bool Shader;
             public bool Flags;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -432,7 +401,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EffectArt = defaultOn;
                 this.Shader = defaultOn;
                 this.Flags = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -443,7 +411,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EffectArt, null));
                 ret.Add((Shader, null));
                 ret.Add((Flags, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -507,10 +474,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IVisualEffect);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -598,7 +561,6 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLink<IArtObjectGetter> EffectArt { get; set; }
         new IFormLink<IEffectShaderGetter> Shader { get; set; }
         new VisualEffect.Flag Flags { get; set; }
-        new VisualEffect.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IVisualEffectInternal :
@@ -620,7 +582,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IArtObjectGetter> EffectArt { get; }
         IFormLinkGetter<IEffectShaderGetter> Shader { get; }
         VisualEffect.Flag Flags { get; }
-        VisualEffect.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -800,7 +761,6 @@ namespace Mutagen.Bethesda.Skyrim
         EffectArt = 7,
         Shader = 8,
         Flags = 9,
-        DATADataTypeState = 10,
     }
     #endregion
 
@@ -818,9 +778,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "3f255cad-cf84-4fdc-ae26-0285f00ea645";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(VisualEffect.Mask<>);
 
@@ -901,7 +861,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.EffectArt.Clear();
             item.Shader.Clear();
             item.Flags = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -991,7 +950,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.EffectArt = item.EffectArt.Equals(rhs.EffectArt);
             ret.Shader = item.Shader.Equals(rhs.Shader);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1052,10 +1010,6 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.Flags ?? true)
             {
                 sb.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1119,10 +1073,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1154,7 +1104,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.EffectArt);
             hash.Add(item.Shader);
             hash.Add(item.Flags);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1271,10 +1220,6 @@ namespace Mutagen.Bethesda.Skyrim
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -1424,15 +1369,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly VisualEffectBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IVisualEffectGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IVisualEffectGetter item,
             MutagenWriter writer,
@@ -1468,7 +1404,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1528,15 +1464,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly VisualEffectBinaryCreateTranslation Instance = new VisualEffectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.RFCT;
-        public static void FillBinaryStructs(
-            IVisualEffectInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IVisualEffectInternal item,
             MutagenFrame frame,
@@ -1623,7 +1550,6 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         private RangeInt32? _DATALocation;
-        public VisualEffect.DATADataType DATADataTypeState { get; private set; }
         #region EffectArt
         private int _EffectArtLocation => _DATALocation!.Value.Min;
         private bool _EffectArt_IsSet => _DATALocation.HasValue;

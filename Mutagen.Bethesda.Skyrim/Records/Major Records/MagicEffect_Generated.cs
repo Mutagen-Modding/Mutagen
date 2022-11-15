@@ -409,9 +409,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region DATADataTypeState
-        public MagicEffect.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -481,7 +478,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>());
                 this.Description = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -535,8 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem CounterEffects,
                 TItem Sounds,
                 TItem Description,
-                TItem Conditions,
-                TItem DATADataTypeState)
+                TItem Conditions)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -590,7 +585,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>());
                 this.Description = Description;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -646,7 +640,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>? Sounds;
             public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -704,7 +697,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -754,7 +746,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Sounds);
                 hash.Add(this.Description);
                 hash.Add(this.Conditions);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -859,7 +850,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -962,7 +952,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1076,7 +1065,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -1335,10 +1323,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1394,7 +1378,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>? Sounds;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1491,8 +1474,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Description;
                     case MagicEffect_FieldIndex.Conditions:
                         return Conditions;
-                    case MagicEffect_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1634,9 +1615,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case MagicEffect_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
-                        break;
-                    case MagicEffect_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1781,9 +1759,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
-                    case MagicEffect_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1837,7 +1812,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Sounds != null) return true;
                 if (Description != null) return true;
                 if (Conditions != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -2056,9 +2030,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -2111,7 +2082,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2178,7 +2148,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MagicEffectSound.TranslationMask? Sounds;
             public bool Description;
             public Condition.TranslationMask? Conditions;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -2227,7 +2196,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ScriptEffectAIDelayTime = defaultOn;
                 this.CounterEffects = defaultOn;
                 this.Description = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -2279,7 +2247,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2343,10 +2310,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IMagicEffect);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MagicEffectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MagicEffectSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MagicEffectSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -2494,7 +2457,6 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<MagicEffectSound>? Sounds { get; set; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IMagicEffectInternal :
@@ -2580,7 +2542,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; }
         ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        MagicEffect.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -2801,7 +2762,6 @@ namespace Mutagen.Bethesda.Skyrim
         Sounds = 48,
         Description = 49,
         Conditions = 50,
-        DATADataTypeState = 51,
     }
     #endregion
 
@@ -2819,9 +2779,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "6f4b3983-51e3-47e9-894e-9c442948e6d1";
 
-        public const ushort AdditionalFieldCount = 45;
+        public const ushort AdditionalFieldCount = 44;
 
-        public const ushort FieldCount = 52;
+        public const ushort FieldCount = 51;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -2955,7 +2915,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Sounds = null;
             item.Description = default;
             item.Conditions.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -3143,7 +3102,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3414,10 +3372,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static MagicEffect_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -3652,10 +3606,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Conditions)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -3737,7 +3687,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.Conditions);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -4211,10 +4160,6 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -4362,15 +4307,6 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryWriteTranslator
     {
         public new static readonly MagicEffectBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IMagicEffectGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IMagicEffectGetter item,
@@ -4624,7 +4560,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -4684,15 +4620,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly MagicEffectBinaryCreateTranslation Instance = new MagicEffectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MGEF;
-        public static void FillBinaryStructs(
-            IMagicEffectInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMagicEffectInternal item,
             MutagenFrame frame,
@@ -4984,7 +4911,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private RangeInt32? _DATALocation;
-        public MagicEffect.DATADataType DATADataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;

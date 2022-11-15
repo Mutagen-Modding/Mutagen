@@ -129,7 +129,6 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Position,
                 TItem Rotation,
                 TItem Comments,
-                TItem DATADataTypeState,
                 TItem Projectile)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -166,8 +165,7 @@ namespace Mutagen.Bethesda.Fallout4
                 DistantLodData: DistantLodData,
                 Position: Position,
                 Rotation: Rotation,
-                Comments: Comments,
-                DATADataTypeState: DATADataTypeState)
+                Comments: Comments)
             {
                 this.Projectile = Projectile;
             }
@@ -766,8 +764,7 @@ namespace Mutagen.Bethesda.Fallout4
         Position = 32,
         Rotation = 33,
         Comments = 34,
-        DATADataTypeState = 35,
-        Projectile = 36,
+        Projectile = 35,
     }
     #endregion
 
@@ -787,7 +784,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(PlacedBeam.Mask<>);
 
@@ -1093,8 +1090,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case APlacedTrap_FieldIndex.Rotation:
                     return (PlacedBeam_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.Comments:
-                    return (PlacedBeam_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.DATADataTypeState:
                     return (PlacedBeam_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1499,7 +1494,7 @@ namespace Mutagen.Bethesda.Fallout4
             IPlacedBeamGetter item,
             MutagenWriter writer)
         {
-            APlacedTrapBinaryWriteTranslation.WriteEmbedded(
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
         }

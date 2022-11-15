@@ -151,9 +151,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region StaticAttenuation
         public Single StaticAttenuation { get; set; } = default;
         #endregion
-        #region BNAMDataTypeState
-        public SoundDescriptor.BNAMDataType BNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -192,7 +189,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Priority = initialValue;
                 this.Variance = initialValue;
                 this.StaticAttenuation = initialValue;
-                this.BNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -215,8 +211,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem PercentFrequencyVariance,
                 TItem Priority,
                 TItem Variance,
-                TItem StaticAttenuation,
-                TItem BNAMDataTypeState)
+                TItem StaticAttenuation)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -239,7 +234,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Priority = Priority;
                 this.Variance = Variance;
                 this.StaticAttenuation = StaticAttenuation;
-                this.BNAMDataTypeState = BNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -264,7 +258,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Priority;
             public TItem Variance;
             public TItem StaticAttenuation;
-            public TItem BNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -291,7 +284,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Priority, rhs.Priority)) return false;
                 if (!object.Equals(this.Variance, rhs.Variance)) return false;
                 if (!object.Equals(this.StaticAttenuation, rhs.StaticAttenuation)) return false;
-                if (!object.Equals(this.BNAMDataTypeState, rhs.BNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -310,7 +302,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Priority);
                 hash.Add(this.Variance);
                 hash.Add(this.StaticAttenuation);
-                hash.Add(this.BNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -359,7 +350,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Priority)) return false;
                 if (!eval(this.Variance)) return false;
                 if (!eval(this.StaticAttenuation)) return false;
-                if (!eval(this.BNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -406,7 +396,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Priority)) return true;
                 if (eval(this.Variance)) return true;
                 if (eval(this.StaticAttenuation)) return true;
-                if (eval(this.BNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -462,7 +451,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Priority = eval(this.Priority);
                 obj.Variance = eval(this.Variance);
                 obj.StaticAttenuation = eval(this.StaticAttenuation);
-                obj.BNAMDataTypeState = eval(this.BNAMDataTypeState);
             }
             #endregion
 
@@ -565,10 +553,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(StaticAttenuation, "StaticAttenuation");
                     }
-                    if (printMask?.BNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(BNAMDataTypeState, "BNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -593,7 +577,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Priority;
             public Exception? Variance;
             public Exception? StaticAttenuation;
-            public Exception? BNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -628,8 +611,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Variance;
                     case SoundDescriptor_FieldIndex.StaticAttenuation:
                         return StaticAttenuation;
-                    case SoundDescriptor_FieldIndex.BNAMDataTypeState:
-                        return BNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -678,9 +659,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SoundDescriptor_FieldIndex.StaticAttenuation:
                         this.StaticAttenuation = ex;
-                        break;
-                    case SoundDescriptor_FieldIndex.BNAMDataTypeState:
-                        this.BNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -732,9 +710,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case SoundDescriptor_FieldIndex.StaticAttenuation:
                         this.StaticAttenuation = (Exception?)obj;
                         break;
-                    case SoundDescriptor_FieldIndex.BNAMDataTypeState:
-                        this.BNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -757,7 +732,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Priority != null) return true;
                 if (Variance != null) return true;
                 if (StaticAttenuation != null) return true;
-                if (BNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -853,9 +827,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(StaticAttenuation, "StaticAttenuation");
                 }
-                {
-                    sb.AppendItem(BNAMDataTypeState, "BNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -877,7 +848,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Priority = this.Priority.Combine(rhs.Priority);
                 ret.Variance = this.Variance.Combine(rhs.Variance);
                 ret.StaticAttenuation = this.StaticAttenuation.Combine(rhs.StaticAttenuation);
-                ret.BNAMDataTypeState = this.BNAMDataTypeState.Combine(rhs.BNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -913,7 +883,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Priority;
             public bool Variance;
             public bool StaticAttenuation;
-            public bool BNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -933,7 +902,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Priority = defaultOn;
                 this.Variance = defaultOn;
                 this.StaticAttenuation = defaultOn;
-                this.BNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -954,7 +922,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Priority, null));
                 ret.Add((Variance, null));
                 ret.Add((StaticAttenuation, null));
-                ret.Add((BNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1018,10 +985,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(ISoundDescriptor);
 
-        [Flags]
-        public enum BNAMDataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SoundDescriptorCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SoundDescriptorSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SoundDescriptorSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -1124,7 +1087,6 @@ namespace Mutagen.Bethesda.Skyrim
         new SByte Priority { get; set; }
         new SByte Variance { get; set; }
         new Single StaticAttenuation { get; set; }
-        new SoundDescriptor.BNAMDataType BNAMDataTypeState { get; set; }
     }
 
     public partial interface ISoundDescriptorInternal :
@@ -1158,7 +1120,6 @@ namespace Mutagen.Bethesda.Skyrim
         SByte Priority { get; }
         SByte Variance { get; }
         Single StaticAttenuation { get; }
-        SoundDescriptor.BNAMDataType BNAMDataTypeState { get; }
 
     }
 
@@ -1348,7 +1309,6 @@ namespace Mutagen.Bethesda.Skyrim
         Priority = 17,
         Variance = 18,
         StaticAttenuation = 19,
-        BNAMDataTypeState = 20,
     }
     #endregion
 
@@ -1366,9 +1326,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "8ef28a33-b4e1-488e-bd9a-9231e58a3aad";
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(SoundDescriptor.Mask<>);
 
@@ -1469,7 +1429,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Priority = default;
             item.Variance = default;
             item.StaticAttenuation = default;
-            item.BNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1600,7 +1559,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Priority = item.Priority == rhs.Priority;
             ret.Variance = item.Variance == rhs.Variance;
             ret.StaticAttenuation = item.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation);
-            ret.BNAMDataTypeState = item.BNAMDataTypeState == rhs.BNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1725,10 +1683,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.StaticAttenuation, "StaticAttenuation");
             }
-            if (printMask?.BNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.BNAMDataTypeState, "BNAMDataTypeState");
-            }
         }
         
         public static SoundDescriptor_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1835,10 +1789,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.BNAMDataTypeState) ?? true))
-            {
-                if (lhs.BNAMDataTypeState != rhs.BNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -1889,7 +1839,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Priority);
             hash.Add(item.Variance);
             hash.Add(item.StaticAttenuation);
-            hash.Add(item.BNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2135,10 +2084,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.StaticAttenuation = rhs.StaticAttenuation;
             }
-            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.BNAMDataTypeState) ?? true))
-            {
-                item.BNAMDataTypeState = rhs.BNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2287,15 +2232,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly SoundDescriptorBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ISoundDescriptorGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ISoundDescriptorGetter item,
             MutagenWriter writer,
@@ -2387,7 +2323,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2447,15 +2383,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly SoundDescriptorBinaryCreateTranslation Instance = new SoundDescriptorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SNDR;
-        public static void FillBinaryStructs(
-            ISoundDescriptorInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISoundDescriptorInternal item,
             MutagenFrame frame,
@@ -2643,7 +2570,6 @@ namespace Mutagen.Bethesda.Skyrim
         public ISoundLoopAndRumbleGetter? LoopAndRumble => _LoopAndRumbleLocation.HasValue ? SoundLoopAndRumbleBinaryOverlay.SoundLoopAndRumbleFactory(_recordData.Slice(_LoopAndRumbleLocation!.Value.Min), _package) : default;
         #endregion
         private RangeInt32? _BNAMLocation;
-        public SoundDescriptor.BNAMDataType BNAMDataTypeState { get; private set; }
         #region PercentFrequencyShift
         private int _PercentFrequencyShiftLocation => _BNAMLocation!.Value.Min;
         private bool _PercentFrequencyShift_IsSet => _BNAMLocation.HasValue;

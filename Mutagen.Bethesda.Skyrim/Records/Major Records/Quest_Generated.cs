@@ -221,9 +221,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IQuestGetter.Description => this.Description;
         #endregion
-        #region DNAMDataTypeState
-        public Quest.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -265,7 +262,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>());
                 this.Description = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -291,8 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Stages,
                 TItem Objectives,
                 TItem Aliases,
-                TItem Description,
-                TItem DNAMDataTypeState)
+                TItem Description)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -318,7 +313,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>());
                 this.Description = Description;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -346,7 +340,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>? Objectives;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>? Aliases;
             public TItem Description;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -376,7 +369,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Objectives, rhs.Objectives)) return false;
                 if (!object.Equals(this.Aliases, rhs.Aliases)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -398,7 +390,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Objectives);
                 hash.Add(this.Aliases);
                 hash.Add(this.Description);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -494,7 +485,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (!eval(this.Description)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -588,7 +578,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (eval(this.Description)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -703,7 +692,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.Description = eval(this.Description);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -878,10 +866,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Description, "Description");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -909,7 +893,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>? Objectives;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>? Aliases;
             public Exception? Description;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -950,8 +933,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Aliases;
                     case Quest_FieldIndex.Description:
                         return Description;
-                    case Quest_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1009,9 +990,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Quest_FieldIndex.Description:
                         this.Description = ex;
-                        break;
-                    case Quest_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1072,9 +1050,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Quest_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
-                    case Quest_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1100,7 +1075,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Objectives != null) return true;
                 if (Aliases != null) return true;
                 if (Description != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1265,9 +1239,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Description, "Description");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1292,7 +1263,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), Noggog.ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
                 ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), Noggog.ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1331,7 +1301,6 @@ namespace Mutagen.Bethesda.Skyrim
             public QuestObjective.TranslationMask? Objectives;
             public QuestAlias.TranslationMask? Aliases;
             public bool Description;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1350,7 +1319,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TextDisplayGlobals = defaultOn;
                 this.Filter = defaultOn;
                 this.Description = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1374,7 +1342,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Objectives == null ? DefaultOn : !Objectives.GetCrystal().CopyNothing, Objectives?.GetCrystal()));
                 ret.Add((Aliases == null ? DefaultOn : !Aliases.GetCrystal().CopyNothing, Aliases?.GetCrystal()));
                 ret.Add((Description, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1438,10 +1405,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IQuest);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => QuestCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => QuestSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => QuestSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -1553,7 +1516,6 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<QuestObjective> Objectives { get; }
         new ExtendedList<QuestAlias> Aliases { get; }
         new TranslatedString? Description { get; set; }
-        new Quest.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IQuestInternal :
@@ -1604,7 +1566,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IQuestObjectiveGetter> Objectives { get; }
         IReadOnlyList<IQuestAliasGetter> Aliases { get; }
         ITranslatedStringGetter? Description { get; }
-        Quest.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -1797,7 +1758,6 @@ namespace Mutagen.Bethesda.Skyrim
         Objectives = 20,
         Aliases = 21,
         Description = 22,
-        DNAMDataTypeState = 23,
     }
     #endregion
 
@@ -1815,9 +1775,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "480d7a0d-3841-44f9-9a48-b53a29731f22";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(Quest.Mask<>);
 
@@ -1965,7 +1925,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Objectives.Clear();
             item.Aliases.Clear();
             item.Description = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2117,7 +2076,6 @@ namespace Mutagen.Bethesda.Skyrim
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Description = object.Equals(item.Description, rhs.Description);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2296,10 +2254,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(DescriptionItem, "Description");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static Quest_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2418,10 +2372,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -2481,7 +2431,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(Descriptionitem);
             }
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2847,10 +2796,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Description = rhs.Description?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2998,15 +2943,6 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryWriteTranslator
     {
         public new static readonly QuestBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IQuestGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IQuestGetter item,
@@ -3163,7 +3099,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3223,15 +3159,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly QuestBinaryCreateTranslation Instance = new QuestBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.QUST;
-        public static void FillBinaryStructs(
-            IQuestInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IQuestInternal item,
             MutagenFrame frame,
@@ -3458,7 +3385,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Quest.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;

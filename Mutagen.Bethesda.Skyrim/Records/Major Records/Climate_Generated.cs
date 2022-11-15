@@ -122,9 +122,6 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte PhaseLength { get; set; } = default;
         public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 64);
         #endregion
-        #region TNAMDataTypeState
-        public Climate.TNAMDataType TNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -161,7 +158,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Volatility = initialValue;
                 this.Moons = initialValue;
                 this.PhaseLength = initialValue;
-                this.TNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -182,8 +178,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SunsetEndRaw,
                 TItem Volatility,
                 TItem Moons,
-                TItem PhaseLength,
-                TItem TNAMDataTypeState)
+                TItem PhaseLength)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -204,7 +199,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Volatility = Volatility;
                 this.Moons = Moons;
                 this.PhaseLength = PhaseLength;
-                this.TNAMDataTypeState = TNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -227,7 +221,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Volatility;
             public TItem Moons;
             public TItem PhaseLength;
-            public TItem TNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -252,7 +245,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Volatility, rhs.Volatility)) return false;
                 if (!object.Equals(this.Moons, rhs.Moons)) return false;
                 if (!object.Equals(this.PhaseLength, rhs.PhaseLength)) return false;
-                if (!object.Equals(this.TNAMDataTypeState, rhs.TNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -269,7 +261,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Volatility);
                 hash.Add(this.Moons);
                 hash.Add(this.PhaseLength);
-                hash.Add(this.TNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -306,7 +297,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Volatility)) return false;
                 if (!eval(this.Moons)) return false;
                 if (!eval(this.PhaseLength)) return false;
-                if (!eval(this.TNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -341,7 +331,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Volatility)) return true;
                 if (eval(this.Moons)) return true;
                 if (eval(this.PhaseLength)) return true;
-                if (eval(this.TNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -382,7 +371,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Volatility = eval(this.Volatility);
                 obj.Moons = eval(this.Moons);
                 obj.PhaseLength = eval(this.PhaseLength);
-                obj.TNAMDataTypeState = eval(this.TNAMDataTypeState);
             }
             #endregion
 
@@ -460,10 +448,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(PhaseLength, "PhaseLength");
                     }
-                    if (printMask?.TNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -486,7 +470,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Volatility;
             public Exception? Moons;
             public Exception? PhaseLength;
-            public Exception? TNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -517,8 +500,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Moons;
                     case Climate_FieldIndex.PhaseLength:
                         return PhaseLength;
-                    case Climate_FieldIndex.TNAMDataTypeState:
-                        return TNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -561,9 +542,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Climate_FieldIndex.PhaseLength:
                         this.PhaseLength = ex;
-                        break;
-                    case Climate_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -609,9 +587,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Climate_FieldIndex.PhaseLength:
                         this.PhaseLength = (Exception?)obj;
                         break;
-                    case Climate_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -632,7 +607,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Volatility != null) return true;
                 if (Moons != null) return true;
                 if (PhaseLength != null) return true;
-                if (TNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -705,9 +679,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(PhaseLength, "PhaseLength");
                 }
-                {
-                    sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -727,7 +698,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Volatility = this.Volatility.Combine(rhs.Volatility);
                 ret.Moons = this.Moons.Combine(rhs.Moons);
                 ret.PhaseLength = this.PhaseLength.Combine(rhs.PhaseLength);
-                ret.TNAMDataTypeState = this.TNAMDataTypeState.Combine(rhs.TNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -761,7 +731,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Volatility;
             public bool Moons;
             public bool PhaseLength;
-            public bool TNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -779,7 +748,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Volatility = defaultOn;
                 this.Moons = defaultOn;
                 this.PhaseLength = defaultOn;
-                this.TNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -798,7 +766,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Volatility, null));
                 ret.Add((Moons, null));
                 ret.Add((PhaseLength, null));
-                ret.Add((TNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -862,10 +829,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IClimate);
 
-        [Flags]
-        public enum TNAMDataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ClimateCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ClimateSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ClimateSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -969,7 +932,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte Volatility { get; set; }
         new Climate.Moon Moons { get; set; }
         new Byte PhaseLength { get; set; }
-        new Climate.TNAMDataType TNAMDataTypeState { get; set; }
     }
 
     public partial interface IClimateInternal :
@@ -1006,7 +968,6 @@ namespace Mutagen.Bethesda.Skyrim
         Byte Volatility { get; }
         Climate.Moon Moons { get; }
         Byte PhaseLength { get; }
-        Climate.TNAMDataType TNAMDataTypeState { get; }
 
     }
 
@@ -1194,7 +1155,6 @@ namespace Mutagen.Bethesda.Skyrim
         Volatility = 15,
         Moons = 16,
         PhaseLength = 17,
-        TNAMDataTypeState = 18,
     }
     #endregion
 
@@ -1212,9 +1172,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "5e6ece21-de78-4014-a7f0-4ea69c8655c9";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(Climate.Mask<>);
 
@@ -1307,7 +1267,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Volatility = default;
             item.Moons = default;
             item.PhaseLength = default;
-            item.TNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1444,7 +1403,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Volatility = item.Volatility == rhs.Volatility;
             ret.Moons = item.Moons == rhs.Moons;
             ret.PhaseLength = item.PhaseLength == rhs.PhaseLength;
-            ret.TNAMDataTypeState = item.TNAMDataTypeState == rhs.TNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1552,10 +1510,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.PhaseLength, "PhaseLength");
             }
-            if (printMask?.TNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
-            }
         }
         
         public static Climate_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1654,10 +1608,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.PhaseLength != rhs.PhaseLength) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.TNAMDataTypeState) ?? true))
-            {
-                if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -1706,7 +1656,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Volatility);
             hash.Add(item.Moons);
             hash.Add(item.PhaseLength);
-            hash.Add(item.TNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1939,10 +1888,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.PhaseLength = rhs.PhaseLength;
             }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.TNAMDataTypeState) ?? true))
-            {
-                item.TNAMDataTypeState = rhs.TNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2091,15 +2036,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly ClimateBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IClimateGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IClimateGetter item,
             MutagenWriter writer,
@@ -2175,7 +2111,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2235,15 +2171,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLMT;
-        public static void FillBinaryStructs(
-            IClimateInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IClimateInternal item,
             MutagenFrame frame,
@@ -2383,7 +2310,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _TNAMLocation;
-        public Climate.TNAMDataType TNAMDataTypeState { get; private set; }
         #region SunriseBeginRaw
         private int _SunriseBeginRawLocation => _TNAMLocation!.Value.Min;
         private bool _SunriseBeginRaw_IsSet => _TNAMLocation.HasValue;

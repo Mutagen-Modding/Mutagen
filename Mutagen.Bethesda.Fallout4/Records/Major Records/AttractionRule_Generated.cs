@@ -71,9 +71,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unused
         public UInt16 Unused { get; set; } = default;
         #endregion
-        #region AOR2DataTypeState
-        public AttractionRule.AOR2DataType AOR2DataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -105,7 +102,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.RequiresLineOfSight = initialValue;
                 this.IsCombatTarget = initialValue;
                 this.Unused = initialValue;
-                this.AOR2DataTypeState = initialValue;
             }
 
             public Mask(
@@ -121,8 +117,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem MaxDelay,
                 TItem RequiresLineOfSight,
                 TItem IsCombatTarget,
-                TItem Unused,
-                TItem AOR2DataTypeState)
+                TItem Unused)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -138,7 +133,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.RequiresLineOfSight = RequiresLineOfSight;
                 this.IsCombatTarget = IsCombatTarget;
                 this.Unused = Unused;
-                this.AOR2DataTypeState = AOR2DataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -156,7 +150,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem RequiresLineOfSight;
             public TItem IsCombatTarget;
             public TItem Unused;
-            public TItem AOR2DataTypeState;
             #endregion
 
             #region Equals
@@ -176,7 +169,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.RequiresLineOfSight, rhs.RequiresLineOfSight)) return false;
                 if (!object.Equals(this.IsCombatTarget, rhs.IsCombatTarget)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
-                if (!object.Equals(this.AOR2DataTypeState, rhs.AOR2DataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -188,7 +180,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.RequiresLineOfSight);
                 hash.Add(this.IsCombatTarget);
                 hash.Add(this.Unused);
-                hash.Add(this.AOR2DataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -205,7 +196,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.RequiresLineOfSight)) return false;
                 if (!eval(this.IsCombatTarget)) return false;
                 if (!eval(this.Unused)) return false;
-                if (!eval(this.AOR2DataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -220,7 +210,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.RequiresLineOfSight)) return true;
                 if (eval(this.IsCombatTarget)) return true;
                 if (eval(this.Unused)) return true;
-                if (eval(this.AOR2DataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -242,7 +231,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.RequiresLineOfSight = eval(this.RequiresLineOfSight);
                 obj.IsCombatTarget = eval(this.IsCombatTarget);
                 obj.Unused = eval(this.Unused);
-                obj.AOR2DataTypeState = eval(this.AOR2DataTypeState);
             }
             #endregion
 
@@ -285,10 +273,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Unused, "Unused");
                     }
-                    if (printMask?.AOR2DataTypeState ?? true)
-                    {
-                        sb.AppendItem(AOR2DataTypeState, "AOR2DataTypeState");
-                    }
                 }
             }
             #endregion
@@ -306,7 +290,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? RequiresLineOfSight;
             public Exception? IsCombatTarget;
             public Exception? Unused;
-            public Exception? AOR2DataTypeState;
             #endregion
 
             #region IErrorMask
@@ -327,8 +310,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return IsCombatTarget;
                     case AttractionRule_FieldIndex.Unused:
                         return Unused;
-                    case AttractionRule_FieldIndex.AOR2DataTypeState:
-                        return AOR2DataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -356,9 +337,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case AttractionRule_FieldIndex.Unused:
                         this.Unused = ex;
-                        break;
-                    case AttractionRule_FieldIndex.AOR2DataTypeState:
-                        this.AOR2DataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -389,9 +367,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case AttractionRule_FieldIndex.Unused:
                         this.Unused = (Exception?)obj;
                         break;
-                    case AttractionRule_FieldIndex.AOR2DataTypeState:
-                        this.AOR2DataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -407,7 +382,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (RequiresLineOfSight != null) return true;
                 if (IsCombatTarget != null) return true;
                 if (Unused != null) return true;
-                if (AOR2DataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -452,9 +426,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Unused, "Unused");
                 }
-                {
-                    sb.AppendItem(AOR2DataTypeState, "AOR2DataTypeState");
-                }
             }
             #endregion
 
@@ -469,7 +440,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.RequiresLineOfSight = this.RequiresLineOfSight.Combine(rhs.RequiresLineOfSight);
                 ret.IsCombatTarget = this.IsCombatTarget.Combine(rhs.IsCombatTarget);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.AOR2DataTypeState = this.AOR2DataTypeState.Combine(rhs.AOR2DataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -498,7 +468,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool RequiresLineOfSight;
             public bool IsCombatTarget;
             public bool Unused;
-            public bool AOR2DataTypeState;
             #endregion
 
             #region Ctors
@@ -513,7 +482,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.RequiresLineOfSight = defaultOn;
                 this.IsCombatTarget = defaultOn;
                 this.Unused = defaultOn;
-                this.AOR2DataTypeState = defaultOn;
             }
 
             #endregion
@@ -527,7 +495,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((RequiresLineOfSight, null));
                 ret.Add((IsCombatTarget, null));
                 ret.Add((Unused, null));
-                ret.Add((AOR2DataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -582,10 +549,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IAttractionRule);
 
-        [Flags]
-        public enum AOR2DataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -675,7 +638,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Boolean RequiresLineOfSight { get; set; }
         new Boolean IsCombatTarget { get; set; }
         new UInt16 Unused { get; set; }
-        new AttractionRule.AOR2DataType AOR2DataTypeState { get; set; }
     }
 
     public partial interface IAttractionRuleInternal :
@@ -699,7 +661,6 @@ namespace Mutagen.Bethesda.Fallout4
         Boolean RequiresLineOfSight { get; }
         Boolean IsCombatTarget { get; }
         UInt16 Unused { get; }
-        AttractionRule.AOR2DataType AOR2DataTypeState { get; }
 
     }
 
@@ -882,7 +843,6 @@ namespace Mutagen.Bethesda.Fallout4
         RequiresLineOfSight = 10,
         IsCombatTarget = 11,
         Unused = 12,
-        AOR2DataTypeState = 13,
     }
     #endregion
 
@@ -900,9 +860,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "ef7fcf3c-9d9e-47a9-aaf1-f79e945aceee";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(AttractionRule.Mask<>);
 
@@ -986,7 +946,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.RequiresLineOfSight = default;
             item.IsCombatTarget = default;
             item.Unused = default;
-            item.AOR2DataTypeState = default;
             base.Clear(item);
         }
         
@@ -1077,7 +1036,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.RequiresLineOfSight = item.RequiresLineOfSight == rhs.RequiresLineOfSight;
             ret.IsCombatTarget = item.IsCombatTarget == rhs.IsCombatTarget;
             ret.Unused = item.Unused == rhs.Unused;
-            ret.AOR2DataTypeState = item.AOR2DataTypeState == rhs.AOR2DataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1150,10 +1108,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.Unused ?? true)
             {
                 sb.AppendItem(item.Unused, "Unused");
-            }
-            if (printMask?.AOR2DataTypeState ?? true)
-            {
-                sb.AppendItem(item.AOR2DataTypeState, "AOR2DataTypeState");
             }
         }
         
@@ -1229,10 +1183,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.AOR2DataTypeState) ?? true))
-            {
-                if (lhs.AOR2DataTypeState != rhs.AOR2DataTypeState) return false;
-            }
             return true;
         }
         
@@ -1267,7 +1217,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.RequiresLineOfSight);
             hash.Add(item.IsCombatTarget);
             hash.Add(item.Unused);
-            hash.Add(item.AOR2DataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1394,10 +1343,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.Unused) ?? true))
             {
                 item.Unused = rhs.Unused;
-            }
-            if ((copyMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.AOR2DataTypeState) ?? true))
-            {
-                item.AOR2DataTypeState = rhs.AOR2DataTypeState;
             }
         }
         
@@ -1547,15 +1492,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly AttractionRuleBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IAttractionRuleGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IAttractionRuleGetter item,
             MutagenWriter writer,
@@ -1593,7 +1529,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1653,15 +1589,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly AttractionRuleBinaryCreateTranslation Instance = new AttractionRuleBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AORU;
-        public static void FillBinaryStructs(
-            IAttractionRuleInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAttractionRuleInternal item,
             MutagenFrame frame,
@@ -1751,7 +1678,6 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         private RangeInt32? _AOR2Location;
-        public AttractionRule.AOR2DataType AOR2DataTypeState { get; private set; }
         #region Radius
         private int _RadiusLocation => _AOR2Location!.Value.Min;
         private bool _Radius_IsSet => _AOR2Location.HasValue;

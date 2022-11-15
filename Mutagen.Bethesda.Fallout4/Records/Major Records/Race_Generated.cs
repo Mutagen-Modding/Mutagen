@@ -751,9 +751,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; } = new GenderedItem<ExtendedList<Bone>?>(default, default);
         IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> IRaceGetter.BoneData => this.BoneData;
         #endregion
-        #region DATADataTypeState
-        public Race.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -869,7 +866,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.HairColorExtendedLookupTexture = initialValue;
                 this.DialogueQuest = initialValue;
                 this.BoneData = new GenderedItem<TItem>(initialValue, initialValue);
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -969,8 +965,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem HairColorLookupTexture,
                 TItem HairColorExtendedLookupTexture,
                 TItem DialogueQuest,
-                TItem BoneData,
-                TItem DATADataTypeState)
+                TItem BoneData)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -1070,7 +1065,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.HairColorExtendedLookupTexture = HairColorExtendedLookupTexture;
                 this.DialogueQuest = DialogueQuest;
                 this.BoneData = new GenderedItem<TItem>(BoneData, BoneData);
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -1172,7 +1166,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem HairColorExtendedLookupTexture;
             public TItem DialogueQuest;
             public GenderedItem<TItem> BoneData;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -1276,7 +1269,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture)) return false;
                 if (!object.Equals(this.DialogueQuest, rhs.DialogueQuest)) return false;
                 if (!object.Equals(this.BoneData, rhs.BoneData)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1372,7 +1364,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.HairColorExtendedLookupTexture);
                 hash.Add(this.DialogueQuest);
                 hash.Add(this.BoneData);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1613,7 +1604,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.HairColorExtendedLookupTexture)) return false;
                 if (!eval(this.DialogueQuest)) return false;
                 if (!eval(this.BoneData.Male) || !eval(this.BoneData.Female)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -1852,7 +1842,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.HairColorExtendedLookupTexture)) return true;
                 if (eval(this.DialogueQuest)) return true;
                 if (eval(this.BoneData.Male) || eval(this.BoneData.Female)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -2129,7 +2118,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.BoneData = new GenderedItem<R>(
                     eval(this.BoneData.Male),
                     eval(this.BoneData.Female));
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -2702,10 +2690,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine($"BoneData => {BoneData}");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -2807,7 +2791,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? HairColorExtendedLookupTexture;
             public Exception? DialogueQuest;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? BoneData;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -2996,8 +2979,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return DialogueQuest;
                     case Race_FieldIndex.BoneData:
                         return BoneData;
-                    case Race_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -3277,9 +3258,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Race_FieldIndex.BoneData:
                         this.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
-                        break;
-                    case Race_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -3562,9 +3540,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Race_FieldIndex.BoneData:
                         this.BoneData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
-                    case Race_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -3664,7 +3639,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (HairColorExtendedLookupTexture != null) return true;
                 if (DialogueQuest != null) return true;
                 if (BoneData != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -4151,9 +4125,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine($"BoneData => {BoneData}");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -4252,7 +4223,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.HairColorExtendedLookupTexture = this.HairColorExtendedLookupTexture.Combine(rhs.HairColorExtendedLookupTexture);
                 ret.DialogueQuest = this.DialogueQuest.Combine(rhs.DialogueQuest);
                 ret.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.BoneData?.Overall, rhs.BoneData?.Overall), GenderedItem.Combine(this.BoneData?.Specific, rhs.BoneData?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4365,7 +4335,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool HairColorExtendedLookupTexture;
             public bool DialogueQuest;
             public GenderedItem<bool>? BoneData;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -4446,7 +4415,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.HairColorLookupTexture = defaultOn;
                 this.HairColorExtendedLookupTexture = defaultOn;
                 this.DialogueQuest = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -4544,7 +4512,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((HairColorExtendedLookupTexture, null));
                 ret.Add((DialogueQuest, null));
                 ret.Add((BoneData != null || DefaultOn, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4601,10 +4568,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IRace);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -4791,7 +4754,6 @@ namespace Mutagen.Bethesda.Fallout4
         new String? HairColorExtendedLookupTexture { get; set; }
         new IFormLinkNullable<IQuestGetter> DialogueQuest { get; set; }
         new IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; }
-        new Race.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IRaceInternal :
@@ -4926,7 +4888,6 @@ namespace Mutagen.Bethesda.Fallout4
         String? HairColorExtendedLookupTexture { get; }
         IFormLinkNullableGetter<IQuestGetter> DialogueQuest { get; }
         IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData { get; }
-        Race.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -5193,7 +5154,6 @@ namespace Mutagen.Bethesda.Fallout4
         HairColorExtendedLookupTexture = 94,
         DialogueQuest = 95,
         BoneData = 96,
-        DATADataTypeState = 97,
     }
     #endregion
 
@@ -5211,9 +5171,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "653cc994-ac13-436b-907d-6a4c43bcd98a";
 
-        public const ushort AdditionalFieldCount = 91;
+        public const ushort AdditionalFieldCount = 90;
 
-        public const ushort FieldCount = 98;
+        public const ushort FieldCount = 97;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -5476,7 +5436,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.DialogueQuest.Clear();
             item.BoneData.Male = null;
             item.BoneData.Female = null;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -5764,7 +5723,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.BoneData = new GenderedItem<bool>(
                 male: item.BoneData.Male.SequenceEqualNullable(rhs.BoneData.Male),
                 female: item.BoneData.Female.SequenceEqualNullable(rhs.BoneData.Female));
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -6301,10 +6259,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.BoneData.Print(sb, "BoneData");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Race_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -6723,10 +6677,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!Equals(lhs.BoneData, rhs.BoneData)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -6878,7 +6828,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
             hash.Add(item.DialogueQuest);
             hash.Add(HashCode.Combine(item.BoneData.Male, item.BoneData.Female));
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -7807,10 +7756,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.BoneData = new GenderedItem<ExtendedList<Bone>?>(
                 male: rhs.BoneData.Male?.Select(x => x.DeepCopy()).ToExtendedList(),
                 female: rhs.BoneData.Female?.Select(x => x.DeepCopy()).ToExtendedList());
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -9347,7 +9292,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
         private RangeInt32? _DATALocation;
-        public Race.DATADataType DATADataTypeState { get; private set; }
         #region Height
         private int _HeightLocation => _DATALocation!.Value.Min;
         private bool _Height_IsSet => _DATALocation.HasValue;

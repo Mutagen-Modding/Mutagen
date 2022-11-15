@@ -255,12 +255,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region DATADataTypeState
-        public Ingredient.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
-        #region ENITDataTypeState
-        public Ingredient.ENITDataType ENITDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -301,8 +295,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.IngredientValue = initialValue;
                 this.Flags = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.DATADataTypeState = initialValue;
-                this.ENITDataTypeState = initialValue;
             }
 
             public Mask(
@@ -327,9 +319,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Weight,
                 TItem IngredientValue,
                 TItem Flags,
-                TItem Effects,
-                TItem DATADataTypeState,
-                TItem ENITDataTypeState)
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -354,8 +344,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.IngredientValue = IngredientValue;
                 this.Flags = Flags;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.DATADataTypeState = DATADataTypeState;
-                this.ENITDataTypeState = ENITDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -382,8 +370,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem IngredientValue;
             public TItem Flags;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
-            public TItem DATADataTypeState;
-            public TItem ENITDataTypeState;
             #endregion
 
             #region Equals
@@ -412,8 +398,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.IngredientValue, rhs.IngredientValue)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-                if (!object.Equals(this.ENITDataTypeState, rhs.ENITDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -434,8 +418,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.IngredientValue);
                 hash.Add(this.Flags);
                 hash.Add(this.Effects);
-                hash.Add(this.DATADataTypeState);
-                hash.Add(this.ENITDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -502,8 +484,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.DATADataTypeState)) return false;
-                if (!eval(this.ENITDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -568,8 +548,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.DATADataTypeState)) return true;
-                if (eval(this.ENITDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -627,8 +605,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
-                obj.ENITDataTypeState = eval(this.ENITDataTypeState);
             }
             #endregion
 
@@ -739,14 +715,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
-                    if (printMask?.ENITDataTypeState ?? true)
-                    {
-                        sb.AppendItem(ENITDataTypeState, "ENITDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -773,8 +741,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? IngredientValue;
             public Exception? Flags;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
-            public Exception? DATADataTypeState;
-            public Exception? ENITDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -813,10 +779,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Flags;
                     case Ingredient_FieldIndex.Effects:
                         return Effects;
-                    case Ingredient_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
-                    case Ingredient_FieldIndex.ENITDataTypeState:
-                        return ENITDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -871,12 +833,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Ingredient_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Ingredient_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
-                    case Ingredient_FieldIndex.ENITDataTypeState:
-                        this.ENITDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -934,12 +890,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Ingredient_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
-                    case Ingredient_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
-                    case Ingredient_FieldIndex.ENITDataTypeState:
-                        this.ENITDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -964,8 +914,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (IngredientValue != null) return true;
                 if (Flags != null) return true;
                 if (Effects != null) return true;
-                if (DATADataTypeState != null) return true;
-                if (ENITDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1059,12 +1007,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
-                {
-                    sb.AppendItem(ENITDataTypeState, "ENITDataTypeState");
-                }
             }
             #endregion
 
@@ -1088,8 +1030,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.IngredientValue = this.IngredientValue.Combine(rhs.IngredientValue);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-                ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1127,8 +1067,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool IngredientValue;
             public bool Flags;
             public Effect.TranslationMask? Effects;
-            public bool DATADataTypeState;
-            public bool ENITDataTypeState;
             #endregion
 
             #region Ctors
@@ -1146,8 +1084,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Weight = defaultOn;
                 this.IngredientValue = defaultOn;
                 this.Flags = defaultOn;
-                this.DATADataTypeState = defaultOn;
-                this.ENITDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1170,8 +1106,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((IngredientValue, null));
                 ret.Add((Flags, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
-                ret.Add((ENITDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1228,14 +1162,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IIngredient);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
-        [Flags]
-        public enum ENITDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1369,8 +1295,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Int32 IngredientValue { get; set; }
         new Ingredient.Flag Flags { get; set; }
         new ExtendedList<Effect> Effects { get; }
-        new Ingredient.DATADataType DATADataTypeState { get; set; }
-        new Ingredient.ENITDataType ENITDataTypeState { get; set; }
     }
 
     public partial interface IIngredientInternal :
@@ -1451,8 +1375,6 @@ namespace Mutagen.Bethesda.Fallout4
         Int32 IngredientValue { get; }
         Ingredient.Flag Flags { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
-        Ingredient.DATADataType DATADataTypeState { get; }
-        Ingredient.ENITDataType ENITDataTypeState { get; }
 
     }
 
@@ -1644,8 +1566,6 @@ namespace Mutagen.Bethesda.Fallout4
         IngredientValue = 19,
         Flags = 20,
         Effects = 21,
-        DATADataTypeState = 22,
-        ENITDataTypeState = 23,
     }
     #endregion
 
@@ -1663,9 +1583,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "ff149c28-1233-4a7a-97cf-c9d2e7a1b490";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Ingredient.Mask<>);
 
@@ -1787,8 +1707,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.IngredientValue = default;
             item.Flags = default;
             item.Effects.Clear();
-            item.DATADataTypeState = default;
-            item.ENITDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1918,8 +1836,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
-            ret.ENITDataTypeState = item.ENITDataTypeState == rhs.ENITDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2055,14 +1971,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
-            if (printMask?.ENITDataTypeState ?? true)
-            {
-                sb.AppendItem(item.ENITDataTypeState, "ENITDataTypeState");
-            }
         }
         
         public static Ingredient_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2193,14 +2101,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Ingredient_FieldIndex.Effects)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Ingredient_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Ingredient_FieldIndex.ENITDataTypeState) ?? true))
-            {
-                if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
-            }
             return true;
         }
         
@@ -2259,8 +2159,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.IngredientValue);
             hash.Add(item.Flags);
             hash.Add(item.Effects);
-            hash.Add(item.DATADataTypeState);
-            hash.Add(item.ENITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2617,14 +2515,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.ENITDataTypeState) ?? true))
-            {
-                item.ENITDataTypeState = rhs.ENITDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2773,15 +2663,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly IngredientBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IIngredientGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IIngredientGetter item,
             MutagenWriter writer,
@@ -2893,7 +2774,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2953,15 +2834,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly IngredientBinaryCreateTranslation Instance = new IngredientBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.INGR;
-        public static void FillBinaryStructs(
-            IIngredientInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IIngredientInternal item,
             MutagenFrame frame,
@@ -3199,7 +3071,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         private RangeInt32? _DATALocation;
-        public Ingredient.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
@@ -3211,7 +3082,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         private RangeInt32? _ENITLocation;
-        public Ingredient.ENITDataType ENITDataTypeState { get; private set; }
         #region IngredientValue
         private int _IngredientValueLocation => _ENITLocation!.Value.Min;
         private bool _IngredientValue_IsSet => _ENITLocation.HasValue;

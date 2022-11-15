@@ -92,9 +92,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region ReverbClass
         public ReverbClass ReverbClass { get; set; } = default;
         #endregion
-        #region DATADataTypeState
-        public ReverbParameters.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -133,7 +130,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DensityPercent = initialValue;
                 this.Unknown = initialValue;
                 this.ReverbClass = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -156,8 +152,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem DiffusionPercent,
                 TItem DensityPercent,
                 TItem Unknown,
-                TItem ReverbClass,
-                TItem DATADataTypeState)
+                TItem ReverbClass)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -180,7 +175,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DensityPercent = DensityPercent;
                 this.Unknown = Unknown;
                 this.ReverbClass = ReverbClass;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -205,7 +199,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem DensityPercent;
             public TItem Unknown;
             public TItem ReverbClass;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -232,7 +225,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.DensityPercent, rhs.DensityPercent)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.ReverbClass, rhs.ReverbClass)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -251,7 +243,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.DensityPercent);
                 hash.Add(this.Unknown);
                 hash.Add(this.ReverbClass);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -275,7 +266,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.DensityPercent)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.ReverbClass)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -297,7 +287,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.DensityPercent)) return true;
                 if (eval(this.Unknown)) return true;
                 if (eval(this.ReverbClass)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -326,7 +315,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.DensityPercent = eval(this.DensityPercent);
                 obj.Unknown = eval(this.Unknown);
                 obj.ReverbClass = eval(this.ReverbClass);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -397,10 +385,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(ReverbClass, "ReverbClass");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -425,7 +409,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? DensityPercent;
             public Exception? Unknown;
             public Exception? ReverbClass;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -460,8 +443,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Unknown;
                     case ReverbParameters_FieldIndex.ReverbClass:
                         return ReverbClass;
-                    case ReverbParameters_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -510,9 +491,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case ReverbParameters_FieldIndex.ReverbClass:
                         this.ReverbClass = ex;
-                        break;
-                    case ReverbParameters_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -564,9 +542,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case ReverbParameters_FieldIndex.ReverbClass:
                         this.ReverbClass = (Exception?)obj;
                         break;
-                    case ReverbParameters_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -589,7 +564,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (DensityPercent != null) return true;
                 if (Unknown != null) return true;
                 if (ReverbClass != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -655,9 +629,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(ReverbClass, "ReverbClass");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -679,7 +650,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.DensityPercent = this.DensityPercent.Combine(rhs.DensityPercent);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.ReverbClass = this.ReverbClass.Combine(rhs.ReverbClass);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -715,7 +685,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool DensityPercent;
             public bool Unknown;
             public bool ReverbClass;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -737,7 +706,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DensityPercent = defaultOn;
                 this.Unknown = defaultOn;
                 this.ReverbClass = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -758,7 +726,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((DensityPercent, null));
                 ret.Add((Unknown, null));
                 ret.Add((ReverbClass, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -813,10 +780,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IReverbParameters);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -913,7 +876,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Percent DensityPercent { get; set; }
         new Byte Unknown { get; set; }
         new ReverbClass ReverbClass { get; set; }
-        new ReverbParameters.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IReverbParametersInternal :
@@ -944,7 +906,6 @@ namespace Mutagen.Bethesda.Fallout4
         Percent DensityPercent { get; }
         Byte Unknown { get; }
         ReverbClass ReverbClass { get; }
-        ReverbParameters.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1134,7 +1095,6 @@ namespace Mutagen.Bethesda.Fallout4
         DensityPercent = 17,
         Unknown = 18,
         ReverbClass = 19,
-        DATADataTypeState = 20,
     }
     #endregion
 
@@ -1152,9 +1112,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "ff9240a5-43c1-4889-b0ec-6fd0889e4bbf";
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(ReverbParameters.Mask<>);
 
@@ -1246,7 +1206,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.DensityPercent = default;
             item.Unknown = default;
             item.ReverbClass = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1344,7 +1303,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.DensityPercent = item.DensityPercent.Equals(rhs.DensityPercent);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.ReverbClass = item.ReverbClass == rhs.ReverbClass;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1445,10 +1403,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.ReverbClass ?? true)
             {
                 sb.AppendItem(item.ReverbClass, "ReverbClass");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1552,10 +1506,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.ReverbClass != rhs.ReverbClass) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1597,7 +1547,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.DensityPercent);
             hash.Add(item.Unknown);
             hash.Add(item.ReverbClass);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1753,10 +1702,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.ReverbClass = rhs.ReverbClass;
             }
-            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1905,15 +1850,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ReverbParametersBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IReverbParametersGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IReverbParametersGetter item,
             MutagenWriter writer,
@@ -1966,7 +1902,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2026,15 +1962,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ReverbParametersBinaryCreateTranslation Instance = new ReverbParametersBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REVB;
-        public static void FillBinaryStructs(
-            IReverbParametersInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IReverbParametersInternal item,
             MutagenFrame frame,
@@ -2151,7 +2078,6 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         private RangeInt32? _DATALocation;
-        public ReverbParameters.DATADataType DATADataTypeState { get; private set; }
         #region DecayMilliseconds
         private int _DecayMillisecondsLocation => _DATALocation!.Value.Min;
         private bool _DecayMilliseconds_IsSet => _DATALocation.HasValue;

@@ -73,9 +73,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region CameraOffset
         public P3Float CameraOffset { get; set; } = default;
         #endregion
-        #region GNAMDataTypeState
-        public Zoom.GNAMDataType GNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -105,7 +102,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Overlay = initialValue;
                 this.ImagespaceModifier = initialValue;
                 this.CameraOffset = initialValue;
-                this.GNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -119,8 +115,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem FovMult,
                 TItem Overlay,
                 TItem ImagespaceModifier,
-                TItem CameraOffset,
-                TItem GNAMDataTypeState)
+                TItem CameraOffset)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -134,7 +129,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Overlay = Overlay;
                 this.ImagespaceModifier = ImagespaceModifier;
                 this.CameraOffset = CameraOffset;
-                this.GNAMDataTypeState = GNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -150,7 +144,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Overlay;
             public TItem ImagespaceModifier;
             public TItem CameraOffset;
-            public TItem GNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -168,7 +161,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Overlay, rhs.Overlay)) return false;
                 if (!object.Equals(this.ImagespaceModifier, rhs.ImagespaceModifier)) return false;
                 if (!object.Equals(this.CameraOffset, rhs.CameraOffset)) return false;
-                if (!object.Equals(this.GNAMDataTypeState, rhs.GNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -178,7 +170,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Overlay);
                 hash.Add(this.ImagespaceModifier);
                 hash.Add(this.CameraOffset);
-                hash.Add(this.GNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -193,7 +184,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Overlay)) return false;
                 if (!eval(this.ImagespaceModifier)) return false;
                 if (!eval(this.CameraOffset)) return false;
-                if (!eval(this.GNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -206,7 +196,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Overlay)) return true;
                 if (eval(this.ImagespaceModifier)) return true;
                 if (eval(this.CameraOffset)) return true;
-                if (eval(this.GNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -226,7 +215,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Overlay = eval(this.Overlay);
                 obj.ImagespaceModifier = eval(this.ImagespaceModifier);
                 obj.CameraOffset = eval(this.CameraOffset);
-                obj.GNAMDataTypeState = eval(this.GNAMDataTypeState);
             }
             #endregion
 
@@ -261,10 +249,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(CameraOffset, "CameraOffset");
                     }
-                    if (printMask?.GNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(GNAMDataTypeState, "GNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -280,7 +264,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Overlay;
             public Exception? ImagespaceModifier;
             public Exception? CameraOffset;
-            public Exception? GNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -297,8 +280,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return ImagespaceModifier;
                     case Zoom_FieldIndex.CameraOffset:
                         return CameraOffset;
-                    case Zoom_FieldIndex.GNAMDataTypeState:
-                        return GNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -320,9 +301,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Zoom_FieldIndex.CameraOffset:
                         this.CameraOffset = ex;
-                        break;
-                    case Zoom_FieldIndex.GNAMDataTypeState:
-                        this.GNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -347,9 +325,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Zoom_FieldIndex.CameraOffset:
                         this.CameraOffset = (Exception?)obj;
                         break;
-                    case Zoom_FieldIndex.GNAMDataTypeState:
-                        this.GNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,7 +338,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Overlay != null) return true;
                 if (ImagespaceModifier != null) return true;
                 if (CameraOffset != null) return true;
-                if (GNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -402,9 +376,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(CameraOffset, "CameraOffset");
                 }
-                {
-                    sb.AppendItem(GNAMDataTypeState, "GNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -417,7 +388,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Overlay = this.Overlay.Combine(rhs.Overlay);
                 ret.ImagespaceModifier = this.ImagespaceModifier.Combine(rhs.ImagespaceModifier);
                 ret.CameraOffset = this.CameraOffset.Combine(rhs.CameraOffset);
-                ret.GNAMDataTypeState = this.GNAMDataTypeState.Combine(rhs.GNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -444,7 +414,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Overlay;
             public bool ImagespaceModifier;
             public bool CameraOffset;
-            public bool GNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -457,7 +426,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Overlay = defaultOn;
                 this.ImagespaceModifier = defaultOn;
                 this.CameraOffset = defaultOn;
-                this.GNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -469,7 +437,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Overlay, null));
                 ret.Add((ImagespaceModifier, null));
                 ret.Add((CameraOffset, null));
-                ret.Add((GNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -526,10 +493,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IZoom);
 
-        [Flags]
-        public enum GNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -618,7 +581,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Zoom.OverlayType Overlay { get; set; }
         new IFormLink<IImageSpaceAdapterGetter> ImagespaceModifier { get; set; }
         new P3Float CameraOffset { get; set; }
-        new Zoom.GNAMDataType GNAMDataTypeState { get; set; }
     }
 
     public partial interface IZoomInternal :
@@ -641,7 +603,6 @@ namespace Mutagen.Bethesda.Fallout4
         Zoom.OverlayType Overlay { get; }
         IFormLinkGetter<IImageSpaceAdapterGetter> ImagespaceModifier { get; }
         P3Float CameraOffset { get; }
-        Zoom.GNAMDataType GNAMDataTypeState { get; }
 
     }
 
@@ -822,7 +783,6 @@ namespace Mutagen.Bethesda.Fallout4
         Overlay = 8,
         ImagespaceModifier = 9,
         CameraOffset = 10,
-        GNAMDataTypeState = 11,
     }
     #endregion
 
@@ -840,9 +800,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "7c3747ae-d998-47c1-8b4e-0c5b0d325b84";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(Zoom.Mask<>);
 
@@ -924,7 +884,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Overlay = default;
             item.ImagespaceModifier.Clear();
             item.CameraOffset = default;
-            item.GNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1014,7 +973,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Overlay = item.Overlay == rhs.Overlay;
             ret.ImagespaceModifier = item.ImagespaceModifier.Equals(rhs.ImagespaceModifier);
             ret.CameraOffset = item.CameraOffset.Equals(rhs.CameraOffset);
-            ret.GNAMDataTypeState = item.GNAMDataTypeState == rhs.GNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1079,10 +1037,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.CameraOffset ?? true)
             {
                 sb.AppendItem(item.CameraOffset, "CameraOffset");
-            }
-            if (printMask?.GNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.GNAMDataTypeState, "GNAMDataTypeState");
             }
         }
         
@@ -1150,10 +1104,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.CameraOffset.Equals(rhs.CameraOffset)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Zoom_FieldIndex.GNAMDataTypeState) ?? true))
-            {
-                if (lhs.GNAMDataTypeState != rhs.GNAMDataTypeState) return false;
-            }
             return true;
         }
         
@@ -1186,7 +1136,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Overlay);
             hash.Add(item.ImagespaceModifier);
             hash.Add(item.CameraOffset);
-            hash.Add(item.GNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1306,10 +1255,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.CameraOffset) ?? true))
             {
                 item.CameraOffset = rhs.CameraOffset;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Zoom_FieldIndex.GNAMDataTypeState) ?? true))
-            {
-                item.GNAMDataTypeState = rhs.GNAMDataTypeState;
             }
         }
         
@@ -1459,15 +1404,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ZoomBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IZoomGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IZoomGetter item,
             MutagenWriter writer,
@@ -1506,7 +1442,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1566,15 +1502,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ZoomBinaryCreateTranslation Instance = new ZoomBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ZOOM;
-        public static void FillBinaryStructs(
-            IZoomInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IZoomInternal item,
             MutagenFrame frame,
@@ -1663,7 +1590,6 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         private RangeInt32? _GNAMLocation;
-        public Zoom.GNAMDataType GNAMDataTypeState { get; private set; }
         #region FovMult
         private int _FovMultLocation => _GNAMLocation!.Value.Min;
         private bool _FovMult_IsSet => _GNAMLocation.HasValue;

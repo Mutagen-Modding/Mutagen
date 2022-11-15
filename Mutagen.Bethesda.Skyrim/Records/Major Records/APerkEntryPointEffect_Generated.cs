@@ -110,14 +110,12 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem PRKEDataTypeState,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount)
             : base(
                 Rank: Rank,
                 Priority: Priority,
-                Conditions: Conditions,
-                PRKEDataTypeState: PRKEDataTypeState)
+                Conditions: Conditions)
             {
                 this.EntryPoint = EntryPoint;
                 this.PerkConditionTabCount = PerkConditionTabCount;
@@ -592,9 +590,8 @@ namespace Mutagen.Bethesda.Skyrim
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        PRKEDataTypeState = 3,
-        EntryPoint = 4,
-        PerkConditionTabCount = 5,
+        EntryPoint = 3,
+        PerkConditionTabCount = 4,
     }
     #endregion
 
@@ -614,7 +611,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(APerkEntryPointEffect.Mask<>);
 
@@ -833,8 +830,6 @@ namespace Mutagen.Bethesda.Skyrim
                     return (APerkEntryPointEffect_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
                     return (APerkEntryPointEffect_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return (APerkEntryPointEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1039,9 +1034,6 @@ namespace Mutagen.Bethesda.Skyrim
             IAPerkEntryPointEffectGetter item,
             MutagenWriter writer)
         {
-            APerkEffectBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
             EnumBinaryTranslation<APerkEntryPointEffect.EntryType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.EntryPoint,
@@ -1122,9 +1114,6 @@ namespace Mutagen.Bethesda.Skyrim
             IAPerkEntryPointEffect item,
             MutagenFrame frame)
         {
-            APerkEffectBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
             item.EntryPoint = EnumBinaryTranslation<APerkEntryPointEffect.EntryType, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 1);

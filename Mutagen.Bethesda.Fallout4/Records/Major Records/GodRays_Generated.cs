@@ -81,9 +81,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region ForwardPhase
         public Single ForwardPhase { get; set; } = default;
         #endregion
-        #region DATADataTypeState
-        public GodRays.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -118,7 +115,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.BackPhase = initialValue;
                 this.AirColor = initialValue;
                 this.ForwardPhase = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -137,8 +133,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ForwardColorScale,
                 TItem BackPhase,
                 TItem AirColor,
-                TItem ForwardPhase,
-                TItem DATADataTypeState)
+                TItem ForwardPhase)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -157,7 +152,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.BackPhase = BackPhase;
                 this.AirColor = AirColor;
                 this.ForwardPhase = ForwardPhase;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -178,7 +172,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem BackPhase;
             public TItem AirColor;
             public TItem ForwardPhase;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -201,7 +194,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.BackPhase, rhs.BackPhase)) return false;
                 if (!object.Equals(this.AirColor, rhs.AirColor)) return false;
                 if (!object.Equals(this.ForwardPhase, rhs.ForwardPhase)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -216,7 +208,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.BackPhase);
                 hash.Add(this.AirColor);
                 hash.Add(this.ForwardPhase);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -236,7 +227,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.BackPhase)) return false;
                 if (!eval(this.AirColor)) return false;
                 if (!eval(this.ForwardPhase)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -254,7 +244,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.BackPhase)) return true;
                 if (eval(this.AirColor)) return true;
                 if (eval(this.ForwardPhase)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -279,7 +268,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.BackPhase = eval(this.BackPhase);
                 obj.AirColor = eval(this.AirColor);
                 obj.ForwardPhase = eval(this.ForwardPhase);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -334,10 +322,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(ForwardPhase, "ForwardPhase");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -358,7 +342,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? BackPhase;
             public Exception? AirColor;
             public Exception? ForwardPhase;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -385,8 +368,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return AirColor;
                     case GodRays_FieldIndex.ForwardPhase:
                         return ForwardPhase;
-                    case GodRays_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -423,9 +404,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case GodRays_FieldIndex.ForwardPhase:
                         this.ForwardPhase = ex;
-                        break;
-                    case GodRays_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -465,9 +443,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case GodRays_FieldIndex.ForwardPhase:
                         this.ForwardPhase = (Exception?)obj;
                         break;
-                    case GodRays_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -486,7 +461,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (BackPhase != null) return true;
                 if (AirColor != null) return true;
                 if (ForwardPhase != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -540,9 +514,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(ForwardPhase, "ForwardPhase");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -560,7 +531,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.BackPhase = this.BackPhase.Combine(rhs.BackPhase);
                 ret.AirColor = this.AirColor.Combine(rhs.AirColor);
                 ret.ForwardPhase = this.ForwardPhase.Combine(rhs.ForwardPhase);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -592,7 +562,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool BackPhase;
             public bool AirColor;
             public bool ForwardPhase;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -610,7 +579,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.BackPhase = defaultOn;
                 this.AirColor = defaultOn;
                 this.ForwardPhase = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -627,7 +595,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((BackPhase, null));
                 ret.Add((AirColor, null));
                 ret.Add((ForwardPhase, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -682,10 +649,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IGodRays);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -778,7 +741,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single BackPhase { get; set; }
         new Color AirColor { get; set; }
         new Single ForwardPhase { get; set; }
-        new GodRays.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IGodRaysInternal :
@@ -805,7 +767,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single BackPhase { get; }
         Color AirColor { get; }
         Single ForwardPhase { get; }
-        GodRays.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -991,7 +952,6 @@ namespace Mutagen.Bethesda.Fallout4
         BackPhase = 13,
         AirColor = 14,
         ForwardPhase = 15,
-        DATADataTypeState = 16,
     }
     #endregion
 
@@ -1009,9 +969,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "92693d71-3760-4363-a089-ad858e092a57";
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(GodRays.Mask<>);
 
@@ -1098,7 +1058,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.BackPhase = default;
             item.AirColor = default;
             item.ForwardPhase = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1192,7 +1151,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.BackPhase = item.BackPhase.EqualsWithin(rhs.BackPhase);
             ret.AirColor = item.AirColor.ColorOnlyEquals(rhs.AirColor);
             ret.ForwardPhase = item.ForwardPhase.EqualsWithin(rhs.ForwardPhase);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1277,10 +1235,6 @@ namespace Mutagen.Bethesda.Fallout4
             if (printMask?.ForwardPhase ?? true)
             {
                 sb.AppendItem(item.ForwardPhase, "ForwardPhase");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1368,10 +1322,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.ForwardPhase.EqualsWithin(rhs.ForwardPhase)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GodRays_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1409,7 +1359,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.BackPhase);
             hash.Add(item.AirColor);
             hash.Add(item.ForwardPhase);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1548,10 +1497,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.ForwardPhase) ?? true))
             {
                 item.ForwardPhase = rhs.ForwardPhase;
-            }
-            if ((copyMask?.GetShouldTranslate((int)GodRays_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -1701,15 +1646,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly GodRaysBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IGodRaysGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IGodRaysGetter item,
             MutagenWriter writer,
@@ -1765,7 +1701,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1825,15 +1761,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly GodRaysBinaryCreateTranslation Instance = new GodRaysBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GDRY;
-        public static void FillBinaryStructs(
-            IGodRaysInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IGodRaysInternal item,
             MutagenFrame frame,
@@ -1929,7 +1856,6 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         private RangeInt32? _DATALocation;
-        public GodRays.DATADataType DATADataTypeState { get; private set; }
         #region BackColor
         private int _BackColorLocation => _DATALocation!.Value.Min;
         private bool _BackColor_IsSet => _DATALocation.HasValue;

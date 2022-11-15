@@ -195,9 +195,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region SPITDataTypeState
-        public Spell.SPITDataType SPITDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -238,7 +235,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Range = initialValue;
                 this.CastingPerk = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.SPITDataTypeState = initialValue;
             }
 
             public Mask(
@@ -263,8 +259,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem CastDuration,
                 TItem Range,
                 TItem CastingPerk,
-                TItem Effects,
-                TItem SPITDataTypeState)
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -289,7 +284,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Range = Range;
                 this.CastingPerk = CastingPerk;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.SPITDataTypeState = SPITDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -316,7 +310,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Range;
             public TItem CastingPerk;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
-            public TItem SPITDataTypeState;
             #endregion
 
             #region Equals
@@ -345,7 +338,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Range, rhs.Range)) return false;
                 if (!object.Equals(this.CastingPerk, rhs.CastingPerk)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
-                if (!object.Equals(this.SPITDataTypeState, rhs.SPITDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -366,7 +358,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Range);
                 hash.Add(this.CastingPerk);
                 hash.Add(this.Effects);
-                hash.Add(this.SPITDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -417,7 +408,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.SPITDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -466,7 +456,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.SPITDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -524,7 +513,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.SPITDataTypeState = eval(this.SPITDataTypeState);
             }
             #endregion
 
@@ -635,10 +623,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.SPITDataTypeState ?? true)
-                    {
-                        sb.AppendItem(SPITDataTypeState, "SPITDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -665,7 +649,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Range;
             public Exception? CastingPerk;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
-            public Exception? SPITDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -704,8 +687,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return CastingPerk;
                     case Spell_FieldIndex.Effects:
                         return Effects;
-                    case Spell_FieldIndex.SPITDataTypeState:
-                        return SPITDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -760,9 +741,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Spell_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Spell_FieldIndex.SPITDataTypeState:
-                        this.SPITDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -820,9 +798,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Spell_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
-                    case Spell_FieldIndex.SPITDataTypeState:
-                        this.SPITDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -847,7 +822,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Range != null) return true;
                 if (CastingPerk != null) return true;
                 if (Effects != null) return true;
-                if (SPITDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -949,9 +923,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(SPITDataTypeState, "SPITDataTypeState");
-                }
             }
             #endregion
 
@@ -975,7 +946,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Range = this.Range.Combine(rhs.Range);
                 ret.CastingPerk = this.CastingPerk.Combine(rhs.CastingPerk);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-                ret.SPITDataTypeState = this.SPITDataTypeState.Combine(rhs.SPITDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1013,7 +983,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Range;
             public bool CastingPerk;
             public Effect.TranslationMask? Effects;
-            public bool SPITDataTypeState;
             #endregion
 
             #region Ctors
@@ -1035,7 +1004,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CastDuration = defaultOn;
                 this.Range = defaultOn;
                 this.CastingPerk = defaultOn;
-                this.SPITDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1058,7 +1026,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Range, null));
                 ret.Add((CastingPerk, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
-                ret.Add((SPITDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1115,10 +1082,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(ISpell);
 
-        [Flags]
-        public enum SPITDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1239,7 +1202,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single Range { get; set; }
         new IFormLink<IPerkGetter> CastingPerk { get; set; }
         new ExtendedList<Effect> Effects { get; }
-        new Spell.SPITDataType SPITDataTypeState { get; set; }
     }
 
     public partial interface ISpellInternal :
@@ -1300,7 +1262,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single Range { get; }
         IFormLinkGetter<IPerkGetter> CastingPerk { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
-        Spell.SPITDataType SPITDataTypeState { get; }
 
     }
 
@@ -1492,7 +1453,6 @@ namespace Mutagen.Bethesda.Fallout4
         Range = 19,
         CastingPerk = 20,
         Effects = 21,
-        SPITDataTypeState = 22,
     }
     #endregion
 
@@ -1510,9 +1470,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9e79e9ae-bd86-4521-ac80-5872e989d6ed";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Spell.Mask<>);
 
@@ -1616,7 +1576,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Range = default;
             item.CastingPerk.Clear();
             item.Effects.Clear();
-            item.SPITDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1726,7 +1685,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SPITDataTypeState = item.SPITDataTypeState == rhs.SPITDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1858,10 +1816,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.SPITDataTypeState ?? true)
-            {
-                sb.AppendItem(item.SPITDataTypeState, "SPITDataTypeState");
-            }
         }
         
         public static Spell_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1976,10 +1930,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Spell_FieldIndex.Effects)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.SPITDataTypeState) ?? true))
-            {
-                if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
-            }
             return true;
         }
         
@@ -2026,7 +1976,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Range);
             hash.Add(item.CastingPerk);
             hash.Add(item.Effects);
-            hash.Add(item.SPITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2267,10 +2216,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.SPITDataTypeState) ?? true))
-            {
-                item.SPITDataTypeState = rhs.SPITDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2419,15 +2364,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly SpellBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ISpellGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ISpellGetter item,
             MutagenWriter writer,
@@ -2526,7 +2462,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2586,15 +2522,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SPEL;
-        public static void FillBinaryStructs(
-            ISpellInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISpellInternal item,
             MutagenFrame frame,
@@ -2782,7 +2709,6 @@ namespace Mutagen.Bethesda.Fallout4
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         private RangeInt32? _SPITLocation;
-        public Spell.SPITDataType SPITDataTypeState { get; private set; }
         #region BaseCost
         private int _BaseCostLocation => _SPITLocation!.Value.Min;
         private bool _BaseCost_IsSet => _SPITLocation.HasValue;
