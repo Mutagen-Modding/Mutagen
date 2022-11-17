@@ -38,6 +38,9 @@ internal static class ModContextExt
 
     public static readonly Landscape.TranslationMask? LandscapeCopyMask = null;
 
+    private static readonly ObjectKey CellObjectKey =
+        LoquiRegistration.StaticRegister.GetRegister(typeof(ICell)).ObjectKey; 
+
     public static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
         this ISkyrimListGroupGetter<ICellBlockGetter> cellBlocks,
         ILinkCache linkCache,
@@ -116,8 +119,8 @@ internal static class ModContextExt
                         return cell;
                     };
 
-                    if (LoquiRegistration.TryGetRegister(type, out var regis)
-                        && regis.ClassType == typeof(Cell))
+                    var match = MajorRecordContextEnumerableUtility.GetMatch(type, CellObjectKey);
+                    if (match != MajorRecordContextEnumerableUtility.TypeMatch.NotMatch)
                     {
                         yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>(
                             modKey: modKey,
@@ -126,15 +129,16 @@ internal static class ModContextExt
                             duplicateInto: (m, r, e) => cellGetter(m, (ICellGetter)r, true, e),
                             parent: subBlockContext);
                     }
-                    else
+
+                    if (match != MajorRecordContextEnumerableUtility.TypeMatch.Match)
                     {
                         foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(
-                                     readOnlyCell,
-                                     linkCache, 
-                                     type, 
-                                     modKey,
+                                     readOnlyCell, 
+                                     linkCache,
+                                     type,
+                                     modKey, 
                                      subBlockContext, 
-                                     throwIfUnknown,
+                                     throwIfUnknown, 
                                      (m, c) => cellGetter(m, c, false, default(string?)),
                                      (m, c, e) => cellGetter(m, c, true, e)))
                         {
@@ -216,8 +220,8 @@ internal static class ModContextExt
                         return cell;
                     };
 
-                    if (LoquiRegistration.TryGetRegister(type, out var regis)
-                        && regis.ClassType == typeof(Cell))
+                    var match = MajorRecordContextEnumerableUtility.GetMatch(type, CellObjectKey);
+                    if (match != MajorRecordContextEnumerableUtility.TypeMatch.NotMatch)
                     {
                         yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>(
                             modKey: modKey,
@@ -226,7 +230,8 @@ internal static class ModContextExt
                             duplicateInto: (m, r, e) => cellGetter(m, (ICellGetter)r, true, e),
                             parent: subBlockContext);
                     }
-                    else
+
+                    if (match != MajorRecordContextEnumerableUtility.TypeMatch.Match)
                     {
                         foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(
                                      readOnlyCell, 

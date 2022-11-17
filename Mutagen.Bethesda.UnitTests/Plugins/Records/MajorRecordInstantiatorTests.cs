@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Utility;
 using Xunit;
+using Mutagen.Bethesda.Oblivion;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 
@@ -11,8 +12,8 @@ public class MajorRecordInstantiatorTests
     {
         Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
-        var ret = MajorRecordInstantiator<Oblivion.Ammunition>.Activator(form, GameRelease.Oblivion);
-        Assert.IsType<Oblivion.Ammunition>(ret);
+        var ret = MajorRecordInstantiator<Ammunition>.Activator(form, GameRelease.Oblivion);
+        Assert.IsType<Ammunition>(ret);
         Assert.Equal(form, ret.FormKey);
     }
 
@@ -21,8 +22,8 @@ public class MajorRecordInstantiatorTests
     {
         Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
-        var ret = MajorRecordInstantiator<Oblivion.IAmmunition>.Activator(form, GameRelease.Oblivion);
-        Assert.IsType<Oblivion.Ammunition>(ret);
+        var ret = MajorRecordInstantiator<IAmmunition>.Activator(form, GameRelease.Oblivion);
+        Assert.IsType<Ammunition>(ret);
         Assert.Equal(form, ret.FormKey);
     }
 
@@ -31,8 +32,8 @@ public class MajorRecordInstantiatorTests
     {
         Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
-        var ret = MajorRecordInstantiator<Oblivion.IAmmunitionGetter>.Activator(form, GameRelease.Oblivion);
-        Assert.IsType<Oblivion.Ammunition>(ret);
+        var ret = MajorRecordInstantiator<IAmmunitionGetter>.Activator(form, GameRelease.Oblivion);
+        Assert.IsType<Ammunition>(ret);
         Assert.Equal(form, ret.FormKey);
     }
         
@@ -41,8 +42,8 @@ public class MajorRecordInstantiatorTests
     {
         Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
-        var ret = MajorRecordInstantiator.Activator(form, GameRelease.Oblivion, typeof(Oblivion.Ammunition));
-        Assert.IsType<Oblivion.Ammunition>(ret);
+        var ret = MajorRecordInstantiator.Activator(form, GameRelease.Oblivion, typeof(Ammunition));
+        Assert.IsType<Ammunition>(ret);
         Assert.Equal(form, ret.FormKey);
     }
 
@@ -51,8 +52,8 @@ public class MajorRecordInstantiatorTests
     {
         Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
-        var ret = MajorRecordInstantiator.Activator(form, GameRelease.Oblivion, typeof(Oblivion.IAmmunition));
-        Assert.IsType<Oblivion.Ammunition>(ret);
+        var ret = MajorRecordInstantiator.Activator(form, GameRelease.Oblivion, typeof(IAmmunition));
+        Assert.IsType<Ammunition>(ret);
         Assert.Equal(form, ret.FormKey);
     }
 
@@ -61,8 +62,8 @@ public class MajorRecordInstantiatorTests
     {
         Warmup.Init();
         var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
-        var ret = MajorRecordInstantiator.Activator(form, GameRelease.Oblivion, typeof(Oblivion.IAmmunitionGetter));
-        Assert.IsType<Oblivion.Ammunition>(ret);
+        var ret = MajorRecordInstantiator.Activator(form, GameRelease.Oblivion, typeof(IAmmunitionGetter));
+        Assert.IsType<Ammunition>(ret);
         Assert.Equal(form, ret.FormKey);
     }
 }
