@@ -119,24 +119,27 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
     
     private bool TryGetGameDirectory(GameRelease release, GameInstallMode installMode, [MaybeNullWhen(false)] out DirectoryPath path)
     {
-        switch (installMode)
+        foreach (var install in Enums<GameInstallMode>.EnumerateContainedFlags(installMode))
         {
-            case GameInstallMode.Steam:
-                foreach (var folder in GetSteamFolders(release))
-                {
-                    path = folder;
-                    return true;
-                }
-                break;
-            case GameInstallMode.Gog:
-                foreach (var folder in GetGogFolders(release))
-                {
-                    path = folder;
-                    return true;
-                }
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(installMode), installMode, null);
+            switch (install)
+            {
+                case GameInstallMode.Steam:
+                    foreach (var folder in GetSteamFolders(release))
+                    {
+                        path = folder;
+                        return true;
+                    }
+                    break;
+                case GameInstallMode.Gog:
+                    foreach (var folder in GetGogFolders(release))
+                    {
+                        path = folder;
+                        return true;
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(installMode), installMode, null);
+            }
         }
         
         path = default;
