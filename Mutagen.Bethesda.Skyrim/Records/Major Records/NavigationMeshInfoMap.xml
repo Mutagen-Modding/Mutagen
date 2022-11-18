@@ -23,10 +23,21 @@
       <RefList name="LinkedDoors" refName="LinkedDoor" counterLength="4" />
       <RefDirect name="Island" refName="IslandData" nullable="True" binary="Custom" />
       <Int32 name="Unknown2" />
-      <FormLink name="ParentWorldspace" refName="Worldspace" />
       <CustomLogic name="ParentParseLogic" />
-      <P2Int16 name="ParentWorldspaceCoord" binary="NoGeneration" />
-      <FormLink name="ParentCell" refName="Cell" binary="NoGeneration" />
+      <RefDirect name="Parent" refName="ANavigationMapInfoParent" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="ANavigationMapInfoParent" abstract="true" objType="Subrecord" GUID="6e17868b-7e78-4678-9065-b9b3a50ef657" ID="486" />
+  <Object name="NavigationMapInfoWorldParent" baseClass="ANavigationMapInfoParent" objType="Subrecord" GUID="40a84624-86a8-48bc-b0f4-43003a69be03" ID="487">
+    <Fields>
+      <FormLink name="ParentWorldspace" refName="Worldspace" />
+      <P2Int16 name="ParentWorldspaceCoord" />
+    </Fields>
+  </Object>
+  <Object name="NavigationMapInfoCellParent" baseClass="ANavigationMapInfoParent" objType="Subrecord" GUID="2022843a-f370-40aa-a001-e09232a2b081" ID="488">
+    <Fields>
+      <Int32 name="Unused" />
+      <FormLink name="ParentCell" refName="Cell" />
     </Fields>
   </Object>
   <Object name="LinkedDoor" objType="Subrecord" GUID="47c9da10-da3e-4e0b-b735-a20fa8632f68" ID="275">

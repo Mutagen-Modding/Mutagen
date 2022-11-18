@@ -126,28 +126,10 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown2
         public Int32 Unknown2 { get; set; } = default;
         #endregion
-        #region ParentWorldspace
-        private readonly IFormLink<IWorldspaceGetter> _ParentWorldspace = new FormLink<IWorldspaceGetter>();
-        public IFormLink<IWorldspaceGetter> ParentWorldspace
-        {
-            get => _ParentWorldspace;
-            set => _ParentWorldspace.SetTo(value);
-        }
+        #region Parent
+        public ANavigationMapInfoParent Parent { get; set; } = default!;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWorldspaceGetter> INavigationMapInfoGetter.ParentWorldspace => this.ParentWorldspace;
-        #endregion
-        #region ParentWorldspaceCoord
-        public P2Int16 ParentWorldspaceCoord { get; set; } = default;
-        #endregion
-        #region ParentCell
-        private readonly IFormLink<ICellGetter> _ParentCell = new FormLink<ICellGetter>();
-        public IFormLink<ICellGetter> ParentCell
-        {
-            get => _ParentCell;
-            set => _ParentCell.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ICellGetter> INavigationMapInfoGetter.ParentCell => this.ParentCell;
+        IANavigationMapInfoParentGetter INavigationMapInfoGetter.Parent => Parent;
         #endregion
 
         #region To String
@@ -197,9 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>());
                 this.Island = new MaskItem<TItem, IslandData.Mask<TItem>?>(initialValue, new IslandData.Mask<TItem>(initialValue));
                 this.Unknown2 = initialValue;
-                this.ParentWorldspace = initialValue;
-                this.ParentWorldspaceCoord = initialValue;
-                this.ParentCell = initialValue;
+                this.Parent = new MaskItem<TItem, ANavigationMapInfoParent.Mask<TItem>?>(initialValue, new ANavigationMapInfoParent.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -212,9 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem LinkedDoors,
                 TItem Island,
                 TItem Unknown2,
-                TItem ParentWorldspace,
-                TItem ParentWorldspaceCoord,
-                TItem ParentCell)
+                TItem Parent)
             {
                 this.NavigationMesh = NavigationMesh;
                 this.Unknown = Unknown;
@@ -225,9 +203,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(LinkedDoors, Enumerable.Empty<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>());
                 this.Island = new MaskItem<TItem, IslandData.Mask<TItem>?>(Island, new IslandData.Mask<TItem>(Island));
                 this.Unknown2 = Unknown2;
-                this.ParentWorldspace = ParentWorldspace;
-                this.ParentWorldspaceCoord = ParentWorldspaceCoord;
-                this.ParentCell = ParentCell;
+                this.Parent = new MaskItem<TItem, ANavigationMapInfoParent.Mask<TItem>?>(Parent, new ANavigationMapInfoParent.Mask<TItem>(Parent));
             }
 
             #pragma warning disable CS8618
@@ -248,9 +224,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>? LinkedDoors;
             public MaskItem<TItem, IslandData.Mask<TItem>?>? Island { get; set; }
             public TItem Unknown2;
-            public TItem ParentWorldspace;
-            public TItem ParentWorldspaceCoord;
-            public TItem ParentCell;
+            public MaskItem<TItem, ANavigationMapInfoParent.Mask<TItem>?>? Parent { get; set; }
             #endregion
 
             #region Equals
@@ -272,9 +246,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.LinkedDoors, rhs.LinkedDoors)) return false;
                 if (!object.Equals(this.Island, rhs.Island)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.ParentWorldspace, rhs.ParentWorldspace)) return false;
-                if (!object.Equals(this.ParentWorldspaceCoord, rhs.ParentWorldspaceCoord)) return false;
-                if (!object.Equals(this.ParentCell, rhs.ParentCell)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -289,9 +261,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.LinkedDoors);
                 hash.Add(this.Island);
                 hash.Add(this.Unknown2);
-                hash.Add(this.ParentWorldspace);
-                hash.Add(this.ParentWorldspaceCoord);
-                hash.Add(this.ParentCell);
+                hash.Add(this.Parent);
                 return hash.ToHashCode();
             }
 
@@ -344,9 +314,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.Island.Specific != null && !this.Island.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Unknown2)) return false;
-                if (!eval(this.ParentWorldspace)) return false;
-                if (!eval(this.ParentWorldspaceCoord)) return false;
-                if (!eval(this.ParentCell)) return false;
+                if (Parent != null)
+                {
+                    if (!eval(this.Parent.Overall)) return false;
+                    if (this.Parent.Specific != null && !this.Parent.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -398,9 +370,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.Island.Specific != null && this.Island.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Unknown2)) return true;
-                if (eval(this.ParentWorldspace)) return true;
-                if (eval(this.ParentWorldspaceCoord)) return true;
-                if (eval(this.ParentCell)) return true;
+                if (Parent != null)
+                {
+                    if (eval(this.Parent.Overall)) return true;
+                    if (this.Parent.Specific != null && this.Parent.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -464,9 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 obj.Island = this.Island == null ? null : new MaskItem<R, IslandData.Mask<R>?>(eval(this.Island.Overall), this.Island.Specific?.Translate(eval));
                 obj.Unknown2 = eval(this.Unknown2);
-                obj.ParentWorldspace = eval(this.ParentWorldspace);
-                obj.ParentWorldspaceCoord = eval(this.ParentWorldspaceCoord);
-                obj.ParentCell = eval(this.ParentCell);
+                obj.Parent = this.Parent == null ? null : new MaskItem<R, ANavigationMapInfoParent.Mask<R>?>(eval(this.Parent.Overall), this.Parent.Specific?.Translate(eval));
             }
             #endregion
 
@@ -570,17 +542,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Unknown2, "Unknown2");
                     }
-                    if (printMask?.ParentWorldspace ?? true)
+                    if (printMask?.Parent?.Overall ?? true)
                     {
-                        sb.AppendItem(ParentWorldspace, "ParentWorldspace");
-                    }
-                    if (printMask?.ParentWorldspaceCoord ?? true)
-                    {
-                        sb.AppendItem(ParentWorldspaceCoord, "ParentWorldspaceCoord");
-                    }
-                    if (printMask?.ParentCell ?? true)
-                    {
-                        sb.AppendItem(ParentCell, "ParentCell");
+                        Parent?.Print(sb);
                     }
                 }
             }
@@ -615,9 +579,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedDoor.ErrorMask?>>?>? LinkedDoors;
             public MaskItem<Exception?, IslandData.ErrorMask?>? Island;
             public Exception? Unknown2;
-            public Exception? ParentWorldspace;
-            public Exception? ParentWorldspaceCoord;
-            public Exception? ParentCell;
+            public MaskItem<Exception?, ANavigationMapInfoParent.ErrorMask?>? Parent;
             #endregion
 
             #region IErrorMask
@@ -644,12 +606,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Island;
                     case NavigationMapInfo_FieldIndex.Unknown2:
                         return Unknown2;
-                    case NavigationMapInfo_FieldIndex.ParentWorldspace:
-                        return ParentWorldspace;
-                    case NavigationMapInfo_FieldIndex.ParentWorldspaceCoord:
-                        return ParentWorldspaceCoord;
-                    case NavigationMapInfo_FieldIndex.ParentCell:
-                        return ParentCell;
+                    case NavigationMapInfo_FieldIndex.Parent:
+                        return Parent;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -687,14 +645,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NavigationMapInfo_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
                         break;
-                    case NavigationMapInfo_FieldIndex.ParentWorldspace:
-                        this.ParentWorldspace = ex;
-                        break;
-                    case NavigationMapInfo_FieldIndex.ParentWorldspaceCoord:
-                        this.ParentWorldspaceCoord = ex;
-                        break;
-                    case NavigationMapInfo_FieldIndex.ParentCell:
-                        this.ParentCell = ex;
+                    case NavigationMapInfo_FieldIndex.Parent:
+                        this.Parent = new MaskItem<Exception?, ANavigationMapInfoParent.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -733,14 +685,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NavigationMapInfo_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
                         break;
-                    case NavigationMapInfo_FieldIndex.ParentWorldspace:
-                        this.ParentWorldspace = (Exception?)obj;
-                        break;
-                    case NavigationMapInfo_FieldIndex.ParentWorldspaceCoord:
-                        this.ParentWorldspaceCoord = (Exception?)obj;
-                        break;
-                    case NavigationMapInfo_FieldIndex.ParentCell:
-                        this.ParentCell = (Exception?)obj;
+                    case NavigationMapInfo_FieldIndex.Parent:
+                        this.Parent = (MaskItem<Exception?, ANavigationMapInfoParent.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -759,9 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (LinkedDoors != null) return true;
                 if (Island != null) return true;
                 if (Unknown2 != null) return true;
-                if (ParentWorldspace != null) return true;
-                if (ParentWorldspaceCoord != null) return true;
-                if (ParentCell != null) return true;
+                if (Parent != null) return true;
                 return false;
             }
             #endregion
@@ -861,15 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Unknown2, "Unknown2");
                 }
-                {
-                    sb.AppendItem(ParentWorldspace, "ParentWorldspace");
-                }
-                {
-                    sb.AppendItem(ParentWorldspaceCoord, "ParentWorldspaceCoord");
-                }
-                {
-                    sb.AppendItem(ParentCell, "ParentCell");
-                }
+                Parent?.Print(sb);
             }
             #endregion
 
@@ -887,9 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.LinkedDoors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedDoor.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedDoors?.Overall, rhs.LinkedDoors?.Overall), Noggog.ExceptionExt.Combine(this.LinkedDoors?.Specific, rhs.LinkedDoors?.Specific));
                 ret.Island = this.Island.Combine(rhs.Island, (l, r) => l.Combine(r));
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.ParentWorldspace = this.ParentWorldspace.Combine(rhs.ParentWorldspace);
-                ret.ParentWorldspaceCoord = this.ParentWorldspaceCoord.Combine(rhs.ParentWorldspaceCoord);
-                ret.ParentCell = this.ParentCell.Combine(rhs.ParentCell);
+                ret.Parent = this.Parent.Combine(rhs.Parent, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -922,9 +856,7 @@ namespace Mutagen.Bethesda.Skyrim
             public LinkedDoor.TranslationMask? LinkedDoors;
             public IslandData.TranslationMask? Island;
             public bool Unknown2;
-            public bool ParentWorldspace;
-            public bool ParentWorldspaceCoord;
-            public bool ParentCell;
+            public ANavigationMapInfoParent.TranslationMask? Parent;
             #endregion
 
             #region Ctors
@@ -941,9 +873,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MergedTo = defaultOn;
                 this.PreferredMerges = defaultOn;
                 this.Unknown2 = defaultOn;
-                this.ParentWorldspace = defaultOn;
-                this.ParentWorldspaceCoord = defaultOn;
-                this.ParentCell = defaultOn;
             }
 
             #endregion
@@ -968,9 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LinkedDoors == null ? DefaultOn : !LinkedDoors.GetCrystal().CopyNothing, LinkedDoors?.GetCrystal()));
                 ret.Add((Island != null ? Island.OnOverall : DefaultOn, Island?.GetCrystal()));
                 ret.Add((Unknown2, null));
-                ret.Add((ParentWorldspace, null));
-                ret.Add((ParentWorldspaceCoord, null));
-                ret.Add((ParentCell, null));
+                ret.Add((Parent != null ? Parent.OnOverall : DefaultOn, Parent?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1058,9 +985,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<LinkedDoor> LinkedDoors { get; }
         new IslandData? Island { get; set; }
         new Int32 Unknown2 { get; set; }
-        new IFormLink<IWorldspaceGetter> ParentWorldspace { get; set; }
-        new P2Int16 ParentWorldspaceCoord { get; set; }
-        new IFormLink<ICellGetter> ParentCell { get; set; }
+        new ANavigationMapInfoParent Parent { get; set; }
     }
 
     public partial interface INavigationMapInfoGetter :
@@ -1085,9 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<ILinkedDoorGetter> LinkedDoors { get; }
         IIslandDataGetter? Island { get; }
         Int32 Unknown2 { get; }
-        IFormLinkGetter<IWorldspaceGetter> ParentWorldspace { get; }
-        P2Int16 ParentWorldspaceCoord { get; }
-        IFormLinkGetter<ICellGetter> ParentCell { get; }
+        IANavigationMapInfoParentGetter Parent { get; }
 
     }
 
@@ -1266,9 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim
         LinkedDoors = 6,
         Island = 7,
         Unknown2 = 8,
-        ParentWorldspace = 9,
-        ParentWorldspaceCoord = 10,
-        ParentCell = 11,
+        Parent = 9,
     }
     #endregion
 
@@ -1286,9 +1207,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "cad666d1-81b5-4a7c-91e7-cecba3dbb3c2";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(NavigationMapInfo.Mask<>);
 
@@ -1372,9 +1293,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.LinkedDoors.Clear();
             item.Island = null;
             item.Unknown2 = default;
-            item.ParentWorldspace.Clear();
-            item.ParentWorldspaceCoord = default;
-            item.ParentCell.Clear();
+            item.Parent.Clear();
         }
         
         #region Mutagen
@@ -1384,8 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.MergedTo.RemapLinks(mapping);
             obj.PreferredMerges.RemapLinks(mapping);
             obj.LinkedDoors.RemapLinks(mapping);
-            obj.ParentWorldspace.Relink(mapping);
-            obj.ParentCell.Relink(mapping);
+            obj.Parent.RemapLinks(mapping);
         }
         
         #endregion
@@ -1456,9 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.ParentWorldspace = item.ParentWorldspace.Equals(rhs.ParentWorldspace);
-            ret.ParentWorldspaceCoord = item.ParentWorldspaceCoord.Equals(rhs.ParentWorldspaceCoord);
-            ret.ParentCell = item.ParentCell.Equals(rhs.ParentCell);
+            ret.Parent = MaskItemExt.Factory(item.Parent.GetEqualsMask(rhs.Parent, include), include);
         }
         
         public string Print(
@@ -1570,17 +1486,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Unknown2, "Unknown2");
             }
-            if (printMask?.ParentWorldspace ?? true)
+            if (printMask?.Parent?.Overall ?? true)
             {
-                sb.AppendItem(item.ParentWorldspace.FormKey, "ParentWorldspace");
-            }
-            if (printMask?.ParentWorldspaceCoord ?? true)
-            {
-                sb.AppendItem(item.ParentWorldspaceCoord, "ParentWorldspaceCoord");
-            }
-            if (printMask?.ParentCell ?? true)
-            {
-                sb.AppendItem(item.ParentCell.FormKey, "ParentCell");
+                item.Parent?.Print(sb, "Parent");
             }
         }
         
@@ -1631,17 +1539,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Parent) ?? true))
             {
-                if (!lhs.ParentWorldspace.Equals(rhs.ParentWorldspace)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord) ?? true))
-            {
-                if (!lhs.ParentWorldspaceCoord.Equals(rhs.ParentWorldspaceCoord)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentCell) ?? true))
-            {
-                if (!lhs.ParentCell.Equals(rhs.ParentCell)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Parent, rhs.Parent, out var lhsParent, out var rhsParent, out var isParentEqual))
+                {
+                    if (!((ANavigationMapInfoParentCommon)((IANavigationMapInfoParentGetter)lhsParent).CommonInstance()!).Equals(lhsParent, rhsParent, equalsMask?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.Parent))) return false;
+                }
+                else if (!isParentEqual) return false;
             }
             return true;
         }
@@ -1661,9 +1565,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(Islanditem);
             }
             hash.Add(item.Unknown2);
-            hash.Add(item.ParentWorldspace);
-            hash.Add(item.ParentWorldspaceCoord);
-            hash.Add(item.ParentCell);
+            hash.Add(item.Parent);
             return hash.ToHashCode();
         }
         
@@ -1691,8 +1593,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            yield return FormLinkInformation.Factory(obj.ParentWorldspace);
-            yield return FormLinkInformation.Factory(obj.ParentCell);
+            if (obj.Parent is IFormLinkContainerGetter ParentlinkCont)
+            {
+                foreach (var item in ParentlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1819,17 +1726,27 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Unknown2 = rhs.Unknown2;
             }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspace) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Parent) ?? true))
             {
-                item.ParentWorldspace.SetTo(rhs.ParentWorldspace.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord) ?? true))
-            {
-                item.ParentWorldspaceCoord = rhs.ParentWorldspaceCoord;
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentCell) ?? true))
-            {
-                item.ParentCell.SetTo(rhs.ParentCell.FormKey);
+                errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.Parent);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Parent) ?? true))
+                    {
+                        item.Parent = rhs.Parent.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.Parent),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -1971,9 +1888,6 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item);
             writer.Write(item.Unknown2);
-            FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ParentWorldspace);
             NavigationMapInfoBinaryWriteTranslation.WriteBinaryParentParseLogic(
                 writer: writer,
                 item: item);
@@ -2067,7 +1981,6 @@ namespace Mutagen.Bethesda.Skyrim
                 frame: frame,
                 item: item);
             item.Unknown2 = frame.ReadInt32();
-            item.ParentWorldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             NavigationMapInfoBinaryCreateTranslation.FillBinaryParentParseLogicCustom(
                 frame: frame,
                 item: item);
@@ -2168,7 +2081,6 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomIslandEndPos();
         #endregion
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(IslandEndingPos, 0x4));
-        public IFormLinkGetter<IWorldspaceGetter> ParentWorldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x4, 0x4))));
         #region ParentParseLogic
         partial void ParentParseLogicCustomParse(
             OverlayStream stream,
