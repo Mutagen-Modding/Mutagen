@@ -2203,6 +2203,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.CombatStyle.Relink(mapping);
             obj.OwnerQuest.Relink(mapping);
             obj.PackageTemplate.Relink(mapping);
+            obj.Data.RemapLinks(mapping);
             obj.ProcedureTree.RemapLinks(mapping);
             obj.OnBegin?.RemapLinks(mapping);
             obj.OnEnd?.RemapLinks(mapping);

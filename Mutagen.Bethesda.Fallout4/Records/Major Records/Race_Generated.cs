@@ -5484,6 +5484,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.CollarTextureSet.Relink(mapping);
             obj.SoundOpenCorpse.Relink(mapping);
             obj.SoundCloseCorpse.Relink(mapping);
+            obj.BipedObjects?.RemapLinks(mapping);
             obj.MovementDataOverrides.RemapLinks(mapping);
             obj.EquipmentSlots.RemapLinks(mapping);
             obj.UnarmedWeapon.Relink(mapping);

@@ -289,7 +289,7 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
                         {
                             sb.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
                         }
-                        else if (dict.ValueTypeGen is FormLinkType formIDType)
+                        else if (dict.ValueTypeGen is FormLinkType or LoquiType)
                         {
                             sb.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
                         }
