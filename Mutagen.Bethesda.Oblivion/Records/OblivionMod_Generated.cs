@@ -4479,6 +4479,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IGlobalFloatGetter":
                 case "IGlobalFloat":
                 case "IGlobalFloatInternal":
+                case "GlobalUnknown":
+                case "IGlobalUnknownGetter":
+                case "IGlobalUnknown":
+                case "IGlobalUnknownInternal":
                     obj.Globals.Remove(
                         type: type,
                         keys: keys);

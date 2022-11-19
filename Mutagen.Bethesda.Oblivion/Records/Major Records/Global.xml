@@ -20,4 +20,10 @@
       <Float name="Data" recordType="FLTV" />
     </Fields>
   </Object>
+  <Object name="GlobalUnknown" recordType="GLOB" baseClass="Global" objType="Record" GUID="b17187a9-3abf-4818-952e-46101a060efe" ID="224">
+    <Fields>
+      <Char name="TypeChar" recordType="FNAM" nullable="False" binary="Custom" />
+      <Float name="Data" recordType="FLTV" />
+    </Fields>
+  </Object>
 </Loqui>

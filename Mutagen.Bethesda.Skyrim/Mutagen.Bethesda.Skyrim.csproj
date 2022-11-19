@@ -189,6 +189,9 @@
     <Compile Include="Records\Common Subrecords\WaterReflection.cs">
       <DependentUpon>WaterReflection.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\GlobalUnknown.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Landscape.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
@@ -2121,6 +2124,9 @@
     </Compile>
     <Compile Include="Records\Major Records\NavigationMapInfoCellParent_Generated.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalUnknown_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

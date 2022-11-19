@@ -442,7 +442,8 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             PerkEntryPointModifyValues_Registration.Instance,
             ANavigationMapInfoParent_Registration.Instance,
             NavigationMapInfoWorldParent_Registration.Instance,
-            NavigationMapInfoCellParent_Registration.Instance
+            NavigationMapInfoCellParent_Registration.Instance,
+            GlobalUnknown_Registration.Instance
         );
     }
 }

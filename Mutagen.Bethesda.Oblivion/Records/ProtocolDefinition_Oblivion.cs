@@ -204,7 +204,8 @@ internal class ProtocolDefinition_Oblivion : IProtocolRegistration
             ScriptEffectData_Registration.Instance,
             LeveledCreatureEntry_Registration.Instance,
             LeveledItemEntry_Registration.Instance,
-            LeveledSpellEntry_Registration.Instance
+            LeveledSpellEntry_Registration.Instance,
+            GlobalUnknown_Registration.Instance
         );
     }
 }
