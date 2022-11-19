@@ -21,9 +21,10 @@ public static class Implicits
     static Implicits()
     {
         #region Oblivion
+        var oblivion = ModKey.FromFileName("Oblivion.esm");
         var oblivionBaseMasters = new List<ModKey>()
         {
-            "Oblivion.esm",
+            oblivion,
             "Knights.esp",
             "DLCShiveringIsles.esp",
             "DLCBattlehornCastle.esp",
@@ -38,7 +39,7 @@ public static class Implicits
         Oblivion = new ImplicitRegistration(
             GameRelease.Oblivion,
             BaseMasters: new ImplicitModKeyCollection(oblivionBaseMasters),
-            Listings: new ImplicitModKeyCollection(Array.Empty<ModKey>()),
+            Listings: new ImplicitModKeyCollection(oblivion.AsEnumerable()),
             RecordFormKeys: Array.Empty<FormKey>());
         #endregion
 
