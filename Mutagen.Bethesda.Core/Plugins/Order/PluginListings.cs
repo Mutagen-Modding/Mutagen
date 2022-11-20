@@ -62,6 +62,7 @@ public static class PluginListings
     public static IEnumerable<ILoadOrderListingGetter> LoadOrderListingsFromStream(Stream stream, GameRelease game)
     {
         return new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         new GameReleaseInjection(game))))
@@ -169,6 +170,7 @@ public static class PluginListings
         IFileSystem fs)
     {
         var pluginListingParser = new PluginListingsParser(
+            new PluginListingCommentTrimmer(),
             new LoadOrderListingParser(
                 new HasEnabledMarkersProvider(gameContext)));
         var provider = new PluginListingsProvider(

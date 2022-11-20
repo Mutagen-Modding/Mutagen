@@ -154,6 +154,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         Release))));
@@ -355,6 +356,7 @@ public sealed record GameEnvironmentBuilder
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         Release))));

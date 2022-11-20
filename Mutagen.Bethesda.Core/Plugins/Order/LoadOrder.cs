@@ -460,6 +460,7 @@ public static class LoadOrder
         IFileSystem fs)
     {
         var pluginListingParser = new PluginListingsParser(
+            new PluginListingCommentTrimmer(),
             new LoadOrderListingParser(
                 new HasEnabledMarkersProvider(gameContext)));
         var provider = new PluginListingsProvider(

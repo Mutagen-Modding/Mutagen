@@ -416,6 +416,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Order\DI\PluginListingCommentTrimmer.cs" />
     <Compile Include="Plugins\Order\DI\PluginListingsParser.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
