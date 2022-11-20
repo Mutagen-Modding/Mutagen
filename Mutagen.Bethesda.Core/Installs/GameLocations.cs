@@ -18,7 +18,11 @@ public static class GameLocations
     /// <inheritdoc cref="GameLocator" />
     public static IEnumerable<DirectoryPath> GetGameFolders(GameRelease release)
     {
-        return GameInstallLookup.GetAll(release);
+        IGameDirectoryLookup lookup = Locator;
+        foreach (var installMode in GameInstallLookup.GetInstallModes(release))
+        {
+            yield return lookup.Get(release, installMode);
+        }
     }
 
     /// <inheritdoc cref="GameLocator" />

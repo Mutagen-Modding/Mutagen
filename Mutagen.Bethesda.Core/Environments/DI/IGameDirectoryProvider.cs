@@ -14,7 +14,7 @@ public sealed class GameDirectoryProvider : IGameDirectoryProvider
     private readonly IGameInstallLookup _gameInstallLookup;
     private readonly IGameDirectoryLookup _locator;
 
-    public DirectoryPath? Path => _locator.TryGet(_release.Release, _gameInstallLookup.GetInstallMode(_release.Release));
+    public DirectoryPath? Path => Get();
 
     public GameDirectoryProvider(
         IGameReleaseContext release,
@@ -24,6 +24,16 @@ public sealed class GameDirectoryProvider : IGameDirectoryProvider
         _release = release;
         _gameInstallLookup = gameInstallLookup;
         _locator = locator;
+    }
+
+    private DirectoryPath? Get()
+    {
+        var install = _gameInstallLookup
+            .GetInstallModes(_release.Release)
+            .Select(x => (GameInstallMode?)x)
+            .FirstOrDefault();
+        if (install == null) return null;
+        return _locator.TryGet(_release.Release, install.Value);
     }
 }
 

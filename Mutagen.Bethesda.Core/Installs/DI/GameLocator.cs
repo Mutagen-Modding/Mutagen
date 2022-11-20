@@ -119,27 +119,24 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
     
     private bool TryGetGameDirectory(GameRelease release, GameInstallMode installMode, [MaybeNullWhen(false)] out DirectoryPath path)
     {
-        foreach (var install in Enums<GameInstallMode>.EnumerateContainedFlags(installMode))
+        switch (installMode)
         {
-            switch (install)
-            {
-                case GameInstallMode.Steam:
-                    foreach (var folder in GetSteamFolders(release))
-                    {
-                        path = folder;
-                        return true;
-                    }
-                    break;
-                case GameInstallMode.Gog:
-                    foreach (var folder in GetGogFolders(release))
-                    {
-                        path = folder;
-                        return true;
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(installMode), installMode, null);
-            }
+            case GameInstallMode.Steam:
+                foreach (var folder in GetSteamFolders(release))
+                {
+                    path = folder;
+                    return true;
+                }
+                break;
+            case GameInstallMode.Gog:
+                foreach (var folder in GetGogFolders(release))
+                {
+                    path = folder;
+                    return true;
+                }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(installMode), installMode, null);
         }
         
         path = default;
@@ -175,15 +172,9 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
         throw new DirectoryNotFoundException($"Data folder for {installMode} {release} cannot be found automatically");
     }
 
-    public GameInstallMode GetInstallMode(GameRelease release)
+    public IEnumerable<GameInstallMode> GetInstallModes(GameRelease release)
     {
-        GameInstallMode ret = default;
-        foreach (var mode in InternalGetInstallModes(release))
-        {
-            ret |= mode;
-        }
-
-        return ret;
+        return InternalGetInstallModes(release);
     }
 
     internal static IReadOnlyDictionary<GameRelease, GameMetaData> Games { get; }
@@ -301,11 +292,6 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
         }
 
         return null;
-    }
-
-    IEnumerable<DirectoryPath> IGameInstallLookup.GetAll(GameRelease release)
-    {
-        return GetAllGameDirectories(release);
     }
 
     DirectoryPath IGameDirectoryLookup.Get(GameRelease release, GameInstallMode installMode)

@@ -151,6 +151,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Installs\Exceptions\NoGameInstallationException.cs" />
     <Compile Include="Installs\GameLocations.cs" />
     <Compile Include="Installs\GameMetaData.cs" />
     <Compile Include="Installs\RegistryHelper.cs" />
