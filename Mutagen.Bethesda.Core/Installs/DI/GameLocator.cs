@@ -296,9 +296,9 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
 
     DirectoryPath? IGameDirectoryLookup.TryGet(GameRelease release, GameInstallMode installMode)
     {
-        if (TryGetDataDirectory(release, installMode, out var dir))
+        if (TryGetGameDirectory(release, installMode, out var path))
         {
-            return dir;
+            return path;
         }
 
         return null;
