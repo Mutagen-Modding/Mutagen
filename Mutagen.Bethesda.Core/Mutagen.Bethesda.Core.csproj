@@ -571,7 +571,7 @@
     <Compile Include="Plugins\Implicit\ImplicitRecordFormKeys.cs" />
     <Compile Include="Plugins\Implicit\ImplicitListings.cs" />
     <Compile Include="Plugins\Implicit\ImplicitBaseMasters.cs" />
-    <Compile Include="Ini\Ini.cs" />
+    <Compile Include="Inis\Ini.cs" />
     <Compile Include="Plugins\Aspects\IKeywordCommon.cs" />
     <Compile Include="Plugins\Records\IGameSettingCommon.cs" />
     <Compile Include="Plugins\Records\IGroup.cs" />
