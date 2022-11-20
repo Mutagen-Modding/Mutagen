@@ -11,18 +11,18 @@ public interface IGameDirectoryProvider
 public sealed class GameDirectoryProvider : IGameDirectoryProvider
 {
     private readonly IGameReleaseContext _release;
-    private readonly IGameInstallProvider _gameInstallProvider;
+    private readonly IGameInstallLookup _gameInstallLookup;
     private readonly IGameDirectoryLookup _locator;
 
-    public DirectoryPath? Path => _locator.TryGet(_release.Release, _gameInstallProvider.GetInstallMode(_release.Release));
+    public DirectoryPath? Path => _locator.TryGet(_release.Release, _gameInstallLookup.GetInstallMode(_release.Release));
 
     public GameDirectoryProvider(
         IGameReleaseContext release,
-        IGameInstallProvider gameInstallProvider,
+        IGameInstallLookup gameInstallLookup,
         IGameDirectoryLookup locator)
     {
         _release = release;
-        _gameInstallProvider = gameInstallProvider;
+        _gameInstallLookup = gameInstallLookup;
         _locator = locator;
     }
 }

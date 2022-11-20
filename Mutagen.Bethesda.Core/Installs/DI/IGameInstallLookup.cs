@@ -2,7 +2,7 @@
 
 namespace Mutagen.Bethesda.Installs.DI;
 
-public interface IGameInstallProvider
+public interface IGameInstallLookup
 {
     GameInstallMode GetInstallMode(GameRelease release);
     

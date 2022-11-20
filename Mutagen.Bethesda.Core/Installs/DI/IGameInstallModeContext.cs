@@ -10,18 +10,18 @@ public interface IGameInstallModeContext
 
 public sealed class GameInstallModeContext : IGameInstallModeContext
 {
-    private readonly IGameInstallProvider _gameInstallProvider;
+    private readonly IGameInstallLookup _gameInstallLookup;
     private readonly IGameReleaseContext _releaseContext;
 
     public GameInstallModeContext(
-        IGameInstallProvider gameInstallProvider,
+        IGameInstallLookup gameInstallLookup,
         IGameReleaseContext releaseContext)
     {
-        _gameInstallProvider = gameInstallProvider;
+        _gameInstallLookup = gameInstallLookup;
         _releaseContext = releaseContext;
     }
 
-    public GameInstallMode InstallMode => _gameInstallProvider.GetInstallMode(_releaseContext.Release);
+    public GameInstallMode InstallMode => _gameInstallLookup.GetInstallMode(_releaseContext.Release);
 }
 
 public sealed class GameInstallModePlaceholder : IGameInstallModeContext

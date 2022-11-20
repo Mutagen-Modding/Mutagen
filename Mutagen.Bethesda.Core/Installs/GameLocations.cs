@@ -13,12 +13,12 @@ public static class GameLocations
     private static readonly GameLocator Locator = new();
     private static IGameDirectoryLookup GameDirLookup => Locator;
     private static IDataDirectoryLookup DataDirLookup => Locator;
-    private static IGameInstallProvider GameInstallProvider => Locator; 
+    private static IGameInstallLookup GameInstallLookup => Locator; 
         
     /// <inheritdoc cref="GameLocator" />
     public static IEnumerable<DirectoryPath> GetGameFolders(GameRelease release)
     {
-        return GameInstallProvider.GetAll(release);
+        return GameInstallLookup.GetAll(release);
     }
 
     /// <inheritdoc cref="GameLocator" />
