@@ -144,6 +144,8 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Inis\DI\IIniPathLookup.cs" />
+    <Compile Include="Inis\DI\IIniPathProvider.cs" />
     <Compile Include="Installs\DI\GameLocator.cs" />
     <Compile Include="Installs\DI\IGameInstallModeContext.cs" />
     <Compile Include="Installs\DI\IGameInstallLookup.cs">
