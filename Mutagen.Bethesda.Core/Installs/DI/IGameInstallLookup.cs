@@ -3,4 +3,5 @@
 public interface IGameInstallLookup
 {
     IEnumerable<GameInstallMode> GetInstallModes(GameRelease release);
+    GameInstallMode GetInstallMode(GameRelease release);
 }

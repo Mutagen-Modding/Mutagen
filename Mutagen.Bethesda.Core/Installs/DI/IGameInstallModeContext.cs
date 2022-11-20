@@ -41,5 +41,10 @@ public sealed class GameInstallModeContext : IGameInstallModeContext
 
 public sealed class GameInstallModeInjection : IGameInstallModeContext
 {
-    public GameInstallMode InstallMode => throw new IncompleteInitialization();
+    public GameInstallMode InstallMode { get; }
+
+    public GameInstallModeInjection(GameInstallMode installMode)
+    {
+        InstallMode = installMode;
+    }
 }

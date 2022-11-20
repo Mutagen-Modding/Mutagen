@@ -3,6 +3,7 @@ using GameFinder.StoreHandlers.GOG;
 using GameFinder.StoreHandlers.Steam;
 using Microsoft.Win32;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs.Exceptions;
 using Noggog;
 
 namespace Mutagen.Bethesda.Installs.DI;
@@ -175,6 +176,15 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
     public IEnumerable<GameInstallMode> GetInstallModes(GameRelease release)
     {
         return InternalGetInstallModes(release);
+    }
+
+    public GameInstallMode GetInstallMode(GameRelease release)
+    {
+        var installMode = GetInstallModes(release)
+            .Select(x => (GameInstallMode?)x)
+            .FirstOrDefault();
+        if (installMode == null) throw new NoGameInstallationException();
+        return installMode.Value;
     }
 
     internal static IReadOnlyDictionary<GameRelease, GameMetaData> Games { get; }
