@@ -53,6 +53,7 @@ ModB.esp
             .ToList();
         result.Should().Equal(
             new LoadOrderListing("ModA.esm", true),
+            new LoadOrderListing("#ModB.esp", false),
             new LoadOrderListing("ModC.esp", true));
     }
         

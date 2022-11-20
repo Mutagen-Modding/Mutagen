@@ -35,7 +35,7 @@ public class PluginCommentTrimmerTests
     {
         sut.Trim("#ModB.esp")
             .ToString()
-            .Should().Be("");
+            .Should().Be("#ModB.esp");
     }
 
     
@@ -46,7 +46,7 @@ public class PluginCommentTrimmerTests
     {
         sut.Trim("Mod#B.esp")
             .ToString()
-            .Should().Be("Mod");
+            .Should().Be("Mod#B.esp");
     }
 
     [Theory]
