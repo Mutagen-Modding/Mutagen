@@ -39,7 +39,7 @@ public sealed class GameInstallModeContext : IGameInstallModeContext
     }
 }
 
-public sealed class GameInstallModePlaceholder : IGameInstallModeContext
+public sealed class GameInstallModeInjection : IGameInstallModeContext
 {
     public GameInstallMode InstallMode => throw new IncompleteInitialization();
 }

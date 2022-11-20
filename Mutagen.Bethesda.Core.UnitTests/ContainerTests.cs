@@ -17,7 +17,7 @@ public class ContainerTests
         builder.RegisterModule<MutagenModule>();
         builder.RegisterType<FileSystem>().As<IFileSystem>();
         builder.RegisterType<GameReleasePlaceholder>().As<IGameReleaseContext>();
-        builder.RegisterType<GameInstallModePlaceholder>().As<IGameInstallModeContext>();
+        builder.RegisterType<GameInstallModeInjection>().As<IGameInstallModeContext>();
         var cont = builder.Build();
         cont.ValidateEverything();
     }
