@@ -4,14 +4,23 @@ namespace Mutagen.Bethesda.Inis.DI;
 
 public interface IIniPathLookup
 {
-    FilePath Get(GameRelease release);
+    FilePath Get(GameRelease release, GameInstallMode gameInstallMode);
 }
 
 public class IniPathLookup : IIniPathLookup
 {
-    public FilePath Get(GameRelease release)
+    public FilePath Get(GameRelease release, GameInstallMode gameInstallMode)
     {
-        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games", ToMyDocumentsString(release), $"{ToIniName(release)}.ini");
+        var docsString = ToMyDocumentsString(release);
+        if (gameInstallMode == GameInstallMode.Gog)
+        {
+            docsString += " GOG";
+        }
+        return Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "My Games",
+            docsString, 
+            $"{ToIniName(release)}.ini");
     }
 
     public static string ToMyDocumentsString(GameRelease release)

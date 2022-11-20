@@ -4,6 +4,8 @@ using FluentAssertions;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis;
+using Mutagen.Bethesda.Inis.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing;
 using Noggog;
@@ -25,7 +27,7 @@ public class GetApplicableArchivePathsTests
     {
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>()
         {
-            { Ini.GetTypicalPath(GameRelease.SkyrimSE).Path, new MockFileData($@"[Archive]
+            { Ini.GetTypicalPath(GameRelease.SkyrimSE, GameInstallMode.Steam).Path, new MockFileData($@"[Archive]
 sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
         });
         fs.Directory.CreateDirectory(BaseFolder);
@@ -40,7 +42,10 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
             fs, 
             new GetArchiveIniListings(
                 fs,
-                gameReleaseInjection),
+                new IniPathProvider(
+                    new GameInstallModeInjection(GameInstallMode.Steam),
+                    gameReleaseInjection,
+                    new IniPathLookup())),
             new CheckArchiveApplicability(
                 ext),
             new DataDirectoryInjection(BaseFolder),

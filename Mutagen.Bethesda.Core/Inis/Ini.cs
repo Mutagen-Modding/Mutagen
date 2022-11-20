@@ -8,8 +8,8 @@ internal class Ini
 {
     private static readonly IniPathLookup Lookup = new();
     
-    public static FilePath GetTypicalPath(GameRelease release)
+    public static FilePath GetTypicalPath(GameRelease release, GameInstallMode installMode)
     {
-        return Lookup.Get(release);
+        return Lookup.Get(release, installMode);
     }
 }

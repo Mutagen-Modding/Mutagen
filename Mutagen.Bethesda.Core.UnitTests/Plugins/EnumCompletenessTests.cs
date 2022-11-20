@@ -1,5 +1,7 @@
 using Mutagen.Bethesda.Inis;
+using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using Xunit;
 
@@ -11,7 +13,7 @@ public class EnumCompletenessTests
     [Fact]
     public void ToCategoryCoverage()
     {
-        foreach (var release in EnumExt.GetValues<GameRelease>())
+        foreach (var release in Enums<GameRelease>.Values)
         {
             release.ToCategory();
         }
@@ -20,7 +22,7 @@ public class EnumCompletenessTests
     [Fact]
     public void HasEnabledMarkers()
     {
-        foreach (var release in EnumExt.GetValues<GameRelease>())
+        foreach (var release in Enums<GameRelease>.Values)
         {
             PluginListings.HasEnabledMarkers(release);
         }
@@ -29,7 +31,7 @@ public class EnumCompletenessTests
     [Fact]
     public void GameConstants()
     {
-        foreach (var release in EnumExt.GetValues<GameRelease>())
+        foreach (var release in Enums<GameRelease>.Values)
         {
             Mutagen.Bethesda.Plugins.Meta.GameConstants.Get(release);
         }
@@ -39,7 +41,7 @@ public class EnumCompletenessTests
 
     public void DefaultFormVersion()
     {
-        foreach (var release in EnumExt.GetValues<GameRelease>())
+        foreach (var release in Enums<GameRelease>.Values)
         {
             release.GetDefaultFormVersion();
         }
@@ -50,7 +52,7 @@ public class EnumCompletenessTests
     [Fact]
     public void HasFormVersion()
     {
-        foreach (var cat in EnumExt.GetValues<GameCategory>())
+        foreach (var cat in Enums<GameCategory>.Values)
         {
             cat.HasFormVersion();
         }
@@ -61,9 +63,9 @@ public class EnumCompletenessTests
     [Fact]
     public void MyDocumentsString()
     {
-        foreach (var release in EnumExt.GetValues<GameRelease>())
+        foreach (var release in Enums<GameRelease>.Values)
         {
-            Ini.ToMyDocumentsString(release);
+            IniPathLookup.ToMyDocumentsString(release);
         }
     }
     #endregion
@@ -72,9 +74,9 @@ public class EnumCompletenessTests
     [Fact]
     public void ToIniName()
     {
-        foreach (var release in EnumExt.GetValues<GameRelease>())
+        foreach (var release in Enums<GameRelease>.Values)
         {
-            Ini.ToIniName(release);
+            IniPathLookup.ToIniName(release);
         }
     }
     #endregion
