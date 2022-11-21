@@ -7,6 +7,7 @@ namespace Mutagen.Bethesda.Installs.DI;
 public interface IGameInstallModeContext
 {
     GameInstallMode InstallMode { get; }
+    GameInstallMode? InstallModeOptional { get; }
 }
 
 public sealed class GameInstallModeContext : IGameInstallModeContext
@@ -22,29 +23,26 @@ public sealed class GameInstallModeContext : IGameInstallModeContext
         _releaseContext = releaseContext;
     }
 
-    public GameInstallMode InstallMode => Get();
+    public GameInstallMode InstallMode => Get() ?? throw new NoGameInstallationException();
 
-    private GameInstallMode Get()
+    public GameInstallMode? InstallModeOptional => Get();
+
+    private GameInstallMode? Get()
     {
-        var install =  _gameInstallLookup
+        return _gameInstallLookup
             .GetInstallModes(_releaseContext.Release)
             .Select(x => (GameInstallMode?)x)
             .FirstOrDefault();
-        if (install == null)
-        {
-            throw new NoGameInstallationException();
-        }
-
-        return install.Value;
     }
 }
 
 public sealed class GameInstallModeInjection : IGameInstallModeContext
 {
-    public GameInstallMode InstallMode { get; }
+    public GameInstallMode InstallMode => InstallModeOptional ?? throw new NoGameInstallationException();
+    public GameInstallMode? InstallModeOptional { get; }
 
-    public GameInstallModeInjection(GameInstallMode installMode)
+    public GameInstallModeInjection(GameInstallMode? installMode)
     {
-        InstallMode = installMode;
+        InstallModeOptional = installMode;
     }
 }

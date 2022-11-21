@@ -178,13 +178,16 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
         return InternalGetInstallModes(release);
     }
 
-    public GameInstallMode GetInstallMode(GameRelease release)
+    public GameInstallMode? TryGetInstallMode(GameRelease release)
     {
-        var installMode = GetInstallModes(release)
+        return GetInstallModes(release)
             .Select(x => (GameInstallMode?)x)
             .FirstOrDefault();
-        if (installMode == null) throw new NoGameInstallationException();
-        return installMode.Value;
+    }
+
+    public GameInstallMode GetInstallMode(GameRelease release)
+    {
+        return TryGetInstallMode(release) ?? throw new NoGameInstallationException();
     }
 
     internal static IReadOnlyDictionary<GameRelease, GameMetaData> Games { get; }

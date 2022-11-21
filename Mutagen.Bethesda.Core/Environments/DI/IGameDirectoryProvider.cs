@@ -11,30 +11,40 @@ public interface IGameDirectoryProvider
 public sealed class GameDirectoryProvider : IGameDirectoryProvider
 {
     private readonly IGameReleaseContext _release;
-    private readonly IGameInstallLookup _gameInstallLookup;
+    private readonly IGameInstallModeContext _installModeContext;
     private readonly IGameDirectoryLookup _locator;
 
     public DirectoryPath? Path => Get();
 
     public GameDirectoryProvider(
         IGameReleaseContext release,
-        IGameInstallLookup gameInstallLookup,
+        IGameInstallModeContext installModeContext,
         IGameDirectoryLookup locator)
     {
         _release = release;
-        _gameInstallLookup = gameInstallLookup;
+        _installModeContext = installModeContext;
         _locator = locator;
     }
 
     private DirectoryPath? Get()
     {
-        var install = _gameInstallLookup
-            .GetInstallModes(_release.Release)
-            .Select(x => (GameInstallMode?)x)
-            .FirstOrDefault();
+        var install = _installModeContext.InstallModeOptional;
         if (install == null) return null;
         return _locator.TryGet(_release.Release, install.Value);
     }
+}
+
+public sealed class GameDirectoryRelativeProvider : IGameDirectoryProvider
+{
+    private readonly IDataDirectoryProvider _dataDirectoryProvider;
+
+    public GameDirectoryRelativeProvider(
+        IDataDirectoryProvider dataDirectoryProvider)
+    {
+        _dataDirectoryProvider = dataDirectoryProvider;
+    }
+
+    public DirectoryPath? Path => _dataDirectoryProvider.Path.Directory;
 }
 
 public record GameDirectoryInjection(DirectoryPath? Path) : IGameDirectoryProvider;
