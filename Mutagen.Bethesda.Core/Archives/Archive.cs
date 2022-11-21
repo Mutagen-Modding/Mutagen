@@ -30,6 +30,15 @@ public static class Archive
             new DataDirectoryInjection(dataFolderPath),
             ext);
     }
+    
+    private static GetApplicableArchivePaths GetApplicableArchivePathsDiObsolete(
+        GameRelease release,
+        DirectoryPath dataFolderPath)
+    {
+        var loc = new GameLocator();
+        var install = loc.GetInstallMode(release);
+        return GetApplicableArchivePathsDi(release, install, dataFolderPath);
+    }
         
     /// <summary>
     /// Returns the preferred extension (.bsa/.ba2) depending on the Game Release
@@ -73,7 +82,9 @@ public static class Archive
     [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath)
     {
-        return GetApplicableArchivePaths(release, GameInstallMode.Steam, dataFolderPath);
+        var loc = new GameLocator();
+        var install = loc.GetInstallMode(release);
+        return GetApplicableArchivePaths(release, install, dataFolderPath);
     }
 
     /// <summary>
@@ -102,7 +113,8 @@ public static class Archive
     [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, IEnumerable<FileName>? archiveOrdering)
     {
-        return GetApplicableArchivePaths(release, GameInstallMode.Steam, dataFolderPath);
+        return GetApplicableArchivePathsDiObsolete(release, dataFolderPath)
+            .Get();
     }
 
     /// <summary>
@@ -116,7 +128,8 @@ public static class Archive
     public static IEnumerable<FilePath> GetApplicableArchivePaths(
         GameRelease release,
         GameInstallMode installMode,
-        DirectoryPath dataFolderPath, IEnumerable<FileName>? archiveOrdering)
+        DirectoryPath dataFolderPath, 
+        IEnumerable<FileName>? archiveOrdering)
     {
         return GetApplicableArchivePathsDi(release, installMode, dataFolderPath)
             .Get(archiveOrdering);
@@ -136,7 +149,8 @@ public static class Archive
         GameRelease release, 
         DirectoryPath dataFolderPath, ModKey modKey)
     {
-        return GetApplicableArchivePaths(release, GameInstallMode.Steam, dataFolderPath, modKey);
+        return GetApplicableArchivePathsDiObsolete(release, dataFolderPath)
+            .Get(modKey);
     }
 
     /// <summary>
@@ -171,7 +185,8 @@ public static class Archive
     [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IEnumerable<FileName>? archiveOrdering)
     {
-        return GetApplicableArchivePaths(release, GameInstallMode.Steam, dataFolderPath, modKey, archiveOrdering);
+        return GetApplicableArchivePathsDiObsolete(release, dataFolderPath)
+            .Get(modKey, archiveOrdering);
     }
 
     /// <summary>
@@ -209,7 +224,8 @@ public static class Archive
     [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IComparer<FileName>? archiveOrdering)
     {
-        return GetApplicableArchivePaths(release, GameInstallMode.Steam, dataFolderPath, modKey, archiveOrdering);
+        return GetApplicableArchivePathsDiObsolete(release, dataFolderPath)
+            .Get(modKey, archiveOrdering);
     }
 
     /// <summary>
@@ -261,7 +277,9 @@ public static class Archive
     [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FileName> GetIniListings(GameRelease release)
     {
-        return GetIniListings(release, GameInstallMode.Steam);
+        var loc = new GameLocator();
+        var installMode = loc.GetInstallMode(release);
+        return GetIniListings(release, installMode);
     }
 
     /// <summary>
@@ -290,7 +308,9 @@ public static class Archive
     [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FileName> GetIniListings(GameRelease release, FilePath path)
     {
-        return GetIniListings(release, GameInstallMode.Steam, path);
+        var loc = new GameLocator();
+        var installMode = loc.GetInstallMode(release);
+        return GetIniListings(release, installMode, path);
     }
 
     /// <summary>
@@ -320,7 +340,9 @@ public static class Archive
     [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FileName> GetIniListings(GameRelease release, Stream iniStream)
     {
-        return GetIniListings(release, GameInstallMode.Steam, iniStream);
+        var loc = new GameLocator();
+        var installMode = loc.GetInstallMode(release);
+        return GetIniListings(release, installMode, iniStream);
     }
 
     /// <summary>

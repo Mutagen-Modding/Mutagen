@@ -289,7 +289,13 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
 
     bool IDataDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)
     {
-        return TryGetDataDirectory(release, GameInstallMode.Steam, out path);
+        var installMode = TryGetInstallMode(release);
+        if (installMode == null)
+        {
+            path = default;
+            return false;
+        }
+        return TryGetDataDirectory(release, installMode.Value, out path);
     }
 
     bool IDataDirectoryLookup.TryGet(GameRelease release, GameInstallMode installMode, out DirectoryPath path)
@@ -319,7 +325,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
 
     DirectoryPath IDataDirectoryLookup.Get(GameRelease release)
     {
-        return GetDataDirectory(release, GameInstallMode.Steam);
+        return GetDataDirectory(release, GetInstallMode(release));
     }
 
     DirectoryPath IDataDirectoryLookup.Get(GameRelease release, GameInstallMode installMode)
@@ -334,12 +340,18 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
 
     bool IGameDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)
     {
-        return TryGetGameDirectory(release, GameInstallMode.Steam, out path);
+        var installMode = TryGetInstallMode(release);
+        if (installMode == null)
+        {
+            path = default;
+            return false;
+        }
+        return TryGetGameDirectory(release, installMode.Value, out path);
     }
 
     DirectoryPath IGameDirectoryLookup.Get(GameRelease release)
     {
-        return GetGameDirectory(release, GameInstallMode.Steam);
+        return GetGameDirectory(release, GetInstallMode(release));
     }
 
     #endregion
