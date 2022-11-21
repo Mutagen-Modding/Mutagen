@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Archives.Exceptions;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings;
@@ -46,8 +47,30 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
         ModKey = modKey;
     }
 
+    [Obsolete("Use variant with non-optional GameInstallMode instead")]
+    public static StringsFolderLookupOverlay TypicalFactory(
+        GameRelease release,
+        ModKey modKey,
+        DirectoryPath dataPath,
+        StringsReadParameters? instructions,
+        GameInstallMode? installMode = null)
+    {
+        if (installMode == null)
+        {
+            var loc = new GameLocator();
+            installMode = loc.GetInstallMode(release);
+        }
+        return TypicalFactory(
+            release,
+            installMode.Value,
+            modKey,
+            dataPath,
+            instructions);
+    }
+
     public static StringsFolderLookupOverlay TypicalFactory(
         GameRelease release, 
+        GameInstallMode installMode,
         ModKey modKey, 
         DirectoryPath dataPath,
         StringsReadParameters? instructions)
@@ -82,7 +105,7 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
                             dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.Path, type, encodings.GetEncoding(release, lang)), LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
-                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey, instructions?.BsaOrdering))
+                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, installMode, dataPath, modKey, instructions?.BsaOrdering))
                     {
                         try
                         {
