@@ -4,8 +4,6 @@ sealed record GameMetaData(
     GameRelease Game, 
     string NexusName,
     long NexusGameId,
-    int? SteamId,
-    long? GogId,
-    string? RegistryPath,
-    string? RegistryKey,
+    IEnumerable<IGameSource> GameSources,
     IEnumerable<string> RequiredFiles);
+    

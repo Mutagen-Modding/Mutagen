@@ -10,7 +10,7 @@ public class GamesDictCompleteness
     [Fact]
     public void GameDictCompleteness()
     {
-        foreach (var rel in EnumExt.GetValues<GameRelease>())
+        foreach (var rel in Enums<GameRelease>.Values)
         {
             GameLocator.Games.ContainsKey(rel)
                 .Should().BeTrue();

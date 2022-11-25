@@ -107,9 +107,6 @@ public static class LoadOrder
         var categoryContext = new GameCategoryInjection(game.ToCategory());
         var pluginPath = new PluginListingsPathContext(
             new PluginListingsPathProvider(),
-            new GameInstallModeContext(
-                new GameLocator(),
-                gameContext),
             gameContext);
         var dataDir = new DataDirectoryInjection(dataPath);
         var pluginProvider = PluginListingsProvider(
@@ -193,13 +190,9 @@ public static class LoadOrder
         bool throwOnMissingMods = true,
         IScheduler? scheduler = null)
     {
-        var dataDir = new DataDirectoryInjection(dataFolderPath);
         var gameRelease = new GameReleaseInjection(game);
         var pluginPath = new PluginListingsPathContext(
             new PluginListingsPathProvider(),
-            new GameInstallModeContext(
-                new GameLocator(),
-                gameRelease),
             gameRelease);
         var gameCategoryInjection = new GameCategoryInjection(game.ToCategory());
         var cccPath = new CreationClubListingsPathProvider(

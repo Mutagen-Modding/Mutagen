@@ -16,21 +16,18 @@ public interface IPluginListingsPathContext
 public sealed class PluginListingsPathContext : IPluginListingsPathContext
 {
     private readonly IPluginListingsPathProvider _provider;
-    private readonly IGameInstallModeContext _gameInstallModeContext;
     private readonly IGameReleaseContext _gameReleaseContext;
 
     public PluginListingsPathContext(
         IPluginListingsPathProvider provider,
-        IGameInstallModeContext gameInstallModeContext, 
         IGameReleaseContext gameReleaseContext)
     {
         _provider = provider;
-        _gameInstallModeContext = gameInstallModeContext;
         _gameReleaseContext = gameReleaseContext;
     }
 
     /// <inheritdoc />
-    public FilePath Path => _provider.Get(_gameReleaseContext.Release, _gameInstallModeContext.InstallMode);
+    public FilePath Path => _provider.Get(_gameReleaseContext.Release);
 }
 
 public sealed record PluginListingsPathInjection(FilePath Path) : IPluginListingsPathContext;

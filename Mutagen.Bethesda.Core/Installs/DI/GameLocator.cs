@@ -3,12 +3,11 @@ using GameFinder.StoreHandlers.GOG;
 using GameFinder.StoreHandlers.Steam;
 using Microsoft.Win32;
 using Mutagen.Bethesda.Environments.DI;
-using Mutagen.Bethesda.Installs.Exceptions;
 using Noggog;
 
 namespace Mutagen.Bethesda.Installs.DI;
 
-public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IGameInstallLookup
+public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 {
     private readonly Lazy<SteamHandler> _steamHandler;
     private readonly Lazy<GOGHandler> _gogHandler;
@@ -21,87 +20,132 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
     
     private IEnumerable<DirectoryPath> GetAllGameDirectories(GameRelease release)
     {
-        return GetSteamFolders(release)
-            .And(GetGogFolders(release))
-            .Distinct();
+        foreach (var source in Games[release].GameSources)
+        {
+            if (TryGetGameDirectory(source, out var path))
+            {
+                yield return path;
+            }
+        }
     }
     
-    private bool TryGetSteam(GameRelease release, out DirectoryPath directoryPath)
+    private bool TryGetGameDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
     {
-        directoryPath = GetSteamFolders(release).FirstOrDefault();
-        return directoryPath != default;
-    }
-
-    private bool TryGetGog(GameRelease release, out DirectoryPath directoryPath)
-    {
-        directoryPath = GetGogFolders(release).FirstOrDefault();
-        return directoryPath != default;
-    }
-
-    private IEnumerable<DirectoryPath> GetSteamFolders(GameRelease release)
-    {
-        if (TryGetGameDirectoryFromRegistry(release, out var regisPath)
-            && regisPath.Exists)
+        foreach (var source in GetAllGameDirectories(release))
         {
-            yield return regisPath;
+            path = source;
+            return true;
         }
+        
+        path = default;
+        return false;
+    }
+    
+    private bool TryGetGameDirectory(IGameSource gameSource, [MaybeNullWhen(false)] out DirectoryPath path)
+    {
+        switch (gameSource)
+        {
+            case RegistryGameSource registryGameSource:
+                return TryGetGameDirectoryFromRegistry(registryGameSource, out path);
+            case SteamGameSource steam:
+                return TryGetSteamGameFolder(steam, out path);
+            case GogGameSource gog:
+                return TryGetGogGameFolder(gog, out path);
+            default:
+                throw new NotImplementedException();
+        }
+    }
 
+    private DirectoryPath GetGameDirectory(GameRelease release)
+    {
+        if (TryGetGameDirectory(release, out var path))
+        {
+            return path;
+        }
+        throw new DirectoryNotFoundException($"Game folder for {release} cannot be found automatically");
+    }
+
+    private bool TryGetDataDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
+    {
+        if (TryGetGameDirectory(release, out path))
+        {
+            path = Path.Combine(path, "Data");
+            return true;
+        }
+        path = default;
+        return false;
+    }
+
+    private DirectoryPath GetDataDirectory(GameRelease release)
+    {
+        if (TryGetDataDirectory(release, out var path))
+        {
+            return path;
+        }
+        throw new DirectoryNotFoundException($"Data folder for {release} cannot be found automatically");
+    }
+
+    private bool TryGetSteamGameFolder(SteamGameSource steamGameSource, out DirectoryPath directoryPath)
+    {
         foreach (var game in _steamHandler.Value.FindAllGames()
                      .Where(x => x.Error.IsNullOrWhitespace())
                      .Select(x => x.Game)
                      .NotNull()
-                     .Where(x => x.AppId == Games[release].SteamId))
+                     .Where(x => x.AppId == steamGameSource.Id))
         {
-            yield return game.Path;
+            directoryPath = game.Path;
+            return true;
         }
+
+        directoryPath = default;
+        return false;
     }
 
-    private IEnumerable<DirectoryPath> GetGogFolders(GameRelease release)
+    private bool TryGetGogGameFolder(GogGameSource gogGameSource, out DirectoryPath directoryPath)
     {
         foreach (var game in _gogHandler.Value.FindAllGames()
                      .Where(x => x.Error.IsNullOrWhitespace())
                      .Select(x => x.Game)
                      .NotNull()
-                     .Where(x => x.Id == Games[release].GogId))
+                     .Where(x => x.Id == gogGameSource.Id))
         {
-            yield return game.Path;
+            directoryPath = game.Path;
+            return true;
         }
-    }
 
-    private IEnumerable<GameInstallMode> InternalGetInstallModes(GameRelease release)
-    {
-        if (TryGetSteam(release, out _))
-        {
-            yield return GameInstallMode.Steam;
-        }
-        if (TryGetGog(release, out _))
-        {
-            yield return GameInstallMode.Gog;
-        }
+        directoryPath = default;
+        return false;
     }
     
     [Obsolete("Will be made private at some point")]
     public bool TryGetGameDirectoryFromRegistry(GameRelease release,
         [MaybeNullWhen(false)] out DirectoryPath path)
     {
+        var gameRegistration = Games[release].GameSources.OfType<RegistryGameSource>().FirstOrDefault();
+                
+        if (gameRegistration == null)
+        {
+            path = default;
+            return false;
+        }
+
+        return TryGetGameDirectoryFromRegistry(gameRegistration, out path);
+    }
+    
+    private bool TryGetGameDirectoryFromRegistry(
+        RegistryGameSource registryGameSource,
+        [MaybeNullWhen(false)] out DirectoryPath path)
+    {
         try
         {
-            var gameRegistration = Games[release];
-                
-            if (gameRegistration.RegistryPath == null || gameRegistration.RegistryKey == null)
-            {
-                path = default;
-                return false;
-            }
-                
-            using var regKey = Registry.LocalMachine.OpenSubKey(gameRegistration.RegistryPath);
+            using var regKey = Registry.LocalMachine.OpenSubKey(registryGameSource.RegistryPath);
             if (regKey == null)
             {
                 path = default;
                 return false;
             }
 
-            var regRes = RegistryHelper.GetStringValueFromRegistry(regKey, gameRegistration.RegistryKey);
+            var regRes = RegistryHelper.GetStringValueFromRegistry(regKey, registryGameSource.RegistryKey);
             if (regRes.Failed)
             {
                 path = default;
@@ -117,78 +161,6 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
             return false;
         }
     }
-    
-    private bool TryGetGameDirectory(GameRelease release, GameInstallMode installMode, [MaybeNullWhen(false)] out DirectoryPath path)
-    {
-        switch (installMode)
-        {
-            case GameInstallMode.Steam:
-                foreach (var folder in GetSteamFolders(release))
-                {
-                    path = folder;
-                    return true;
-                }
-                break;
-            case GameInstallMode.Gog:
-                foreach (var folder in GetGogFolders(release))
-                {
-                    path = folder;
-                    return true;
-                }
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(installMode), installMode, null);
-        }
-        
-        path = default;
-        return false;
-    }
-
-    private DirectoryPath GetGameDirectory(GameRelease release, GameInstallMode installMode)
-    {
-        if (TryGetGameDirectory(release, installMode, out var path))
-        {
-            return path;
-        }
-        throw new DirectoryNotFoundException($"Game folder for {installMode} {release} cannot be found automatically");
-    }
-
-    private bool TryGetDataDirectory(GameRelease release, GameInstallMode installMode, [MaybeNullWhen(false)] out DirectoryPath path)
-    {
-        if (TryGetGameDirectory(release, installMode, out path))
-        {
-            path = Path.Combine(path, "Data");
-            return true;
-        }
-        path = default;
-        return false;
-    }
-
-    private DirectoryPath GetDataDirectory(GameRelease release, GameInstallMode installMode)
-    {
-        if (TryGetDataDirectory(release, installMode, out var path))
-        {
-            return path;
-        }
-        throw new DirectoryNotFoundException($"Data folder for {installMode} {release} cannot be found automatically");
-    }
-
-    public IEnumerable<GameInstallMode> GetInstallModes(GameRelease release)
-    {
-        return InternalGetInstallModes(release);
-    }
-
-    public GameInstallMode? TryGetInstallMode(GameRelease release)
-    {
-        return GetInstallModes(release)
-            .Select(x => (GameInstallMode?)x)
-            .FirstOrDefault();
-    }
-
-    public GameInstallMode GetInstallMode(GameRelease release)
-    {
-        return TryGetInstallMode(release) ?? throw new NoGameInstallationException();
-    }
 
     internal static IReadOnlyDictionary<GameRelease, GameMetaData> Games { get; }
 
@@ -201,10 +173,22 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
                     GameRelease.Oblivion,
                     NexusName: "oblivion",
                     NexusGameId: 101,
-                    SteamId: 22330,
-                    GogId: 1458058109,
-                    RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Oblivion",
-                    RegistryKey: @"installed path",
+                    GameSources: new IGameSource[]
+                    {
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Oblivion",
+                            RegistryKey = @"installed path"
+                        },
+                        new SteamGameSource() 
+                        {
+                            Id = 22330
+                        },
+                        new GogGameSource() 
+                        {
+                            Id = 1458058109
+                        },
+                    },
                     RequiredFiles: new string[]
                     {
                         "oblivion.exe"
@@ -215,10 +199,18 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
                     GameRelease.SkyrimLE,
                     NexusName: "skyrim",
                     NexusGameId: 110,
-                    SteamId: 72850,
-                    GogId: null,
-                    RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim",
-                    RegistryKey: @"installed path",
+                    GameSources: new IGameSource[]
+                    {
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim",
+                            RegistryKey = @"installed path"
+                        },
+                        new SteamGameSource() 
+                        {
+                            Id = 72850
+                        },
+                    },
                     RequiredFiles: new string[]
                     {
                         "tesv.exe"
@@ -229,10 +221,18 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
                     GameRelease.SkyrimSE,
                     NexusName: "skyrimspecialedition",
                     NexusGameId: 1704,
-                    SteamId: 489830,
-                    GogId: 1711230643,
-                    RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition",
-                    RegistryKey: @"installed path",
+                    GameSources: new IGameSource[]
+                    {
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition",
+                            RegistryKey = @"installed path"
+                        },
+                        new SteamGameSource() 
+                        {
+                            Id = 489830
+                        },
+                    },
                     RequiredFiles: new string[]
                     {
                         "SkyrimSE.exe"
@@ -243,10 +243,18 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
                     GameRelease.Fallout4,
                     NexusName: "fallout4",
                     NexusGameId: 1151,
-                    SteamId: 377160,
-                    GogId: null,
-                    RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout4",
-                    RegistryKey: @"installed path",
+                    GameSources: new IGameSource[]
+                    {
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout4",
+                            RegistryKey = @"installed path",
+                        },
+                        new SteamGameSource() 
+                        {
+                            Id = 377160
+                        },
+                    },
                     RequiredFiles: new string[]
                     {
                         "Fallout4.exe"
@@ -257,10 +265,18 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
                     GameRelease.SkyrimVR,
                     NexusName: "skyrimspecialedition",
                     NexusGameId: 1704,
-                    SteamId: 611670,
-                    GogId: null,
-                    RegistryPath: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim VR",
-                    RegistryKey: @"installed path",
+                    GameSources: new IGameSource[]
+                    {
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim VR",
+                            RegistryKey = @"installed path",
+                        },
+                        new SteamGameSource() 
+                        {
+                            Id = 611670
+                        },
+                    },
                     RequiredFiles: new string[]
                     {
                         "SkyrimVR.exe"
@@ -269,12 +285,38 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
         };
         games[GameRelease.EnderalLE] = games[GameRelease.SkyrimLE] with
         {
-            RegistryPath = null,
-            RegistryKey = null,
+            GameSources = new IGameSource[]
+            {
+                new SteamGameSource() 
+                {
+                    Id = 72850
+                },
+            },
         };
         games[GameRelease.EnderalSE] = games[GameRelease.SkyrimSE] with
         {
-            RegistryPath = @"SOFTWARE\WOW6432Node\SureAI\Enderal SE",
+            GameSources = new IGameSource[]
+            {
+                new RegistryGameSource()
+                {
+                    RegistryPath = @"SOFTWARE\WOW6432Node\SureAI\Enderal SE",
+                    RegistryKey = @"installed path",
+                },
+                new SteamGameSource() 
+                {
+                    Id = 489830
+                },
+            },
+        };
+        games[GameRelease.SkyrimSEGog] = games[GameRelease.SkyrimSE] with
+        {
+            GameSources = new IGameSource[]
+            {
+                new GogGameSource() 
+                {
+                    Id = 1711230643
+                },
+            },
         };
         Games = games;
     }
@@ -289,48 +331,12 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
 
     bool IDataDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)
     {
-        var installMode = TryGetInstallMode(release);
-        if (installMode == null)
-        {
-            path = default;
-            return false;
-        }
-        return TryGetDataDirectory(release, installMode.Value, out path);
-    }
-
-    bool IDataDirectoryLookup.TryGet(GameRelease release, GameInstallMode installMode, out DirectoryPath path)
-    {
-        return TryGetDataDirectory(release, installMode, out path);
-    }
-
-    DirectoryPath? IGameDirectoryLookup.TryGet(GameRelease release, GameInstallMode installMode)
-    {
-        if (TryGetGameDirectory(release, installMode, out var path))
-        {
-            return path;
-        }
-
-        return null;
-    }
-
-    DirectoryPath IGameDirectoryLookup.Get(GameRelease release, GameInstallMode installMode)
-    {
-        return GetGameDirectory(release, installMode);
-    }
-
-    bool IGameDirectoryLookup.TryGet(GameRelease release, GameInstallMode installMode, out DirectoryPath path)
-    {
-        return TryGetGameDirectory(release, installMode, out path);
+        return TryGetDataDirectory(release, out path);
     }
 
     DirectoryPath IDataDirectoryLookup.Get(GameRelease release)
     {
-        return GetDataDirectory(release, GetInstallMode(release));
-    }
-
-    DirectoryPath IDataDirectoryLookup.Get(GameRelease release, GameInstallMode installMode)
-    {
-        return GetDataDirectory(release, installMode);
+        return GetDataDirectory(release);
     }
 
     IEnumerable<DirectoryPath> IGameDirectoryLookup.GetAll(GameRelease release)
@@ -340,18 +346,22 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup, IG
 
     bool IGameDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)
     {
-        var installMode = TryGetInstallMode(release);
-        if (installMode == null)
+        return TryGetGameDirectory(release, out path);
+    }
+
+    DirectoryPath? IGameDirectoryLookup.TryGet(GameRelease release)
+    {
+        if (TryGetGameDirectory(release, out var path))
         {
-            path = default;
-            return false;
+            return path;
         }
-        return TryGetGameDirectory(release, installMode.Value, out path);
+
+        return null;
     }
 
     DirectoryPath IGameDirectoryLookup.Get(GameRelease release)
     {
-        return GetGameDirectory(release, GetInstallMode(release));
+        return GetGameDirectory(release);
     }
 
     #endregion

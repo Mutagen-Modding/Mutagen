@@ -167,9 +167,6 @@ public sealed class GameEnvironmentState :
         var category = new GameCategoryContext(gameReleaseInjection);
         var pluginListingsPathProvider = new PluginListingsPathContext(
             new PluginListingsPathProvider(),
-            new GameInstallModeContext(
-                new GameLocator(),
-                gameReleaseInjection),
             gameReleaseInjection);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
@@ -286,9 +283,6 @@ public sealed class GameEnvironmentState<TMod> :
         var category = new GameCategoryContext(gameReleaseInjection);
         var pluginListingsPathProvider = new PluginListingsPathContext(
             new PluginListingsPathProvider(),
-            new GameInstallModeContext(
-                new GameLocator(),
-                gameReleaseInjection),
             gameReleaseInjection);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
@@ -414,9 +408,6 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
         var category = new GameCategoryContext(gameReleaseInjection);
         var pluginListingsPathProvider = new PluginListingsPathContext(
             new PluginListingsPathProvider(),
-            new GameInstallModeContext(
-                new GameLocator(),
-                gameReleaseInjection),
             gameReleaseInjection);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,

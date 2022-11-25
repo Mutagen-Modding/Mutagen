@@ -19,6 +19,7 @@ public sealed class HasEnabledMarkersProvider : IHasEnabledMarkersProvider
             {
                 GameRelease.Fallout4 => true,
                 GameRelease.SkyrimSE => true,
+                GameRelease.SkyrimSEGog => true,
                 GameRelease.EnderalSE => true,
                 GameRelease.SkyrimVR => true,
                 GameRelease.SkyrimLE => false,

@@ -27,7 +27,7 @@ public class GetApplicableArchivePathsTests
     {
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>()
         {
-            { Ini.GetTypicalPath(GameRelease.SkyrimSE, GameInstallMode.Steam).Path, new MockFileData($@"[Archive]
+            { Ini.GetTypicalPath(GameRelease.SkyrimSE).Path, new MockFileData($@"[Archive]
 sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
         });
         fs.Directory.CreateDirectory(BaseFolder);
@@ -43,7 +43,6 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
             new GetArchiveIniListings(
                 fs,
                 new IniPathProvider(
-                    new GameInstallModeInjection(GameInstallMode.Steam),
                     gameReleaseInjection,
                     new IniPathLookup())),
             new CheckArchiveApplicability(

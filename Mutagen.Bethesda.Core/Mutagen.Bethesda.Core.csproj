@@ -7,6 +7,7 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RootNamespace>Mutagen.Bethesda</RootNamespace>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
@@ -147,16 +148,14 @@
     <Compile Include="Inis\DI\IIniPathLookup.cs" />
     <Compile Include="Inis\DI\IIniPathProvider.cs" />
     <Compile Include="Installs\DI\GameLocator.cs" />
-    <Compile Include="Installs\DI\IGameInstallModeContext.cs" />
-    <Compile Include="Installs\DI\IGameInstallLookup.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
-    <Compile Include="Installs\Exceptions\NoGameInstallationException.cs" />
+    <Compile Include="Installs\GameSource.cs" />
     <Compile Include="Installs\GameLocations.cs" />
     <Compile Include="Installs\GameMetaData.cs" />
+    <Compile Include="Installs\GogGameSource.cs" />
+    <Compile Include="Installs\IGameSource.cs" />
+    <Compile Include="Installs\RegistryGameSource.cs" />
     <Compile Include="Installs\RegistryHelper.cs" />
+    <Compile Include="Installs\SteamGameSource.cs" />
     <Compile Include="Plugins\Analysis\RecordLocationMarker.cs" />
     <Compile Include="Plugins\Analysis\RecordLocator.cs">
       <CodeLanguage>cs</CodeLanguage>

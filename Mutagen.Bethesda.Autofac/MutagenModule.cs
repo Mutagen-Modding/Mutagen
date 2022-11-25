@@ -24,7 +24,6 @@ public class MutagenModule : Module
                 typeof(ILoadOrderWriter),
                 typeof(IModActivator),
                 typeof(IIniPathLookup),
-                typeof(IGameInstallLookup),
                 typeof(IMasterReferenceReaderFactory))
             .NotInjection()
             .AsMatchingInterface();
@@ -38,7 +37,6 @@ public class MutagenModule : Module
             .As(typeof(IModImporter<>));
         builder.RegisterType<GameLocator>()
             .As<IGameDirectoryLookup>()
-            .As<IDataDirectoryLookup>()
-            .As<IGameInstallLookup>();
+            .As<IDataDirectoryLookup>();
     }
 }

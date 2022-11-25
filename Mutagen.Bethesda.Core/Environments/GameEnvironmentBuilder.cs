@@ -16,7 +16,6 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     where TModGetter : class, IContextGetterMod<TMod, TModGetter>
 {
     private IGameReleaseContext Release { get; }
-    private IGameInstallModeContext? InstallMode { get; init; }
     internal IDataDirectoryProvider? DataDirectoryProvider { get; init; }
     internal ILoadOrderListingsProvider? ListingsProvider { get; init; }
     internal IPluginListingsPathContext? PluginListingsPathContext { get; init; }
@@ -128,11 +127,6 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         return this with { DataDirectoryProvider = new DataDirectoryInjection(path) };
     }
 
-    public GameEnvironmentBuilder<TMod, TModGetter> WithGameInstallMode(GameInstallMode installMode)
-    {
-        return this with { InstallMode = new GameInstallModeInjection(installMode) };
-    }
-
     /// <summary>
     /// Creates an environment with all the given rules added to the builder
     /// </summary>
@@ -142,27 +136,17 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         Warmup.Init();
         var category = new GameCategoryContext(Release);
         var gameLocator = new GameLocator();
-        var installMode = InstallMode;
-        if (installMode == null)
-        {
-            installMode = new GameInstallModeInjection(gameLocator.GetInstallMode(Release.Release));
-        }
         var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(
             Release,
-            installMode,
             gameLocator);
         var pluginPathProvider = PluginListingsPathContext ?? new PluginListingsPathContext(
             new PluginListingsPathProvider(),
-            new GameInstallModeContext(
-                new GameLocator(),
-                Release),
             Release);
         var cccPath = CccListingsPathProvider ?? new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(category),
             new GameDirectoryProvider(
                 Release,
-                installMode,
                 gameLocator));
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
@@ -231,7 +215,6 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
 public sealed record GameEnvironmentBuilder
 {
     private IGameReleaseContext Release { get; }
-    private IGameInstallModeContext? InstallMode { get; init; }
     internal IDataDirectoryProvider? DataDirectoryProvider { get; init; }
     internal ILoadOrderListingsProvider? ListingsProvider { get; init; }
     internal IPluginListingsPathContext? PluginListingsPathContext { get; init; }
@@ -343,11 +326,6 @@ public sealed record GameEnvironmentBuilder
         return this with { DataDirectoryProvider = new DataDirectoryInjection(path) };
     }
 
-    public GameEnvironmentBuilder WithGameInstallMode(GameInstallMode installMode)
-    {
-        return this with { InstallMode = new GameInstallModeInjection(installMode) };
-    }
-
     /// <summary>
     /// Creates an environment with all the given rules added to the builder
     /// </summary>
@@ -357,27 +335,17 @@ public sealed record GameEnvironmentBuilder
         Warmup.Init();
         var category = new GameCategoryContext(Release);
         var gameLocator = new GameLocator();
-        var installMode = InstallMode;
-        if (installMode == null)
-        {
-            installMode = new GameInstallModeInjection(gameLocator.GetInstallMode(Release.Release));
-        }
         var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(
             Release,
-            installMode,
             gameLocator);
         var pluginPathProvider = PluginListingsPathContext ?? new PluginListingsPathContext(
             new PluginListingsPathProvider(),
-            new GameInstallModeContext(
-                new GameLocator(),
-                Release),
             Release);
         var cccPath = CccListingsPathProvider ?? new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(category),
             new GameDirectoryProvider(
                 Release,
-                installMode,
                 gameLocator));
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,

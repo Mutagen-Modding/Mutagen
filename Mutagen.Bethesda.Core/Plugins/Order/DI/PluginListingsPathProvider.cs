@@ -4,20 +4,11 @@ namespace Mutagen.Bethesda.Plugins.Order.DI;
 
 public interface IPluginListingsPathProvider
 {
-    FilePath Get(GameRelease release, GameInstallMode installMode);
+    FilePath Get(GameRelease release);
 }
 
 public class PluginListingsPathProvider : IPluginListingsPathProvider
 {
-    private string? GetInstallModeSuffix(GameInstallMode installMode)
-    {
-        return installMode switch
-        {
-            GameInstallMode.Gog => " GOG",
-            _ => null,
-        };
-    }
-    
     private string GetGameFolder(GameRelease release)
     {
         return release switch
@@ -26,6 +17,7 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
             GameRelease.SkyrimLE => "Skyrim",
             GameRelease.EnderalLE => "Enderal",
             GameRelease.SkyrimSE => "Skyrim Special Edition",
+            GameRelease.SkyrimSEGog => "Skyrim Special Edition GOG",
             GameRelease.EnderalSE => "Enderal Special Edition",
             GameRelease.SkyrimVR => "Skyrim VR",
             GameRelease.Fallout4 => "Fallout4",
@@ -33,25 +25,15 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
         };
     }
     
-    private string GetRelativePluginsPath(GameRelease release, GameInstallMode installMode)
+    private string GetRelativePluginsPath(GameRelease release)
     {
-        var installModeSuffix = GetInstallModeSuffix(installMode);
         var gameFolder = GetGameFolder(release);
-        if (installModeSuffix == null)
-        {
-            return System.IO.Path.Combine(
-                gameFolder,
-                "Plugins.txt");
-        }
-        else
-        {
-            return System.IO.Path.Combine(
-                $"{gameFolder}{installModeSuffix}",
-                "Plugins.txt");
-        }
+        return System.IO.Path.Combine(
+            gameFolder,
+            "Plugins.txt");
     }
 
-    public FilePath Get(GameRelease release, GameInstallMode installMode) => System.IO.Path.Combine(
+    public FilePath Get(GameRelease release) => System.IO.Path.Combine(
         Environment.GetEnvironmentVariable("LocalAppData")!,
-        GetRelativePluginsPath(release, installMode));
+        GetRelativePluginsPath(release));
 }

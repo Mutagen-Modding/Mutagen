@@ -3,17 +3,13 @@ using Noggog;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis.DI;
-using Mutagen.Bethesda.Installs.DI;
 using Stream = System.IO.Stream;
 
 namespace Mutagen.Bethesda.Archives;
 
 public static class Archive
 {
-    private static GetApplicableArchivePaths GetApplicableArchivePathsDi(
-        GameRelease release,
-        GameInstallMode installMode,
-        DirectoryPath dataFolderPath)
+    private static GetApplicableArchivePaths GetApplicableArchivePathsDi(GameRelease release, DirectoryPath dataFolderPath)
     {
         var gameReleaseInjection = new GameReleaseInjection(release);
         var ext = new ArchiveExtensionProvider(gameReleaseInjection);
@@ -22,22 +18,12 @@ public static class Archive
             new GetArchiveIniListings(
                 IFileSystemExt.DefaultFilesystem,
                 new IniPathProvider(
-                    new GameInstallModeInjection(installMode),
                     new GameReleaseInjection(release),
                     new IniPathLookup())),
             new CheckArchiveApplicability(
                 ext),
             new DataDirectoryInjection(dataFolderPath),
             ext);
-    }
-    
-    private static GetApplicableArchivePaths GetApplicableArchivePathsDiObsolete(
-        GameRelease release,
-        DirectoryPath dataFolderPath)
-    {
-        var loc = new GameLocator();
-        var install = loc.GetInstallMode(release);
-        return GetApplicableArchivePathsDi(release, install, dataFolderPath);
     }
         
     /// <summary>
@@ -79,27 +65,9 @@ public static class Archive
     /// <param name="release">GameRelease to query for</param>
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <returns></returns>
-    [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath)
     {
-        var loc = new GameLocator();
-        var install = loc.GetInstallMode(release);
-        return GetApplicableArchivePaths(release, install, dataFolderPath);
-    }
-
-    /// <summary>
-    /// Enumerates all Archives for a given release that are within a given dataFolderPath.
-    /// </summary>
-    /// <param name="release">GameRelease to query for</param>
-    /// <param name="installMode">GameInstallMode to query for</param>
-    /// <param name="dataFolderPath">Folder to query within</param>
-    /// <returns></returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(
-        GameRelease release, 
-        GameInstallMode installMode,
-        DirectoryPath dataFolderPath)
-    {
-        return GetApplicableArchivePathsDi(release, installMode, dataFolderPath)
+        return GetApplicableArchivePathsDi(release, dataFolderPath)
             .Get();
     }
 
@@ -110,28 +78,9 @@ public static class Archive
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
     /// <returns></returns>
-    [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, IEnumerable<FileName>? archiveOrdering)
     {
-        return GetApplicableArchivePathsDiObsolete(release, dataFolderPath)
-            .Get();
-    }
-
-    /// <summary>
-    /// Enumerates all Archives for a given release that are within a given dataFolderPath.
-    /// </summary>
-    /// <param name="release">GameRelease to query for</param>
-    /// <param name="installMode">GameInstallMode to query for</param>
-    /// <param name="dataFolderPath">Folder to query within</param>
-    /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
-    /// <returns></returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(
-        GameRelease release,
-        GameInstallMode installMode,
-        DirectoryPath dataFolderPath, 
-        IEnumerable<FileName>? archiveOrdering)
-    {
-        return GetApplicableArchivePathsDi(release, installMode, dataFolderPath)
+        return GetApplicableArchivePathsDi(release, dataFolderPath)
             .Get(archiveOrdering);
     }
 
@@ -144,31 +93,9 @@ public static class Archive
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="modKey">ModKey to query about</param>
     /// <returns></returns>
-    [Obsolete("Use alternative with GameInstallMode instead")]
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(
-        GameRelease release, 
-        DirectoryPath dataFolderPath, ModKey modKey)
+    public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey)
     {
-        return GetApplicableArchivePathsDiObsolete(release, dataFolderPath)
-            .Get(modKey);
-    }
-
-    /// <summary>
-    /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.<br/>
-    /// This call is intended to return Archives related to one specific mod.<br/>
-    /// NOTE:  It is currently a bit experimental
-    /// </summary>
-    /// <param name="release">GameRelease to query for</param>
-    /// <param name="installMode">GameInstallMode to query for</param>
-    /// <param name="dataFolderPath">Folder to query within</param>
-    /// <param name="modKey">ModKey to query about</param>
-    /// <returns></returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(
-        GameRelease release,
-        GameInstallMode installMode,
-        DirectoryPath dataFolderPath, ModKey modKey)
-    {
-        return GetApplicableArchivePathsDi(release, installMode, dataFolderPath)
+        return GetApplicableArchivePathsDi(release, dataFolderPath)
             .Get(modKey);
     }
 
@@ -182,32 +109,9 @@ public static class Archive
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
     /// <returns></returns>
-    [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IEnumerable<FileName>? archiveOrdering)
     {
-        return GetApplicableArchivePathsDiObsolete(release, dataFolderPath)
-            .Get(modKey, archiveOrdering);
-    }
-
-    /// <summary>
-    /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.<br/>
-    /// This call is intended to return Archives related to one specific mod.<br/>
-    /// NOTE:  It is currently a bit experimental
-    /// </summary>
-    /// <param name="release">GameRelease to query for</param>
-    /// <param name="installMode">GameInstallMode to query for</param>
-    /// <param name="dataFolderPath">Folder to query within</param>
-    /// <param name="modKey">ModKey to query about</param>
-    /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
-    /// <returns></returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(
-        GameRelease release,
-        GameInstallMode installMode,
-        DirectoryPath dataFolderPath,
-        ModKey modKey,
-        IEnumerable<FileName>? archiveOrdering)
-    {
-        return GetApplicableArchivePathsDi(release, installMode, dataFolderPath)
+        return GetApplicableArchivePathsDi(release, dataFolderPath)
             .Get(modKey, archiveOrdering);
     }
 
@@ -221,32 +125,9 @@ public static class Archive
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="archiveOrdering">How to order the archive paths.  Null for no ordering</param>
     /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
-    [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IComparer<FileName>? archiveOrdering)
     {
-        return GetApplicableArchivePathsDiObsolete(release, dataFolderPath)
-            .Get(modKey, archiveOrdering);
-    }
-
-    /// <summary>
-    /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.<br/>
-    /// This call is intended to return Archives related to one specific mod.<br/>
-    /// NOTE:  It is currently a bit experimental
-    /// </summary>
-    /// <param name="release">GameRelease to query for</param>
-    /// <param name="installMode">GameInstallMode to query for</param>
-    /// <param name="dataFolderPath">Folder to query within</param>
-    /// <param name="modKey">ModKey to query about</param>
-    /// <param name="archiveOrdering">How to order the archive paths.  Null for no ordering</param>
-    /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
-    public static IEnumerable<FilePath> GetApplicableArchivePaths(
-        GameRelease release,
-        GameInstallMode installMode,
-        DirectoryPath dataFolderPath,
-        ModKey modKey,
-        IComparer<FileName>? archiveOrdering)
-    {
-        return GetApplicableArchivePathsDi(release, installMode, dataFolderPath)
+        return GetApplicableArchivePathsDi(release, dataFolderPath)
             .Get(modKey, archiveOrdering);
     }
 
@@ -274,28 +155,13 @@ public static class Archive
     /// </summary>
     /// <param name="release">GameRelease to query for</param>
     /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-    [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FileName> GetIniListings(GameRelease release)
     {
-        var loc = new GameLocator();
-        var installMode = loc.GetInstallMode(release);
-        return GetIniListings(release, installMode);
-    }
-
-    /// <summary>
-    /// Queries the related ini file and looks for Archive ordering information
-    /// </summary>
-    /// <param name="release">GameRelease to query for</param>
-    /// <param name="installMode">GameInstallMode to query for</param>
-    /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-    public static IEnumerable<FileName> GetIniListings(GameRelease release, GameInstallMode installMode)
-    {
         return new GetArchiveIniListings(
-            IFileSystemExt.DefaultFilesystem,
-            new IniPathProvider(
-                new GameInstallModeInjection(installMode),
-                new GameReleaseInjection(release),
-                new IniPathLookup()))
+                IFileSystemExt.DefaultFilesystem,
+                new IniPathProvider(
+                    new GameReleaseInjection(release),
+                    new IniPathLookup()))
             .Get();
     }
 
@@ -305,27 +171,11 @@ public static class Archive
     /// <param name="release">GameRelease to query for</param>
     /// <param name="path">Path to the file containing INI data</param>
     /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-    [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FileName> GetIniListings(GameRelease release, FilePath path)
-    {
-        var loc = new GameLocator();
-        var installMode = loc.GetInstallMode(release);
-        return GetIniListings(release, installMode, path);
-    }
-
-    /// <summary>
-    /// Queries the related ini file and looks for Archive ordering information
-    /// </summary>
-    /// <param name="release">GameRelease to query for</param>
-    /// <param name="installMode">GameInstallMode to query for</param>
-    /// <param name="path">Path to the file containing INI data</param>
-    /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-    public static IEnumerable<FileName> GetIniListings(GameRelease release, GameInstallMode installMode, FilePath path)
     {
         return new GetArchiveIniListings(
                 IFileSystemExt.DefaultFilesystem,
                 new IniPathProvider(
-                    new GameInstallModeInjection(installMode),
                     new GameReleaseInjection(release),
                     new IniPathLookup()))
             .Get(path);
@@ -337,27 +187,11 @@ public static class Archive
     /// <param name="release">GameRelease ini is for</param>
     /// <param name="iniStream">Stream containing INI data</param>
     /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-    [Obsolete("Use alternative with GameInstallMode instead")]
     public static IEnumerable<FileName> GetIniListings(GameRelease release, Stream iniStream)
-    {
-        var loc = new GameLocator();
-        var installMode = loc.GetInstallMode(release);
-        return GetIniListings(release, installMode, iniStream);
-    }
-
-    /// <summary>
-    /// Queries the related ini file and looks for Archive ordering information
-    /// </summary>
-    /// <param name="release">GameRelease ini is for</param>
-    /// <param name="installMode">GameInstallMode to query for</param>
-    /// <param name="iniStream">Stream containing INI data</param>
-    /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-    public static IEnumerable<FileName> GetIniListings(GameRelease release, GameInstallMode installMode, Stream iniStream)
     {
         return new GetArchiveIniListings(
                 IFileSystemExt.DefaultFilesystem,
                 new IniPathProvider(
-                    new GameInstallModeInjection(installMode),
                     new GameReleaseInjection(release),
                     new IniPathLookup()))
             .Get(iniStream);

@@ -1,7 +1,6 @@
-using Mutagen.Bethesda.Inis;
+using FluentAssertions;
 using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Plugins.Order;
-using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using Xunit;
 
@@ -38,12 +37,21 @@ public class EnumCompletenessTests
     }
 
     [Fact]
-
     public void DefaultFormVersion()
     {
         foreach (var release in Enums<GameRelease>.Values)
         {
             release.GetDefaultFormVersion();
+        }
+    }
+
+    [Fact]
+    public void RelatedReleases()
+    {
+        foreach (var release in Enums<GameRelease>.Values)
+        {
+            var cat = release.ToCategory();
+            cat.GetRelatedReleases().Should().Contain(release);
         }
     }
     #endregion

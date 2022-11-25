@@ -13,15 +13,13 @@ public static class GameLocations
     private static readonly GameLocator Locator = new();
     private static IGameDirectoryLookup GameDirLookup => Locator;
     private static IDataDirectoryLookup DataDirLookup => Locator;
-    private static IGameInstallLookup GameInstallLookup => Locator; 
         
     /// <inheritdoc cref="GameLocator" />
     public static IEnumerable<DirectoryPath> GetGameFolders(GameRelease release)
     {
-        IGameDirectoryLookup lookup = Locator;
-        foreach (var installMode in GameInstallLookup.GetInstallModes(release))
+        foreach (var dir in GameDirLookup.GetAll(release))
         {
-            yield return lookup.Get(release, installMode);
+            yield return dir;
         }
     }
 
@@ -34,54 +32,26 @@ public static class GameLocations
     }
     
     /// <inheritdoc cref="GameLocator" />
-    [Obsolete("Use variant with GameInstallMode instead")]
     public static bool TryGetGameFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
     {
         return GameDirLookup.TryGet(release, out path);
     }
-    
-    /// <inheritdoc cref="GameLocator" />
-    public static bool TryGetGameFolder(GameRelease release, GameInstallMode installMode, [MaybeNullWhen(false)] out DirectoryPath path)
-    {
-        return GameDirLookup.TryGet(release, installMode, out path);
-    }
 
     /// <inheritdoc cref="GameLocator" />
-    [Obsolete("Use variant with GameInstallMode instead")]
     public static DirectoryPath GetGameFolder(GameRelease release)
     {
         return GameDirLookup.Get(release);
     }
 
     /// <inheritdoc cref="GameLocator" />
-    public static DirectoryPath GetGameFolder(GameRelease release, GameInstallMode installMode)
-    {
-        return GameDirLookup.Get(release, installMode);
-    }
-
-    /// <inheritdoc cref="GameLocator" />
-    [Obsolete("Use variant with GameInstallMode instead")]
     public static bool TryGetDataFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
     {
         return DataDirLookup.TryGet(release, out path);
     }
 
     /// <inheritdoc cref="GameLocator" />
-    public static bool TryGetDataFolder(GameRelease release, GameInstallMode installMode, [MaybeNullWhen(false)] out DirectoryPath path)
-    {
-        return DataDirLookup.TryGet(release, installMode, out path);
-    }
-
-    /// <inheritdoc cref="GameLocator" />
-    [Obsolete("Use variant with GameInstallMode instead")]
     public static DirectoryPath GetDataFolder(GameRelease release)
     {
         return DataDirLookup.Get(release);
-    }
-
-    /// <inheritdoc cref="GameLocator" />
-    public static DirectoryPath GetDataFolder(GameRelease release, GameInstallMode installMode)
-    {
-        return DataDirLookup.Get(release, installMode);
     }
 }

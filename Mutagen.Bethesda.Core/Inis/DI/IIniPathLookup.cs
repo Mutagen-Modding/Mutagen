@@ -4,18 +4,14 @@ namespace Mutagen.Bethesda.Inis.DI;
 
 public interface IIniPathLookup
 {
-    FilePath Get(GameRelease release, GameInstallMode gameInstallMode);
+    FilePath Get(GameRelease release);
 }
 
 public class IniPathLookup : IIniPathLookup
 {
-    public FilePath Get(GameRelease release, GameInstallMode gameInstallMode)
+    public FilePath Get(GameRelease release)
     {
         var docsString = ToMyDocumentsString(release);
-        if (gameInstallMode == GameInstallMode.Gog)
-        {
-            docsString += " GOG";
-        }
         return Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             "My Games",
@@ -31,6 +27,7 @@ public class IniPathLookup : IIniPathLookup
             GameRelease.SkyrimLE => "Skyrim",
             GameRelease.EnderalLE => "Enderal",
             GameRelease.SkyrimSE => "Skyrim Special Edition",
+            GameRelease.SkyrimSEGog => "Skyrim Special Edition GOG",
             GameRelease.EnderalSE => "Enderal Special Edition",
             GameRelease.SkyrimVR => "Skyrim VR",
             GameRelease.Fallout4 => "Fallout4",
@@ -45,6 +42,7 @@ public class IniPathLookup : IIniPathLookup
             GameRelease.Oblivion => "Oblivion",
             GameRelease.SkyrimLE => "Skyrim",
             GameRelease.SkyrimSE => "Skyrim",
+            GameRelease.SkyrimSEGog => "Skyrim",
             GameRelease.EnderalLE => "Enderal",
             GameRelease.EnderalSE => "Enderal",
             GameRelease.SkyrimVR => "SkyrimVR",

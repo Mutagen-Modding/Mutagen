@@ -17,9 +17,6 @@ public static class PluginListings
         var gameReleaseInjection = new GameReleaseInjection(game);
         return new PluginListingsPathContext(
             new PluginListingsPathProvider(),
-            new GameInstallModeContext(
-                new GameLocator(),
-                gameReleaseInjection),
             gameReleaseInjection).Path;
     }
 
@@ -79,9 +76,6 @@ public static class PluginListings
         return LoadOrderListingsFromPath(
             new PluginListingsPathContext(
                 new PluginListingsPathProvider(),
-                new GameInstallModeContext(
-                    new GameLocator(),
-                    gameReleaseInjection),
                 gameReleaseInjection).Path,
             game,
             dataPath,
@@ -150,9 +144,6 @@ public static class PluginListings
         return ObservableExt.WatchFile(
             new PluginListingsPathContext(
                 new PluginListingsPathProvider(),
-                new GameInstallModeContext(
-                    new GameLocator(),
-                    gameReleaseInjection),
                 gameReleaseInjection).Path);
     }
 
