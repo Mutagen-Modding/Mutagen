@@ -126,16 +126,16 @@ public class Api
         PlacedObject disabledObj = placedObject;
         disabledObj.Disable();
         //_testOutputHelper.WriteLine($"{disabledPlacedObject.MajorRecordFlagsRaw}");
-        Assert.True(EnumExt.HasFlag(disabledObj.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
+        Assert.True(Enums.HasFlag(disabledObj.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
         MajorRecord majorRecord = placedObject;
         majorRecord.Disable();
-        Assert.True(EnumExt.HasFlag(majorRecord.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
+        Assert.True(Enums.HasFlag(majorRecord.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
         IMajorRecord interfaceRecord = placedObject;
         interfaceRecord.Disable();
-        Assert.True(EnumExt.HasFlag(interfaceRecord.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
+        Assert.True(Enums.HasFlag(interfaceRecord.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
         IPlaced interfacePlaced = placedObject;
         interfacePlaced.Disable();
-        Assert.True(EnumExt.HasFlag(interfacePlaced.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
+        Assert.True(Enums.HasFlag(interfacePlaced.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
 
         // Sanity test both API are invokable under Placed context.
         PlacedTrap placedTrap = new PlacedTrap(key, SkyrimRelease.SkyrimSE);
@@ -149,7 +149,7 @@ public class Api
         //Try any other object other than Placed (invoke MajorRecord.Disable() and see if it works)
         var armor = new Armor(key, SkyrimRelease.SkyrimSE);
         armor.Disable();
-        Assert.True(EnumExt.HasFlag(armor.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
+        Assert.True(Enums.HasFlag(armor.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
     }
 
 

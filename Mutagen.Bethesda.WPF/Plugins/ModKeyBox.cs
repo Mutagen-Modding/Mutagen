@@ -41,7 +41,7 @@ public class ModKeyBox : NoggogControl
     public static readonly DependencyProperty ModTypeProperty = DependencyProperty.Register(nameof(ModType), typeof(ModType), typeof(ModKeyBox),
         new FrameworkPropertyMetadata(default(ModType), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-    public IEnumerable<ModType> ModTypes => EnumExt.GetValues<ModType>();
+    public IEnumerable<ModType> ModTypes => Enums<ModType>.Values;
 
     public string Watermark
     {

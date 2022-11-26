@@ -37,7 +37,7 @@ partial class ColorRecordBinaryCreateTranslation
         {
             throw new MalformedDataException("Did not find expected FNAM subrecord");
         }
-        if (EnumExt.HasFlag(fnam.AsInt32(), RemappingIndexFlag))
+        if (Enums.HasFlag(fnam.AsInt32(), RemappingIndexFlag))
         {
             item.Data = new ColorRemappingIndex()
             {
@@ -58,7 +58,7 @@ partial class ColorRecordBinaryCreateTranslation
     {
         var fnam = frame.ReadSubrecord(RecordTypes.FNAM);
         var val = fnam.AsInt32();
-        EnumExt.SetFlag(ref val, RemappingIndexFlag, false);
+        Enums.SetFlag(ref val, RemappingIndexFlag, false);
         item.Flags = (ColorRecord.Flag)val;
     }
 }
@@ -71,7 +71,7 @@ partial class ColorRecordBinaryWriteTranslation
     {
         var data = item.Data;
         var flags = (int)item.Flags;
-        flags = EnumExt.SetFlag(flags, ColorRecordBinaryCreateTranslation.RemappingIndexFlag, data is IColorRemappingIndexGetter);
+        flags = Enums.SetFlag(flags, ColorRecordBinaryCreateTranslation.RemappingIndexFlag, data is IColorRemappingIndexGetter);
         using (HeaderExport.Subrecord(writer, RecordTypes.CNAM))
         {
             data.WriteToBinary(writer);
@@ -113,7 +113,7 @@ partial class ColorRecordBinaryOverlay
         var cnamMem = HeaderTranslation.ExtractSubrecordMemory(_recordData, _cnamLocation.Value, _package.MetaData);
 
         var flag = RawFlag;
-        if (EnumExt.HasFlag(flag, ColorRecordBinaryCreateTranslation.RemappingIndexFlag))
+        if (Enums.HasFlag(flag, ColorRecordBinaryCreateTranslation.RemappingIndexFlag))
         {
             return new ColorRemappingIndex()
             {
@@ -147,6 +147,6 @@ partial class ColorRecordBinaryOverlay
 
     public partial ColorRecord.Flag GetFlagsCustom()
     {
-        return (ColorRecord.Flag)EnumExt.SetFlag(RawFlag, ColorRecordBinaryCreateTranslation.RemappingIndexFlag, false);
+        return (ColorRecord.Flag)Enums.SetFlag(RawFlag, ColorRecordBinaryCreateTranslation.RemappingIndexFlag, false);
     }
 }

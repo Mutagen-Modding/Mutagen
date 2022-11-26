@@ -216,11 +216,11 @@ public partial class FaceFxPhonemesMixIn
 
 partial class FaceFxPhonemesBinaryCreateTranslation
 {
-    public static readonly IReadOnlyList<Target> Targets = EnumExt.GetValues<Target>().ToExtendedList();
+    public static readonly IReadOnlyList<Target> Targets = Enums<Target>.Values;
     public static readonly IReadOnlyList<(Target Target, string Name)> TargetWithNames;
-    public static readonly int TargetSize = EnumExt.GetSize<Target>();
-    public static readonly IEnumerable<Phoneme.Slot> Slots = EnumExt.GetValues<Phoneme.Slot>();
-    public static readonly int SlotSize = EnumExt.GetSize<Phoneme.Slot>();
+    public static readonly int TargetSize = Enums<Target>.Values.Count;
+    public static readonly IEnumerable<Phoneme.Slot> Slots = Enums<Phoneme.Slot>.Values;
+    public static readonly int SlotSize = Enums<Phoneme.Slot>.Values.Count;
 
     static FaceFxPhonemesBinaryCreateTranslation()
     {

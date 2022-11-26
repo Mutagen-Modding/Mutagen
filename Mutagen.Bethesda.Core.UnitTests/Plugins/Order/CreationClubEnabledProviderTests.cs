@@ -10,7 +10,7 @@ public class CreationClubEnabledProviderTests
     [Fact]
     public void AllEnumsCovered()
     {
-        foreach (var category in EnumExt.GetValues<GameCategory>())
+        foreach (var category in Enums<GameCategory>.Values)
         {
             new CreationClubEnabledProvider(
                     new GameCategoryInjection(category)).Used

@@ -15,7 +15,7 @@ internal static class BinaryOverlayArrayHelper
         T[] ret = new T[amount];
         for (int i = 0; i < amount; i++)
         {
-            ret[i] = EnumExt.Parse<T>(BinaryPrimitives.ReadInt32LittleEndian(mem.Slice(i * enumLength)), default(T));
+            ret[i] = Enums<T>.TryConvert(BinaryPrimitives.ReadInt32LittleEndian(mem.Slice(i * enumLength)), default(T));
         }
         return ret;
     }

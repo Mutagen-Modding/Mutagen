@@ -23,11 +23,11 @@ partial class ClimateBinaryCreateTranslation
         var raw = frame.ReadUInt8();
         item.PhaseLength = (byte)(raw % 64);
         item.Moons = default(Climate.Moon);
-        if (EnumExt.HasFlag(raw, MasserFlag))
+        if (Enums.HasFlag(raw, MasserFlag))
         {
             item.Moons |= Climate.Moon.Masser;
         }
-        if (EnumExt.HasFlag(raw, SecundaFlag))
+        if (Enums.HasFlag(raw, SecundaFlag))
         {
             item.Moons |= Climate.Moon.Secunda;
         }
@@ -41,11 +41,11 @@ partial class ClimateBinaryWriteTranslation
         var raw = item.PhaseLength;
         if (item.Moons.HasFlag(Climate.Moon.Masser))
         {
-            raw = (byte)EnumExt.SetFlag(raw, ClimateBinaryCreateTranslation.MasserFlag, true);
+            raw = (byte)Enums.SetFlag(raw, ClimateBinaryCreateTranslation.MasserFlag, true);
         }
         if (item.Moons.HasFlag(Climate.Moon.Secunda))
         {
-            raw = (byte)EnumExt.SetFlag(raw, ClimateBinaryCreateTranslation.SecundaFlag, true);
+            raw = (byte)Enums.SetFlag(raw, ClimateBinaryCreateTranslation.SecundaFlag, true);
         }
         writer.Write(raw);
     }
@@ -60,11 +60,11 @@ partial class ClimateBinaryOverlay
             if (!_TNAMLocation.HasValue) return default;
             var raw = _recordData[_TNAMLocation.Value.Min + 5];
             var ret = default(Climate.Moon);
-            if (EnumExt.HasFlag(raw, ClimateBinaryCreateTranslation.MasserFlag))
+            if (Enums.HasFlag(raw, ClimateBinaryCreateTranslation.MasserFlag))
             {
                 ret |= Climate.Moon.Masser;
             }
-            if (EnumExt.HasFlag(raw, ClimateBinaryCreateTranslation.SecundaFlag))
+            if (Enums.HasFlag(raw, ClimateBinaryCreateTranslation.SecundaFlag))
             {
                 ret |= Climate.Moon.Secunda;
             }

@@ -6680,7 +6680,7 @@ namespace Mutagen.Bethesda.Fallout4
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -6717,7 +6717,7 @@ namespace Mutagen.Bethesda.Fallout4
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -7333,7 +7333,7 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
             bool disposeStrings = param.StringsWriter != null;
             using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
             {
@@ -7641,7 +7641,7 @@ namespace Mutagen.Bethesda.Fallout4
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -24289,7 +24289,7 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null);
+            param.StringsWriter ??= (Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null);
             bool disposeStrings = param.StringsWriter != null;
             var bundle = new WritingBundle(GameRelease.Fallout4)
             {
@@ -25081,7 +25081,7 @@ namespace Mutagen.Bethesda.Fallout4
                     throw new ArgumentException("File stream was too short to parse flags");
                 }
                 var flags = stream.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
                     meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                 }

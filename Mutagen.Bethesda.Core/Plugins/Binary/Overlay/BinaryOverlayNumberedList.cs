@@ -40,7 +40,7 @@ internal sealed class NumberedEnumList<T> : IReadOnlyList<T>
             }
             if (((index + 1) * EnumLength) < Memory.Length)
             {
-                return EnumExt.Parse<T>(BinaryPrimitives.ReadInt32LittleEndian(Memory.Span.Slice(index * EnumLength)), default(T));
+                return Enums<T>.TryConvert(BinaryPrimitives.ReadInt32LittleEndian(Memory.Span.Slice(index * EnumLength)), default(T));
             }
             return default;
         }

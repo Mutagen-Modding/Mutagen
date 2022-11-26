@@ -39,8 +39,8 @@ partial class BookBinaryCreateTranslation
 
     public static TeachesOption GetTeachingOption(int flags)
     {
-        var avFlag = EnumExt.HasFlag(flags, SkillFlag);
-        var spellFlag = EnumExt.HasFlag(flags, SpellFlag);
+        var avFlag = Enums.HasFlag(flags, SkillFlag);
+        var spellFlag = Enums.HasFlag(flags, SpellFlag);
         var numFlags = avFlag ? 1 : 0;
         numFlags += spellFlag ? 1 : 0;
         if (numFlags > 1)
@@ -102,16 +102,16 @@ partial class BookBinaryWriteTranslation
         switch (item.Teaches)
         {
             case IBookSpellGetter _:
-                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
-                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, true);
+                flags = Enums.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
+                flags = Enums.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, true);
                 break;
             case IBookSkillGetter _:
-                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, true);
-                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
+                flags = Enums.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, true);
+                flags = Enums.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
                 break;
             case IBookTeachesNothingGetter _:
-                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
-                flags = EnumExt.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
+                flags = Enums.SetFlag(flags, BookBinaryCreateTranslation.SkillFlag, false);
+                flags = Enums.SetFlag(flags, BookBinaryCreateTranslation.SpellFlag, false);
                 break;
             default:
                 break;

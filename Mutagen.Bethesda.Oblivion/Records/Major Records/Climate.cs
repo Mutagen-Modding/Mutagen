@@ -122,7 +122,7 @@ partial class ClimateDataBinaryCreateTranslation
     public static partial void FillBinaryPhaseCustom(MutagenFrame frame, IClimateData item)
     {
         var b = frame.Reader.ReadUInt8();
-        if (EnumExt.TryParse<Climate.MoonPhase>(GetPhaseInt(b), out var e))
+        if (Enums<Climate.MoonPhase>.TryConvert(GetPhaseInt(b), out var e))
         {
             item.Phase = e;
         }

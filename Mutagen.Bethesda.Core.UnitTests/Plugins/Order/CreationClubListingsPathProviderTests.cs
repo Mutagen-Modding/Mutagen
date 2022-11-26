@@ -29,7 +29,7 @@ public class CreationClubListingsPathProviderTests
         CreationClubListingsPathProvider sut)
     {
         enabledProvider.Used.Returns(true);
-        foreach (var category in EnumExt.GetValues<GameCategory>())
+        foreach (var category in Enums<GameCategory>.Values)
         {
             gameCategoryContext.Category.Returns(category);
             sut.Path

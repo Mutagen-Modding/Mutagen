@@ -11,7 +11,7 @@ internal sealed class InheritingInterfaceMapper : InterfaceMapGetter, IInheritin
     public static InheritingInterfaceMapper AutomaticFactory()
     {
         var ret = new InheritingInterfaceMapper();
-        foreach (var category in EnumExt<GameCategory>.Values)
+        foreach (var category in Enums<GameCategory>.Values)
         {
             var t = Type.GetType(
                 $"Mutagen.Bethesda.{category}.{category}InheritingInterfaceMapping, Mutagen.Bethesda.{category}");

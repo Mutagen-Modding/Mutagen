@@ -224,11 +224,11 @@ partial class PlacedObjectBinaryWriteTranslation
             byte flags = 0;
             if (lightingTemplate.FormKeyNullable != null)
             {
-                flags = EnumExt.SetFlag(flags, PlacedObjectBinaryCreateTranslation.HasLightingTemplateFlag, true);
+                flags = Enums.SetFlag(flags, PlacedObjectBinaryCreateTranslation.HasLightingTemplateFlag, true);
             }
             if (imageSpace.FormKeyNullable != null)
             {
-                flags = EnumExt.SetFlag(flags, PlacedObjectBinaryCreateTranslation.HasImageSpaceFlag, true);
+                flags = Enums.SetFlag(flags, PlacedObjectBinaryCreateTranslation.HasImageSpaceFlag, true);
             }
             writer.Write(flags);
             writer.Write(unknown2);

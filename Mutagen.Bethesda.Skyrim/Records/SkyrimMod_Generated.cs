@@ -6049,7 +6049,7 @@ namespace Mutagen.Bethesda.Skyrim
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -6089,7 +6089,7 @@ namespace Mutagen.Bethesda.Skyrim
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -6696,7 +6696,7 @@ namespace Mutagen.Bethesda.Skyrim
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(item.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(item.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
             bool disposeStrings = param.StringsWriter != null;
             using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
             {
@@ -7008,7 +7008,7 @@ namespace Mutagen.Bethesda.Skyrim
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -22566,7 +22566,7 @@ namespace Mutagen.Bethesda.Skyrim
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(item.SkyrimRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null);
+            param.StringsWriter ??= (Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(item.SkyrimRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null);
             bool disposeStrings = param.StringsWriter != null;
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
@@ -23297,7 +23297,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("File stream was too short to parse flags");
                 }
                 var flags = stream.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
                     meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                 }

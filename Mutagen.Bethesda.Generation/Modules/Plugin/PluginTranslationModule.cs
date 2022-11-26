@@ -398,7 +398,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         if (objData.UsesStringFiles)
         {
-            sb.AppendLine($"param.StringsWriter ??= (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncodingProvider)}.{nameof(MutagenEncodingProvider.Instance)}) : null);");
+            sb.AppendLine($"param.StringsWriter ??= (Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncodingProvider)}.{nameof(MutagenEncodingProvider.Instance)}) : null);");
             sb.AppendLine("bool disposeStrings = param.StringsWriter != null;");
         }
         sb.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");
@@ -477,7 +477,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         sb.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
                     }
                     sb.AppendLine($"var flags = reader.GetInt32(offset: 8);");
-                    sb.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
+                    sb.AppendLine($"if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
                     using (sb.CurlyBrace())
                     {
                         sb.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
@@ -2463,7 +2463,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     sb.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
                                 }
                                 sb.AppendLine($"var flags = stream.GetInt32(offset: 8);");
-                                sb.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
+                                sb.AppendLine($"if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
                                 using (sb.CurlyBrace())
                                 {
                                     sb.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");

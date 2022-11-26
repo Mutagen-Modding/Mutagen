@@ -142,7 +142,7 @@ public class MainVM : ViewModel
 
         AddPassthroughGroupCommand = ReactiveCommand.Create(AddPassthroughGroup);
 
-        DataFolders.AddOrUpdate(EnumExt.GetValues<GameRelease>()
+        DataFolders.AddOrUpdate(Enums<GameRelease>.Values
             .Select(r => new DataFolderVM(r)));
         DataFolders.Connect()
             .Bind(DataFoldersDisplay)
@@ -175,7 +175,7 @@ public class MainVM : ViewModel
     {
         HashSet<GameRelease> games = new HashSet<GameRelease>()
         {
-            EnumExt.GetValues<GameRelease>()
+            Enums<GameRelease>.Values
         };
         foreach (var group in Groups)
         {

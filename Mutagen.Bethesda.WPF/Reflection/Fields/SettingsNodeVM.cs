@@ -268,7 +268,7 @@ public abstract class SettingsNodeVM : ViewModel
                 var foundType = param.Assembly.GetType(param.TargetType.FullName!);
                 if (foundType == null)
                 {
-                    EnumExt.TryGetEnumType(param.TargetType.FullName!, out foundType);
+                    Enums.TryGetEnumType(param.TargetType.FullName!, out foundType);
                 }
                 if (foundType != null)
                 {

@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public T Property => EnumExt<T>.Convert(_structData.Span.Slice(0x0, 0x1)[0]);
+        public T Property => Enums<T>.Convert(_structData.Span.Slice(0x0, 0x1)[0]);
         public Single Step => _structData.Slice(0x1, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

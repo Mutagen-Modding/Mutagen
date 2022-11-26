@@ -39,7 +39,7 @@ public static class IPlacedExt
             placed.EnableParent.Reference.SetTo(Constants.Player.Cast<ILinkedReferenceGetter>());
         }
 
-        placed.MajorRecordFlagsRaw = EnumExt.SetFlag(placed.MajorRecordFlagsRaw, (int)SkyrimMajorRecordFlag.InitiallyDisabled, true);
+        placed.MajorRecordFlagsRaw = Enums.SetFlag(placed.MajorRecordFlagsRaw, (int)SkyrimMajorRecordFlag.InitiallyDisabled, true);
         return true;
     }
 }

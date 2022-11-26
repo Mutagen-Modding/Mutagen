@@ -61,7 +61,7 @@ partial class TerminalBinaryCreateTranslation
         uint indexToCheck = 1;
         for (int i = 0; i < NumSlots; i++)
         {
-            var has = EnumExt.HasFlag(markers, indexToCheck);
+            var has = Enums.HasFlag(markers, indexToCheck);
             indexToCheck <<= 1;
             if (!has) continue;
             var marker = getter(i);
@@ -135,7 +135,7 @@ partial class TerminalBinaryWriteTranslation
             uint indexToCheck = 1;
             foreach (var marker in markers)
             {
-                exportFlags = EnumExt.SetFlag(exportFlags, indexToCheck, marker.Enabled);
+                exportFlags = Enums.SetFlag(exportFlags, indexToCheck, marker.Enabled);
                 indexToCheck <<= 1;
             }
         }

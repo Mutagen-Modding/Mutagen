@@ -57,7 +57,7 @@ partial class ObjectTemplateBinaryCreateTranslation<T>
         AObjectModProperty<T> ret;
         var type = (ObjectModProperty.ValueType)data[0];
         var enumVal = data[4];
-        var Prop = EnumExt<T>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(data[8..]));
+        var Prop = Enums<T>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(data[8..]));
         switch (type)
         {
             case ObjectModProperty.ValueType.Int:
@@ -227,11 +227,11 @@ partial class ObjectTemplateBinaryWriteTranslation
         where TValueEnum : struct, Enum
         where TFunctionEnum : struct, Enum
     {
-        writer.Write(checked((byte)EnumExt<TValueEnum>.ConvertFrom(type)));
+        writer.Write(checked((byte)Enums<TValueEnum>.ConvertFrom(type)));
         writer.WriteZeros(3);
-        writer.Write(checked((byte)EnumExt<TFunctionEnum>.ConvertFrom(func)));
+        writer.Write(checked((byte)Enums<TFunctionEnum>.ConvertFrom(func)));
         writer.WriteZeros(3);
-        writer.Write(checked((ushort)EnumExt<TPropertyEnum>.ConvertFrom(prop.Property)));
+        writer.Write(checked((ushort)Enums<TPropertyEnum>.ConvertFrom(prop.Property)));
         writer.WriteZeros(2);
     }
 }

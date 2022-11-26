@@ -15,7 +15,7 @@ internal static class OverrideMaskRegistrations
 
     static OverrideMaskRegistrations()
     {
-        foreach (var category in EnumExt<GameCategory>.Values)
+        foreach (var category in Enums<GameCategory>.Values)
         {
             var t = Type.GetType(
                 $"Mutagen.Bethesda.{category}.{category}OverrideMaskRegistration, Mutagen.Bethesda.{category}");
