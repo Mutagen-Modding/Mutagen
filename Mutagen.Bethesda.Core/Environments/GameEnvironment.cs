@@ -84,7 +84,7 @@ public interface IGameEnvironment<TMod> : IGameEnvironment
     /// <summary>
     /// Load Order object containing all the mods present in the environment.
     /// </summary>
-    new ILoadOrder<IModListing<TMod>> LoadOrder { get; }
+    new ILoadOrderGetter<IModListingGetter<TMod>> LoadOrder { get; }
 }
 
 public interface IGameEnvironment<TModSetter, TModGetter> : IGameEnvironment<TModGetter>
@@ -94,7 +94,7 @@ public interface IGameEnvironment<TModSetter, TModGetter> : IGameEnvironment<TMo
     /// <summary>
     /// Load Order object containing all the mods present in the environment.
     /// </summary>
-    new ILoadOrder<IModListing<TModGetter>> LoadOrder { get; }
+    new ILoadOrderGetter<IModListingGetter<TModGetter>> LoadOrder { get; }
 
     /// <summary>
     /// Convenience Link Cache to use created from the provided Load Order object
@@ -236,7 +236,7 @@ public sealed class GameEnvironmentState<TMod> :
 
     public FilePath? CreationClubListingsFilePath { get; }
 
-    public ILoadOrder<IModListing<TMod>> LoadOrder { get; }
+    public ILoadOrderGetter<IModListingGetter<TMod>> LoadOrder { get; }
 
     public ILinkCache LinkCache { get; }
 
@@ -358,7 +358,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
     /// <summary>
     /// Load Order object containing all the mods present in the environment.
     /// </summary>
-    public ILoadOrder<IModListing<TModGetter>> LoadOrder { get; }
+    public ILoadOrderGetter<IModListingGetter<TModGetter>> LoadOrder { get; }
 
     /// <summary>
     /// Convenience Link Cache to use created from the provided Load Order object
@@ -370,7 +370,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
         DirectoryPath dataFolderPath,
         FilePath loadOrderFilePath,
         FilePath? creationClubListingsFilePath,
-        ILoadOrder<IModListing<TModGetter>> loadOrder,
+        ILoadOrderGetter<IModListingGetter<TModGetter>> loadOrder,
         ILinkCache<TModSetter, TModGetter> linkCache,
         bool dispose = true)
     {
