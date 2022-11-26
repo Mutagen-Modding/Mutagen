@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using System.Collections.Immutable;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
@@ -20,6 +21,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     internal ILoadOrderListingsProvider? ListingsProvider { get; init; }
     internal IPluginListingsPathContext? PluginListingsPathContext { get; init; }
     internal ICreationClubListingsPathProvider? CccListingsPathProvider { get; init; }
+    internal IFileSystem? FileSystem { get; init; }
 
     private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
 
@@ -127,6 +129,11 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         return this with { DataDirectoryProvider = new DataDirectoryInjection(path) };
     }
 
+    public GameEnvironmentBuilder<TMod, TModGetter> WithFileSystem(IFileSystem fileSystem)
+    {
+        return this with { FileSystem = fileSystem };
+    }
+
     /// <summary>
     /// Creates an environment with all the given rules added to the builder
     /// </summary>
@@ -134,6 +141,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     public IGameEnvironment<TMod, TModGetter> Build()
     {
         Warmup.Init();
+        var fs = FileSystem ?? IFileSystemExt.DefaultFilesystem;
         var category = new GameCategoryContext(Release);
         var gameLocator = new GameLocator();
         var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(
@@ -149,7 +157,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                 Release,
                 gameLocator));
         var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
+            fs,
             new PluginListingsParser(
                 new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
@@ -159,14 +167,14 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         var listingsProv = ListingsProvider ?? new LoadOrderListingsProvider(
             new OrderListings(),
             new ImplicitListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
+                fs,
                 dataDirectory,
                 new ImplicitListingModKeyProvider(
                     Release)),
             new PluginListingsProvider(
                 Release,
                 new TimestampedPluginListingsProvider(
-                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                    new TimestampAligner(fs),
                     new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
                     pluginRawListingsReader,
                     dataDirectory,
@@ -175,7 +183,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                     pluginRawListingsReader,
                     pluginPathProvider)),
             new CreationClubListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
+                fs,
                 dataDirectory,
                 cccPath,
                 new CreationClubRawListingsReader()));
@@ -187,11 +195,11 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         }
 
         var loGetter = new LoadOrderImporter<TModGetter>(
-            IFileSystemExt.DefaultFilesystem,
+            fs,
             dataDirectory,
             new LoadOrderListingsInjection(filteredListings),
             new ModImporter<TModGetter>(
-                IFileSystemExt.DefaultFilesystem,
+                fs,
                 Release));
 
         ILoadOrderGetter<IModListingGetter<TModGetter>> lo = loGetter.Import();
@@ -219,6 +227,7 @@ public sealed record GameEnvironmentBuilder
     internal ILoadOrderListingsProvider? ListingsProvider { get; init; }
     internal IPluginListingsPathContext? PluginListingsPathContext { get; init; }
     internal ICreationClubListingsPathProvider? CccListingsPathProvider { get; init; }
+    internal IFileSystem? FileSystem { get; init; }
 
     private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
 
@@ -325,6 +334,11 @@ public sealed record GameEnvironmentBuilder
     {
         return this with { DataDirectoryProvider = new DataDirectoryInjection(path) };
     }
+    
+    public GameEnvironmentBuilder WithFileSystem(IFileSystem fileSystem)
+    {
+        return this with { FileSystem = fileSystem };
+    }
 
     /// <summary>
     /// Creates an environment with all the given rules added to the builder
@@ -333,6 +347,7 @@ public sealed record GameEnvironmentBuilder
     public IGameEnvironment Build()
     {
         Warmup.Init();
+        var fs = FileSystem ?? IFileSystemExt.DefaultFilesystem;
         var category = new GameCategoryContext(Release);
         var gameLocator = new GameLocator();
         var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(
@@ -348,7 +363,7 @@ public sealed record GameEnvironmentBuilder
                 Release,
                 gameLocator));
         var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
+            fs,
             new PluginListingsParser(
                 new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
@@ -358,14 +373,14 @@ public sealed record GameEnvironmentBuilder
         var listingsProv = ListingsProvider ?? new LoadOrderListingsProvider(
             new OrderListings(),
             new ImplicitListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
+                fs,
                 dataDirectory,
                 new ImplicitListingModKeyProvider(
                     Release)),
             new PluginListingsProvider(
                 Release,
                 new TimestampedPluginListingsProvider(
-                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                    new TimestampAligner(fs),
                     new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
                     pluginRawListingsReader,
                     dataDirectory,
@@ -374,7 +389,7 @@ public sealed record GameEnvironmentBuilder
                     pluginRawListingsReader,
                     pluginPathProvider)),
             new CreationClubListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
+                fs,
                 dataDirectory,
                 cccPath,
                 new CreationClubRawListingsReader()));
@@ -386,11 +401,11 @@ public sealed record GameEnvironmentBuilder
         }
 
         var loGetter = new LoadOrderImporter(
-            IFileSystemExt.DefaultFilesystem,
+            fs,
             dataDirectory,
             new LoadOrderListingsInjection(filteredListings),
             new ModImporter(
-                IFileSystemExt.DefaultFilesystem,
+                fs,
                 Release));
 
         ILoadOrderGetter<IModListingGetter<IModGetter>> lo = loGetter.Import();
