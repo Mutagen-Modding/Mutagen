@@ -442,7 +442,7 @@ public static class LinkCacheConstructionMixIn
         GameCategory category,
         params IMod[] mutableMods)
     {
-        if (mutableMods.Length == 0) return immutableBaseCache.ToUntypedImmutableLinkCache();
+        if (mutableMods.Length == 0) return immutableBaseCache.ToUntypedImmutableLinkCache(category);
         var mismatchedMod = mutableMods.FirstOrDefault(x => x.GameRelease.ToCategory() != category);
         if (mismatchedMod != null)
         {
