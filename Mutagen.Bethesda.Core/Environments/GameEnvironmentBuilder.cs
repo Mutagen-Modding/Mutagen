@@ -215,7 +215,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             dataFolderPath: dataDirectory.Path,
             loadOrderFilePath: pluginPathProvider.Path,
             creationClubListingsFilePath: cccPath.Path,
-            loadOrder: loGetter.Import(),
+            loadOrder: lo,
             linkCache: linkCache);
     }
 }
@@ -421,7 +421,7 @@ public sealed record GameEnvironmentBuilder
             dataFolderPath: dataDirectory.Path,
             loadOrderFilePath: pluginPathProvider.Path,
             creationClubListingsFilePath: cccPath.Path,
-            loadOrder: loGetter.Import(),
+            loadOrder: lo,
             linkCache: linkCache);
     }
 }
