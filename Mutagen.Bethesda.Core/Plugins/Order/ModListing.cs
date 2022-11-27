@@ -78,7 +78,7 @@ public sealed record ModListing<TMod> : IModListing<TMod>
     /// <inheritdoc cref="IModListing{TMod}.Mod" />
     public TMod? Mod { get; set; }
 
-    private ModListing(ModKey key, TMod? mod, bool enabled, string ghostSuffix = "")
+    public ModListing(ModKey key, TMod? mod, bool enabled, string ghostSuffix = "")
     {
         ModKey = key;
         Mod = mod;
