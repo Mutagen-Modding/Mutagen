@@ -206,6 +206,39 @@ public class FormKeyTests
         new FormKey(ModKey.Null, 123456).IsNull.Should().BeTrue();
     }
     #endregion
+    
+    #region Equality
+
+    [Fact]
+    public void SelfEquality()
+    {
+        var fk = FormKey.Factory("123456:Skyrim.esm");
+        fk.Should().Be(fk);
+    }
+
+    [Fact]
+    public void NullEquality()
+    {
+        var fk = FormKey.Null;
+        fk.Should().Be(fk);
+    }
+
+    [Fact]
+    public void NotNullEquality()
+    {
+        var fk = FormKey.Factory("123456:Skyrim.esm");
+        fk.Should().NotBe(FormKey.Null);
+    }
+
+    [Fact]
+    public void DifferentModKeyEquality()
+    {
+        var fk = FormKey.Factory("123456:Skyrim.esm");
+        var fk2 = FormKey.Factory("123456:Skyrim2.esm");
+        fk.Should().NotBe(fk2);
+    }
+    
+    #endregion
 
     #region Comparers
     #region Alphabetical
