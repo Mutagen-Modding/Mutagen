@@ -186,6 +186,26 @@ public readonly struct ModKey : IEquatable<ModKey>
     /// </summary>
     /// <param name="str">String to parse</param>
     /// <param name="modKey">ModKey if successfully converted</param>
+    /// <param name="errorReason">Reason for a failed conversion</param>
+    /// <returns>True if conversion successful</returns>
+    public static bool TryFromNameAndExtension(string? str, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
+    {
+        if (str == null)
+        {
+            errorReason = "String was null";
+            modKey = default;
+            return false;
+        }
+
+        return TryFromNameAndExtension((ReadOnlySpan<char>)str, out modKey, out errorReason);
+    }
+
+    /// <summary>
+    /// Attempts to construct a ModKey from a string:
+    ///   ModName.esp
+    /// </summary>
+    /// <param name="str">String to parse</param>
+    /// <param name="modKey">ModKey if successfully converted</param>
     /// <returns>True if conversion successful</returns>
     public static bool TryFromNameAndExtension(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModKey modKey)
     {
@@ -196,13 +216,63 @@ public readonly struct ModKey : IEquatable<ModKey>
     /// Attempts to construct a ModKey from a string:
     ///   ModName.esp
     /// </summary>
+    /// <param name="str">String to parse</param>
+    /// <param name="modKey">ModKey if successfully converted</param>
+    /// <returns>True if conversion successful</returns>
+    public static bool TryFromNameAndExtension(string? str, [MaybeNullWhen(false)] out ModKey modKey)
+    {
+        return TryFromNameAndExtension(str, out modKey, out _);
+    }
+
+    /// <summary>
+    /// Attempts to construct a ModKey from a string:
+    ///   ModName.esp
+    /// </summary>
+    /// <param name="str">String to parse</param>
+    /// <returns>True if conversion successful</returns>
+    public static ModKey? TryFromNameAndExtension(ReadOnlySpan<char> str)
+    {
+        if (TryFromNameAndExtension(str, out var modKey, out _))
+        {
+            return modKey;
+        }
+
+        return default;
+    }
+
+    /// <summary>
+    /// Attempts to construct a ModKey from a string:
+    ///   ModName.esp
+    /// </summary>
+    /// <param name="str">String to parse</param>
+    /// <returns>True if conversion successful</returns>
+    public static ModKey? TryFromNameAndExtension(string? str)
+    {
+        if (TryFromNameAndExtension(str, out var modKey, out _))
+        {
+            return modKey;
+        }
+
+        return default;
+    }
+
+    /// <summary>
+    /// Attempts to construct a ModKey from a string:
+    ///   ModName.esp
+    /// </summary>
     /// <param name="fileName">FileName to parse</param>
     /// <param name="modKey">ModKey if successfully converted</param>
     /// <param name="errorReason">Reason for a failed conversion</param>
     /// <returns>True if conversion successful</returns>
-    public static bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
+    public static bool TryFromFileName(FileName? fileName, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
     {
-        return TryFromNameAndExtension(fileName.String, out modKey, out errorReason);
+        if (fileName == null)
+        {
+            modKey = default;
+            errorReason = "Filename was null";
+            return false;
+        }
+        return TryFromNameAndExtension(fileName.Value.String, out modKey, out errorReason);
     }
 
     /// <summary>
@@ -212,9 +282,25 @@ public readonly struct ModKey : IEquatable<ModKey>
     /// <param name="fileName">FileName to parse</param>
     /// <param name="modKey">ModKey if successfully converted</param>
     /// <returns>True if conversion successful</returns>
-    public static bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out ModKey modKey)
+    public static bool TryFromFileName(FileName? fileName, [MaybeNullWhen(false)] out ModKey modKey)
     {
         return TryFromFileName(fileName, out modKey, out _);
+    }
+
+    /// <summary>
+    /// Attempts to construct a ModKey from a string:
+    ///   ModName.esp
+    /// </summary>
+    /// <param name="fileName">FileName to parse</param>
+    /// <returns>True if conversion successful</returns>
+    public static ModKey? TryFromFileName(FileName? fileName)
+    {
+        if (TryFromFileName(fileName, out var modKey, out _))
+        {
+            return modKey;
+        }
+
+        return default;
     }
 
     public static bool TryFromName(ReadOnlySpan<char> str, ModType type, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
@@ -233,7 +319,44 @@ public readonly struct ModKey : IEquatable<ModKey>
         return true;
     }
 
+    public static bool TryFromName(string? str, ModType type, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
+    {
+        if (str == null)
+        {
+            modKey = default;
+            errorReason = "Filename was null";
+            return false;
+        }
+
+        return TryFromName((ReadOnlySpan<char>)str, type, out modKey, out errorReason);
+    }
+
+    public static ModKey? TryFromName(ReadOnlySpan<char> str, ModType type)
+    {
+        if (TryFromName(str, type, out var modKey, out _))
+        {
+            return modKey;
+        }
+
+        return default;
+    }
+
+    public static ModKey? TryFromName(string? str, ModType type)
+    {
+        if (TryFromName(str, type, out var modKey, out _))
+        {
+            return modKey;
+        }
+
+        return default;
+    }
+
     public static bool TryFromName(ReadOnlySpan<char> str, ModType type, [MaybeNullWhen(false)] out ModKey modKey)
+    {
+        return TryFromName(str, type, out modKey, out _);
+    }
+
+    public static bool TryFromName(string? str, ModType type, [MaybeNullWhen(false)] out ModKey modKey)
     {
         return TryFromName(str, type, out modKey, out _);
     }
