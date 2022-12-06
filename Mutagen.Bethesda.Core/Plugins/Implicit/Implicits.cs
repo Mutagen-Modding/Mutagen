@@ -140,6 +140,7 @@ public static class Implicits
             GameRelease.SkyrimLE => SkyrimLE,
             GameRelease.EnderalLE => EnderalLE,
             GameRelease.SkyrimSE => SkyrimSE,
+            GameRelease.SkyrimSEGog => SkyrimSE,
             GameRelease.EnderalSE => EnderalSE,
             GameRelease.SkyrimVR => SkyrimVR,
             GameRelease.Fallout4 => Fallout4,

@@ -1,7 +1,16 @@
+using AutoFixture.Xunit2;
 using FluentAssertions;
+using Loqui;
+using Mutagen.Bethesda.Archives.DI;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
+using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins;
@@ -52,6 +61,58 @@ public class EnumCompletenessTests
         {
             var cat = release.ToCategory();
             cat.GetRelatedReleases().Should().Contain(release);
+        }
+    }
+
+    [Fact]
+    public void Implicits()
+    {
+        foreach (var release in Enums<GameRelease>.Values)
+        {
+            Mutagen.Bethesda.Plugins.Implicits.Get(release).Should().NotBeNull();
+        }
+    }
+
+    [Theory]
+    [MutagenAutoData]
+    public void PluginListingsProvider(
+        [Frozen] IGameReleaseContext gameReleaseContext,
+        PluginListingsProvider sut)
+    {
+        foreach (var release in Enums<GameRelease>.Values)
+        {
+            gameReleaseContext.Release.Returns(release);
+            sut.Get().ToArray();
+        }
+    }
+
+    [Theory]
+    [MutagenAutoData]
+    public void ArchiveReaderProvider(
+        [Frozen] IGameReleaseContext gameReleaseContext,
+        FilePath path,
+        ArchiveReaderProvider sut)
+    {
+        foreach (var release in Enums<GameRelease>.Values)
+        {
+            gameReleaseContext.Release.Returns(release);
+            Assert.Throws<FileNotFoundException>(() =>
+                sut.Create(path).Should().NotBeNull());
+        }
+    }
+
+    [Theory]
+    [MutagenAutoData]
+    public void MutagenEncodingProvider(
+        MutagenEncodingProvider sut)
+    {
+        foreach (var release in Enums<GameRelease>.Values
+                     .Where(x => x != GameRelease.Oblivion))
+        {
+            foreach (var lang in Enums<Language>.Values)
+            {
+                sut.GetEncoding(release, lang).Should().NotBeNull();
+            }
         }
     }
     #endregion

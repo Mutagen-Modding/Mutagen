@@ -75,6 +75,7 @@ public sealed class MutagenEncodingProvider : IMutagenEncodingProvider
             case GameRelease.SkyrimLE:
                 return GetSkyrimLeEncoding(language);
             case GameRelease.SkyrimSE:
+            case GameRelease.SkyrimSEGog:
             case GameRelease.SkyrimVR:
             case GameRelease.EnderalSE:
             case GameRelease.Fallout4:

@@ -123,6 +123,7 @@
     </Fields>
     <GameReleaseOptions>SkyrimLE</GameReleaseOptions>
     <GameReleaseOptions>SkyrimSE</GameReleaseOptions>
+    <GameReleaseOptions>SkyrimSEGog</GameReleaseOptions>
     <GameReleaseOptions>SkyrimVR</GameReleaseOptions>
     <GameReleaseOptions>EnderalLE</GameReleaseOptions>
     <GameReleaseOptions>EnderalSE</GameReleaseOptions>

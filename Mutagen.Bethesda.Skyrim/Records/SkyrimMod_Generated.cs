@@ -19584,6 +19584,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         SkyrimLE = 1,
         SkyrimSE = 2,
+        SkyrimSEGog = 7,
         SkyrimVR = 3,
         EnderalLE = 5,
         EnderalSE = 6
@@ -19597,6 +19598,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 SkyrimRelease.SkyrimLE => GameRelease.SkyrimLE,
                 SkyrimRelease.SkyrimSE => GameRelease.SkyrimSE,
+                SkyrimRelease.SkyrimSEGog => GameRelease.SkyrimSEGog,
                 SkyrimRelease.SkyrimVR => GameRelease.SkyrimVR,
                 SkyrimRelease.EnderalLE => GameRelease.EnderalLE,
                 SkyrimRelease.EnderalSE => GameRelease.EnderalSE,
@@ -19610,6 +19612,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 GameRelease.SkyrimLE => SkyrimRelease.SkyrimLE,
                 GameRelease.SkyrimSE => SkyrimRelease.SkyrimSE,
+                GameRelease.SkyrimSEGog => SkyrimRelease.SkyrimSEGog,
                 GameRelease.SkyrimVR => SkyrimRelease.SkyrimVR,
                 GameRelease.EnderalLE => SkyrimRelease.EnderalLE,
                 GameRelease.EnderalSE => SkyrimRelease.EnderalSE,
