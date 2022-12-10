@@ -68,7 +68,14 @@ public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenerat
         {
             if (dataType == null)
             {
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Span[{passedLengthAccessor ?? "0x0"}];");
+                if (data.IsAfterBreak)
+                {
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Length <= {passedLengthAccessor} ? default : {structDataAccessor}.Span[{passedLengthAccessor ?? "0x0"}];");   
+                }
+                else
+                {
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Span[{passedLengthAccessor ?? "0x0"}];");   
+                }
             }
             else
             {

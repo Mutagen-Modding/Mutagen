@@ -3153,7 +3153,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Single BuffStandoffDistance => _structData.Length <= 0x64 ? default : _structData.Slice(0x64, 0x4).Float();
         public Single RangedStandoffDistance => _structData.Length <= 0x68 ? default : _structData.Slice(0x68, 0x4).Float();
         public Single GroupStandoffDistance => _structData.Length <= 0x6C ? default : _structData.Slice(0x6C, 0x4).Float();
-        public Byte RushingAttackPercentChance => _structData.Span[0x70];
+        public Byte RushingAttackPercentChance => _structData.Length <= 0x70 ? default : _structData.Span[0x70];
         public Single RushingAttackDistanceMult => _structData.Length <= 0x74 ? default : _structData.Slice(0x74, 0x4).Float();
         #region SecondaryFlags
         partial void SecondaryFlagsCustomParse(
