@@ -53,6 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Offset { get; set; } = default;
         #endregion
         #region HeightMap
+        public static readonly P2Int HeightMapFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IArray2d<Byte> _HeightMap = new Array2d<Byte>(33, 33);
         public IArray2d<Byte> HeightMap
@@ -1207,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.HeightMap.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<Byte>.Instance.Parse(
                     reader: frame,
-                    size: new P2Int(33, 33),
+                    size: LandscapeVertexHeightMap.HeightMapFixedSize,
                     transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.Unknown = P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
@@ -1281,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim
             mem: _structData.Slice(4),
             package: _package,
             itemLength: 1,
-            size: new P2Int(33, 33),
+            size: LandscapeVertexHeightMap.HeightMapFixedSize,
             getter: (s, p) => s[0]);
         #endregion
         public P3UInt8 Unknown => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x445, 0x3));

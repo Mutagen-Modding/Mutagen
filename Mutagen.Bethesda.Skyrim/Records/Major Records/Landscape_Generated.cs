@@ -60,6 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         Landscape.Flag? ILandscapeGetter.Flags => this.Flags;
         #endregion
         #region VertexNormals
+        public static readonly P2Int VertexNormalsFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IArray2d<P3UInt8>? _VertexNormals;
         public IArray2d<P3UInt8>? VertexNormals
@@ -85,6 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILandscapeVertexHeightMapGetter? ILandscapeGetter.VertexHeightMap => this.VertexHeightMap;
         #endregion
         #region VertexColors
+        public static readonly P2Int VertexColorsFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IArray2d<P3UInt8>? _VertexColors;
         public IArray2d<P3UInt8>? VertexColors
@@ -2179,7 +2181,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.VertexNormals = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Parse(
                             reader: frame,
-                            size: new P2Int(33, 33),
+                            size: Landscape.VertexNormalsFixedSize,
                             transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         ;
                     return (int)Landscape_FieldIndex.VertexNormals;
@@ -2195,7 +2197,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.VertexColors = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Parse(
                             reader: frame,
-                            size: new P2Int(33, 33),
+                            size: Landscape.VertexColorsFixedSize,
                             transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         ;
                     return (int)Landscape_FieldIndex.VertexColors;
@@ -2392,7 +2394,7 @@ namespace Mutagen.Bethesda.Skyrim
                         mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
                         package: _package,
                         itemLength: 3,
-                        size: new P2Int(33, 33),
+                        size: Landscape.VertexNormalsFixedSize,
                         getter: (s, p) => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)Landscape_FieldIndex.VertexNormals;
                 }
@@ -2408,7 +2410,7 @@ namespace Mutagen.Bethesda.Skyrim
                         mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
                         package: _package,
                         itemLength: 3,
-                        size: new P2Int(33, 33),
+                        size: Landscape.VertexColorsFixedSize,
                         getter: (s, p) => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)Landscape_FieldIndex.VertexColors;
                 }
