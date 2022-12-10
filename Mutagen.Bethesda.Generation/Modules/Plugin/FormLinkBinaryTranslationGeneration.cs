@@ -231,7 +231,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
         Accessor recordDataAccessor, 
         int? currentPosition,
         string passedLengthAccessor,
-        DataType dataType = null)
+        DataType? dataType = null)
     {
         var data = typeGen.GetFieldData();
         switch (data.BinaryOverlayFallback)
@@ -273,7 +273,14 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
             }
             if (dataType == null)
             {
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")};");
+                if (data.IsAfterBreak)
+                {
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Length <= {passedLengthAccessor} ? {linkType.DirectTypeName(getter: true)}.Null : {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")};");
+                }
+                else
+                {
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")};");
+                }
             }
             else
             {
