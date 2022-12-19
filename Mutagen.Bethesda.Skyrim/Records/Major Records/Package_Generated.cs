@@ -2175,7 +2175,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.PackageTemplate.Clear();
             item.DataInputVersion = default;
             item.Data.Clear();
-            item.XnamMarker = new byte[0];
+            item.XnamMarker = Array.Empty<byte>();
             item.ProcedureTree.Clear();
             item.OnBegin = null;
             item.OnEnd = null;

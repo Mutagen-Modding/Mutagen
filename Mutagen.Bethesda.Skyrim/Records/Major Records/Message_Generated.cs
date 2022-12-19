@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Description.Clear();
             item.Name = default;
-            item.INAM = new byte[0];
+            item.INAM = Array.Empty<byte>();
             item.Quest.Clear();
             item.Flags = default;
             item.DisplayTime = default;

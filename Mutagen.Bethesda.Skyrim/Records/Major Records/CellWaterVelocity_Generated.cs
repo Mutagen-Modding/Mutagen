@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Offset = default;
             item.Unknown = default;
             item.Angle = default;
-            item.Unknown2 = new byte[0];
+            item.Unknown2 = Array.Empty<byte>();
         }
         
         #region Mutagen

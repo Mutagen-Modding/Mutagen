@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Thickness = default;
             item.HalfExtents = default;
             item.IsWindDetachedEnd = default;
-            item.Unknown = new byte[0];
+            item.Unknown = Array.Empty<byte>();
         }
         
         #region Mutagen

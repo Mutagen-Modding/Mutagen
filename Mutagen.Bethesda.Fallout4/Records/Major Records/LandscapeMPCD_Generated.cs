@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ILandscapeMPCD item)
         {
             ClearPartial();
-            item.MPCD = new byte[0];
+            item.MPCD = Array.Empty<byte>();
         }
         
         #region Mutagen

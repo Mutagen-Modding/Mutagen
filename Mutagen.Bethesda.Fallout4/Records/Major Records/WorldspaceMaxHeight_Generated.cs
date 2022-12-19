@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Min = default;
             item.Max = default;
-            item.CellData = new byte[0];
+            item.CellData = Array.Empty<byte>();
         }
         
         #region Mutagen
