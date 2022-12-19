@@ -128,14 +128,4 @@ partial class StaticBinaryWriteTranslation
             lod.WriteToBinary(writer);
         }
     }
-
-    public static void Write(MutagenWriter writer, IDistantLodGetter lod)
-    {
-        var len = lod.Data.Length + lod.Mesh.Length + 1;
-        if (len != 260)
-        {
-            throw new ArgumentException($"Distant Lod string and data size did not add up to expected length. {len} != 260");
-        }
-        lod.WriteToBinary(writer);
-    }
 }

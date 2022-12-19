@@ -280,6 +280,9 @@
     <Compile Include="Records\Major Records\DialogTopic.cs">
       <DependentUpon>DialogTopic.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DistantLod.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
