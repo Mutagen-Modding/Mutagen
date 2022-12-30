@@ -56,6 +56,7 @@ class BsaFolderRecord : IArchiveFolder
             var len = rdr.ReadByte();
             data = rdr.ReadBytes(len + totalFileLen);
             Path = data.Slice(0, len).ReadStringTerm(BSA.HeaderType);
+            Path = IFileSystemExt.CleanDirectorySeparators(Path);
             data = data.Slice(len);
         }
         else
