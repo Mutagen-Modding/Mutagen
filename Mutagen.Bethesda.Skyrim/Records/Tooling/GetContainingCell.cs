@@ -20,8 +20,8 @@ namespace Mutagen.Bethesda.Skyrim.Records.Tooling {
                     int cellX = 0;
                     int cellY = 0;
                     if(placedContext.Record.Placement != null) {
-                        var floatX = placedContext.Record.Placement!.Position.X;
-                        var floatY = placedContext.Record.Placement!.Position.Y;
+                        var floatX = placedContext.Record.Placement.Position.X;
+                        var floatY = placedContext.Record.Placement.Position.Y;
                         cellX = (int)Math.Floor(floatX / 4096);
                         cellY = (int)Math.Floor(floatY / 4096);
                     }
