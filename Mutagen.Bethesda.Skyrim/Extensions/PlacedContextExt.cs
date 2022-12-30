@@ -6,47 +6,26 @@ using PlacedContext = Mutagen.Bethesda.Plugins.Cache.IModContext<Mutagen.Bethesd
 
 namespace Mutagen.Bethesda.Skyrim.Extensions {
     public static class PlacedContextExt {
-        //
-        // Summary:
-        //     Attempts to locate placedContext's containing cell.
-        //
-        // Parameters:
-        //   placedContext:
-        //     Context of the placed reference.
-        //
-        //   worldspaceCellLocationCache:
-        //     WorldspaceCellLocationCache to use for cell lookup
-        //
-        //   containingCell:
-        //     Context of the containing cell if located
-        //
-        // Returns:
-        //     True if containing cell was found
+        /// <summary>
+        /// Attempts to locate placedContext's containing cell.
+        /// </summary>
+        /// <param name="placedContext">Context of the placed reference</param>
+        /// <param name="worldspaceCellLocationCache">WorldspaceCellLocationCache to use for cell lookup</param>
+        /// <param name="containingCell">Context of the containing cell if located</param>
+        /// <returns>True if containing cell was found</returns>
         public static bool TryGetContainingCell(this PlacedContext placedContext,
                                                 WorldspaceCellLocationCache worldspaceCellLocationCache,
                                                 [MaybeNullWhen(false)] out IModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter> containingCell) {
             return GetContainingCell.TryGetContainingCell(placedContext, worldspaceCellLocationCache, out containingCell, out _);
         }
-
-        //
-        // Summary:
-        //     Attempts to locate placedContext's containing cell.
-        //
-        // Parameters:
-        //   placedContext:
-        //     Context of the placed reference.
-        //
-        //   worldspaceCellLocationCache:
-        //     WorldspaceCellLocationCache to use for cell lookup
-        //
-        //   containingCell:
-        //     Context of the containing cell if located
-        //
-        //   parentCell:
-        //     Context of the parent cell if located
-        //
-        // Returns:
-        //     True if containing cell was found
+        /// <summary>
+        /// Attempts to locate placedContext's containing cell.
+        /// </summary>
+        /// <param name="placedContext">Context of the placed reference</param>
+        /// <param name="worldspaceCellLocationCache">WorldspaceCellLocationCache to use for cell lookup</param>
+        /// <param name="containingCell">Context of the containing cell if located</param>
+        /// <param name="parentCell">Context of the parent cell if located</param>
+        /// <returns>True if containing cell was found</returns>
         public static bool TryGetContainingCell(PlacedContext placedContext,
                                                 WorldspaceCellLocationCache worldspaceCellLocationCache,
                                                 [MaybeNullWhen(false)] out IModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter> containingCell,

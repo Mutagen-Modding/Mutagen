@@ -7,13 +7,10 @@ namespace Mutagen.Bethesda.Skyrim.Records.Tooling {
     public class WorldspaceCellLocationCache {
         private readonly Lazy<Dictionary<IFormLink<IWorldspaceGetter>, Dictionary<P2Int, CellContext>>> lazyGrid;
 
-        //
-        // Summary:
-        //     Creates a cell location cache for all worldspaces using the given cell contexts.
-        //
-        // Parameters:
-        //   allCellContexts:
-        //     Collection of cell contexts that will be used to build the cell location cache.
+        /// <summary>
+        /// Creates a cell location cache for all worldspaces using the given cell contexts.
+        /// </summary>
+        /// <param name="allCellContexts">Collection of cell contexts that will be used to build the cell location cache.</param>
         public WorldspaceCellLocationCache(IEnumerable<CellContext> allCellContexts) {
             lazyGrid = new Lazy<Dictionary<IFormLink<IWorldspaceGetter>, Dictionary<P2Int, CellContext>>>(() => {
                 var currentCellGrid = new Dictionary<IFormLink<IWorldspaceGetter>, Dictionary<P2Int, CellContext>>();
