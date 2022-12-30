@@ -85,12 +85,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISoundDescriptorStandardDataGetter rhs) return false;
-            return ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundDescriptorStandardDataGetter? obj)
         {
-            return ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Fallout4
             switch (index)
             {
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -948,27 +948,27 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISoundDescriptorStandardDataGetter? lhs,
             ISoundDescriptorStandardDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IASoundDescriptorGetter)lhs, (IASoundDescriptorGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.PercentFrequencyShift) ?? true))
+            if (!base.Equals((IASoundDescriptorGetter)lhs, (IASoundDescriptorGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.PercentFrequencyShift) ?? true))
             {
                 if (!lhs.PercentFrequencyShift.Equals(rhs.PercentFrequencyShift)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.PercentFrequencyVariance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.PercentFrequencyVariance) ?? true))
             {
                 if (!lhs.PercentFrequencyVariance.Equals(rhs.PercentFrequencyVariance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.Priority) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.Priority) ?? true))
             {
                 if (lhs.Priority != rhs.Priority) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.Variance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.Variance) ?? true))
             {
                 if (lhs.Variance != rhs.Variance) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.StaticAttenuation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.StaticAttenuation) ?? true))
             {
                 if (!lhs.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
             }
@@ -978,12 +978,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IASoundDescriptorGetter? lhs,
             IASoundDescriptorGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundDescriptorStandardDataGetter?)lhs,
                 rhs: rhs as ISoundDescriptorStandardDataGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoundDescriptorStandardDataGetter item)
@@ -1360,12 +1360,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISoundDescriptorStandardDataGetter rhs) return false;
-            return ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundDescriptorStandardDataGetter? obj)
         {
-            return ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundDescriptorStandardDataCommon)((ISoundDescriptorStandardDataGetter)this).CommonInstance()!).GetHashCode(this);

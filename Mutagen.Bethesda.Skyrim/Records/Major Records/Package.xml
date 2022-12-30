@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Package" objType="Record" recordType="PACK" baseClass="SkyrimMajorRecord" GUID="b5148cf5-ebc6-439e-b0d2-7b254b24f3eb" ID="215">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="PackageAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="PackageAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <Data recordType="PKDT">
         <Fields>
           <Enum name="Flags" enumName="Package.Flag" byteLength="4" />
@@ -57,7 +57,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="APackageData" ctorPermission="internal" objType="Subrecord" GUID="88e8ac4c-9592-4956-9154-3e8d115ec0f9" ID="374">
+  <Object name="APackageData" objType="Subrecord" GUID="88e8ac4c-9592-4956-9154-3e8d115ec0f9" ID="374">
     <Fields>
       <String name="Name" recordType="BNAM" binary="NoGeneration" nullable="True" />
       <Enum name="Flags" enumName="APackageData.Flag" recordType="PNAM" nullable="True" binary="NoGeneration" />

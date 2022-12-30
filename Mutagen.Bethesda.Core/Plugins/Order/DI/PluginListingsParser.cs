@@ -16,11 +16,14 @@ public interface IPluginListingsParser
 
 public sealed class PluginListingsParser : IPluginListingsParser
 {
+    private readonly IPluginListingCommentTrimmer _commentTrimmer;
     private readonly ILoadOrderListingParser _listingParser;
 
     public PluginListingsParser(
+        IPluginListingCommentTrimmer commentTrimmer,
         ILoadOrderListingParser listingParser)
     {
+        _commentTrimmer = commentTrimmer;
         _listingParser = listingParser;
     }
         
@@ -31,11 +34,7 @@ public sealed class PluginListingsParser : IPluginListingsParser
         while (!streamReader.EndOfStream)
         {
             var str = streamReader.ReadLine().AsSpan();
-            var commentIndex = str.IndexOf('#');
-            if (commentIndex != -1)
-            {
-                str = str.Slice(0, commentIndex);
-            }
+            str = _commentTrimmer.Trim(str);
             if (MemoryExtensions.IsWhiteSpace(str) || str.Length == 0) continue;
             yield return _listingParser.FromString(str);
         }

@@ -90,12 +90,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionSoundsGetter rhs) return false;
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionSoundsGetter? obj)
         {
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.MusicType = this.MusicType.Combine(rhs.MusicType);
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionSoundsCommon)((IRegionSoundsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RegionData_FieldIndex.Header:
                     return (RegionSounds_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -939,17 +939,17 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IRegionSoundsGetter? lhs,
             IRegionSoundsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)RegionSounds_FieldIndex.MusicType) ?? true))
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.MusicType) ?? true))
             {
                 if (lhs.MusicType != rhs.MusicType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RegionSounds_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((RegionSoundCommon)((IRegionSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)RegionSounds_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((RegionSoundCommon)((IRegionSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)RegionSounds_FieldIndex.Sounds)))) return false;
             }
             return true;
         }
@@ -957,12 +957,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IRegionDataGetter? lhs,
             IRegionDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRegionSoundsGetter?)lhs,
                 rhs: rhs as IRegionSoundsGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRegionSoundsGetter item)
@@ -1436,12 +1436,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionSoundsGetter rhs) return false;
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionSoundsGetter? obj)
         {
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).GetHashCode(this);

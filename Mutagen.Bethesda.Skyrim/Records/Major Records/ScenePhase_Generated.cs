@@ -144,12 +144,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IScenePhaseGetter rhs) return false;
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScenePhaseGetter? obj)
         {
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).GetHashCode(this);
@@ -637,8 +637,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.StartConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.StartConditions?.Overall, rhs.StartConditions?.Overall), ExceptionExt.Combine(this.StartConditions?.Specific, rhs.StartConditions?.Specific));
-                ret.CompletionConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.CompletionConditions?.Overall, rhs.CompletionConditions?.Overall), ExceptionExt.Combine(this.CompletionConditions?.Specific, rhs.CompletionConditions?.Specific));
+                ret.StartConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.StartConditions?.Overall, rhs.StartConditions?.Overall), Noggog.ExceptionExt.Combine(this.StartConditions?.Specific, rhs.StartConditions?.Specific));
+                ret.CompletionConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CompletionConditions?.Overall, rhs.CompletionConditions?.Overall), Noggog.ExceptionExt.Combine(this.CompletionConditions?.Specific, rhs.CompletionConditions?.Specific));
                 ret.Unused = this.Unused.Combine(rhs.Unused, (l, r) => l.Combine(r));
                 ret.Unused2 = this.Unused2.Combine(rhs.Unused2, (l, r) => l.Combine(r));
                 ret.EditorWidth = this.EditorWidth.Combine(rhs.EditorWidth);
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScenePhaseCommon)((IScenePhaseGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1277,38 +1277,38 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IScenePhaseGetter? lhs,
             IScenePhaseGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.StartConditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.StartConditions) ?? true))
             {
-                if (!lhs.StartConditions.SequenceEqual(rhs.StartConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.StartConditions)))) return false;
+                if (!lhs.StartConditions.SequenceEqual(rhs.StartConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ScenePhase_FieldIndex.StartConditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.CompletionConditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.CompletionConditions) ?? true))
             {
-                if (!lhs.CompletionConditions.SequenceEqual(rhs.CompletionConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.CompletionConditions)))) return false;
+                if (!lhs.CompletionConditions.SequenceEqual(rhs.CompletionConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ScenePhase_FieldIndex.CompletionConditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.Unused) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Unused, rhs.Unused, out var lhsUnused, out var rhsUnused, out var isUnusedEqual))
                 {
-                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused).CommonInstance()!).Equals(lhsUnused, rhsUnused, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.Unused))) return false;
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused).CommonInstance()!).Equals(lhsUnused, rhsUnused, equalsMask?.GetSubCrystal((int)ScenePhase_FieldIndex.Unused))) return false;
                 }
                 else if (!isUnusedEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Unused2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.Unused2) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Unused2, rhs.Unused2, out var lhsUnused2, out var rhsUnused2, out var isUnused2Equal))
                 {
-                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused2).CommonInstance()!).Equals(lhsUnused2, rhsUnused2, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.Unused2))) return false;
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused2).CommonInstance()!).Equals(lhsUnused2, rhsUnused2, equalsMask?.GetSubCrystal((int)ScenePhase_FieldIndex.Unused2))) return false;
                 }
                 else if (!isUnused2Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.EditorWidth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhase_FieldIndex.EditorWidth) ?? true))
             {
                 if (lhs.EditorWidth != rhs.EditorWidth) return false;
             }
@@ -2077,12 +2077,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IScenePhaseGetter rhs) return false;
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScenePhaseGetter? obj)
         {
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).GetHashCode(this);

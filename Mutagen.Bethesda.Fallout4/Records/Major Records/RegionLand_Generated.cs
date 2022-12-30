@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionLandGetter rhs) return false;
-            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionLandGetter? obj)
         {
-            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).GetHashCode(this);
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((RegionLandCommon)((IRegionLandGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RegionData_FieldIndex.Icons:
                     return (RegionLand_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -856,15 +856,15 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IRegionLandGetter? lhs,
             IRegionLandGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)RegionLand_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)RegionLand_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
             {
                 if (!lhs.LodDisplayDistanceMultiplier.EqualsWithin(rhs.LodDisplayDistanceMultiplier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RegionLand_FieldIndex.OcclusionAccuracyDist) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionLand_FieldIndex.OcclusionAccuracyDist) ?? true))
             {
                 if (!lhs.OcclusionAccuracyDist.EqualsWithin(rhs.OcclusionAccuracyDist)) return false;
             }
@@ -874,12 +874,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IRegionDataGetter? lhs,
             IRegionDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRegionLandGetter?)lhs,
                 rhs: rhs as IRegionLandGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRegionLandGetter item)
@@ -1301,12 +1301,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionLandGetter rhs) return false;
-            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionLandGetter? obj)
         {
-            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).GetHashCode(this);

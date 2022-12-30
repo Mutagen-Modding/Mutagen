@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IAlphaLayerGetter rhs) return false;
-            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAlphaLayerGetter? obj)
         {
-            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Skyrim
             AlphaLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.AlphaLayerData = MemorySliceExt.Equal(item.AlphaLayerData, rhs.AlphaLayerData);
+            ret.AlphaLayerData = MemorySliceExt.SequenceEqual(item.AlphaLayerData, rhs.AlphaLayerData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case BaseLayer_FieldIndex.Header:
                     return (AlphaLayer_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -807,13 +807,13 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IAlphaLayerGetter? lhs,
             IAlphaLayerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IBaseLayerGetter)lhs, (IBaseLayerGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
+            if (!base.Equals((IBaseLayerGetter)lhs, (IBaseLayerGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
             }
             return true;
         }
@@ -821,12 +821,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IBaseLayerGetter? lhs,
             IBaseLayerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAlphaLayerGetter?)lhs,
                 rhs: rhs as IAlphaLayerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAlphaLayerGetter item)
@@ -1228,12 +1228,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IAlphaLayerGetter rhs) return false;
-            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAlphaLayerGetter? obj)
         {
-            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).GetHashCode(this);

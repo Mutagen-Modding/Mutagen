@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using Autofac;
 using Mutagen.Bethesda.Autofac;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Noggog.Autofac;
 using Xunit;
 

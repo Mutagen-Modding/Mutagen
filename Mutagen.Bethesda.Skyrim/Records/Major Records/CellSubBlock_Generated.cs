@@ -98,12 +98,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICellSubBlockGetter rhs) return false;
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellSubBlockGetter? obj)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).GetHashCode(this);
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.GroupType = this.GroupType.Combine(rhs.GroupType);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), ExceptionExt.Combine(this.Cells?.Specific, rhs.Cells?.Specific));
+                ret.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), Noggog.ExceptionExt.Combine(this.Cells?.Specific, rhs.Cells?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1534,28 +1534,28 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ICellSubBlockGetter? lhs,
             ICellSubBlockGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.BlockNumber) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.BlockNumber) ?? true))
             {
                 if (lhs.BlockNumber != rhs.BlockNumber) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.GroupType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.GroupType) ?? true))
             {
                 if (lhs.GroupType != rhs.GroupType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.LastModified) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.LastModified) ?? true))
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Cells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Cells) ?? true))
             {
-                if (!lhs.Cells.SequenceEqual(rhs.Cells, (l, r) => ((CellCommon)((ICellGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)CellSubBlock_FieldIndex.Cells)))) return false;
+                if (!lhs.Cells.SequenceEqual(rhs.Cells, (l, r) => ((CellCommon)((ICellGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)CellSubBlock_FieldIndex.Cells)))) return false;
             }
             return true;
         }
@@ -2204,12 +2204,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICellSubBlockGetter rhs) return false;
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellSubBlockGetter? obj)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).GetHashCode(this);

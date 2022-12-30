@@ -99,12 +99,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ILocalVariableGetter rhs) return false;
-            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocalVariableGetter? obj)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).GetHashCode(this);
@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -888,18 +888,18 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ILocalVariableGetter? lhs,
             ILocalVariableGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LocalVariable_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((LocalVariableDataCommon)((ILocalVariableDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)LocalVariable_FieldIndex.Data))) return false;
+                    if (!((LocalVariableDataCommon)((ILocalVariableDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)LocalVariable_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
@@ -1322,12 +1322,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ILocalVariableGetter rhs) return false;
-            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocalVariableGetter? obj)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).GetHashCode(this);

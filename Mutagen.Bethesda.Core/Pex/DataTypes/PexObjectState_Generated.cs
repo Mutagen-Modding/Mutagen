@@ -68,12 +68,12 @@ namespace Mutagen.Bethesda.Pex
         public override bool Equals(object? obj)
         {
             if (obj is not IPexObjectStateGetter rhs) return false;
-            return ((PexObjectStateCommon)((IPexObjectStateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PexObjectStateCommon)((IPexObjectStateGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPexObjectStateGetter? obj)
         {
-            return ((PexObjectStateCommon)((IPexObjectStateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PexObjectStateCommon)((IPexObjectStateGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PexObjectStateCommon)((IPexObjectStateGetter)this).CommonInstance()!).GetHashCode(this);
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Pex
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Functions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectNamedFunction.ErrorMask?>>?>(ExceptionExt.Combine(this.Functions?.Overall, rhs.Functions?.Overall), ExceptionExt.Combine(this.Functions?.Specific, rhs.Functions?.Specific));
+                ret.Functions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectNamedFunction.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Functions?.Overall, rhs.Functions?.Overall), Noggog.ExceptionExt.Combine(this.Functions?.Specific, rhs.Functions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Pex
             return ((PexObjectStateCommon)((IPexObjectStateGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -825,16 +825,16 @@ namespace Mutagen.Bethesda.Pex
         public virtual bool Equals(
             IPexObjectStateGetter? lhs,
             IPexObjectStateGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PexObjectState_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectState_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectState_FieldIndex.Functions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectState_FieldIndex.Functions) ?? true))
             {
-                if (!lhs.Functions.SequenceEqual(rhs.Functions, (l, r) => ((PexObjectNamedFunctionCommon)((IPexObjectNamedFunctionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObjectState_FieldIndex.Functions)))) return false;
+                if (!lhs.Functions.SequenceEqual(rhs.Functions, (l, r) => ((PexObjectNamedFunctionCommon)((IPexObjectNamedFunctionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PexObjectState_FieldIndex.Functions)))) return false;
             }
             return true;
         }

@@ -127,12 +127,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITintGroupGetter rhs) return false;
-            return ((TintGroupCommon)((ITintGroupGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TintGroupCommon)((ITintGroupGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITintGroupGetter? obj)
         {
-            return ((TintGroupCommon)((ITintGroupGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TintGroupCommon)((ITintGroupGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TintGroupCommon)((ITintGroupGetter)this).CommonInstance()!).GetHashCode(this);
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Options = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintTemplateOption.ErrorMask?>>?>(ExceptionExt.Combine(this.Options?.Overall, rhs.Options?.Overall), ExceptionExt.Combine(this.Options?.Specific, rhs.Options?.Specific));
+                ret.Options = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintTemplateOption.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Options?.Overall, rhs.Options?.Overall), Noggog.ExceptionExt.Combine(this.Options?.Specific, rhs.Options?.Specific));
                 ret.CategoryIndex = this.CategoryIndex.Combine(rhs.CategoryIndex);
                 return ret;
             }
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((TintGroupCommon)((ITintGroupGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1049,18 +1049,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ITintGroupGetter? lhs,
             ITintGroupGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)TintGroup_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintGroup_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintGroup_FieldIndex.Options) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintGroup_FieldIndex.Options) ?? true))
             {
-                if (!lhs.Options.SequenceEqual(rhs.Options, (l, r) => ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TintGroup_FieldIndex.Options)))) return false;
+                if (!lhs.Options.SequenceEqual(rhs.Options, (l, r) => ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TintGroup_FieldIndex.Options)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintGroup_FieldIndex.CategoryIndex) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintGroup_FieldIndex.CategoryIndex) ?? true))
             {
                 if (lhs.CategoryIndex != rhs.CategoryIndex) return false;
             }
@@ -1529,12 +1529,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITintGroupGetter rhs) return false;
-            return ((TintGroupCommon)((ITintGroupGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TintGroupCommon)((ITintGroupGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITintGroupGetter? obj)
         {
-            return ((TintGroupCommon)((ITintGroupGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TintGroupCommon)((ITintGroupGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TintGroupCommon)((ITintGroupGetter)this).CommonInstance()!).GetHashCode(this);

@@ -4,6 +4,7 @@ using System.IO.Abstractions;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 
 namespace Mutagen.Bethesda.Plugins.Order;
@@ -13,7 +14,10 @@ public static class PluginListings
     /// <inheritdoc cref="IPluginListingsProvider"/>
     public static string GetListingsPath(GameRelease game)
     {
-        return new PluginListingsPathProvider(new GameReleaseInjection(game)).Path;
+        var gameReleaseInjection = new GameReleaseInjection(game);
+        return new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            gameReleaseInjection).Path;
     }
 
     /// <summary>
@@ -55,6 +59,7 @@ public static class PluginListings
     public static IEnumerable<ILoadOrderListingGetter> LoadOrderListingsFromStream(Stream stream, GameRelease game)
     {
         return new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         new GameReleaseInjection(game))))
@@ -67,9 +72,11 @@ public static class PluginListings
         DirectoryPath dataPath,
         bool throwOnMissingMods = true)
     {
+        var gameReleaseInjection = new GameReleaseInjection(game);
         return LoadOrderListingsFromPath(
-            new PluginListingsPathProvider(
-                new GameReleaseInjection(game)).Path,
+            new PluginListingsPathContext(
+                new PluginListingsPathProvider(),
+                gameReleaseInjection).Path,
             game,
             dataPath,
             throwOnMissingMods);
@@ -133,9 +140,11 @@ public static class PluginListings
     /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
     public static IObservable<Unit> GetLoadOrderChanged(GameRelease game)
     {
+        var gameReleaseInjection = new GameReleaseInjection(game);
         return ObservableExt.WatchFile(
-            new PluginListingsPathProvider(
-                new GameReleaseInjection(game)).Path);
+            new PluginListingsPathContext(
+                new PluginListingsPathProvider(),
+                gameReleaseInjection).Path);
     }
 
     public static bool HasEnabledMarkers(GameRelease game)
@@ -147,11 +156,12 @@ public static class PluginListings
     private static PluginListingsProvider PluginListingsProvider(
         IDataDirectoryProvider dataDirectory,
         IGameReleaseContext gameContext,
-        IPluginListingsPathProvider listingsPathProvider, 
+        IPluginListingsPathContext listingsPathContext, 
         bool throwOnMissingMods,
         IFileSystem fs)
     {
         var pluginListingParser = new PluginListingsParser(
+            new PluginListingCommentTrimmer(),
             new LoadOrderListingParser(
                 new HasEnabledMarkersProvider(gameContext)));
         var provider = new PluginListingsProvider(
@@ -163,12 +173,12 @@ public static class PluginListings
                     fs,
                     pluginListingParser),
                 dataDirectory,
-                listingsPathProvider),
+                listingsPathContext),
             new EnabledPluginListingsProvider(
                 new PluginRawListingsReader(
                     fs,
                     pluginListingParser),
-                listingsPathProvider));
+                listingsPathContext));
         return provider;
     }
 }

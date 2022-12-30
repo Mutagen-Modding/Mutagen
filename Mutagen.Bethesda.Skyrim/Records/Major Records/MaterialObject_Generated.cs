@@ -210,6 +210,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Model,
                 TItem DNAMs,
                 TItem FalloffScale,
@@ -228,7 +229,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.DNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DNAMs, Enumerable.Empty<(int Index, TItem Value)>());
@@ -755,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.DNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DNAMs?.Overall, rhs.DNAMs?.Overall), ExceptionExt.Combine(this.DNAMs?.Specific, rhs.DNAMs?.Specific));
+                ret.DNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.DNAMs?.Overall, rhs.DNAMs?.Overall), Noggog.ExceptionExt.Combine(this.DNAMs?.Specific, rhs.DNAMs?.Specific));
                 ret.FalloffScale = this.FalloffScale.Combine(rhs.FalloffScale);
                 ret.FalloffBias = this.FalloffBias.Combine(rhs.FalloffBias);
                 ret.NoiseUvScale = this.NoiseUvScale.Combine(rhs.NoiseUvScale);
@@ -919,12 +921,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMaterialObjectGetter rhs) return false;
-            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMaterialObjectGetter? obj)
         {
-            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1105,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MaterialObjectCommon)((IMaterialObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1181,6 +1183,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static MaterialObject Duplicate(
+            this IMaterialObjectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1213,18 +1226,19 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Model = 6,
-        DNAMs = 7,
-        FalloffScale = 8,
-        FalloffBias = 9,
-        NoiseUvScale = 10,
-        MaterialUvScale = 11,
-        ProjectionVector = 12,
-        NormalDampener = 13,
-        SinglePassColor = 14,
-        Flags = 15,
-        HasSnow = 16,
-        DATADataTypeState = 17,
+        SkyrimMajorRecordFlags = 6,
+        Model = 7,
+        DNAMs = 8,
+        FalloffScale = 9,
+        FalloffBias = 10,
+        NoiseUvScale = 11,
+        MaterialUvScale = 12,
+        ProjectionVector = 13,
+        NormalDampener = 14,
+        SinglePassColor = 15,
+        Flags = 16,
+        HasSnow = 17,
+        DATADataTypeState = 18,
     }
     #endregion
 
@@ -1244,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(MaterialObject.Mask<>);
 
@@ -1588,8 +1602,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (MaterialObject_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (MaterialObject_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (MaterialObject_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1606,7 +1622,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (MaterialObject_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1614,59 +1630,59 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMaterialObjectGetter? lhs,
             IMaterialObjectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.Model) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)MaterialObject_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)MaterialObject_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.DNAMs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.DNAMs) ?? true))
             {
                 if (!lhs.DNAMs.SequenceEqualNullable(rhs.DNAMs)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffScale) ?? true))
             {
                 if (!lhs.FalloffScale.EqualsWithin(rhs.FalloffScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffBias) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.FalloffBias) ?? true))
             {
                 if (!lhs.FalloffBias.EqualsWithin(rhs.FalloffBias)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.NoiseUvScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.NoiseUvScale) ?? true))
             {
                 if (!lhs.NoiseUvScale.EqualsWithin(rhs.NoiseUvScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.MaterialUvScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.MaterialUvScale) ?? true))
             {
                 if (!lhs.MaterialUvScale.EqualsWithin(rhs.MaterialUvScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.ProjectionVector) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.ProjectionVector) ?? true))
             {
                 if (!lhs.ProjectionVector.Equals(rhs.ProjectionVector)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.NormalDampener) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.NormalDampener) ?? true))
             {
                 if (!lhs.NormalDampener.EqualsWithin(rhs.NormalDampener)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.SinglePassColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.SinglePassColor) ?? true))
             {
                 if (!lhs.SinglePassColor.ColorOnlyEquals(rhs.SinglePassColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.HasSnow) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.HasSnow) ?? true))
             {
                 if (lhs.HasSnow != rhs.HasSnow) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialObject_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1676,23 +1692,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMaterialObjectGetter?)lhs,
                 rhs: rhs as IMaterialObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMaterialObjectGetter?)lhs,
                 rhs: rhs as IMaterialObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMaterialObjectGetter item)
@@ -2553,12 +2569,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMaterialObjectGetter rhs) return false;
-            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMaterialObjectGetter? obj)
         {
-            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).GetHashCode(this);

@@ -99,6 +99,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Parent)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -106,7 +107,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Parent = Parent;
             }
@@ -400,12 +402,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILayerGetter rhs) return false;
-            return ((LayerCommon)((ILayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LayerCommon)((ILayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILayerGetter? obj)
         {
-            return ((LayerCommon)((ILayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LayerCommon)((ILayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LayerCommon)((ILayerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -552,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LayerCommon)((ILayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -628,6 +630,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Layer Duplicate(
+            this ILayerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LayerCommon)((ILayerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -660,7 +673,8 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
+        Fallout4MajorRecordFlags = 6,
+        Parent = 7,
     }
     #endregion
 
@@ -680,7 +694,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(Layer.Mask<>);
 
@@ -916,8 +930,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Layer_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Layer_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Layer_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -934,7 +950,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Layer_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -942,11 +958,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILayerGetter? lhs,
             ILayerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Layer_FieldIndex.Parent) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Layer_FieldIndex.Parent) ?? true))
             {
                 if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
@@ -956,23 +972,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILayerGetter?)lhs,
                 rhs: rhs as ILayerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILayerGetter?)lhs,
                 rhs: rhs as ILayerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILayerGetter item)
@@ -1517,12 +1533,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILayerGetter rhs) return false;
-            return ((LayerCommon)((ILayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LayerCommon)((ILayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILayerGetter? obj)
         {
-            return ((LayerCommon)((ILayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LayerCommon)((ILayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LayerCommon)((ILayerGetter)this).CommonInstance()!).GetHashCode(this);

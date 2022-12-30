@@ -12,7 +12,7 @@ public class WarmupTests
     {
         var init = Warmup.Init();
 
-        foreach (var category in EnumExt.GetValues<GameCategory>())
+        foreach (var category in Enums<GameCategory>.Values)
         {
             init.Should().Contain(category);
         }

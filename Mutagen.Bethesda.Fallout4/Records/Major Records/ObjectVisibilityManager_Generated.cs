@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Objects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -110,7 +111,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>());
             }
@@ -365,7 +367,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectVisibilityManagerItem.ErrorMask?>>?>(ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), ExceptionExt.Combine(this.Objects?.Specific, rhs.Objects?.Specific));
+                ret.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectVisibilityManagerItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), Noggog.ExceptionExt.Combine(this.Objects?.Specific, rhs.Objects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -469,12 +471,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IObjectVisibilityManagerGetter rhs) return false;
-            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IObjectVisibilityManagerGetter? obj)
         {
-            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -621,7 +623,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -697,6 +699,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ObjectVisibilityManager Duplicate(
+            this IObjectVisibilityManagerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -729,7 +742,8 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Objects = 6,
+        Fallout4MajorRecordFlags = 6,
+        Objects = 7,
     }
     #endregion
 
@@ -749,7 +763,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(ObjectVisibilityManager.Mask<>);
 
@@ -999,8 +1013,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (ObjectVisibilityManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (ObjectVisibilityManager_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (ObjectVisibilityManager_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1017,7 +1033,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (ObjectVisibilityManager_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1025,13 +1041,13 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IObjectVisibilityManagerGetter? lhs,
             IObjectVisibilityManagerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ObjectVisibilityManager_FieldIndex.Objects) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ObjectVisibilityManager_FieldIndex.Objects) ?? true))
             {
-                if (!lhs.Objects.SequenceEqual(rhs.Objects, (l, r) => ((ObjectVisibilityManagerItemCommon)((IObjectVisibilityManagerItemGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ObjectVisibilityManager_FieldIndex.Objects)))) return false;
+                if (!lhs.Objects.SequenceEqual(rhs.Objects, (l, r) => ((ObjectVisibilityManagerItemCommon)((IObjectVisibilityManagerItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ObjectVisibilityManager_FieldIndex.Objects)))) return false;
             }
             return true;
         }
@@ -1039,23 +1055,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IObjectVisibilityManagerGetter?)lhs,
                 rhs: rhs as IObjectVisibilityManagerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IObjectVisibilityManagerGetter?)lhs,
                 rhs: rhs as IObjectVisibilityManagerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IObjectVisibilityManagerGetter item)
@@ -1634,12 +1650,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IObjectVisibilityManagerGetter rhs) return false;
-            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IObjectVisibilityManagerGetter? obj)
         {
-            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ObjectVisibilityManagerCommon)((IObjectVisibilityManagerGetter)this).CommonInstance()!).GetHashCode(this);

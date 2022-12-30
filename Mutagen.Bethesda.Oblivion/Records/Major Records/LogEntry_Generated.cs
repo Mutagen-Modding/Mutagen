@@ -105,12 +105,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ILogEntryGetter rhs) return false;
-            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILogEntryGetter? obj)
         {
-            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Entry = this.Entry.Combine(rhs.Entry);
                 ret.ResultScript = this.ResultScript.Combine(rhs.ResultScript, (l, r) => l.Combine(r));
                 return ret;
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1051,26 +1051,26 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ILogEntryGetter? lhs,
             ILogEntryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.Entry) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Entry) ?? true))
             {
                 if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ResultScript, rhs.ResultScript, out var lhsResultScript, out var rhsResultScript, out var isResultScriptEqual))
                 {
-                    if (!((ScriptFieldsCommon)((IScriptFieldsGetter)lhsResultScript).CommonInstance()!).Equals(lhsResultScript, rhsResultScript, crystal?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript))) return false;
+                    if (!((ScriptFieldsCommon)((IScriptFieldsGetter)lhsResultScript).CommonInstance()!).Equals(lhsResultScript, rhsResultScript, equalsMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript))) return false;
                 }
                 else if (!isResultScriptEqual) return false;
             }
@@ -1599,12 +1599,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ILogEntryGetter rhs) return false;
-            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILogEntryGetter? obj)
         {
-            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).GetHashCode(this);

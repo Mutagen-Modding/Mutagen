@@ -102,12 +102,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IBodyDataGetter rhs) return false;
-            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBodyDataGetter? obj)
         {
-            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.BodyParts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>(ExceptionExt.Combine(this.BodyParts?.Overall, rhs.BodyParts?.Overall), ExceptionExt.Combine(this.BodyParts?.Specific, rhs.BodyParts?.Specific));
+                ret.BodyParts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BodyParts?.Overall, rhs.BodyParts?.Overall), Noggog.ExceptionExt.Combine(this.BodyParts?.Specific, rhs.BodyParts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -967,20 +967,20 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IBodyDataGetter? lhs,
             IBodyDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)BodyData_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyData_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)BodyData_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)BodyData_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyData_FieldIndex.BodyParts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyData_FieldIndex.BodyParts) ?? true))
             {
-                if (!lhs.BodyParts.SequenceEqual(rhs.BodyParts, (l, r) => ((BodyPartCommon)((IBodyPartGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)BodyData_FieldIndex.BodyParts)))) return false;
+                if (!lhs.BodyParts.SequenceEqual(rhs.BodyParts, (l, r) => ((BodyPartCommon)((IBodyPartGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)BodyData_FieldIndex.BodyParts)))) return false;
             }
             return true;
         }
@@ -1427,12 +1427,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IBodyDataGetter rhs) return false;
-            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBodyDataGetter? obj)
         {
-            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).GetHashCode(this);

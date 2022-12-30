@@ -109,6 +109,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Target,
                 TItem RuleSets)
             : base(
@@ -117,7 +118,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Target = Target;
                 this.RuleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>(RuleSets, Enumerable.Empty<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>());
@@ -397,7 +399,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Target = this.Target.Combine(rhs.Target);
-                ret.RuleSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>(ExceptionExt.Combine(this.RuleSets?.Overall, rhs.RuleSets?.Overall), ExceptionExt.Combine(this.RuleSets?.Specific, rhs.RuleSets?.Specific));
+                ret.RuleSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RuleSets?.Overall, rhs.RuleSets?.Overall), Noggog.ExceptionExt.Combine(this.RuleSets?.Specific, rhs.RuleSets?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -504,12 +506,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IInstanceNamingRulesGetter rhs) return false;
-            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IInstanceNamingRulesGetter? obj)
         {
-            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -658,7 +660,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -734,6 +736,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static InstanceNamingRules Duplicate(
+            this IInstanceNamingRulesGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -766,8 +779,9 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Target = 6,
-        RuleSets = 7,
+        Fallout4MajorRecordFlags = 6,
+        Target = 7,
+        RuleSets = 8,
     }
     #endregion
 
@@ -787,7 +801,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(InstanceNamingRules.Mask<>);
 
@@ -1049,8 +1063,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (InstanceNamingRules_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (InstanceNamingRules_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (InstanceNamingRules_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1067,7 +1083,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (InstanceNamingRules_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1075,17 +1091,17 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IInstanceNamingRulesGetter? lhs,
             IInstanceNamingRulesGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.Target) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.Target) ?? true))
             {
                 if (lhs.Target != rhs.Target) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.RuleSets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.RuleSets) ?? true))
             {
-                if (!lhs.RuleSets.SequenceEqual(rhs.RuleSets, (l, r) => ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)InstanceNamingRules_FieldIndex.RuleSets)))) return false;
+                if (!lhs.RuleSets.SequenceEqual(rhs.RuleSets, (l, r) => ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)InstanceNamingRules_FieldIndex.RuleSets)))) return false;
             }
             return true;
         }
@@ -1093,23 +1109,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IInstanceNamingRulesGetter?)lhs,
                 rhs: rhs as IInstanceNamingRulesGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IInstanceNamingRulesGetter?)lhs,
                 rhs: rhs as IInstanceNamingRulesGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IInstanceNamingRulesGetter item)
@@ -1716,12 +1732,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IInstanceNamingRulesGetter rhs) return false;
-            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IInstanceNamingRulesGetter? obj)
         {
-            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((InstanceNamingRulesCommon)((IInstanceNamingRulesGetter)this).CommonInstance()!).GetHashCode(this);

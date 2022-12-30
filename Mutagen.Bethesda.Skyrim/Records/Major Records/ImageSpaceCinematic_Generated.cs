@@ -77,12 +77,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IImageSpaceCinematicGetter rhs) return false;
-            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceCinematicGetter? obj)
         {
-            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).GetHashCode(this);
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -885,18 +885,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IImageSpaceCinematicGetter? lhs,
             IImageSpaceCinematicGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceCinematic_FieldIndex.Saturation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceCinematic_FieldIndex.Saturation) ?? true))
             {
                 if (!lhs.Saturation.EqualsWithin(rhs.Saturation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceCinematic_FieldIndex.Brightness) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceCinematic_FieldIndex.Brightness) ?? true))
             {
                 if (!lhs.Brightness.EqualsWithin(rhs.Brightness)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceCinematic_FieldIndex.Contrast) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceCinematic_FieldIndex.Contrast) ?? true))
             {
                 if (!lhs.Contrast.EqualsWithin(rhs.Contrast)) return false;
             }
@@ -1237,12 +1237,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IImageSpaceCinematicGetter rhs) return false;
-            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceCinematicGetter? obj)
         {
-            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).GetHashCode(this);

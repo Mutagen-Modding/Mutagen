@@ -163,6 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem WalkForwardFootsteps,
                 TItem RunForwardFootsteps,
                 TItem WalkForwardAlternateFootsteps,
@@ -174,7 +175,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.WalkForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
                 this.RunForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunForwardFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
@@ -794,11 +796,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.WalkForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkForwardFootsteps?.Overall, rhs.WalkForwardFootsteps?.Overall), ExceptionExt.Combine(this.WalkForwardFootsteps?.Specific, rhs.WalkForwardFootsteps?.Specific));
-                ret.RunForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RunForwardFootsteps?.Overall, rhs.RunForwardFootsteps?.Overall), ExceptionExt.Combine(this.RunForwardFootsteps?.Specific, rhs.RunForwardFootsteps?.Specific));
-                ret.WalkForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkForwardAlternateFootsteps?.Overall, rhs.WalkForwardAlternateFootsteps?.Overall), ExceptionExt.Combine(this.WalkForwardAlternateFootsteps?.Specific, rhs.WalkForwardAlternateFootsteps?.Specific));
-                ret.RunForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RunForwardAlternateFootsteps?.Overall, rhs.RunForwardAlternateFootsteps?.Overall), ExceptionExt.Combine(this.RunForwardAlternateFootsteps?.Specific, rhs.RunForwardAlternateFootsteps?.Specific));
-                ret.WalkForwardAlternateFootsteps2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkForwardAlternateFootsteps2?.Overall, rhs.WalkForwardAlternateFootsteps2?.Overall), ExceptionExt.Combine(this.WalkForwardAlternateFootsteps2?.Specific, rhs.WalkForwardAlternateFootsteps2?.Specific));
+                ret.WalkForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.WalkForwardFootsteps?.Overall, rhs.WalkForwardFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.WalkForwardFootsteps?.Specific, rhs.WalkForwardFootsteps?.Specific));
+                ret.RunForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RunForwardFootsteps?.Overall, rhs.RunForwardFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.RunForwardFootsteps?.Specific, rhs.RunForwardFootsteps?.Specific));
+                ret.WalkForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.WalkForwardAlternateFootsteps?.Overall, rhs.WalkForwardAlternateFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.WalkForwardAlternateFootsteps?.Specific, rhs.WalkForwardAlternateFootsteps?.Specific));
+                ret.RunForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RunForwardAlternateFootsteps?.Overall, rhs.RunForwardAlternateFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.RunForwardAlternateFootsteps?.Specific, rhs.RunForwardAlternateFootsteps?.Specific));
+                ret.WalkForwardAlternateFootsteps2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.WalkForwardAlternateFootsteps2?.Overall, rhs.WalkForwardAlternateFootsteps2?.Overall), Noggog.ExceptionExt.Combine(this.WalkForwardAlternateFootsteps2?.Specific, rhs.WalkForwardAlternateFootsteps2?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -922,12 +924,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepSetGetter rhs) return false;
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFootstepSetGetter? obj)
         {
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1082,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1158,6 +1160,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static FootstepSet Duplicate(
+            this IFootstepSetGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1190,11 +1203,12 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        WalkForwardFootsteps = 6,
-        RunForwardFootsteps = 7,
-        WalkForwardAlternateFootsteps = 8,
-        RunForwardAlternateFootsteps = 9,
-        WalkForwardAlternateFootsteps2 = 10,
+        SkyrimMajorRecordFlags = 6,
+        WalkForwardFootsteps = 7,
+        RunForwardFootsteps = 8,
+        WalkForwardAlternateFootsteps = 9,
+        RunForwardAlternateFootsteps = 10,
+        WalkForwardAlternateFootsteps2 = 11,
     }
     #endregion
 
@@ -1214,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(FootstepSet.Mask<>);
 
@@ -1543,8 +1557,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (FootstepSet_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (FootstepSet_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (FootstepSet_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1561,7 +1577,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (FootstepSet_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1569,27 +1585,27 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IFootstepSetGetter? lhs,
             IFootstepSetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardFootsteps) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardFootsteps) ?? true))
             {
                 if (!lhs.WalkForwardFootsteps.SequenceEqualNullable(rhs.WalkForwardFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardFootsteps) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardFootsteps) ?? true))
             {
                 if (!lhs.RunForwardFootsteps.SequenceEqualNullable(rhs.RunForwardFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps) ?? true))
             {
                 if (!lhs.WalkForwardAlternateFootsteps.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps) ?? true))
             {
                 if (!lhs.RunForwardAlternateFootsteps.SequenceEqualNullable(rhs.RunForwardAlternateFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2) ?? true))
             {
                 if (!lhs.WalkForwardAlternateFootsteps2.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps2)) return false;
             }
@@ -1599,23 +1615,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFootstepSetGetter?)lhs,
                 rhs: rhs as IFootstepSetGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFootstepSetGetter?)lhs,
                 rhs: rhs as IFootstepSetGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IFootstepSetGetter item)
@@ -2307,12 +2323,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepSetGetter rhs) return false;
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFootstepSetGetter? obj)
         {
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).GetHashCode(this);

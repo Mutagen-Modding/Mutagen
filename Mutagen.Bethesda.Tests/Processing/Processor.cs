@@ -770,11 +770,11 @@ public abstract class Processor
     {
         using var stream = streamGetter();
         var modHeader = stream.GetModHeader();
-        if (!EnumExt.HasFlag(modHeader.Flags, Constants.Localized)) return;
+        if (!Enums.HasFlag(modHeader.Flags, Constants.Localized)) return;
         var outFolder = Path.Combine(TempFolder, "Strings/Processed");
         var language = Language.English;
         using var writer = new StringsWriter(GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(SourcePath)), outFolder, MutagenEncodingProvider.Instance);
-        var stringEntries = EnumExt.GetValues<StringsSource>()
+        var stringEntries = Enums<StringsSource>.Values
             .SelectMany(source =>
             {
                 return GetStringFileEntries(
@@ -792,8 +792,8 @@ public abstract class Processor
             BsaOrdering = bsaOrder
         });
 
-        var overlays = EnumExt
-            .GetValues<StringsSource>().Select(x => (x, stringsOverlay.Get(x)))
+        var overlays = Enums<StringsSource>.Values
+            .Select(x => (x, stringsOverlay.Get(x)))
             .ToDictionary(x => x.x, x => (x.Item2, x.Item2.ToDictionary(x => x.Key, x => x.Value.Value.ToDictionary())));
 
         var deadKeys = KnownDeadStringKeys();
@@ -832,7 +832,7 @@ public abstract class Processor
 
         if (StrictStrings)
         {
-            foreach (var source in EnumExt<StringsSource>.Values)
+            foreach (var source in Enums<StringsSource>.Values)
             {
                 var dict = overlays[source];
                 var langDict = dict.Item2[language];
@@ -867,7 +867,7 @@ public abstract class Processor
 
         stream.Position = 0;
         var mod = stream.ReadModHeader();
-        if (!EnumExt.HasFlag(mod.Flags, (int)ModHeaderCommonFlag.Localized)) return Array.Empty<StringEntry>();
+        if (!Enums.HasFlag(mod.Flags, (int)ModHeaderCommonFlag.Localized)) return Array.Empty<StringEntry>();
 
         stream.Position = 0;
         var locs = RecordLocator.GetLocations(

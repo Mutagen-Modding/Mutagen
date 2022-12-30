@@ -93,12 +93,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IPointToReferenceMappingGetter rhs) return false;
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPointToReferenceMappingGetter? obj)
         {
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Reference = this.Reference.Combine(rhs.Reference);
-                ret.Points = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Points?.Overall, rhs.Points?.Overall), ExceptionExt.Combine(this.Points?.Specific, rhs.Points?.Specific));
+                ret.Points = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Points?.Overall, rhs.Points?.Overall), Noggog.ExceptionExt.Combine(this.Points?.Specific, rhs.Points?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -950,14 +950,14 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IPointToReferenceMappingGetter? lhs,
             IPointToReferenceMappingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
             {
                 if (!lhs.Reference.Equals(rhs.Reference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
             {
                 if (!lhs.Points.SequenceEqualNullable(rhs.Points)) return false;
             }
@@ -1310,12 +1310,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IPointToReferenceMappingGetter rhs) return false;
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPointToReferenceMappingGetter? obj)
         {
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).GetHashCode(this);

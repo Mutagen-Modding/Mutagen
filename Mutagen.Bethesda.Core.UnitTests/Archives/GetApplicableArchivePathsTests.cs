@@ -4,6 +4,8 @@ using FluentAssertions;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis;
+using Mutagen.Bethesda.Inis.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing;
 using Noggog;
@@ -40,7 +42,9 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
             fs, 
             new GetArchiveIniListings(
                 fs,
-                gameReleaseInjection),
+                new IniPathProvider(
+                    gameReleaseInjection,
+                    new IniPathLookup())),
             new CheckArchiveApplicability(
                 ext),
             new DataDirectoryInjection(BaseFolder),

@@ -2,7 +2,6 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System.Buffers.Binary;
 
@@ -17,16 +16,33 @@ partial class NavigationMapInfoBinaryCreateTranslation
             item.Island = IslandData.CreateFromBinary(frame);
         }
     }
-
+     
     public static partial void FillBinaryParentParseLogicCustom(MutagenFrame frame, INavigationMapInfo item)
     {
-        if (item.ParentWorldspace.IsNull)
+        item.Parent = GetParent(frame);
+    }
+
+    public static ANavigationMapInfoParent GetParent<TStream>(TStream frame)
+        where TStream : IMutagenReadStream
+    {
+        var workspaceFk = FormKeyBinaryTranslation.Instance.Parse(frame.GetSpan(4), frame.MetaData.MasterReferences);
+        if (workspaceFk.IsNull)
         {
-            item.ParentCell.SetTo(FormKeyBinaryTranslation.Instance.Parse(frame));
+            return new NavigationMapInfoCellParent()
+            {
+                Unused = frame.ReadInt32(),
+                ParentCell = FormKeyBinaryTranslation.Instance.Parse(frame.ReadSpan(4), frame.MetaData.MasterReferences).ToLink<ICellGetter>()
+            };
         }
         else
         {
-            item.ParentWorldspaceCoord = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame);
+            return new NavigationMapInfoWorldParent()
+            {
+                ParentWorldspace = FormKeyBinaryTranslation.Instance.Parse(frame.ReadSpan(4), frame.MetaData.MasterReferences).ToLink<IWorldspaceGetter>(),
+                ParentWorldspaceCoord = new P2Int16(
+                    frame.ReadInt16(),
+                    frame.ReadInt16())
+            };
         }
     }
 }
@@ -48,14 +64,7 @@ partial class NavigationMapInfoBinaryWriteTranslation
 
     public static partial void WriteBinaryParentParseLogicCustom(MutagenWriter writer, INavigationMapInfoGetter item)
     {
-        if (item.ParentWorldspace.IsNull)
-        {
-            FormKeyBinaryTranslation.Instance.Write(writer, item.ParentCell.FormKey);
-        }
-        else
-        {
-            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, item.ParentWorldspaceCoord);
-        }
+        item.Parent.WriteToBinary(writer);
     }
 }
 
@@ -87,7 +96,7 @@ partial class NavigationMapInfoBinaryOverlay
         if (_structData[LinkedDoorsEndingPos] > 0)
         {
             using var islandStream = new OverlayStream(_structData.Slice(LinkedDoorsEndingPos + 1), stream.MetaData);
-            this._island =  IslandDataBinaryOverlay.IslandDataFactory(
+            this._island = IslandDataBinaryOverlay.IslandDataFactory(
                 islandStream,
                 _package);
             this.IslandEndingPos = LinkedDoorsEndingPos + 1 + islandStream.Position;
@@ -96,6 +105,15 @@ partial class NavigationMapInfoBinaryOverlay
         {
             this._island = null;
             this.IslandEndingPos = LinkedDoorsEndingPos + 1;
+        }
+    }
+
+    public IANavigationMapInfoParentGetter Parent
+    {
+        get
+        {
+            using var islandStream = new OverlayStream(_structData.Slice(IslandEndingPos + 4), _package.MetaData);
+            return NavigationMapInfoBinaryCreateTranslation.GetParent(islandStream);
         }
     }
 }

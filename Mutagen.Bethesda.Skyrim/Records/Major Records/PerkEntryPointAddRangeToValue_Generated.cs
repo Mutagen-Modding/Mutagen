@@ -76,12 +76,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkEntryPointAddRangeToValueGetter rhs) return false;
-            return ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkEntryPointAddRangeToValueGetter? obj)
         {
-            return ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)this).CommonInstance()!).GetHashCode(this);
@@ -106,7 +106,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem PRKEDataTypeState,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
                 TItem From,
@@ -115,7 +114,6 @@ namespace Mutagen.Bethesda.Skyrim
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
-                PRKEDataTypeState: PRKEDataTypeState,
                 EntryPoint: EntryPoint,
                 PerkConditionTabCount: PerkConditionTabCount)
             {
@@ -514,7 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -605,11 +603,10 @@ namespace Mutagen.Bethesda.Skyrim
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        PRKEDataTypeState = 3,
-        EntryPoint = 4,
-        PerkConditionTabCount = 5,
-        From = 6,
-        To = 7,
+        EntryPoint = 3,
+        PerkConditionTabCount = 4,
+        From = 5,
+        To = 6,
     }
     #endregion
 
@@ -629,7 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(PerkEntryPointAddRangeToValue.Mask<>);
 
@@ -861,14 +858,12 @@ namespace Mutagen.Bethesda.Skyrim
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.PRKEDataTypeState:
-                    return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -882,10 +877,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
                     return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return (PerkEntryPointAddRangeToValue_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -893,15 +886,15 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPerkEntryPointAddRangeToValueGetter? lhs,
             IPerkEntryPointAddRangeToValueGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddRangeToValue_FieldIndex.From) ?? true))
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddRangeToValue_FieldIndex.From) ?? true))
             {
                 if (!lhs.From.EqualsWithin(rhs.From)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddRangeToValue_FieldIndex.To) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddRangeToValue_FieldIndex.To) ?? true))
             {
                 if (!lhs.To.EqualsWithin(rhs.To)) return false;
             }
@@ -911,23 +904,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IAPerkEntryPointEffectGetter? lhs,
             IAPerkEntryPointEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkEntryPointAddRangeToValueGetter?)lhs,
                 rhs: rhs as IPerkEntryPointAddRangeToValueGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
             IAPerkEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkEntryPointAddRangeToValueGetter?)lhs,
                 rhs: rhs as IPerkEntryPointAddRangeToValueGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPerkEntryPointAddRangeToValueGetter item)
@@ -1310,12 +1303,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkEntryPointAddRangeToValueGetter rhs) return false;
-            return ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkEntryPointAddRangeToValueGetter? obj)
         {
-            return ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointAddRangeToValueCommon)((IPerkEntryPointAddRangeToValueGetter)this).CommonInstance()!).GetHashCode(this);

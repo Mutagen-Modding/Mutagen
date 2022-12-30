@@ -121,6 +121,13 @@ public static class ObjectGenerationExt
         return false;
     }
 
+    public static bool IsTopLevelListGroup(this ObjectGeneration objGen)
+    {
+        if (objGen.GetObjectType() != ObjectType.Group) return false;
+        if (objGen.Name == $"{objGen.ProtoGen.Protocol.Namespace}ListGroup") return true;
+        return false;
+    }
+
     public static ObjectType GetObjectType(this ObjectGeneration objGen)
     {
         var objType = objGen.GetObjectData().ObjectType;

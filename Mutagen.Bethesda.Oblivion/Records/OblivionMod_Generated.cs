@@ -539,12 +539,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IOblivionModGetter rhs) return false;
-            return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOblivionModGetter? obj)
         {
-            return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2791,6 +2791,8 @@ namespace Mutagen.Bethesda.Oblivion
         IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
+        void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
         public override bool CanUseLocalization => false;
         public override bool UsingLocalization
@@ -3587,7 +3589,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -4477,6 +4479,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IGlobalFloatGetter":
                 case "IGlobalFloat":
                 case "IGlobalFloatInternal":
+                case "GlobalUnknown":
+                case "IGlobalUnknownGetter":
+                case "IGlobalUnknown":
+                case "IGlobalUnknownInternal":
                     obj.Globals.Remove(
                         type: type,
                         keys: keys);
@@ -5452,18 +5458,18 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IOblivionModGetter? lhs,
             IOblivionModGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.ModHeader) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.ModHeader) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ModHeader, rhs.ModHeader, out var lhsModHeader, out var rhsModHeader, out var isModHeaderEqual))
                 {
-                    if (!((OblivionModHeaderCommon)((IOblivionModHeaderGetter)lhsModHeader).CommonInstance()!).Equals(lhsModHeader, rhsModHeader, crystal?.GetSubCrystal((int)OblivionMod_FieldIndex.ModHeader))) return false;
+                    if (!((OblivionModHeaderCommon)((IOblivionModHeaderGetter)lhsModHeader).CommonInstance()!).Equals(lhsModHeader, rhsModHeader, equalsMask?.GetSubCrystal((int)OblivionMod_FieldIndex.ModHeader))) return false;
                 }
                 else if (!isModHeaderEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.GameSettings) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.GameSettings) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.GameSettings, rhs.GameSettings, out var lhsGameSettings, out var rhsGameSettings, out var isGameSettingsEqual))
                 {
@@ -5471,7 +5477,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isGameSettingsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Globals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Globals) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Globals, rhs.Globals, out var lhsGlobals, out var rhsGlobals, out var isGlobalsEqual))
                 {
@@ -5479,7 +5485,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isGlobalsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Classes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Classes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Classes, rhs.Classes, out var lhsClasses, out var rhsClasses, out var isClassesEqual))
                 {
@@ -5487,7 +5493,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isClassesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Factions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Factions) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Factions, rhs.Factions, out var lhsFactions, out var rhsFactions, out var isFactionsEqual))
                 {
@@ -5495,7 +5501,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isFactionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Hairs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Hairs) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Hairs, rhs.Hairs, out var lhsHairs, out var rhsHairs, out var isHairsEqual))
                 {
@@ -5503,7 +5509,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isHairsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Eyes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Eyes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Eyes, rhs.Eyes, out var lhsEyes, out var rhsEyes, out var isEyesEqual))
                 {
@@ -5511,7 +5517,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isEyesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Races) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Races) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Races, rhs.Races, out var lhsRaces, out var rhsRaces, out var isRacesEqual))
                 {
@@ -5519,7 +5525,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isRacesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Sounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Sounds, rhs.Sounds, out var lhsSounds, out var rhsSounds, out var isSoundsEqual))
                 {
@@ -5527,7 +5533,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isSoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Skills) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Skills) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Skills, rhs.Skills, out var lhsSkills, out var rhsSkills, out var isSkillsEqual))
                 {
@@ -5535,7 +5541,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isSkillsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.MagicEffects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.MagicEffects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MagicEffects, rhs.MagicEffects, out var lhsMagicEffects, out var rhsMagicEffects, out var isMagicEffectsEqual))
                 {
@@ -5543,7 +5549,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isMagicEffectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Scripts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Scripts) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Scripts, rhs.Scripts, out var lhsScripts, out var rhsScripts, out var isScriptsEqual))
                 {
@@ -5551,7 +5557,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isScriptsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.LandTextures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LandTextures) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LandTextures, rhs.LandTextures, out var lhsLandTextures, out var rhsLandTextures, out var isLandTexturesEqual))
                 {
@@ -5559,7 +5565,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isLandTexturesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Enchantments) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Enchantments) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Enchantments, rhs.Enchantments, out var lhsEnchantments, out var rhsEnchantments, out var isEnchantmentsEqual))
                 {
@@ -5567,7 +5573,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isEnchantmentsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Spells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Spells) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Spells, rhs.Spells, out var lhsSpells, out var rhsSpells, out var isSpellsEqual))
                 {
@@ -5575,7 +5581,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isSpellsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Birthsigns) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Birthsigns) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Birthsigns, rhs.Birthsigns, out var lhsBirthsigns, out var rhsBirthsigns, out var isBirthsignsEqual))
                 {
@@ -5583,7 +5589,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isBirthsignsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Activators) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Activators) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Activators, rhs.Activators, out var lhsActivators, out var rhsActivators, out var isActivatorsEqual))
                 {
@@ -5591,7 +5597,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isActivatorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.AlchemicalApparatus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AlchemicalApparatus) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AlchemicalApparatus, rhs.AlchemicalApparatus, out var lhsAlchemicalApparatus, out var rhsAlchemicalApparatus, out var isAlchemicalApparatusEqual))
                 {
@@ -5599,7 +5605,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isAlchemicalApparatusEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Armors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Armors) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Armors, rhs.Armors, out var lhsArmors, out var rhsArmors, out var isArmorsEqual))
                 {
@@ -5607,7 +5613,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isArmorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Books) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Books) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Books, rhs.Books, out var lhsBooks, out var rhsBooks, out var isBooksEqual))
                 {
@@ -5615,7 +5621,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isBooksEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Clothes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Clothes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Clothes, rhs.Clothes, out var lhsClothes, out var rhsClothes, out var isClothesEqual))
                 {
@@ -5623,7 +5629,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isClothesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Containers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Containers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Containers, rhs.Containers, out var lhsContainers, out var rhsContainers, out var isContainersEqual))
                 {
@@ -5631,7 +5637,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isContainersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Doors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Doors) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Doors, rhs.Doors, out var lhsDoors, out var rhsDoors, out var isDoorsEqual))
                 {
@@ -5639,7 +5645,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isDoorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ingredients) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ingredients) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Ingredients, rhs.Ingredients, out var lhsIngredients, out var rhsIngredients, out var isIngredientsEqual))
                 {
@@ -5647,7 +5653,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isIngredientsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Lights) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Lights) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Lights, rhs.Lights, out var lhsLights, out var rhsLights, out var isLightsEqual))
                 {
@@ -5655,7 +5661,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isLightsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Miscellaneous) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Miscellaneous) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Miscellaneous, rhs.Miscellaneous, out var lhsMiscellaneous, out var rhsMiscellaneous, out var isMiscellaneousEqual))
                 {
@@ -5663,7 +5669,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isMiscellaneousEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Statics) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Statics) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Statics, rhs.Statics, out var lhsStatics, out var rhsStatics, out var isStaticsEqual))
                 {
@@ -5671,7 +5677,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isStaticsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Grasses) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Grasses) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Grasses, rhs.Grasses, out var lhsGrasses, out var rhsGrasses, out var isGrassesEqual))
                 {
@@ -5679,7 +5685,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isGrassesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Trees) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Trees) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Trees, rhs.Trees, out var lhsTrees, out var rhsTrees, out var isTreesEqual))
                 {
@@ -5687,7 +5693,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isTreesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Flora) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Flora) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Flora, rhs.Flora, out var lhsFlora, out var rhsFlora, out var isFloraEqual))
                 {
@@ -5695,7 +5701,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isFloraEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Furniture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Furniture) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Furniture, rhs.Furniture, out var lhsFurniture, out var rhsFurniture, out var isFurnitureEqual))
                 {
@@ -5703,7 +5709,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isFurnitureEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weapons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weapons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Weapons, rhs.Weapons, out var lhsWeapons, out var rhsWeapons, out var isWeaponsEqual))
                 {
@@ -5711,7 +5717,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isWeaponsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammunitions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammunitions) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Ammunitions, rhs.Ammunitions, out var lhsAmmunitions, out var rhsAmmunitions, out var isAmmunitionsEqual))
                 {
@@ -5719,7 +5725,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isAmmunitionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Npcs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Npcs) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Npcs, rhs.Npcs, out var lhsNpcs, out var rhsNpcs, out var isNpcsEqual))
                 {
@@ -5727,7 +5733,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isNpcsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Creatures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Creatures) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Creatures, rhs.Creatures, out var lhsCreatures, out var rhsCreatures, out var isCreaturesEqual))
                 {
@@ -5735,7 +5741,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isCreaturesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledCreatures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledCreatures) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LeveledCreatures, rhs.LeveledCreatures, out var lhsLeveledCreatures, out var rhsLeveledCreatures, out var isLeveledCreaturesEqual))
                 {
@@ -5743,7 +5749,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isLeveledCreaturesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.SoulGems) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SoulGems) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SoulGems, rhs.SoulGems, out var lhsSoulGems, out var rhsSoulGems, out var isSoulGemsEqual))
                 {
@@ -5751,7 +5757,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isSoulGemsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Keys) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Keys) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Keys, rhs.Keys, out var lhsKeys, out var rhsKeys, out var isKeysEqual))
                 {
@@ -5759,7 +5765,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isKeysEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Potions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Potions) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Potions, rhs.Potions, out var lhsPotions, out var rhsPotions, out var isPotionsEqual))
                 {
@@ -5767,7 +5773,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isPotionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Subspaces) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Subspaces) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Subspaces, rhs.Subspaces, out var lhsSubspaces, out var rhsSubspaces, out var isSubspacesEqual))
                 {
@@ -5775,7 +5781,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isSubspacesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.SigilStones) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SigilStones) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SigilStones, rhs.SigilStones, out var lhsSigilStones, out var rhsSigilStones, out var isSigilStonesEqual))
                 {
@@ -5783,7 +5789,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isSigilStonesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledItems) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledItems) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LeveledItems, rhs.LeveledItems, out var lhsLeveledItems, out var rhsLeveledItems, out var isLeveledItemsEqual))
                 {
@@ -5791,7 +5797,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isLeveledItemsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weathers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weathers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Weathers, rhs.Weathers, out var lhsWeathers, out var rhsWeathers, out var isWeathersEqual))
                 {
@@ -5799,7 +5805,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isWeathersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Climates) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Climates) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Climates, rhs.Climates, out var lhsClimates, out var rhsClimates, out var isClimatesEqual))
                 {
@@ -5807,7 +5813,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isClimatesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Regions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Regions) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Regions, rhs.Regions, out var lhsRegions, out var rhsRegions, out var isRegionsEqual))
                 {
@@ -5815,7 +5821,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isRegionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Cells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Cells) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Cells, rhs.Cells, out var lhsCells, out var rhsCells, out var isCellsEqual))
                 {
@@ -5823,7 +5829,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isCellsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Worldspaces) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Worldspaces) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Worldspaces, rhs.Worldspaces, out var lhsWorldspaces, out var rhsWorldspaces, out var isWorldspacesEqual))
                 {
@@ -5831,7 +5837,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isWorldspacesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.DialogTopics) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.DialogTopics) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DialogTopics, rhs.DialogTopics, out var lhsDialogTopics, out var rhsDialogTopics, out var isDialogTopicsEqual))
                 {
@@ -5839,7 +5845,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isDialogTopicsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Quests) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Quests) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Quests, rhs.Quests, out var lhsQuests, out var rhsQuests, out var isQuestsEqual))
                 {
@@ -5847,7 +5853,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isQuestsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.IdleAnimations) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.IdleAnimations) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.IdleAnimations, rhs.IdleAnimations, out var lhsIdleAnimations, out var rhsIdleAnimations, out var isIdleAnimationsEqual))
                 {
@@ -5855,7 +5861,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isIdleAnimationsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.AIPackages) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AIPackages) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AIPackages, rhs.AIPackages, out var lhsAIPackages, out var rhsAIPackages, out var isAIPackagesEqual))
                 {
@@ -5863,7 +5869,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isAIPackagesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.CombatStyles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.CombatStyles) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CombatStyles, rhs.CombatStyles, out var lhsCombatStyles, out var rhsCombatStyles, out var isCombatStylesEqual))
                 {
@@ -5871,7 +5877,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isCombatStylesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.LoadScreens) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LoadScreens) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LoadScreens, rhs.LoadScreens, out var lhsLoadScreens, out var rhsLoadScreens, out var isLoadScreensEqual))
                 {
@@ -5879,7 +5885,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isLoadScreensEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledSpells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledSpells) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LeveledSpells, rhs.LeveledSpells, out var lhsLeveledSpells, out var rhsLeveledSpells, out var isLeveledSpellsEqual))
                 {
@@ -5887,7 +5893,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isLeveledSpellsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.AnimatedObjects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AnimatedObjects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AnimatedObjects, rhs.AnimatedObjects, out var lhsAnimatedObjects, out var rhsAnimatedObjects, out var isAnimatedObjectsEqual))
                 {
@@ -5895,7 +5901,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isAnimatedObjectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Waters) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Waters) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Waters, rhs.Waters, out var lhsWaters, out var rhsWaters, out var isWatersEqual))
                 {
@@ -5903,7 +5909,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isWatersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.EffectShaders) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.EffectShaders) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.EffectShaders, rhs.EffectShaders, out var lhsEffectShaders, out var rhsEffectShaders, out var isEffectShadersEqual))
                 {
@@ -12019,6 +12025,8 @@ namespace Mutagen.Bethesda.Oblivion
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
+        void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => false;
         public bool UsingLocalization => false;
@@ -12770,12 +12778,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IOblivionModGetter rhs) return false;
-            return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOblivionModGetter? obj)
         {
-            return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).GetHashCode(this);

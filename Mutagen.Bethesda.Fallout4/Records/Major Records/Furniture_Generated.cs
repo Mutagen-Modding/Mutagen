@@ -443,6 +443,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -476,7 +477,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1855,25 +1857,25 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
                 ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
                 ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 ret.DrinkingWater = this.DrinkingWater.Combine(rhs.DrinkingWater);
                 ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.BenchType = this.BenchType.Combine(rhs.BenchType);
                 ret.UsesSkill = this.UsesSkill.Combine(rhs.UsesSkill);
                 ret.AssociatedForm = this.AssociatedForm.Combine(rhs.AssociatedForm);
                 ret.EnabledEntryPoints = this.EnabledEntryPoints.Combine(rhs.EnabledEntryPoints);
-                ret.MarkerEntryPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>(ExceptionExt.Combine(this.MarkerEntryPoints?.Overall, rhs.MarkerEntryPoints?.Overall), ExceptionExt.Combine(this.MarkerEntryPoints?.Specific, rhs.MarkerEntryPoints?.Specific));
+                ret.MarkerEntryPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MarkerEntryPoints?.Overall, rhs.MarkerEntryPoints?.Overall), Noggog.ExceptionExt.Combine(this.MarkerEntryPoints?.Specific, rhs.MarkerEntryPoints?.Specific));
                 ret.MarkerModel = this.MarkerModel.Combine(rhs.MarkerModel);
-                ret.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(ExceptionExt.Combine(this.MarkerParameters?.Overall, rhs.MarkerParameters?.Overall), ExceptionExt.Combine(this.MarkerParameters?.Specific, rhs.MarkerParameters?.Specific));
-                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
-                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MarkerParameters?.Overall, rhs.MarkerParameters?.Overall), Noggog.ExceptionExt.Combine(this.MarkerParameters?.Specific, rhs.MarkerParameters?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
                 ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
                 ret.WBDTDataTypeState = this.WBDTDataTypeState.Combine(rhs.WBDTDataTypeState);
                 return ret;
@@ -2057,12 +2059,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IFurnitureGetter rhs) return false;
-            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFurnitureGetter? obj)
         {
-            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2338,7 +2340,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((FurnitureCommon)((IFurnitureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2414,6 +2416,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Furniture Duplicate(
+            this IFurnitureGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((FurnitureCommon)((IFurnitureGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2446,33 +2459,34 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        Name = 9,
-        Model = 10,
-        Destructible = 11,
-        Keywords = 12,
-        Properties = 13,
-        NativeTerminal = 14,
-        ForcedLocRefType = 15,
-        PNAM = 16,
-        DrinkingWater = 17,
-        ActivateTextOverride = 18,
-        Flags = 19,
-        Conditions = 20,
-        Items = 21,
-        BenchType = 22,
-        UsesSkill = 23,
-        AssociatedForm = 24,
-        EnabledEntryPoints = 25,
-        MarkerEntryPoints = 26,
-        MarkerModel = 27,
-        MarkerParameters = 28,
-        AttachParentSlots = 29,
-        ObjectTemplates = 30,
-        NavmeshGeometry = 31,
-        WBDTDataTypeState = 32,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        Name = 10,
+        Model = 11,
+        Destructible = 12,
+        Keywords = 13,
+        Properties = 14,
+        NativeTerminal = 15,
+        ForcedLocRefType = 16,
+        PNAM = 17,
+        DrinkingWater = 18,
+        ActivateTextOverride = 19,
+        Flags = 20,
+        Conditions = 21,
+        Items = 22,
+        BenchType = 23,
+        UsesSkill = 24,
+        AssociatedForm = 25,
+        EnabledEntryPoints = 26,
+        MarkerEntryPoints = 27,
+        MarkerModel = 28,
+        MarkerParameters = 29,
+        AttachParentSlots = 30,
+        ObjectTemplates = 31,
+        NavmeshGeometry = 32,
+        WBDTDataTypeState = 33,
     }
     #endregion
 
@@ -2492,7 +2506,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 33;
+        public const ushort FieldCount = 34;
 
         public static readonly Type MaskType = typeof(Furniture.Mask<>);
 
@@ -2770,7 +2784,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.NativeTerminal = item.NativeTerminal.Equals(rhs.NativeTerminal);
             ret.ForcedLocRefType = item.ForcedLocRefType.Equals(rhs.ForcedLocRefType);
-            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
+            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
             ret.DrinkingWater = item.DrinkingWater.Equals(rhs.DrinkingWater);
             ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.Flags = item.Flags == rhs.Flags;
@@ -3082,8 +3096,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Furniture_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Furniture_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Furniture_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3100,7 +3116,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Furniture_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3108,135 +3124,135 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IFurnitureGetter? lhs,
             IFurnitureGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Furniture_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Furniture_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Furniture_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Furniture_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.Properties)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.NativeTerminal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.NativeTerminal) ?? true))
             {
                 if (!lhs.NativeTerminal.Equals(rhs.NativeTerminal)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ForcedLocRefType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ForcedLocRefType) ?? true))
             {
                 if (!lhs.ForcedLocRefType.Equals(rhs.ForcedLocRefType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.PNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.PNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.DrinkingWater) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.DrinkingWater) ?? true))
             {
                 if (!lhs.DrinkingWater.Equals(rhs.DrinkingWater)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ActivateTextOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivateTextOverride) ?? true))
             {
                 if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Items) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.Items)))) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.Items)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.BenchType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.BenchType) ?? true))
             {
                 if (lhs.BenchType != rhs.BenchType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.UsesSkill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.UsesSkill) ?? true))
             {
                 if (lhs.UsesSkill != rhs.UsesSkill) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedForm) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedForm) ?? true))
             {
                 if (!lhs.AssociatedForm.Equals(rhs.AssociatedForm)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.EnabledEntryPoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.EnabledEntryPoints) ?? true))
             {
                 if (lhs.EnabledEntryPoints != rhs.EnabledEntryPoints) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerEntryPoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerEntryPoints) ?? true))
             {
-                if (!lhs.MarkerEntryPoints.SequenceEqual(rhs.MarkerEntryPoints, (l, r) => ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.MarkerEntryPoints)))) return false;
+                if (!lhs.MarkerEntryPoints.SequenceEqual(rhs.MarkerEntryPoints, (l, r) => ((FurnitureMarkerEntryPointsCommon)((IFurnitureMarkerEntryPointsGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.MarkerEntryPoints)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerModel) ?? true))
             {
                 if (!string.Equals(lhs.MarkerModel, rhs.MarkerModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerParameters) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerParameters) ?? true))
             {
-                if (!lhs.MarkerParameters.SequenceEqualNullable(rhs.MarkerParameters, (l, r) => ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.MarkerParameters)))) return false;
+                if (!lhs.MarkerParameters.SequenceEqualNullable(rhs.MarkerParameters, (l, r) => ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.MarkerParameters)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.AttachParentSlots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.AttachParentSlots) ?? true))
             {
                 if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectTemplates) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectTemplates) ?? true))
             {
-                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Furniture.Property>)((IObjectTemplateGetter<Furniture.Property>)l).CommonInstance(typeof(Furniture.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)Furniture_FieldIndex.ObjectTemplates)))) return false;
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Furniture.Property>)((IObjectTemplateGetter<Furniture.Property>)l).CommonInstance(typeof(Furniture.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.ObjectTemplates)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.NavmeshGeometry) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.NavmeshGeometry) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NavmeshGeometry, rhs.NavmeshGeometry, out var lhsNavmeshGeometry, out var rhsNavmeshGeometry, out var isNavmeshGeometryEqual))
                 {
-                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, crystal?.GetSubCrystal((int)Furniture_FieldIndex.NavmeshGeometry))) return false;
+                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.NavmeshGeometry))) return false;
                 }
                 else if (!isNavmeshGeometryEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.WBDTDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.WBDTDataTypeState) ?? true))
             {
                 if (lhs.WBDTDataTypeState != rhs.WBDTDataTypeState) return false;
             }
@@ -3246,23 +3262,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFurnitureGetter?)lhs,
                 rhs: rhs as IFurnitureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFurnitureGetter?)lhs,
                 rhs: rhs as IFurnitureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IFurnitureGetter item)
@@ -5234,12 +5250,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IFurnitureGetter rhs) return false;
-            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFurnitureGetter? obj)
         {
-            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).GetHashCode(this);

@@ -342,6 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Name,
@@ -368,7 +369,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1226,12 +1228,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IExplosionGetter rhs) return false;
-            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IExplosionGetter? obj)
         {
-            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1467,7 +1469,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ExplosionCommon)((IExplosionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1543,6 +1545,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Explosion Duplicate(
+            this IExplosionGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ExplosionCommon)((IExplosionGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1575,26 +1588,27 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Name = 8,
-        Model = 9,
-        ObjectEffect = 10,
-        ImageSpaceModifier = 11,
-        Light = 12,
-        Sound1 = 13,
-        Sound2 = 14,
-        ImpactDataSet = 15,
-        PlacedObject = 16,
-        SpawnProjectile = 17,
-        Force = 18,
-        Damage = 19,
-        Radius = 20,
-        ISRadius = 21,
-        VerticalOffsetMult = 22,
-        Flags = 23,
-        SoundLevel = 24,
-        DATADataTypeState = 25,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Name = 9,
+        Model = 10,
+        ObjectEffect = 11,
+        ImageSpaceModifier = 12,
+        Light = 13,
+        Sound1 = 14,
+        Sound2 = 15,
+        ImpactDataSet = 16,
+        PlacedObject = 17,
+        SpawnProjectile = 18,
+        Force = 19,
+        Damage = 20,
+        Radius = 21,
+        ISRadius = 22,
+        VerticalOffsetMult = 23,
+        Flags = 24,
+        SoundLevel = 25,
+        DATADataTypeState = 26,
     }
     #endregion
 
@@ -1614,7 +1628,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Explosion.Mask<>);
 
@@ -1648,6 +1662,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.EXPL,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
@@ -2020,8 +2035,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Explosion_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Explosion_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Explosion_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2038,7 +2055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Explosion_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2046,99 +2063,99 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IExplosionGetter? lhs,
             IExplosionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Explosion_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Explosion_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Explosion_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
             {
                 if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
             {
                 if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
             {
                 if (!lhs.Light.Equals(rhs.Light)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
             {
                 if (!lhs.Sound1.Equals(rhs.Sound1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
             {
                 if (!lhs.Sound2.Equals(rhs.Sound2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.ImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImpactDataSet) ?? true))
             {
                 if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedObject) ?? true))
             {
                 if (!lhs.PlacedObject.Equals(rhs.PlacedObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.SpawnProjectile) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.SpawnProjectile) ?? true))
             {
                 if (!lhs.SpawnProjectile.Equals(rhs.SpawnProjectile)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.Force) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Force) ?? true))
             {
                 if (!lhs.Force.EqualsWithin(rhs.Force)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.Damage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Damage) ?? true))
             {
                 if (!lhs.Damage.EqualsWithin(rhs.Damage)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.Radius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Radius) ?? true))
             {
                 if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.ISRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ISRadius) ?? true))
             {
                 if (!lhs.ISRadius.EqualsWithin(rhs.ISRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.VerticalOffsetMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.VerticalOffsetMult) ?? true))
             {
                 if (!lhs.VerticalOffsetMult.EqualsWithin(rhs.VerticalOffsetMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.SoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.SoundLevel) ?? true))
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Explosion_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -2148,23 +2165,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IExplosionGetter?)lhs,
                 rhs: rhs as IExplosionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IExplosionGetter?)lhs,
                 rhs: rhs as IExplosionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IExplosionGetter item)
@@ -2669,7 +2686,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
@@ -2846,7 +2863,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Explosion_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -2933,6 +2952,11 @@ namespace Mutagen.Bethesda.Skyrim
                         length: 4);
                     return (int)Explosion_FieldIndex.SoundLevel;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -2994,8 +3018,9 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
@@ -3163,6 +3188,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Explosion_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -3211,6 +3241,11 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     return (int)Explosion_FieldIndex.SoundLevel;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return base.FillRecordType(
                         stream: stream,
@@ -3249,12 +3284,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IExplosionGetter rhs) return false;
-            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IExplosionGetter? obj)
         {
-            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).GetHashCode(this);

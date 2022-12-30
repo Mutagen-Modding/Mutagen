@@ -142,9 +142,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IGrassGetter.Unknown3 => this.Unknown3;
         #endregion
-        #region DATADataTypeState
-        public Grass.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -185,7 +182,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.WavePeriod = initialValue;
                 this.Flags = initialValue;
                 this.Unknown3 = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -195,6 +191,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Model,
                 TItem Density,
@@ -209,15 +206,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ColorRange,
                 TItem WavePeriod,
                 TItem Flags,
-                TItem Unknown3,
-                TItem DATADataTypeState)
+                TItem Unknown3)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
@@ -234,7 +231,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.WavePeriod = WavePeriod;
                 this.Flags = Flags;
                 this.Unknown3 = Unknown3;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -261,7 +257,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem WavePeriod;
             public TItem Flags;
             public TItem Unknown3;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -290,7 +285,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.WavePeriod, rhs.WavePeriod)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -311,7 +305,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.WavePeriod);
                 hash.Add(this.Flags);
                 hash.Add(this.Unknown3);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -345,7 +338,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.WavePeriod)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Unknown3)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -377,7 +369,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.WavePeriod)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.Unknown3)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -408,7 +399,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.WavePeriod = eval(this.WavePeriod);
                 obj.Flags = eval(this.Flags);
                 obj.Unknown3 = eval(this.Unknown3);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -487,10 +477,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Unknown3, "Unknown3");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -517,7 +503,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? WavePeriod;
             public Exception? Flags;
             public Exception? Unknown3;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -556,8 +541,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Flags;
                     case Grass_FieldIndex.Unknown3:
                         return Unknown3;
-                    case Grass_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -612,9 +595,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Grass_FieldIndex.Unknown3:
                         this.Unknown3 = ex;
-                        break;
-                    case Grass_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -672,9 +652,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Grass_FieldIndex.Unknown3:
                         this.Unknown3 = (Exception?)obj;
                         break;
-                    case Grass_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -699,7 +676,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (WavePeriod != null) return true;
                 if (Flags != null) return true;
                 if (Unknown3 != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -767,9 +743,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Unknown3, "Unknown3");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -793,7 +766,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.WavePeriod = this.WavePeriod.Combine(rhs.WavePeriod);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -831,7 +803,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool WavePeriod;
             public bool Flags;
             public bool Unknown3;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -853,7 +824,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.WavePeriod = defaultOn;
                 this.Flags = defaultOn;
                 this.Unknown3 = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -876,7 +846,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((WavePeriod, null));
                 ret.Add((Flags, null));
                 ret.Add((Unknown3, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -940,10 +909,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IGrass);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => GrassCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => GrassSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => GrassSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -955,12 +920,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IGrassGetter rhs) return false;
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGrassGetter? obj)
         {
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GrassCommon)((IGrassGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1056,7 +1021,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single WavePeriod { get; set; }
         new Grass.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown3 { get; set; }
-        new Grass.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IGrassInternal :
@@ -1104,7 +1068,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single WavePeriod { get; }
         Grass.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown3 { get; }
-        Grass.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1161,7 +1124,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GrassCommon)((IGrassGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1237,6 +1200,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Grass Duplicate(
+            this IGrassGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((GrassCommon)((IGrassGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1269,22 +1243,22 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Model = 7,
-        Density = 8,
-        MinSlope = 9,
-        MaxSlope = 10,
-        Unknown = 11,
-        UnitsFromWater = 12,
-        Unknown2 = 13,
-        UnitsFromWaterType = 14,
-        PositionRange = 15,
-        HeightRange = 16,
-        ColorRange = 17,
-        WavePeriod = 18,
-        Flags = 19,
-        Unknown3 = 20,
-        DATADataTypeState = 21,
+        SkyrimMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Model = 8,
+        Density = 9,
+        MinSlope = 10,
+        MaxSlope = 11,
+        Unknown = 12,
+        UnitsFromWater = 13,
+        Unknown2 = 14,
+        UnitsFromWaterType = 15,
+        PositionRange = 16,
+        HeightRange = 17,
+        ColorRange = 18,
+        WavePeriod = 19,
+        Flags = 20,
+        Unknown3 = 21,
     }
     #endregion
 
@@ -1302,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "40ec1abd-2509-4d30-b323-24e660c36412";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 15;
 
         public const ushort FieldCount = 22;
 
@@ -1399,7 +1373,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.WavePeriod = default;
             item.Flags = default;
             item.Unknown3 = new byte[3];
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1526,7 +1499,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.WavePeriod = item.WavePeriod.EqualsWithin(rhs.WavePeriod);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unknown3 = MemoryExtensions.SequenceEqual(item.Unknown3.Span, rhs.Unknown3.Span);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1637,10 +1609,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Grass_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1659,8 +1627,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Grass_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Grass_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Grass_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1677,7 +1647,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Grass_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1685,81 +1655,77 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IGrassGetter? lhs,
             IGrassGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Grass_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Grass_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Grass_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Grass_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
             {
                 if (lhs.Density != rhs.Density) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
             {
                 if (lhs.MinSlope != rhs.MinSlope) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
             {
                 if (lhs.MaxSlope != rhs.MaxSlope) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.UnitsFromWater) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitsFromWater) ?? true))
             {
                 if (lhs.UnitsFromWater != rhs.UnitsFromWater) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.UnitsFromWaterType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitsFromWaterType) ?? true))
             {
                 if (lhs.UnitsFromWaterType != rhs.UnitsFromWaterType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
             {
                 if (!lhs.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
             {
                 if (!lhs.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
             {
                 if (!lhs.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
             {
                 if (!lhs.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Unknown3) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1767,23 +1733,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGrassGetter?)lhs,
                 rhs: rhs as IGrassGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGrassGetter?)lhs,
                 rhs: rhs as IGrassGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IGrassGetter item)
@@ -1807,7 +1773,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.WavePeriod);
             hash.Add(item.Flags);
             hash.Add(item.Unknown3);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2037,10 +2002,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Unknown3 = rhs.Unknown3.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2189,15 +2150,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly GrassBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IGrassGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IGrassGetter item,
             MutagenWriter writer,
@@ -2264,7 +2216,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2324,15 +2276,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly GrassBinaryCreateTranslation Instance = new GrassBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GRAS;
-        public static void FillBinaryStructs(
-            IGrassInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IGrassInternal item,
             MutagenFrame frame,
@@ -2459,7 +2402,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _DATALocation;
-        public Grass.DATADataType DATADataTypeState { get; private set; }
         #region Density
         private int _DensityLocation => _DATALocation!.Value.Min;
         private bool _Density_IsSet => _DATALocation.HasValue;
@@ -2650,12 +2592,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IGrassGetter rhs) return false;
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGrassGetter? obj)
         {
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GrassCommon)((IGrassGetter)this).CommonInstance()!).GetHashCode(this);

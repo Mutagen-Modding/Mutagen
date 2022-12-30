@@ -217,6 +217,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem EnchantmentCost,
@@ -236,7 +237,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -796,7 +798,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ChargeTime = this.ChargeTime.Combine(rhs.ChargeTime);
                 ret.BaseEnchantment = this.BaseEnchantment.Combine(rhs.BaseEnchantment);
                 ret.WornRestrictions = this.WornRestrictions.Combine(rhs.WornRestrictions);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
                 return ret;
             }
@@ -941,12 +943,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IObjectEffectGetter rhs) return false;
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IObjectEffectGetter? obj)
         {
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1147,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ObjectEffectCommon)((IObjectEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1223,6 +1225,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ObjectEffect Duplicate(
+            this IObjectEffectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ObjectEffectCommon)((IObjectEffectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1255,19 +1268,20 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        EnchantmentCost = 8,
-        Flags = 9,
-        CastType = 10,
-        EnchantmentAmount = 11,
-        TargetType = 12,
-        EnchantType = 13,
-        ChargeTime = 14,
-        BaseEnchantment = 15,
-        WornRestrictions = 16,
-        Effects = 17,
-        ENITDataTypeState = 18,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        EnchantmentCost = 9,
+        Flags = 10,
+        CastType = 11,
+        EnchantmentAmount = 12,
+        TargetType = 13,
+        EnchantType = 14,
+        ChargeTime = 15,
+        BaseEnchantment = 16,
+        WornRestrictions = 17,
+        Effects = 18,
+        ENITDataTypeState = 19,
     }
     #endregion
 
@@ -1287,7 +1301,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(ObjectEffect.Mask<>);
 
@@ -1618,8 +1632,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (ObjectEffect_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (ObjectEffect_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (ObjectEffect_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1636,7 +1652,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (ObjectEffect_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1644,63 +1660,63 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IObjectEffectGetter? lhs,
             IObjectEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)ObjectEffect_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentCost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentCost) ?? true))
             {
                 if (lhs.EnchantmentCost != rhs.EnchantmentCost) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.CastType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.CastType) ?? true))
             {
                 if (lhs.CastType != rhs.CastType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentAmount) ?? true))
             {
                 if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.TargetType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.TargetType) ?? true))
             {
                 if (lhs.TargetType != rhs.TargetType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantType) ?? true))
             {
                 if (lhs.EnchantType != rhs.EnchantType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ChargeTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ChargeTime) ?? true))
             {
                 if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
             {
                 if (!lhs.BaseEnchantment.Equals(rhs.BaseEnchantment)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
             {
                 if (!lhs.WornRestrictions.Equals(rhs.WornRestrictions)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ObjectEffect_FieldIndex.Effects)))) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Effects)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ENITDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ENITDataTypeState) ?? true))
             {
                 if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
             }
@@ -1710,23 +1726,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IObjectEffectGetter?)lhs,
                 rhs: rhs as IObjectEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IObjectEffectGetter?)lhs,
                 rhs: rhs as IObjectEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IObjectEffectGetter item)
@@ -2587,12 +2603,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IObjectEffectGetter rhs) return false;
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IObjectEffectGetter? obj)
         {
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).GetHashCode(this);

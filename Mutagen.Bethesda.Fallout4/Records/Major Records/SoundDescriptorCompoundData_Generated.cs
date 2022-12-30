@@ -70,12 +70,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISoundDescriptorCompoundDataGetter rhs) return false;
-            return ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundDescriptorCompoundDataGetter? obj)
         {
-            return ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Fallout4
             switch (index)
             {
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -715,22 +715,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISoundDescriptorCompoundDataGetter? lhs,
             ISoundDescriptorCompoundDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IASoundDescriptorGetter)lhs, (IASoundDescriptorGetter)rhs, crystal)) return false;
+            if (!base.Equals((IASoundDescriptorGetter)lhs, (IASoundDescriptorGetter)rhs, equalsMask)) return false;
             return true;
         }
         
         public override bool Equals(
             IASoundDescriptorGetter? lhs,
             IASoundDescriptorGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundDescriptorCompoundDataGetter?)lhs,
                 rhs: rhs as ISoundDescriptorCompoundDataGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoundDescriptorCompoundDataGetter item)
@@ -1034,12 +1034,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISoundDescriptorCompoundDataGetter rhs) return false;
-            return ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundDescriptorCompoundDataGetter? obj)
         {
-            return ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundDescriptorCompoundDataCommon)((ISoundDescriptorCompoundDataGetter)this).CommonInstance()!).GetHashCode(this);

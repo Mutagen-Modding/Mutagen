@@ -93,12 +93,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPreCutMapEntryGetter rhs) return false;
-            return ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPreCutMapEntryGetter? obj)
         {
-            return ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Reference = this.Reference.Combine(rhs.Reference);
-                ret.Triangles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
+                ret.Triangles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), Noggog.ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -939,14 +939,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPreCutMapEntryGetter? lhs,
             IPreCutMapEntryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PreCutMapEntry_FieldIndex.Reference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PreCutMapEntry_FieldIndex.Reference) ?? true))
             {
                 if (!lhs.Reference.Equals(rhs.Reference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PreCutMapEntry_FieldIndex.Triangles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PreCutMapEntry_FieldIndex.Triangles) ?? true))
             {
                 if (!lhs.Triangles.SequenceEqualNullable(rhs.Triangles)) return false;
             }
@@ -1295,12 +1295,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPreCutMapEntryGetter rhs) return false;
-            return ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPreCutMapEntryGetter? obj)
         {
-            return ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PreCutMapEntryCommon)((IPreCutMapEntryGetter)this).CommonInstance()!).GetHashCode(this);

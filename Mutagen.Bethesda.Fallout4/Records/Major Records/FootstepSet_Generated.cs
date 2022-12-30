@@ -163,6 +163,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem WalkFootsteps,
                 TItem RunFootsteps,
                 TItem SprintFootsteps,
@@ -174,7 +175,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
                 this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
@@ -794,11 +796,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.WalkFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkFootsteps?.Overall, rhs.WalkFootsteps?.Overall), ExceptionExt.Combine(this.WalkFootsteps?.Specific, rhs.WalkFootsteps?.Specific));
-                ret.RunFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RunFootsteps?.Overall, rhs.RunFootsteps?.Overall), ExceptionExt.Combine(this.RunFootsteps?.Specific, rhs.RunFootsteps?.Specific));
-                ret.SprintFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SprintFootsteps?.Overall, rhs.SprintFootsteps?.Overall), ExceptionExt.Combine(this.SprintFootsteps?.Specific, rhs.SprintFootsteps?.Specific));
-                ret.SneakFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SneakFootsteps?.Overall, rhs.SneakFootsteps?.Overall), ExceptionExt.Combine(this.SneakFootsteps?.Specific, rhs.SneakFootsteps?.Specific));
-                ret.SwimFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SwimFootsteps?.Overall, rhs.SwimFootsteps?.Overall), ExceptionExt.Combine(this.SwimFootsteps?.Specific, rhs.SwimFootsteps?.Specific));
+                ret.WalkFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.WalkFootsteps?.Overall, rhs.WalkFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.WalkFootsteps?.Specific, rhs.WalkFootsteps?.Specific));
+                ret.RunFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RunFootsteps?.Overall, rhs.RunFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.RunFootsteps?.Specific, rhs.RunFootsteps?.Specific));
+                ret.SprintFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SprintFootsteps?.Overall, rhs.SprintFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.SprintFootsteps?.Specific, rhs.SprintFootsteps?.Specific));
+                ret.SneakFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SneakFootsteps?.Overall, rhs.SneakFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.SneakFootsteps?.Specific, rhs.SneakFootsteps?.Specific));
+                ret.SwimFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SwimFootsteps?.Overall, rhs.SwimFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.SwimFootsteps?.Specific, rhs.SwimFootsteps?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -915,12 +917,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepSetGetter rhs) return false;
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFootstepSetGetter? obj)
         {
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1075,7 +1077,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1151,6 +1153,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static FootstepSet Duplicate(
+            this IFootstepSetGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1183,11 +1196,12 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        WalkFootsteps = 6,
-        RunFootsteps = 7,
-        SprintFootsteps = 8,
-        SneakFootsteps = 9,
-        SwimFootsteps = 10,
+        Fallout4MajorRecordFlags = 6,
+        WalkFootsteps = 7,
+        RunFootsteps = 8,
+        SprintFootsteps = 9,
+        SneakFootsteps = 10,
+        SwimFootsteps = 11,
     }
     #endregion
 
@@ -1207,7 +1221,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(FootstepSet.Mask<>);
 
@@ -1536,8 +1550,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (FootstepSet_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (FootstepSet_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (FootstepSet_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1554,7 +1570,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (FootstepSet_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1562,27 +1578,27 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IFootstepSetGetter? lhs,
             IFootstepSetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkFootsteps) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkFootsteps) ?? true))
             {
                 if (!lhs.WalkFootsteps.SequenceEqualNullable(rhs.WalkFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunFootsteps) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunFootsteps) ?? true))
             {
                 if (!lhs.RunFootsteps.SequenceEqualNullable(rhs.RunFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.SprintFootsteps) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SprintFootsteps) ?? true))
             {
                 if (!lhs.SprintFootsteps.SequenceEqualNullable(rhs.SprintFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.SneakFootsteps) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SneakFootsteps) ?? true))
             {
                 if (!lhs.SneakFootsteps.SequenceEqualNullable(rhs.SneakFootsteps)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.SwimFootsteps) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.SwimFootsteps) ?? true))
             {
                 if (!lhs.SwimFootsteps.SequenceEqualNullable(rhs.SwimFootsteps)) return false;
             }
@@ -1592,23 +1608,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFootstepSetGetter?)lhs,
                 rhs: rhs as IFootstepSetGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFootstepSetGetter?)lhs,
                 rhs: rhs as IFootstepSetGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IFootstepSetGetter item)
@@ -2300,12 +2316,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepSetGetter rhs) return false;
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFootstepSetGetter? obj)
         {
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).GetHashCode(this);

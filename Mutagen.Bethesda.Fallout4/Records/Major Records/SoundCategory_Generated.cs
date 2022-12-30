@@ -177,6 +177,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Flags,
                 TItem Parent,
@@ -191,7 +192,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Flags = Flags;
@@ -681,12 +683,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISoundCategoryGetter rhs) return false;
-            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundCategoryGetter? obj)
         {
-            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -863,7 +865,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -939,6 +941,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static SoundCategory Duplicate(
+            this ISoundCategoryGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -971,14 +984,15 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Flags = 7,
-        Parent = 8,
-        MenuSlider = 9,
-        StaticVolumeMultiplier = 10,
-        DefaultMenuVolume = 11,
-        MinFrequencyMultiplier = 12,
-        SidechainTargetMultiplier = 13,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Flags = 8,
+        Parent = 9,
+        MenuSlider = 10,
+        StaticVolumeMultiplier = 11,
+        DefaultMenuVolume = 12,
+        MinFrequencyMultiplier = 13,
+        SidechainTargetMultiplier = 14,
     }
     #endregion
 
@@ -998,7 +1012,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(SoundCategory.Mask<>);
 
@@ -1289,8 +1303,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (SoundCategory_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (SoundCategory_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (SoundCategory_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1307,7 +1323,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (SoundCategory_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1315,39 +1331,39 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISoundCategoryGetter? lhs,
             ISoundCategoryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SoundCategory_FieldIndex.Name) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundCategory_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundCategory_FieldIndex.Parent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Parent) ?? true))
             {
                 if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundCategory_FieldIndex.MenuSlider) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.MenuSlider) ?? true))
             {
                 if (!lhs.MenuSlider.Equals(rhs.MenuSlider)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundCategory_FieldIndex.StaticVolumeMultiplier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.StaticVolumeMultiplier) ?? true))
             {
                 if (!lhs.StaticVolumeMultiplier.EqualsWithin(rhs.StaticVolumeMultiplier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundCategory_FieldIndex.DefaultMenuVolume) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.DefaultMenuVolume) ?? true))
             {
                 if (!lhs.DefaultMenuVolume.EqualsWithin(rhs.DefaultMenuVolume)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundCategory_FieldIndex.MinFrequencyMultiplier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.MinFrequencyMultiplier) ?? true))
             {
                 if (!lhs.MinFrequencyMultiplier.EqualsWithin(rhs.MinFrequencyMultiplier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundCategory_FieldIndex.SidechainTargetMultiplier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.SidechainTargetMultiplier) ?? true))
             {
                 if (!lhs.SidechainTargetMultiplier.EqualsWithin(rhs.SidechainTargetMultiplier)) return false;
             }
@@ -1357,23 +1373,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundCategoryGetter?)lhs,
                 rhs: rhs as ISoundCategoryGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundCategoryGetter?)lhs,
                 rhs: rhs as ISoundCategoryGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoundCategoryGetter item)
@@ -2131,12 +2147,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISoundCategoryGetter rhs) return false;
-            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundCategoryGetter? obj)
         {
-            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).GetHashCode(this);

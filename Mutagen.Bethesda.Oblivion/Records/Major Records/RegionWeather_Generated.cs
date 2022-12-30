@@ -85,12 +85,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionWeatherGetter rhs) return false;
-            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionWeatherGetter? obj)
         {
-            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).GetHashCode(this);
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
+                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), Noggog.ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionWeatherCommon)((IRegionWeatherGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -885,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RegionData_FieldIndex.Header:
                     return (RegionWeather_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -893,13 +893,13 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IRegionWeatherGetter? lhs,
             IRegionWeatherGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)RegionWeather_FieldIndex.Weathers) ?? true))
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)RegionWeather_FieldIndex.Weathers) ?? true))
             {
-                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)RegionWeather_FieldIndex.Weathers)))) return false;
+                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)RegionWeather_FieldIndex.Weathers)))) return false;
             }
             return true;
         }
@@ -907,12 +907,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IRegionDataGetter? lhs,
             IRegionDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRegionWeatherGetter?)lhs,
                 rhs: rhs as IRegionWeatherGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRegionWeatherGetter item)
@@ -1356,12 +1356,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionWeatherGetter rhs) return false;
-            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionWeatherGetter? obj)
         {
-            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).GetHashCode(this);

@@ -94,12 +94,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRadioReceiverGetter rhs) return false;
-            return ((RadioReceiverCommon)((IRadioReceiverGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RadioReceiverCommon)((IRadioReceiverGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRadioReceiverGetter? obj)
         {
-            return ((RadioReceiverCommon)((IRadioReceiverGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RadioReceiverCommon)((IRadioReceiverGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RadioReceiverCommon)((IRadioReceiverGetter)this).CommonInstance()!).GetHashCode(this);
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((RadioReceiverCommon)((IRadioReceiverGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1032,30 +1032,30 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IRadioReceiverGetter? lhs,
             IRadioReceiverGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)RadioReceiver_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RadioReceiver_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RadioReceiver_FieldIndex.SoundModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RadioReceiver_FieldIndex.SoundModel) ?? true))
             {
                 if (!lhs.SoundModel.Equals(rhs.SoundModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RadioReceiver_FieldIndex.Frequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RadioReceiver_FieldIndex.Frequency) ?? true))
             {
                 if (!lhs.Frequency.EqualsWithin(rhs.Frequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RadioReceiver_FieldIndex.Volume) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RadioReceiver_FieldIndex.Volume) ?? true))
             {
                 if (!lhs.Volume.EqualsWithin(rhs.Volume)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RadioReceiver_FieldIndex.StartsActive) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RadioReceiver_FieldIndex.StartsActive) ?? true))
             {
                 if (lhs.StartsActive != rhs.StartsActive) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RadioReceiver_FieldIndex.NoSignalStatic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RadioReceiver_FieldIndex.NoSignalStatic) ?? true))
             {
                 if (lhs.NoSignalStatic != rhs.NoSignalStatic) return false;
             }
@@ -1432,12 +1432,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRadioReceiverGetter rhs) return false;
-            return ((RadioReceiverCommon)((IRadioReceiverGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RadioReceiverCommon)((IRadioReceiverGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRadioReceiverGetter? obj)
         {
-            return ((RadioReceiverCommon)((IRadioReceiverGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RadioReceiverCommon)((IRadioReceiverGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RadioReceiverCommon)((IRadioReceiverGetter)this).CommonInstance()!).GetHashCode(this);

@@ -169,6 +169,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem GravityVelocity,
                 TItem RotationVelocity,
                 TItem ParticleSizeX,
@@ -189,7 +190,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.GravityVelocity = GravityVelocity;
                 this.RotationVelocity = RotationVelocity;
@@ -860,12 +862,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IShaderParticleGeometryGetter rhs) return false;
-            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IShaderParticleGeometryGetter? obj)
         {
-            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1038,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1114,6 +1116,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ShaderParticleGeometry Duplicate(
+            this IShaderParticleGeometryGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1146,20 +1159,21 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        GravityVelocity = 6,
-        RotationVelocity = 7,
-        ParticleSizeX = 8,
-        ParticleSizeY = 9,
-        CenterOffsetMin = 10,
-        CenterOffsetMax = 11,
-        InitialRotationRange = 12,
-        NumSubtexturesX = 13,
-        NumSubtexturesY = 14,
-        Type = 15,
-        BoxSize = 16,
-        ParticleDensity = 17,
-        ParticleTexture = 18,
-        DATADataTypeState = 19,
+        SkyrimMajorRecordFlags = 6,
+        GravityVelocity = 7,
+        RotationVelocity = 8,
+        ParticleSizeX = 9,
+        ParticleSizeY = 10,
+        CenterOffsetMin = 11,
+        CenterOffsetMax = 12,
+        InitialRotationRange = 13,
+        NumSubtexturesX = 14,
+        NumSubtexturesY = 15,
+        Type = 16,
+        BoxSize = 17,
+        ParticleDensity = 18,
+        ParticleTexture = 19,
+        DATADataTypeState = 20,
     }
     #endregion
 
@@ -1179,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(ShaderParticleGeometry.Mask<>);
 
@@ -1513,8 +1527,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (ShaderParticleGeometry_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1531,7 +1547,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1539,63 +1555,63 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IShaderParticleGeometryGetter? lhs,
             IShaderParticleGeometryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
             {
                 if (!lhs.GravityVelocity.EqualsWithin(rhs.GravityVelocity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.RotationVelocity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.RotationVelocity) ?? true))
             {
                 if (!lhs.RotationVelocity.EqualsWithin(rhs.RotationVelocity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX) ?? true))
             {
                 if (!lhs.ParticleSizeX.EqualsWithin(rhs.ParticleSizeX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY) ?? true))
             {
                 if (!lhs.ParticleSizeY.EqualsWithin(rhs.ParticleSizeY)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin) ?? true))
             {
                 if (!lhs.CenterOffsetMin.EqualsWithin(rhs.CenterOffsetMin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax) ?? true))
             {
                 if (!lhs.CenterOffsetMax.EqualsWithin(rhs.CenterOffsetMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.InitialRotationRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.InitialRotationRange) ?? true))
             {
                 if (!lhs.InitialRotationRange.EqualsWithin(rhs.InitialRotationRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX) ?? true))
             {
                 if (lhs.NumSubtexturesX != rhs.NumSubtexturesX) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY) ?? true))
             {
                 if (lhs.NumSubtexturesY != rhs.NumSubtexturesY) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.BoxSize) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.BoxSize) ?? true))
             {
                 if (lhs.BoxSize != rhs.BoxSize) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleDensity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleDensity) ?? true))
             {
                 if (!lhs.ParticleDensity.EqualsWithin(rhs.ParticleDensity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
             {
                 if (!object.Equals(lhs.ParticleTexture, rhs.ParticleTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1605,23 +1621,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IShaderParticleGeometryGetter?)lhs,
                 rhs: rhs as IShaderParticleGeometryGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IShaderParticleGeometryGetter?)lhs,
                 rhs: rhs as IShaderParticleGeometryGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IShaderParticleGeometryGetter item)
@@ -2410,12 +2426,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IShaderParticleGeometryGetter rhs) return false;
-            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IShaderParticleGeometryGetter? obj)
         {
-            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).GetHashCode(this);

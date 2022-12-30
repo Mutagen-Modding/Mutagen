@@ -133,6 +133,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem SoundDescriptor,
                 TItem Repeat)
@@ -142,7 +143,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.SoundDescriptor = SoundDescriptor;
@@ -502,12 +504,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISoundMarkerGetter rhs) return false;
-            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundMarkerGetter? obj)
         {
-            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -674,7 +676,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SoundMarkerCommon)((ISoundMarkerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -750,6 +752,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static SoundMarker Duplicate(
+            this ISoundMarkerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -782,9 +795,10 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        SoundDescriptor = 7,
-        Repeat = 8,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        SoundDescriptor = 8,
+        Repeat = 9,
     }
     #endregion
 
@@ -804,7 +818,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(SoundMarker.Mask<>);
 
@@ -1059,8 +1073,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (SoundMarker_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (SoundMarker_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (SoundMarker_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1077,7 +1093,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (SoundMarker_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1085,27 +1101,27 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISoundMarkerGetter? lhs,
             ISoundMarkerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SoundMarker_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)SoundMarker_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)SoundMarker_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
             {
                 if (!lhs.SoundDescriptor.Equals(rhs.SoundDescriptor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundMarker_FieldIndex.Repeat) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.Repeat) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Repeat, rhs.Repeat, out var lhsRepeat, out var rhsRepeat, out var isRepeatEqual))
                 {
-                    if (!((SoundRepeatCommon)((ISoundRepeatGetter)lhsRepeat).CommonInstance()!).Equals(lhsRepeat, rhsRepeat, crystal?.GetSubCrystal((int)SoundMarker_FieldIndex.Repeat))) return false;
+                    if (!((SoundRepeatCommon)((ISoundRepeatGetter)lhsRepeat).CommonInstance()!).Equals(lhsRepeat, rhsRepeat, equalsMask?.GetSubCrystal((int)SoundMarker_FieldIndex.Repeat))) return false;
                 }
                 else if (!isRepeatEqual) return false;
             }
@@ -1115,23 +1131,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundMarkerGetter?)lhs,
                 rhs: rhs as ISoundMarkerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundMarkerGetter?)lhs,
                 rhs: rhs as ISoundMarkerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoundMarkerGetter item)
@@ -1770,12 +1786,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISoundMarkerGetter rhs) return false;
-            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundMarkerGetter? obj)
         {
-            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).GetHashCode(this);

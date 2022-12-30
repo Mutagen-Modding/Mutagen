@@ -93,9 +93,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType;
         #endregion
-        #region DATADataTypeState
-        public Relationship.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -127,7 +124,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Unknown = initialValue;
                 this.Flags = initialValue;
                 this.AssociationType = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -137,20 +133,21 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Parent,
                 TItem Child,
                 TItem Rank,
                 TItem Unknown,
                 TItem Flags,
-                TItem AssociationType,
-                TItem DATADataTypeState)
+                TItem AssociationType)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Parent = Parent;
                 this.Child = Child;
@@ -158,7 +155,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Unknown = Unknown;
                 this.Flags = Flags;
                 this.AssociationType = AssociationType;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -176,7 +172,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Unknown;
             public TItem Flags;
             public TItem AssociationType;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -196,7 +191,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.AssociationType, rhs.AssociationType)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -208,7 +202,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Unknown);
                 hash.Add(this.Flags);
                 hash.Add(this.AssociationType);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -225,7 +218,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.AssociationType)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -240,7 +232,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Unknown)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.AssociationType)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -262,7 +253,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Unknown = eval(this.Unknown);
                 obj.Flags = eval(this.Flags);
                 obj.AssociationType = eval(this.AssociationType);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -305,10 +295,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(AssociationType, "AssociationType");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -326,7 +312,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Unknown;
             public Exception? Flags;
             public Exception? AssociationType;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -347,8 +332,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Flags;
                     case Relationship_FieldIndex.AssociationType:
                         return AssociationType;
-                    case Relationship_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -376,9 +359,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Relationship_FieldIndex.AssociationType:
                         this.AssociationType = ex;
-                        break;
-                    case Relationship_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -409,9 +389,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Relationship_FieldIndex.AssociationType:
                         this.AssociationType = (Exception?)obj;
                         break;
-                    case Relationship_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -427,7 +404,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Unknown != null) return true;
                 if (Flags != null) return true;
                 if (AssociationType != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -472,9 +448,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(AssociationType, "AssociationType");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -489,7 +462,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.AssociationType = this.AssociationType.Combine(rhs.AssociationType);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -518,7 +490,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Unknown;
             public bool Flags;
             public bool AssociationType;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -533,7 +504,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Unknown = defaultOn;
                 this.Flags = defaultOn;
                 this.AssociationType = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -547,7 +517,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Unknown, null));
                 ret.Add((Flags, null));
                 ret.Add((AssociationType, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -604,10 +573,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IRelationship);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -616,12 +581,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IRelationshipGetter rhs) return false;
-            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRelationshipGetter? obj)
         {
-            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).GetHashCode(this);
@@ -698,7 +663,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Byte Unknown { get; set; }
         new Relationship.Flag Flags { get; set; }
         new IFormLink<IAssociationTypeGetter> AssociationType { get; set; }
-        new Relationship.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IRelationshipInternal :
@@ -723,7 +687,6 @@ namespace Mutagen.Bethesda.Fallout4
         Byte Unknown { get; }
         Relationship.Flag Flags { get; }
         IFormLinkGetter<IAssociationTypeGetter> AssociationType { get; }
-        Relationship.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -780,7 +743,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -856,6 +819,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Relationship Duplicate(
+            this IRelationshipGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -888,13 +862,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        Child = 7,
-        Rank = 8,
-        Unknown = 9,
-        Flags = 10,
-        AssociationType = 11,
-        DATADataTypeState = 12,
+        Fallout4MajorRecordFlags = 6,
+        Parent = 7,
+        Child = 8,
+        Rank = 9,
+        Unknown = 10,
+        Flags = 11,
+        AssociationType = 12,
     }
     #endregion
 
@@ -912,7 +886,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "3e59d695-6da8-45ea-a3df-6e914bfdc339";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
 
@@ -998,7 +972,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Unknown = default;
             item.Flags = default;
             item.AssociationType.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1092,7 +1065,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Flags = item.Flags == rhs.Flags;
             ret.AssociationType = item.AssociationType.Equals(rhs.AssociationType);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1166,10 +1138,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.AssociationType.FormKey, "AssociationType");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Relationship_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1188,8 +1156,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Relationship_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Relationship_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Relationship_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1206,7 +1176,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Relationship_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1214,37 +1184,33 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IRelationshipGetter? lhs,
             IRelationshipGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
             {
                 if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
             {
                 if (!lhs.Child.Equals(rhs.Child)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
             {
                 if (lhs.Rank != rhs.Rank) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Relationship_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Relationship_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
                 if (!lhs.AssociationType.Equals(rhs.AssociationType)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1252,23 +1218,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRelationshipGetter?)lhs,
                 rhs: rhs as IRelationshipGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRelationshipGetter?)lhs,
                 rhs: rhs as IRelationshipGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRelationshipGetter item)
@@ -1280,7 +1246,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Unknown);
             hash.Add(item.Flags);
             hash.Add(item.AssociationType);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1410,10 +1375,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
                 item.AssociationType.SetTo(rhs.AssociationType.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -1563,15 +1524,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly RelationshipBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IRelationshipGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IRelationshipGetter item,
             MutagenWriter writer,
@@ -1615,7 +1567,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1675,15 +1627,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly RelationshipBinaryCreateTranslation Instance = new RelationshipBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.RELA;
-        public static void FillBinaryStructs(
-            IRelationshipInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IRelationshipInternal item,
             MutagenFrame frame,
@@ -1778,7 +1721,6 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         private RangeInt32? _DATALocation;
-        public Relationship.DATADataType DATADataTypeState { get; private set; }
         #region Parent
         private int _ParentLocation => _DATALocation!.Value.Min;
         private bool _Parent_IsSet => _DATALocation.HasValue;
@@ -1921,12 +1863,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IRelationshipGetter rhs) return false;
-            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRelationshipGetter? obj)
         {
-            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).GetHashCode(this);

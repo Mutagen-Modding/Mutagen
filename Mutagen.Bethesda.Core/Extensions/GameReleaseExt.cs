@@ -11,6 +11,7 @@ public static class GameReleaseExt
             GameRelease.Oblivion => GameCategory.Oblivion,
             GameRelease.SkyrimLE => GameCategory.Skyrim,
             GameRelease.SkyrimSE => GameCategory.Skyrim,
+            GameRelease.SkyrimSEGog => GameCategory.Skyrim,
             GameRelease.SkyrimVR => GameCategory.Skyrim,
             GameRelease.EnderalLE => GameCategory.Skyrim,
             GameRelease.EnderalSE => GameCategory.Skyrim,
@@ -27,6 +28,7 @@ public static class GameReleaseExt
             GameRelease.SkyrimLE => 43,
             GameRelease.EnderalLE => 43,
             GameRelease.SkyrimSE => 44,
+            GameRelease.SkyrimSEGog => 44,
             GameRelease.EnderalSE => 44,
             GameRelease.SkyrimVR => 44,
             GameRelease.Fallout4 => 131,
@@ -42,6 +44,7 @@ public static class GameReleaseExt
                 throw new ArgumentException($"Tried to get language format for an unsupported game: {release}", nameof(release));
             case GameRelease.SkyrimLE:
             case GameRelease.SkyrimSE:
+            case GameRelease.SkyrimSEGog:
             case GameRelease.SkyrimVR:
             case GameRelease.EnderalLE:
             case GameRelease.EnderalSE:

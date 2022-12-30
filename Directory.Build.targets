@@ -4,4 +4,11 @@
     <LangVersion>preview</LangVersion>
     <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup>
+   
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
+    <PackageReference Include="NuGetizer" > 
+      <PrivateAssets>all</PrivateAssets> 
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets> 
+    </PackageReference> 
+  </ItemGroup> 
 </Project>

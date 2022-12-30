@@ -114,12 +114,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IClassDataGetter rhs) return false;
-            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClassDataGetter? obj)
         {
-            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -629,9 +629,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Versioning = this.Versioning.Combine(rhs.Versioning);
-                ret.PrimaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PrimaryAttributes?.Overall, rhs.PrimaryAttributes?.Overall), ExceptionExt.Combine(this.PrimaryAttributes?.Specific, rhs.PrimaryAttributes?.Specific));
+                ret.PrimaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PrimaryAttributes?.Overall, rhs.PrimaryAttributes?.Overall), Noggog.ExceptionExt.Combine(this.PrimaryAttributes?.Specific, rhs.PrimaryAttributes?.Specific));
                 ret.Specialization = this.Specialization.Combine(rhs.Specialization);
-                ret.SecondaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SecondaryAttributes?.Overall, rhs.SecondaryAttributes?.Overall), ExceptionExt.Combine(this.SecondaryAttributes?.Specific, rhs.SecondaryAttributes?.Specific));
+                ret.SecondaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SecondaryAttributes?.Overall, rhs.SecondaryAttributes?.Overall), Noggog.ExceptionExt.Combine(this.SecondaryAttributes?.Specific, rhs.SecondaryAttributes?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ClassServices = this.ClassServices.Combine(rhs.ClassServices);
                 ret.Training = this.Training.Combine(rhs.Training, (l, r) => l.Combine(r));
@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClassDataCommon)((IClassDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1253,38 +1253,38 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IClassDataGetter? lhs,
             IClassDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ClassData_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClassData_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ClassData_FieldIndex.PrimaryAttributes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClassData_FieldIndex.PrimaryAttributes) ?? true))
             {
                 if (!lhs.PrimaryAttributes.SequenceEqualNullable(rhs.PrimaryAttributes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ClassData_FieldIndex.Specialization) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClassData_FieldIndex.Specialization) ?? true))
             {
                 if (lhs.Specialization != rhs.Specialization) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ClassData_FieldIndex.SecondaryAttributes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClassData_FieldIndex.SecondaryAttributes) ?? true))
             {
                 if (!lhs.SecondaryAttributes.SequenceEqualNullable(rhs.SecondaryAttributes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ClassData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClassData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ClassData_FieldIndex.ClassServices) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClassData_FieldIndex.ClassServices) ?? true))
             {
                 if (lhs.ClassServices != rhs.ClassServices) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ClassData_FieldIndex.Training) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClassData_FieldIndex.Training) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Training, rhs.Training, out var lhsTraining, out var rhsTraining, out var isTrainingEqual))
                 {
-                    if (!((ClassTrainingCommon)((IClassTrainingGetter)lhsTraining).CommonInstance()!).Equals(lhsTraining, rhsTraining, crystal?.GetSubCrystal((int)ClassData_FieldIndex.Training))) return false;
+                    if (!((ClassTrainingCommon)((IClassTrainingGetter)lhsTraining).CommonInstance()!).Equals(lhsTraining, rhsTraining, equalsMask?.GetSubCrystal((int)ClassData_FieldIndex.Training))) return false;
                 }
                 else if (!isTrainingEqual) return false;
             }
@@ -1733,12 +1733,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IClassDataGetter rhs) return false;
-            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClassDataGetter? obj)
         {
-            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -246,6 +246,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem PickUpSound,
                 TItem PutDownSound,
                 TItem Components,
@@ -265,7 +266,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.PickUpSound = PickUpSound;
                 this.PutDownSound = PutDownSound;
@@ -1009,17 +1011,17 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.CreatedObject = this.CreatedObject.Combine(rhs.CreatedObject);
                 ret.WorkbenchKeyword = this.WorkbenchKeyword.Combine(rhs.WorkbenchKeyword);
                 ret.NAM1 = this.NAM1.Combine(rhs.NAM1);
                 ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
                 ret.NAM3 = this.NAM3.Combine(rhs.NAM3);
                 ret.MenuArtObject = this.MenuArtObject.Combine(rhs.MenuArtObject);
-                ret.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Categories?.Overall, rhs.Categories?.Overall), ExceptionExt.Combine(this.Categories?.Specific, rhs.Categories?.Specific));
-                ret.CreatedObjectCounts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleCreatedObjectCount.ErrorMask?>>?>(ExceptionExt.Combine(this.CreatedObjectCounts?.Overall, rhs.CreatedObjectCounts?.Overall), ExceptionExt.Combine(this.CreatedObjectCounts?.Specific, rhs.CreatedObjectCounts?.Specific));
+                ret.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Categories?.Overall, rhs.Categories?.Overall), Noggog.ExceptionExt.Combine(this.Categories?.Specific, rhs.Categories?.Specific));
+                ret.CreatedObjectCounts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleCreatedObjectCount.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CreatedObjectCounts?.Overall, rhs.CreatedObjectCounts?.Overall), Noggog.ExceptionExt.Combine(this.CreatedObjectCounts?.Specific, rhs.CreatedObjectCounts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1157,12 +1159,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IConstructibleObjectGetter rhs) return false;
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IConstructibleObjectGetter? obj)
         {
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1339,7 +1341,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1415,6 +1417,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ConstructibleObject Duplicate(
+            this IConstructibleObjectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1447,19 +1460,20 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        PickUpSound = 6,
-        PutDownSound = 7,
-        Components = 8,
-        Description = 9,
-        Conditions = 10,
-        CreatedObject = 11,
-        WorkbenchKeyword = 12,
-        NAM1 = 13,
-        NAM2 = 14,
-        NAM3 = 15,
-        MenuArtObject = 16,
-        Categories = 17,
-        CreatedObjectCounts = 18,
+        Fallout4MajorRecordFlags = 6,
+        PickUpSound = 7,
+        PutDownSound = 8,
+        Components = 9,
+        Description = 10,
+        Conditions = 11,
+        CreatedObject = 12,
+        WorkbenchKeyword = 13,
+        NAM1 = 14,
+        NAM2 = 15,
+        NAM3 = 16,
+        MenuArtObject = 17,
+        Categories = 18,
+        CreatedObjectCounts = 19,
     }
     #endregion
 
@@ -1479,7 +1493,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(ConstructibleObject.Mask<>);
 
@@ -1689,9 +1703,9 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.CreatedObject = item.CreatedObject.Equals(rhs.CreatedObject);
             ret.WorkbenchKeyword = item.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword);
-            ret.NAM1 = MemorySliceExt.Equal(item.NAM1, rhs.NAM1);
-            ret.NAM2 = MemorySliceExt.Equal(item.NAM2, rhs.NAM2);
-            ret.NAM3 = MemorySliceExt.Equal(item.NAM3, rhs.NAM3);
+            ret.NAM1 = MemorySliceExt.SequenceEqual(item.NAM1, rhs.NAM1);
+            ret.NAM2 = MemorySliceExt.SequenceEqual(item.NAM2, rhs.NAM2);
+            ret.NAM3 = MemorySliceExt.SequenceEqual(item.NAM3, rhs.NAM3);
             ret.MenuArtObject = item.MenuArtObject.Equals(rhs.MenuArtObject);
             ret.Categories = item.Categories.CollectionEqualsHelper(
                 rhs.Categories,
@@ -1867,8 +1881,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (ConstructibleObject_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (ConstructibleObject_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (ConstructibleObject_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1885,7 +1901,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (ConstructibleObject_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1893,61 +1909,61 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IConstructibleObjectGetter? lhs,
             IConstructibleObjectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PickUpSound) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Components) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Components) ?? true))
             {
-                if (!lhs.Components.SequenceEqualNullable(rhs.Components, (l, r) => ((ConstructibleObjectComponentCommon)((IConstructibleObjectComponentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Components)))) return false;
+                if (!lhs.Components.SequenceEqualNullable(rhs.Components, (l, r) => ((ConstructibleObjectComponentCommon)((IConstructibleObjectComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Components)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
             {
                 if (!lhs.CreatedObject.Equals(rhs.CreatedObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
             {
                 if (!lhs.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM1) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NAM1, rhs.NAM1)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NAM1, rhs.NAM1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM2) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NAM2, rhs.NAM2)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NAM2, rhs.NAM2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.NAM3) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NAM3, rhs.NAM3)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NAM3, rhs.NAM3)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuArtObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuArtObject) ?? true))
             {
                 if (!lhs.MenuArtObject.Equals(rhs.MenuArtObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Categories) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Categories) ?? true))
             {
                 if (!lhs.Categories.SequenceEqualNullable(rhs.Categories)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCounts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCounts) ?? true))
             {
-                if (!lhs.CreatedObjectCounts.SequenceEqualNullable(rhs.CreatedObjectCounts, (l, r) => ((ConstructibleCreatedObjectCountCommon)((IConstructibleCreatedObjectCountGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ConstructibleObject_FieldIndex.CreatedObjectCounts)))) return false;
+                if (!lhs.CreatedObjectCounts.SequenceEqualNullable(rhs.CreatedObjectCounts, (l, r) => ((ConstructibleCreatedObjectCountCommon)((IConstructibleCreatedObjectCountGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.CreatedObjectCounts)))) return false;
             }
             return true;
         }
@@ -1955,23 +1971,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IConstructibleObjectGetter?)lhs,
                 rhs: rhs as IConstructibleObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IConstructibleObjectGetter?)lhs,
                 rhs: rhs as IConstructibleObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IConstructibleObjectGetter item)
@@ -3040,12 +3056,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IConstructibleObjectGetter rhs) return false;
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IConstructibleObjectGetter? obj)
         {
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).GetHashCode(this);

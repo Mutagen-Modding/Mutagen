@@ -98,12 +98,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPreferredPathingGetter rhs) return false;
-            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPreferredPathingGetter? obj)
         {
-            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -474,8 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.NavmeshSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshSet.ErrorMask?>>?>(ExceptionExt.Combine(this.NavmeshSets?.Overall, rhs.NavmeshSets?.Overall), ExceptionExt.Combine(this.NavmeshSets?.Specific, rhs.NavmeshSets?.Specific));
-                ret.NavmeshTree = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshNode.ErrorMask?>>?>(ExceptionExt.Combine(this.NavmeshTree?.Overall, rhs.NavmeshTree?.Overall), ExceptionExt.Combine(this.NavmeshTree?.Specific, rhs.NavmeshTree?.Specific));
+                ret.NavmeshSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshSet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavmeshSets?.Overall, rhs.NavmeshSets?.Overall), Noggog.ExceptionExt.Combine(this.NavmeshSets?.Specific, rhs.NavmeshSets?.Specific));
+                ret.NavmeshTree = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshNode.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavmeshTree?.Overall, rhs.NavmeshTree?.Overall), Noggog.ExceptionExt.Combine(this.NavmeshTree?.Specific, rhs.NavmeshTree?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PreferredPathingCommon)((IPreferredPathingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1032,16 +1032,16 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPreferredPathingGetter? lhs,
             IPreferredPathingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshSets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshSets) ?? true))
             {
-                if (!lhs.NavmeshSets.SequenceEqual(rhs.NavmeshSets, (l, r) => ((NavmeshSetCommon)((INavmeshSetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PreferredPathing_FieldIndex.NavmeshSets)))) return false;
+                if (!lhs.NavmeshSets.SequenceEqual(rhs.NavmeshSets, (l, r) => ((NavmeshSetCommon)((INavmeshSetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PreferredPathing_FieldIndex.NavmeshSets)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshTree) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshTree) ?? true))
             {
-                if (!lhs.NavmeshTree.SequenceEqual(rhs.NavmeshTree, (l, r) => ((NavmeshNodeCommon)((INavmeshNodeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PreferredPathing_FieldIndex.NavmeshTree)))) return false;
+                if (!lhs.NavmeshTree.SequenceEqual(rhs.NavmeshTree, (l, r) => ((NavmeshNodeCommon)((INavmeshNodeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PreferredPathing_FieldIndex.NavmeshTree)))) return false;
             }
             return true;
         }
@@ -1452,12 +1452,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPreferredPathingGetter rhs) return false;
-            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPreferredPathingGetter? obj)
         {
-            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).GetHashCode(this);

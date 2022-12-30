@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ExtraBindDataVersion
-        public readonly static Byte _ExtraBindDataVersion_Default = 3;
-        public Byte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
+        public static readonly Byte ExtraBindDataVersionDefault = 3;
+        public Byte ExtraBindDataVersion { get; set; } = ExtraBindDataVersionDefault;
         #endregion
         #region Script
         public ScriptEntry Script { get; set; } = new ScriptEntry();
@@ -104,12 +104,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptFragmentsGetter rhs) return false;
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptFragmentsGetter? obj)
         {
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -845,7 +845,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IScriptFragments item)
         {
             ClearPartial();
-            item.ExtraBindDataVersion = ScriptFragments._ExtraBindDataVersion_Default;
+            item.ExtraBindDataVersion = ScriptFragments.ExtraBindDataVersionDefault;
             item.Script.Clear();
             item.OnBegin = null;
             item.OnEnd = null;
@@ -979,34 +979,34 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IScriptFragmentsGetter? lhs,
             IScriptFragmentsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.ExtraBindDataVersion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.ExtraBindDataVersion) ?? true))
             {
                 if (lhs.ExtraBindDataVersion != rhs.ExtraBindDataVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Script) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Script) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Script, rhs.Script, out var lhsScript, out var rhsScript, out var isScriptEqual))
                 {
-                    if (!((ScriptEntryCommon)((IScriptEntryGetter)lhsScript).CommonInstance()!).Equals(lhsScript, rhsScript, crystal?.GetSubCrystal((int)ScriptFragments_FieldIndex.Script))) return false;
+                    if (!((ScriptEntryCommon)((IScriptEntryGetter)lhsScript).CommonInstance()!).Equals(lhsScript, rhsScript, equalsMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.Script))) return false;
                 }
                 else if (!isScriptEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnBegin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnBegin) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OnBegin, rhs.OnBegin, out var lhsOnBegin, out var rhsOnBegin, out var isOnBeginEqual))
                 {
-                    if (!((ScriptFragmentCommon)((IScriptFragmentGetter)lhsOnBegin).CommonInstance()!).Equals(lhsOnBegin, rhsOnBegin, crystal?.GetSubCrystal((int)ScriptFragments_FieldIndex.OnBegin))) return false;
+                    if (!((ScriptFragmentCommon)((IScriptFragmentGetter)lhsOnBegin).CommonInstance()!).Equals(lhsOnBegin, rhsOnBegin, equalsMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.OnBegin))) return false;
                 }
                 else if (!isOnBeginEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnEnd) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OnEnd, rhs.OnEnd, out var lhsOnEnd, out var rhsOnEnd, out var isOnEndEqual))
                 {
-                    if (!((ScriptFragmentCommon)((IScriptFragmentGetter)lhsOnEnd).CommonInstance()!).Equals(lhsOnEnd, rhsOnEnd, crystal?.GetSubCrystal((int)ScriptFragments_FieldIndex.OnEnd))) return false;
+                    if (!((ScriptFragmentCommon)((IScriptFragmentGetter)lhsOnEnd).CommonInstance()!).Equals(lhsOnEnd, rhsOnEnd, equalsMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.OnEnd))) return false;
                 }
                 else if (!isOnEndEqual) return false;
             }
@@ -1409,12 +1409,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptFragmentsGetter rhs) return false;
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptFragmentsGetter? obj)
         {
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);

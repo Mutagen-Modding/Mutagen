@@ -93,12 +93,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILocationCoordinateGetter rhs) return false;
-            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationCoordinateGetter? obj)
         {
-            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).GetHashCode(this);
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Location = this.Location.Combine(rhs.Location);
-                ret.Coordinates = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Coordinates?.Overall, rhs.Coordinates?.Overall), ExceptionExt.Combine(this.Coordinates?.Specific, rhs.Coordinates?.Specific));
+                ret.Coordinates = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Coordinates?.Overall, rhs.Coordinates?.Overall), Noggog.ExceptionExt.Combine(this.Coordinates?.Specific, rhs.Coordinates?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationCoordinateCommon)((ILocationCoordinateGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -939,14 +939,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILocationCoordinateGetter? lhs,
             ILocationCoordinateGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Coordinates) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Coordinates) ?? true))
             {
                 if (!lhs.Coordinates.SequenceEqualNullable(rhs.Coordinates)) return false;
             }
@@ -1305,12 +1305,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILocationCoordinateGetter rhs) return false;
-            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationCoordinateGetter? obj)
         {
-            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).GetHashCode(this);

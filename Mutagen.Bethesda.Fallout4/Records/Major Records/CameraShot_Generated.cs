@@ -225,6 +225,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Model,
                 TItem Conditions,
                 TItem Action,
@@ -249,7 +250,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
@@ -919,7 +921,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Action = this.Action.Combine(rhs.Action);
                 ret.Location = this.Location.Combine(rhs.Location);
                 ret.Target = this.Target.Combine(rhs.Target);
@@ -1095,12 +1097,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ICameraShotGetter rhs) return false;
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICameraShotGetter? obj)
         {
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1291,7 +1293,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1367,6 +1369,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static CameraShot Duplicate(
+            this ICameraShotGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1399,24 +1412,25 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Model = 6,
-        Conditions = 7,
-        Action = 8,
-        Location = 9,
-        Target = 10,
-        Flags = 11,
-        TimeMultiplierPlayer = 12,
-        TimeMultiplierTarget = 13,
-        TimeMultiplierGlobal = 14,
-        MaxTime = 15,
-        MinTime = 16,
-        TargetPercentBetweenActors = 17,
-        NearTargetDistance = 18,
-        LocationSpring = 19,
-        TargetSpring = 20,
-        RotationOffset = 21,
-        ImageSpaceModifier = 22,
-        DATADataTypeState = 23,
+        Fallout4MajorRecordFlags = 6,
+        Model = 7,
+        Conditions = 8,
+        Action = 9,
+        Location = 10,
+        Target = 11,
+        Flags = 12,
+        TimeMultiplierPlayer = 13,
+        TimeMultiplierTarget = 14,
+        TimeMultiplierGlobal = 15,
+        MaxTime = 16,
+        MinTime = 17,
+        TargetPercentBetweenActors = 18,
+        NearTargetDistance = 19,
+        LocationSpring = 20,
+        TargetSpring = 21,
+        RotationOffset = 22,
+        ImageSpaceModifier = 23,
+        DATADataTypeState = 24,
     }
     #endregion
 
@@ -1436,7 +1450,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(CameraShot.Mask<>);
 
@@ -1802,8 +1816,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (CameraShot_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (CameraShot_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (CameraShot_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1820,7 +1836,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (CameraShot_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1828,83 +1844,83 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ICameraShotGetter? lhs,
             ICameraShotGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Model) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)CameraShot_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)CameraShot_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)CameraShot_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)CameraShot_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Action) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Action) ?? true))
             {
                 if (lhs.Action != rhs.Action) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Location) ?? true))
             {
                 if (lhs.Location != rhs.Location) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Target) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Target) ?? true))
             {
                 if (lhs.Target != rhs.Target) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierPlayer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierPlayer) ?? true))
             {
                 if (!lhs.TimeMultiplierPlayer.EqualsWithin(rhs.TimeMultiplierPlayer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierTarget) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierTarget) ?? true))
             {
                 if (!lhs.TimeMultiplierTarget.EqualsWithin(rhs.TimeMultiplierTarget)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierGlobal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierGlobal) ?? true))
             {
                 if (!lhs.TimeMultiplierGlobal.EqualsWithin(rhs.TimeMultiplierGlobal)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.MaxTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.MaxTime) ?? true))
             {
                 if (!lhs.MaxTime.EqualsWithin(rhs.MaxTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.MinTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.MinTime) ?? true))
             {
                 if (!lhs.MinTime.EqualsWithin(rhs.MinTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetPercentBetweenActors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetPercentBetweenActors) ?? true))
             {
                 if (!lhs.TargetPercentBetweenActors.EqualsWithin(rhs.TargetPercentBetweenActors)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.NearTargetDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.NearTargetDistance) ?? true))
             {
                 if (!lhs.NearTargetDistance.EqualsWithin(rhs.NearTargetDistance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.LocationSpring) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.LocationSpring) ?? true))
             {
                 if (!lhs.LocationSpring.EqualsWithin(rhs.LocationSpring)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetSpring) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetSpring) ?? true))
             {
                 if (!lhs.TargetSpring.EqualsWithin(rhs.TargetSpring)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.RotationOffset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.RotationOffset) ?? true))
             {
                 if (!lhs.RotationOffset.Equals(rhs.RotationOffset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
             {
                 if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1914,23 +1930,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICameraShotGetter?)lhs,
                 rhs: rhs as ICameraShotGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICameraShotGetter?)lhs,
                 rhs: rhs as ICameraShotGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ICameraShotGetter item)
@@ -2894,12 +2910,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ICameraShotGetter rhs) return false;
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICameraShotGetter? obj)
         {
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).GetHashCode(this);

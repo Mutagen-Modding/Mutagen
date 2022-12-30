@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Script = this.Script.Combine(rhs.Script);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -680,12 +680,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ISigilStoneGetter rhs) return false;
-            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISigilStoneGetter? obj)
         {
-            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).GetHashCode(this);
@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -940,6 +940,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static SigilStone Duplicate(
+            this ISigilStoneGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1296,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (SigilStone_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1313,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (SigilStone_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1321,39 +1332,39 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ISigilStoneGetter? lhs,
             ISigilStoneGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Name) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)SigilStone_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)SigilStone_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Icon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Icon) ?? true))
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Script) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Script) ?? true))
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Effects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SigilStone_FieldIndex.Effects)))) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SigilStone_FieldIndex.Effects)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((SigilStoneDataCommon)((ISigilStoneDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)SigilStone_FieldIndex.Data))) return false;
+                    if (!((SigilStoneDataCommon)((ISigilStoneDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)SigilStone_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
@@ -1363,23 +1374,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISigilStoneGetter?)lhs,
                 rhs: rhs as ISigilStoneGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISigilStoneGetter?)lhs,
                 rhs: rhs as ISigilStoneGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISigilStoneGetter item)
@@ -2154,12 +2165,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ISigilStoneGetter rhs) return false;
-            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISigilStoneGetter? obj)
         {
-            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).GetHashCode(this);

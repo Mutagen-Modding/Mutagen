@@ -455,6 +455,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem LeftStanding,
                 TItem LeftWalk,
@@ -494,7 +495,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.LeftStanding = LeftStanding;
@@ -1694,12 +1696,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMovementTypeGetter rhs) return false;
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMovementTypeGetter? obj)
         {
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1920,7 +1922,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MovementTypeCommon)((IMovementTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1996,6 +1998,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static MovementType Duplicate(
+            this IMovementTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MovementTypeCommon)((IMovementTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2028,39 +2041,40 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        LeftStanding = 7,
-        LeftWalk = 8,
-        LeftRun = 9,
-        LeftSprint = 10,
-        RightStanding = 11,
-        RightWalk = 12,
-        RightRun = 13,
-        RightSprint = 14,
-        ForwardStanding = 15,
-        ForwardWalk = 16,
-        ForwardRun = 17,
-        ForwardSprint = 18,
-        BackStanding = 19,
-        BackWalk = 20,
-        BackRun = 21,
-        BackSprint = 22,
-        PitchStanding = 23,
-        PitchWalk = 24,
-        PitchRun = 25,
-        PitchSprint = 26,
-        RollStanding = 27,
-        RollWalk = 28,
-        RollRun = 29,
-        RollSprint = 30,
-        YawStanding = 31,
-        YawWalk = 32,
-        YawRun = 33,
-        YawSprint = 34,
-        AnimationChangeThresholds = 35,
-        FloatHeight = 36,
-        FlightAngleGain = 37,
-        SPEDDataTypeState = 38,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        LeftStanding = 8,
+        LeftWalk = 9,
+        LeftRun = 10,
+        LeftSprint = 11,
+        RightStanding = 12,
+        RightWalk = 13,
+        RightRun = 14,
+        RightSprint = 15,
+        ForwardStanding = 16,
+        ForwardWalk = 17,
+        ForwardRun = 18,
+        ForwardSprint = 19,
+        BackStanding = 20,
+        BackWalk = 21,
+        BackRun = 22,
+        BackSprint = 23,
+        PitchStanding = 24,
+        PitchWalk = 25,
+        PitchRun = 26,
+        PitchSprint = 27,
+        RollStanding = 28,
+        RollWalk = 29,
+        RollRun = 30,
+        RollSprint = 31,
+        YawStanding = 32,
+        YawWalk = 33,
+        YawRun = 34,
+        YawSprint = 35,
+        AnimationChangeThresholds = 36,
+        FloatHeight = 37,
+        FlightAngleGain = 38,
+        SPEDDataTypeState = 39,
     }
     #endregion
 
@@ -2080,7 +2094,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 39;
+        public const ushort FieldCount = 40;
 
         public static readonly Type MaskType = typeof(MovementType.Mask<>);
 
@@ -2519,8 +2533,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (MovementType_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (MovementType_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (MovementType_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2537,7 +2553,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (MovementType_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2545,143 +2561,143 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMovementTypeGetter? lhs,
             IMovementTypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.Name) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.LeftStanding) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.LeftStanding) ?? true))
             {
                 if (!lhs.LeftStanding.EqualsWithin(rhs.LeftStanding)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.LeftWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.LeftWalk) ?? true))
             {
                 if (!lhs.LeftWalk.EqualsWithin(rhs.LeftWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.LeftRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.LeftRun) ?? true))
             {
                 if (!lhs.LeftRun.EqualsWithin(rhs.LeftRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.LeftSprint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.LeftSprint) ?? true))
             {
                 if (!lhs.LeftSprint.EqualsWithin(rhs.LeftSprint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RightStanding) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RightStanding) ?? true))
             {
                 if (!lhs.RightStanding.EqualsWithin(rhs.RightStanding)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RightWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RightWalk) ?? true))
             {
                 if (!lhs.RightWalk.EqualsWithin(rhs.RightWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RightRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RightRun) ?? true))
             {
                 if (!lhs.RightRun.EqualsWithin(rhs.RightRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RightSprint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RightSprint) ?? true))
             {
                 if (!lhs.RightSprint.EqualsWithin(rhs.RightSprint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardStanding) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardStanding) ?? true))
             {
                 if (!lhs.ForwardStanding.EqualsWithin(rhs.ForwardStanding)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardWalk) ?? true))
             {
                 if (!lhs.ForwardWalk.EqualsWithin(rhs.ForwardWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardRun) ?? true))
             {
                 if (!lhs.ForwardRun.EqualsWithin(rhs.ForwardRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardSprint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardSprint) ?? true))
             {
                 if (!lhs.ForwardSprint.EqualsWithin(rhs.ForwardSprint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.BackStanding) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.BackStanding) ?? true))
             {
                 if (!lhs.BackStanding.EqualsWithin(rhs.BackStanding)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.BackWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.BackWalk) ?? true))
             {
                 if (!lhs.BackWalk.EqualsWithin(rhs.BackWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.BackRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.BackRun) ?? true))
             {
                 if (!lhs.BackRun.EqualsWithin(rhs.BackRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.BackSprint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.BackSprint) ?? true))
             {
                 if (!lhs.BackSprint.EqualsWithin(rhs.BackSprint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.PitchStanding) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.PitchStanding) ?? true))
             {
                 if (!lhs.PitchStanding.EqualsWithin(rhs.PitchStanding)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.PitchWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.PitchWalk) ?? true))
             {
                 if (!lhs.PitchWalk.EqualsWithin(rhs.PitchWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.PitchRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.PitchRun) ?? true))
             {
                 if (!lhs.PitchRun.EqualsWithin(rhs.PitchRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.PitchSprint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.PitchSprint) ?? true))
             {
                 if (!lhs.PitchSprint.EqualsWithin(rhs.PitchSprint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RollStanding) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RollStanding) ?? true))
             {
                 if (!lhs.RollStanding.EqualsWithin(rhs.RollStanding)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RollWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RollWalk) ?? true))
             {
                 if (!lhs.RollWalk.EqualsWithin(rhs.RollWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RollRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RollRun) ?? true))
             {
                 if (!lhs.RollRun.EqualsWithin(rhs.RollRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RollSprint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.RollSprint) ?? true))
             {
                 if (!lhs.RollSprint.EqualsWithin(rhs.RollSprint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.YawStanding) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.YawStanding) ?? true))
             {
                 if (!lhs.YawStanding.EqualsWithin(rhs.YawStanding)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.YawWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.YawWalk) ?? true))
             {
                 if (!lhs.YawWalk.EqualsWithin(rhs.YawWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.YawRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.YawRun) ?? true))
             {
                 if (!lhs.YawRun.EqualsWithin(rhs.YawRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.YawSprint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.YawSprint) ?? true))
             {
                 if (!lhs.YawSprint.EqualsWithin(rhs.YawSprint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.AnimationChangeThresholds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.AnimationChangeThresholds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AnimationChangeThresholds, rhs.AnimationChangeThresholds, out var lhsAnimationChangeThresholds, out var rhsAnimationChangeThresholds, out var isAnimationChangeThresholdsEqual))
                 {
-                    if (!((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)lhsAnimationChangeThresholds).CommonInstance()!).Equals(lhsAnimationChangeThresholds, rhsAnimationChangeThresholds, crystal?.GetSubCrystal((int)MovementType_FieldIndex.AnimationChangeThresholds))) return false;
+                    if (!((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)lhsAnimationChangeThresholds).CommonInstance()!).Equals(lhsAnimationChangeThresholds, rhsAnimationChangeThresholds, equalsMask?.GetSubCrystal((int)MovementType_FieldIndex.AnimationChangeThresholds))) return false;
                 }
                 else if (!isAnimationChangeThresholdsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.FloatHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.FloatHeight) ?? true))
             {
                 if (!lhs.FloatHeight.EqualsWithin(rhs.FloatHeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.FlightAngleGain) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.FlightAngleGain) ?? true))
             {
                 if (!lhs.FlightAngleGain.EqualsWithin(rhs.FlightAngleGain)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.SPEDDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementType_FieldIndex.SPEDDataTypeState) ?? true))
             {
                 if (lhs.SPEDDataTypeState != rhs.SPEDDataTypeState) return false;
             }
@@ -2691,23 +2707,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMovementTypeGetter?)lhs,
                 rhs: rhs as IMovementTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMovementTypeGetter?)lhs,
                 rhs: rhs as IMovementTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMovementTypeGetter item)
@@ -3894,12 +3910,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMovementTypeGetter rhs) return false;
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMovementTypeGetter? obj)
         {
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);

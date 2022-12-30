@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageDataFloatGetter rhs) return false;
-            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageDataFloatGetter? obj)
         {
-            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).GetHashCode(this);
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PackageDataFloatCommon)((IPackageDataFloatGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case APackageData_FieldIndex.Flags:
                     return (PackageDataFloat_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -804,11 +804,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPackageDataFloatGetter? lhs,
             IPackageDataFloatGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PackageDataFloat_FieldIndex.Data) ?? true))
+            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PackageDataFloat_FieldIndex.Data) ?? true))
             {
                 if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
             }
@@ -818,12 +818,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAPackageDataGetter? lhs,
             IAPackageDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackageDataFloatGetter?)lhs,
                 rhs: rhs as IPackageDataFloatGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPackageDataFloatGetter item)
@@ -1153,12 +1153,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageDataFloatGetter rhs) return false;
-            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageDataFloatGetter? obj)
         {
-            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).GetHashCode(this);

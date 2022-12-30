@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISceneAdapterGetter rhs) return false;
-            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneAdapterGetter? obj)
         {
-            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case AVirtualMachineAdapter_FieldIndex.Scripts:
                     return (SceneAdapter_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -833,15 +833,15 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISceneAdapterGetter? lhs,
             ISceneAdapterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SceneAdapter_FieldIndex.ScriptFragments) ?? true))
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SceneAdapter_FieldIndex.ScriptFragments) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ScriptFragments, rhs.ScriptFragments, out var lhsScriptFragments, out var rhsScriptFragments, out var isScriptFragmentsEqual))
                 {
-                    if (!((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)lhsScriptFragments).CommonInstance()!).Equals(lhsScriptFragments, rhsScriptFragments, crystal?.GetSubCrystal((int)SceneAdapter_FieldIndex.ScriptFragments))) return false;
+                    if (!((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)lhsScriptFragments).CommonInstance()!).Equals(lhsScriptFragments, rhsScriptFragments, equalsMask?.GetSubCrystal((int)SceneAdapter_FieldIndex.ScriptFragments))) return false;
                 }
                 else if (!isScriptFragmentsEqual) return false;
             }
@@ -851,12 +851,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAVirtualMachineAdapterGetter? lhs,
             IAVirtualMachineAdapterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISceneAdapterGetter?)lhs,
                 rhs: rhs as ISceneAdapterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISceneAdapterGetter item)
@@ -1257,12 +1257,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISceneAdapterGetter rhs) return false;
-            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneAdapterGetter? obj)
         {
-            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).GetHashCode(this);

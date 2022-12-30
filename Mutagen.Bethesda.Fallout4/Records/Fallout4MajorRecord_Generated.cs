@@ -91,6 +91,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.FormVersion = initialValue;
                 this.Version2 = initialValue;
+                this.Fallout4MajorRecordFlags = initialValue;
             }
 
             public Mask(
@@ -99,7 +100,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Fallout4MajorRecordFlags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -108,6 +110,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.FormVersion = FormVersion;
                 this.Version2 = Version2;
+                this.Fallout4MajorRecordFlags = Fallout4MajorRecordFlags;
             }
 
             #pragma warning disable CS8618
@@ -121,6 +124,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public TItem FormVersion;
             public TItem Version2;
+            public TItem Fallout4MajorRecordFlags;
             #endregion
 
             #region Equals
@@ -136,6 +140,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.FormVersion, rhs.FormVersion)) return false;
                 if (!object.Equals(this.Version2, rhs.Version2)) return false;
+                if (!object.Equals(this.Fallout4MajorRecordFlags, rhs.Fallout4MajorRecordFlags)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -143,6 +148,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var hash = new HashCode();
                 hash.Add(this.FormVersion);
                 hash.Add(this.Version2);
+                hash.Add(this.Fallout4MajorRecordFlags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -155,6 +161,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!base.All(eval)) return false;
                 if (!eval(this.FormVersion)) return false;
                 if (!eval(this.Version2)) return false;
+                if (!eval(this.Fallout4MajorRecordFlags)) return false;
                 return true;
             }
             #endregion
@@ -165,6 +172,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (base.Any(eval)) return true;
                 if (eval(this.FormVersion)) return true;
                 if (eval(this.Version2)) return true;
+                if (eval(this.Fallout4MajorRecordFlags)) return true;
                 return false;
             }
             #endregion
@@ -182,6 +190,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 obj.FormVersion = eval(this.FormVersion);
                 obj.Version2 = eval(this.Version2);
+                obj.Fallout4MajorRecordFlags = eval(this.Fallout4MajorRecordFlags);
             }
             #endregion
 
@@ -208,6 +217,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Version2, "Version2");
                     }
+                    if (printMask?.Fallout4MajorRecordFlags ?? true)
+                    {
+                        sb.AppendItem(Fallout4MajorRecordFlags, "Fallout4MajorRecordFlags");
+                    }
                 }
             }
             #endregion
@@ -221,6 +234,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public Exception? FormVersion;
             public Exception? Version2;
+            public Exception? Fallout4MajorRecordFlags;
             #endregion
 
             #region IErrorMask
@@ -233,6 +247,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return FormVersion;
                     case Fallout4MajorRecord_FieldIndex.Version2:
                         return Version2;
+                    case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                        return Fallout4MajorRecordFlags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -248,6 +264,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4MajorRecord_FieldIndex.Version2:
                         this.Version2 = ex;
+                        break;
+                    case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                        this.Fallout4MajorRecordFlags = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -266,6 +285,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4MajorRecord_FieldIndex.Version2:
                         this.Version2 = (Exception?)obj;
                         break;
+                    case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                        this.Fallout4MajorRecordFlags = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -277,6 +299,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Overall != null) return true;
                 if (FormVersion != null) return true;
                 if (Version2 != null) return true;
+                if (Fallout4MajorRecordFlags != null) return true;
                 return false;
             }
             #endregion
@@ -309,6 +332,9 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Version2, "Version2");
                 }
+                {
+                    sb.AppendItem(Fallout4MajorRecordFlags, "Fallout4MajorRecordFlags");
+                }
             }
             #endregion
 
@@ -319,6 +345,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.FormVersion = this.FormVersion.Combine(rhs.FormVersion);
                 ret.Version2 = this.Version2.Combine(rhs.Version2);
+                ret.Fallout4MajorRecordFlags = this.Fallout4MajorRecordFlags.Combine(rhs.Fallout4MajorRecordFlags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -343,6 +370,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public bool FormVersion;
             public bool Version2;
+            public bool Fallout4MajorRecordFlags;
             #endregion
 
             #region Ctors
@@ -353,6 +381,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.FormVersion = defaultOn;
                 this.Version2 = defaultOn;
+                this.Fallout4MajorRecordFlags = defaultOn;
             }
 
             #endregion
@@ -362,6 +391,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.GetCrystal(ret);
                 ret.Add((FormVersion, null));
                 ret.Add((Version2, null));
+                ret.Add((Fallout4MajorRecordFlags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -460,12 +490,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IFallout4MajorRecordGetter rhs) return false;
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFallout4MajorRecordGetter? obj)
         {
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -517,6 +547,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new UInt16 FormVersion { get; set; }
         new UInt16 Version2 { get; set; }
+        new Fallout4MajorRecord.Fallout4MajorRecordFlag Fallout4MajorRecordFlags { get; set; }
     }
 
     public partial interface IFallout4MajorRecordInternal :
@@ -540,6 +571,7 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         UInt16 FormVersion { get; }
         UInt16 Version2 { get; }
+        Fallout4MajorRecord.Fallout4MajorRecordFlag Fallout4MajorRecordFlags { get; }
 
     }
 
@@ -596,7 +628,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -884,6 +916,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Fallout4MajorRecord Duplicate(
+            this IFallout4MajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -916,6 +959,7 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Fallout4MajorRecordFlags = 6,
     }
     #endregion
 
@@ -933,9 +977,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "31e44987-0e57-41ce-8b90-094434216c76";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Fallout4MajorRecord.Mask<>);
 
@@ -1005,6 +1049,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.FormVersion = default;
             item.Version2 = default;
+            item.Fallout4MajorRecordFlags = default;
             base.Clear(item);
         }
         
@@ -1152,6 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.FormVersion = item.FormVersion == rhs.FormVersion;
             ret.Version2 = item.Version2 == rhs.Version2;
+            ret.Fallout4MajorRecordFlags = item.Fallout4MajorRecordFlags == rhs.Fallout4MajorRecordFlags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1209,6 +1255,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Version2, "Version2");
             }
+            if (printMask?.Fallout4MajorRecordFlags ?? true)
+            {
+                sb.AppendItem(item.Fallout4MajorRecordFlags, "Fallout4MajorRecordFlags");
+            }
         }
         
         public static Fallout4MajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -1224,7 +1274,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Fallout4MajorRecord_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1232,17 +1282,21 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.FormVersion) ?? true))
+            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.FormVersion) ?? true))
             {
                 if (lhs.FormVersion != rhs.FormVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.Version2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.Version2) ?? true))
             {
                 if (lhs.Version2 != rhs.Version2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags) ?? true))
+            {
+                if (lhs.Fallout4MajorRecordFlags != rhs.Fallout4MajorRecordFlags) return false;
             }
             return true;
         }
@@ -1250,12 +1304,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFallout4MajorRecordGetter?)lhs,
                 rhs: rhs as IFallout4MajorRecordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IFallout4MajorRecordGetter item)
@@ -1263,6 +1317,7 @@ namespace Mutagen.Bethesda.Fallout4
             var hash = new HashCode();
             hash.Add(item.FormVersion);
             hash.Add(item.Version2);
+            hash.Add(item.Fallout4MajorRecordFlags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1422,6 +1477,10 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.Version2) ?? true))
             {
                 item.Version2 = rhs.Version2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags) ?? true))
+            {
+                item.Fallout4MajorRecordFlags = rhs.Fallout4MajorRecordFlags;
             }
         }
         
@@ -1714,12 +1773,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IFallout4MajorRecordGetter rhs) return false;
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFallout4MajorRecordGetter? obj)
         {
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).GetHashCode(this);

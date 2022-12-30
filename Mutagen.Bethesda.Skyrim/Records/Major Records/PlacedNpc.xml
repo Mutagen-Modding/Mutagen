@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedNpc" recordType="ACHR" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="b00383a9-1cbf-4c8c-9cdf-f2e886a6909a" ID="224">
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <FormLink name="Base" refName="Npc" recordType="NAME" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
       <ByteArray name="RagdollData" recordType="XRGD" />

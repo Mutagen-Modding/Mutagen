@@ -205,9 +205,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region LeafFrequency
         public Single LeafFrequency { get; set; } = default;
         #endregion
-        #region CNAMDataTypeState
-        public Tree.CNAMDataType CNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -245,7 +242,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = initialValue;
                 this.LeafAmplitude = initialValue;
                 this.LeafFrequency = initialValue;
-                this.CNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -255,6 +251,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Model,
@@ -266,15 +263,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem BranchFlexibility,
                 TItem Unknown,
                 TItem LeafAmplitude,
-                TItem LeafFrequency,
-                TItem CNAMDataTypeState)
+                TItem LeafFrequency)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -288,7 +285,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = Unknown;
                 this.LeafAmplitude = LeafAmplitude;
                 this.LeafFrequency = LeafFrequency;
-                this.CNAMDataTypeState = CNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -312,7 +308,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Unknown;
             public TItem LeafAmplitude;
             public TItem LeafFrequency;
-            public TItem CNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -338,7 +333,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.LeafAmplitude, rhs.LeafAmplitude)) return false;
                 if (!object.Equals(this.LeafFrequency, rhs.LeafFrequency)) return false;
-                if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -356,7 +350,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Unknown);
                 hash.Add(this.LeafAmplitude);
                 hash.Add(this.LeafFrequency);
-                hash.Add(this.CNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -395,7 +388,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.LeafAmplitude)) return false;
                 if (!eval(this.LeafFrequency)) return false;
-                if (!eval(this.CNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -432,7 +424,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Unknown)) return true;
                 if (eval(this.LeafAmplitude)) return true;
                 if (eval(this.LeafFrequency)) return true;
-                if (eval(this.CNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -460,7 +451,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Unknown = eval(this.Unknown);
                 obj.LeafAmplitude = eval(this.LeafAmplitude);
                 obj.LeafFrequency = eval(this.LeafFrequency);
-                obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
             }
             #endregion
 
@@ -527,10 +517,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(LeafFrequency, "LeafFrequency");
                     }
-                    if (printMask?.CNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -554,7 +540,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Unknown;
             public Exception? LeafAmplitude;
             public Exception? LeafFrequency;
-            public Exception? CNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -587,8 +572,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return LeafAmplitude;
                     case Tree_FieldIndex.LeafFrequency:
                         return LeafFrequency;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        return CNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -634,9 +617,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Tree_FieldIndex.LeafFrequency:
                         this.LeafFrequency = ex;
-                        break;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -685,9 +665,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Tree_FieldIndex.LeafFrequency:
                         this.LeafFrequency = (Exception?)obj;
                         break;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -709,7 +686,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Unknown != null) return true;
                 if (LeafAmplitude != null) return true;
                 if (LeafFrequency != null) return true;
-                if (CNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -764,9 +740,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(LeafFrequency, "LeafFrequency");
                 }
-                {
-                    sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -787,7 +760,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.LeafAmplitude = this.LeafAmplitude.Combine(rhs.LeafAmplitude);
                 ret.LeafFrequency = this.LeafFrequency.Combine(rhs.LeafFrequency);
-                ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -822,7 +794,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Unknown;
             public bool LeafAmplitude;
             public bool LeafFrequency;
-            public bool CNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -839,7 +810,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = defaultOn;
                 this.LeafAmplitude = defaultOn;
                 this.LeafFrequency = defaultOn;
-                this.CNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -859,7 +829,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Unknown, null));
                 ret.Add((LeafAmplitude, null));
                 ret.Add((LeafFrequency, null));
-                ret.Add((CNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -928,10 +897,6 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum CNAMDataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => TreeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => TreeSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TreeSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -943,12 +908,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ITreeGetter rhs) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITreeGetter? obj)
         {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1055,7 +1020,6 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte> Unknown { get; set; }
         new Single LeafAmplitude { get; set; }
         new Single LeafFrequency { get; set; }
-        new Tree.CNAMDataType CNAMDataTypeState { get; set; }
         #region Mutagen
         new Tree.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1123,7 +1087,6 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> Unknown { get; }
         Single LeafAmplitude { get; }
         Single LeafFrequency { get; }
-        Tree.CNAMDataType CNAMDataTypeState { get; }
 
         #region Mutagen
         Tree.MajorFlag MajorFlags { get; }
@@ -1184,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1260,6 +1223,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Tree Duplicate(
+            this ITreeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1292,19 +1266,19 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Model = 8,
-        Ingredient = 9,
-        HarvestSound = 10,
-        Production = 11,
-        Name = 12,
-        TrunkFlexibility = 13,
-        BranchFlexibility = 14,
-        Unknown = 15,
-        LeafAmplitude = 16,
-        LeafFrequency = 17,
-        CNAMDataTypeState = 18,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Model = 9,
+        Ingredient = 10,
+        HarvestSound = 11,
+        Production = 12,
+        Name = 13,
+        TrunkFlexibility = 14,
+        BranchFlexibility = 15,
+        Unknown = 16,
+        LeafAmplitude = 17,
+        LeafFrequency = 18,
     }
     #endregion
 
@@ -1322,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "5353e43a-3c33-49d9-b5a7-fc971ba96d88";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 12;
 
         public const ushort FieldCount = 19;
 
@@ -1358,6 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.TREE,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.MODL,
                 RecordTypes.PFIG,
@@ -1421,7 +1396,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Unknown = new byte[32];
             item.LeafAmplitude = default;
             item.LeafFrequency = default;
-            item.CNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1564,7 +1538,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
             ret.LeafAmplitude = item.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude);
             ret.LeafFrequency = item.LeafFrequency.EqualsWithin(rhs.LeafFrequency);
-            ret.CNAMDataTypeState = item.CNAMDataTypeState == rhs.CNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1666,10 +1639,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.LeafFrequency, "LeafFrequency");
             }
-            if (printMask?.CNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
-            }
         }
         
         public static Tree_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1688,8 +1657,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Tree_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Tree_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Tree_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1706,7 +1677,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Tree_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1714,77 +1685,73 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ITreeGetter? lhs,
             ITreeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Tree_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Tree_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Tree_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
             {
                 if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
             {
                 if (!lhs.HarvestSound.Equals(rhs.HarvestSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Production, rhs.Production, out var lhsProduction, out var rhsProduction, out var isProductionEqual))
                 {
-                    if (!((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)lhsProduction).CommonInstance()!).Equals(lhsProduction, rhsProduction, crystal?.GetSubCrystal((int)Tree_FieldIndex.Production))) return false;
+                    if (!((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)lhsProduction).CommonInstance()!).Equals(lhsProduction, rhsProduction, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.Production))) return false;
                 }
                 else if (!isProductionEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
             {
                 if (!lhs.TrunkFlexibility.EqualsWithin(rhs.TrunkFlexibility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.BranchFlexibility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchFlexibility) ?? true))
             {
                 if (!lhs.BranchFlexibility.EqualsWithin(rhs.BranchFlexibility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Unknown) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.LeafAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafAmplitude) ?? true))
             {
                 if (!lhs.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.LeafFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafFrequency) ?? true))
             {
                 if (!lhs.LeafFrequency.EqualsWithin(rhs.LeafFrequency)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
             }
             return true;
         }
@@ -1792,23 +1759,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITreeGetter?)lhs,
                 rhs: rhs as ITreeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITreeGetter?)lhs,
                 rhs: rhs as ITreeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ITreeGetter item)
@@ -1838,7 +1805,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Unknown);
             hash.Add(item.LeafAmplitude);
             hash.Add(item.LeafFrequency);
-            hash.Add(item.CNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2122,10 +2088,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.LeafFrequency = rhs.LeafFrequency;
             }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                item.CNAMDataTypeState = rhs.CNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2274,15 +2236,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly TreeBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ITreeGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ITreeGetter item,
             MutagenWriter writer,
@@ -2297,7 +2250,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
@@ -2363,7 +2316,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2423,15 +2376,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TREE;
-        public static void FillBinaryStructs(
-            ITreeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ITreeInternal item,
             MutagenFrame frame,
@@ -2446,7 +2390,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Tree_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -2501,6 +2447,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (dataFrame.Remaining < 4) return null;
                     item.LeafFrequency = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)Tree_FieldIndex.LeafFrequency;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2564,8 +2515,9 @@ namespace Mutagen.Bethesda.Skyrim
         public Tree.MajorFlag MajorFlags => (Tree.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
@@ -2599,7 +2551,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         private RangeInt32? _CNAMLocation;
-        public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
         #region TrunkFlexibility
         private int _TrunkFlexibilityLocation => _CNAMLocation!.Value.Min;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;
@@ -2697,6 +2648,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Tree_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -2737,6 +2693,11 @@ namespace Mutagen.Bethesda.Skyrim
                     _CNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Tree_FieldIndex.LeafFrequency;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return base.FillRecordType(
                         stream: stream,
@@ -2775,12 +2736,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ITreeGetter rhs) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITreeGetter? obj)
         {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);

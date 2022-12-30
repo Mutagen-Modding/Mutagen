@@ -15,12 +15,12 @@ public sealed class PluginLiveLoadOrderProvider : IPluginLiveLoadOrderProvider
 {
     private readonly IFileSystem _fileSystem;
     private readonly IPluginListingsProvider _listingsProvider;
-    private readonly IPluginListingsPathProvider _pluginListingsFilePath;
+    private readonly IPluginListingsPathContext _pluginListingsFilePath;
 
     public PluginLiveLoadOrderProvider(
         IFileSystem fileSystem,
         IPluginListingsProvider listingsProvider,
-        IPluginListingsPathProvider pluginListingsFilePath)
+        IPluginListingsPathContext pluginListingsFilePath)
     {
         _fileSystem = fileSystem;
         _listingsProvider = listingsProvider;

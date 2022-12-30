@@ -93,6 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -100,7 +101,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Data = Data;
             }
@@ -399,12 +401,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IGameSettingFloatGetter rhs) return false;
-            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGameSettingFloatGetter? obj)
         {
-            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).GetHashCode(this);
@@ -549,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -625,6 +627,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static GameSettingFloat Duplicate(
+            this IGameSettingFloatGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -657,7 +670,8 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Data = 6,
+        SkyrimMajorRecordFlags = 6,
+        Data = 7,
     }
     #endregion
 
@@ -677,7 +691,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GameSettingFloat.Mask<>);
 
@@ -929,8 +943,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GameSettingFloat_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.Version2:
                     return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.SkyrimMajorRecordFlags:
+                    return (GameSettingFloat_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -950,8 +966,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GameSettingFloat_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (GameSettingFloat_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (GameSettingFloat_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -968,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (GameSettingFloat_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -976,11 +994,11 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IGameSettingFloatGetter? lhs,
             IGameSettingFloatGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)GameSettingFloat_FieldIndex.Data) ?? true))
+            if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)GameSettingFloat_FieldIndex.Data) ?? true))
             {
                 if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
             }
@@ -990,34 +1008,34 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IGameSettingGetter? lhs,
             IGameSettingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGameSettingFloatGetter?)lhs,
                 rhs: rhs as IGameSettingFloatGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGameSettingFloatGetter?)lhs,
                 rhs: rhs as IGameSettingFloatGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGameSettingFloatGetter?)lhs,
                 rhs: rhs as IGameSettingFloatGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IGameSettingFloatGetter item)
@@ -1617,12 +1635,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IGameSettingFloatGetter rhs) return false;
-            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGameSettingFloatGetter? obj)
         {
-            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).GetHashCode(this);

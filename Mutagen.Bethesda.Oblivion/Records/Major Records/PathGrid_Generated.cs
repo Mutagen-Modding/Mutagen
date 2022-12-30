@@ -612,10 +612,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.PointToPointConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PathGridPoint.ErrorMask?>>?>(ExceptionExt.Combine(this.PointToPointConnections?.Overall, rhs.PointToPointConnections?.Overall), ExceptionExt.Combine(this.PointToPointConnections?.Specific, rhs.PointToPointConnections?.Specific));
+                ret.PointToPointConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PathGridPoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PointToPointConnections?.Overall, rhs.PointToPointConnections?.Overall), Noggog.ExceptionExt.Combine(this.PointToPointConnections?.Specific, rhs.PointToPointConnections?.Specific));
                 ret.PGAG = this.PGAG.Combine(rhs.PGAG);
-                ret.InterCellConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InterCellPoint.ErrorMask?>>?>(ExceptionExt.Combine(this.InterCellConnections?.Overall, rhs.InterCellConnections?.Overall), ExceptionExt.Combine(this.InterCellConnections?.Specific, rhs.InterCellConnections?.Specific));
-                ret.PointToReferenceMappings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PointToReferenceMapping.ErrorMask?>>?>(ExceptionExt.Combine(this.PointToReferenceMappings?.Overall, rhs.PointToReferenceMappings?.Overall), ExceptionExt.Combine(this.PointToReferenceMappings?.Specific, rhs.PointToReferenceMappings?.Specific));
+                ret.InterCellConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InterCellPoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.InterCellConnections?.Overall, rhs.InterCellConnections?.Overall), Noggog.ExceptionExt.Combine(this.InterCellConnections?.Specific, rhs.InterCellConnections?.Specific));
+                ret.PointToReferenceMappings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PointToReferenceMapping.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PointToReferenceMappings?.Overall, rhs.PointToReferenceMappings?.Overall), Noggog.ExceptionExt.Combine(this.PointToReferenceMappings?.Specific, rhs.PointToReferenceMappings?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -716,12 +716,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IPathGridGetter rhs) return false;
-            return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPathGridGetter? obj)
         {
-            return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).GetHashCode(this);
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PathGridCommon)((IPathGridGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -948,6 +948,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static PathGrid Duplicate(
+            this IPathGridGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((PathGridCommon)((IPathGridGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1179,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs.PointToPointConnections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.PGAG = MemorySliceExt.Equal(item.PGAG, rhs.PGAG);
+            ret.PGAG = MemorySliceExt.SequenceEqual(item.PGAG, rhs.PGAG);
             ret.InterCellConnections = item.InterCellConnections.CollectionEqualsHelper(
                 rhs.InterCellConnections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1303,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (PathGrid_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1320,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (PathGrid_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1328,25 +1339,25 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IPathGridGetter? lhs,
             IPathGridGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToPointConnections) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToPointConnections) ?? true))
             {
-                if (!lhs.PointToPointConnections.SequenceEqualNullable(rhs.PointToPointConnections, (l, r) => ((PathGridPointCommon)((IPathGridPointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PathGrid_FieldIndex.PointToPointConnections)))) return false;
+                if (!lhs.PointToPointConnections.SequenceEqualNullable(rhs.PointToPointConnections, (l, r) => ((PathGridPointCommon)((IPathGridPointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToPointConnections)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PathGrid_FieldIndex.PGAG) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PGAG) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PGAG, rhs.PGAG)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.PGAG, rhs.PGAG)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PathGrid_FieldIndex.InterCellConnections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PathGrid_FieldIndex.InterCellConnections) ?? true))
             {
-                if (!lhs.InterCellConnections.SequenceEqualNullable(rhs.InterCellConnections, (l, r) => ((InterCellPointCommon)((IInterCellPointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PathGrid_FieldIndex.InterCellConnections)))) return false;
+                if (!lhs.InterCellConnections.SequenceEqualNullable(rhs.InterCellConnections, (l, r) => ((InterCellPointCommon)((IInterCellPointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PathGrid_FieldIndex.InterCellConnections)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToReferenceMappings) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToReferenceMappings) ?? true))
             {
-                if (!lhs.PointToReferenceMappings.SequenceEqual(rhs.PointToReferenceMappings, (l, r) => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PathGrid_FieldIndex.PointToReferenceMappings)))) return false;
+                if (!lhs.PointToReferenceMappings.SequenceEqual(rhs.PointToReferenceMappings, (l, r) => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PathGrid_FieldIndex.PointToReferenceMappings)))) return false;
             }
             return true;
         }
@@ -1354,23 +1365,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPathGridGetter?)lhs,
                 rhs: rhs as IPathGridGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPathGridGetter?)lhs,
                 rhs: rhs as IPathGridGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPathGridGetter item)
@@ -2114,12 +2125,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IPathGridGetter rhs) return false;
-            return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPathGridGetter? obj)
         {
-            return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).GetHashCode(this);

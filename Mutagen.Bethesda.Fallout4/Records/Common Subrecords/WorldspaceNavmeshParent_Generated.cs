@@ -84,12 +84,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWorldspaceNavmeshParentGetter rhs) return false;
-            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceNavmeshParentGetter? obj)
         {
-            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Fallout4
             switch (index)
             {
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -838,15 +838,15 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWorldspaceNavmeshParentGetter? lhs,
             IWorldspaceNavmeshParentGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IANavmeshParentGetter)lhs, (IANavmeshParentGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)WorldspaceNavmeshParent_FieldIndex.Parent) ?? true))
+            if (!base.Equals((IANavmeshParentGetter)lhs, (IANavmeshParentGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceNavmeshParent_FieldIndex.Parent) ?? true))
             {
                 if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WorldspaceNavmeshParent_FieldIndex.Coordinates) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceNavmeshParent_FieldIndex.Coordinates) ?? true))
             {
                 if (!lhs.Coordinates.Equals(rhs.Coordinates)) return false;
             }
@@ -856,12 +856,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IANavmeshParentGetter? lhs,
             IANavmeshParentGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWorldspaceNavmeshParentGetter?)lhs,
                 rhs: rhs as IWorldspaceNavmeshParentGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IWorldspaceNavmeshParentGetter item)
@@ -1203,12 +1203,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWorldspaceNavmeshParentGetter rhs) return false;
-            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceNavmeshParentGetter? obj)
         {
-            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceNavmeshParentCommon)((IWorldspaceNavmeshParentGetter)this).CommonInstance()!).GetHashCode(this);

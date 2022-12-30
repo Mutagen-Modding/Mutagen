@@ -60,6 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         Landscape.Flag? ILandscapeGetter.Flags => this.Flags;
         #endregion
         #region VertexNormals
+        public static readonly P2Int VertexNormalsFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IArray2d<P3UInt8>? _VertexNormals;
         public IArray2d<P3UInt8>? VertexNormals
@@ -85,6 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILandscapeVertexHeightMapGetter? ILandscapeGetter.VertexHeightMap => this.VertexHeightMap;
         #endregion
         #region VertexColors
+        public static readonly P2Int VertexColorsFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IArray2d<P3UInt8>? _VertexColors;
         public IArray2d<P3UInt8>? VertexColors
@@ -166,6 +168,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Flags,
                 TItem VertexNormals,
                 TItem VertexHeightMap,
@@ -178,7 +181,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Flags = Flags;
                 this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexNormals, Enumerable.Empty<(P2Int Index, TItem Value)>());
@@ -761,11 +765,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.VertexNormals?.Overall, rhs.VertexNormals?.Overall), ExceptionExt.Combine(this.VertexNormals?.Specific, rhs.VertexNormals?.Specific));
+                ret.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.VertexNormals?.Overall, rhs.VertexNormals?.Overall), Noggog.ExceptionExt.Combine(this.VertexNormals?.Specific, rhs.VertexNormals?.Specific));
                 ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap, (l, r) => l.Combine(r));
-                ret.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.VertexColors?.Overall, rhs.VertexColors?.Overall), ExceptionExt.Combine(this.VertexColors?.Specific, rhs.VertexColors?.Specific));
-                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
-                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
+                ret.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.VertexColors?.Overall, rhs.VertexColors?.Overall), Noggog.ExceptionExt.Combine(this.VertexColors?.Specific, rhs.VertexColors?.Specific));
+                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), Noggog.ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
+                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), Noggog.ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -890,12 +894,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeGetter rhs) return false;
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeGetter? obj)
         {
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1052,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1128,6 +1132,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Landscape Duplicate(
+            this ILandscapeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1160,12 +1175,13 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Flags = 6,
-        VertexNormals = 7,
-        VertexHeightMap = 8,
-        VertexColors = 9,
-        Layers = 10,
-        Textures = 11,
+        SkyrimMajorRecordFlags = 6,
+        Flags = 7,
+        VertexNormals = 8,
+        VertexHeightMap = 9,
+        VertexColors = 10,
+        Layers = 11,
+        Textures = 12,
     }
     #endregion
 
@@ -1185,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Landscape.Mask<>);
 
@@ -1519,8 +1535,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Landscape_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Landscape_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Landscape_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1537,7 +1555,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Landscape_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1545,35 +1563,35 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILandscapeGetter? lhs,
             ILandscapeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Flags) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
                 if (!lhs.VertexNormals.SequenceEqualNullable(rhs.VertexNormals)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VertexHeightMap, rhs.VertexHeightMap, out var lhsVertexHeightMap, out var rhsVertexHeightMap, out var isVertexHeightMapEqual))
                 {
-                    if (!((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)lhsVertexHeightMap).CommonInstance()!).Equals(lhsVertexHeightMap, rhsVertexHeightMap, crystal?.GetSubCrystal((int)Landscape_FieldIndex.VertexHeightMap))) return false;
+                    if (!((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)lhsVertexHeightMap).CommonInstance()!).Equals(lhsVertexHeightMap, rhsVertexHeightMap, equalsMask?.GetSubCrystal((int)Landscape_FieldIndex.VertexHeightMap))) return false;
                 }
                 else if (!isVertexHeightMapEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
                 if (!lhs.VertexColors.SequenceEqualNullable(rhs.VertexColors)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
             {
-                if (!lhs.Layers.SequenceEqual(rhs.Layers, (l, r) => ((BaseLayerCommon)((IBaseLayerGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Landscape_FieldIndex.Layers)))) return false;
+                if (!lhs.Layers.SequenceEqual(rhs.Layers, (l, r) => ((BaseLayerCommon)((IBaseLayerGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Landscape_FieldIndex.Layers)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
             {
                 if (!lhs.Textures.SequenceEqualNullable(rhs.Textures)) return false;
             }
@@ -1583,23 +1601,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandscapeGetter?)lhs,
                 rhs: rhs as ILandscapeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandscapeGetter?)lhs,
                 rhs: rhs as ILandscapeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILandscapeGetter item)
@@ -2163,7 +2181,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.VertexNormals = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Parse(
                             reader: frame,
-                            size: new P2Int(33, 33),
+                            size: Landscape.VertexNormalsFixedSize,
                             transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         ;
                     return (int)Landscape_FieldIndex.VertexNormals;
@@ -2179,7 +2197,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.VertexColors = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Parse(
                             reader: frame,
-                            size: new P2Int(33, 33),
+                            size: Landscape.VertexColorsFixedSize,
                             transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         ;
                     return (int)Landscape_FieldIndex.VertexColors;
@@ -2376,7 +2394,7 @@ namespace Mutagen.Bethesda.Skyrim
                         mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
                         package: _package,
                         itemLength: 3,
-                        size: new P2Int(33, 33),
+                        size: Landscape.VertexNormalsFixedSize,
                         getter: (s, p) => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)Landscape_FieldIndex.VertexNormals;
                 }
@@ -2392,7 +2410,7 @@ namespace Mutagen.Bethesda.Skyrim
                         mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
                         package: _package,
                         itemLength: 3,
-                        size: new P2Int(33, 33),
+                        size: Landscape.VertexColorsFixedSize,
                         getter: (s, p) => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)Landscape_FieldIndex.VertexColors;
                 }
@@ -2467,12 +2485,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeGetter rhs) return false;
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeGetter? obj)
         {
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);

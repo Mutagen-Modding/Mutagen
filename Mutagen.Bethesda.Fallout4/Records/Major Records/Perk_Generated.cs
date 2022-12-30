@@ -181,9 +181,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region DATADataTypeState
-        public Perk.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -223,7 +220,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NextPerk = initialValue;
                 this.Swf = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>());
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -233,6 +229,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Name,
                 TItem Description,
@@ -246,15 +243,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Sound,
                 TItem NextPerk,
                 TItem Swf,
-                TItem Effects,
-                TItem DATADataTypeState)
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, PerkAdapter.Mask<TItem>?>(VirtualMachineAdapter, new PerkAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
@@ -270,7 +267,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NextPerk = NextPerk;
                 this.Swf = Swf;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>());
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -296,7 +292,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem NextPerk;
             public TItem Swf;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>? Effects;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -324,7 +319,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.NextPerk, rhs.NextPerk)) return false;
                 if (!object.Equals(this.Swf, rhs.Swf)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -344,7 +338,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.NextPerk);
                 hash.Add(this.Swf);
                 hash.Add(this.Effects);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -395,7 +388,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -444,7 +436,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -502,7 +493,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -607,10 +597,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -636,7 +622,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? NextPerk;
             public Exception? Swf;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>? Effects;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -673,8 +658,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Swf;
                     case Perk_FieldIndex.Effects:
                         return Effects;
-                    case Perk_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -726,9 +709,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Perk_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Perk_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -783,9 +763,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Perk_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>)obj;
                         break;
-                    case Perk_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -809,7 +786,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (NextPerk != null) return true;
                 if (Swf != null) return true;
                 if (Effects != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -906,9 +882,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -921,7 +894,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Trait = this.Trait.Combine(rhs.Trait);
                 ret.Level = this.Level.Combine(rhs.Level);
                 ret.NumRanks = this.NumRanks.Combine(rhs.NumRanks);
@@ -930,8 +903,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Sound = this.Sound.Combine(rhs.Sound);
                 ret.NextPerk = this.NextPerk.Combine(rhs.NextPerk);
                 ret.Swf = this.Swf.Combine(rhs.Swf);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -968,7 +940,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool NextPerk;
             public bool Swf;
             public APerkEffect.TranslationMask? Effects;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -988,7 +959,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Sound = defaultOn;
                 this.NextPerk = defaultOn;
                 this.Swf = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1010,7 +980,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((NextPerk, null));
                 ret.Add((Swf, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1072,10 +1041,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1084,12 +1049,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPerkGetter rhs) return false;
-            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkGetter? obj)
         {
-            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkCommon)((IPerkGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1182,7 +1147,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IPerkGetter> NextPerk { get; set; }
         new String? Swf { get; set; }
         new ExtendedList<APerkEffect> Effects { get; }
-        new Perk.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Perk.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1235,7 +1199,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IPerkGetter> NextPerk { get; }
         String? Swf { get; }
         IReadOnlyList<IAPerkEffectGetter> Effects { get; }
-        Perk.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         Perk.MajorFlag MajorFlags { get; }
@@ -1296,7 +1259,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PerkCommon)((IPerkGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1372,6 +1335,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Perk Duplicate(
+            this IPerkGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((PerkCommon)((IPerkGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1404,21 +1378,21 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Name = 7,
-        Description = 8,
-        Icon = 9,
-        Conditions = 10,
-        Trait = 11,
-        Level = 12,
-        NumRanks = 13,
-        Playable = 14,
-        Hidden = 15,
-        Sound = 16,
-        NextPerk = 17,
-        Swf = 18,
-        Effects = 19,
-        DATADataTypeState = 20,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        Description = 9,
+        Icon = 10,
+        Conditions = 11,
+        Trait = 12,
+        Level = 13,
+        NumRanks = 14,
+        Playable = 15,
+        Hidden = 16,
+        Sound = 17,
+        NextPerk = 18,
+        Swf = 19,
+        Effects = 20,
     }
     #endregion
 
@@ -1436,7 +1410,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "137b6882-7400-436a-8cb1-aca1870f6bc4";
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 14;
 
         public const ushort FieldCount = 21;
 
@@ -1544,7 +1518,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.NextPerk.Clear();
             item.Swf = default;
             item.Effects.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1658,7 +1631,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1788,10 +1760,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Perk_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1810,8 +1778,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Perk_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Perk_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Perk_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1828,7 +1798,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Perk_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1836,73 +1806,69 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPerkGetter? lhs,
             IPerkGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((PerkAdapterCommon)((IPerkAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Perk_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((PerkAdapterCommon)((IPerkAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Perk_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Icon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Icon) ?? true))
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Perk_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Perk_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Trait) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Trait) ?? true))
             {
                 if (lhs.Trait != rhs.Trait) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Level) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Level) ?? true))
             {
                 if (lhs.Level != rhs.Level) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.NumRanks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.NumRanks) ?? true))
             {
                 if (lhs.NumRanks != rhs.NumRanks) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Playable) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Playable) ?? true))
             {
                 if (lhs.Playable != rhs.Playable) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Hidden) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Hidden) ?? true))
             {
                 if (lhs.Hidden != rhs.Hidden) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
             {
                 if (!lhs.NextPerk.Equals(rhs.NextPerk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Swf) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Swf) ?? true))
             {
                 if (!string.Equals(lhs.Swf, rhs.Swf)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((APerkEffectCommon)((IAPerkEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Perk_FieldIndex.Effects)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((APerkEffectCommon)((IAPerkEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Perk_FieldIndex.Effects)))) return false;
             }
             return true;
         }
@@ -1910,23 +1876,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkGetter?)lhs,
                 rhs: rhs as IPerkGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkGetter?)lhs,
                 rhs: rhs as IPerkGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPerkGetter item)
@@ -1958,7 +1924,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(Swfitem);
             }
             hash.Add(item.Effects);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2205,10 +2170,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2357,15 +2318,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly PerkBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IPerkGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IPerkGetter item,
             MutagenWriter writer,
@@ -2460,7 +2412,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2520,15 +2472,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly PerkBinaryCreateTranslation Instance = new PerkBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PERK;
-        public static void FillBinaryStructs(
-            IPerkInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IPerkInternal item,
             MutagenFrame frame,
@@ -2724,7 +2667,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         private RangeInt32? _DATALocation;
-        public Perk.DATADataType DATADataTypeState { get; private set; }
         #region Trait
         private int _TraitLocation => _DATALocation!.Value.Min;
         private bool _Trait_IsSet => _DATALocation.HasValue;
@@ -2952,12 +2894,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPerkGetter rhs) return false;
-            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkGetter? obj)
         {
-            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkCommon)((IPerkGetter)this).CommonInstance()!).GetHashCode(this);

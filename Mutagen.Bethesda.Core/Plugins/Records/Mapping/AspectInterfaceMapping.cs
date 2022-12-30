@@ -11,7 +11,7 @@ internal sealed class AspectInterfaceMapper : InterfaceMapGetter, IAspectInterfa
     public static AspectInterfaceMapper AutomaticFactory()
     {
         var ret = new AspectInterfaceMapper();
-        foreach (var category in EnumExt<GameCategory>.Values)
+        foreach (var category in Enums<GameCategory>.Values)
         {
             var t = Type.GetType(
                 $"Mutagen.Bethesda.{category}.{category}AspectInterfaceMapping, Mutagen.Bethesda.{category}");

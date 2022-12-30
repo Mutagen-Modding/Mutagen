@@ -980,6 +980,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Animatable,
                 TItem Duration,
                 TItem RadialBlurUseTarget,
@@ -1050,7 +1051,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Animatable = Animatable;
                 this.Duration = Duration;
@@ -6519,63 +6521,63 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.RadialBlurCenter = this.RadialBlurCenter.Combine(rhs.RadialBlurCenter);
                 ret.DepthOfFieldFlags = this.DepthOfFieldFlags.Combine(rhs.DepthOfFieldFlags);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.BlurRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.BlurRadius?.Overall, rhs.BlurRadius?.Overall), ExceptionExt.Combine(this.BlurRadius?.Specific, rhs.BlurRadius?.Specific));
-                ret.DoubleVisionStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DoubleVisionStrength?.Overall, rhs.DoubleVisionStrength?.Overall), ExceptionExt.Combine(this.DoubleVisionStrength?.Specific, rhs.DoubleVisionStrength?.Specific));
-                ret.TintColor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.TintColor?.Overall, rhs.TintColor?.Overall), ExceptionExt.Combine(this.TintColor?.Specific, rhs.TintColor?.Specific));
-                ret.FadeColor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.FadeColor?.Overall, rhs.FadeColor?.Overall), ExceptionExt.Combine(this.FadeColor?.Specific, rhs.FadeColor?.Specific));
-                ret.RadialBlurStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.RadialBlurStrength?.Overall, rhs.RadialBlurStrength?.Overall), ExceptionExt.Combine(this.RadialBlurStrength?.Specific, rhs.RadialBlurStrength?.Specific));
-                ret.RadialBlurRampUp = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.RadialBlurRampUp?.Overall, rhs.RadialBlurRampUp?.Overall), ExceptionExt.Combine(this.RadialBlurRampUp?.Specific, rhs.RadialBlurRampUp?.Specific));
-                ret.RadialBlurStart = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.RadialBlurStart?.Overall, rhs.RadialBlurStart?.Overall), ExceptionExt.Combine(this.RadialBlurStart?.Specific, rhs.RadialBlurStart?.Specific));
-                ret.RadialBlurRampDown = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.RadialBlurRampDown?.Overall, rhs.RadialBlurRampDown?.Overall), ExceptionExt.Combine(this.RadialBlurRampDown?.Specific, rhs.RadialBlurRampDown?.Specific));
-                ret.RadialBlurDownStart = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.RadialBlurDownStart?.Overall, rhs.RadialBlurDownStart?.Overall), ExceptionExt.Combine(this.RadialBlurDownStart?.Specific, rhs.RadialBlurDownStart?.Specific));
-                ret.DepthOfFieldStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldStrength?.Overall, rhs.DepthOfFieldStrength?.Overall), ExceptionExt.Combine(this.DepthOfFieldStrength?.Specific, rhs.DepthOfFieldStrength?.Specific));
-                ret.DepthOfFieldDistance = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldDistance?.Overall, rhs.DepthOfFieldDistance?.Overall), ExceptionExt.Combine(this.DepthOfFieldDistance?.Specific, rhs.DepthOfFieldDistance?.Specific));
-                ret.DepthOfFieldRange = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldRange?.Overall, rhs.DepthOfFieldRange?.Overall), ExceptionExt.Combine(this.DepthOfFieldRange?.Specific, rhs.DepthOfFieldRange?.Specific));
-                ret.DepthOfFieldVignetteRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldVignetteRadius?.Overall, rhs.DepthOfFieldVignetteRadius?.Overall), ExceptionExt.Combine(this.DepthOfFieldVignetteRadius?.Specific, rhs.DepthOfFieldVignetteRadius?.Specific));
-                ret.DepthOfFieldVignetteStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldVignetteStrength?.Overall, rhs.DepthOfFieldVignetteStrength?.Overall), ExceptionExt.Combine(this.DepthOfFieldVignetteStrength?.Specific, rhs.DepthOfFieldVignetteStrength?.Specific));
-                ret.MotionBlurStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.MotionBlurStrength?.Overall, rhs.MotionBlurStrength?.Overall), ExceptionExt.Combine(this.MotionBlurStrength?.Specific, rhs.MotionBlurStrength?.Specific));
-                ret.HdrEyeAdaptSpeedMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrEyeAdaptSpeedMult?.Overall, rhs.HdrEyeAdaptSpeedMult?.Overall), ExceptionExt.Combine(this.HdrEyeAdaptSpeedMult?.Specific, rhs.HdrEyeAdaptSpeedMult?.Specific));
-                ret.HdrEyeAdaptSpeedAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrEyeAdaptSpeedAdd?.Overall, rhs.HdrEyeAdaptSpeedAdd?.Overall), ExceptionExt.Combine(this.HdrEyeAdaptSpeedAdd?.Specific, rhs.HdrEyeAdaptSpeedAdd?.Specific));
-                ret.HdrBloomBlurRadiusMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomBlurRadiusMult?.Overall, rhs.HdrBloomBlurRadiusMult?.Overall), ExceptionExt.Combine(this.HdrBloomBlurRadiusMult?.Specific, rhs.HdrBloomBlurRadiusMult?.Specific));
-                ret.HdrBloomBlurRadiusAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomBlurRadiusAdd?.Overall, rhs.HdrBloomBlurRadiusAdd?.Overall), ExceptionExt.Combine(this.HdrBloomBlurRadiusAdd?.Specific, rhs.HdrBloomBlurRadiusAdd?.Specific));
-                ret.HdrBloomThresholdMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomThresholdMult?.Overall, rhs.HdrBloomThresholdMult?.Overall), ExceptionExt.Combine(this.HdrBloomThresholdMult?.Specific, rhs.HdrBloomThresholdMult?.Specific));
-                ret.HdrBloomThresholdAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomThresholdAdd?.Overall, rhs.HdrBloomThresholdAdd?.Overall), ExceptionExt.Combine(this.HdrBloomThresholdAdd?.Specific, rhs.HdrBloomThresholdAdd?.Specific));
-                ret.HdrBloomScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomScaleMult?.Overall, rhs.HdrBloomScaleMult?.Overall), ExceptionExt.Combine(this.HdrBloomScaleMult?.Specific, rhs.HdrBloomScaleMult?.Specific));
-                ret.HdrBloomScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomScaleAdd?.Overall, rhs.HdrBloomScaleAdd?.Overall), ExceptionExt.Combine(this.HdrBloomScaleAdd?.Specific, rhs.HdrBloomScaleAdd?.Specific));
-                ret.HdrTargetLumMinMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrTargetLumMinMult?.Overall, rhs.HdrTargetLumMinMult?.Overall), ExceptionExt.Combine(this.HdrTargetLumMinMult?.Specific, rhs.HdrTargetLumMinMult?.Specific));
-                ret.HdrTargetLumMinAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrTargetLumMinAdd?.Overall, rhs.HdrTargetLumMinAdd?.Overall), ExceptionExt.Combine(this.HdrTargetLumMinAdd?.Specific, rhs.HdrTargetLumMinAdd?.Specific));
-                ret.HdrTargetLumMaxMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrTargetLumMaxMult?.Overall, rhs.HdrTargetLumMaxMult?.Overall), ExceptionExt.Combine(this.HdrTargetLumMaxMult?.Specific, rhs.HdrTargetLumMaxMult?.Specific));
-                ret.HdrTargetLumMaxAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrTargetLumMaxAdd?.Overall, rhs.HdrTargetLumMaxAdd?.Overall), ExceptionExt.Combine(this.HdrTargetLumMaxAdd?.Specific, rhs.HdrTargetLumMaxAdd?.Specific));
-                ret.HdrSunlightScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrSunlightScaleMult?.Overall, rhs.HdrSunlightScaleMult?.Overall), ExceptionExt.Combine(this.HdrSunlightScaleMult?.Specific, rhs.HdrSunlightScaleMult?.Specific));
-                ret.HdrSunlightScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrSunlightScaleAdd?.Overall, rhs.HdrSunlightScaleAdd?.Overall), ExceptionExt.Combine(this.HdrSunlightScaleAdd?.Specific, rhs.HdrSunlightScaleAdd?.Specific));
-                ret.HdrSkyScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrSkyScaleMult?.Overall, rhs.HdrSkyScaleMult?.Overall), ExceptionExt.Combine(this.HdrSkyScaleMult?.Specific, rhs.HdrSkyScaleMult?.Specific));
-                ret.HdrSkyScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrSkyScaleAdd?.Overall, rhs.HdrSkyScaleAdd?.Overall), ExceptionExt.Combine(this.HdrSkyScaleAdd?.Specific, rhs.HdrSkyScaleAdd?.Specific));
-                ret.Unknown08 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown08?.Overall, rhs.Unknown08?.Overall), ExceptionExt.Combine(this.Unknown08?.Specific, rhs.Unknown08?.Specific));
-                ret.Unknown48 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown48?.Overall, rhs.Unknown48?.Overall), ExceptionExt.Combine(this.Unknown48?.Specific, rhs.Unknown48?.Specific));
-                ret.Unknown09 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown09?.Overall, rhs.Unknown09?.Overall), ExceptionExt.Combine(this.Unknown09?.Specific, rhs.Unknown09?.Specific));
-                ret.Unknown49 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown49?.Overall, rhs.Unknown49?.Overall), ExceptionExt.Combine(this.Unknown49?.Specific, rhs.Unknown49?.Specific));
-                ret.Unknown0A = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0A?.Overall, rhs.Unknown0A?.Overall), ExceptionExt.Combine(this.Unknown0A?.Specific, rhs.Unknown0A?.Specific));
-                ret.Unknown4A = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4A?.Overall, rhs.Unknown4A?.Overall), ExceptionExt.Combine(this.Unknown4A?.Specific, rhs.Unknown4A?.Specific));
-                ret.Unknown0B = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0B?.Overall, rhs.Unknown0B?.Overall), ExceptionExt.Combine(this.Unknown0B?.Specific, rhs.Unknown0B?.Specific));
-                ret.Unknown4B = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4B?.Overall, rhs.Unknown4B?.Overall), ExceptionExt.Combine(this.Unknown4B?.Specific, rhs.Unknown4B?.Specific));
-                ret.Unknown0C = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0C?.Overall, rhs.Unknown0C?.Overall), ExceptionExt.Combine(this.Unknown0C?.Specific, rhs.Unknown0C?.Specific));
-                ret.Unknown4C = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4C?.Overall, rhs.Unknown4C?.Overall), ExceptionExt.Combine(this.Unknown4C?.Specific, rhs.Unknown4C?.Specific));
-                ret.Unknown0D = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0D?.Overall, rhs.Unknown0D?.Overall), ExceptionExt.Combine(this.Unknown0D?.Specific, rhs.Unknown0D?.Specific));
-                ret.Unknown4D = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4D?.Overall, rhs.Unknown4D?.Overall), ExceptionExt.Combine(this.Unknown4D?.Specific, rhs.Unknown4D?.Specific));
-                ret.Unknown0E = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0E?.Overall, rhs.Unknown0E?.Overall), ExceptionExt.Combine(this.Unknown0E?.Specific, rhs.Unknown0E?.Specific));
-                ret.Unknown4E = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4E?.Overall, rhs.Unknown4E?.Overall), ExceptionExt.Combine(this.Unknown4E?.Specific, rhs.Unknown4E?.Specific));
-                ret.Unknown0F = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0F?.Overall, rhs.Unknown0F?.Overall), ExceptionExt.Combine(this.Unknown0F?.Specific, rhs.Unknown0F?.Specific));
-                ret.Unknown4F = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4F?.Overall, rhs.Unknown4F?.Overall), ExceptionExt.Combine(this.Unknown4F?.Specific, rhs.Unknown4F?.Specific));
-                ret.Unknown10 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown10?.Overall, rhs.Unknown10?.Overall), ExceptionExt.Combine(this.Unknown10?.Specific, rhs.Unknown10?.Specific));
-                ret.Unknown50 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown50?.Overall, rhs.Unknown50?.Overall), ExceptionExt.Combine(this.Unknown50?.Specific, rhs.Unknown50?.Specific));
-                ret.CinematicSaturationMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicSaturationMult?.Overall, rhs.CinematicSaturationMult?.Overall), ExceptionExt.Combine(this.CinematicSaturationMult?.Specific, rhs.CinematicSaturationMult?.Specific));
-                ret.CinematicSaturationAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicSaturationAdd?.Overall, rhs.CinematicSaturationAdd?.Overall), ExceptionExt.Combine(this.CinematicSaturationAdd?.Specific, rhs.CinematicSaturationAdd?.Specific));
-                ret.CinematicBrightnessMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicBrightnessMult?.Overall, rhs.CinematicBrightnessMult?.Overall), ExceptionExt.Combine(this.CinematicBrightnessMult?.Specific, rhs.CinematicBrightnessMult?.Specific));
-                ret.CinematicBrightnessAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicBrightnessAdd?.Overall, rhs.CinematicBrightnessAdd?.Overall), ExceptionExt.Combine(this.CinematicBrightnessAdd?.Specific, rhs.CinematicBrightnessAdd?.Specific));
-                ret.CinematicContrastMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicContrastMult?.Overall, rhs.CinematicContrastMult?.Overall), ExceptionExt.Combine(this.CinematicContrastMult?.Specific, rhs.CinematicContrastMult?.Specific));
-                ret.CinematicContrastAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicContrastAdd?.Overall, rhs.CinematicContrastAdd?.Overall), ExceptionExt.Combine(this.CinematicContrastAdd?.Specific, rhs.CinematicContrastAdd?.Specific));
-                ret.Unknown14 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown14?.Overall, rhs.Unknown14?.Overall), ExceptionExt.Combine(this.Unknown14?.Specific, rhs.Unknown14?.Specific));
-                ret.Unknown54 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown54?.Overall, rhs.Unknown54?.Overall), ExceptionExt.Combine(this.Unknown54?.Specific, rhs.Unknown54?.Specific));
+                ret.BlurRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BlurRadius?.Overall, rhs.BlurRadius?.Overall), Noggog.ExceptionExt.Combine(this.BlurRadius?.Specific, rhs.BlurRadius?.Specific));
+                ret.DoubleVisionStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DoubleVisionStrength?.Overall, rhs.DoubleVisionStrength?.Overall), Noggog.ExceptionExt.Combine(this.DoubleVisionStrength?.Specific, rhs.DoubleVisionStrength?.Specific));
+                ret.TintColor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TintColor?.Overall, rhs.TintColor?.Overall), Noggog.ExceptionExt.Combine(this.TintColor?.Specific, rhs.TintColor?.Specific));
+                ret.FadeColor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FadeColor?.Overall, rhs.FadeColor?.Overall), Noggog.ExceptionExt.Combine(this.FadeColor?.Specific, rhs.FadeColor?.Specific));
+                ret.RadialBlurStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RadialBlurStrength?.Overall, rhs.RadialBlurStrength?.Overall), Noggog.ExceptionExt.Combine(this.RadialBlurStrength?.Specific, rhs.RadialBlurStrength?.Specific));
+                ret.RadialBlurRampUp = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RadialBlurRampUp?.Overall, rhs.RadialBlurRampUp?.Overall), Noggog.ExceptionExt.Combine(this.RadialBlurRampUp?.Specific, rhs.RadialBlurRampUp?.Specific));
+                ret.RadialBlurStart = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RadialBlurStart?.Overall, rhs.RadialBlurStart?.Overall), Noggog.ExceptionExt.Combine(this.RadialBlurStart?.Specific, rhs.RadialBlurStart?.Specific));
+                ret.RadialBlurRampDown = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RadialBlurRampDown?.Overall, rhs.RadialBlurRampDown?.Overall), Noggog.ExceptionExt.Combine(this.RadialBlurRampDown?.Specific, rhs.RadialBlurRampDown?.Specific));
+                ret.RadialBlurDownStart = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RadialBlurDownStart?.Overall, rhs.RadialBlurDownStart?.Overall), Noggog.ExceptionExt.Combine(this.RadialBlurDownStart?.Specific, rhs.RadialBlurDownStart?.Specific));
+                ret.DepthOfFieldStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DepthOfFieldStrength?.Overall, rhs.DepthOfFieldStrength?.Overall), Noggog.ExceptionExt.Combine(this.DepthOfFieldStrength?.Specific, rhs.DepthOfFieldStrength?.Specific));
+                ret.DepthOfFieldDistance = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DepthOfFieldDistance?.Overall, rhs.DepthOfFieldDistance?.Overall), Noggog.ExceptionExt.Combine(this.DepthOfFieldDistance?.Specific, rhs.DepthOfFieldDistance?.Specific));
+                ret.DepthOfFieldRange = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DepthOfFieldRange?.Overall, rhs.DepthOfFieldRange?.Overall), Noggog.ExceptionExt.Combine(this.DepthOfFieldRange?.Specific, rhs.DepthOfFieldRange?.Specific));
+                ret.DepthOfFieldVignetteRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DepthOfFieldVignetteRadius?.Overall, rhs.DepthOfFieldVignetteRadius?.Overall), Noggog.ExceptionExt.Combine(this.DepthOfFieldVignetteRadius?.Specific, rhs.DepthOfFieldVignetteRadius?.Specific));
+                ret.DepthOfFieldVignetteStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DepthOfFieldVignetteStrength?.Overall, rhs.DepthOfFieldVignetteStrength?.Overall), Noggog.ExceptionExt.Combine(this.DepthOfFieldVignetteStrength?.Specific, rhs.DepthOfFieldVignetteStrength?.Specific));
+                ret.MotionBlurStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MotionBlurStrength?.Overall, rhs.MotionBlurStrength?.Overall), Noggog.ExceptionExt.Combine(this.MotionBlurStrength?.Specific, rhs.MotionBlurStrength?.Specific));
+                ret.HdrEyeAdaptSpeedMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrEyeAdaptSpeedMult?.Overall, rhs.HdrEyeAdaptSpeedMult?.Overall), Noggog.ExceptionExt.Combine(this.HdrEyeAdaptSpeedMult?.Specific, rhs.HdrEyeAdaptSpeedMult?.Specific));
+                ret.HdrEyeAdaptSpeedAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrEyeAdaptSpeedAdd?.Overall, rhs.HdrEyeAdaptSpeedAdd?.Overall), Noggog.ExceptionExt.Combine(this.HdrEyeAdaptSpeedAdd?.Specific, rhs.HdrEyeAdaptSpeedAdd?.Specific));
+                ret.HdrBloomBlurRadiusMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrBloomBlurRadiusMult?.Overall, rhs.HdrBloomBlurRadiusMult?.Overall), Noggog.ExceptionExt.Combine(this.HdrBloomBlurRadiusMult?.Specific, rhs.HdrBloomBlurRadiusMult?.Specific));
+                ret.HdrBloomBlurRadiusAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrBloomBlurRadiusAdd?.Overall, rhs.HdrBloomBlurRadiusAdd?.Overall), Noggog.ExceptionExt.Combine(this.HdrBloomBlurRadiusAdd?.Specific, rhs.HdrBloomBlurRadiusAdd?.Specific));
+                ret.HdrBloomThresholdMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrBloomThresholdMult?.Overall, rhs.HdrBloomThresholdMult?.Overall), Noggog.ExceptionExt.Combine(this.HdrBloomThresholdMult?.Specific, rhs.HdrBloomThresholdMult?.Specific));
+                ret.HdrBloomThresholdAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrBloomThresholdAdd?.Overall, rhs.HdrBloomThresholdAdd?.Overall), Noggog.ExceptionExt.Combine(this.HdrBloomThresholdAdd?.Specific, rhs.HdrBloomThresholdAdd?.Specific));
+                ret.HdrBloomScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrBloomScaleMult?.Overall, rhs.HdrBloomScaleMult?.Overall), Noggog.ExceptionExt.Combine(this.HdrBloomScaleMult?.Specific, rhs.HdrBloomScaleMult?.Specific));
+                ret.HdrBloomScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrBloomScaleAdd?.Overall, rhs.HdrBloomScaleAdd?.Overall), Noggog.ExceptionExt.Combine(this.HdrBloomScaleAdd?.Specific, rhs.HdrBloomScaleAdd?.Specific));
+                ret.HdrTargetLumMinMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrTargetLumMinMult?.Overall, rhs.HdrTargetLumMinMult?.Overall), Noggog.ExceptionExt.Combine(this.HdrTargetLumMinMult?.Specific, rhs.HdrTargetLumMinMult?.Specific));
+                ret.HdrTargetLumMinAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrTargetLumMinAdd?.Overall, rhs.HdrTargetLumMinAdd?.Overall), Noggog.ExceptionExt.Combine(this.HdrTargetLumMinAdd?.Specific, rhs.HdrTargetLumMinAdd?.Specific));
+                ret.HdrTargetLumMaxMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrTargetLumMaxMult?.Overall, rhs.HdrTargetLumMaxMult?.Overall), Noggog.ExceptionExt.Combine(this.HdrTargetLumMaxMult?.Specific, rhs.HdrTargetLumMaxMult?.Specific));
+                ret.HdrTargetLumMaxAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrTargetLumMaxAdd?.Overall, rhs.HdrTargetLumMaxAdd?.Overall), Noggog.ExceptionExt.Combine(this.HdrTargetLumMaxAdd?.Specific, rhs.HdrTargetLumMaxAdd?.Specific));
+                ret.HdrSunlightScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrSunlightScaleMult?.Overall, rhs.HdrSunlightScaleMult?.Overall), Noggog.ExceptionExt.Combine(this.HdrSunlightScaleMult?.Specific, rhs.HdrSunlightScaleMult?.Specific));
+                ret.HdrSunlightScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrSunlightScaleAdd?.Overall, rhs.HdrSunlightScaleAdd?.Overall), Noggog.ExceptionExt.Combine(this.HdrSunlightScaleAdd?.Specific, rhs.HdrSunlightScaleAdd?.Specific));
+                ret.HdrSkyScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrSkyScaleMult?.Overall, rhs.HdrSkyScaleMult?.Overall), Noggog.ExceptionExt.Combine(this.HdrSkyScaleMult?.Specific, rhs.HdrSkyScaleMult?.Specific));
+                ret.HdrSkyScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HdrSkyScaleAdd?.Overall, rhs.HdrSkyScaleAdd?.Overall), Noggog.ExceptionExt.Combine(this.HdrSkyScaleAdd?.Specific, rhs.HdrSkyScaleAdd?.Specific));
+                ret.Unknown08 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown08?.Overall, rhs.Unknown08?.Overall), Noggog.ExceptionExt.Combine(this.Unknown08?.Specific, rhs.Unknown08?.Specific));
+                ret.Unknown48 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown48?.Overall, rhs.Unknown48?.Overall), Noggog.ExceptionExt.Combine(this.Unknown48?.Specific, rhs.Unknown48?.Specific));
+                ret.Unknown09 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown09?.Overall, rhs.Unknown09?.Overall), Noggog.ExceptionExt.Combine(this.Unknown09?.Specific, rhs.Unknown09?.Specific));
+                ret.Unknown49 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown49?.Overall, rhs.Unknown49?.Overall), Noggog.ExceptionExt.Combine(this.Unknown49?.Specific, rhs.Unknown49?.Specific));
+                ret.Unknown0A = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown0A?.Overall, rhs.Unknown0A?.Overall), Noggog.ExceptionExt.Combine(this.Unknown0A?.Specific, rhs.Unknown0A?.Specific));
+                ret.Unknown4A = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown4A?.Overall, rhs.Unknown4A?.Overall), Noggog.ExceptionExt.Combine(this.Unknown4A?.Specific, rhs.Unknown4A?.Specific));
+                ret.Unknown0B = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown0B?.Overall, rhs.Unknown0B?.Overall), Noggog.ExceptionExt.Combine(this.Unknown0B?.Specific, rhs.Unknown0B?.Specific));
+                ret.Unknown4B = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown4B?.Overall, rhs.Unknown4B?.Overall), Noggog.ExceptionExt.Combine(this.Unknown4B?.Specific, rhs.Unknown4B?.Specific));
+                ret.Unknown0C = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown0C?.Overall, rhs.Unknown0C?.Overall), Noggog.ExceptionExt.Combine(this.Unknown0C?.Specific, rhs.Unknown0C?.Specific));
+                ret.Unknown4C = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown4C?.Overall, rhs.Unknown4C?.Overall), Noggog.ExceptionExt.Combine(this.Unknown4C?.Specific, rhs.Unknown4C?.Specific));
+                ret.Unknown0D = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown0D?.Overall, rhs.Unknown0D?.Overall), Noggog.ExceptionExt.Combine(this.Unknown0D?.Specific, rhs.Unknown0D?.Specific));
+                ret.Unknown4D = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown4D?.Overall, rhs.Unknown4D?.Overall), Noggog.ExceptionExt.Combine(this.Unknown4D?.Specific, rhs.Unknown4D?.Specific));
+                ret.Unknown0E = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown0E?.Overall, rhs.Unknown0E?.Overall), Noggog.ExceptionExt.Combine(this.Unknown0E?.Specific, rhs.Unknown0E?.Specific));
+                ret.Unknown4E = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown4E?.Overall, rhs.Unknown4E?.Overall), Noggog.ExceptionExt.Combine(this.Unknown4E?.Specific, rhs.Unknown4E?.Specific));
+                ret.Unknown0F = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown0F?.Overall, rhs.Unknown0F?.Overall), Noggog.ExceptionExt.Combine(this.Unknown0F?.Specific, rhs.Unknown0F?.Specific));
+                ret.Unknown4F = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown4F?.Overall, rhs.Unknown4F?.Overall), Noggog.ExceptionExt.Combine(this.Unknown4F?.Specific, rhs.Unknown4F?.Specific));
+                ret.Unknown10 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown10?.Overall, rhs.Unknown10?.Overall), Noggog.ExceptionExt.Combine(this.Unknown10?.Specific, rhs.Unknown10?.Specific));
+                ret.Unknown50 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown50?.Overall, rhs.Unknown50?.Overall), Noggog.ExceptionExt.Combine(this.Unknown50?.Specific, rhs.Unknown50?.Specific));
+                ret.CinematicSaturationMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CinematicSaturationMult?.Overall, rhs.CinematicSaturationMult?.Overall), Noggog.ExceptionExt.Combine(this.CinematicSaturationMult?.Specific, rhs.CinematicSaturationMult?.Specific));
+                ret.CinematicSaturationAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CinematicSaturationAdd?.Overall, rhs.CinematicSaturationAdd?.Overall), Noggog.ExceptionExt.Combine(this.CinematicSaturationAdd?.Specific, rhs.CinematicSaturationAdd?.Specific));
+                ret.CinematicBrightnessMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CinematicBrightnessMult?.Overall, rhs.CinematicBrightnessMult?.Overall), Noggog.ExceptionExt.Combine(this.CinematicBrightnessMult?.Specific, rhs.CinematicBrightnessMult?.Specific));
+                ret.CinematicBrightnessAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CinematicBrightnessAdd?.Overall, rhs.CinematicBrightnessAdd?.Overall), Noggog.ExceptionExt.Combine(this.CinematicBrightnessAdd?.Specific, rhs.CinematicBrightnessAdd?.Specific));
+                ret.CinematicContrastMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CinematicContrastMult?.Overall, rhs.CinematicContrastMult?.Overall), Noggog.ExceptionExt.Combine(this.CinematicContrastMult?.Specific, rhs.CinematicContrastMult?.Specific));
+                ret.CinematicContrastAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CinematicContrastAdd?.Overall, rhs.CinematicContrastAdd?.Overall), Noggog.ExceptionExt.Combine(this.CinematicContrastAdd?.Specific, rhs.CinematicContrastAdd?.Specific));
+                ret.Unknown14 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown14?.Overall, rhs.Unknown14?.Overall), Noggog.ExceptionExt.Combine(this.Unknown14?.Specific, rhs.Unknown14?.Specific));
+                ret.Unknown54 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Unknown54?.Overall, rhs.Unknown54?.Overall), Noggog.ExceptionExt.Combine(this.Unknown54?.Specific, rhs.Unknown54?.Specific));
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
@@ -6816,12 +6818,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IImageSpaceAdapterGetter rhs) return false;
-            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceAdapterGetter? obj)
         {
-            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -7092,7 +7094,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -7168,6 +7170,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ImageSpaceAdapter Duplicate(
+            this IImageSpaceAdapterGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -7200,70 +7213,71 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Animatable = 6,
-        Duration = 7,
-        RadialBlurUseTarget = 8,
-        RadialBlurCenter = 9,
-        DepthOfFieldFlags = 10,
-        Unknown = 11,
-        BlurRadius = 12,
-        DoubleVisionStrength = 13,
-        TintColor = 14,
-        FadeColor = 15,
-        RadialBlurStrength = 16,
-        RadialBlurRampUp = 17,
-        RadialBlurStart = 18,
-        RadialBlurRampDown = 19,
-        RadialBlurDownStart = 20,
-        DepthOfFieldStrength = 21,
-        DepthOfFieldDistance = 22,
-        DepthOfFieldRange = 23,
-        DepthOfFieldVignetteRadius = 24,
-        DepthOfFieldVignetteStrength = 25,
-        MotionBlurStrength = 26,
-        HdrEyeAdaptSpeedMult = 27,
-        HdrEyeAdaptSpeedAdd = 28,
-        HdrBloomBlurRadiusMult = 29,
-        HdrBloomBlurRadiusAdd = 30,
-        HdrBloomThresholdMult = 31,
-        HdrBloomThresholdAdd = 32,
-        HdrBloomScaleMult = 33,
-        HdrBloomScaleAdd = 34,
-        HdrTargetLumMinMult = 35,
-        HdrTargetLumMinAdd = 36,
-        HdrTargetLumMaxMult = 37,
-        HdrTargetLumMaxAdd = 38,
-        HdrSunlightScaleMult = 39,
-        HdrSunlightScaleAdd = 40,
-        HdrSkyScaleMult = 41,
-        HdrSkyScaleAdd = 42,
-        Unknown08 = 43,
-        Unknown48 = 44,
-        Unknown09 = 45,
-        Unknown49 = 46,
-        Unknown0A = 47,
-        Unknown4A = 48,
-        Unknown0B = 49,
-        Unknown4B = 50,
-        Unknown0C = 51,
-        Unknown4C = 52,
-        Unknown0D = 53,
-        Unknown4D = 54,
-        Unknown0E = 55,
-        Unknown4E = 56,
-        Unknown0F = 57,
-        Unknown4F = 58,
-        Unknown10 = 59,
-        Unknown50 = 60,
-        CinematicSaturationMult = 61,
-        CinematicSaturationAdd = 62,
-        CinematicBrightnessMult = 63,
-        CinematicBrightnessAdd = 64,
-        CinematicContrastMult = 65,
-        CinematicContrastAdd = 66,
-        Unknown14 = 67,
-        Unknown54 = 68,
-        DNAMDataTypeState = 69,
+        Fallout4MajorRecordFlags = 6,
+        Animatable = 7,
+        Duration = 8,
+        RadialBlurUseTarget = 9,
+        RadialBlurCenter = 10,
+        DepthOfFieldFlags = 11,
+        Unknown = 12,
+        BlurRadius = 13,
+        DoubleVisionStrength = 14,
+        TintColor = 15,
+        FadeColor = 16,
+        RadialBlurStrength = 17,
+        RadialBlurRampUp = 18,
+        RadialBlurStart = 19,
+        RadialBlurRampDown = 20,
+        RadialBlurDownStart = 21,
+        DepthOfFieldStrength = 22,
+        DepthOfFieldDistance = 23,
+        DepthOfFieldRange = 24,
+        DepthOfFieldVignetteRadius = 25,
+        DepthOfFieldVignetteStrength = 26,
+        MotionBlurStrength = 27,
+        HdrEyeAdaptSpeedMult = 28,
+        HdrEyeAdaptSpeedAdd = 29,
+        HdrBloomBlurRadiusMult = 30,
+        HdrBloomBlurRadiusAdd = 31,
+        HdrBloomThresholdMult = 32,
+        HdrBloomThresholdAdd = 33,
+        HdrBloomScaleMult = 34,
+        HdrBloomScaleAdd = 35,
+        HdrTargetLumMinMult = 36,
+        HdrTargetLumMinAdd = 37,
+        HdrTargetLumMaxMult = 38,
+        HdrTargetLumMaxAdd = 39,
+        HdrSunlightScaleMult = 40,
+        HdrSunlightScaleAdd = 41,
+        HdrSkyScaleMult = 42,
+        HdrSkyScaleAdd = 43,
+        Unknown08 = 44,
+        Unknown48 = 45,
+        Unknown09 = 46,
+        Unknown49 = 47,
+        Unknown0A = 48,
+        Unknown4A = 49,
+        Unknown0B = 50,
+        Unknown4B = 51,
+        Unknown0C = 52,
+        Unknown4C = 53,
+        Unknown0D = 54,
+        Unknown4D = 55,
+        Unknown0E = 56,
+        Unknown4E = 57,
+        Unknown0F = 58,
+        Unknown4F = 59,
+        Unknown10 = 60,
+        Unknown50 = 61,
+        CinematicSaturationMult = 62,
+        CinematicSaturationAdd = 63,
+        CinematicBrightnessMult = 64,
+        CinematicBrightnessAdd = 65,
+        CinematicContrastMult = 66,
+        CinematicContrastAdd = 67,
+        Unknown14 = 68,
+        Unknown54 = 69,
+        DNAMDataTypeState = 70,
     }
     #endregion
 
@@ -7283,7 +7297,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 64;
 
-        public const ushort FieldCount = 70;
+        public const ushort FieldCount = 71;
 
         public static readonly Type MaskType = typeof(ImageSpaceAdapter.Mask<>);
 
@@ -8751,8 +8765,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (ImageSpaceAdapter_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -8769,7 +8785,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -8777,263 +8793,263 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IImageSpaceAdapterGetter? lhs,
             IImageSpaceAdapterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Animatable) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Animatable) ?? true))
             {
                 if (lhs.Animatable != rhs.Animatable) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
             {
                 if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget) ?? true))
             {
                 if (lhs.RadialBlurUseTarget != rhs.RadialBlurUseTarget) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
             {
                 if (!lhs.RadialBlurCenter.Equals(rhs.RadialBlurCenter)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags) ?? true))
             {
                 if (lhs.DepthOfFieldFlags != rhs.DepthOfFieldFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
             {
-                if (!lhs.BlurRadius.SequenceEqualNullable(rhs.BlurRadius, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.BlurRadius)))) return false;
+                if (!lhs.BlurRadius.SequenceEqualNullable(rhs.BlurRadius, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.BlurRadius)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength) ?? true))
             {
-                if (!lhs.DoubleVisionStrength.SequenceEqualNullable(rhs.DoubleVisionStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength)))) return false;
+                if (!lhs.DoubleVisionStrength.SequenceEqualNullable(rhs.DoubleVisionStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.TintColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.TintColor) ?? true))
             {
-                if (!lhs.TintColor.SequenceEqualNullable(rhs.TintColor, (l, r) => ((ColorFrameCommon)((IColorFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.TintColor)))) return false;
+                if (!lhs.TintColor.SequenceEqualNullable(rhs.TintColor, (l, r) => ((ColorFrameCommon)((IColorFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.TintColor)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.FadeColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.FadeColor) ?? true))
             {
-                if (!lhs.FadeColor.SequenceEqualNullable(rhs.FadeColor, (l, r) => ((ColorFrameCommon)((IColorFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.FadeColor)))) return false;
+                if (!lhs.FadeColor.SequenceEqualNullable(rhs.FadeColor, (l, r) => ((ColorFrameCommon)((IColorFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.FadeColor)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength) ?? true))
             {
-                if (!lhs.RadialBlurStrength.SequenceEqualNullable(rhs.RadialBlurStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength)))) return false;
+                if (!lhs.RadialBlurStrength.SequenceEqualNullable(rhs.RadialBlurStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp) ?? true))
             {
-                if (!lhs.RadialBlurRampUp.SequenceEqualNullable(rhs.RadialBlurRampUp, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp)))) return false;
+                if (!lhs.RadialBlurRampUp.SequenceEqualNullable(rhs.RadialBlurRampUp, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart) ?? true))
             {
-                if (!lhs.RadialBlurStart.SequenceEqualNullable(rhs.RadialBlurStart, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart)))) return false;
+                if (!lhs.RadialBlurStart.SequenceEqualNullable(rhs.RadialBlurStart, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown) ?? true))
             {
-                if (!lhs.RadialBlurRampDown.SequenceEqualNullable(rhs.RadialBlurRampDown, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown)))) return false;
+                if (!lhs.RadialBlurRampDown.SequenceEqualNullable(rhs.RadialBlurRampDown, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart) ?? true))
             {
-                if (!lhs.RadialBlurDownStart.SequenceEqualNullable(rhs.RadialBlurDownStart, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart)))) return false;
+                if (!lhs.RadialBlurDownStart.SequenceEqualNullable(rhs.RadialBlurDownStart, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength) ?? true))
             {
-                if (!lhs.DepthOfFieldStrength.SequenceEqualNullable(rhs.DepthOfFieldStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength)))) return false;
+                if (!lhs.DepthOfFieldStrength.SequenceEqualNullable(rhs.DepthOfFieldStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance) ?? true))
             {
-                if (!lhs.DepthOfFieldDistance.SequenceEqualNullable(rhs.DepthOfFieldDistance, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance)))) return false;
+                if (!lhs.DepthOfFieldDistance.SequenceEqualNullable(rhs.DepthOfFieldDistance, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange) ?? true))
             {
-                if (!lhs.DepthOfFieldRange.SequenceEqualNullable(rhs.DepthOfFieldRange, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange)))) return false;
+                if (!lhs.DepthOfFieldRange.SequenceEqualNullable(rhs.DepthOfFieldRange, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius) ?? true))
             {
-                if (!lhs.DepthOfFieldVignetteRadius.SequenceEqualNullable(rhs.DepthOfFieldVignetteRadius, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius)))) return false;
+                if (!lhs.DepthOfFieldVignetteRadius.SequenceEqualNullable(rhs.DepthOfFieldVignetteRadius, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteRadius)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength) ?? true))
             {
-                if (!lhs.DepthOfFieldVignetteStrength.SequenceEqualNullable(rhs.DepthOfFieldVignetteStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength)))) return false;
+                if (!lhs.DepthOfFieldVignetteStrength.SequenceEqualNullable(rhs.DepthOfFieldVignetteStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldVignetteStrength)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength) ?? true))
             {
-                if (!lhs.MotionBlurStrength.SequenceEqualNullable(rhs.MotionBlurStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength)))) return false;
+                if (!lhs.MotionBlurStrength.SequenceEqualNullable(rhs.MotionBlurStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult) ?? true))
             {
-                if (!lhs.HdrEyeAdaptSpeedMult.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult)))) return false;
+                if (!lhs.HdrEyeAdaptSpeedMult.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd) ?? true))
             {
-                if (!lhs.HdrEyeAdaptSpeedAdd.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd)))) return false;
+                if (!lhs.HdrEyeAdaptSpeedAdd.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult) ?? true))
             {
-                if (!lhs.HdrBloomBlurRadiusMult.SequenceEqualNullable(rhs.HdrBloomBlurRadiusMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult)))) return false;
+                if (!lhs.HdrBloomBlurRadiusMult.SequenceEqualNullable(rhs.HdrBloomBlurRadiusMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd) ?? true))
             {
-                if (!lhs.HdrBloomBlurRadiusAdd.SequenceEqualNullable(rhs.HdrBloomBlurRadiusAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd)))) return false;
+                if (!lhs.HdrBloomBlurRadiusAdd.SequenceEqualNullable(rhs.HdrBloomBlurRadiusAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult) ?? true))
             {
-                if (!lhs.HdrBloomThresholdMult.SequenceEqualNullable(rhs.HdrBloomThresholdMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult)))) return false;
+                if (!lhs.HdrBloomThresholdMult.SequenceEqualNullable(rhs.HdrBloomThresholdMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd) ?? true))
             {
-                if (!lhs.HdrBloomThresholdAdd.SequenceEqualNullable(rhs.HdrBloomThresholdAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd)))) return false;
+                if (!lhs.HdrBloomThresholdAdd.SequenceEqualNullable(rhs.HdrBloomThresholdAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult) ?? true))
             {
-                if (!lhs.HdrBloomScaleMult.SequenceEqualNullable(rhs.HdrBloomScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult)))) return false;
+                if (!lhs.HdrBloomScaleMult.SequenceEqualNullable(rhs.HdrBloomScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd) ?? true))
             {
-                if (!lhs.HdrBloomScaleAdd.SequenceEqualNullable(rhs.HdrBloomScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd)))) return false;
+                if (!lhs.HdrBloomScaleAdd.SequenceEqualNullable(rhs.HdrBloomScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult) ?? true))
             {
-                if (!lhs.HdrTargetLumMinMult.SequenceEqualNullable(rhs.HdrTargetLumMinMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult)))) return false;
+                if (!lhs.HdrTargetLumMinMult.SequenceEqualNullable(rhs.HdrTargetLumMinMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd) ?? true))
             {
-                if (!lhs.HdrTargetLumMinAdd.SequenceEqualNullable(rhs.HdrTargetLumMinAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd)))) return false;
+                if (!lhs.HdrTargetLumMinAdd.SequenceEqualNullable(rhs.HdrTargetLumMinAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult) ?? true))
             {
-                if (!lhs.HdrTargetLumMaxMult.SequenceEqualNullable(rhs.HdrTargetLumMaxMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult)))) return false;
+                if (!lhs.HdrTargetLumMaxMult.SequenceEqualNullable(rhs.HdrTargetLumMaxMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd) ?? true))
             {
-                if (!lhs.HdrTargetLumMaxAdd.SequenceEqualNullable(rhs.HdrTargetLumMaxAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd)))) return false;
+                if (!lhs.HdrTargetLumMaxAdd.SequenceEqualNullable(rhs.HdrTargetLumMaxAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult) ?? true))
             {
-                if (!lhs.HdrSunlightScaleMult.SequenceEqualNullable(rhs.HdrSunlightScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult)))) return false;
+                if (!lhs.HdrSunlightScaleMult.SequenceEqualNullable(rhs.HdrSunlightScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd) ?? true))
             {
-                if (!lhs.HdrSunlightScaleAdd.SequenceEqualNullable(rhs.HdrSunlightScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd)))) return false;
+                if (!lhs.HdrSunlightScaleAdd.SequenceEqualNullable(rhs.HdrSunlightScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult) ?? true))
             {
-                if (!lhs.HdrSkyScaleMult.SequenceEqualNullable(rhs.HdrSkyScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult)))) return false;
+                if (!lhs.HdrSkyScaleMult.SequenceEqualNullable(rhs.HdrSkyScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd) ?? true))
             {
-                if (!lhs.HdrSkyScaleAdd.SequenceEqualNullable(rhs.HdrSkyScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd)))) return false;
+                if (!lhs.HdrSkyScaleAdd.SequenceEqualNullable(rhs.HdrSkyScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown08) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown08) ?? true))
             {
-                if (!lhs.Unknown08.SequenceEqualNullable(rhs.Unknown08, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown08)))) return false;
+                if (!lhs.Unknown08.SequenceEqualNullable(rhs.Unknown08, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown08)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown48) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown48) ?? true))
             {
-                if (!lhs.Unknown48.SequenceEqualNullable(rhs.Unknown48, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown48)))) return false;
+                if (!lhs.Unknown48.SequenceEqualNullable(rhs.Unknown48, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown48)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown09) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown09) ?? true))
             {
-                if (!lhs.Unknown09.SequenceEqualNullable(rhs.Unknown09, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown09)))) return false;
+                if (!lhs.Unknown09.SequenceEqualNullable(rhs.Unknown09, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown09)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown49) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown49) ?? true))
             {
-                if (!lhs.Unknown49.SequenceEqualNullable(rhs.Unknown49, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown49)))) return false;
+                if (!lhs.Unknown49.SequenceEqualNullable(rhs.Unknown49, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown49)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0A) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0A) ?? true))
             {
-                if (!lhs.Unknown0A.SequenceEqualNullable(rhs.Unknown0A, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0A)))) return false;
+                if (!lhs.Unknown0A.SequenceEqualNullable(rhs.Unknown0A, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0A)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4A) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4A) ?? true))
             {
-                if (!lhs.Unknown4A.SequenceEqualNullable(rhs.Unknown4A, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4A)))) return false;
+                if (!lhs.Unknown4A.SequenceEqualNullable(rhs.Unknown4A, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4A)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0B) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0B) ?? true))
             {
-                if (!lhs.Unknown0B.SequenceEqualNullable(rhs.Unknown0B, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0B)))) return false;
+                if (!lhs.Unknown0B.SequenceEqualNullable(rhs.Unknown0B, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0B)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4B) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4B) ?? true))
             {
-                if (!lhs.Unknown4B.SequenceEqualNullable(rhs.Unknown4B, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4B)))) return false;
+                if (!lhs.Unknown4B.SequenceEqualNullable(rhs.Unknown4B, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4B)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0C) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0C) ?? true))
             {
-                if (!lhs.Unknown0C.SequenceEqualNullable(rhs.Unknown0C, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0C)))) return false;
+                if (!lhs.Unknown0C.SequenceEqualNullable(rhs.Unknown0C, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0C)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4C) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4C) ?? true))
             {
-                if (!lhs.Unknown4C.SequenceEqualNullable(rhs.Unknown4C, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4C)))) return false;
+                if (!lhs.Unknown4C.SequenceEqualNullable(rhs.Unknown4C, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4C)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0D) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0D) ?? true))
             {
-                if (!lhs.Unknown0D.SequenceEqualNullable(rhs.Unknown0D, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0D)))) return false;
+                if (!lhs.Unknown0D.SequenceEqualNullable(rhs.Unknown0D, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0D)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4D) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4D) ?? true))
             {
-                if (!lhs.Unknown4D.SequenceEqualNullable(rhs.Unknown4D, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4D)))) return false;
+                if (!lhs.Unknown4D.SequenceEqualNullable(rhs.Unknown4D, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4D)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0E) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0E) ?? true))
             {
-                if (!lhs.Unknown0E.SequenceEqualNullable(rhs.Unknown0E, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0E)))) return false;
+                if (!lhs.Unknown0E.SequenceEqualNullable(rhs.Unknown0E, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0E)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4E) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4E) ?? true))
             {
-                if (!lhs.Unknown4E.SequenceEqualNullable(rhs.Unknown4E, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4E)))) return false;
+                if (!lhs.Unknown4E.SequenceEqualNullable(rhs.Unknown4E, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4E)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0F) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0F) ?? true))
             {
-                if (!lhs.Unknown0F.SequenceEqualNullable(rhs.Unknown0F, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0F)))) return false;
+                if (!lhs.Unknown0F.SequenceEqualNullable(rhs.Unknown0F, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0F)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4F) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4F) ?? true))
             {
-                if (!lhs.Unknown4F.SequenceEqualNullable(rhs.Unknown4F, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4F)))) return false;
+                if (!lhs.Unknown4F.SequenceEqualNullable(rhs.Unknown4F, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4F)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown10) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown10) ?? true))
             {
-                if (!lhs.Unknown10.SequenceEqualNullable(rhs.Unknown10, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown10)))) return false;
+                if (!lhs.Unknown10.SequenceEqualNullable(rhs.Unknown10, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown10)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown50) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown50) ?? true))
             {
-                if (!lhs.Unknown50.SequenceEqualNullable(rhs.Unknown50, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown50)))) return false;
+                if (!lhs.Unknown50.SequenceEqualNullable(rhs.Unknown50, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown50)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult) ?? true))
             {
-                if (!lhs.CinematicSaturationMult.SequenceEqualNullable(rhs.CinematicSaturationMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult)))) return false;
+                if (!lhs.CinematicSaturationMult.SequenceEqualNullable(rhs.CinematicSaturationMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd) ?? true))
             {
-                if (!lhs.CinematicSaturationAdd.SequenceEqualNullable(rhs.CinematicSaturationAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd)))) return false;
+                if (!lhs.CinematicSaturationAdd.SequenceEqualNullable(rhs.CinematicSaturationAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult) ?? true))
             {
-                if (!lhs.CinematicBrightnessMult.SequenceEqualNullable(rhs.CinematicBrightnessMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult)))) return false;
+                if (!lhs.CinematicBrightnessMult.SequenceEqualNullable(rhs.CinematicBrightnessMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd) ?? true))
             {
-                if (!lhs.CinematicBrightnessAdd.SequenceEqualNullable(rhs.CinematicBrightnessAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd)))) return false;
+                if (!lhs.CinematicBrightnessAdd.SequenceEqualNullable(rhs.CinematicBrightnessAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult) ?? true))
             {
-                if (!lhs.CinematicContrastMult.SequenceEqualNullable(rhs.CinematicContrastMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult)))) return false;
+                if (!lhs.CinematicContrastMult.SequenceEqualNullable(rhs.CinematicContrastMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd) ?? true))
             {
-                if (!lhs.CinematicContrastAdd.SequenceEqualNullable(rhs.CinematicContrastAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd)))) return false;
+                if (!lhs.CinematicContrastAdd.SequenceEqualNullable(rhs.CinematicContrastAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown14) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown14) ?? true))
             {
-                if (!lhs.Unknown14.SequenceEqualNullable(rhs.Unknown14, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown14)))) return false;
+                if (!lhs.Unknown14.SequenceEqualNullable(rhs.Unknown14, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown14)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown54) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown54) ?? true))
             {
-                if (!lhs.Unknown54.SequenceEqualNullable(rhs.Unknown54, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown54)))) return false;
+                if (!lhs.Unknown54.SequenceEqualNullable(rhs.Unknown54, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown54)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
@@ -9043,23 +9059,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImageSpaceAdapterGetter?)lhs,
                 rhs: rhs as IImageSpaceAdapterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImageSpaceAdapterGetter?)lhs,
                 rhs: rhs as IImageSpaceAdapterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IImageSpaceAdapterGetter item)
@@ -13687,12 +13703,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IImageSpaceAdapterGetter rhs) return false;
-            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceAdapterGetter? obj)
         {
-            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).GetHashCode(this);

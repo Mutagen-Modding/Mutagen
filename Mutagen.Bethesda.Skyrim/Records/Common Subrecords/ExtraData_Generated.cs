@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IExtraDataGetter rhs) return false;
-            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IExtraDataGetter? obj)
         {
-            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -855,18 +855,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IExtraDataGetter? lhs,
             IExtraDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ExtraData_FieldIndex.Owner) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ExtraData_FieldIndex.Owner) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Owner, rhs.Owner, out var lhsOwner, out var rhsOwner, out var isOwnerEqual))
                 {
-                    if (!((OwnerTargetCommon)((IOwnerTargetGetter)lhsOwner).CommonInstance()!).Equals(lhsOwner, rhsOwner, crystal?.GetSubCrystal((int)ExtraData_FieldIndex.Owner))) return false;
+                    if (!((OwnerTargetCommon)((IOwnerTargetGetter)lhsOwner).CommonInstance()!).Equals(lhsOwner, rhsOwner, equalsMask?.GetSubCrystal((int)ExtraData_FieldIndex.Owner))) return false;
                 }
                 else if (!isOwnerEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ExtraData_FieldIndex.ItemCondition) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ExtraData_FieldIndex.ItemCondition) ?? true))
             {
                 if (!lhs.ItemCondition.EqualsWithin(rhs.ItemCondition)) return false;
             }
@@ -1245,12 +1245,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IExtraDataGetter rhs) return false;
-            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IExtraDataGetter? obj)
         {
-            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).GetHashCode(this);

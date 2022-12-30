@@ -125,12 +125,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IMorphGroupGetter rhs) return false;
-            return ((MorphGroupCommon)((IMorphGroupGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MorphGroupCommon)((IMorphGroupGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMorphGroupGetter? obj)
         {
-            return ((MorphGroupCommon)((IMorphGroupGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MorphGroupCommon)((IMorphGroupGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MorphGroupCommon)((IMorphGroupGetter)this).CommonInstance()!).GetHashCode(this);
@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.MorphPresets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphPreset.ErrorMask?>>?>(ExceptionExt.Combine(this.MorphPresets?.Overall, rhs.MorphPresets?.Overall), ExceptionExt.Combine(this.MorphPresets?.Specific, rhs.MorphPresets?.Specific));
+                ret.MorphPresets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphPreset.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MorphPresets?.Overall, rhs.MorphPresets?.Overall), Noggog.ExceptionExt.Combine(this.MorphPresets?.Specific, rhs.MorphPresets?.Specific));
                 ret.UnknownMPPK = this.UnknownMPPK.Combine(rhs.UnknownMPPK);
                 ret.UnknownMPGS = this.UnknownMPGS.Combine(rhs.UnknownMPGS);
                 return ret;
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MorphGroupCommon)((IMorphGroupGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -996,8 +996,8 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.MorphPresets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.UnknownMPPK = MemorySliceExt.Equal(item.UnknownMPPK, rhs.UnknownMPPK);
-            ret.UnknownMPGS = MemorySliceExt.Equal(item.UnknownMPGS, rhs.UnknownMPGS);
+            ret.UnknownMPPK = MemorySliceExt.SequenceEqual(item.UnknownMPPK, rhs.UnknownMPPK);
+            ret.UnknownMPGS = MemorySliceExt.SequenceEqual(item.UnknownMPGS, rhs.UnknownMPGS);
         }
         
         public string Print(
@@ -1078,24 +1078,24 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMorphGroupGetter? lhs,
             IMorphGroupGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)MorphGroup_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MorphGroup_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MorphGroup_FieldIndex.MorphPresets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MorphGroup_FieldIndex.MorphPresets) ?? true))
             {
-                if (!lhs.MorphPresets.SequenceEqualNullable(rhs.MorphPresets, (l, r) => ((MorphPresetCommon)((IMorphPresetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MorphGroup_FieldIndex.MorphPresets)))) return false;
+                if (!lhs.MorphPresets.SequenceEqualNullable(rhs.MorphPresets, (l, r) => ((MorphPresetCommon)((IMorphPresetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MorphGroup_FieldIndex.MorphPresets)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MorphGroup_FieldIndex.UnknownMPPK) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MorphGroup_FieldIndex.UnknownMPPK) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.UnknownMPPK, rhs.UnknownMPPK)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.UnknownMPPK, rhs.UnknownMPPK)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MorphGroup_FieldIndex.UnknownMPGS) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MorphGroup_FieldIndex.UnknownMPGS) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.UnknownMPGS, rhs.UnknownMPGS)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.UnknownMPGS, rhs.UnknownMPGS)) return false;
             }
             return true;
         }
@@ -1628,12 +1628,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IMorphGroupGetter rhs) return false;
-            return ((MorphGroupCommon)((IMorphGroupGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MorphGroupCommon)((IMorphGroupGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMorphGroupGetter? obj)
         {
-            return ((MorphGroupCommon)((IMorphGroupGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MorphGroupCommon)((IMorphGroupGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MorphGroupCommon)((IMorphGroupGetter)this).CommonInstance()!).GetHashCode(this);

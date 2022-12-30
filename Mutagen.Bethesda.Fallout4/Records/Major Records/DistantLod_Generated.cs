@@ -54,14 +54,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Data = new byte[0];
-        public MemorySlice<Byte> Data
+        protected MemorySlice<Byte>? _Data;
+        public MemorySlice<Byte>? Data
         {
-            get => _Data;
+            get => this._Data;
             set => this._Data = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IDistantLodGetter.Data => this.Data;
+        ReadOnlyMemorySlice<Byte>? IDistantLodGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDistantLodGetter rhs) return false;
-            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDistantLodGetter? obj)
         {
-            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).GetHashCode(this);
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IDistantLod>
     {
         new String Mesh { get; set; }
-        new MemorySlice<Byte> Data { get; set; }
+        new MemorySlice<Byte>? Data { get; set; }
     }
 
     public partial interface IDistantLodGetter :
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DistantLod_Registration.Instance;
         String Mesh { get; }
-        ReadOnlyMemorySlice<Byte> Data { get; }
+        ReadOnlyMemorySlice<Byte>? Data { get; }
 
     }
 
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DistantLodCommon)((IDistantLodGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Mesh = string.Empty;
-            item.Data = new byte[0];
+            item.Data = default;
         }
         
         #region Mutagen
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Mesh = string.Equals(item.Mesh, rhs.Mesh);
-            ret.Data = MemoryExtensions.SequenceEqual(item.Data.Span, rhs.Data.Span);
+            ret.Data = MemorySliceExt.SequenceEqual(item.Data, rhs.Data);
         }
         
         public string Print(
@@ -830,9 +830,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Mesh, "Mesh");
             }
-            if (printMask?.Data ?? true)
+            if ((printMask?.Data ?? true)
+                && item.Data is {} DataItem)
             {
-                sb.AppendLine($"Data => {SpanExt.ToHexString(item.Data)}");
+                sb.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
             }
         }
         
@@ -840,16 +841,16 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDistantLodGetter? lhs,
             IDistantLodGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DistantLod_FieldIndex.Mesh) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DistantLod_FieldIndex.Mesh) ?? true))
             {
                 if (!string.Equals(lhs.Mesh, rhs.Mesh)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DistantLod_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DistantLod_FieldIndex.Data) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Data.Span, rhs.Data.Span)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Data, rhs.Data)) return false;
             }
             return true;
         }
@@ -858,7 +859,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var hash = new HashCode();
             hash.Add(item.Mesh);
-            hash.Add(item.Data);
+            if (item.Data is {} DataItem)
+            {
+                hash.Add(DataItem);
+            }
             return hash.ToHashCode();
         }
         
@@ -897,7 +901,14 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((copyMask?.GetShouldTranslate((int)DistantLod_FieldIndex.Data) ?? true))
             {
-                item.Data = rhs.Data.ToArray();
+                if(rhs.Data is {} Datarhs)
+                {
+                    item.Data = Datarhs.ToArray();
+                }
+                else
+                {
+                    item.Data = default;
+                }
             }
         }
         
@@ -999,9 +1010,22 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.Mesh,
                 binaryType: StringBinaryType.NullTerminate);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            DistantLodBinaryWriteTranslation.WriteBinaryData(
                 writer: writer,
-                item: item.Data);
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IDistantLodGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IDistantLodGetter item)
+        {
+            WriteBinaryDataCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -1039,8 +1063,15 @@ namespace Mutagen.Bethesda.Fallout4
                 reader: frame,
                 stringBinaryType: StringBinaryType.NullTerminate,
                 parseWhole: false);
-            item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete) return;
+            DistantLodBinaryCreateTranslation.FillBinaryDataCustom(
+                frame: frame,
+                item: item);
         }
+
+        public static partial void FillBinaryDataCustom(
+            MutagenFrame frame,
+            IDistantLod item);
 
     }
 
@@ -1110,8 +1141,10 @@ namespace Mutagen.Bethesda.Fallout4
         protected int MeshEndingPos;
         #endregion
         #region Data
-        public ReadOnlyMemorySlice<Byte> Data => _structData.Span.Slice(MeshEndingPos).ToArray();
+        public partial ReadOnlyMemorySlice<Byte>? GetDataCustom(int location);
+        public ReadOnlyMemorySlice<Byte>? Data => GetDataCustom(location: MeshEndingPos);
         protected int DataEndingPos;
+        partial void CustomDataEndPos();
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1146,6 +1179,7 @@ namespace Mutagen.Bethesda.Fallout4
                 package: package);
             ret.Mesh = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
             ret.MeshEndingPos = ret.Mesh.Length + 1;
+            ret.CustomDataEndPos();
             stream.Position += ret.DataEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1183,12 +1217,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDistantLodGetter rhs) return false;
-            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDistantLodGetter? obj)
         {
-            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DistantLodCommon)((IDistantLodGetter)this).CommonInstance()!).GetHashCode(this);

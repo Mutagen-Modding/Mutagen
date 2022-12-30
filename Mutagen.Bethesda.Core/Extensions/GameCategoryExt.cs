@@ -34,6 +34,7 @@ public static class GameCategoryExt
             case GameCategory.Skyrim:
                 yield return GameRelease.SkyrimLE;
                 yield return GameRelease.SkyrimSE;
+                yield return GameRelease.SkyrimSEGog;
                 yield return GameRelease.SkyrimVR;
                 yield return GameRelease.EnderalLE;
                 yield return GameRelease.EnderalSE;

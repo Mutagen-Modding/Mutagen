@@ -831,15 +831,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? INpcGetter.ActivateTextOverride => this.ActivateTextOverride;
         #endregion
-        #region ACBSDataTypeState
-        public Npc.ACBSDataType ACBSDataTypeState { get; set; } = default;
-        #endregion
-        #region AIDTDataTypeState
-        public Npc.AIDTDataType AIDTDataTypeState { get; set; } = default;
-        #endregion
-        #region DNAMDataTypeState
-        public Npc.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -953,9 +944,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>());
                 this.FacialMorphIntensity = initialValue;
                 this.ActivateTextOverride = initialValue;
-                this.ACBSDataTypeState = initialValue;
-                this.AIDTDataTypeState = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -965,6 +953,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -1052,17 +1041,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem BodyMorphRegionValues,
                 TItem FaceMorphs,
                 TItem FacialMorphIntensity,
-                TItem ActivateTextOverride,
-                TItem ACBSDataTypeState,
-                TItem AIDTDataTypeState,
-                TItem DNAMDataTypeState)
+                TItem ActivateTextOverride)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1152,9 +1139,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>?>(FaceMorphs, Enumerable.Empty<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>());
                 this.FacialMorphIntensity = FacialMorphIntensity;
                 this.ActivateTextOverride = ActivateTextOverride;
-                this.ACBSDataTypeState = ACBSDataTypeState;
-                this.AIDTDataTypeState = AIDTDataTypeState;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -1254,9 +1238,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcFaceMorph.Mask<TItem>?>>?>? FaceMorphs;
             public TItem FacialMorphIntensity;
             public TItem ActivateTextOverride;
-            public TItem ACBSDataTypeState;
-            public TItem AIDTDataTypeState;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -1358,9 +1339,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.FaceMorphs, rhs.FaceMorphs)) return false;
                 if (!object.Equals(this.FacialMorphIntensity, rhs.FacialMorphIntensity)) return false;
                 if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
-                if (!object.Equals(this.ACBSDataTypeState, rhs.ACBSDataTypeState)) return false;
-                if (!object.Equals(this.AIDTDataTypeState, rhs.AIDTDataTypeState)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1454,9 +1432,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.FaceMorphs);
                 hash.Add(this.FacialMorphIntensity);
                 hash.Add(this.ActivateTextOverride);
-                hash.Add(this.ACBSDataTypeState);
-                hash.Add(this.AIDTDataTypeState);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1743,9 +1718,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (!eval(this.FacialMorphIntensity)) return false;
                 if (!eval(this.ActivateTextOverride)) return false;
-                if (!eval(this.ACBSDataTypeState)) return false;
-                if (!eval(this.AIDTDataTypeState)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -2030,9 +2002,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (eval(this.FacialMorphIntensity)) return true;
                 if (eval(this.ActivateTextOverride)) return true;
-                if (eval(this.ACBSDataTypeState)) return true;
-                if (eval(this.AIDTDataTypeState)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -2341,9 +2310,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 obj.FacialMorphIntensity = eval(this.FacialMorphIntensity);
                 obj.ActivateTextOverride = eval(this.ActivateTextOverride);
-                obj.ACBSDataTypeState = eval(this.ACBSDataTypeState);
-                obj.AIDTDataTypeState = eval(this.AIDTDataTypeState);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -2949,18 +2915,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                     }
-                    if (printMask?.ACBSDataTypeState ?? true)
-                    {
-                        sb.AppendItem(ACBSDataTypeState, "ACBSDataTypeState");
-                    }
-                    if (printMask?.AIDTDataTypeState ?? true)
-                    {
-                        sb.AppendItem(AIDTDataTypeState, "AIDTDataTypeState");
-                    }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -3060,9 +3014,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>? FaceMorphs;
             public Exception? FacialMorphIntensity;
             public Exception? ActivateTextOverride;
-            public Exception? ACBSDataTypeState;
-            public Exception? AIDTDataTypeState;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -3247,12 +3198,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return FacialMorphIntensity;
                     case Npc_FieldIndex.ActivateTextOverride:
                         return ActivateTextOverride;
-                    case Npc_FieldIndex.ACBSDataTypeState:
-                        return ACBSDataTypeState;
-                    case Npc_FieldIndex.AIDTDataTypeState:
-                        return AIDTDataTypeState;
-                    case Npc_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -3526,15 +3471,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Npc_FieldIndex.ActivateTextOverride:
                         this.ActivateTextOverride = ex;
-                        break;
-                    case Npc_FieldIndex.ACBSDataTypeState:
-                        this.ACBSDataTypeState = ex;
-                        break;
-                    case Npc_FieldIndex.AIDTDataTypeState:
-                        this.AIDTDataTypeState = ex;
-                        break;
-                    case Npc_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -3811,15 +3747,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Npc_FieldIndex.ActivateTextOverride:
                         this.ActivateTextOverride = (Exception?)obj;
                         break;
-                    case Npc_FieldIndex.ACBSDataTypeState:
-                        this.ACBSDataTypeState = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.AIDTDataTypeState:
-                        this.AIDTDataTypeState = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -3917,9 +3844,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (FaceMorphs != null) return true;
                 if (FacialMorphIntensity != null) return true;
                 if (ActivateTextOverride != null) return true;
-                if (ACBSDataTypeState != null) return true;
-                if (AIDTDataTypeState != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -4431,15 +4355,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                 }
-                {
-                    sb.AppendItem(ACBSDataTypeState, "ACBSDataTypeState");
-                }
-                {
-                    sb.AppendItem(AIDTDataTypeState, "AIDTDataTypeState");
-                }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -4461,7 +4376,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.UseTemplateActors = this.UseTemplateActors.Combine(rhs.UseTemplateActors);
                 ret.BleedoutOverride = this.BleedoutOverride.Combine(rhs.BleedoutOverride);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), Noggog.ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
                 ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
                 ret.Voice = this.Voice.Combine(rhs.Voice);
                 ret.DefaultTemplate = this.DefaultTemplate.Combine(rhs.DefaultTemplate);
@@ -4469,23 +4384,23 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.LegendaryChance = this.LegendaryChance.Combine(rhs.LegendaryChance);
                 ret.TemplateActors = this.TemplateActors.Combine(rhs.TemplateActors, (l, r) => l.Combine(r));
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
+                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), Noggog.ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Skin = this.Skin.Combine(rhs.Skin);
                 ret.FarAwayModel = this.FarAwayModel.Combine(rhs.FarAwayModel);
                 ret.AttackRace = this.AttackRace.Combine(rhs.AttackRace);
-                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
+                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), Noggog.ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
                 ret.SpectatorOverridePackageList = this.SpectatorOverridePackageList.Combine(rhs.SpectatorOverridePackageList);
                 ret.ObserveDeadBodyOverridePackageList = this.ObserveDeadBodyOverridePackageList.Combine(rhs.ObserveDeadBodyOverridePackageList);
                 ret.GuardWarnOverridePackageList = this.GuardWarnOverridePackageList.Combine(rhs.GuardWarnOverridePackageList);
                 ret.CombatOverridePackageList = this.CombatOverridePackageList.Combine(rhs.CombatOverridePackageList);
                 ret.FollowerCommandPackageList = this.FollowerCommandPackageList.Combine(rhs.FollowerCommandPackageList);
                 ret.FollowerElevatorPackageList = this.FollowerElevatorPackageList.Combine(rhs.FollowerElevatorPackageList);
-                ret.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Perks?.Overall, rhs.Perks?.Overall), ExceptionExt.Combine(this.Perks?.Specific, rhs.Perks?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Perks?.Overall, rhs.Perks?.Overall), Noggog.ExceptionExt.Combine(this.Perks?.Specific, rhs.Perks?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.Aggression = this.Aggression.Combine(rhs.Aggression);
                 ret.Confidence = this.Confidence.Combine(rhs.Confidence);
                 ret.EnergyLevel = this.EnergyLevel.Combine(rhs.EnergyLevel);
@@ -4497,10 +4412,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AggroRadiusWarnOrAttack = this.AggroRadiusWarnOrAttack.Combine(rhs.AggroRadiusWarnOrAttack);
                 ret.AggroRadiusAttack = this.AggroRadiusAttack.Combine(rhs.AggroRadiusAttack);
                 ret.NoSlowApproach = this.NoSlowApproach.Combine(rhs.NoSlowApproach);
-                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
-                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), Noggog.ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
                 ret.Class = this.Class.Combine(rhs.Class);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
@@ -4509,7 +4424,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.FarAwayModelDistance = this.FarAwayModelDistance.Combine(rhs.FarAwayModelDistance);
                 ret.GearedUpWeapons = this.GearedUpWeapons.Combine(rhs.GearedUpWeapons);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
+                ret.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), Noggog.ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
                 ret.HairColor = this.HairColor.Combine(rhs.HairColor);
                 ret.FacialHairColor = this.FacialHairColor.Combine(rhs.FacialHairColor);
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
@@ -4520,7 +4435,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.HeightMax = this.HeightMax.Combine(rhs.HeightMax);
                 ret.Weight = this.Weight.Combine(rhs.Weight, (l, r) => l.Combine(r));
                 ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.SoundsFinalize = this.SoundsFinalize.Combine(rhs.SoundsFinalize);
                 ret.InheritsSoundsFrom = this.InheritsSoundsFrom.Combine(rhs.InheritsSoundsFrom);
                 ret.PowerArmorStand = this.PowerArmorStand.Combine(rhs.PowerArmorStand);
@@ -4530,15 +4445,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.CrimeFaction = this.CrimeFaction.Combine(rhs.CrimeFaction);
                 ret.HeadTexture = this.HeadTexture.Combine(rhs.HeadTexture);
                 ret.TextureLighting = this.TextureLighting.Combine(rhs.TextureLighting);
-                ret.Morphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcMorph.ErrorMask?>>?>(ExceptionExt.Combine(this.Morphs?.Overall, rhs.Morphs?.Overall), ExceptionExt.Combine(this.Morphs?.Specific, rhs.Morphs?.Specific));
-                ret.FaceTintingLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceTintingLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.FaceTintingLayers?.Overall, rhs.FaceTintingLayers?.Overall), ExceptionExt.Combine(this.FaceTintingLayers?.Specific, rhs.FaceTintingLayers?.Specific));
+                ret.Morphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcMorph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Morphs?.Overall, rhs.Morphs?.Overall), Noggog.ExceptionExt.Combine(this.Morphs?.Specific, rhs.Morphs?.Specific));
+                ret.FaceTintingLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceTintingLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceTintingLayers?.Overall, rhs.FaceTintingLayers?.Overall), Noggog.ExceptionExt.Combine(this.FaceTintingLayers?.Specific, rhs.FaceTintingLayers?.Specific));
                 ret.BodyMorphRegionValues = this.BodyMorphRegionValues.Combine(rhs.BodyMorphRegionValues, (l, r) => l.Combine(r));
-                ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>(ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
+                ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcFaceMorph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), Noggog.ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
                 ret.FacialMorphIntensity = this.FacialMorphIntensity.Combine(rhs.FacialMorphIntensity);
                 ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
-                ret.ACBSDataTypeState = this.ACBSDataTypeState.Combine(rhs.ACBSDataTypeState);
-                ret.AIDTDataTypeState = this.AIDTDataTypeState.Combine(rhs.AIDTDataTypeState);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4649,9 +4561,6 @@ namespace Mutagen.Bethesda.Fallout4
             public NpcFaceMorph.TranslationMask? FaceMorphs;
             public bool FacialMorphIntensity;
             public bool ActivateTextOverride;
-            public bool ACBSDataTypeState;
-            public bool AIDTDataTypeState;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -4731,9 +4640,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextureLighting = defaultOn;
                 this.FacialMorphIntensity = defaultOn;
                 this.ActivateTextOverride = defaultOn;
-                this.ACBSDataTypeState = defaultOn;
-                this.AIDTDataTypeState = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -4829,9 +4735,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((FaceMorphs == null ? DefaultOn : !FaceMorphs.GetCrystal().CopyNothing, FaceMorphs?.GetCrystal()));
                 ret.Add((FacialMorphIntensity, null));
                 ret.Add((ActivateTextOverride, null));
-                ret.Add((ACBSDataTypeState, null));
-                ret.Add((AIDTDataTypeState, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4893,18 +4796,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum ACBSDataType
-        {
-        }
-        [Flags]
-        public enum AIDTDataType
-        {
-        }
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -4913,12 +4804,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not INpcGetter rhs) return false;
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcGetter? obj)
         {
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
@@ -5103,9 +4994,6 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<NpcFaceMorph> FaceMorphs { get; }
         new Single? FacialMorphIntensity { get; set; }
         new TranslatedString? ActivateTextOverride { get; set; }
-        new Npc.ACBSDataType ACBSDataTypeState { get; set; }
-        new Npc.AIDTDataType AIDTDataTypeState { get; set; }
-        new Npc.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
         new Npc.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -5251,9 +5139,6 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<INpcFaceMorphGetter> FaceMorphs { get; }
         Single? FacialMorphIntensity { get; }
         ITranslatedStringGetter? ActivateTextOverride { get; }
-        Npc.ACBSDataType ACBSDataTypeState { get; }
-        Npc.AIDTDataType AIDTDataTypeState { get; }
-        Npc.DNAMDataType DNAMDataTypeState { get; }
 
         #region Mutagen
         Npc.MajorFlag MajorFlags { get; }
@@ -5314,7 +5199,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -5390,6 +5275,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Npc Duplicate(
+            this INpcGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -5422,97 +5318,95 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        AnimationSound = 9,
-        Flags = 10,
-        XpValueOffset = 11,
-        Level = 12,
-        CalcMinLevel = 13,
-        CalcMaxLevel = 14,
-        DispositionBase = 15,
-        UseTemplateActors = 16,
-        BleedoutOverride = 17,
-        Unknown = 18,
-        Factions = 19,
-        DeathItem = 20,
-        Voice = 21,
-        DefaultTemplate = 22,
-        LegendaryTemplate = 23,
-        LegendaryChance = 24,
-        TemplateActors = 25,
-        Race = 26,
-        ActorEffect = 27,
-        Destructible = 28,
-        Skin = 29,
-        FarAwayModel = 30,
-        AttackRace = 31,
-        Attacks = 32,
-        SpectatorOverridePackageList = 33,
-        ObserveDeadBodyOverridePackageList = 34,
-        GuardWarnOverridePackageList = 35,
-        CombatOverridePackageList = 36,
-        FollowerCommandPackageList = 37,
-        FollowerElevatorPackageList = 38,
-        Perks = 39,
-        Properties = 40,
-        ForcedLocRefType = 41,
-        NativeTerminal = 42,
-        Items = 43,
-        Aggression = 44,
-        Confidence = 45,
-        EnergyLevel = 46,
-        Responsibility = 47,
-        Mood = 48,
-        Assistance = 49,
-        AggroRadiusBehaviorEnabled = 50,
-        AggroRadiusWarn = 51,
-        AggroRadiusWarnOrAttack = 52,
-        AggroRadiusAttack = 53,
-        NoSlowApproach = 54,
-        Packages = 55,
-        Keywords = 56,
-        AttachParentSlots = 57,
-        ObjectTemplates = 58,
-        Class = 59,
-        Name = 60,
-        ShortName = 61,
-        BaseHealth = 62,
-        BaseActionPoints = 63,
-        FarAwayModelDistance = 64,
-        GearedUpWeapons = 65,
-        Unused = 66,
-        HeadParts = 67,
-        HairColor = 68,
-        FacialHairColor = 69,
-        CombatStyle = 70,
-        GiftFilter = 71,
-        NAM5 = 72,
-        HeightMin = 73,
-        NAM7 = 74,
-        HeightMax = 75,
-        Weight = 76,
-        SoundLevel = 77,
-        Sounds = 78,
-        SoundsFinalize = 79,
-        InheritsSoundsFrom = 80,
-        PowerArmorStand = 81,
-        DefaultOutfit = 82,
-        SleepingOutfit = 83,
-        DefaultPackageList = 84,
-        CrimeFaction = 85,
-        HeadTexture = 86,
-        TextureLighting = 87,
-        Morphs = 88,
-        FaceTintingLayers = 89,
-        BodyMorphRegionValues = 90,
-        FaceMorphs = 91,
-        FacialMorphIntensity = 92,
-        ActivateTextOverride = 93,
-        ACBSDataTypeState = 94,
-        AIDTDataTypeState = 95,
-        DNAMDataTypeState = 96,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        AnimationSound = 10,
+        Flags = 11,
+        XpValueOffset = 12,
+        Level = 13,
+        CalcMinLevel = 14,
+        CalcMaxLevel = 15,
+        DispositionBase = 16,
+        UseTemplateActors = 17,
+        BleedoutOverride = 18,
+        Unknown = 19,
+        Factions = 20,
+        DeathItem = 21,
+        Voice = 22,
+        DefaultTemplate = 23,
+        LegendaryTemplate = 24,
+        LegendaryChance = 25,
+        TemplateActors = 26,
+        Race = 27,
+        ActorEffect = 28,
+        Destructible = 29,
+        Skin = 30,
+        FarAwayModel = 31,
+        AttackRace = 32,
+        Attacks = 33,
+        SpectatorOverridePackageList = 34,
+        ObserveDeadBodyOverridePackageList = 35,
+        GuardWarnOverridePackageList = 36,
+        CombatOverridePackageList = 37,
+        FollowerCommandPackageList = 38,
+        FollowerElevatorPackageList = 39,
+        Perks = 40,
+        Properties = 41,
+        ForcedLocRefType = 42,
+        NativeTerminal = 43,
+        Items = 44,
+        Aggression = 45,
+        Confidence = 46,
+        EnergyLevel = 47,
+        Responsibility = 48,
+        Mood = 49,
+        Assistance = 50,
+        AggroRadiusBehaviorEnabled = 51,
+        AggroRadiusWarn = 52,
+        AggroRadiusWarnOrAttack = 53,
+        AggroRadiusAttack = 54,
+        NoSlowApproach = 55,
+        Packages = 56,
+        Keywords = 57,
+        AttachParentSlots = 58,
+        ObjectTemplates = 59,
+        Class = 60,
+        Name = 61,
+        ShortName = 62,
+        BaseHealth = 63,
+        BaseActionPoints = 64,
+        FarAwayModelDistance = 65,
+        GearedUpWeapons = 66,
+        Unused = 67,
+        HeadParts = 68,
+        HairColor = 69,
+        FacialHairColor = 70,
+        CombatStyle = 71,
+        GiftFilter = 72,
+        NAM5 = 73,
+        HeightMin = 74,
+        NAM7 = 75,
+        HeightMax = 76,
+        Weight = 77,
+        SoundLevel = 78,
+        Sounds = 79,
+        SoundsFinalize = 80,
+        InheritsSoundsFrom = 81,
+        PowerArmorStand = 82,
+        DefaultOutfit = 83,
+        SleepingOutfit = 84,
+        DefaultPackageList = 85,
+        CrimeFaction = 86,
+        HeadTexture = 87,
+        TextureLighting = 88,
+        Morphs = 89,
+        FaceTintingLayers = 90,
+        BodyMorphRegionValues = 91,
+        FaceMorphs = 92,
+        FacialMorphIntensity = 93,
+        ActivateTextOverride = 94,
     }
     #endregion
 
@@ -5530,9 +5424,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "8074d783-8164-453f-bdd2-f39627cf7a6b";
 
-        public const ushort AdditionalFieldCount = 91;
+        public const ushort AdditionalFieldCount = 88;
 
-        public const ushort FieldCount = 97;
+        public const ushort FieldCount = 95;
 
         public static readonly Type MaskType = typeof(Npc.Mask<>);
 
@@ -5790,9 +5684,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.FaceMorphs.Clear();
             item.FacialMorphIntensity = default;
             item.ActivateTextOverride = default;
-            item.ACBSDataTypeState = default;
-            item.AIDTDataTypeState = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -6034,7 +5925,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.FacialHairColor = item.FacialHairColor.Equals(rhs.FacialHairColor);
             ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
             ret.GiftFilter = item.GiftFilter.Equals(rhs.GiftFilter);
-            ret.NAM5 = MemorySliceExt.Equal(item.NAM5, rhs.NAM5);
+            ret.NAM5 = MemorySliceExt.SequenceEqual(item.NAM5, rhs.NAM5);
             ret.HeightMin = item.HeightMin.EqualsWithin(rhs.HeightMin);
             ret.NAM7 = item.NAM7.EqualsWithin(rhs.NAM7);
             ret.HeightMax = item.HeightMax.EqualsWithin(rhs.HeightMax);
@@ -6048,7 +5939,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SoundsFinalize = MemorySliceExt.Equal(item.SoundsFinalize, rhs.SoundsFinalize);
+            ret.SoundsFinalize = MemorySliceExt.SequenceEqual(item.SoundsFinalize, rhs.SoundsFinalize);
             ret.InheritsSoundsFrom = item.InheritsSoundsFrom.Equals(rhs.InheritsSoundsFrom);
             ret.PowerArmorStand = item.PowerArmorStand.Equals(rhs.PowerArmorStand);
             ret.DefaultOutfit = item.DefaultOutfit.Equals(rhs.DefaultOutfit);
@@ -6076,9 +5967,6 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.FacialMorphIntensity = item.FacialMorphIntensity.EqualsWithin(rhs.FacialMorphIntensity);
             ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
-            ret.ACBSDataTypeState = item.ACBSDataTypeState == rhs.ACBSDataTypeState;
-            ret.AIDTDataTypeState = item.AIDTDataTypeState == rhs.AIDTDataTypeState;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -6651,18 +6539,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
             }
-            if (printMask?.ACBSDataTypeState ?? true)
-            {
-                sb.AppendItem(item.ACBSDataTypeState, "ACBSDataTypeState");
-            }
-            if (printMask?.AIDTDataTypeState ?? true)
-            {
-                sb.AppendItem(item.AIDTDataTypeState, "AIDTDataTypeState");
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static Npc_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -6681,8 +6557,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Npc_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Npc_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Npc_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -6699,7 +6577,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Npc_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -6707,401 +6585,389 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INpcGetter? lhs,
             INpcGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Npc_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Npc_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AnimationSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.AnimationSound) ?? true))
             {
                 if (!lhs.AnimationSound.Equals(rhs.AnimationSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.XpValueOffset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.XpValueOffset) ?? true))
             {
                 if (lhs.XpValueOffset != rhs.XpValueOffset) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Level) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Level) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Level, rhs.Level, out var lhsLevel, out var rhsLevel, out var isLevelEqual))
                 {
-                    if (!((ANpcLevelCommon)((IANpcLevelGetter)lhsLevel).CommonInstance()!).Equals(lhsLevel, rhsLevel, crystal?.GetSubCrystal((int)Npc_FieldIndex.Level))) return false;
+                    if (!((ANpcLevelCommon)((IANpcLevelGetter)lhsLevel).CommonInstance()!).Equals(lhsLevel, rhsLevel, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Level))) return false;
                 }
                 else if (!isLevelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CalcMinLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.CalcMinLevel) ?? true))
             {
                 if (lhs.CalcMinLevel != rhs.CalcMinLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CalcMaxLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.CalcMaxLevel) ?? true))
             {
                 if (lhs.CalcMaxLevel != rhs.CalcMaxLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DispositionBase) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.DispositionBase) ?? true))
             {
                 if (lhs.DispositionBase != rhs.DispositionBase) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.UseTemplateActors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.UseTemplateActors) ?? true))
             {
                 if (lhs.UseTemplateActors != rhs.UseTemplateActors) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BleedoutOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.BleedoutOverride) ?? true))
             {
                 if (lhs.BleedoutOverride != rhs.BleedoutOverride) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
             {
-                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Factions)))) return false;
+                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Factions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
                 if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Voice) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Voice) ?? true))
             {
                 if (!lhs.Voice.Equals(rhs.Voice)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DefaultTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultTemplate) ?? true))
             {
                 if (!lhs.DefaultTemplate.Equals(rhs.DefaultTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.LegendaryTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.LegendaryTemplate) ?? true))
             {
                 if (!lhs.LegendaryTemplate.Equals(rhs.LegendaryTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.LegendaryChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.LegendaryChance) ?? true))
             {
                 if (!lhs.LegendaryChance.Equals(rhs.LegendaryChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.TemplateActors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.TemplateActors) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.TemplateActors, rhs.TemplateActors, out var lhsTemplateActors, out var rhsTemplateActors, out var isTemplateActorsEqual))
                 {
-                    if (!((TemplateActorsCommon)((ITemplateActorsGetter)lhsTemplateActors).CommonInstance()!).Equals(lhsTemplateActors, rhsTemplateActors, crystal?.GetSubCrystal((int)Npc_FieldIndex.TemplateActors))) return false;
+                    if (!((TemplateActorsCommon)((ITemplateActorsGetter)lhsTemplateActors).CommonInstance()!).Equals(lhsTemplateActors, rhsTemplateActors, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.TemplateActors))) return false;
                 }
                 else if (!isTemplateActorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
             {
                 if (!lhs.Race.Equals(rhs.Race)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ActorEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ActorEffect) ?? true))
             {
                 if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Npc_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Skin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Skin) ?? true))
             {
                 if (!lhs.Skin.Equals(rhs.Skin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModel) ?? true))
             {
                 if (!lhs.FarAwayModel.Equals(rhs.FarAwayModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AttackRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.AttackRace) ?? true))
             {
                 if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Attacks)))) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Attacks)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
                 if (!lhs.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
             {
                 if (!lhs.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.GuardWarnOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.GuardWarnOverridePackageList) ?? true))
             {
                 if (!lhs.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CombatOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatOverridePackageList) ?? true))
             {
                 if (!lhs.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FollowerCommandPackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FollowerCommandPackageList) ?? true))
             {
                 if (!lhs.FollowerCommandPackageList.Equals(rhs.FollowerCommandPackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FollowerElevatorPackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FollowerElevatorPackageList) ?? true))
             {
                 if (!lhs.FollowerElevatorPackageList.Equals(rhs.FollowerElevatorPackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
             {
-                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks, (l, r) => ((PerkPlacementCommon)((IPerkPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Perks)))) return false;
+                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks, (l, r) => ((PerkPlacementCommon)((IPerkPlacementGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Perks)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Properties)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ForcedLocRefType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ForcedLocRefType) ?? true))
             {
                 if (!lhs.ForcedLocRefType.Equals(rhs.ForcedLocRefType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.NativeTerminal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.NativeTerminal) ?? true))
             {
                 if (!lhs.NativeTerminal.Equals(rhs.NativeTerminal)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Items)))) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Items)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Aggression) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Aggression) ?? true))
             {
                 if (lhs.Aggression != rhs.Aggression) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Confidence) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Confidence) ?? true))
             {
                 if (lhs.Confidence != rhs.Confidence) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.EnergyLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.EnergyLevel) ?? true))
             {
                 if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Responsibility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Responsibility) ?? true))
             {
                 if (lhs.Responsibility != rhs.Responsibility) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Mood) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Mood) ?? true))
             {
                 if (lhs.Mood != rhs.Mood) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Assistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Assistance) ?? true))
             {
                 if (lhs.Assistance != rhs.Assistance) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusBehaviorEnabled) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusBehaviorEnabled) ?? true))
             {
                 if (lhs.AggroRadiusBehaviorEnabled != rhs.AggroRadiusBehaviorEnabled) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusWarn) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusWarn) ?? true))
             {
                 if (lhs.AggroRadiusWarn != rhs.AggroRadiusWarn) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusWarnOrAttack) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusWarnOrAttack) ?? true))
             {
                 if (lhs.AggroRadiusWarnOrAttack != rhs.AggroRadiusWarnOrAttack) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusAttack) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.AggroRadiusAttack) ?? true))
             {
                 if (lhs.AggroRadiusAttack != rhs.AggroRadiusAttack) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.NoSlowApproach) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.NoSlowApproach) ?? true))
             {
                 if (lhs.NoSlowApproach != rhs.NoSlowApproach) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Packages) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Packages) ?? true))
             {
                 if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AttachParentSlots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.AttachParentSlots) ?? true))
             {
                 if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ObjectTemplates) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectTemplates) ?? true))
             {
-                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Npc.Property>)((IObjectTemplateGetter<Npc.Property>)l).CommonInstance(typeof(Npc.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.ObjectTemplates)))) return false;
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Npc.Property>)((IObjectTemplateGetter<Npc.Property>)l).CommonInstance(typeof(Npc.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectTemplates)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
             {
                 if (!lhs.Class.Equals(rhs.Class)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
             {
                 if (!object.Equals(lhs.ShortName, rhs.ShortName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BaseHealth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseHealth) ?? true))
             {
                 if (lhs.BaseHealth != rhs.BaseHealth) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BaseActionPoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseActionPoints) ?? true))
             {
                 if (lhs.BaseActionPoints != rhs.BaseActionPoints) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModelDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModelDistance) ?? true))
             {
                 if (lhs.FarAwayModelDistance != rhs.FarAwayModelDistance) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.GearedUpWeapons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.GearedUpWeapons) ?? true))
             {
                 if (lhs.GearedUpWeapons != rhs.GearedUpWeapons) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeadParts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadParts) ?? true))
             {
                 if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
             {
                 if (!lhs.HairColor.Equals(rhs.HairColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FacialHairColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FacialHairColor) ?? true))
             {
                 if (!lhs.FacialHairColor.Equals(rhs.FacialHairColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
             {
                 if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.GiftFilter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.GiftFilter) ?? true))
             {
                 if (!lhs.GiftFilter.Equals(rhs.GiftFilter)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NAM5, rhs.NAM5)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NAM5, rhs.NAM5)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeightMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HeightMin) ?? true))
             {
                 if (!lhs.HeightMin.EqualsWithin(rhs.HeightMin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.NAM7) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.NAM7) ?? true))
             {
                 if (!lhs.NAM7.EqualsWithin(rhs.NAM7)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeightMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HeightMax) ?? true))
             {
                 if (!lhs.HeightMax.EqualsWithin(rhs.HeightMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Weight) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Weight, rhs.Weight, out var lhsWeight, out var rhsWeight, out var isWeightEqual))
                 {
-                    if (!((NpcWeightCommon)((INpcWeightGetter)lhsWeight).CommonInstance()!).Equals(lhsWeight, rhsWeight, crystal?.GetSubCrystal((int)Npc_FieldIndex.Weight))) return false;
+                    if (!((NpcWeightCommon)((INpcWeightGetter)lhsWeight).CommonInstance()!).Equals(lhsWeight, rhsWeight, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Weight))) return false;
                 }
                 else if (!isWeightEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.SoundLevel) ?? true))
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((NpcSoundCommon)((INpcSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((NpcSoundCommon)((INpcSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Sounds)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SoundsFinalize) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.SoundsFinalize) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SoundsFinalize, rhs.SoundsFinalize)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SoundsFinalize, rhs.SoundsFinalize)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.InheritsSoundsFrom) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.InheritsSoundsFrom) ?? true))
             {
                 if (!lhs.InheritsSoundsFrom.Equals(rhs.InheritsSoundsFrom)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.PowerArmorStand) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.PowerArmorStand) ?? true))
             {
                 if (!lhs.PowerArmorStand.Equals(rhs.PowerArmorStand)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DefaultOutfit) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultOutfit) ?? true))
             {
                 if (!lhs.DefaultOutfit.Equals(rhs.DefaultOutfit)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SleepingOutfit) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.SleepingOutfit) ?? true))
             {
                 if (!lhs.SleepingOutfit.Equals(rhs.SleepingOutfit)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DefaultPackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultPackageList) ?? true))
             {
                 if (!lhs.DefaultPackageList.Equals(rhs.DefaultPackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CrimeFaction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.CrimeFaction) ?? true))
             {
                 if (!lhs.CrimeFaction.Equals(rhs.CrimeFaction)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeadTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadTexture) ?? true))
             {
                 if (!lhs.HeadTexture.Equals(rhs.HeadTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.TextureLighting) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.TextureLighting) ?? true))
             {
                 if (!lhs.TextureLighting.ColorOnlyEquals(rhs.TextureLighting)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Morphs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Morphs) ?? true))
             {
-                if (!lhs.Morphs.SequenceEqual(rhs.Morphs, (l, r) => ((NpcMorphCommon)((INpcMorphGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Morphs)))) return false;
+                if (!lhs.Morphs.SequenceEqual(rhs.Morphs, (l, r) => ((NpcMorphCommon)((INpcMorphGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Morphs)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceTintingLayers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceTintingLayers) ?? true))
             {
-                if (!lhs.FaceTintingLayers.SequenceEqual(rhs.FaceTintingLayers, (l, r) => ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.FaceTintingLayers)))) return false;
+                if (!lhs.FaceTintingLayers.SequenceEqual(rhs.FaceTintingLayers, (l, r) => ((NpcFaceTintingLayerCommon)((INpcFaceTintingLayerGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.FaceTintingLayers)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.BodyMorphRegionValues) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.BodyMorphRegionValues) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BodyMorphRegionValues, rhs.BodyMorphRegionValues, out var lhsBodyMorphRegionValues, out var rhsBodyMorphRegionValues, out var isBodyMorphRegionValuesEqual))
                 {
-                    if (!((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)lhsBodyMorphRegionValues).CommonInstance()!).Equals(lhsBodyMorphRegionValues, rhsBodyMorphRegionValues, crystal?.GetSubCrystal((int)Npc_FieldIndex.BodyMorphRegionValues))) return false;
+                    if (!((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)lhsBodyMorphRegionValues).CommonInstance()!).Equals(lhsBodyMorphRegionValues, rhsBodyMorphRegionValues, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.BodyMorphRegionValues))) return false;
                 }
                 else if (!isBodyMorphRegionValuesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceMorphs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceMorphs) ?? true))
             {
-                if (!lhs.FaceMorphs.SequenceEqual(rhs.FaceMorphs, (l, r) => ((NpcFaceMorphCommon)((INpcFaceMorphGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.FaceMorphs)))) return false;
+                if (!lhs.FaceMorphs.SequenceEqual(rhs.FaceMorphs, (l, r) => ((NpcFaceMorphCommon)((INpcFaceMorphGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.FaceMorphs)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FacialMorphIntensity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FacialMorphIntensity) ?? true))
             {
                 if (!lhs.FacialMorphIntensity.EqualsWithin(rhs.FacialMorphIntensity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ActivateTextOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ActivateTextOverride) ?? true))
             {
                 if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ACBSDataTypeState) ?? true))
-            {
-                if (lhs.ACBSDataTypeState != rhs.ACBSDataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AIDTDataTypeState) ?? true))
-            {
-                if (lhs.AIDTDataTypeState != rhs.AIDTDataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -7109,23 +6975,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INpcGetter?)lhs,
                 rhs: rhs as INpcGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INpcGetter?)lhs,
                 rhs: rhs as INpcGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(INpcGetter item)
@@ -7258,9 +7124,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(ActivateTextOverrideitem);
             }
-            hash.Add(item.ACBSDataTypeState);
-            hash.Add(item.AIDTDataTypeState);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -8429,18 +8292,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ActivateTextOverride) ?? true))
             {
                 item.ActivateTextOverride = rhs.ActivateTextOverride?.DeepCopy();
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ACBSDataTypeState) ?? true))
-            {
-                item.ACBSDataTypeState = rhs.ACBSDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AIDTDataTypeState) ?? true))
-            {
-                item.AIDTDataTypeState = rhs.AIDTDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
             }
         }
         
@@ -9852,7 +9703,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
         #endregion
         private RangeInt32? _ACBSLocation;
-        public Npc.ACBSDataType ACBSDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _ACBSLocation!.Value.Min;
         public partial Npc.Flag GetFlagsCustom();
@@ -9978,7 +9828,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         private RangeInt32? _AIDTLocation;
-        public Npc.AIDTDataType AIDTDataTypeState { get; private set; }
         #region Aggression
         private int _AggressionLocation => _AIDTLocation!.Value.Min;
         private bool _Aggression_IsSet => _AIDTLocation.HasValue;
@@ -10062,7 +9911,6 @@ namespace Mutagen.Bethesda.Fallout4
         public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Npc.DNAMDataType DNAMDataTypeState { get; private set; }
         #region BaseHealth
         private int _BaseHealthLocation => _DNAMLocation!.Value.Min;
         private bool _BaseHealth_IsSet => _DNAMLocation.HasValue;
@@ -10761,12 +10609,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not INpcGetter rhs) return false;
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcGetter? obj)
         {
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);

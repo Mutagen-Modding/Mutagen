@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IConditionGlobalGetter rhs) return false;
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IConditionGlobalGetter? obj)
         {
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).GetHashCode(this);
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -862,7 +862,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case Condition_FieldIndex.Unknown1:
                     return (ConditionGlobal_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -870,19 +870,19 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IConditionGlobalGetter? lhs,
             IConditionGlobalGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IConditionGetter)lhs, (IConditionGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.ComparisonValue) ?? true))
+            if (!base.Equals((IConditionGetter)lhs, (IConditionGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.ComparisonValue) ?? true))
             {
                 if (!lhs.ComparisonValue.Equals(rhs.ComparisonValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((ConditionDataCommon)((IConditionDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)ConditionGlobal_FieldIndex.Data))) return false;
+                    if (!((ConditionDataCommon)((IConditionDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)ConditionGlobal_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
@@ -892,12 +892,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IConditionGetter? lhs,
             IConditionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IConditionGlobalGetter?)lhs,
                 rhs: rhs as IConditionGlobalGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IConditionGlobalGetter item)
@@ -1331,12 +1331,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IConditionGlobalGetter rhs) return false;
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IConditionGlobalGetter? obj)
         {
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).GetHashCode(this);

@@ -143,9 +143,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region StopOnSceneEnd
         public Boolean StopOnSceneEnd { get; set; } = default;
         #endregion
-        #region TRDADataTypeState
-        public DialogResponse.TRDADataType TRDADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -165,12 +162,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDialogResponseGetter rhs) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogResponseGetter? obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);
@@ -201,7 +198,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextHash = initialValue;
                 this.CameraPath = initialValue;
                 this.StopOnSceneEnd = initialValue;
-                this.TRDADataTypeState = initialValue;
             }
 
             public Mask(
@@ -220,8 +216,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ListenerIdleAnimation,
                 TItem TextHash,
                 TItem CameraPath,
-                TItem StopOnSceneEnd,
-                TItem TRDADataTypeState)
+                TItem StopOnSceneEnd)
             {
                 this.Emotion = Emotion;
                 this.ResponseNumber = ResponseNumber;
@@ -239,7 +234,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextHash = TextHash;
                 this.CameraPath = CameraPath;
                 this.StopOnSceneEnd = StopOnSceneEnd;
-                this.TRDADataTypeState = TRDADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -267,7 +261,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem TextHash;
             public TItem CameraPath;
             public TItem StopOnSceneEnd;
-            public TItem TRDADataTypeState;
             #endregion
 
             #region Equals
@@ -296,7 +289,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.TextHash, rhs.TextHash)) return false;
                 if (!object.Equals(this.CameraPath, rhs.CameraPath)) return false;
                 if (!object.Equals(this.StopOnSceneEnd, rhs.StopOnSceneEnd)) return false;
-                if (!object.Equals(this.TRDADataTypeState, rhs.TRDADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -318,7 +310,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.TextHash);
                 hash.Add(this.CameraPath);
                 hash.Add(this.StopOnSceneEnd);
-                hash.Add(this.TRDADataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -343,7 +334,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.TextHash)) return false;
                 if (!eval(this.CameraPath)) return false;
                 if (!eval(this.StopOnSceneEnd)) return false;
-                if (!eval(this.TRDADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -367,7 +357,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.TextHash)) return true;
                 if (eval(this.CameraPath)) return true;
                 if (eval(this.StopOnSceneEnd)) return true;
-                if (eval(this.TRDADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -398,7 +387,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.TextHash = eval(this.TextHash);
                 obj.CameraPath = eval(this.CameraPath);
                 obj.StopOnSceneEnd = eval(this.StopOnSceneEnd);
-                obj.TRDADataTypeState = eval(this.TRDADataTypeState);
             }
             #endregion
 
@@ -481,10 +469,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(StopOnSceneEnd, "StopOnSceneEnd");
                     }
-                    if (printMask?.TRDADataTypeState ?? true)
-                    {
-                        sb.AppendItem(TRDADataTypeState, "TRDADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -525,7 +509,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? TextHash;
             public Exception? CameraPath;
             public Exception? StopOnSceneEnd;
-            public Exception? TRDADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -566,8 +549,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return CameraPath;
                     case DialogResponse_FieldIndex.StopOnSceneEnd:
                         return StopOnSceneEnd;
-                    case DialogResponse_FieldIndex.TRDADataTypeState:
-                        return TRDADataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -625,9 +606,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case DialogResponse_FieldIndex.StopOnSceneEnd:
                         this.StopOnSceneEnd = ex;
-                        break;
-                    case DialogResponse_FieldIndex.TRDADataTypeState:
-                        this.TRDADataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -687,9 +665,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case DialogResponse_FieldIndex.StopOnSceneEnd:
                         this.StopOnSceneEnd = (Exception?)obj;
                         break;
-                    case DialogResponse_FieldIndex.TRDADataTypeState:
-                        this.TRDADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -714,7 +689,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (TextHash != null) return true;
                 if (CameraPath != null) return true;
                 if (StopOnSceneEnd != null) return true;
-                if (TRDADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -788,9 +762,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(StopOnSceneEnd, "StopOnSceneEnd");
                 }
-                {
-                    sb.AppendItem(TRDADataTypeState, "TRDADataTypeState");
-                }
             }
             #endregion
 
@@ -815,7 +786,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.TextHash = this.TextHash.Combine(rhs.TextHash);
                 ret.CameraPath = this.CameraPath.Combine(rhs.CameraPath);
                 ret.StopOnSceneEnd = this.StopOnSceneEnd.Combine(rhs.StopOnSceneEnd);
-                ret.TRDADataTypeState = this.TRDADataTypeState.Combine(rhs.TRDADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -855,7 +825,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool TextHash;
             public bool CameraPath;
             public bool StopOnSceneEnd;
-            public bool TRDADataTypeState;
             #endregion
 
             #region Ctors
@@ -881,7 +850,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextHash = defaultOn;
                 this.CameraPath = defaultOn;
                 this.StopOnSceneEnd = defaultOn;
-                this.TRDADataTypeState = defaultOn;
             }
 
             #endregion
@@ -913,7 +881,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((TextHash, null));
                 ret.Add((CameraPath, null));
                 ret.Add((StopOnSceneEnd, null));
-                ret.Add((TRDADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -927,10 +894,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponseCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseSetterCommon.Instance.RemapLinks(this, mapping);
-        [Flags]
-        public enum TRDADataType
-        {
-        }
         #endregion
 
         #region Binary Translation
@@ -1012,7 +975,6 @@ namespace Mutagen.Bethesda.Fallout4
         new MemorySlice<Byte>? TextHash { get; set; }
         new IFormLinkNullable<ICameraPathGetter> CameraPath { get; set; }
         new Boolean StopOnSceneEnd { get; set; }
-        new DialogResponse.TRDADataType TRDADataTypeState { get; set; }
     }
 
     public partial interface IDialogResponseGetter :
@@ -1044,7 +1006,6 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? TextHash { get; }
         IFormLinkNullableGetter<ICameraPathGetter> CameraPath { get; }
         Boolean StopOnSceneEnd { get; }
-        DialogResponse.TRDADataType TRDADataTypeState { get; }
 
     }
 
@@ -1101,7 +1062,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1230,7 +1191,6 @@ namespace Mutagen.Bethesda.Fallout4
         TextHash = 13,
         CameraPath = 14,
         StopOnSceneEnd = 15,
-        TRDADataTypeState = 16,
     }
     #endregion
 
@@ -1248,9 +1208,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "2af08585-7d3a-49dd-98d2-500486f6c2e7";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(DialogResponse.Mask<>);
 
@@ -1353,7 +1313,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.TextHash = default;
             item.CameraPath.Clear();
             item.StopOnSceneEnd = default;
-            item.TRDADataTypeState = default;
         }
         
         #region Mutagen
@@ -1378,7 +1337,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: DialogResponseBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: DialogResponseBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1422,10 +1380,9 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AlternateLipText = string.Equals(item.AlternateLipText, rhs.AlternateLipText);
             ret.SpeakerIdleAnimation = item.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation);
             ret.ListenerIdleAnimation = item.ListenerIdleAnimation.Equals(rhs.ListenerIdleAnimation);
-            ret.TextHash = MemorySliceExt.Equal(item.TextHash, rhs.TextHash);
+            ret.TextHash = MemorySliceExt.SequenceEqual(item.TextHash, rhs.TextHash);
             ret.CameraPath = item.CameraPath.Equals(rhs.CameraPath);
             ret.StopOnSceneEnd = item.StopOnSceneEnd == rhs.StopOnSceneEnd;
-            ret.TRDADataTypeState = item.TRDADataTypeState == rhs.TRDADataTypeState;
         }
         
         public string Print(
@@ -1535,86 +1492,78 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.StopOnSceneEnd, "StopOnSceneEnd");
             }
-            if (printMask?.TRDADataTypeState ?? true)
-            {
-                sb.AppendItem(item.TRDADataTypeState, "TRDADataTypeState");
-            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
             IDialogResponseGetter? lhs,
             IDialogResponseGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
             {
                 if (!lhs.Emotion.Equals(rhs.Emotion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
             {
                 if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.InterruptPercentage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.InterruptPercentage) ?? true))
             {
                 if (lhs.InterruptPercentage != rhs.InterruptPercentage) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraTargetAlias) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraTargetAlias) ?? true))
             {
                 if (lhs.CameraTargetAlias != rhs.CameraTargetAlias) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraLocationAlias) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraLocationAlias) ?? true))
             {
                 if (lhs.CameraLocationAlias != rhs.CameraLocationAlias) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Text) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Text) ?? true))
             {
                 if (!object.Equals(lhs.Text, rhs.Text)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ScriptNotes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ScriptNotes) ?? true))
             {
                 if (!string.Equals(lhs.ScriptNotes, rhs.ScriptNotes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Edits) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Edits) ?? true))
             {
                 if (!string.Equals(lhs.Edits, rhs.Edits)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.AlternateLipText) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AlternateLipText) ?? true))
             {
                 if (!string.Equals(lhs.AlternateLipText, rhs.AlternateLipText)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
             {
                 if (!lhs.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
             {
                 if (!lhs.ListenerIdleAnimation.Equals(rhs.ListenerIdleAnimation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.TextHash) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TextHash) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TextHash, rhs.TextHash)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TextHash, rhs.TextHash)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraPath) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.CameraPath) ?? true))
             {
                 if (!lhs.CameraPath.Equals(rhs.CameraPath)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.StopOnSceneEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.StopOnSceneEnd) ?? true))
             {
                 if (lhs.StopOnSceneEnd != rhs.StopOnSceneEnd) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDADataTypeState) ?? true))
-            {
-                if (lhs.TRDADataTypeState != rhs.TRDADataTypeState) return false;
             }
             return true;
         }
@@ -1641,7 +1590,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
             hash.Add(item.CameraPath);
             hash.Add(item.StopOnSceneEnd);
-            hash.Add(item.TRDADataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1759,10 +1707,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.StopOnSceneEnd = rhs.StopOnSceneEnd;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDADataTypeState) ?? true))
-            {
-                item.TRDADataTypeState = rhs.TRDADataTypeState;
-            }
         }
         
         #endregion
@@ -1855,12 +1799,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static readonly DialogResponseBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IDialogResponseGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IDialogResponseGetter item,
             MutagenWriter writer,
@@ -1944,9 +1882,6 @@ namespace Mutagen.Bethesda.Fallout4
             IDialogResponseGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1969,12 +1904,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class DialogResponseBinaryCreateTranslation
     {
         public static readonly DialogResponseBinaryCreateTranslation Instance = new DialogResponseBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IDialogResponse item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IDialogResponse item,
@@ -2153,7 +2082,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         private RangeInt32? _TRDALocation;
-        public DialogResponse.TRDADataType TRDADataTypeState { get; private set; }
         #region Emotion
         private int _EmotionLocation => _TRDALocation!.Value.Min;
         private bool _Emotion_IsSet => _TRDALocation.HasValue;
@@ -2375,12 +2303,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDialogResponseGetter rhs) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogResponseGetter? obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);

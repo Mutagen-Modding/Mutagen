@@ -94,12 +94,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageFlagsOverrideGetter rhs) return false;
-            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageFlagsOverrideGetter? obj)
         {
-            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).GetHashCode(this);
@@ -667,7 +667,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1019,30 +1019,30 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPackageFlagsOverrideGetter? lhs,
             IPackageFlagsOverrideGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.SetFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.SetFlags) ?? true))
             {
                 if (lhs.SetFlags != rhs.SetFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.ClearFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.ClearFlags) ?? true))
             {
                 if (lhs.ClearFlags != rhs.ClearFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.SetInterruptFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.SetInterruptFlags) ?? true))
             {
                 if (lhs.SetInterruptFlags != rhs.SetInterruptFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.ClearInterruptFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.ClearInterruptFlags) ?? true))
             {
                 if (lhs.ClearInterruptFlags != rhs.ClearInterruptFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.PreferredSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.PreferredSpeed) ?? true))
             {
                 if (lhs.PreferredSpeed != rhs.PreferredSpeed) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.Unknown) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
@@ -1428,12 +1428,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageFlagsOverrideGetter rhs) return false;
-            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageFlagsOverrideGetter? obj)
         {
-            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).GetHashCode(this);

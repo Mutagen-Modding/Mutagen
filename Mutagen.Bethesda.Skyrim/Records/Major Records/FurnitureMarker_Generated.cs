@@ -105,12 +105,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IFurnitureMarkerGetter rhs) return false;
-            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFurnitureMarkerGetter? obj)
         {
-            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -969,30 +969,30 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IFurnitureMarkerGetter? lhs,
             IFurnitureMarkerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.Enabled) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.Enabled) ?? true))
             {
                 if (lhs.Enabled != rhs.Enabled) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.DisabledEntryPoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.DisabledEntryPoints) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DisabledEntryPoints, rhs.DisabledEntryPoints, out var lhsDisabledEntryPoints, out var rhsDisabledEntryPoints, out var isDisabledEntryPointsEqual))
                 {
-                    if (!((EntryPointsCommon)((IEntryPointsGetter)lhsDisabledEntryPoints).CommonInstance()!).Equals(lhsDisabledEntryPoints, rhsDisabledEntryPoints, crystal?.GetSubCrystal((int)FurnitureMarker_FieldIndex.DisabledEntryPoints))) return false;
+                    if (!((EntryPointsCommon)((IEntryPointsGetter)lhsDisabledEntryPoints).CommonInstance()!).Equals(lhsDisabledEntryPoints, rhsDisabledEntryPoints, equalsMask?.GetSubCrystal((int)FurnitureMarker_FieldIndex.DisabledEntryPoints))) return false;
                 }
                 else if (!isDisabledEntryPointsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.MarkerKeyword) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.MarkerKeyword) ?? true))
             {
                 if (!lhs.MarkerKeyword.Equals(rhs.MarkerKeyword)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.EntryPoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.EntryPoints) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.EntryPoints, rhs.EntryPoints, out var lhsEntryPoints, out var rhsEntryPoints, out var isEntryPointsEqual))
                 {
-                    if (!((EntryPointsCommon)((IEntryPointsGetter)lhsEntryPoints).CommonInstance()!).Equals(lhsEntryPoints, rhsEntryPoints, crystal?.GetSubCrystal((int)FurnitureMarker_FieldIndex.EntryPoints))) return false;
+                    if (!((EntryPointsCommon)((IEntryPointsGetter)lhsEntryPoints).CommonInstance()!).Equals(lhsEntryPoints, rhsEntryPoints, equalsMask?.GetSubCrystal((int)FurnitureMarker_FieldIndex.EntryPoints))) return false;
                 }
                 else if (!isEntryPointsEqual) return false;
             }
@@ -1398,12 +1398,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IFurnitureMarkerGetter rhs) return false;
-            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFurnitureMarkerGetter? obj)
         {
-            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).GetHashCode(this);

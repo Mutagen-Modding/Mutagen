@@ -300,6 +300,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem Relations,
                 TItem Flags,
@@ -322,7 +323,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
@@ -1088,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>(ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
+                ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), Noggog.ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ExteriorJailMarker = this.ExteriorJailMarker.Combine(rhs.ExteriorJailMarker);
                 ret.FollowerWaitMarker = this.FollowerWaitMarker.Combine(rhs.FollowerWaitMarker);
@@ -1097,12 +1099,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SharedCrimeFactionList = this.SharedCrimeFactionList.Combine(rhs.SharedCrimeFactionList);
                 ret.JailOutfit = this.JailOutfit.Combine(rhs.JailOutfit);
                 ret.CrimeValues = this.CrimeValues.Combine(rhs.CrimeValues, (l, r) => l.Combine(r));
-                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
+                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), Noggog.ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
                 ret.VendorBuySellList = this.VendorBuySellList.Combine(rhs.VendorBuySellList);
                 ret.MerchantContainer = this.MerchantContainer.Combine(rhs.MerchantContainer);
                 ret.VendorValues = this.VendorValues.Combine(rhs.VendorValues, (l, r) => l.Combine(r));
                 ret.VendorLocation = this.VendorLocation.Combine(rhs.VendorLocation, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1253,12 +1255,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IFactionGetter rhs) return false;
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFactionGetter? obj)
         {
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1457,7 +1459,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1533,6 +1535,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Faction Duplicate(
+            this IFactionGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1565,22 +1578,23 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Relations = 7,
-        Flags = 8,
-        ExteriorJailMarker = 9,
-        FollowerWaitMarker = 10,
-        StolenGoodsContainer = 11,
-        PlayerInventoryContainer = 12,
-        SharedCrimeFactionList = 13,
-        JailOutfit = 14,
-        CrimeValues = 15,
-        Ranks = 16,
-        VendorBuySellList = 17,
-        MerchantContainer = 18,
-        VendorValues = 19,
-        VendorLocation = 20,
-        Conditions = 21,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        Relations = 8,
+        Flags = 9,
+        ExteriorJailMarker = 10,
+        FollowerWaitMarker = 11,
+        StolenGoodsContainer = 12,
+        PlayerInventoryContainer = 13,
+        SharedCrimeFactionList = 14,
+        JailOutfit = 15,
+        CrimeValues = 16,
+        Ranks = 17,
+        VendorBuySellList = 18,
+        MerchantContainer = 19,
+        VendorValues = 20,
+        VendorLocation = 21,
+        Conditions = 22,
     }
     #endregion
 
@@ -1600,7 +1614,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(Faction.Mask<>);
 
@@ -2013,8 +2027,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Faction_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Faction_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Faction_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2031,7 +2047,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Faction_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2039,85 +2055,85 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IFactionGetter? lhs,
             IFactionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
             {
-                if (!lhs.Relations.SequenceEqual(rhs.Relations, (l, r) => ((RelationCommon)((IRelationGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Faction_FieldIndex.Relations)))) return false;
+                if (!lhs.Relations.SequenceEqual(rhs.Relations, (l, r) => ((RelationCommon)((IRelationGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Relations)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
             {
                 if (!lhs.ExteriorJailMarker.Equals(rhs.ExteriorJailMarker)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
             {
                 if (!lhs.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
             {
                 if (!lhs.StolenGoodsContainer.Equals(rhs.StolenGoodsContainer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
             {
                 if (!lhs.PlayerInventoryContainer.Equals(rhs.PlayerInventoryContainer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
             {
                 if (!lhs.SharedCrimeFactionList.Equals(rhs.SharedCrimeFactionList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
             {
                 if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CrimeValues, rhs.CrimeValues, out var lhsCrimeValues, out var rhsCrimeValues, out var isCrimeValuesEqual))
                 {
-                    if (!((CrimeValuesCommon)((ICrimeValuesGetter)lhsCrimeValues).CommonInstance()!).Equals(lhsCrimeValues, rhsCrimeValues, crystal?.GetSubCrystal((int)Faction_FieldIndex.CrimeValues))) return false;
+                    if (!((CrimeValuesCommon)((ICrimeValuesGetter)lhsCrimeValues).CommonInstance()!).Equals(lhsCrimeValues, rhsCrimeValues, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.CrimeValues))) return false;
                 }
                 else if (!isCrimeValuesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
             {
-                if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((RankCommon)((IRankGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Faction_FieldIndex.Ranks)))) return false;
+                if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((RankCommon)((IRankGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
             {
                 if (!lhs.VendorBuySellList.Equals(rhs.VendorBuySellList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
             {
                 if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VendorValues, rhs.VendorValues, out var lhsVendorValues, out var rhsVendorValues, out var isVendorValuesEqual))
                 {
-                    if (!((VendorValuesCommon)((IVendorValuesGetter)lhsVendorValues).CommonInstance()!).Equals(lhsVendorValues, rhsVendorValues, crystal?.GetSubCrystal((int)Faction_FieldIndex.VendorValues))) return false;
+                    if (!((VendorValuesCommon)((IVendorValuesGetter)lhsVendorValues).CommonInstance()!).Equals(lhsVendorValues, rhsVendorValues, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.VendorValues))) return false;
                 }
                 else if (!isVendorValuesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorLocation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorLocation) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VendorLocation, rhs.VendorLocation, out var lhsVendorLocation, out var rhsVendorLocation, out var isVendorLocationEqual))
                 {
-                    if (!((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)lhsVendorLocation).CommonInstance()!).Equals(lhsVendorLocation, rhsVendorLocation, crystal?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation))) return false;
+                    if (!((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)lhsVendorLocation).CommonInstance()!).Equals(lhsVendorLocation, rhsVendorLocation, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation))) return false;
                 }
                 else if (!isVendorLocationEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Faction_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -2125,23 +2141,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFactionGetter?)lhs,
                 rhs: rhs as IFactionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFactionGetter?)lhs,
                 rhs: rhs as IFactionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IFactionGetter item)
@@ -3325,12 +3341,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IFactionGetter rhs) return false;
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFactionGetter? obj)
         {
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);

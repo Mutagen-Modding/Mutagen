@@ -30,7 +30,7 @@ public static class Warmup
                 new ProtocolDefinition_Bethesda()
             };
 
-            foreach (var category in EnumExt<GameCategory>.Values)
+            foreach (var category in Enums<GameCategory>.Values)
             {
                 try
                 {

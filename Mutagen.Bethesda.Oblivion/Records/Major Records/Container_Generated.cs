@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Script = this.Script.Combine(rhs.Script);
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerItem.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
                 ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
@@ -725,12 +725,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IContainerGetter rhs) return false;
-            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IContainerGetter? obj)
         {
-            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -985,6 +985,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Container Duplicate(
+            this IContainerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1348,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Container_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1365,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Container_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1373,43 +1384,43 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IContainerGetter? lhs,
             IContainerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Name) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Container_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Container_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Script) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Script) ?? true))
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((ContainerItemCommon)((IContainerItemGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Container_FieldIndex.Items)))) return false;
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((ContainerItemCommon)((IContainerItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Container_FieldIndex.Items)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((ContainerDataCommon)((IContainerDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Container_FieldIndex.Data))) return false;
+                    if (!((ContainerDataCommon)((IContainerDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Container_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
                 if (!lhs.OpenSound.Equals(rhs.OpenSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
                 if (!lhs.CloseSound.Equals(rhs.CloseSound)) return false;
             }
@@ -1419,23 +1430,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IContainerGetter?)lhs,
                 rhs: rhs as IContainerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IContainerGetter?)lhs,
                 rhs: rhs as IContainerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IContainerGetter item)
@@ -2240,12 +2251,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IContainerGetter rhs) return false;
-            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IContainerGetter? obj)
         {
-            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).GetHashCode(this);

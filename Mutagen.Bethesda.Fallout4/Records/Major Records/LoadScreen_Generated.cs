@@ -161,6 +161,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Description,
                 TItem Conditions,
                 TItem LoadingScreenNif,
@@ -174,7 +175,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Description = Description;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
@@ -586,7 +588,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.LoadingScreenNif = this.LoadingScreenNif.Combine(rhs.LoadingScreenNif);
                 ret.Transform = this.Transform.Combine(rhs.Transform);
                 ret.Rotation = this.Rotation.Combine(rhs.Rotation, (l, r) => l.Combine(r));
@@ -716,12 +718,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILoadScreenGetter rhs) return false;
-            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILoadScreenGetter? obj)
         {
-            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).GetHashCode(this);
@@ -888,7 +890,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -964,6 +966,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static LoadScreen Duplicate(
+            this ILoadScreenGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -996,13 +1009,14 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Description = 6,
-        Conditions = 7,
-        LoadingScreenNif = 8,
-        Transform = 9,
-        Rotation = 10,
-        Zoom = 11,
-        CameraPath = 12,
+        Fallout4MajorRecordFlags = 6,
+        Description = 7,
+        Conditions = 8,
+        LoadingScreenNif = 9,
+        Transform = 10,
+        Rotation = 11,
+        Zoom = 12,
+        CameraPath = 13,
     }
     #endregion
 
@@ -1022,7 +1036,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(LoadScreen.Mask<>);
 
@@ -1328,8 +1342,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (LoadScreen_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (LoadScreen_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (LoadScreen_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1346,7 +1362,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (LoadScreen_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1354,43 +1370,43 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILoadScreenGetter? lhs,
             ILoadScreenGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Description) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LoadScreen_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LoadScreen_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.LoadingScreenNif) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.LoadingScreenNif) ?? true))
             {
                 if (!lhs.LoadingScreenNif.Equals(rhs.LoadingScreenNif)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Transform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Transform) ?? true))
             {
                 if (!lhs.Transform.Equals(rhs.Transform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Rotation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Rotation) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Rotation, rhs.Rotation, out var lhsRotation, out var rhsRotation, out var isRotationEqual))
                 {
-                    if (!((LoadScreenRotationCommon)((ILoadScreenRotationGetter)lhsRotation).CommonInstance()!).Equals(lhsRotation, rhsRotation, crystal?.GetSubCrystal((int)LoadScreen_FieldIndex.Rotation))) return false;
+                    if (!((LoadScreenRotationCommon)((ILoadScreenRotationGetter)lhsRotation).CommonInstance()!).Equals(lhsRotation, rhsRotation, equalsMask?.GetSubCrystal((int)LoadScreen_FieldIndex.Rotation))) return false;
                 }
                 else if (!isRotationEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Zoom) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Zoom) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Zoom, rhs.Zoom, out var lhsZoom, out var rhsZoom, out var isZoomEqual))
                 {
-                    if (!((LoadScreenZoomCommon)((ILoadScreenZoomGetter)lhsZoom).CommonInstance()!).Equals(lhsZoom, rhsZoom, crystal?.GetSubCrystal((int)LoadScreen_FieldIndex.Zoom))) return false;
+                    if (!((LoadScreenZoomCommon)((ILoadScreenZoomGetter)lhsZoom).CommonInstance()!).Equals(lhsZoom, rhsZoom, equalsMask?.GetSubCrystal((int)LoadScreen_FieldIndex.Zoom))) return false;
                 }
                 else if (!isZoomEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.CameraPath) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.CameraPath) ?? true))
             {
                 if (!string.Equals(lhs.CameraPath, rhs.CameraPath)) return false;
             }
@@ -1400,23 +1416,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILoadScreenGetter?)lhs,
                 rhs: rhs as ILoadScreenGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILoadScreenGetter?)lhs,
                 rhs: rhs as ILoadScreenGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILoadScreenGetter item)
@@ -2225,12 +2241,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILoadScreenGetter rhs) return false;
-            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILoadScreenGetter? obj)
         {
-            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).GetHashCode(this);

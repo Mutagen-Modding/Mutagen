@@ -212,7 +212,7 @@ partial class PackageBinaryCreateTranslation
         // Mark end for later
         var end = stream.Position;
 
-        // Pase package data input values
+        // Parse package data input values
         stream.Position = valuesPosition;
         itemIndex = -1;
         lastPackage = null;

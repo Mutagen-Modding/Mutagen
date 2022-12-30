@@ -87,12 +87,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionAreaGetter rhs) return false;
-            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionAreaGetter? obj)
         {
-            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).GetHashCode(this);
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.EdgeFallOff = this.EdgeFallOff.Combine(rhs.EdgeFallOff);
-                ret.RegionPointListData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RegionPointListData?.Overall, rhs.RegionPointListData?.Overall), ExceptionExt.Combine(this.RegionPointListData?.Specific, rhs.RegionPointListData?.Specific));
+                ret.RegionPointListData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RegionPointListData?.Overall, rhs.RegionPointListData?.Overall), Noggog.ExceptionExt.Combine(this.RegionPointListData?.Specific, rhs.RegionPointListData?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RegionAreaCommon)((IRegionAreaGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -935,14 +935,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IRegionAreaGetter? lhs,
             IRegionAreaGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)RegionArea_FieldIndex.EdgeFallOff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionArea_FieldIndex.EdgeFallOff) ?? true))
             {
                 if (lhs.EdgeFallOff != rhs.EdgeFallOff) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RegionArea_FieldIndex.RegionPointListData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionArea_FieldIndex.RegionPointListData) ?? true))
             {
                 if (!lhs.RegionPointListData.SequenceEqualNullable(rhs.RegionPointListData)) return false;
             }
@@ -1362,12 +1362,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionAreaGetter rhs) return false;
-            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionAreaGetter? obj)
         {
-            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).GetHashCode(this);

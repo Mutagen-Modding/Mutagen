@@ -858,12 +858,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IClothingGetter rhs) return false;
-            return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClothingGetter? obj)
         {
-            return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClothingCommon)((IClothingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1120,6 +1120,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Clothing Duplicate(
+            this IClothingGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ClothingCommon)((IClothingGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1567,7 +1578,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Clothing_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1584,7 +1595,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Clothing_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1592,79 +1603,79 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IClothingGetter? lhs,
             IClothingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.Name) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.Script) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.Script) ?? true))
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.Enchantment) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.Enchantment) ?? true))
             {
                 if (!lhs.Enchantment.Equals(rhs.Enchantment)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.EnchantmentPoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.EnchantmentPoints) ?? true))
             {
                 if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.ClothingFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.ClothingFlags) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ClothingFlags, rhs.ClothingFlags, out var lhsClothingFlags, out var rhsClothingFlags, out var isClothingFlagsEqual))
                 {
-                    if (!((ClothingFlagsCommon)((IClothingFlagsGetter)lhsClothingFlags).CommonInstance()!).Equals(lhsClothingFlags, rhsClothingFlags, crystal?.GetSubCrystal((int)Clothing_FieldIndex.ClothingFlags))) return false;
+                    if (!((ClothingFlagsCommon)((IClothingFlagsGetter)lhsClothingFlags).CommonInstance()!).Equals(lhsClothingFlags, rhsClothingFlags, equalsMask?.GetSubCrystal((int)Clothing_FieldIndex.ClothingFlags))) return false;
                 }
                 else if (!isClothingFlagsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.MaleBipedModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.MaleBipedModel) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MaleBipedModel, rhs.MaleBipedModel, out var lhsMaleBipedModel, out var rhsMaleBipedModel, out var isMaleBipedModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsMaleBipedModel).CommonInstance()!).Equals(lhsMaleBipedModel, rhsMaleBipedModel, crystal?.GetSubCrystal((int)Clothing_FieldIndex.MaleBipedModel))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsMaleBipedModel).CommonInstance()!).Equals(lhsMaleBipedModel, rhsMaleBipedModel, equalsMask?.GetSubCrystal((int)Clothing_FieldIndex.MaleBipedModel))) return false;
                 }
                 else if (!isMaleBipedModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.MaleWorldModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.MaleWorldModel) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MaleWorldModel, rhs.MaleWorldModel, out var lhsMaleWorldModel, out var rhsMaleWorldModel, out var isMaleWorldModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsMaleWorldModel).CommonInstance()!).Equals(lhsMaleWorldModel, rhsMaleWorldModel, crystal?.GetSubCrystal((int)Clothing_FieldIndex.MaleWorldModel))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsMaleWorldModel).CommonInstance()!).Equals(lhsMaleWorldModel, rhsMaleWorldModel, equalsMask?.GetSubCrystal((int)Clothing_FieldIndex.MaleWorldModel))) return false;
                 }
                 else if (!isMaleWorldModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.MaleIcon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.MaleIcon) ?? true))
             {
                 if (!string.Equals(lhs.MaleIcon, rhs.MaleIcon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.FemaleBipedModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.FemaleBipedModel) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FemaleBipedModel, rhs.FemaleBipedModel, out var lhsFemaleBipedModel, out var rhsFemaleBipedModel, out var isFemaleBipedModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsFemaleBipedModel).CommonInstance()!).Equals(lhsFemaleBipedModel, rhsFemaleBipedModel, crystal?.GetSubCrystal((int)Clothing_FieldIndex.FemaleBipedModel))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsFemaleBipedModel).CommonInstance()!).Equals(lhsFemaleBipedModel, rhsFemaleBipedModel, equalsMask?.GetSubCrystal((int)Clothing_FieldIndex.FemaleBipedModel))) return false;
                 }
                 else if (!isFemaleBipedModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.FemaleWorldModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.FemaleWorldModel) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FemaleWorldModel, rhs.FemaleWorldModel, out var lhsFemaleWorldModel, out var rhsFemaleWorldModel, out var isFemaleWorldModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsFemaleWorldModel).CommonInstance()!).Equals(lhsFemaleWorldModel, rhsFemaleWorldModel, crystal?.GetSubCrystal((int)Clothing_FieldIndex.FemaleWorldModel))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsFemaleWorldModel).CommonInstance()!).Equals(lhsFemaleWorldModel, rhsFemaleWorldModel, equalsMask?.GetSubCrystal((int)Clothing_FieldIndex.FemaleWorldModel))) return false;
                 }
                 else if (!isFemaleWorldModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.FemaleIcon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.FemaleIcon) ?? true))
             {
                 if (!string.Equals(lhs.FemaleIcon, rhs.FemaleIcon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Clothing_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Clothing_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((ClothingDataCommon)((IClothingDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Clothing_FieldIndex.Data))) return false;
+                    if (!((ClothingDataCommon)((IClothingDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Clothing_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
@@ -1674,23 +1685,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IClothingGetter?)lhs,
                 rhs: rhs as IClothingGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IClothingGetter?)lhs,
                 rhs: rhs as IClothingGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IClothingGetter item)
@@ -2698,12 +2709,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IClothingGetter rhs) return false;
-            return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClothingGetter? obj)
         {
-            return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).GetHashCode(this);

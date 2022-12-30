@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Havok = this.Havok.Combine(rhs.Havok, (l, r) => l.Combine(r));
                 ret.TextureSpecularExponent = this.TextureSpecularExponent.Combine(rhs.TextureSpecularExponent);
-                ret.PotentialGrass = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PotentialGrass?.Overall, rhs.PotentialGrass?.Overall), ExceptionExt.Combine(this.PotentialGrass?.Specific, rhs.PotentialGrass?.Specific));
+                ret.PotentialGrass = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PotentialGrass?.Overall, rhs.PotentialGrass?.Overall), Noggog.ExceptionExt.Combine(this.PotentialGrass?.Specific, rhs.PotentialGrass?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -575,12 +575,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ILandTextureGetter rhs) return false;
-            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandTextureGetter? obj)
         {
-            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -807,6 +807,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static LandTexture Duplicate(
+            this ILandTextureGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1139,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (LandTexture_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1156,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (LandTexture_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1164,27 +1175,27 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ILandTextureGetter? lhs,
             ILandTextureGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LandTexture_FieldIndex.Icon) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Icon) ?? true))
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandTexture_FieldIndex.Havok) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Havok) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Havok, rhs.Havok, out var lhsHavok, out var rhsHavok, out var isHavokEqual))
                 {
-                    if (!((HavokDataCommon)((IHavokDataGetter)lhsHavok).CommonInstance()!).Equals(lhsHavok, rhsHavok, crystal?.GetSubCrystal((int)LandTexture_FieldIndex.Havok))) return false;
+                    if (!((HavokDataCommon)((IHavokDataGetter)lhsHavok).CommonInstance()!).Equals(lhsHavok, rhsHavok, equalsMask?.GetSubCrystal((int)LandTexture_FieldIndex.Havok))) return false;
                 }
                 else if (!isHavokEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandTexture_FieldIndex.TextureSpecularExponent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandTexture_FieldIndex.TextureSpecularExponent) ?? true))
             {
                 if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandTexture_FieldIndex.PotentialGrass) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandTexture_FieldIndex.PotentialGrass) ?? true))
             {
                 if (!lhs.PotentialGrass.SequenceEqualNullable(rhs.PotentialGrass)) return false;
             }
@@ -1194,23 +1205,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandTextureGetter?)lhs,
                 rhs: rhs as ILandTextureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandTextureGetter?)lhs,
                 rhs: rhs as ILandTextureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILandTextureGetter item)
@@ -1893,12 +1904,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ILandTextureGetter rhs) return false;
-            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandTextureGetter? obj)
         {
-            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).GetHashCode(this);

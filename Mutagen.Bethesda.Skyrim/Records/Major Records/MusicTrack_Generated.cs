@@ -176,6 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Type,
                 TItem Duration,
                 TItem FadeOut,
@@ -191,7 +192,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Type = Type;
                 this.Duration = Duration;
@@ -784,9 +786,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.TrackFilename = this.TrackFilename.Combine(rhs.TrackFilename);
                 ret.FinaleFilename = this.FinaleFilename.Combine(rhs.FinaleFilename);
                 ret.LoopData = this.LoopData.Combine(rhs.LoopData, (l, r) => l.Combine(r));
-                ret.CuePoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CuePoints?.Overall, rhs.CuePoints?.Overall), ExceptionExt.Combine(this.CuePoints?.Specific, rhs.CuePoints?.Specific));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Tracks?.Overall, rhs.Tracks?.Overall), ExceptionExt.Combine(this.Tracks?.Specific, rhs.Tracks?.Specific));
+                ret.CuePoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CuePoints?.Overall, rhs.CuePoints?.Overall), Noggog.ExceptionExt.Combine(this.CuePoints?.Specific, rhs.CuePoints?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Tracks?.Overall, rhs.Tracks?.Overall), Noggog.ExceptionExt.Combine(this.Tracks?.Specific, rhs.Tracks?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -923,12 +925,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMusicTrackGetter rhs) return false;
-            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMusicTrackGetter? obj)
         {
-            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1093,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1169,6 +1171,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static MusicTrack Duplicate(
+            this IMusicTrackGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1201,15 +1214,16 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Type = 6,
-        Duration = 7,
-        FadeOut = 8,
-        TrackFilename = 9,
-        FinaleFilename = 10,
-        LoopData = 11,
-        CuePoints = 12,
-        Conditions = 13,
-        Tracks = 14,
+        SkyrimMajorRecordFlags = 6,
+        Type = 7,
+        Duration = 8,
+        FadeOut = 9,
+        TrackFilename = 10,
+        FinaleFilename = 11,
+        LoopData = 12,
+        CuePoints = 13,
+        Conditions = 14,
+        Tracks = 15,
     }
     #endregion
 
@@ -1229,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(MusicTrack.Mask<>);
 
@@ -1600,8 +1614,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (MusicTrack_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (MusicTrack_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (MusicTrack_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1618,7 +1634,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (MusicTrack_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1626,47 +1642,47 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMusicTrackGetter? lhs,
             IMusicTrackGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Type) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Duration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Duration) ?? true))
             {
                 if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.FadeOut) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FadeOut) ?? true))
             {
                 if (!lhs.FadeOut.EqualsWithin(rhs.FadeOut)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.TrackFilename) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.TrackFilename) ?? true))
             {
                 if (!object.Equals(lhs.TrackFilename, rhs.TrackFilename)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.FinaleFilename) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FinaleFilename) ?? true))
             {
                 if (!object.Equals(lhs.FinaleFilename, rhs.FinaleFilename)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LoopData, rhs.LoopData, out var lhsLoopData, out var rhsLoopData, out var isLoopDataEqual))
                 {
-                    if (!((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)lhsLoopData).CommonInstance()!).Equals(lhsLoopData, rhsLoopData, crystal?.GetSubCrystal((int)MusicTrack_FieldIndex.LoopData))) return false;
+                    if (!((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)lhsLoopData).CommonInstance()!).Equals(lhsLoopData, rhsLoopData, equalsMask?.GetSubCrystal((int)MusicTrack_FieldIndex.LoopData))) return false;
                 }
                 else if (!isLoopDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.CuePoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.CuePoints) ?? true))
             {
                 if (!lhs.CuePoints.SequenceEqualNullable(rhs.CuePoints)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MusicTrack_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MusicTrack_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Tracks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Tracks) ?? true))
             {
                 if (!lhs.Tracks.SequenceEqualNullable(rhs.Tracks)) return false;
             }
@@ -1676,23 +1692,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMusicTrackGetter?)lhs,
                 rhs: rhs as IMusicTrackGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMusicTrackGetter?)lhs,
                 rhs: rhs as IMusicTrackGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMusicTrackGetter item)
@@ -2622,12 +2638,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMusicTrackGetter rhs) return false;
-            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMusicTrackGetter? obj)
         {
-            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).GetHashCode(this);

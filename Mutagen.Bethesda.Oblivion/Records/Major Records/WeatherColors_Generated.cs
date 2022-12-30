@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherColorsGetter rhs) return false;
-            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherColorsGetter? obj)
         {
-            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherColorsCommon)((IWeatherColorsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,22 +917,22 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IWeatherColorsGetter? lhs,
             IWeatherColorsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunrise) ?? true))
             {
                 if (!lhs.Sunrise.ColorOnlyEquals(rhs.Sunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherColors_FieldIndex.Day) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Day) ?? true))
             {
                 if (!lhs.Day.ColorOnlyEquals(rhs.Day)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunset) ?? true))
             {
                 if (!lhs.Sunset.ColorOnlyEquals(rhs.Sunset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherColors_FieldIndex.Night) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Night) ?? true))
             {
                 if (!lhs.Night.ColorOnlyEquals(rhs.Night)) return false;
             }
@@ -1276,12 +1276,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherColorsGetter rhs) return false;
-            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherColorsGetter? obj)
         {
-            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).GetHashCode(this);

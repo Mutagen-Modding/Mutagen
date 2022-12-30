@@ -94,12 +94,12 @@ namespace Mutagen.Bethesda.Pex
         public override bool Equals(object? obj)
         {
             if (obj is not IDebugInfoGetter rhs) return false;
-            return ((DebugInfoCommon)((IDebugInfoGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DebugInfoCommon)((IDebugInfoGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDebugInfoGetter? obj)
         {
-            return ((DebugInfoCommon)((IDebugInfoGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DebugInfoCommon)((IDebugInfoGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DebugInfoCommon)((IDebugInfoGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,9 +589,9 @@ namespace Mutagen.Bethesda.Pex
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ModificationTime = this.ModificationTime.Combine(rhs.ModificationTime);
-                ret.Functions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugFunction.ErrorMask?>>?>(ExceptionExt.Combine(this.Functions?.Overall, rhs.Functions?.Overall), ExceptionExt.Combine(this.Functions?.Specific, rhs.Functions?.Specific));
-                ret.PropertyGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugPropertyGroup.ErrorMask?>>?>(ExceptionExt.Combine(this.PropertyGroups?.Overall, rhs.PropertyGroups?.Overall), ExceptionExt.Combine(this.PropertyGroups?.Specific, rhs.PropertyGroups?.Specific));
-                ret.StructOrders = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugStructOrder.ErrorMask?>>?>(ExceptionExt.Combine(this.StructOrders?.Overall, rhs.StructOrders?.Overall), ExceptionExt.Combine(this.StructOrders?.Specific, rhs.StructOrders?.Specific));
+                ret.Functions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugFunction.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Functions?.Overall, rhs.Functions?.Overall), Noggog.ExceptionExt.Combine(this.Functions?.Specific, rhs.Functions?.Specific));
+                ret.PropertyGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugPropertyGroup.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PropertyGroups?.Overall, rhs.PropertyGroups?.Overall), Noggog.ExceptionExt.Combine(this.PropertyGroups?.Specific, rhs.PropertyGroups?.Specific));
+                ret.StructOrders = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugStructOrder.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.StructOrders?.Overall, rhs.StructOrders?.Overall), Noggog.ExceptionExt.Combine(this.StructOrders?.Specific, rhs.StructOrders?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Pex
             return ((DebugInfoCommon)((IDebugInfoGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1084,24 +1084,24 @@ namespace Mutagen.Bethesda.Pex
         public virtual bool Equals(
             IDebugInfoGetter? lhs,
             IDebugInfoGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.ModificationTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugInfo_FieldIndex.ModificationTime) ?? true))
             {
                 if (lhs.ModificationTime != rhs.ModificationTime) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.Functions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugInfo_FieldIndex.Functions) ?? true))
             {
-                if (!lhs.Functions.SequenceEqual(rhs.Functions, (l, r) => ((DebugFunctionCommon)((IDebugFunctionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DebugInfo_FieldIndex.Functions)))) return false;
+                if (!lhs.Functions.SequenceEqual(rhs.Functions, (l, r) => ((DebugFunctionCommon)((IDebugFunctionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DebugInfo_FieldIndex.Functions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.PropertyGroups) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugInfo_FieldIndex.PropertyGroups) ?? true))
             {
-                if (!lhs.PropertyGroups.SequenceEqual(rhs.PropertyGroups, (l, r) => ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DebugInfo_FieldIndex.PropertyGroups)))) return false;
+                if (!lhs.PropertyGroups.SequenceEqual(rhs.PropertyGroups, (l, r) => ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DebugInfo_FieldIndex.PropertyGroups)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.StructOrders) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugInfo_FieldIndex.StructOrders) ?? true))
             {
-                if (!lhs.StructOrders.SequenceEqual(rhs.StructOrders, (l, r) => ((DebugStructOrderCommon)((IDebugStructOrderGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DebugInfo_FieldIndex.StructOrders)))) return false;
+                if (!lhs.StructOrders.SequenceEqual(rhs.StructOrders, (l, r) => ((DebugStructOrderCommon)((IDebugStructOrderGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DebugInfo_FieldIndex.StructOrders)))) return false;
             }
             return true;
         }

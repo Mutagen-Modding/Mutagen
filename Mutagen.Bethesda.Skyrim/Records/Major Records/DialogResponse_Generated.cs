@@ -128,9 +128,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IDialogResponseGetter.ListenerIdleAnimation => this.ListenerIdleAnimation;
         #endregion
-        #region TRDTDataTypeState
-        public DialogResponse.TRDTDataType TRDTDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -150,12 +147,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IDialogResponseGetter rhs) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogResponseGetter? obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);
@@ -183,7 +180,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Edits = initialValue;
                 this.SpeakerIdleAnimation = initialValue;
                 this.ListenerIdleAnimation = initialValue;
-                this.TRDTDataTypeState = initialValue;
             }
 
             public Mask(
@@ -199,8 +195,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ScriptNotes,
                 TItem Edits,
                 TItem SpeakerIdleAnimation,
-                TItem ListenerIdleAnimation,
-                TItem TRDTDataTypeState)
+                TItem ListenerIdleAnimation)
             {
                 this.Emotion = Emotion;
                 this.EmotionValue = EmotionValue;
@@ -215,7 +210,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Edits = Edits;
                 this.SpeakerIdleAnimation = SpeakerIdleAnimation;
                 this.ListenerIdleAnimation = ListenerIdleAnimation;
-                this.TRDTDataTypeState = TRDTDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -240,7 +234,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Edits;
             public TItem SpeakerIdleAnimation;
             public TItem ListenerIdleAnimation;
-            public TItem TRDTDataTypeState;
             #endregion
 
             #region Equals
@@ -266,7 +259,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Edits, rhs.Edits)) return false;
                 if (!object.Equals(this.SpeakerIdleAnimation, rhs.SpeakerIdleAnimation)) return false;
                 if (!object.Equals(this.ListenerIdleAnimation, rhs.ListenerIdleAnimation)) return false;
-                if (!object.Equals(this.TRDTDataTypeState, rhs.TRDTDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -285,7 +277,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Edits);
                 hash.Add(this.SpeakerIdleAnimation);
                 hash.Add(this.ListenerIdleAnimation);
-                hash.Add(this.TRDTDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -307,7 +298,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Edits)) return false;
                 if (!eval(this.SpeakerIdleAnimation)) return false;
                 if (!eval(this.ListenerIdleAnimation)) return false;
-                if (!eval(this.TRDTDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -328,7 +318,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Edits)) return true;
                 if (eval(this.SpeakerIdleAnimation)) return true;
                 if (eval(this.ListenerIdleAnimation)) return true;
-                if (eval(this.TRDTDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -356,7 +345,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Edits = eval(this.Edits);
                 obj.SpeakerIdleAnimation = eval(this.SpeakerIdleAnimation);
                 obj.ListenerIdleAnimation = eval(this.ListenerIdleAnimation);
-                obj.TRDTDataTypeState = eval(this.TRDTDataTypeState);
             }
             #endregion
 
@@ -427,10 +415,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(ListenerIdleAnimation, "ListenerIdleAnimation");
                     }
-                    if (printMask?.TRDTDataTypeState ?? true)
-                    {
-                        sb.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -468,7 +452,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Edits;
             public Exception? SpeakerIdleAnimation;
             public Exception? ListenerIdleAnimation;
-            public Exception? TRDTDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -503,8 +486,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return SpeakerIdleAnimation;
                     case DialogResponse_FieldIndex.ListenerIdleAnimation:
                         return ListenerIdleAnimation;
-                    case DialogResponse_FieldIndex.TRDTDataTypeState:
-                        return TRDTDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -553,9 +534,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case DialogResponse_FieldIndex.ListenerIdleAnimation:
                         this.ListenerIdleAnimation = ex;
-                        break;
-                    case DialogResponse_FieldIndex.TRDTDataTypeState:
-                        this.TRDTDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -606,9 +584,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case DialogResponse_FieldIndex.ListenerIdleAnimation:
                         this.ListenerIdleAnimation = (Exception?)obj;
                         break;
-                    case DialogResponse_FieldIndex.TRDTDataTypeState:
-                        this.TRDTDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -630,7 +605,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Edits != null) return true;
                 if (SpeakerIdleAnimation != null) return true;
                 if (ListenerIdleAnimation != null) return true;
-                if (TRDTDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -695,9 +669,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(ListenerIdleAnimation, "ListenerIdleAnimation");
                 }
-                {
-                    sb.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
-                }
             }
             #endregion
 
@@ -719,7 +690,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Edits = this.Edits.Combine(rhs.Edits);
                 ret.SpeakerIdleAnimation = this.SpeakerIdleAnimation.Combine(rhs.SpeakerIdleAnimation);
                 ret.ListenerIdleAnimation = this.ListenerIdleAnimation.Combine(rhs.ListenerIdleAnimation);
-                ret.TRDTDataTypeState = this.TRDTDataTypeState.Combine(rhs.TRDTDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -756,7 +726,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Edits;
             public bool SpeakerIdleAnimation;
             public bool ListenerIdleAnimation;
-            public bool TRDTDataTypeState;
             #endregion
 
             #region Ctors
@@ -779,7 +748,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Edits = defaultOn;
                 this.SpeakerIdleAnimation = defaultOn;
                 this.ListenerIdleAnimation = defaultOn;
-                this.TRDTDataTypeState = defaultOn;
             }
 
             #endregion
@@ -808,7 +776,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Edits, null));
                 ret.Add((SpeakerIdleAnimation, null));
                 ret.Add((ListenerIdleAnimation, null));
-                ret.Add((TRDTDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -822,10 +789,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponseCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseSetterCommon.Instance.RemapLinks(this, mapping);
-        [Flags]
-        public enum TRDTDataType
-        {
-        }
         #endregion
 
         #region Binary Translation
@@ -904,7 +867,6 @@ namespace Mutagen.Bethesda.Skyrim
         new String Edits { get; set; }
         new IFormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; set; }
         new IFormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation { get; set; }
-        new DialogResponse.TRDTDataType TRDTDataTypeState { get; set; }
     }
 
     public partial interface IDialogResponseGetter :
@@ -933,7 +895,6 @@ namespace Mutagen.Bethesda.Skyrim
         String Edits { get; }
         IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation { get; }
         IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation { get; }
-        DialogResponse.TRDTDataType TRDTDataTypeState { get; }
 
     }
 
@@ -990,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1116,7 +1077,6 @@ namespace Mutagen.Bethesda.Skyrim
         Edits = 10,
         SpeakerIdleAnimation = 11,
         ListenerIdleAnimation = 12,
-        TRDTDataTypeState = 13,
     }
     #endregion
 
@@ -1134,9 +1094,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "a48dd14d-639a-47de-b96d-4517394936b7";
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(DialogResponse.Mask<>);
 
@@ -1231,7 +1191,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Edits = string.Empty;
             item.SpeakerIdleAnimation.Clear();
             item.ListenerIdleAnimation.Clear();
-            item.TRDTDataTypeState = default;
         }
         
         #region Mutagen
@@ -1254,7 +1213,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: DialogResponseBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: DialogResponseBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1298,7 +1256,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Edits = string.Equals(item.Edits, rhs.Edits);
             ret.SpeakerIdleAnimation = item.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation);
             ret.ListenerIdleAnimation = item.ListenerIdleAnimation.Equals(rhs.ListenerIdleAnimation);
-            ret.TRDTDataTypeState = item.TRDTDataTypeState == rhs.TRDTDataTypeState;
         }
         
         public string Print(
@@ -1395,74 +1352,66 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.ListenerIdleAnimation.FormKeyNullable, "ListenerIdleAnimation");
             }
-            if (printMask?.TRDTDataTypeState ?? true)
-            {
-                sb.AppendItem(item.TRDTDataTypeState, "TRDTDataTypeState");
-            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
             IDialogResponseGetter? lhs,
             IDialogResponseGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
             {
                 if (lhs.Emotion != rhs.Emotion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.EmotionValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.EmotionValue) ?? true))
             {
                 if (lhs.EmotionValue != rhs.EmotionValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
             {
                 if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown2) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown3) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Text) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Text) ?? true))
             {
                 if (!object.Equals(lhs.Text, rhs.Text)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ScriptNotes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ScriptNotes) ?? true))
             {
                 if (!string.Equals(lhs.ScriptNotes, rhs.ScriptNotes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Edits) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Edits) ?? true))
             {
                 if (!string.Equals(lhs.Edits, rhs.Edits)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
             {
                 if (!lhs.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
             {
                 if (!lhs.ListenerIdleAnimation.Equals(rhs.ListenerIdleAnimation)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDTDataTypeState) ?? true))
-            {
-                if (lhs.TRDTDataTypeState != rhs.TRDTDataTypeState) return false;
             }
             return true;
         }
@@ -1483,7 +1432,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Edits);
             hash.Add(item.SpeakerIdleAnimation);
             hash.Add(item.ListenerIdleAnimation);
-            hash.Add(item.TRDTDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1577,10 +1525,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ListenerIdleAnimation.SetTo(rhs.ListenerIdleAnimation.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDTDataTypeState) ?? true))
-            {
-                item.TRDTDataTypeState = rhs.TRDTDataTypeState;
-            }
         }
         
         #endregion
@@ -1673,12 +1617,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static readonly DialogResponseBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IDialogResponseGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IDialogResponseGetter item,
             MutagenWriter writer,
@@ -1738,9 +1676,6 @@ namespace Mutagen.Bethesda.Skyrim
             IDialogResponseGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1763,12 +1698,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class DialogResponseBinaryCreateTranslation
     {
         public static readonly DialogResponseBinaryCreateTranslation Instance = new DialogResponseBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IDialogResponse item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IDialogResponse item,
@@ -1914,7 +1843,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         private RangeInt32? _TRDTLocation;
-        public DialogResponse.TRDTDataType TRDTDataTypeState { get; private set; }
         #region Emotion
         private int _EmotionLocation => _TRDTLocation!.Value.Min;
         private bool _Emotion_IsSet => _TRDTLocation.HasValue;
@@ -2091,12 +2019,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IDialogResponseGetter rhs) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogResponseGetter? obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);

@@ -86,14 +86,16 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem SkyrimMajorRecordFlags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
             }
 
@@ -350,12 +352,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IHairGetter rhs) return false;
-            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHairGetter? obj)
         {
-            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HairCommon)((IHairGetter)this).CommonInstance()!).GetHashCode(this);
@@ -498,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((HairCommon)((IHairGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -574,6 +576,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Hair Duplicate(
+            this IHairGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((HairCommon)((IHairGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -606,6 +619,7 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        SkyrimMajorRecordFlags = 6,
     }
     #endregion
 
@@ -625,7 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 0;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Hair.Mask<>);
 
@@ -851,8 +865,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Hair_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Hair_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Hair_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -869,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Hair_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -877,33 +893,33 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IHairGetter? lhs,
             IHairGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHairGetter?)lhs,
                 rhs: rhs as IHairGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHairGetter?)lhs,
                 rhs: rhs as IHairGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IHairGetter item)
@@ -1359,12 +1375,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IHairGetter rhs) return false;
-            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHairGetter? obj)
         {
-            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HairCommon)((IHairGetter)this).CommonInstance()!).GetHashCode(this);

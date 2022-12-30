@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IContainerItemGetter rhs) return false;
-            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IContainerItemGetter? obj)
         {
-            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ContainerItemCommon)((IContainerItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -859,14 +859,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IContainerItemGetter? lhs,
             IContainerItemGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
                 if (!lhs.Item.Equals(rhs.Item)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
                 if (lhs.Count != rhs.Count) return false;
             }
@@ -1197,12 +1197,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IContainerItemGetter rhs) return false;
-            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IContainerItemGetter? obj)
         {
-            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).GetHashCode(this);

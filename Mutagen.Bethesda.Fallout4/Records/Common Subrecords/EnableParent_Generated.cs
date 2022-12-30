@@ -96,12 +96,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IEnableParentGetter rhs) return false;
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEnableParentGetter? obj)
         {
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -956,22 +956,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IEnableParentGetter? lhs,
             IEnableParentGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
                 if (!lhs.Reference.Equals(rhs.Reference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Unknown) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
@@ -1335,12 +1335,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IEnableParentGetter rhs) return false;
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEnableParentGetter? obj)
         {
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).GetHashCode(this);

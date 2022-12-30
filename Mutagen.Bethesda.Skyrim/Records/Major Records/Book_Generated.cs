@@ -266,9 +266,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IBookGetter.Description => this.Description;
         #endregion
-        #region DATADataTypeState
-        public Book.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -312,7 +309,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = initialValue;
                 this.InventoryArt = initialValue;
                 this.Description = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -322,6 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Name,
@@ -339,15 +336,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Value,
                 TItem Weight,
                 TItem InventoryArt,
-                TItem Description,
-                TItem DATADataTypeState)
+                TItem Description)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -367,7 +364,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = Weight;
                 this.InventoryArt = InventoryArt;
                 this.Description = Description;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -397,7 +393,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Weight;
             public TItem InventoryArt;
             public TItem Description;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -429,7 +424,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.InventoryArt, rhs.InventoryArt)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -453,7 +447,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Weight);
                 hash.Add(this.InventoryArt);
                 hash.Add(this.Description);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -516,7 +509,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Weight)) return false;
                 if (!eval(this.InventoryArt)) return false;
                 if (!eval(this.Description)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -577,7 +569,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Weight)) return true;
                 if (eval(this.InventoryArt)) return true;
                 if (eval(this.Description)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -624,7 +615,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Weight = eval(this.Weight);
                 obj.InventoryArt = eval(this.InventoryArt);
                 obj.Description = eval(this.Description);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -732,10 +722,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Description, "Description");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -765,7 +751,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Weight;
             public Exception? InventoryArt;
             public Exception? Description;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -810,8 +795,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return InventoryArt;
                     case Book_FieldIndex.Description:
                         return Description;
-                    case Book_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -875,9 +858,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Book_FieldIndex.Description:
                         this.Description = ex;
-                        break;
-                    case Book_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -944,9 +924,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Book_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -974,7 +951,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Weight != null) return true;
                 if (InventoryArt != null) return true;
                 if (Description != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1060,9 +1036,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Description, "Description");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -1080,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
@@ -1089,7 +1062,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.InventoryArt = this.InventoryArt.Combine(rhs.InventoryArt);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1130,7 +1102,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Weight;
             public bool InventoryArt;
             public bool Description;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1151,7 +1122,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = defaultOn;
                 this.InventoryArt = defaultOn;
                 this.Description = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1177,7 +1147,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Weight, null));
                 ret.Add((InventoryArt, null));
                 ret.Add((Description, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1241,10 +1210,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IBook);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BookCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BookSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BookSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -1256,12 +1221,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IBookGetter rhs) return false;
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBookGetter? obj)
         {
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BookCommon)((IBookGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1384,7 +1349,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Weight { get; set; }
         new IFormLinkNullable<IStaticGetter> InventoryArt { get; set; }
         new TranslatedString? Description { get; set; }
-        new Book.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IBookInternal :
@@ -1468,7 +1432,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single Weight { get; }
         IFormLinkNullableGetter<IStaticGetter> InventoryArt { get; }
         ITranslatedStringGetter? Description { get; }
-        Book.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1525,7 +1488,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BookCommon)((IBookGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1601,6 +1564,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Book Duplicate(
+            this IBookGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((BookCommon)((IBookGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1633,25 +1607,25 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Name = 8,
-        Model = 9,
-        Icons = 10,
-        BookText = 11,
-        Destructible = 12,
-        PickUpSound = 13,
-        PutDownSound = 14,
-        Keywords = 15,
-        Flags = 16,
-        Type = 17,
-        Unused = 18,
-        Teaches = 19,
-        Value = 20,
-        Weight = 21,
-        InventoryArt = 22,
-        Description = 23,
-        DATADataTypeState = 24,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Name = 9,
+        Model = 10,
+        Icons = 11,
+        BookText = 12,
+        Destructible = 13,
+        PickUpSound = 14,
+        PutDownSound = 15,
+        Keywords = 16,
+        Flags = 17,
+        Type = 18,
+        Unused = 19,
+        Teaches = 20,
+        Value = 21,
+        Weight = 22,
+        InventoryArt = 23,
+        Description = 24,
     }
     #endregion
 
@@ -1669,7 +1643,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "75309913-652c-4e97-9cf4-6ccb493d3143";
 
-        public const ushort AdditionalFieldCount = 19;
+        public const ushort AdditionalFieldCount = 18;
 
         public const ushort FieldCount = 25;
 
@@ -1705,6 +1679,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.BOOK,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
@@ -1782,7 +1757,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Weight = default;
             item.InventoryArt.Clear();
             item.Description = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1962,7 +1936,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.InventoryArt = item.InventoryArt.Equals(rhs.InventoryArt);
             ret.Description = object.Equals(item.Description, rhs.Description);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2102,10 +2075,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(DescriptionItem, "Description");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Book_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2124,8 +2093,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Book_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Book_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Book_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2142,7 +2113,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Book_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2150,109 +2121,105 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IBookGetter? lhs,
             IBookGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Book_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Book_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Book_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Book_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Book_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Book_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.BookText) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.BookText) ?? true))
             {
                 if (!object.Equals(lhs.BookText, rhs.BookText)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Book_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Teaches, rhs.Teaches, out var lhsTeaches, out var rhsTeaches, out var isTeachesEqual))
                 {
-                    if (!((BookTeachTargetCommon)((IBookTeachTargetGetter)lhsTeaches).CommonInstance()!).Equals(lhsTeaches, rhsTeaches, crystal?.GetSubCrystal((int)Book_FieldIndex.Teaches))) return false;
+                    if (!((BookTeachTargetCommon)((IBookTeachTargetGetter)lhsTeaches).CommonInstance()!).Equals(lhsTeaches, rhsTeaches, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Teaches))) return false;
                 }
                 else if (!isTeachesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.InventoryArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.InventoryArt) ?? true))
             {
                 if (!lhs.InventoryArt.Equals(rhs.InventoryArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -2260,23 +2227,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBookGetter?)lhs,
                 rhs: rhs as IBookGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBookGetter?)lhs,
                 rhs: rhs as IBookGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IBookGetter item)
@@ -2321,7 +2288,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(Descriptionitem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2743,10 +2709,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Description = rhs.Description?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2895,15 +2857,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly BookBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IBookGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IBookGetter item,
             MutagenWriter writer,
@@ -2918,7 +2871,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
@@ -3045,7 +2998,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3105,15 +3058,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly BookBinaryCreateTranslation Instance = new BookBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BOOK;
-        public static void FillBinaryStructs(
-            IBookInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IBookInternal item,
             MutagenFrame frame,
@@ -3128,7 +3072,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Book_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -3239,6 +3185,11 @@ namespace Mutagen.Bethesda.Skyrim
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Book_FieldIndex.Description;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -3308,8 +3259,9 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
@@ -3349,7 +3301,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private RangeInt32? _DATALocation;
-        public Book.DATADataType DATADataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         public partial Book.Flag GetFlagsCustom();
@@ -3460,6 +3411,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Book_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -3541,6 +3497,11 @@ namespace Mutagen.Bethesda.Skyrim
                     _DescriptionLocation = (stream.Position - offset);
                     return (int)Book_FieldIndex.Description;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return base.FillRecordType(
                         stream: stream,
@@ -3579,12 +3540,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IBookGetter rhs) return false;
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBookGetter? obj)
         {
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BookCommon)((IBookGetter)this).CommonInstance()!).GetHashCode(this);

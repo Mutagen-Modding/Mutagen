@@ -50,36 +50,36 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Sunrise
-        public readonly static Single _Sunrise_Default = 1f;
-        public Single Sunrise { get; set; } = _Sunrise_Default;
+        public static readonly Single SunriseDefault = 1f;
+        public Single Sunrise { get; set; } = SunriseDefault;
         #endregion
         #region Day
-        public readonly static Single _Day_Default = 1f;
-        public Single Day { get; set; } = _Day_Default;
+        public static readonly Single DayDefault = 1f;
+        public Single Day { get; set; } = DayDefault;
         #endregion
         #region Sunset
-        public readonly static Single _Sunset_Default = 1f;
-        public Single Sunset { get; set; } = _Sunset_Default;
+        public static readonly Single SunsetDefault = 1f;
+        public Single Sunset { get; set; } = SunsetDefault;
         #endregion
         #region Night
-        public readonly static Single _Night_Default = 1f;
-        public Single Night { get; set; } = _Night_Default;
+        public static readonly Single NightDefault = 1f;
+        public Single Night { get; set; } = NightDefault;
         #endregion
         #region EarlySunrise
-        public readonly static Single _EarlySunrise_Default = 1f;
-        public Single EarlySunrise { get; set; } = _EarlySunrise_Default;
+        public static readonly Single EarlySunriseDefault = 1f;
+        public Single EarlySunrise { get; set; } = EarlySunriseDefault;
         #endregion
         #region LateSunrise
-        public readonly static Single _LateSunrise_Default = 1f;
-        public Single LateSunrise { get; set; } = _LateSunrise_Default;
+        public static readonly Single LateSunriseDefault = 1f;
+        public Single LateSunrise { get; set; } = LateSunriseDefault;
         #endregion
         #region EarlySunset
-        public readonly static Single _EarlySunset_Default = 1f;
-        public Single EarlySunset { get; set; } = _EarlySunset_Default;
+        public static readonly Single EarlySunsetDefault = 1f;
+        public Single EarlySunset { get; set; } = EarlySunsetDefault;
         #endregion
         #region LateSunset
-        public readonly static Single _LateSunset_Default = 1f;
-        public Single LateSunset { get; set; } = _LateSunset_Default;
+        public static readonly Single LateSunsetDefault = 1f;
+        public Single LateSunset { get; set; } = LateSunsetDefault;
         #endregion
 
         #region To String
@@ -100,12 +100,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherAlphaGetter rhs) return false;
-            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherAlphaGetter? obj)
         {
-            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).GetHashCode(this);
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WeatherAlphaCommon)((IWeatherAlphaGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -945,14 +945,14 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IWeatherAlpha item)
         {
             ClearPartial();
-            item.Sunrise = WeatherAlpha._Sunrise_Default;
-            item.Day = WeatherAlpha._Day_Default;
-            item.Sunset = WeatherAlpha._Sunset_Default;
-            item.Night = WeatherAlpha._Night_Default;
-            item.EarlySunrise = WeatherAlpha._EarlySunrise_Default;
-            item.LateSunrise = WeatherAlpha._LateSunrise_Default;
-            item.EarlySunset = WeatherAlpha._EarlySunset_Default;
-            item.LateSunset = WeatherAlpha._LateSunset_Default;
+            item.Sunrise = WeatherAlpha.SunriseDefault;
+            item.Day = WeatherAlpha.DayDefault;
+            item.Sunset = WeatherAlpha.SunsetDefault;
+            item.Night = WeatherAlpha.NightDefault;
+            item.EarlySunrise = WeatherAlpha.EarlySunriseDefault;
+            item.LateSunrise = WeatherAlpha.LateSunriseDefault;
+            item.EarlySunset = WeatherAlpha.EarlySunsetDefault;
+            item.LateSunset = WeatherAlpha.LateSunsetDefault;
         }
         
         #region Mutagen
@@ -1092,38 +1092,38 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWeatherAlphaGetter? lhs,
             IWeatherAlphaGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Sunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Sunrise) ?? true))
             {
                 if (!lhs.Sunrise.EqualsWithin(rhs.Sunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Day) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Day) ?? true))
             {
                 if (!lhs.Day.EqualsWithin(rhs.Day)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Sunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Sunset) ?? true))
             {
                 if (!lhs.Sunset.EqualsWithin(rhs.Sunset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Night) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Night) ?? true))
             {
                 if (!lhs.Night.EqualsWithin(rhs.Night)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.EarlySunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.EarlySunrise) ?? true))
             {
                 if (!lhs.EarlySunrise.EqualsWithin(rhs.EarlySunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.LateSunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.LateSunrise) ?? true))
             {
                 if (!lhs.LateSunrise.EqualsWithin(rhs.LateSunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.EarlySunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.EarlySunset) ?? true))
             {
                 if (!lhs.EarlySunset.EqualsWithin(rhs.EarlySunset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.LateSunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.LateSunset) ?? true))
             {
                 if (!lhs.LateSunset.EqualsWithin(rhs.LateSunset)) return false;
             }
@@ -1507,12 +1507,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherAlphaGetter rhs) return false;
-            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherAlphaGetter? obj)
         {
-            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherAlphaCommon)((IWeatherAlphaGetter)this).CommonInstance()!).GetHashCode(this);

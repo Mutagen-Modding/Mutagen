@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Fallout4
         public QuestAdapter.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region ExtraBindDataVersion
-        public readonly static Byte _ExtraBindDataVersion_Default = 3;
-        public Byte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
+        public static readonly Byte ExtraBindDataVersionDefault = 3;
+        public Byte ExtraBindDataVersion { get; set; } = ExtraBindDataVersionDefault;
         #endregion
         #region Script
         public ScriptEntry Script { get; set; } = new ScriptEntry();
@@ -111,12 +111,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestAdapterGetter rhs) return false;
-            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestAdapterGetter? obj)
         {
-            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -578,8 +578,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.ExtraBindDataVersion = this.ExtraBindDataVersion.Combine(rhs.ExtraBindDataVersion);
                 ret.Script = this.Script.Combine(rhs.Script, (l, r) => l.Combine(r));
-                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestScriptFragment.ErrorMask?>>?>(ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
-                ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestFragmentAlias.ErrorMask?>>?>(ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
+                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestScriptFragment.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), Noggog.ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
+                ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestFragmentAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), Noggog.ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Versioning = default;
-            item.ExtraBindDataVersion = QuestAdapter._ExtraBindDataVersion_Default;
+            item.ExtraBindDataVersion = QuestAdapter.ExtraBindDataVersionDefault;
             item.Script.Clear();
             item.Fragments.Clear();
             item.Aliases.Clear();
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case AVirtualMachineAdapter_FieldIndex.Scripts:
                     return (QuestAdapter_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1175,33 +1175,33 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IQuestAdapterGetter? lhs,
             IQuestAdapterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Versioning) ?? true))
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.ExtraBindDataVersion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.ExtraBindDataVersion) ?? true))
             {
                 if (lhs.ExtraBindDataVersion != rhs.ExtraBindDataVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Script) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Script) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Script, rhs.Script, out var lhsScript, out var rhsScript, out var isScriptEqual))
                 {
-                    if (!((ScriptEntryCommon)((IScriptEntryGetter)lhsScript).CommonInstance()!).Equals(lhsScript, rhsScript, crystal?.GetSubCrystal((int)QuestAdapter_FieldIndex.Script))) return false;
+                    if (!((ScriptEntryCommon)((IScriptEntryGetter)lhsScript).CommonInstance()!).Equals(lhsScript, rhsScript, equalsMask?.GetSubCrystal((int)QuestAdapter_FieldIndex.Script))) return false;
                 }
                 else if (!isScriptEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Fragments) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Fragments) ?? true))
             {
-                if (!lhs.Fragments.SequenceEqual(rhs.Fragments, (l, r) => ((QuestScriptFragmentCommon)((IQuestScriptFragmentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestAdapter_FieldIndex.Fragments)))) return false;
+                if (!lhs.Fragments.SequenceEqual(rhs.Fragments, (l, r) => ((QuestScriptFragmentCommon)((IQuestScriptFragmentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestAdapter_FieldIndex.Fragments)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Aliases) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Aliases) ?? true))
             {
-                if (!lhs.Aliases.SequenceEqual(rhs.Aliases, (l, r) => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestAdapter_FieldIndex.Aliases)))) return false;
+                if (!lhs.Aliases.SequenceEqual(rhs.Aliases, (l, r) => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestAdapter_FieldIndex.Aliases)))) return false;
             }
             return true;
         }
@@ -1209,12 +1209,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAVirtualMachineAdapterGetter? lhs,
             IAVirtualMachineAdapterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IQuestAdapterGetter?)lhs,
                 rhs: rhs as IQuestAdapterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IQuestAdapterGetter item)
@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public QuestAdapter.VersioningBreaks Versioning { get; private set; }
-        public Byte ExtraBindDataVersion => _structData.Span[ScriptsEndingPos + 0x0];
+        public Byte ExtraBindDataVersion => _structData.Length <= ScriptsEndingPos + 0x0 ? default : _structData.Span[ScriptsEndingPos + 0x0];
         #region FragmentCount
         partial void FragmentCountCustomParse(
             OverlayStream stream,
@@ -1772,12 +1772,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestAdapterGetter rhs) return false;
-            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestAdapterGetter? obj)
         {
-            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).GetHashCode(this);

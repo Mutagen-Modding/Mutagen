@@ -77,12 +77,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMusicTrackLoopDataGetter rhs) return false;
-            return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMusicTrackLoopDataGetter? obj)
         {
-            return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -885,18 +885,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMusicTrackLoopDataGetter? lhs,
             IMusicTrackLoopDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)MusicTrackLoopData_FieldIndex.Begins) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrackLoopData_FieldIndex.Begins) ?? true))
             {
                 if (!lhs.Begins.EqualsWithin(rhs.Begins)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicTrackLoopData_FieldIndex.Ends) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrackLoopData_FieldIndex.Ends) ?? true))
             {
                 if (!lhs.Ends.EqualsWithin(rhs.Ends)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicTrackLoopData_FieldIndex.Count) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrackLoopData_FieldIndex.Count) ?? true))
             {
                 if (lhs.Count != rhs.Count) return false;
             }
@@ -1235,12 +1235,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMusicTrackLoopDataGetter rhs) return false;
-            return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMusicTrackLoopDataGetter? obj)
         {
-            return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).GetHashCode(this);

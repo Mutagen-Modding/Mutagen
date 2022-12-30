@@ -85,12 +85,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRelationGetter rhs) return false;
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRelationGetter? obj)
         {
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RelationCommon)((IRelationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -901,18 +901,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IRelationGetter? lhs,
             IRelationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
             {
                 if (!lhs.Target.Equals(rhs.Target)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {
                 if (lhs.Modifier != rhs.Modifier) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Relation_FieldIndex.Reaction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Relation_FieldIndex.Reaction) ?? true))
             {
                 if (lhs.Reaction != rhs.Reaction) return false;
             }
@@ -1256,12 +1256,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRelationGetter rhs) return false;
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRelationGetter? obj)
         {
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RelationCommon)((IRelationGetter)this).CommonInstance()!).GetHashCode(this);

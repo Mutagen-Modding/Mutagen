@@ -94,6 +94,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -101,7 +102,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Data = Data;
             }
@@ -393,12 +395,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IGameSettingStringGetter rhs) return false;
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGameSettingStringGetter? obj)
         {
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).GetHashCode(this);
@@ -543,7 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -619,6 +621,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static GameSettingString Duplicate(
+            this IGameSettingStringGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -651,7 +664,8 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Data = 6,
+        Fallout4MajorRecordFlags = 6,
+        Data = 7,
     }
     #endregion
 
@@ -671,7 +685,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GameSettingString.Mask<>);
 
@@ -923,8 +937,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (GameSettingString_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.Version2:
                     return (GameSettingString_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.Fallout4MajorRecordFlags:
+                    return (GameSettingString_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -944,8 +960,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (GameSettingString_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (GameSettingString_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (GameSettingString_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -962,7 +980,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (GameSettingString_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -970,11 +988,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IGameSettingStringGetter? lhs,
             IGameSettingStringGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)GameSettingString_FieldIndex.Data) ?? true))
+            if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)GameSettingString_FieldIndex.Data) ?? true))
             {
                 if (!object.Equals(lhs.Data, rhs.Data)) return false;
             }
@@ -984,34 +1002,34 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IGameSettingGetter? lhs,
             IGameSettingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGameSettingStringGetter?)lhs,
                 rhs: rhs as IGameSettingStringGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGameSettingStringGetter?)lhs,
                 rhs: rhs as IGameSettingStringGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGameSettingStringGetter?)lhs,
                 rhs: rhs as IGameSettingStringGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IGameSettingStringGetter item)
@@ -1616,12 +1634,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IGameSettingStringGetter rhs) return false;
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGameSettingStringGetter? obj)
         {
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).GetHashCode(this);

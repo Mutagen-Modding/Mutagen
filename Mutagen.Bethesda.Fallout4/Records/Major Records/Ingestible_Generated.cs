@@ -286,9 +286,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region ENITDataTypeState
-        public Ingestible.ENITDataType ENITDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -334,7 +331,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ConsumeSound = initialValue;
                 this.AddictionName = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.ENITDataTypeState = initialValue;
             }
 
             public Mask(
@@ -344,6 +340,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
                 TItem Name,
@@ -363,15 +360,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem AddictionChance,
                 TItem ConsumeSound,
                 TItem AddictionName,
-                TItem Effects,
-                TItem ENITDataTypeState)
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.PreviewTransform = PreviewTransform;
@@ -393,7 +390,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ConsumeSound = ConsumeSound;
                 this.AddictionName = AddictionName;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.ENITDataTypeState = ENITDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -425,7 +421,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem ConsumeSound;
             public TItem AddictionName;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
-            public TItem ENITDataTypeState;
             #endregion
 
             #region Equals
@@ -459,7 +454,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ConsumeSound, rhs.ConsumeSound)) return false;
                 if (!object.Equals(this.AddictionName, rhs.AddictionName)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
-                if (!object.Equals(this.ENITDataTypeState, rhs.ENITDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -485,7 +479,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ConsumeSound);
                 hash.Add(this.AddictionName);
                 hash.Add(this.Effects);
-                hash.Add(this.ENITDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -553,7 +546,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.ENITDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -619,7 +611,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.ENITDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -682,7 +673,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.ENITDataTypeState = eval(this.ENITDataTypeState);
             }
             #endregion
 
@@ -813,10 +803,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.ENITDataTypeState ?? true)
-                    {
-                        sb.AppendItem(ENITDataTypeState, "ENITDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -848,7 +834,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? ConsumeSound;
             public Exception? AddictionName;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
-            public Exception? ENITDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -897,8 +882,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return AddictionName;
                     case Ingestible_FieldIndex.Effects:
                         return Effects;
-                    case Ingestible_FieldIndex.ENITDataTypeState:
-                        return ENITDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -968,9 +951,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Ingestible_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Ingestible_FieldIndex.ENITDataTypeState:
-                        this.ENITDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1043,9 +1023,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Ingestible_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
-                    case Ingestible_FieldIndex.ENITDataTypeState:
-                        this.ENITDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1075,7 +1052,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ConsumeSound != null) return true;
                 if (AddictionName != null) return true;
                 if (Effects != null) return true;
-                if (ENITDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1186,9 +1162,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(ENITDataTypeState, "ENITDataTypeState");
-                }
             }
             #endregion
 
@@ -1200,7 +1173,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
@@ -1216,8 +1189,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AddictionChance = this.AddictionChance.Combine(rhs.AddictionChance);
                 ret.ConsumeSound = this.ConsumeSound.Combine(rhs.ConsumeSound);
                 ret.AddictionName = this.AddictionName.Combine(rhs.AddictionName);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-                ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1260,7 +1232,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool ConsumeSound;
             public bool AddictionName;
             public Effect.TranslationMask? Effects;
-            public bool ENITDataTypeState;
             #endregion
 
             #region Ctors
@@ -1284,7 +1255,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AddictionChance = defaultOn;
                 this.ConsumeSound = defaultOn;
                 this.AddictionName = defaultOn;
-                this.ENITDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1312,7 +1282,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ConsumeSound, null));
                 ret.Add((AddictionName, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
-                ret.Add((ENITDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1374,10 +1343,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum ENITDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1386,12 +1351,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IIngestibleGetter rhs) return false;
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIngestibleGetter? obj)
         {
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1514,7 +1479,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLink<ISoundDescriptorGetter> ConsumeSound { get; set; }
         new TranslatedString? AddictionName { get; set; }
         new ExtendedList<Effect> Effects { get; }
-        new Ingestible.ENITDataType ENITDataTypeState { get; set; }
         #region Mutagen
         new Ingestible.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1599,7 +1563,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ISoundDescriptorGetter> ConsumeSound { get; }
         ITranslatedStringGetter? AddictionName { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
-        Ingestible.ENITDataType ENITDataTypeState { get; }
 
         #region Mutagen
         Ingestible.MajorFlag MajorFlags { get; }
@@ -1660,7 +1623,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((IngestibleCommon)((IIngestibleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1736,6 +1699,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Ingestible Duplicate(
+            this IIngestibleGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((IngestibleCommon)((IIngestibleGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1768,27 +1742,27 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        PreviewTransform = 7,
-        Name = 8,
-        Keywords = 9,
-        Model = 10,
-        Icons = 11,
-        PickUpSound = 12,
-        PutDownSound = 13,
-        EquipmentType = 14,
-        CraftingSound = 15,
-        Destructible = 16,
-        Description = 17,
-        Weight = 18,
-        Value = 19,
-        Flags = 20,
-        Addiction = 21,
-        AddictionChance = 22,
-        ConsumeSound = 23,
-        AddictionName = 24,
-        Effects = 25,
-        ENITDataTypeState = 26,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        PreviewTransform = 8,
+        Name = 9,
+        Keywords = 10,
+        Model = 11,
+        Icons = 12,
+        PickUpSound = 13,
+        PutDownSound = 14,
+        EquipmentType = 15,
+        CraftingSound = 16,
+        Destructible = 17,
+        Description = 18,
+        Weight = 19,
+        Value = 20,
+        Flags = 21,
+        Addiction = 22,
+        AddictionChance = 23,
+        ConsumeSound = 24,
+        AddictionName = 25,
+        Effects = 26,
     }
     #endregion
 
@@ -1806,7 +1780,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "12503adc-e228-4b45-a88a-bee5aac320fd";
 
-        public const ushort AdditionalFieldCount = 21;
+        public const ushort AdditionalFieldCount = 20;
 
         public const ushort FieldCount = 27;
 
@@ -1937,7 +1911,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.ConsumeSound.Clear();
             item.AddictionName = default;
             item.Effects.Clear();
-            item.ENITDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2071,7 +2044,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ENITDataTypeState = item.ENITDataTypeState == rhs.ENITDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2228,10 +2200,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.ENITDataTypeState ?? true)
-            {
-                sb.AppendItem(item.ENITDataTypeState, "ENITDataTypeState");
-            }
         }
         
         public static Ingestible_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2250,8 +2218,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Ingestible_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Ingestible_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Ingestible_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2268,7 +2238,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Ingestible_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2276,109 +2246,105 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IIngestibleGetter? lhs,
             IIngestibleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Ingestible_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Ingestible_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Ingestible_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
             {
                 if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.CraftingSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.CraftingSound) ?? true))
             {
                 if (!lhs.CraftingSound.Equals(rhs.CraftingSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Ingestible_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Addiction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Addiction) ?? true))
             {
                 if (!lhs.Addiction.Equals(rhs.Addiction)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionChance) ?? true))
             {
                 if (!lhs.AddictionChance.EqualsWithin(rhs.AddictionChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.ConsumeSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ConsumeSound) ?? true))
             {
                 if (!lhs.ConsumeSound.Equals(rhs.ConsumeSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionName) ?? true))
             {
                 if (!object.Equals(lhs.AddictionName, rhs.AddictionName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Effects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Ingestible_FieldIndex.Effects)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.ENITDataTypeState) ?? true))
-            {
-                if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.Effects)))) return false;
             }
             return true;
         }
@@ -2386,23 +2352,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IIngestibleGetter?)lhs,
                 rhs: rhs as IIngestibleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IIngestibleGetter?)lhs,
                 rhs: rhs as IIngestibleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IIngestibleGetter item)
@@ -2446,7 +2412,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(AddictionNameitem);
             }
             hash.Add(item.Effects);
-            hash.Add(item.ENITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2804,10 +2769,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ENITDataTypeState) ?? true))
-            {
-                item.ENITDataTypeState = rhs.ENITDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2956,15 +2917,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly IngestibleBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IIngestibleGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IIngestibleGetter item,
             MutagenWriter writer,
@@ -3095,7 +3047,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3155,15 +3107,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly IngestibleBinaryCreateTranslation Instance = new IngestibleBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ALCH;
-        public static void FillBinaryStructs(
-            IIngestibleInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IIngestibleInternal item,
             MutagenFrame frame,
@@ -3432,7 +3375,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         private RangeInt32? _ENITLocation;
-        public Ingestible.ENITDataType ENITDataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _ENITLocation!.Value.Min;
         private bool _Value_IsSet => _ENITLocation.HasValue;
@@ -3684,12 +3626,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IIngestibleGetter rhs) return false;
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIngestibleGetter? obj)
         {
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).GetHashCode(this);

@@ -80,12 +80,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IEnchantmentDataGetter rhs) return false;
-            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEnchantmentDataGetter? obj)
         {
-            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EnchantmentDataCommon)((IEnchantmentDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -927,22 +927,22 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IEnchantmentDataGetter? lhs,
             IEnchantmentDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)EnchantmentData_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnchantmentData_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EnchantmentData_FieldIndex.ChargeAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnchantmentData_FieldIndex.ChargeAmount) ?? true))
             {
                 if (lhs.ChargeAmount != rhs.ChargeAmount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EnchantmentData_FieldIndex.EnchantCost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnchantmentData_FieldIndex.EnchantCost) ?? true))
             {
                 if (lhs.EnchantCost != rhs.EnchantCost) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EnchantmentData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnchantmentData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
@@ -1295,12 +1295,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IEnchantmentDataGetter rhs) return false;
-            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEnchantmentDataGetter? obj)
         {
-            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).GetHashCode(this);

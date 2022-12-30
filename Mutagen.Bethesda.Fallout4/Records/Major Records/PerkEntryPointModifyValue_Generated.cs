@@ -78,12 +78,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkEntryPointModifyValueGetter rhs) return false;
-            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkEntryPointModifyValueGetter? obj)
         {
-            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).GetHashCode(this);
@@ -108,7 +108,6 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem PRKEDataTypeState,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
                 TItem PerkEntryID,
@@ -118,7 +117,6 @@ namespace Mutagen.Bethesda.Fallout4
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
-                PRKEDataTypeState: PRKEDataTypeState,
                 EntryPoint: EntryPoint,
                 PerkConditionTabCount: PerkConditionTabCount,
                 PerkEntryID: PerkEntryID)
@@ -518,7 +516,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -609,12 +607,11 @@ namespace Mutagen.Bethesda.Fallout4
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        PRKEDataTypeState = 3,
-        EntryPoint = 4,
-        PerkConditionTabCount = 5,
-        PerkEntryID = 6,
-        Modification = 7,
-        Value = 8,
+        EntryPoint = 3,
+        PerkConditionTabCount = 4,
+        PerkEntryID = 5,
+        Modification = 6,
+        Value = 7,
     }
     #endregion
 
@@ -634,7 +631,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(PerkEntryPointModifyValue.Mask<>);
 
@@ -870,8 +867,6 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.PRKEDataTypeState:
-                    return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
@@ -879,7 +874,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case APerkEntryPointEffect_FieldIndex.PerkEntryID:
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -893,10 +888,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -904,15 +897,15 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPerkEntryPointModifyValueGetter? lhs,
             IPerkEntryPointModifyValueGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PerkEntryPointModifyValue_FieldIndex.Modification) ?? true))
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointModifyValue_FieldIndex.Modification) ?? true))
             {
                 if (lhs.Modification != rhs.Modification) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkEntryPointModifyValue_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointModifyValue_FieldIndex.Value) ?? true))
             {
                 if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
             }
@@ -922,23 +915,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAPerkEntryPointEffectGetter? lhs,
             IAPerkEntryPointEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkEntryPointModifyValueGetter?)lhs,
                 rhs: rhs as IPerkEntryPointModifyValueGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
             IAPerkEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPerkEntryPointModifyValueGetter?)lhs,
                 rhs: rhs as IPerkEntryPointModifyValueGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPerkEntryPointModifyValueGetter item)
@@ -1399,12 +1392,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkEntryPointModifyValueGetter rhs) return false;
-            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkEntryPointModifyValueGetter? obj)
         {
-            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).GetHashCode(this);

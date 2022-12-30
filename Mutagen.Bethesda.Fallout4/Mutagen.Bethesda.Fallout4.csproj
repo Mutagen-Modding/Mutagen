@@ -280,6 +280,9 @@
     <Compile Include="Records\Major Records\DialogTopic.cs">
       <DependentUpon>DialogTopic.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DistantLod.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
@@ -2434,16 +2437,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GitInfo" Version="2.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Loqui" Version="2.50.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.50.1" />
-    <PackageReference Include="NuGetizer" Version="0.8.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Loqui" />
+    <PackageReference Include="Noggog.CSharpExt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

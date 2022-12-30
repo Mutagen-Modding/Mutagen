@@ -75,12 +75,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPlacementGetter rhs) return false;
-            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacementGetter? obj)
         {
-            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).GetHashCode(this);
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -846,14 +846,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPlacementGetter? lhs,
             IPlacementGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Placement_FieldIndex.Position) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Placement_FieldIndex.Position) ?? true))
             {
                 if (!lhs.Position.Equals(rhs.Position)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Placement_FieldIndex.Rotation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Placement_FieldIndex.Rotation) ?? true))
             {
                 if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
             }
@@ -1184,12 +1184,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPlacementGetter rhs) return false;
-            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacementGetter? obj)
         {
-            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).GetHashCode(this);

@@ -185,7 +185,7 @@ public class GenderedItemMaskGeneration : TypicalMaskFieldGeneration
 
     public override void GenerateForErrorMaskCombine(StructuredStringBuilder sb, TypeGeneration field, string accessor, string retAccessor, string rhsAccessor)
     {
-        sb.AppendLine($"{retAccessor} = new {GetErrorMaskTypeStr(field)}(ExceptionExt.Combine({accessor}?.Overall, {rhsAccessor}?.Overall), GenderedItem.Combine({accessor}?.Specific, {rhsAccessor}?.Specific));");
+        sb.AppendLine($"{retAccessor} = new {GetErrorMaskTypeStr(field)}(Noggog.ExceptionExt.Combine({accessor}?.Overall, {rhsAccessor}?.Overall), GenderedItem.Combine({accessor}?.Specific, {rhsAccessor}?.Specific));");
     }
 
     public override void GenerateForTranslationMask(StructuredStringBuilder sb, TypeGeneration field)

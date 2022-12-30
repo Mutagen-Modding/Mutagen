@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class MagicEffectBoundArchetype
 {
-    public FormLink<IBindableEquipmentGetter> Association => this.AssociationKey.AsLink<IBindableEquipmentGetter>();
+    public FormLink<IBindableEquipmentGetter> Association => this.AssociationKey.ToLink<IBindableEquipmentGetter>();
 
     IFormLink<IBindableEquipmentGetter> IMagicEffectBoundArchetype.Association => this.Association;
     IFormLinkGetter<IBindableEquipmentGetter> IMagicEffectBoundArchetypeGetter.Association => this.Association;
@@ -27,5 +27,5 @@ public partial interface IMagicEffectBoundArchetypeGetter
 
 partial class MagicEffectBoundArchetypeBinaryOverlay
 {
-    public IFormLinkGetter<IBindableEquipmentGetter> Association => this.AssociationKey.AsLink<IBindableEquipmentGetter>();
+    public IFormLinkGetter<IBindableEquipmentGetter> Association => this.AssociationKey.ToLink<IBindableEquipmentGetter>();
 }

@@ -68,12 +68,12 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
                             sb.AppendLine($"if (obj.{field.Name} != null)");
                             using (sb.CurlyBrace())
                             {
-                                sb.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.AsLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
+                                sb.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.ToLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
                             }
                         }
                         else
                         {
-                            sb.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.AsLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
+                            sb.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.ToLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
                         }
                     }
                     else if (field is LoquiType loqui)
@@ -289,7 +289,7 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
                         {
                             sb.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
                         }
-                        else if (dict.ValueTypeGen is FormLinkType formIDType)
+                        else if (dict.ValueTypeGen is FormLinkType or LoquiType)
                         {
                             sb.AppendLine($"obj.{field.Name}{(field.Nullable ? "?" : null)}.RemapLinks(mapping);");
                         }
@@ -332,7 +332,7 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
 
     public async Task GenerateInterfaceImplementation(ObjectGeneration obj, StructuredStringBuilder fg, bool getter)
     {
-        var shouldAlwaysOverride = obj.IsTopLevelGroup();
+        var shouldAlwaysOverride = obj.IsTopLevelGroup() || obj.IsTopLevelListGroup();
         fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.EnumerateFormLinks)}() => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateFormLinks(this);");
 
         if (!getter)

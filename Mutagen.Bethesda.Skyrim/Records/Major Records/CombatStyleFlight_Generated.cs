@@ -95,12 +95,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICombatStyleFlightGetter rhs) return false;
-            return ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleFlightGetter? obj)
         {
-            return ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)this).CommonInstance()!).GetHashCode(this);
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1148,42 +1148,42 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ICombatStyleFlightGetter? lhs,
             ICombatStyleFlightGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.HoverChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.HoverChance) ?? true))
             {
                 if (!lhs.HoverChance.EqualsWithin(rhs.HoverChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.DiveBombChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.DiveBombChance) ?? true))
             {
                 if (!lhs.DiveBombChance.EqualsWithin(rhs.DiveBombChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.GroundAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.GroundAttackChance) ?? true))
             {
                 if (!lhs.GroundAttackChance.EqualsWithin(rhs.GroundAttackChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.HoverTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.HoverTime) ?? true))
             {
                 if (!lhs.HoverTime.EqualsWithin(rhs.HoverTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.GroundAttackTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.GroundAttackTime) ?? true))
             {
                 if (!lhs.GroundAttackTime.EqualsWithin(rhs.GroundAttackTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.PerchAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.PerchAttackChance) ?? true))
             {
                 if (!lhs.PerchAttackChance.EqualsWithin(rhs.PerchAttackChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.PerchAttackTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.PerchAttackTime) ?? true))
             {
                 if (!lhs.PerchAttackTime.EqualsWithin(rhs.PerchAttackTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.FlyingAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleFlight_FieldIndex.FlyingAttackChance) ?? true))
             {
                 if (!lhs.FlyingAttackChance.EqualsWithin(rhs.FlyingAttackChance)) return false;
             }
@@ -1631,12 +1631,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICombatStyleFlightGetter rhs) return false;
-            return ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleFlightGetter? obj)
         {
-            return ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleFlightCommon)((ICombatStyleFlightGetter)this).CommonInstance()!).GetHashCode(this);

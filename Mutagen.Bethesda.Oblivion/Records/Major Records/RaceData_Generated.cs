@@ -118,12 +118,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IRaceDataGetter rhs) return false;
-            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRaceDataGetter? obj)
         {
-            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -650,8 +650,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.SkillBoost5 = this.SkillBoost5.Combine(rhs.SkillBoost5, (l, r) => l.Combine(r));
                 ret.SkillBoost6 = this.SkillBoost6.Combine(rhs.SkillBoost6, (l, r) => l.Combine(r));
                 ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
-                ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
+                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
+                ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1281,78 +1281,78 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IRaceDataGetter? lhs,
             IRaceDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost0) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost0) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost0, rhs.SkillBoost0, out var lhsSkillBoost0, out var rhsSkillBoost0, out var isSkillBoost0Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost0).CommonInstance()!).Equals(lhsSkillBoost0, rhsSkillBoost0, crystal?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost0))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost0).CommonInstance()!).Equals(lhsSkillBoost0, rhsSkillBoost0, equalsMask?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost0))) return false;
                 }
                 else if (!isSkillBoost0Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost1) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost1, rhs.SkillBoost1, out var lhsSkillBoost1, out var rhsSkillBoost1, out var isSkillBoost1Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost1).CommonInstance()!).Equals(lhsSkillBoost1, rhsSkillBoost1, crystal?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost1))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost1).CommonInstance()!).Equals(lhsSkillBoost1, rhsSkillBoost1, equalsMask?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost1))) return false;
                 }
                 else if (!isSkillBoost1Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost2) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost2, rhs.SkillBoost2, out var lhsSkillBoost2, out var rhsSkillBoost2, out var isSkillBoost2Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost2).CommonInstance()!).Equals(lhsSkillBoost2, rhsSkillBoost2, crystal?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost2))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost2).CommonInstance()!).Equals(lhsSkillBoost2, rhsSkillBoost2, equalsMask?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost2))) return false;
                 }
                 else if (!isSkillBoost2Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost3) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost3, rhs.SkillBoost3, out var lhsSkillBoost3, out var rhsSkillBoost3, out var isSkillBoost3Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost3).CommonInstance()!).Equals(lhsSkillBoost3, rhsSkillBoost3, crystal?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost3))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost3).CommonInstance()!).Equals(lhsSkillBoost3, rhsSkillBoost3, equalsMask?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost3))) return false;
                 }
                 else if (!isSkillBoost3Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost4) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost4, rhs.SkillBoost4, out var lhsSkillBoost4, out var rhsSkillBoost4, out var isSkillBoost4Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost4).CommonInstance()!).Equals(lhsSkillBoost4, rhsSkillBoost4, crystal?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost4))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost4).CommonInstance()!).Equals(lhsSkillBoost4, rhsSkillBoost4, equalsMask?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost4))) return false;
                 }
                 else if (!isSkillBoost4Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost5) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost5, rhs.SkillBoost5, out var lhsSkillBoost5, out var rhsSkillBoost5, out var isSkillBoost5Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost5).CommonInstance()!).Equals(lhsSkillBoost5, rhsSkillBoost5, crystal?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost5))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost5).CommonInstance()!).Equals(lhsSkillBoost5, rhsSkillBoost5, equalsMask?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost5))) return false;
                 }
                 else if (!isSkillBoost5Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost6) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost6) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost6, rhs.SkillBoost6, out var lhsSkillBoost6, out var rhsSkillBoost6, out var isSkillBoost6Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost6).CommonInstance()!).Equals(lhsSkillBoost6, rhsSkillBoost6, crystal?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost6))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost6).CommonInstance()!).Equals(lhsSkillBoost6, rhsSkillBoost6, equalsMask?.GetSubCrystal((int)RaceData_FieldIndex.SkillBoost6))) return false;
                 }
                 else if (!isSkillBoost6Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.Height) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.Height) ?? true))
             {
                 if (!Equals(lhs.Height, rhs.Height)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.Weight) ?? true))
             {
                 if (!Equals(lhs.Weight, rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
@@ -1933,12 +1933,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IRaceDataGetter rhs) return false;
-            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRaceDataGetter? obj)
         {
-            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).GetHashCode(this);

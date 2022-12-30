@@ -8,10 +8,8 @@ using Noggog;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins.Cache;
 
 namespace Mutagen.Bethesda.Plugins.Records;
 
@@ -35,7 +33,9 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     public IEnumerable<TMajor> Records => ProtectedCache.Items;
 
     IEnumerable<IMajorRecordGetter> IGroupGetter.Records => Records;
+    IEnumerable<ILoquiObject> IGroupCommonGetter.Records => Records;
     IEnumerable<IMajorRecord> IGroup.Records => Records;
+    IEnumerable<IMajorRecord> IGroup<TMajor>.Records => Records;
 
     /// <summary>
     /// Number of records contained in the group.
@@ -344,7 +344,8 @@ internal abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGrou
     public IEnumerable<FormKey> FormKeys => _recordCache.Keys;
     public IEnumerable<TMajor> Items => _recordCache.Items;
     IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => _recordCache;
-    IEnumerable<IMajorRecordGetter> IGroupGetter.Records => _recordCache.Items;
+    IEnumerable<IMajorRecordGetter> IGroupGetter.Records => Records;
+    IEnumerable<ILoquiObject> IGroupCommonGetter.Records => Records;
     public ILoquiRegistration ContainedRecordRegistration => _registration;
     public Type ContainedRecordType => typeof(TMajor);
 

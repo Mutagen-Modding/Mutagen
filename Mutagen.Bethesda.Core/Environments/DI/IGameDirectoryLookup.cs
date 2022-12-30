@@ -27,4 +27,11 @@ public interface IGameDirectoryLookup
     /// <exception cref="System.IO.DirectoryNotFoundException">Thrown if the game directory could not be located</exception>
     /// <returns>The game directory</returns>
     DirectoryPath Get(GameRelease release);
+
+    /// <summary>
+    /// Given a release, tries to retrieve the preferred game directory (not the data directory within)
+    /// </summary>
+    /// <param name="release">Release to query</param>
+    /// <returns>The game directory, if located</returns>
+    DirectoryPath? TryGet(GameRelease release);
 }

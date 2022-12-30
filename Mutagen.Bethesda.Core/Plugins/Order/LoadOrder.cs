@@ -7,6 +7,7 @@ using System.IO.Abstractions;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
@@ -104,7 +105,9 @@ public static class LoadOrder
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var gameContext = new GameReleaseInjection(game);
         var categoryContext = new GameCategoryInjection(game.ToCategory());
-        var pluginPath = new PluginListingsPathProvider(gameContext);
+        var pluginPath = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            gameContext);
         var dataDir = new DataDirectoryInjection(dataPath);
         var pluginProvider = PluginListingsProvider(
             dataDir,
@@ -187,9 +190,10 @@ public static class LoadOrder
         bool throwOnMissingMods = true,
         IScheduler? scheduler = null)
     {
-        var dataDir = new DataDirectoryInjection(dataFolderPath);
         var gameRelease = new GameReleaseInjection(game);
-        var pluginPath = new PluginListingsPathProvider(gameRelease);
+        var pluginPath = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            gameRelease);
         var gameCategoryInjection = new GameCategoryInjection(game.ToCategory());
         var cccPath = new CreationClubListingsPathProvider(
             gameCategoryInjection,
@@ -444,11 +448,12 @@ public static class LoadOrder
     private static PluginListingsProvider PluginListingsProvider(
         IDataDirectoryProvider dataDirectory,
         IGameReleaseContext gameContext,
-        IPluginListingsPathProvider listingsPathProvider, 
+        IPluginListingsPathContext listingsPathContext, 
         bool throwOnMissingMods,
         IFileSystem fs)
     {
         var pluginListingParser = new PluginListingsParser(
+            new PluginListingCommentTrimmer(),
             new LoadOrderListingParser(
                 new HasEnabledMarkersProvider(gameContext)));
         var provider = new PluginListingsProvider(
@@ -460,12 +465,12 @@ public static class LoadOrder
                     fs,
                     pluginListingParser),
                 dataDirectory,
-                listingsPathProvider),
+                listingsPathContext),
             new EnabledPluginListingsProvider(
                 new PluginRawListingsReader(
                     fs,
                     pluginListingParser),
-                listingsPathProvider));
+                listingsPathContext));
         return provider;
     }
 }

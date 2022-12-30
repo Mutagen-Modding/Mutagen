@@ -205,9 +205,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region SPITDataTypeState
-        public Spell.SPITDataType SPITDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -249,7 +246,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Range = initialValue;
                 this.HalfCostPerk = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.SPITDataTypeState = initialValue;
             }
 
             public Mask(
@@ -259,6 +255,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Keywords,
@@ -274,15 +271,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem CastDuration,
                 TItem Range,
                 TItem HalfCostPerk,
-                TItem Effects,
-                TItem SPITDataTypeState)
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -300,7 +297,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Range = Range;
                 this.HalfCostPerk = HalfCostPerk;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.SPITDataTypeState = SPITDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -328,7 +324,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Range;
             public TItem HalfCostPerk;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
-            public TItem SPITDataTypeState;
             #endregion
 
             #region Equals
@@ -358,7 +353,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Range, rhs.Range)) return false;
                 if (!object.Equals(this.HalfCostPerk, rhs.HalfCostPerk)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
-                if (!object.Equals(this.SPITDataTypeState, rhs.SPITDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -380,7 +374,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Range);
                 hash.Add(this.HalfCostPerk);
                 hash.Add(this.Effects);
-                hash.Add(this.SPITDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -432,7 +425,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.SPITDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -482,7 +474,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.SPITDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -541,7 +532,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.SPITDataTypeState = eval(this.SPITDataTypeState);
             }
             #endregion
 
@@ -656,10 +646,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.SPITDataTypeState ?? true)
-                    {
-                        sb.AppendItem(SPITDataTypeState, "SPITDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -687,7 +673,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Range;
             public Exception? HalfCostPerk;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
-            public Exception? SPITDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -728,8 +713,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return HalfCostPerk;
                     case Spell_FieldIndex.Effects:
                         return Effects;
-                    case Spell_FieldIndex.SPITDataTypeState:
-                        return SPITDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -787,9 +770,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Spell_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Spell_FieldIndex.SPITDataTypeState:
-                        this.SPITDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -850,9 +830,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Spell_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
-                    case Spell_FieldIndex.SPITDataTypeState:
-                        this.SPITDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -878,7 +855,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Range != null) return true;
                 if (HalfCostPerk != null) return true;
                 if (Effects != null) return true;
-                if (SPITDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -983,9 +959,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(SPITDataTypeState, "SPITDataTypeState");
-                }
             }
             #endregion
 
@@ -996,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.MenuDisplayObject = this.MenuDisplayObject.Combine(rhs.MenuDisplayObject);
                 ret.EquipmentType = this.EquipmentType.Combine(rhs.EquipmentType);
                 ret.Description = this.Description.Combine(rhs.Description);
@@ -1009,8 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.CastDuration = this.CastDuration.Combine(rhs.CastDuration);
                 ret.Range = this.Range.Combine(rhs.Range);
                 ret.HalfCostPerk = this.HalfCostPerk.Combine(rhs.HalfCostPerk);
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-                ret.SPITDataTypeState = this.SPITDataTypeState.Combine(rhs.SPITDataTypeState);
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1049,7 +1021,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Range;
             public bool HalfCostPerk;
             public Effect.TranslationMask? Effects;
-            public bool SPITDataTypeState;
             #endregion
 
             #region Ctors
@@ -1072,7 +1043,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CastDuration = defaultOn;
                 this.Range = defaultOn;
                 this.HalfCostPerk = defaultOn;
-                this.SPITDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1096,7 +1066,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Range, null));
                 ret.Add((HalfCostPerk, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
-                ret.Add((SPITDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1160,10 +1129,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(ISpell);
 
-        [Flags]
-        public enum SPITDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1172,12 +1137,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISpellGetter rhs) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISpellGetter? obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1284,7 +1249,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Range { get; set; }
         new IFormLink<IPerkGetter> HalfCostPerk { get; set; }
         new ExtendedList<Effect> Effects { get; }
-        new Spell.SPITDataType SPITDataTypeState { get; set; }
     }
 
     public partial interface ISpellInternal :
@@ -1345,7 +1309,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single Range { get; }
         IFormLinkGetter<IPerkGetter> HalfCostPerk { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
-        Spell.SPITDataType SPITDataTypeState { get; }
 
     }
 
@@ -1402,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1478,6 +1441,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Spell Duplicate(
+            this ISpellGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1510,23 +1484,23 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Keywords = 8,
-        MenuDisplayObject = 9,
-        EquipmentType = 10,
-        Description = 11,
-        BaseCost = 12,
-        Flags = 13,
-        Type = 14,
-        ChargeTime = 15,
-        CastType = 16,
-        TargetType = 17,
-        CastDuration = 18,
-        Range = 19,
-        HalfCostPerk = 20,
-        Effects = 21,
-        SPITDataTypeState = 22,
+        SkyrimMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Keywords = 9,
+        MenuDisplayObject = 10,
+        EquipmentType = 11,
+        Description = 12,
+        BaseCost = 13,
+        Flags = 14,
+        Type = 15,
+        ChargeTime = 16,
+        CastType = 17,
+        TargetType = 18,
+        CastDuration = 19,
+        Range = 20,
+        HalfCostPerk = 21,
+        Effects = 22,
     }
     #endregion
 
@@ -1544,7 +1518,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "9bc07114-08cb-4a62-8819-b3edc36ab87e";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 16;
 
         public const ushort FieldCount = 23;
 
@@ -1652,7 +1626,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Range = default;
             item.HalfCostPerk.Clear();
             item.Effects.Clear();
-            item.SPITDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1764,7 +1737,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SPITDataTypeState = item.SPITDataTypeState == rhs.SPITDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1900,10 +1872,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.SPITDataTypeState ?? true)
-            {
-                sb.AppendItem(item.SPITDataTypeState, "SPITDataTypeState");
-            }
         }
         
         public static Spell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1922,8 +1890,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Spell_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Spell_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Spell_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1940,7 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Spell_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1948,81 +1918,77 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISpellGetter? lhs,
             ISpellGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Spell_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Spell_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.MenuDisplayObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.MenuDisplayObject) ?? true))
             {
                 if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
             {
                 if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.BaseCost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.BaseCost) ?? true))
             {
                 if (lhs.BaseCost != rhs.BaseCost) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.ChargeTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.ChargeTime) ?? true))
             {
                 if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.CastType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.CastType) ?? true))
             {
                 if (lhs.CastType != rhs.CastType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.TargetType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.TargetType) ?? true))
             {
                 if (lhs.TargetType != rhs.TargetType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.CastDuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.CastDuration) ?? true))
             {
                 if (!lhs.CastDuration.EqualsWithin(rhs.CastDuration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Range) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Range) ?? true))
             {
                 if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.HalfCostPerk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.HalfCostPerk) ?? true))
             {
                 if (!lhs.HalfCostPerk.Equals(rhs.HalfCostPerk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Spell_FieldIndex.Effects)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.SPITDataTypeState) ?? true))
-            {
-                if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Spell_FieldIndex.Effects)))) return false;
             }
             return true;
         }
@@ -2030,23 +1996,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISpellGetter?)lhs,
                 rhs: rhs as ISpellGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISpellGetter?)lhs,
                 rhs: rhs as ISpellGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISpellGetter item)
@@ -2071,7 +2037,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Range);
             hash.Add(item.HalfCostPerk);
             hash.Add(item.Effects);
-            hash.Add(item.SPITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2320,10 +2285,6 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.SPITDataTypeState) ?? true))
-            {
-                item.SPITDataTypeState = rhs.SPITDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2472,15 +2433,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly SpellBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ISpellGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ISpellGetter item,
             MutagenWriter writer,
@@ -2583,7 +2535,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2643,15 +2595,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SPEL;
-        public static void FillBinaryStructs(
-            ISpellInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISpellInternal item,
             MutagenFrame frame,
@@ -2849,7 +2792,6 @@ namespace Mutagen.Bethesda.Skyrim
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         private RangeInt32? _SPITLocation;
-        public Spell.SPITDataType SPITDataTypeState { get; private set; }
         #region BaseCost
         private int _BaseCostLocation => _SPITLocation!.Value.Min;
         private bool _BaseCost_IsSet => _SPITLocation.HasValue;
@@ -3057,12 +2999,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISpellGetter rhs) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISpellGetter? obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);

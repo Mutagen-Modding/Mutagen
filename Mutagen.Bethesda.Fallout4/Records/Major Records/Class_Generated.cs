@@ -121,9 +121,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region BleedoutDefault
         public Single BleedoutDefault { get; set; } = default;
         #endregion
-        #region DATADataTypeState
-        public Class.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -155,7 +152,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.Unknown = initialValue;
                 this.BleedoutDefault = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -165,20 +161,21 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Description,
                 TItem Icon,
                 TItem Properties,
                 TItem Unknown,
-                TItem BleedoutDefault,
-                TItem DATADataTypeState)
+                TItem BleedoutDefault)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Description = Description;
@@ -186,7 +183,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.Unknown = Unknown;
                 this.BleedoutDefault = BleedoutDefault;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -204,7 +200,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public TItem Unknown;
             public TItem BleedoutDefault;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -224,7 +219,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.BleedoutDefault, rhs.BleedoutDefault)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -236,7 +230,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Properties);
                 hash.Add(this.Unknown);
                 hash.Add(this.BleedoutDefault);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -264,7 +257,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.BleedoutDefault)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -290,7 +282,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (eval(this.Unknown)) return true;
                 if (eval(this.BleedoutDefault)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -326,7 +317,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 obj.Unknown = eval(this.Unknown);
                 obj.BleedoutDefault = eval(this.BleedoutDefault);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -384,10 +374,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(BleedoutDefault, "BleedoutDefault");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -405,7 +391,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public Exception? Unknown;
             public Exception? BleedoutDefault;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -426,8 +411,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Unknown;
                     case Class_FieldIndex.BleedoutDefault:
                         return BleedoutDefault;
-                    case Class_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -455,9 +438,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Class_FieldIndex.BleedoutDefault:
                         this.BleedoutDefault = ex;
-                        break;
-                    case Class_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -488,9 +468,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Class_FieldIndex.BleedoutDefault:
                         this.BleedoutDefault = (Exception?)obj;
                         break;
-                    case Class_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -506,7 +483,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Properties != null) return true;
                 if (Unknown != null) return true;
                 if (BleedoutDefault != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -566,9 +542,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(BleedoutDefault, "BleedoutDefault");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -580,10 +553,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.BleedoutDefault = this.BleedoutDefault.Combine(rhs.BleedoutDefault);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -612,7 +584,6 @@ namespace Mutagen.Bethesda.Fallout4
             public ObjectProperty.TranslationMask? Properties;
             public bool Unknown;
             public bool BleedoutDefault;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -626,7 +597,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Icon = defaultOn;
                 this.Unknown = defaultOn;
                 this.BleedoutDefault = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -640,7 +610,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((Unknown, null));
                 ret.Add((BleedoutDefault, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -697,10 +666,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IClass);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -709,12 +674,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IClassGetter rhs) return false;
-            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClassGetter? obj)
         {
-            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClassCommon)((IClassGetter)this).CommonInstance()!).GetHashCode(this);
@@ -798,7 +763,6 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new Int32 Unknown { get; set; }
         new Single BleedoutDefault { get; set; }
-        new Class.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IClassInternal :
@@ -832,7 +796,6 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         Int32 Unknown { get; }
         Single BleedoutDefault { get; }
-        Class.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -889,7 +852,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ClassCommon)((IClassGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -965,6 +928,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Class Duplicate(
+            this IClassGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ClassCommon)((IClassGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -997,13 +971,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Description = 7,
-        Icon = 8,
-        Properties = 9,
-        Unknown = 10,
-        BleedoutDefault = 11,
-        DATADataTypeState = 12,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Description = 8,
+        Icon = 9,
+        Properties = 10,
+        Unknown = 11,
+        BleedoutDefault = 12,
     }
     #endregion
 
@@ -1021,7 +995,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "52233944-872e-4364-bf4d-9253df4d2bf4";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
 
@@ -1111,7 +1085,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Properties = null;
             item.Unknown = default;
             item.BleedoutDefault = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1206,7 +1179,6 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.BleedoutDefault = item.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1293,10 +1265,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.BleedoutDefault, "BleedoutDefault");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Class_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1315,8 +1283,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Class_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Class_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Class_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1333,7 +1303,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Class_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1341,37 +1311,33 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IClassGetter? lhs,
             IClassGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Class_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Class_FieldIndex.Properties)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
             {
                 if (!lhs.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1379,23 +1345,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IClassGetter?)lhs,
                 rhs: rhs as IClassGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IClassGetter?)lhs,
                 rhs: rhs as IClassGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IClassGetter item)
@@ -1413,7 +1379,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Properties);
             hash.Add(item.Unknown);
             hash.Add(item.BleedoutDefault);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1576,10 +1541,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.BleedoutDefault = rhs.BleedoutDefault;
             }
-            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1728,15 +1689,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ClassBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IClassGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IClassGetter item,
             MutagenWriter writer,
@@ -1795,7 +1747,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1855,15 +1807,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ClassBinaryCreateTranslation Instance = new ClassBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLAS;
-        public static void FillBinaryStructs(
-            IClassInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IClassInternal item,
             MutagenFrame frame,
@@ -2003,7 +1946,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         private RangeInt32? _DATALocation;
-        public Class.DATADataType DATADataTypeState { get; private set; }
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
@@ -2153,12 +2095,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IClassGetter rhs) return false;
-            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClassGetter? obj)
         {
-            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClassCommon)((IClassGetter)this).CommonInstance()!).GetHashCode(this);

@@ -66,6 +66,7 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? ILandscapeGetter.DATA => this.DATA;
         #endregion
         #region VertexNormals
+        public static readonly P2Int VertexNormalsFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IArray2d<P3UInt8>? _VertexNormals;
         public IArray2d<P3UInt8>? VertexNormals
@@ -91,6 +92,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILandscapeVertexHeightMapGetter? ILandscapeGetter.VertexHeightMap => this.VertexHeightMap;
         #endregion
         #region VertexColors
+        public static readonly P2Int VertexColorsFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IArray2d<P3UInt8>? _VertexColors;
         public IArray2d<P3UInt8>? VertexColors
@@ -187,6 +189,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem DATA,
                 TItem VertexNormals,
                 TItem VertexHeightMap,
@@ -200,7 +203,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.DATA = DATA;
                 this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexNormals, Enumerable.Empty<(P2Int Index, TItem Value)>());
@@ -873,12 +877,12 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.DATA = this.DATA.Combine(rhs.DATA);
-                ret.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.VertexNormals?.Overall, rhs.VertexNormals?.Overall), ExceptionExt.Combine(this.VertexNormals?.Specific, rhs.VertexNormals?.Specific));
+                ret.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.VertexNormals?.Overall, rhs.VertexNormals?.Overall), Noggog.ExceptionExt.Combine(this.VertexNormals?.Specific, rhs.VertexNormals?.Specific));
                 ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap, (l, r) => l.Combine(r));
-                ret.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.VertexColors?.Overall, rhs.VertexColors?.Overall), ExceptionExt.Combine(this.VertexColors?.Specific, rhs.VertexColors?.Specific));
-                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
-                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
-                ret.MPCDs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LandscapeMPCD.ErrorMask?>>?>(ExceptionExt.Combine(this.MPCDs?.Overall, rhs.MPCDs?.Overall), ExceptionExt.Combine(this.MPCDs?.Specific, rhs.MPCDs?.Specific));
+                ret.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.VertexColors?.Overall, rhs.VertexColors?.Overall), Noggog.ExceptionExt.Combine(this.VertexColors?.Specific, rhs.VertexColors?.Specific));
+                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), Noggog.ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
+                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), Noggog.ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
+                ret.MPCDs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LandscapeMPCD.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MPCDs?.Overall, rhs.MPCDs?.Overall), Noggog.ExceptionExt.Combine(this.MPCDs?.Specific, rhs.MPCDs?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -998,12 +1002,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeGetter rhs) return false;
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeGetter? obj)
         {
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1164,7 +1168,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1240,6 +1244,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Landscape Duplicate(
+            this ILandscapeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1272,13 +1287,14 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        DATA = 6,
-        VertexNormals = 7,
-        VertexHeightMap = 8,
-        VertexColors = 9,
-        Layers = 10,
-        Textures = 11,
-        MPCDs = 12,
+        Fallout4MajorRecordFlags = 6,
+        DATA = 7,
+        VertexNormals = 8,
+        VertexHeightMap = 9,
+        VertexColors = 10,
+        Layers = 11,
+        Textures = 12,
+        MPCDs = 13,
     }
     #endregion
 
@@ -1298,7 +1314,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Landscape.Mask<>);
 
@@ -1476,7 +1492,7 @@ namespace Mutagen.Bethesda.Fallout4
             Landscape.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.VertexNormals = item.VertexNormals.Array2dEqualsHelper(
                 rhs.VertexNormals,
                 (l, r) => l.Equals(r),
@@ -1652,8 +1668,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Landscape_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Landscape_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Landscape_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1670,7 +1688,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Landscape_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1678,41 +1696,41 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILandscapeGetter? lhs,
             ILandscapeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
                 if (!lhs.VertexNormals.SequenceEqualNullable(rhs.VertexNormals)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VertexHeightMap, rhs.VertexHeightMap, out var lhsVertexHeightMap, out var rhsVertexHeightMap, out var isVertexHeightMapEqual))
                 {
-                    if (!((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)lhsVertexHeightMap).CommonInstance()!).Equals(lhsVertexHeightMap, rhsVertexHeightMap, crystal?.GetSubCrystal((int)Landscape_FieldIndex.VertexHeightMap))) return false;
+                    if (!((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)lhsVertexHeightMap).CommonInstance()!).Equals(lhsVertexHeightMap, rhsVertexHeightMap, equalsMask?.GetSubCrystal((int)Landscape_FieldIndex.VertexHeightMap))) return false;
                 }
                 else if (!isVertexHeightMapEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
                 if (!lhs.VertexColors.SequenceEqualNullable(rhs.VertexColors)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
             {
-                if (!lhs.Layers.SequenceEqual(rhs.Layers, (l, r) => ((BaseLayerCommon)((IBaseLayerGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Landscape_FieldIndex.Layers)))) return false;
+                if (!lhs.Layers.SequenceEqual(rhs.Layers, (l, r) => ((BaseLayerCommon)((IBaseLayerGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Landscape_FieldIndex.Layers)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
             {
                 if (!lhs.Textures.SequenceEqualNullable(rhs.Textures)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.MPCDs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.MPCDs) ?? true))
             {
-                if (!lhs.MPCDs.SequenceEqual(rhs.MPCDs, (l, r) => ((LandscapeMPCDCommon)((ILandscapeMPCDGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Landscape_FieldIndex.MPCDs)))) return false;
+                if (!lhs.MPCDs.SequenceEqual(rhs.MPCDs, (l, r) => ((LandscapeMPCDCommon)((ILandscapeMPCDGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Landscape_FieldIndex.MPCDs)))) return false;
             }
             return true;
         }
@@ -1720,23 +1738,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandscapeGetter?)lhs,
                 rhs: rhs as ILandscapeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandscapeGetter?)lhs,
                 rhs: rhs as ILandscapeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILandscapeGetter item)
@@ -2340,7 +2358,7 @@ namespace Mutagen.Bethesda.Fallout4
                     item.VertexNormals = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Parse(
                             reader: frame,
-                            size: new P2Int(33, 33),
+                            size: Landscape.VertexNormalsFixedSize,
                             transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         ;
                     return (int)Landscape_FieldIndex.VertexNormals;
@@ -2356,7 +2374,7 @@ namespace Mutagen.Bethesda.Fallout4
                     item.VertexColors = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Parse(
                             reader: frame,
-                            size: new P2Int(33, 33),
+                            size: Landscape.VertexColorsFixedSize,
                             transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         ;
                     return (int)Landscape_FieldIndex.VertexColors;
@@ -2564,7 +2582,7 @@ namespace Mutagen.Bethesda.Fallout4
                         mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
                         package: _package,
                         itemLength: 3,
-                        size: new P2Int(33, 33),
+                        size: Landscape.VertexNormalsFixedSize,
                         getter: (s, p) => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)Landscape_FieldIndex.VertexNormals;
                 }
@@ -2580,7 +2598,7 @@ namespace Mutagen.Bethesda.Fallout4
                         mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
                         package: _package,
                         itemLength: 3,
-                        size: new P2Int(33, 33),
+                        size: Landscape.VertexColorsFixedSize,
                         getter: (s, p) => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)Landscape_FieldIndex.VertexColors;
                 }
@@ -2670,12 +2688,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeGetter rhs) return false;
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeGetter? obj)
         {
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);

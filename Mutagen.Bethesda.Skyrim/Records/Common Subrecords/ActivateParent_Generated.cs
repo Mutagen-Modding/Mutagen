@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IActivateParentGetter rhs) return false;
-            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActivateParentGetter? obj)
         {
-            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActivateParentCommon)((IActivateParentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -859,14 +859,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IActivateParentGetter? lhs,
             IActivateParentGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ActivateParent_FieldIndex.Reference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActivateParent_FieldIndex.Reference) ?? true))
             {
                 if (!lhs.Reference.Equals(rhs.Reference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActivateParent_FieldIndex.Delay) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActivateParent_FieldIndex.Delay) ?? true))
             {
                 if (!lhs.Delay.EqualsWithin(rhs.Delay)) return false;
             }
@@ -1199,12 +1199,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IActivateParentGetter rhs) return false;
-            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActivateParentGetter? obj)
         {
-            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).GetHashCode(this);

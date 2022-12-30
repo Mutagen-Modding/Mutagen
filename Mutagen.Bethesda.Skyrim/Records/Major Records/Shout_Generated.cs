@@ -159,6 +159,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem MenuDisplayObject,
                 TItem Description,
@@ -169,7 +170,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.MenuDisplayObject = MenuDisplayObject;
@@ -499,7 +501,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.MenuDisplayObject = this.MenuDisplayObject.Combine(rhs.MenuDisplayObject);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.WordsOfPower = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ShoutWord.ErrorMask?>>?>(ExceptionExt.Combine(this.WordsOfPower?.Overall, rhs.WordsOfPower?.Overall), ExceptionExt.Combine(this.WordsOfPower?.Specific, rhs.WordsOfPower?.Specific));
+                ret.WordsOfPower = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ShoutWord.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.WordsOfPower?.Overall, rhs.WordsOfPower?.Overall), Noggog.ExceptionExt.Combine(this.WordsOfPower?.Specific, rhs.WordsOfPower?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -624,12 +626,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IShoutGetter rhs) return false;
-            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IShoutGetter? obj)
         {
-            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).GetHashCode(this);
@@ -810,7 +812,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ShoutCommon)((IShoutGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -886,6 +888,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Shout Duplicate(
+            this IShoutGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ShoutCommon)((IShoutGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -918,10 +931,11 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        MenuDisplayObject = 7,
-        Description = 8,
-        WordsOfPower = 9,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        MenuDisplayObject = 8,
+        Description = 9,
+        WordsOfPower = 10,
     }
     #endregion
 
@@ -941,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(Shout.Mask<>);
 
@@ -1214,8 +1228,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Shout_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Shout_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Shout_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1232,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Shout_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1240,25 +1256,25 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IShoutGetter? lhs,
             IShoutGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Shout_FieldIndex.Name) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Shout_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Shout_FieldIndex.MenuDisplayObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Shout_FieldIndex.MenuDisplayObject) ?? true))
             {
                 if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Shout_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Shout_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Shout_FieldIndex.WordsOfPower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Shout_FieldIndex.WordsOfPower) ?? true))
             {
-                if (!lhs.WordsOfPower.SequenceEqual(rhs.WordsOfPower, (l, r) => ((ShoutWordCommon)((IShoutWordGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Shout_FieldIndex.WordsOfPower)))) return false;
+                if (!lhs.WordsOfPower.SequenceEqual(rhs.WordsOfPower, (l, r) => ((ShoutWordCommon)((IShoutWordGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Shout_FieldIndex.WordsOfPower)))) return false;
             }
             return true;
         }
@@ -1266,23 +1282,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IShoutGetter?)lhs,
                 rhs: rhs as IShoutGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IShoutGetter?)lhs,
                 rhs: rhs as IShoutGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IShoutGetter item)
@@ -1966,12 +1982,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IShoutGetter rhs) return false;
-            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IShoutGetter? obj)
         {
-            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).GetHashCode(this);

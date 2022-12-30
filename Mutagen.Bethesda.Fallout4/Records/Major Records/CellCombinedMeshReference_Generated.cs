@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ICellCombinedMeshReferenceGetter rhs) return false;
-            return ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellCombinedMeshReferenceGetter? obj)
         {
-            return ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -848,14 +848,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ICellCombinedMeshReferenceGetter? lhs,
             ICellCombinedMeshReferenceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CellCombinedMeshReference_FieldIndex.Reference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellCombinedMeshReference_FieldIndex.Reference) ?? true))
             {
                 if (!lhs.Reference.Equals(rhs.Reference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellCombinedMeshReference_FieldIndex.CombinedMesh) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellCombinedMeshReference_FieldIndex.CombinedMesh) ?? true))
             {
                 if (lhs.CombinedMesh != rhs.CombinedMesh) return false;
             }
@@ -1179,12 +1179,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ICellCombinedMeshReferenceGetter rhs) return false;
-            return ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellCombinedMeshReferenceGetter? obj)
         {
-            return ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)this).CommonInstance()!).GetHashCode(this);

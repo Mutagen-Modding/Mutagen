@@ -101,12 +101,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ISkyrimListGroupGetter<T> rhs) return false;
-            return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISkyrimListGroupGetter<T>? obj)
         {
-            return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimListGroupCommon<T>.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimListGroupCommon<T>.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimListGroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -151,9 +151,9 @@ namespace Mutagen.Bethesda.Skyrim
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<T, TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<T, TMajor>(records, throwIfUnknown);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkyrimListGroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkyrimListGroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkyrimListGroupSetterCommon<T>.Instance.RemapListedAssetLinks(this, mapping);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkyrimListGroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkyrimListGroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkyrimListGroupSetterCommon<T>.Instance.RemapListedAssetLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: null);
+                equalsMask: null);
         }
 
         public static bool Equals<T, T_TranslMask>(
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask.GetCrystal());
+                equalsMask: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter>(
@@ -1004,24 +1004,24 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISkyrimListGroupGetter<T>? lhs,
             ISkyrimListGroupGetter<T>? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SkyrimListGroup_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkyrimListGroup_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SkyrimListGroup_FieldIndex.LastModified) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkyrimListGroup_FieldIndex.LastModified) ?? true))
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SkyrimListGroup_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkyrimListGroup_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SkyrimListGroup_FieldIndex.Records) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkyrimListGroup_FieldIndex.Records) ?? true))
             {
-                if (!lhs.Records.SequenceEqual(rhs.Records, (l, r) => ((CellBlockCommon)((ICellBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SkyrimListGroup_FieldIndex.Records)))) return false;
+                if (!lhs.Records.SequenceEqual(rhs.Records, (l, r) => ((CellBlockCommon)((ICellBlockGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SkyrimListGroup_FieldIndex.Records)))) return false;
             }
             return true;
         }
@@ -1465,8 +1465,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimListGroupCommon<T>.Instance.EnumerateFormLinks(this);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkyrimListGroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimListGroupCommon<T>.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkyrimListGroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -1583,12 +1583,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ISkyrimListGroupGetter<T> rhs) return false;
-            return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISkyrimListGroupGetter<T>? obj)
         {
-            return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SkyrimListGroupCommon<T>)((ISkyrimListGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -1959,7 +1959,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ExceptionExt.Combine(this.Records?.Overall, rhs.Records?.Overall), ExceptionExt.Combine(this.Records?.Specific, rhs.Records?.Specific));
+                ret.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(Noggog.ExceptionExt.Combine(this.Records?.Overall, rhs.Records?.Overall), Noggog.ExceptionExt.Combine(this.Records?.Specific, rhs.Records?.Specific));
                 return ret;
             }
             public static ErrorMask<T_ErrMask>? Combine(ErrorMask<T_ErrMask>? lhs, ErrorMask<T_ErrMask>? rhs)

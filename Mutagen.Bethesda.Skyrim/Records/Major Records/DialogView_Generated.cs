@@ -153,6 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Quest,
                 TItem Branches,
                 TItem TNAMs,
@@ -164,7 +165,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Quest = Quest;
                 this.Branches = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Branches, Enumerable.Empty<(int Index, TItem Value)>());
@@ -584,8 +586,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Quest = this.Quest.Combine(rhs.Quest);
-                ret.Branches = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Branches?.Overall, rhs.Branches?.Overall), ExceptionExt.Combine(this.Branches?.Specific, rhs.Branches?.Specific));
-                ret.TNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.TNAMs?.Overall, rhs.TNAMs?.Overall), ExceptionExt.Combine(this.TNAMs?.Specific, rhs.TNAMs?.Specific));
+                ret.Branches = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Branches?.Overall, rhs.Branches?.Overall), Noggog.ExceptionExt.Combine(this.Branches?.Specific, rhs.Branches?.Specific));
+                ret.TNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TNAMs?.Overall, rhs.TNAMs?.Overall), Noggog.ExceptionExt.Combine(this.TNAMs?.Specific, rhs.TNAMs?.Specific));
                 ret.ENAM = this.ENAM.Combine(rhs.ENAM);
                 ret.DNAM = this.DNAM.Combine(rhs.DNAM);
                 return ret;
@@ -711,12 +713,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDialogViewGetter rhs) return false;
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogViewGetter? obj)
         {
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).GetHashCode(this);
@@ -871,7 +873,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogViewCommon)((IDialogViewGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -947,6 +949,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static DialogView Duplicate(
+            this IDialogViewGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((DialogViewCommon)((IDialogViewGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -979,11 +992,12 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Quest = 6,
-        Branches = 7,
-        TNAMs = 8,
-        ENAM = 9,
-        DNAM = 10,
+        SkyrimMajorRecordFlags = 6,
+        Quest = 7,
+        Branches = 8,
+        TNAMs = 9,
+        ENAM = 10,
+        DNAM = 11,
     }
     #endregion
 
@@ -1003,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(DialogView.Mask<>);
 
@@ -1185,8 +1199,8 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.TNAMs,
                 (l, r) => MemoryExtensions.SequenceEqual(l.Span, r.Span),
                 include);
-            ret.ENAM = MemorySliceExt.Equal(item.ENAM, rhs.ENAM);
-            ret.DNAM = MemorySliceExt.Equal(item.DNAM, rhs.DNAM);
+            ret.ENAM = MemorySliceExt.SequenceEqual(item.ENAM, rhs.ENAM);
+            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1296,8 +1310,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (DialogView_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (DialogView_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (DialogView_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1314,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (DialogView_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1322,29 +1338,29 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IDialogViewGetter? lhs,
             IDialogViewGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.Quest) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DialogView_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.Branches) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogView_FieldIndex.Branches) ?? true))
             {
                 if (!lhs.Branches.SequenceEqualNullable(rhs.Branches)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.TNAMs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogView_FieldIndex.TNAMs) ?? true))
             {
                 if (!lhs.TNAMs.SequenceEqualNullable(rhs.TNAMs)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.ENAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogView_FieldIndex.ENAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ENAM, rhs.ENAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.DNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogView_FieldIndex.DNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
             }
             return true;
         }
@@ -1352,23 +1368,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDialogViewGetter?)lhs,
                 rhs: rhs as IDialogViewGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDialogViewGetter?)lhs,
                 rhs: rhs as IDialogViewGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IDialogViewGetter item)
@@ -2085,12 +2101,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDialogViewGetter rhs) return false;
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogViewGetter? obj)
         {
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).GetHashCode(this);

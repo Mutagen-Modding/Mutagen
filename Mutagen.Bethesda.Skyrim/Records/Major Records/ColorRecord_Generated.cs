@@ -135,6 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem Color,
                 TItem Playable)
@@ -144,7 +145,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.Color = Color;
@@ -499,12 +501,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IColorRecordGetter rhs) return false;
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IColorRecordGetter? obj)
         {
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -669,7 +671,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ColorRecordCommon)((IColorRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -745,6 +747,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ColorRecord Duplicate(
+            this IColorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ColorRecordCommon)((IColorRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -777,9 +790,10 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Color = 7,
-        Playable = 8,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        Color = 8,
+        Playable = 9,
     }
     #endregion
 
@@ -799,7 +813,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(ColorRecord.Mask<>);
 
@@ -1049,8 +1063,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (ColorRecord_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (ColorRecord_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (ColorRecord_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1067,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (ColorRecord_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1075,19 +1091,19 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IColorRecordGetter? lhs,
             IColorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Name) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Color) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Playable) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Playable) ?? true))
             {
                 if (lhs.Playable != rhs.Playable) return false;
             }
@@ -1097,23 +1113,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IColorRecordGetter?)lhs,
                 rhs: rhs as IColorRecordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IColorRecordGetter?)lhs,
                 rhs: rhs as IColorRecordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IColorRecordGetter item)
@@ -1720,12 +1736,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IColorRecordGetter rhs) return false;
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IColorRecordGetter? obj)
         {
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).GetHashCode(this);

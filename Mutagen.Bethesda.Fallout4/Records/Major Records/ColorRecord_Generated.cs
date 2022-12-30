@@ -152,6 +152,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Data,
                 TItem Flags,
@@ -162,7 +163,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Data = new MaskItem<TItem, AColorRecordData.Mask<TItem>?>(Data, new AColorRecordData.Mask<TItem>(Data));
@@ -498,7 +500,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -610,12 +612,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IColorRecordGetter rhs) return false;
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IColorRecordGetter? obj)
         {
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -784,7 +786,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ColorRecordCommon)((IColorRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -860,6 +862,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ColorRecord Duplicate(
+            this IColorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ColorRecordCommon)((IColorRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -892,10 +905,11 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Data = 7,
-        Flags = 8,
-        Conditions = 9,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Data = 8,
+        Flags = 9,
+        Conditions = 10,
     }
     #endregion
 
@@ -915,7 +929,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(ColorRecord.Mask<>);
 
@@ -1188,8 +1202,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (ColorRecord_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (ColorRecord_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (ColorRecord_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1206,7 +1222,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (ColorRecord_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1214,29 +1230,29 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IColorRecordGetter? lhs,
             IColorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Name) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((AColorRecordDataCommon)((IAColorRecordDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)ColorRecord_FieldIndex.Data))) return false;
+                    if (!((AColorRecordDataCommon)((IAColorRecordDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)ColorRecord_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ColorRecord_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ColorRecord_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1244,23 +1260,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IColorRecordGetter?)lhs,
                 rhs: rhs as IColorRecordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IColorRecordGetter?)lhs,
                 rhs: rhs as IColorRecordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IColorRecordGetter item)
@@ -1998,12 +2014,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IColorRecordGetter rhs) return false;
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IColorRecordGetter? obj)
         {
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).GetHashCode(this);

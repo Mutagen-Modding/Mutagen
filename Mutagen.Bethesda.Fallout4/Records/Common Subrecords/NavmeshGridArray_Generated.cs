@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INavmeshGridArrayGetter rhs) return false;
-            return ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavmeshGridArrayGetter? obj)
         {
-            return ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)this).CommonInstance()!).GetHashCode(this);
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.GridCell = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.GridCell?.Overall, rhs.GridCell?.Overall), ExceptionExt.Combine(this.GridCell?.Specific, rhs.GridCell?.Specific));
+                ret.GridCell = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.GridCell?.Overall, rhs.GridCell?.Overall), Noggog.ExceptionExt.Combine(this.GridCell?.Specific, rhs.GridCell?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -875,10 +875,10 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INavmeshGridArrayGetter? lhs,
             INavmeshGridArrayGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)NavmeshGridArray_FieldIndex.GridCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGridArray_FieldIndex.GridCell) ?? true))
             {
                 if (!lhs.GridCell.SequenceEqualNullable(rhs.GridCell)) return false;
             }
@@ -1213,12 +1213,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INavmeshGridArrayGetter rhs) return false;
-            return ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavmeshGridArrayGetter? obj)
         {
-            return ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)this).CommonInstance()!).GetHashCode(this);

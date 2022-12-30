@@ -620,12 +620,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IWaterGetter rhs) return false;
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWaterGetter? obj)
         {
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -858,6 +858,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Water Duplicate(
+            this IWaterGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1209,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Water_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1226,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Water_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1234,43 +1245,43 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IWaterGetter? lhs,
             IWaterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Texture) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Texture) ?? true))
             {
                 if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
             {
                 if (lhs.Opacity != rhs.Opacity) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.MaterialID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.MaterialID) ?? true))
             {
                 if (!string.Equals(lhs.MaterialID, rhs.MaterialID)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((WaterDataCommon)((IWaterDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Water_FieldIndex.Data))) return false;
+                    if (!((WaterDataCommon)((IWaterDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Water_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.RelatedWaters, rhs.RelatedWaters, out var lhsRelatedWaters, out var rhsRelatedWaters, out var isRelatedWatersEqual))
                 {
-                    if (!((RelatedWatersCommon)((IRelatedWatersGetter)lhsRelatedWaters).CommonInstance()!).Equals(lhsRelatedWaters, rhsRelatedWaters, crystal?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters))) return false;
+                    if (!((RelatedWatersCommon)((IRelatedWatersGetter)lhsRelatedWaters).CommonInstance()!).Equals(lhsRelatedWaters, rhsRelatedWaters, equalsMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters))) return false;
                 }
                 else if (!isRelatedWatersEqual) return false;
             }
@@ -1280,23 +1291,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWaterGetter?)lhs,
                 rhs: rhs as IWaterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWaterGetter?)lhs,
                 rhs: rhs as IWaterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IWaterGetter item)
@@ -2089,12 +2100,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IWaterGetter rhs) return false;
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWaterGetter? obj)
         {
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);

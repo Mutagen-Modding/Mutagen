@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ImpactDataSet,
                 TItem Tag)
             : base(
@@ -111,7 +112,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ImpactDataSet = ImpactDataSet;
                 this.Tag = Tag;
@@ -440,12 +442,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepGetter rhs) return false;
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFootstepGetter? obj)
         {
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).GetHashCode(this);
@@ -594,7 +596,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FootstepCommon)((IFootstepGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -670,6 +672,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Footstep Duplicate(
+            this IFootstepGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((FootstepCommon)((IFootstepGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -702,8 +715,9 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ImpactDataSet = 6,
-        Tag = 7,
+        SkyrimMajorRecordFlags = 6,
+        ImpactDataSet = 7,
+        Tag = 8,
     }
     #endregion
 
@@ -723,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(Footstep.Mask<>);
 
@@ -966,8 +980,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Footstep_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Footstep_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Footstep_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -984,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Footstep_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -992,15 +1008,15 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IFootstepGetter? lhs,
             IFootstepGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
             {
                 if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
             {
                 if (!string.Equals(lhs.Tag, rhs.Tag)) return false;
             }
@@ -1010,23 +1026,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFootstepGetter?)lhs,
                 rhs: rhs as IFootstepGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFootstepGetter?)lhs,
                 rhs: rhs as IFootstepGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IFootstepGetter item)
@@ -1595,12 +1611,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepGetter rhs) return false;
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFootstepGetter? obj)
         {
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).GetHashCode(this);

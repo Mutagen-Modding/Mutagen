@@ -1,5 +1,6 @@
 using Noggog;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Installs.DI;
 
 namespace Mutagen.Bethesda.Installs;
@@ -10,41 +11,47 @@ namespace Mutagen.Bethesda.Installs;
 public static class GameLocations
 {
     private static readonly GameLocator Locator = new();
+    private static IGameDirectoryLookup GameDirLookup => Locator;
+    private static IDataDirectoryLookup DataDirLookup => Locator;
         
     /// <inheritdoc cref="GameLocator" />
     public static IEnumerable<DirectoryPath> GetGameFolders(GameRelease release)
     {
-        return Locator.GetGameDirectories(release);
+        foreach (var dir in GameDirLookup.GetAll(release))
+        {
+            yield return dir;
+        }
     }
 
     /// <inheritdoc cref="GameLocator" />
+    [Obsolete("Will be removed soon")]
     public static bool TryGetGameFolderFromRegistry(GameRelease release,
         [MaybeNullWhen(false)] out DirectoryPath path)
     {
         return Locator.TryGetGameDirectoryFromRegistry(release, out path);
     }
-        
+    
     /// <inheritdoc cref="GameLocator" />
     public static bool TryGetGameFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
     {
-        return Locator.TryGetGameDirectory(release, out path);
+        return GameDirLookup.TryGet(release, out path);
     }
 
     /// <inheritdoc cref="GameLocator" />
     public static DirectoryPath GetGameFolder(GameRelease release)
     {
-        return Locator.GetGameDirectory(release);
+        return GameDirLookup.Get(release);
     }
 
     /// <inheritdoc cref="GameLocator" />
     public static bool TryGetDataFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
     {
-        return Locator.TryGetDataDirectory(release, out path);
+        return DataDirLookup.TryGet(release, out path);
     }
 
     /// <inheritdoc cref="GameLocator" />
     public static DirectoryPath GetDataFolder(GameRelease release)
     {
-        return Locator.GetDataDirectory(release);
+        return DataDirLookup.Get(release);
     }
 }

@@ -442,12 +442,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IAnimatedObjectGetter rhs) return false;
-            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAnimatedObjectGetter? obj)
         {
-            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -680,6 +680,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static AnimatedObject Duplicate(
+            this IAnimatedObjectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -981,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (AnimatedObject_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -998,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (AnimatedObject_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1006,19 +1017,19 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IAnimatedObjectGetter? lhs,
             IAnimatedObjectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AnimatedObject_FieldIndex.Model) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)AnimatedObject_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)AnimatedObject_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AnimatedObject_FieldIndex.IdleAnimation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.IdleAnimation) ?? true))
             {
                 if (!lhs.IdleAnimation.Equals(rhs.IdleAnimation)) return false;
             }
@@ -1028,23 +1039,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAnimatedObjectGetter?)lhs,
                 rhs: rhs as IAnimatedObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAnimatedObjectGetter?)lhs,
                 rhs: rhs as IAnimatedObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAnimatedObjectGetter item)
@@ -1642,12 +1653,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IAnimatedObjectGetter rhs) return false;
-            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAnimatedObjectGetter? obj)
         {
-            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).GetHashCode(this);

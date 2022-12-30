@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat]
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
     /// </summary>
     public abstract partial class Global :
         SkyrimMajorRecord,
@@ -89,14 +89,16 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem SkyrimMajorRecordFlags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
             }
 
@@ -356,12 +358,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IGlobalGetter rhs) return false;
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGlobalGetter? obj)
         {
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).GetHashCode(this);
@@ -401,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat]
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
     /// </summary>
     public partial interface IGlobal :
         IGlobalGetter,
@@ -422,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat]
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
     /// </summary>
     public partial interface IGlobalGetter :
         ISkyrimMajorRecordGetter,
@@ -490,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -566,6 +568,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Global Duplicate(
+            this IGlobalGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -598,6 +611,7 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        SkyrimMajorRecordFlags = 6,
     }
     #endregion
 
@@ -617,7 +631,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 0;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Global.Mask<>);
 
@@ -846,8 +860,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Global_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Global_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Global_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -864,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Global_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -872,33 +888,33 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IGlobalGetter? lhs,
             IGlobalGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGlobalGetter?)lhs,
                 rhs: rhs as IGlobalGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGlobalGetter?)lhs,
                 rhs: rhs as IGlobalGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IGlobalGetter item)
@@ -1408,12 +1424,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IGlobalGetter rhs) return false;
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGlobalGetter? obj)
         {
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).GetHashCode(this);

@@ -106,12 +106,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICloudLayerGetter rhs) return false;
-            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICloudLayerGetter? obj)
         {
-            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1004,34 +1004,34 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ICloudLayerGetter? lhs,
             ICloudLayerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.Enabled) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CloudLayer_FieldIndex.Enabled) ?? true))
             {
                 if (lhs.Enabled != rhs.Enabled) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.XSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CloudLayer_FieldIndex.XSpeed) ?? true))
             {
                 if (!lhs.XSpeed.EqualsWithin(rhs.XSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.YSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CloudLayer_FieldIndex.YSpeed) ?? true))
             {
                 if (!lhs.YSpeed.EqualsWithin(rhs.YSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.Colors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CloudLayer_FieldIndex.Colors) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Colors, rhs.Colors, out var lhsColors, out var rhsColors, out var isColorsEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsColors).CommonInstance()!).Equals(lhsColors, rhsColors, crystal?.GetSubCrystal((int)CloudLayer_FieldIndex.Colors))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsColors).CommonInstance()!).Equals(lhsColors, rhsColors, equalsMask?.GetSubCrystal((int)CloudLayer_FieldIndex.Colors))) return false;
                 }
                 else if (!isColorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.Alphas) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CloudLayer_FieldIndex.Alphas) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Alphas, rhs.Alphas, out var lhsAlphas, out var rhsAlphas, out var isAlphasEqual))
                 {
-                    if (!((WeatherAlphaCommon)((IWeatherAlphaGetter)lhsAlphas).CommonInstance()!).Equals(lhsAlphas, rhsAlphas, crystal?.GetSubCrystal((int)CloudLayer_FieldIndex.Alphas))) return false;
+                    if (!((WeatherAlphaCommon)((IWeatherAlphaGetter)lhsAlphas).CommonInstance()!).Equals(lhsAlphas, rhsAlphas, equalsMask?.GetSubCrystal((int)CloudLayer_FieldIndex.Alphas))) return false;
                 }
                 else if (!isAlphasEqual) return false;
             }
@@ -1418,12 +1418,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICloudLayerGetter rhs) return false;
-            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICloudLayerGetter? obj)
         {
-            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).GetHashCode(this);

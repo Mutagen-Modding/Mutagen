@@ -92,12 +92,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ITreeDataGetter rhs) return false;
-            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITreeDataGetter? obj)
         {
-            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((TreeDataCommon)((ITreeDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1095,38 +1095,38 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ITreeDataGetter? lhs,
             ITreeDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.LeafCurvature) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TreeData_FieldIndex.LeafCurvature) ?? true))
             {
                 if (!lhs.LeafCurvature.EqualsWithin(rhs.LeafCurvature)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.MinimumLeafAngle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TreeData_FieldIndex.MinimumLeafAngle) ?? true))
             {
                 if (!lhs.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.MaximumLeafAngle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TreeData_FieldIndex.MaximumLeafAngle) ?? true))
             {
                 if (!lhs.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.BranchDimmingValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TreeData_FieldIndex.BranchDimmingValue) ?? true))
             {
                 if (!lhs.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.LeafDimmingValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TreeData_FieldIndex.LeafDimmingValue) ?? true))
             {
                 if (!lhs.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.ShadowRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TreeData_FieldIndex.ShadowRadius) ?? true))
             {
                 if (lhs.ShadowRadius != rhs.ShadowRadius) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.RockingSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TreeData_FieldIndex.RockingSpeed) ?? true))
             {
                 if (!lhs.RockingSpeed.EqualsWithin(rhs.RockingSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.RustleSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TreeData_FieldIndex.RustleSpeed) ?? true))
             {
                 if (!lhs.RustleSpeed.EqualsWithin(rhs.RustleSpeed)) return false;
             }
@@ -1515,12 +1515,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ITreeDataGetter rhs) return false;
-            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITreeDataGetter? obj)
         {
-            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).GetHashCode(this);

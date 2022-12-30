@@ -152,9 +152,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ITintTemplateOptionGetter.Default => this.Default;
         #endregion
-        #region TETIDataTypeState
-        public TintTemplateOption.TETIDataType TETIDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -174,12 +171,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITintTemplateOptionGetter rhs) return false;
-            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITintTemplateOptionGetter? obj)
         {
-            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -203,7 +200,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.BlendOperation = initialValue;
                 this.TemplateColors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>());
                 this.Default = initialValue;
-                this.TETIDataTypeState = initialValue;
             }
 
             public Mask(
@@ -215,8 +211,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Textures,
                 TItem BlendOperation,
                 TItem TemplateColors,
-                TItem Default,
-                TItem TETIDataTypeState)
+                TItem Default)
             {
                 this.Slot = Slot;
                 this.Index = Index;
@@ -227,7 +222,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.BlendOperation = BlendOperation;
                 this.TemplateColors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>?>(TemplateColors, Enumerable.Empty<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>());
                 this.Default = Default;
-                this.TETIDataTypeState = TETIDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -248,7 +242,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem BlendOperation;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>?>? TemplateColors;
             public TItem Default;
-            public TItem TETIDataTypeState;
             #endregion
 
             #region Equals
@@ -270,7 +263,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.BlendOperation, rhs.BlendOperation)) return false;
                 if (!object.Equals(this.TemplateColors, rhs.TemplateColors)) return false;
                 if (!object.Equals(this.Default, rhs.Default)) return false;
-                if (!object.Equals(this.TETIDataTypeState, rhs.TETIDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -285,7 +277,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.BlendOperation);
                 hash.Add(this.TemplateColors);
                 hash.Add(this.Default);
-                hash.Add(this.TETIDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -335,7 +326,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (!eval(this.Default)) return false;
-                if (!eval(this.TETIDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -384,7 +374,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 if (eval(this.Default)) return true;
-                if (eval(this.TETIDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -449,7 +438,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
                 obj.Default = eval(this.Default);
-                obj.TETIDataTypeState = eval(this.TETIDataTypeState);
             }
             #endregion
 
@@ -551,10 +539,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Default, "Default");
                     }
-                    if (printMask?.TETIDataTypeState ?? true)
-                    {
-                        sb.AppendItem(TETIDataTypeState, "TETIDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -588,7 +572,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? BlendOperation;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintTemplateColor.ErrorMask?>>?>? TemplateColors;
             public Exception? Default;
-            public Exception? TETIDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -615,8 +598,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return TemplateColors;
                     case TintTemplateOption_FieldIndex.Default:
                         return Default;
-                    case TintTemplateOption_FieldIndex.TETIDataTypeState:
-                        return TETIDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -653,9 +634,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case TintTemplateOption_FieldIndex.Default:
                         this.Default = ex;
-                        break;
-                    case TintTemplateOption_FieldIndex.TETIDataTypeState:
-                        this.TETIDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -694,9 +672,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case TintTemplateOption_FieldIndex.Default:
                         this.Default = (Exception?)obj;
                         break;
-                    case TintTemplateOption_FieldIndex.TETIDataTypeState:
-                        this.TETIDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -714,7 +689,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (BlendOperation != null) return true;
                 if (TemplateColors != null) return true;
                 if (Default != null) return true;
-                if (TETIDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -814,9 +788,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Default, "Default");
                 }
-                {
-                    sb.AppendItem(TETIDataTypeState, "TETIDataTypeState");
-                }
             }
             #endregion
 
@@ -829,12 +800,11 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Index = this.Index.Combine(rhs.Index);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), Noggog.ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
                 ret.BlendOperation = this.BlendOperation.Combine(rhs.BlendOperation);
-                ret.TemplateColors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintTemplateColor.ErrorMask?>>?>(ExceptionExt.Combine(this.TemplateColors?.Overall, rhs.TemplateColors?.Overall), ExceptionExt.Combine(this.TemplateColors?.Specific, rhs.TemplateColors?.Specific));
+                ret.TemplateColors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintTemplateColor.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TemplateColors?.Overall, rhs.TemplateColors?.Overall), Noggog.ExceptionExt.Combine(this.TemplateColors?.Specific, rhs.TemplateColors?.Specific));
                 ret.Default = this.Default.Combine(rhs.Default);
-                ret.TETIDataTypeState = this.TETIDataTypeState.Combine(rhs.TETIDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -867,7 +837,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool BlendOperation;
             public TintTemplateColor.TranslationMask? TemplateColors;
             public bool Default;
-            public bool TETIDataTypeState;
             #endregion
 
             #region Ctors
@@ -884,7 +853,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Textures = defaultOn;
                 this.BlendOperation = defaultOn;
                 this.Default = defaultOn;
-                this.TETIDataTypeState = defaultOn;
             }
 
             #endregion
@@ -909,7 +877,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((BlendOperation, null));
                 ret.Add((TemplateColors == null ? DefaultOn : !TemplateColors.GetCrystal().CopyNothing, TemplateColors?.GetCrystal()));
                 ret.Add((Default, null));
-                ret.Add((TETIDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -923,10 +890,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TintTemplateOptionCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintTemplateOptionSetterCommon.Instance.RemapLinks(this, mapping);
-        [Flags]
-        public enum TETIDataType
-        {
-        }
         #endregion
 
         #region Binary Translation
@@ -1008,7 +971,6 @@ namespace Mutagen.Bethesda.Fallout4
         new BlendOperation? BlendOperation { get; set; }
         new ExtendedList<TintTemplateColor>? TemplateColors { get; set; }
         new Single? Default { get; set; }
-        new TintTemplateOption.TETIDataType TETIDataTypeState { get; set; }
     }
 
     public partial interface ITintTemplateOptionGetter :
@@ -1042,7 +1004,6 @@ namespace Mutagen.Bethesda.Fallout4
         BlendOperation? BlendOperation { get; }
         IReadOnlyList<ITintTemplateColorGetter>? TemplateColors { get; }
         Single? Default { get; }
-        TintTemplateOption.TETIDataType TETIDataTypeState { get; }
 
     }
 
@@ -1099,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1221,7 +1182,6 @@ namespace Mutagen.Bethesda.Fallout4
         BlendOperation = 6,
         TemplateColors = 7,
         Default = 8,
-        TETIDataTypeState = 9,
     }
     #endregion
 
@@ -1239,9 +1199,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "f16b47d8-d290-4bd8-9678-673778a46050";
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(TintTemplateOption.Mask<>);
 
@@ -1336,7 +1296,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.BlendOperation = default;
             item.TemplateColors = null;
             item.Default = default;
-            item.TETIDataTypeState = default;
         }
         
         #region Mutagen
@@ -1358,7 +1317,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: TintTemplateOptionBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: TintTemplateOptionBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1407,7 +1365,6 @@ namespace Mutagen.Bethesda.Fallout4
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Default = item.Default.EqualsWithin(rhs.Default);
-            ret.TETIDataTypeState = item.TETIDataTypeState == rhs.TETIDataTypeState;
         }
         
         public string Print(
@@ -1523,58 +1480,50 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(DefaultItem, "Default");
             }
-            if (printMask?.TETIDataTypeState ?? true)
-            {
-                sb.AppendItem(item.TETIDataTypeState, "TETIDataTypeState");
-            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
             ITintTemplateOptionGetter? lhs,
             ITintTemplateOptionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Slot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Slot) ?? true))
             {
                 if (lhs.Slot != rhs.Slot) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TintTemplateOption_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TintTemplateOption_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Textures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Textures) ?? true))
             {
                 if (!lhs.Textures.SequenceEqualNullable(rhs.Textures)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.BlendOperation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.BlendOperation) ?? true))
             {
                 if (lhs.BlendOperation != rhs.BlendOperation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.TemplateColors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.TemplateColors) ?? true))
             {
-                if (!lhs.TemplateColors.SequenceEqualNullable(rhs.TemplateColors, (l, r) => ((TintTemplateColorCommon)((ITintTemplateColorGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TintTemplateOption_FieldIndex.TemplateColors)))) return false;
+                if (!lhs.TemplateColors.SequenceEqualNullable(rhs.TemplateColors, (l, r) => ((TintTemplateColorCommon)((ITintTemplateColorGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TintTemplateOption_FieldIndex.TemplateColors)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Default) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.Default) ?? true))
             {
                 if (!lhs.Default.EqualsWithin(rhs.Default)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.TETIDataTypeState) ?? true))
-            {
-                if (lhs.TETIDataTypeState != rhs.TETIDataTypeState) return false;
             }
             return true;
         }
@@ -1603,7 +1552,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(Defaultitem);
             }
-            hash.Add(item.TETIDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1745,10 +1693,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Default = rhs.Default;
             }
-            if ((copyMask?.GetShouldTranslate((int)TintTemplateOption_FieldIndex.TETIDataTypeState) ?? true))
-            {
-                item.TETIDataTypeState = rhs.TETIDataTypeState;
-            }
         }
         
         #endregion
@@ -1841,12 +1785,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static readonly TintTemplateOptionBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ITintTemplateOptionGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             ITintTemplateOptionGetter item,
             MutagenWriter writer,
@@ -1915,9 +1853,6 @@ namespace Mutagen.Bethesda.Fallout4
             ITintTemplateOptionGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1940,12 +1875,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class TintTemplateOptionBinaryCreateTranslation
     {
         public static readonly TintTemplateOptionBinaryCreateTranslation Instance = new TintTemplateOptionBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            ITintTemplateOption item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             ITintTemplateOption item,
@@ -2102,7 +2031,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         private RangeInt32? _TETILocation;
-        public TintTemplateOption.TETIDataType TETIDataTypeState { get; private set; }
         #region Slot
         private int _SlotLocation => _TETILocation!.Value.Min;
         private bool _Slot_IsSet => _TETILocation.HasValue;
@@ -2292,12 +2220,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITintTemplateOptionGetter rhs) return false;
-            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITintTemplateOptionGetter? obj)
         {
-            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TintTemplateOptionCommon)((ITintTemplateOptionGetter)this).CommonInstance()!).GetHashCode(this);

@@ -173,9 +173,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IImpactGetter.FootstepParticleMaxDist => this.FootstepParticleMaxDist;
         #endregion
-        #region DATADataTypeState
-        public Impact.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -218,7 +215,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FootstepExplosion = initialValue;
                 this.Hazard = initialValue;
                 this.FootstepParticleMaxDist = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -228,6 +224,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Model,
                 TItem Duration,
                 TItem Orientation,
@@ -244,15 +241,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Sound2,
                 TItem FootstepExplosion,
                 TItem Hazard,
-                TItem FootstepParticleMaxDist,
-                TItem DATADataTypeState)
+                TItem FootstepParticleMaxDist)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Duration = Duration;
@@ -271,7 +268,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FootstepExplosion = FootstepExplosion;
                 this.Hazard = Hazard;
                 this.FootstepParticleMaxDist = FootstepParticleMaxDist;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -300,7 +296,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem FootstepExplosion;
             public TItem Hazard;
             public TItem FootstepParticleMaxDist;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -331,7 +326,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.FootstepExplosion, rhs.FootstepExplosion)) return false;
                 if (!object.Equals(this.Hazard, rhs.Hazard)) return false;
                 if (!object.Equals(this.FootstepParticleMaxDist, rhs.FootstepParticleMaxDist)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -354,7 +348,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.FootstepExplosion);
                 hash.Add(this.Hazard);
                 hash.Add(this.FootstepParticleMaxDist);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -390,7 +383,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.FootstepExplosion)) return false;
                 if (!eval(this.Hazard)) return false;
                 if (!eval(this.FootstepParticleMaxDist)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -424,7 +416,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.FootstepExplosion)) return true;
                 if (eval(this.Hazard)) return true;
                 if (eval(this.FootstepParticleMaxDist)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -457,7 +448,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.FootstepExplosion = eval(this.FootstepExplosion);
                 obj.Hazard = eval(this.Hazard);
                 obj.FootstepParticleMaxDist = eval(this.FootstepParticleMaxDist);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -544,10 +534,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(FootstepParticleMaxDist, "FootstepParticleMaxDist");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -576,7 +562,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? FootstepExplosion;
             public Exception? Hazard;
             public Exception? FootstepParticleMaxDist;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -619,8 +604,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Hazard;
                     case Impact_FieldIndex.FootstepParticleMaxDist:
                         return FootstepParticleMaxDist;
-                    case Impact_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -681,9 +664,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Impact_FieldIndex.FootstepParticleMaxDist:
                         this.FootstepParticleMaxDist = ex;
-                        break;
-                    case Impact_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -747,9 +727,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Impact_FieldIndex.FootstepParticleMaxDist:
                         this.FootstepParticleMaxDist = (Exception?)obj;
                         break;
-                    case Impact_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -776,7 +753,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (FootstepExplosion != null) return true;
                 if (Hazard != null) return true;
                 if (FootstepParticleMaxDist != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -850,9 +826,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(FootstepParticleMaxDist, "FootstepParticleMaxDist");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -878,7 +851,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.FootstepExplosion = this.FootstepExplosion.Combine(rhs.FootstepExplosion);
                 ret.Hazard = this.Hazard.Combine(rhs.Hazard);
                 ret.FootstepParticleMaxDist = this.FootstepParticleMaxDist.Combine(rhs.FootstepParticleMaxDist);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -918,7 +890,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool FootstepExplosion;
             public bool Hazard;
             public bool FootstepParticleMaxDist;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -942,7 +913,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FootstepExplosion = defaultOn;
                 this.Hazard = defaultOn;
                 this.FootstepParticleMaxDist = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -967,7 +937,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((FootstepExplosion, null));
                 ret.Add((Hazard, null));
                 ret.Add((FootstepParticleMaxDist, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1024,10 +993,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IImpact);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1036,12 +1001,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IImpactGetter rhs) return false;
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImpactGetter? obj)
         {
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1133,7 +1098,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IExplosionGetter> FootstepExplosion { get; set; }
         new IFormLinkNullable<IHazardGetter> Hazard { get; set; }
         new Single? FootstepParticleMaxDist { get; set; }
-        new Impact.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IImpactInternal :
@@ -1175,7 +1139,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IExplosionGetter> FootstepExplosion { get; }
         IFormLinkNullableGetter<IHazardGetter> Hazard { get; }
         Single? FootstepParticleMaxDist { get; }
-        Impact.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1232,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1308,6 +1271,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Impact Duplicate(
+            this IImpactGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1340,24 +1314,24 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Model = 6,
-        Duration = 7,
-        Orientation = 8,
-        AngleThreshold = 9,
-        PlacementRadius = 10,
-        SoundLevel = 11,
-        NoDecalData = 12,
-        Result = 13,
-        Unknown = 14,
-        Decal = 15,
-        TextureSet = 16,
-        SecondaryTextureSet = 17,
-        Sound1 = 18,
-        Sound2 = 19,
-        FootstepExplosion = 20,
-        Hazard = 21,
-        FootstepParticleMaxDist = 22,
-        DATADataTypeState = 23,
+        Fallout4MajorRecordFlags = 6,
+        Model = 7,
+        Duration = 8,
+        Orientation = 9,
+        AngleThreshold = 10,
+        PlacementRadius = 11,
+        SoundLevel = 12,
+        NoDecalData = 13,
+        Result = 14,
+        Unknown = 15,
+        Decal = 16,
+        TextureSet = 17,
+        SecondaryTextureSet = 18,
+        Sound1 = 19,
+        Sound2 = 20,
+        FootstepExplosion = 21,
+        Hazard = 22,
+        FootstepParticleMaxDist = 23,
     }
     #endregion
 
@@ -1375,7 +1349,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "047c6db4-4783-40f6-8168-73fe2fde61ab";
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 17;
 
         public const ushort FieldCount = 24;
 
@@ -1484,7 +1458,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.FootstepExplosion.Clear();
             item.Hazard.Clear();
             item.FootstepParticleMaxDist = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1601,7 +1574,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.FootstepExplosion = item.FootstepExplosion.Equals(rhs.FootstepExplosion);
             ret.Hazard = item.Hazard.Equals(rhs.Hazard);
             ret.FootstepParticleMaxDist = item.FootstepParticleMaxDist.EqualsWithin(rhs.FootstepParticleMaxDist);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1722,10 +1694,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(FootstepParticleMaxDistItem, "FootstepParticleMaxDist");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Impact_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1744,8 +1712,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Impact_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Impact_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Impact_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1762,7 +1732,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Impact_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1770,89 +1740,85 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IImpactGetter? lhs,
             IImpactGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Model) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Impact_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Duration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Duration) ?? true))
             {
                 if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Orientation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Orientation) ?? true))
             {
                 if (lhs.Orientation != rhs.Orientation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.AngleThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.AngleThreshold) ?? true))
             {
                 if (!lhs.AngleThreshold.EqualsWithin(rhs.AngleThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.PlacementRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.PlacementRadius) ?? true))
             {
                 if (!lhs.PlacementRadius.EqualsWithin(rhs.PlacementRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.SoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.SoundLevel) ?? true))
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
             {
                 if (lhs.NoDecalData != rhs.NoDecalData) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
             {
                 if (lhs.Result != rhs.Result) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Decal, rhs.Decal, out var lhsDecal, out var rhsDecal, out var isDecalEqual))
                 {
-                    if (!((DecalCommon)((IDecalGetter)lhsDecal).CommonInstance()!).Equals(lhsDecal, rhsDecal, crystal?.GetSubCrystal((int)Impact_FieldIndex.Decal))) return false;
+                    if (!((DecalCommon)((IDecalGetter)lhsDecal).CommonInstance()!).Equals(lhsDecal, rhsDecal, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.Decal))) return false;
                 }
                 else if (!isDecalEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
             {
                 if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
             {
                 if (!lhs.SecondaryTextureSet.Equals(rhs.SecondaryTextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
             {
                 if (!lhs.Sound1.Equals(rhs.Sound1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
             {
                 if (!lhs.Sound2.Equals(rhs.Sound2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.FootstepExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.FootstepExplosion) ?? true))
             {
                 if (!lhs.FootstepExplosion.Equals(rhs.FootstepExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
             {
                 if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.FootstepParticleMaxDist) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.FootstepParticleMaxDist) ?? true))
             {
                 if (!lhs.FootstepParticleMaxDist.EqualsWithin(rhs.FootstepParticleMaxDist)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1860,23 +1826,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImpactGetter?)lhs,
                 rhs: rhs as IImpactGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImpactGetter?)lhs,
                 rhs: rhs as IImpactGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IImpactGetter item)
@@ -1908,7 +1874,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(FootstepParticleMaxDistitem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2155,10 +2120,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FootstepParticleMaxDist = rhs.FootstepParticleMaxDist;
             }
-            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2307,15 +2268,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ImpactBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IImpactGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IImpactGetter item,
             MutagenWriter writer,
@@ -2406,7 +2358,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2466,15 +2418,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ImpactBinaryCreateTranslation Instance = new ImpactBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IPCT;
-        public static void FillBinaryStructs(
-            IImpactInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IImpactInternal item,
             MutagenFrame frame,
@@ -2633,7 +2576,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _DATALocation;
-        public Impact.DATADataType DATADataTypeState { get; private set; }
         #region Duration
         private int _DurationLocation => _DATALocation!.Value.Min;
         private bool _Duration_IsSet => _DATALocation.HasValue;
@@ -2869,12 +2811,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IImpactGetter rhs) return false;
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImpactGetter? obj)
         {
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);

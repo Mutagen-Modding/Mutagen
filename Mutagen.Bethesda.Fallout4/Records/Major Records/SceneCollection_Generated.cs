@@ -141,6 +141,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Quest,
                 TItem Scenes,
                 TItem VNAM,
@@ -152,7 +153,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Quest = Quest;
                 this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneCollectionItem.Mask<TItem>?>>?>(Scenes, Enumerable.Empty<MaskItemIndexed<TItem, SceneCollectionItem.Mask<TItem>?>>());
@@ -571,9 +573,9 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Quest = this.Quest.Combine(rhs.Quest);
-                ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneCollectionItem.ErrorMask?>>?>(ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
+                ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneCollectionItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), Noggog.ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
                 ret.VNAM = this.VNAM.Combine(rhs.VNAM);
-                ret.XNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.XNAMs?.Overall, rhs.XNAMs?.Overall), ExceptionExt.Combine(this.XNAMs?.Specific, rhs.XNAMs?.Specific));
+                ret.XNAMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.XNAMs?.Overall, rhs.XNAMs?.Overall), Noggog.ExceptionExt.Combine(this.XNAMs?.Specific, rhs.XNAMs?.Specific));
                 ret.VNAM2 = this.VNAM2.Combine(rhs.VNAM2);
                 return ret;
             }
@@ -690,12 +692,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISceneCollectionGetter rhs) return false;
-            return ((SceneCollectionCommon)((ISceneCollectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneCollectionCommon)((ISceneCollectionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneCollectionGetter? obj)
         {
-            return ((SceneCollectionCommon)((ISceneCollectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneCollectionCommon)((ISceneCollectionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneCollectionCommon)((ISceneCollectionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -850,7 +852,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SceneCollectionCommon)((ISceneCollectionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -926,6 +928,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static SceneCollection Duplicate(
+            this ISceneCollectionGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SceneCollectionCommon)((ISceneCollectionGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -958,11 +971,12 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Quest = 6,
-        Scenes = 7,
-        VNAM = 8,
-        XNAMs = 9,
-        VNAM2 = 10,
+        Fallout4MajorRecordFlags = 6,
+        Quest = 7,
+        Scenes = 8,
+        VNAM = 9,
+        XNAMs = 10,
+        VNAM2 = 11,
     }
     #endregion
 
@@ -982,7 +996,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(SceneCollection.Mask<>);
 
@@ -1274,8 +1288,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (SceneCollection_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (SceneCollection_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (SceneCollection_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1292,7 +1308,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (SceneCollection_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1300,27 +1316,27 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISceneCollectionGetter? lhs,
             ISceneCollectionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SceneCollection_FieldIndex.Quest) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SceneCollection_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneCollection_FieldIndex.Scenes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneCollection_FieldIndex.Scenes) ?? true))
             {
-                if (!lhs.Scenes.SequenceEqual(rhs.Scenes, (l, r) => ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SceneCollection_FieldIndex.Scenes)))) return false;
+                if (!lhs.Scenes.SequenceEqual(rhs.Scenes, (l, r) => ((SceneCollectionItemCommon)((ISceneCollectionItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SceneCollection_FieldIndex.Scenes)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneCollection_FieldIndex.VNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneCollection_FieldIndex.VNAM) ?? true))
             {
                 if (lhs.VNAM != rhs.VNAM) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneCollection_FieldIndex.XNAMs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneCollection_FieldIndex.XNAMs) ?? true))
             {
                 if (!lhs.XNAMs.SequenceEqualNullable(rhs.XNAMs)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneCollection_FieldIndex.VNAM2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneCollection_FieldIndex.VNAM2) ?? true))
             {
                 if (lhs.VNAM2 != rhs.VNAM2) return false;
             }
@@ -1330,23 +1346,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISceneCollectionGetter?)lhs,
                 rhs: rhs as ISceneCollectionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISceneCollectionGetter?)lhs,
                 rhs: rhs as ISceneCollectionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISceneCollectionGetter item)
@@ -2090,12 +2106,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISceneCollectionGetter rhs) return false;
-            return ((SceneCollectionCommon)((ISceneCollectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneCollectionCommon)((ISceneCollectionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneCollectionGetter? obj)
         {
-            return ((SceneCollectionCommon)((ISceneCollectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneCollectionCommon)((ISceneCollectionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneCollectionCommon)((ISceneCollectionGetter)this).CommonInstance()!).GetHashCode(this);

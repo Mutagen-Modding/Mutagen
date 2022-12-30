@@ -101,12 +101,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherMagicGetter rhs) return false;
-            return ((WeatherMagicCommon)((IWeatherMagicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherMagicCommon)((IWeatherMagicGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherMagicGetter? obj)
         {
-            return ((WeatherMagicCommon)((IWeatherMagicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherMagicCommon)((IWeatherMagicGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherMagicCommon)((IWeatherMagicGetter)this).CommonInstance()!).GetHashCode(this);
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WeatherMagicCommon)((IWeatherMagicGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1040,30 +1040,30 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWeatherMagicGetter? lhs,
             IWeatherMagicGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WeatherMagic_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherMagic_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherMagic_FieldIndex.OnLightningStrikeSpell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherMagic_FieldIndex.OnLightningStrikeSpell) ?? true))
             {
                 if (!lhs.OnLightningStrikeSpell.Equals(rhs.OnLightningStrikeSpell)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherMagic_FieldIndex.OnLightningStrikeThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherMagic_FieldIndex.OnLightningStrikeThreshold) ?? true))
             {
                 if (!lhs.OnLightningStrikeThreshold.EqualsWithin(rhs.OnLightningStrikeThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherMagic_FieldIndex.OnWeatherActivateSpell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherMagic_FieldIndex.OnWeatherActivateSpell) ?? true))
             {
                 if (!lhs.OnWeatherActivateSpell.Equals(rhs.OnWeatherActivateSpell)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherMagic_FieldIndex.OnWeatherActivateThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherMagic_FieldIndex.OnWeatherActivateThreshold) ?? true))
             {
                 if (!lhs.OnWeatherActivateThreshold.EqualsWithin(rhs.OnWeatherActivateThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherMagic_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherMagic_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
@@ -1443,12 +1443,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherMagicGetter rhs) return false;
-            return ((WeatherMagicCommon)((IWeatherMagicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherMagicCommon)((IWeatherMagicGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherMagicGetter? obj)
         {
-            return ((WeatherMagicCommon)((IWeatherMagicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherMagicCommon)((IWeatherMagicGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherMagicCommon)((IWeatherMagicGetter)this).CommonInstance()!).GetHashCode(this);

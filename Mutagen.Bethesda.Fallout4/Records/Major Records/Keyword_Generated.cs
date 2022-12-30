@@ -166,6 +166,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Color,
                 TItem Notes,
                 TItem Type,
@@ -178,7 +179,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Color = Color;
                 this.Notes = Notes;
@@ -617,12 +619,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IKeywordGetter rhs) return false;
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IKeywordGetter? obj)
         {
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -813,7 +815,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -889,6 +891,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Keyword Duplicate(
+            this IKeywordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -921,12 +934,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Color = 6,
-        Notes = 7,
-        Type = 8,
-        AttractionRule = 9,
-        Name = 10,
-        DisplayName = 11,
+        Fallout4MajorRecordFlags = 6,
+        Color = 7,
+        Notes = 8,
+        Type = 9,
+        AttractionRule = 10,
+        Name = 11,
+        DisplayName = 12,
     }
     #endregion
 
@@ -946,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Keyword.Mask<>);
 
@@ -1222,8 +1236,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Keyword_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Keyword_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Keyword_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1240,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Keyword_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1248,31 +1264,31 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IKeywordGetter? lhs,
             IKeywordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Color) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Notes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Notes) ?? true))
             {
                 if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.AttractionRule) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.AttractionRule) ?? true))
             {
                 if (!lhs.AttractionRule.Equals(rhs.AttractionRule)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.DisplayName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.DisplayName) ?? true))
             {
                 if (!string.Equals(lhs.DisplayName, rhs.DisplayName)) return false;
             }
@@ -1282,23 +1298,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IKeywordGetter?)lhs,
                 rhs: rhs as IKeywordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IKeywordGetter?)lhs,
                 rhs: rhs as IKeywordGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IKeywordGetter item)
@@ -2001,12 +2017,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IKeywordGetter rhs) return false;
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IKeywordGetter? obj)
         {
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);

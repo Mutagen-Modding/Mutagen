@@ -134,7 +134,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                 semiColon: false))
             {
                 args.Add($"reader: {Module.ReaderMemberName}");
-                args.Add($"size: new P2Int({arr2d.FixedSize.Value.X}, {arr2d.FixedSize.Value.Y})");
+                args.Add($"size: {objGen.Name}.{typeGen.Name}FixedSize");
                 if (needsRecordConv)
                 {
                     args.AddPassArg($"translationParams");
@@ -366,7 +366,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                     args.Add($"mem: {structDataAccessor}.Slice({passedLength})");
                     args.Add($"package: _package");
                     args.Add($"itemLength: {subLen.Value}");
-                    args.Add($"size: new P2Int({arr2d.FixedSize.Value.X}, {arr2d.FixedSize.Value.Y})");
+                    args.Add($"size: {objGen.Name}.{typeGen.Name}FixedSize");
                     args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, arr2d.SubTypeGeneration, "s", "p")}");
                 }
             }
@@ -411,7 +411,7 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
             args.Add($"mem: {dataAccess}");
             args.Add($"package: _package");
             args.Add($"itemLength: {subLen.Value}");
-            args.Add($"size: new P2Int({arr2d.FixedSize.Value.X}, {arr2d.FixedSize.Value.Y})");
+            args.Add($"size: {objGen.Name}.{typeGen.Name}FixedSize");
             args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, arr2d.SubTypeGeneration, "s", "p")}");
         }
     }

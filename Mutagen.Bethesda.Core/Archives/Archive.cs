@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins;
 using Noggog;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Inis.DI;
 using Stream = System.IO.Stream;
 
 namespace Mutagen.Bethesda.Archives;
@@ -16,7 +17,9 @@ public static class Archive
             IFileSystemExt.DefaultFilesystem,
             new GetArchiveIniListings(
                 IFileSystemExt.DefaultFilesystem,
-                gameReleaseInjection),
+                new IniPathProvider(
+                    new GameReleaseInjection(release),
+                    new IniPathLookup())),
             new CheckArchiveApplicability(
                 ext),
             new DataDirectoryInjection(dataFolderPath),
@@ -156,7 +159,9 @@ public static class Archive
     {
         return new GetArchiveIniListings(
                 IFileSystemExt.DefaultFilesystem,
-                new GameReleaseInjection(release))
+                new IniPathProvider(
+                    new GameReleaseInjection(release),
+                    new IniPathLookup()))
             .Get();
     }
 
@@ -170,7 +175,9 @@ public static class Archive
     {
         return new GetArchiveIniListings(
                 IFileSystemExt.DefaultFilesystem,
-                new GameReleaseInjection(release))
+                new IniPathProvider(
+                    new GameReleaseInjection(release),
+                    new IniPathLookup()))
             .Get(path);
     }
 
@@ -184,7 +191,9 @@ public static class Archive
     {
         return new GetArchiveIniListings(
                 IFileSystemExt.DefaultFilesystem,
-                new GameReleaseInjection(release))
+                new IniPathProvider(
+                    new GameReleaseInjection(release),
+                    new IniPathLookup()))
             .Get(iniStream);
     }
 }

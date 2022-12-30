@@ -156,6 +156,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Description,
                 TItem Abbreviation,
@@ -168,7 +169,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Description = Description;
@@ -600,12 +602,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IActorValueInformationGetter rhs) return false;
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActorValueInformationGetter? obj)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -776,7 +778,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -852,6 +854,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ActorValueInformation Duplicate(
+            this IActorValueInformationGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -884,12 +897,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Description = 7,
-        Abbreviation = 8,
-        DefaultValue = 9,
-        Flags = 10,
-        Type = 11,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Description = 8,
+        Abbreviation = 9,
+        DefaultValue = 10,
+        Flags = 11,
+        Type = 12,
     }
     #endregion
 
@@ -909,7 +923,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(ActorValueInformation.Mask<>);
 
@@ -1185,8 +1199,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (ActorValueInformation_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (ActorValueInformation_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (ActorValueInformation_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1203,7 +1219,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (ActorValueInformation_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1211,31 +1227,31 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IActorValueInformationGetter? lhs,
             IActorValueInformationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
             {
                 if (!object.Equals(lhs.Abbreviation, rhs.Abbreviation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.DefaultValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.DefaultValue) ?? true))
             {
                 if (!lhs.DefaultValue.EqualsWithin(rhs.DefaultValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
@@ -1245,23 +1261,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IActorValueInformationGetter?)lhs,
                 rhs: rhs as IActorValueInformationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IActorValueInformationGetter?)lhs,
                 rhs: rhs as IActorValueInformationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IActorValueInformationGetter item)
@@ -1968,12 +1984,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IActorValueInformationGetter rhs) return false;
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActorValueInformationGetter? obj)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).GetHashCode(this);

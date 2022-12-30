@@ -97,12 +97,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IDestructibleGetter rhs) return false;
-            return ((DestructibleCommon)((IDestructibleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DestructibleCommon)((IDestructibleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDestructibleGetter? obj)
         {
-            return ((DestructibleCommon)((IDestructibleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DestructibleCommon)((IDestructibleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DestructibleCommon)((IDestructibleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DestructionStage.ErrorMask?>>?>(ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
+                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DestructionStage.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), Noggog.ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DestructibleCommon)((IDestructibleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -986,20 +986,20 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IDestructibleGetter? lhs,
             IDestructibleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Destructible_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Destructible_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((DestructableDataCommon)((IDestructableDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Destructible_FieldIndex.Data))) return false;
+                    if (!((DestructableDataCommon)((IDestructableDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Destructible_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Destructible_FieldIndex.Stages) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Destructible_FieldIndex.Stages) ?? true))
             {
-                if (!lhs.Stages.SequenceEqual(rhs.Stages, (l, r) => ((DestructionStageCommon)((IDestructionStageGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Destructible_FieldIndex.Stages)))) return false;
+                if (!lhs.Stages.SequenceEqual(rhs.Stages, (l, r) => ((DestructionStageCommon)((IDestructionStageGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Destructible_FieldIndex.Stages)))) return false;
             }
             return true;
         }
@@ -1462,12 +1462,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IDestructibleGetter rhs) return false;
-            return ((DestructibleCommon)((IDestructibleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DestructibleCommon)((IDestructibleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDestructibleGetter? obj)
         {
-            return ((DestructibleCommon)((IDestructibleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DestructibleCommon)((IDestructibleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DestructibleCommon)((IDestructibleGetter)this).CommonInstance()!).GetHashCode(this);

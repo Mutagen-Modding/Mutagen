@@ -3,7 +3,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
-using Mutagen.Bethesda.UnitTests.AutoData;
+using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using Noggog.Testing.IO;
 using NSubstitute;

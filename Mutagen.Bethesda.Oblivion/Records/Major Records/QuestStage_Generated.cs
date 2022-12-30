@@ -87,12 +87,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestStageGetter rhs) return false;
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestStageGetter? obj)
         {
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).GetHashCode(this);
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Stage = this.Stage.Combine(rhs.Stage);
-                ret.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.LogEntries?.Overall, rhs.LogEntries?.Overall), ExceptionExt.Combine(this.LogEntries?.Specific, rhs.LogEntries?.Specific));
+                ret.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LogEntries?.Overall, rhs.LogEntries?.Overall), Noggog.ExceptionExt.Combine(this.LogEntries?.Specific, rhs.LogEntries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -946,16 +946,16 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IQuestStageGetter? lhs,
             IQuestStageGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.Stage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestStage_FieldIndex.Stage) ?? true))
             {
                 if (lhs.Stage != rhs.Stage) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
             {
-                if (!lhs.LogEntries.SequenceEqual(rhs.LogEntries, (l, r) => ((LogEntryCommon)((ILogEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries)))) return false;
+                if (!lhs.LogEntries.SequenceEqual(rhs.LogEntries, (l, r) => ((LogEntryCommon)((ILogEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries)))) return false;
             }
             return true;
         }
@@ -1385,12 +1385,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestStageGetter rhs) return false;
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestStageGetter? obj)
         {
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).GetHashCode(this);

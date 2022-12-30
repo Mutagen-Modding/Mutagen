@@ -158,12 +158,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageBranchGetter rhs) return false;
-            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageBranchGetter? obj)
         {
-            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).GetHashCode(this);
@@ -803,14 +803,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.BranchType = this.BranchType.Combine(rhs.BranchType);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Root = this.Root.Combine(rhs.Root, (l, r) => l.Combine(r));
                 ret.ProcedureType = this.ProcedureType.Combine(rhs.ProcedureType);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.DataInputIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DataInputIndices?.Overall, rhs.DataInputIndices?.Overall), ExceptionExt.Combine(this.DataInputIndices?.Specific, rhs.DataInputIndices?.Specific));
+                ret.DataInputIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.DataInputIndices?.Overall, rhs.DataInputIndices?.Overall), Noggog.ExceptionExt.Combine(this.DataInputIndices?.Specific, rhs.DataInputIndices?.Specific));
                 ret.FlagsOverride = this.FlagsOverride.Combine(rhs.FlagsOverride, (l, r) => l.Combine(r));
                 ret.FlagsOverrideUnused = this.FlagsOverrideUnused.Combine(rhs.FlagsOverrideUnused, (l, r) => l.Combine(r));
-                ret.Unknown = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Unknown?.Overall, rhs.Unknown?.Overall), ExceptionExt.Combine(this.Unknown?.Specific, rhs.Unknown?.Specific));
+                ret.Unknown = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Unknown?.Overall, rhs.Unknown?.Overall), Noggog.ExceptionExt.Combine(this.Unknown?.Specific, rhs.Unknown?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageBranchCommon)((IPackageBranchGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1486,54 +1486,54 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPackageBranchGetter? lhs,
             IPackageBranchGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.BranchType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.BranchType) ?? true))
             {
                 if (!string.Equals(lhs.BranchType, rhs.BranchType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PackageBranch_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PackageBranch_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.Root) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.Root) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Root, rhs.Root, out var lhsRoot, out var rhsRoot, out var isRootEqual))
                 {
-                    if (!((PackageRootCommon)((IPackageRootGetter)lhsRoot).CommonInstance()!).Equals(lhsRoot, rhsRoot, crystal?.GetSubCrystal((int)PackageBranch_FieldIndex.Root))) return false;
+                    if (!((PackageRootCommon)((IPackageRootGetter)lhsRoot).CommonInstance()!).Equals(lhsRoot, rhsRoot, equalsMask?.GetSubCrystal((int)PackageBranch_FieldIndex.Root))) return false;
                 }
                 else if (!isRootEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.ProcedureType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.ProcedureType) ?? true))
             {
                 if (!string.Equals(lhs.ProcedureType, rhs.ProcedureType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.DataInputIndices) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.DataInputIndices) ?? true))
             {
                 if (!lhs.DataInputIndices.SequenceEqualNullable(rhs.DataInputIndices)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.FlagsOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.FlagsOverride) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FlagsOverride, rhs.FlagsOverride, out var lhsFlagsOverride, out var rhsFlagsOverride, out var isFlagsOverrideEqual))
                 {
-                    if (!((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)lhsFlagsOverride).CommonInstance()!).Equals(lhsFlagsOverride, rhsFlagsOverride, crystal?.GetSubCrystal((int)PackageBranch_FieldIndex.FlagsOverride))) return false;
+                    if (!((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)lhsFlagsOverride).CommonInstance()!).Equals(lhsFlagsOverride, rhsFlagsOverride, equalsMask?.GetSubCrystal((int)PackageBranch_FieldIndex.FlagsOverride))) return false;
                 }
                 else if (!isFlagsOverrideEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.FlagsOverrideUnused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.FlagsOverrideUnused) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FlagsOverrideUnused, rhs.FlagsOverrideUnused, out var lhsFlagsOverrideUnused, out var rhsFlagsOverrideUnused, out var isFlagsOverrideUnusedEqual))
                 {
-                    if (!((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)lhsFlagsOverrideUnused).CommonInstance()!).Equals(lhsFlagsOverrideUnused, rhsFlagsOverrideUnused, crystal?.GetSubCrystal((int)PackageBranch_FieldIndex.FlagsOverrideUnused))) return false;
+                    if (!((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)lhsFlagsOverrideUnused).CommonInstance()!).Equals(lhsFlagsOverrideUnused, rhsFlagsOverrideUnused, equalsMask?.GetSubCrystal((int)PackageBranch_FieldIndex.FlagsOverrideUnused))) return false;
                 }
                 else if (!isFlagsOverrideUnusedEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.Unknown) ?? true))
             {
                 if (!lhs.Unknown.SequenceEqualNullable(rhs.Unknown)) return false;
             }
@@ -2283,12 +2283,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageBranchGetter rhs) return false;
-            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageBranchGetter? obj)
         {
-            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).GetHashCode(this);

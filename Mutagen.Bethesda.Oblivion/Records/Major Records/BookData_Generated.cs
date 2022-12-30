@@ -80,12 +80,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IBookDataGetter rhs) return false;
-            return ((BookDataCommon)((IBookDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BookDataCommon)((IBookDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBookDataGetter? obj)
         {
-            return ((BookDataCommon)((IBookDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BookDataCommon)((IBookDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BookDataCommon)((IBookDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BookDataCommon)((IBookDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -927,22 +927,22 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IBookDataGetter? lhs,
             IBookDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)BookData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BookData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BookData_FieldIndex.Teaches) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BookData_FieldIndex.Teaches) ?? true))
             {
                 if (lhs.Teaches != rhs.Teaches) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BookData_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BookData_FieldIndex.Value) ?? true))
             {
                 if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BookData_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BookData_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
@@ -1299,12 +1299,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IBookDataGetter rhs) return false;
-            return ((BookDataCommon)((IBookDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BookDataCommon)((IBookDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBookDataGetter? obj)
         {
-            return ((BookDataCommon)((IBookDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BookDataCommon)((IBookDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BookDataCommon)((IBookDataGetter)this).CommonInstance()!).GetHashCode(this);

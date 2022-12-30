@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icon = this.Icon.Combine(rhs.Icon);
-                ret.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SpeedTreeSeeds?.Overall, rhs.SpeedTreeSeeds?.Overall), ExceptionExt.Combine(this.SpeedTreeSeeds?.Specific, rhs.SpeedTreeSeeds?.Specific));
+                ret.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SpeedTreeSeeds?.Overall, rhs.SpeedTreeSeeds?.Overall), Noggog.ExceptionExt.Combine(this.SpeedTreeSeeds?.Specific, rhs.SpeedTreeSeeds?.Specific));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.BillboardDimensions = this.BillboardDimensions.Combine(rhs.BillboardDimensions, (l, r) => l.Combine(r));
                 return ret;
@@ -637,12 +637,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ITreeGetter rhs) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITreeGetter? obj)
         {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -879,6 +879,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Tree Duplicate(
+            this ITreeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1228,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Tree_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1245,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Tree_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1253,39 +1264,39 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ITreeGetter? lhs,
             ITreeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Tree_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.SpeedTreeSeeds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.SpeedTreeSeeds) ?? true))
             {
                 if (!lhs.SpeedTreeSeeds.SequenceEqualNullable(rhs.SpeedTreeSeeds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((TreeDataCommon)((ITreeDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Tree_FieldIndex.Data))) return false;
+                    if (!((TreeDataCommon)((ITreeDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.BillboardDimensions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardDimensions) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BillboardDimensions, rhs.BillboardDimensions, out var lhsBillboardDimensions, out var rhsBillboardDimensions, out var isBillboardDimensionsEqual))
                 {
-                    if (!((DimensionsCommon)((IDimensionsGetter)lhsBillboardDimensions).CommonInstance()!).Equals(lhsBillboardDimensions, rhsBillboardDimensions, crystal?.GetSubCrystal((int)Tree_FieldIndex.BillboardDimensions))) return false;
+                    if (!((DimensionsCommon)((IDimensionsGetter)lhsBillboardDimensions).CommonInstance()!).Equals(lhsBillboardDimensions, rhsBillboardDimensions, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.BillboardDimensions))) return false;
                 }
                 else if (!isBillboardDimensionsEqual) return false;
             }
@@ -1295,23 +1306,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITreeGetter?)lhs,
                 rhs: rhs as ITreeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITreeGetter?)lhs,
                 rhs: rhs as ITreeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ITreeGetter item)
@@ -2067,12 +2078,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ITreeGetter rhs) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITreeGetter? obj)
         {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);

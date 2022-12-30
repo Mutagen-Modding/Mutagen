@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Plugins.Records;
+
 namespace Mutagen.Bethesda.Skyrim;
 
 public partial class SkyrimMajorRecord
@@ -25,7 +27,16 @@ public partial class SkyrimMajorRecord
     protected override ushort? FormVersionAbstract => this.FormVersion;
 }
 
+public partial interface ISkyrimMajorRecord : IFormVersionSetter
+{
+}
+
 partial class SkyrimMajorRecordBinaryOverlay
 {
     protected override ushort? FormVersionAbstract => this.FormVersion;
+
+    public SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags
+    {
+        get => (SkyrimMajorRecord.SkyrimMajorRecordFlag)this.MajorRecordFlagsRaw;
+    }
 }

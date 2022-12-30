@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
-using Mutagen.Bethesda.UnitTests.AutoData;
+using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using NSubstitute;
 using Xunit;
@@ -29,11 +29,11 @@ public class CreationClubListingsPathProviderTests
         CreationClubListingsPathProvider sut)
     {
         enabledProvider.Used.Returns(true);
-        foreach (var category in EnumExt.GetValues<GameCategory>())
+        foreach (var category in Enums<GameCategory>.Values)
         {
             gameCategoryContext.Category.Returns(category);
             sut.Path
-                .Should().Be(new FilePath(Path.Combine(gameDir.Path, $"{category}.ccc")));
+                .Should().Be(new FilePath(Path.Combine(gameDir.Path!, $"{category}.ccc")));
         }
     }
 }

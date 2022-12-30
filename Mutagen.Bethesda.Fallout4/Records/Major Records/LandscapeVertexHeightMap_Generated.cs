@@ -53,6 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Single Offset { get; set; } = default;
         #endregion
         #region HeightMap
+        public static readonly P2Int HeightMapFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IArray2d<Byte> _HeightMap = new Array2d<Byte>(33, 33);
         public IArray2d<Byte> HeightMap
@@ -88,12 +89,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILandscapeVertexHeightMapGetter rhs) return false;
-            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeVertexHeightMapGetter? obj)
         {
-            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).GetHashCode(this);
@@ -426,7 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Offset = this.Offset.Combine(rhs.Offset);
-                ret.HeightMap = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.HeightMap?.Overall, rhs.HeightMap?.Overall), ExceptionExt.Combine(this.HeightMap?.Specific, rhs.HeightMap?.Specific));
+                ret.HeightMap = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.HeightMap?.Overall, rhs.HeightMap?.Overall), Noggog.ExceptionExt.Combine(this.HeightMap?.Specific, rhs.HeightMap?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
@@ -632,7 +633,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -976,18 +977,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILandscapeVertexHeightMapGetter? lhs,
             ILandscapeVertexHeightMapGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Offset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Offset) ?? true))
             {
                 if (!lhs.Offset.EqualsWithin(rhs.Offset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.HeightMap) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.HeightMap) ?? true))
             {
                 if (!lhs.HeightMap.SequenceEqualNullable(rhs.HeightMap)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Unknown) ?? true))
             {
                 if (!lhs.Unknown.Equals(rhs.Unknown)) return false;
             }
@@ -1207,7 +1208,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.HeightMap.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<Byte>.Instance.Parse(
                     reader: frame,
-                    size: new P2Int(33, 33),
+                    size: LandscapeVertexHeightMap.HeightMapFixedSize,
                     transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.Unknown = P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
@@ -1281,7 +1282,7 @@ namespace Mutagen.Bethesda.Fallout4
             mem: _structData.Slice(4),
             package: _package,
             itemLength: 1,
-            size: new P2Int(33, 33),
+            size: LandscapeVertexHeightMap.HeightMapFixedSize,
             getter: (s, p) => s[0]);
         #endregion
         public P3UInt8 Unknown => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x445, 0x3));
@@ -1353,12 +1354,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILandscapeVertexHeightMapGetter rhs) return false;
-            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeVertexHeightMapGetter? obj)
         {
-            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)this).CommonInstance()!).GetHashCode(this);

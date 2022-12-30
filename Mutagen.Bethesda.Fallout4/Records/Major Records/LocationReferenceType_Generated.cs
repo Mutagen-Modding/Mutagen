@@ -106,6 +106,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Color,
                 TItem TNAM)
             : base(
@@ -114,7 +115,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Color = Color;
                 this.TNAM = TNAM;
@@ -434,12 +436,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILocationReferenceTypeGetter rhs) return false;
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationReferenceTypeGetter? obj)
         {
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -588,7 +590,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -664,6 +666,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static LocationReferenceType Duplicate(
+            this ILocationReferenceTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -696,8 +709,9 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Color = 6,
-        TNAM = 7,
+        Fallout4MajorRecordFlags = 6,
+        Color = 7,
+        TNAM = 8,
     }
     #endregion
 
@@ -717,7 +731,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(LocationReferenceType.Mask<>);
 
@@ -883,7 +897,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
-            ret.TNAM = MemorySliceExt.Equal(item.TNAM, rhs.TNAM);
+            ret.TNAM = MemorySliceExt.SequenceEqual(item.TNAM, rhs.TNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -961,8 +975,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (LocationReferenceType_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (LocationReferenceType_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -979,7 +995,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (LocationReferenceType_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -987,17 +1003,17 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILocationReferenceTypeGetter? lhs,
             ILocationReferenceTypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.Color) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.TNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.TNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TNAM, rhs.TNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TNAM, rhs.TNAM)) return false;
             }
             return true;
         }
@@ -1005,23 +1021,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILocationReferenceTypeGetter?)lhs,
                 rhs: rhs as ILocationReferenceTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILocationReferenceTypeGetter?)lhs,
                 rhs: rhs as ILocationReferenceTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILocationReferenceTypeGetter item)
@@ -1598,12 +1614,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILocationReferenceTypeGetter rhs) return false;
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationReferenceTypeGetter? obj)
         {
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).GetHashCode(this);

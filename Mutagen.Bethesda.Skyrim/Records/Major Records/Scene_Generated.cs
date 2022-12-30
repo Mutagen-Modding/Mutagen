@@ -223,6 +223,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Flags,
                 TItem Phases,
@@ -240,7 +241,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, SceneAdapter.Mask<TItem>?>(VirtualMachineAdapter, new SceneAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Flags = Flags;
@@ -953,15 +955,15 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Phases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScenePhase.ErrorMask?>>?>(ExceptionExt.Combine(this.Phases?.Overall, rhs.Phases?.Overall), ExceptionExt.Combine(this.Phases?.Specific, rhs.Phases?.Specific));
-                ret.Actors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneActor.ErrorMask?>>?>(ExceptionExt.Combine(this.Actors?.Overall, rhs.Actors?.Overall), ExceptionExt.Combine(this.Actors?.Specific, rhs.Actors?.Specific));
-                ret.Actions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneAction.ErrorMask?>>?>(ExceptionExt.Combine(this.Actions?.Overall, rhs.Actions?.Overall), ExceptionExt.Combine(this.Actions?.Specific, rhs.Actions?.Specific));
+                ret.Phases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScenePhase.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Phases?.Overall, rhs.Phases?.Overall), Noggog.ExceptionExt.Combine(this.Phases?.Specific, rhs.Phases?.Specific));
+                ret.Actors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneActor.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Actors?.Overall, rhs.Actors?.Overall), Noggog.ExceptionExt.Combine(this.Actors?.Specific, rhs.Actors?.Specific));
+                ret.Actions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SceneAction.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Actions?.Overall, rhs.Actions?.Overall), Noggog.ExceptionExt.Combine(this.Actions?.Specific, rhs.Actions?.Specific));
                 ret.Unused = this.Unused.Combine(rhs.Unused, (l, r) => l.Combine(r));
                 ret.Unused2 = this.Unused2.Combine(rhs.Unused2, (l, r) => l.Combine(r));
                 ret.Quest = this.Quest.Combine(rhs.Quest);
                 ret.LastActionIndex = this.LastActionIndex.Combine(rhs.LastActionIndex);
                 ret.VNAM = this.VNAM.Combine(rhs.VNAM);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1099,12 +1101,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISceneGetter rhs) return false;
-            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneGetter? obj)
         {
-            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneCommon)((ISceneGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1279,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SceneCommon)((ISceneGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1355,6 +1357,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Scene Duplicate(
+            this ISceneGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SceneCommon)((ISceneGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1387,17 +1400,18 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Flags = 7,
-        Phases = 8,
-        Actors = 9,
-        Actions = 10,
-        Unused = 11,
-        Unused2 = 12,
-        Quest = 13,
-        LastActionIndex = 14,
-        VNAM = 15,
-        Conditions = 16,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Flags = 8,
+        Phases = 9,
+        Actors = 10,
+        Actions = 11,
+        Unused = 12,
+        Unused2 = 13,
+        Quest = 14,
+        LastActionIndex = 15,
+        VNAM = 16,
+        Conditions = 17,
     }
     #endregion
 
@@ -1417,7 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(Scene.Mask<>);
 
@@ -1451,6 +1465,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.SCEN,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.FNAM,
                 RecordTypes.HNAM,
                 RecordTypes.NAM0,
@@ -1675,7 +1690,7 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
             ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.LastActionIndex = item.LastActionIndex == rhs.LastActionIndex;
-            ret.VNAM = MemorySliceExt.Equal(item.VNAM, rhs.VNAM);
+            ret.VNAM = MemorySliceExt.SequenceEqual(item.VNAM, rhs.VNAM);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1837,8 +1852,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Scene_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Scene_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Scene_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1855,7 +1872,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Scene_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1863,65 +1880,65 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISceneGetter? lhs,
             ISceneGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((SceneAdapterCommon)((ISceneAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Scene_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((SceneAdapterCommon)((ISceneAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Scene_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Phases) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.Phases) ?? true))
             {
-                if (!lhs.Phases.SequenceEqual(rhs.Phases, (l, r) => ((ScenePhaseCommon)((IScenePhaseGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Phases)))) return false;
+                if (!lhs.Phases.SequenceEqual(rhs.Phases, (l, r) => ((ScenePhaseCommon)((IScenePhaseGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Scene_FieldIndex.Phases)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Actors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.Actors) ?? true))
             {
-                if (!lhs.Actors.SequenceEqual(rhs.Actors, (l, r) => ((SceneActorCommon)((ISceneActorGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Actors)))) return false;
+                if (!lhs.Actors.SequenceEqual(rhs.Actors, (l, r) => ((SceneActorCommon)((ISceneActorGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Scene_FieldIndex.Actors)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Actions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.Actions) ?? true))
             {
-                if (!lhs.Actions.SequenceEqual(rhs.Actions, (l, r) => ((SceneActionCommon)((ISceneActionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Actions)))) return false;
+                if (!lhs.Actions.SequenceEqual(rhs.Actions, (l, r) => ((SceneActionCommon)((ISceneActionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Scene_FieldIndex.Actions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.Unused) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Unused, rhs.Unused, out var lhsUnused, out var rhsUnused, out var isUnusedEqual))
                 {
-                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused).CommonInstance()!).Equals(lhsUnused, rhsUnused, crystal?.GetSubCrystal((int)Scene_FieldIndex.Unused))) return false;
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused).CommonInstance()!).Equals(lhsUnused, rhsUnused, equalsMask?.GetSubCrystal((int)Scene_FieldIndex.Unused))) return false;
                 }
                 else if (!isUnusedEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Unused2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.Unused2) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Unused2, rhs.Unused2, out var lhsUnused2, out var rhsUnused2, out var isUnused2Equal))
                 {
-                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused2).CommonInstance()!).Equals(lhsUnused2, rhsUnused2, crystal?.GetSubCrystal((int)Scene_FieldIndex.Unused2))) return false;
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused2).CommonInstance()!).Equals(lhsUnused2, rhsUnused2, equalsMask?.GetSubCrystal((int)Scene_FieldIndex.Unused2))) return false;
                 }
                 else if (!isUnused2Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
             {
                 if (lhs.LastActionIndex != rhs.LastActionIndex) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.VNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.VNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.VNAM, rhs.VNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.VNAM, rhs.VNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Scene_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Scene_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Scene_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1929,23 +1946,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISceneGetter?)lhs,
                 rhs: rhs as ISceneGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISceneGetter?)lhs,
                 rhs: rhs as ISceneGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISceneGetter item)
@@ -2486,7 +2503,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((SceneAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             EnumBinaryTranslation<Scene.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -2651,7 +2668,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.SceneAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.SceneAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Scene_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FNAM:
@@ -2739,6 +2758,11 @@ namespace Mutagen.Bethesda.Skyrim
                             transl: Condition.TryCreateFromBinary));
                     return (int)Scene_FieldIndex.Conditions;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -2800,8 +2824,9 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public ISceneAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? SceneAdapterBinaryOverlay.SceneAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public ISceneAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? SceneAdapterBinaryOverlay.SceneAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
@@ -2898,6 +2923,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Scene_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FNAM:
@@ -2983,6 +3013,11 @@ namespace Mutagen.Bethesda.Skyrim
                             skipHeader: false));
                     return (int)Scene_FieldIndex.Conditions;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return base.FillRecordType(
                         stream: stream,
@@ -3021,12 +3056,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISceneGetter rhs) return false;
-            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneGetter? obj)
         {
-            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneCommon)((ISceneGetter)this).CommonInstance()!).GetHashCode(this);

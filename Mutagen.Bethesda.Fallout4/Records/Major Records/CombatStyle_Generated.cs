@@ -248,20 +248,11 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         CombatStyle.Flag? ICombatStyleGetter.Flags => this.Flags;
         #endregion
-        #region CSGDDataTypeState
-        public CombatStyle.CSGDDataType CSGDDataTypeState { get; set; } = default;
-        #endregion
         #region CSMEDataTypeState
         public CombatStyle.CSMEDataType CSMEDataTypeState { get; set; } = default;
         #endregion
-        #region CSCRDataTypeState
-        public CombatStyle.CSCRDataType CSCRDataTypeState { get; set; } = default;
-        #endregion
         #region CSLRDataTypeState
         public CombatStyle.CSLRDataType CSLRDataTypeState { get; set; } = default;
-        #endregion
-        #region CSFLDataTypeState
-        public CombatStyle.CSFLDataType CSFLDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -338,11 +329,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PerchAttackTime = initialValue;
                 this.FlyingAttackChance = initialValue;
                 this.Flags = initialValue;
-                this.CSGDDataTypeState = initialValue;
                 this.CSMEDataTypeState = initialValue;
-                this.CSCRDataTypeState = initialValue;
                 this.CSLRDataTypeState = initialValue;
-                this.CSFLDataTypeState = initialValue;
             }
 
             public Mask(
@@ -352,6 +340,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem OffensiveMult,
                 TItem DefensiveMult,
                 TItem GroupOffensiveMult,
@@ -402,18 +391,16 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem PerchAttackTime,
                 TItem FlyingAttackChance,
                 TItem Flags,
-                TItem CSGDDataTypeState,
                 TItem CSMEDataTypeState,
-                TItem CSCRDataTypeState,
-                TItem CSLRDataTypeState,
-                TItem CSFLDataTypeState)
+                TItem CSLRDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.OffensiveMult = OffensiveMult;
                 this.DefensiveMult = DefensiveMult;
@@ -465,11 +452,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PerchAttackTime = PerchAttackTime;
                 this.FlyingAttackChance = FlyingAttackChance;
                 this.Flags = Flags;
-                this.CSGDDataTypeState = CSGDDataTypeState;
                 this.CSMEDataTypeState = CSMEDataTypeState;
-                this.CSCRDataTypeState = CSCRDataTypeState;
                 this.CSLRDataTypeState = CSLRDataTypeState;
-                this.CSFLDataTypeState = CSFLDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -531,11 +515,8 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem PerchAttackTime;
             public TItem FlyingAttackChance;
             public TItem Flags;
-            public TItem CSGDDataTypeState;
             public TItem CSMEDataTypeState;
-            public TItem CSCRDataTypeState;
             public TItem CSLRDataTypeState;
-            public TItem CSFLDataTypeState;
             #endregion
 
             #region Equals
@@ -599,11 +580,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.PerchAttackTime, rhs.PerchAttackTime)) return false;
                 if (!object.Equals(this.FlyingAttackChance, rhs.FlyingAttackChance)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.CSGDDataTypeState, rhs.CSGDDataTypeState)) return false;
                 if (!object.Equals(this.CSMEDataTypeState, rhs.CSMEDataTypeState)) return false;
-                if (!object.Equals(this.CSCRDataTypeState, rhs.CSCRDataTypeState)) return false;
                 if (!object.Equals(this.CSLRDataTypeState, rhs.CSLRDataTypeState)) return false;
-                if (!object.Equals(this.CSFLDataTypeState, rhs.CSFLDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -659,11 +637,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.PerchAttackTime);
                 hash.Add(this.FlyingAttackChance);
                 hash.Add(this.Flags);
-                hash.Add(this.CSGDDataTypeState);
                 hash.Add(this.CSMEDataTypeState);
-                hash.Add(this.CSCRDataTypeState);
                 hash.Add(this.CSLRDataTypeState);
-                hash.Add(this.CSFLDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -724,11 +699,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.PerchAttackTime)) return false;
                 if (!eval(this.FlyingAttackChance)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.CSGDDataTypeState)) return false;
                 if (!eval(this.CSMEDataTypeState)) return false;
-                if (!eval(this.CSCRDataTypeState)) return false;
                 if (!eval(this.CSLRDataTypeState)) return false;
-                if (!eval(this.CSFLDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -787,11 +759,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.PerchAttackTime)) return true;
                 if (eval(this.FlyingAttackChance)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.CSGDDataTypeState)) return true;
                 if (eval(this.CSMEDataTypeState)) return true;
-                if (eval(this.CSCRDataTypeState)) return true;
                 if (eval(this.CSLRDataTypeState)) return true;
-                if (eval(this.CSFLDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -857,11 +826,8 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.PerchAttackTime = eval(this.PerchAttackTime);
                 obj.FlyingAttackChance = eval(this.FlyingAttackChance);
                 obj.Flags = eval(this.Flags);
-                obj.CSGDDataTypeState = eval(this.CSGDDataTypeState);
                 obj.CSMEDataTypeState = eval(this.CSMEDataTypeState);
-                obj.CSCRDataTypeState = eval(this.CSCRDataTypeState);
                 obj.CSLRDataTypeState = eval(this.CSLRDataTypeState);
-                obj.CSFLDataTypeState = eval(this.CSFLDataTypeState);
             }
             #endregion
 
@@ -1080,25 +1046,13 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.CSGDDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
-                    }
                     if (printMask?.CSMEDataTypeState ?? true)
                     {
                         sb.AppendItem(CSMEDataTypeState, "CSMEDataTypeState");
                     }
-                    if (printMask?.CSCRDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CSCRDataTypeState, "CSCRDataTypeState");
-                    }
                     if (printMask?.CSLRDataTypeState ?? true)
                     {
                         sb.AppendItem(CSLRDataTypeState, "CSLRDataTypeState");
-                    }
-                    if (printMask?.CSFLDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CSFLDataTypeState, "CSFLDataTypeState");
                     }
                 }
             }
@@ -1161,11 +1115,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? PerchAttackTime;
             public Exception? FlyingAttackChance;
             public Exception? Flags;
-            public Exception? CSGDDataTypeState;
             public Exception? CSMEDataTypeState;
-            public Exception? CSCRDataTypeState;
             public Exception? CSLRDataTypeState;
-            public Exception? CSFLDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1274,16 +1225,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return FlyingAttackChance;
                     case CombatStyle_FieldIndex.Flags:
                         return Flags;
-                    case CombatStyle_FieldIndex.CSGDDataTypeState:
-                        return CSGDDataTypeState;
                     case CombatStyle_FieldIndex.CSMEDataTypeState:
                         return CSMEDataTypeState;
-                    case CombatStyle_FieldIndex.CSCRDataTypeState:
-                        return CSCRDataTypeState;
                     case CombatStyle_FieldIndex.CSLRDataTypeState:
                         return CSLRDataTypeState;
-                    case CombatStyle_FieldIndex.CSFLDataTypeState:
-                        return CSFLDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1444,20 +1389,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case CombatStyle_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSGDDataTypeState:
-                        this.CSGDDataTypeState = ex;
-                        break;
                     case CombatStyle_FieldIndex.CSMEDataTypeState:
                         this.CSMEDataTypeState = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSCRDataTypeState:
-                        this.CSCRDataTypeState = ex;
-                        break;
                     case CombatStyle_FieldIndex.CSLRDataTypeState:
                         this.CSLRDataTypeState = ex;
-                        break;
-                    case CombatStyle_FieldIndex.CSFLDataTypeState:
-                        this.CSFLDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1620,20 +1556,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case CombatStyle_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSGDDataTypeState:
-                        this.CSGDDataTypeState = (Exception?)obj;
-                        break;
                     case CombatStyle_FieldIndex.CSMEDataTypeState:
                         this.CSMEDataTypeState = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSCRDataTypeState:
-                        this.CSCRDataTypeState = (Exception?)obj;
-                        break;
                     case CombatStyle_FieldIndex.CSLRDataTypeState:
                         this.CSLRDataTypeState = (Exception?)obj;
-                        break;
-                    case CombatStyle_FieldIndex.CSFLDataTypeState:
-                        this.CSFLDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1694,11 +1621,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (PerchAttackTime != null) return true;
                 if (FlyingAttackChance != null) return true;
                 if (Flags != null) return true;
-                if (CSGDDataTypeState != null) return true;
                 if (CSMEDataTypeState != null) return true;
-                if (CSCRDataTypeState != null) return true;
                 if (CSLRDataTypeState != null) return true;
-                if (CSFLDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1876,19 +1800,10 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
-                }
-                {
                     sb.AppendItem(CSMEDataTypeState, "CSMEDataTypeState");
                 }
                 {
-                    sb.AppendItem(CSCRDataTypeState, "CSCRDataTypeState");
-                }
-                {
                     sb.AppendItem(CSLRDataTypeState, "CSLRDataTypeState");
-                }
-                {
-                    sb.AppendItem(CSFLDataTypeState, "CSFLDataTypeState");
                 }
             }
             #endregion
@@ -1948,11 +1863,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PerchAttackTime = this.PerchAttackTime.Combine(rhs.PerchAttackTime);
                 ret.FlyingAttackChance = this.FlyingAttackChance.Combine(rhs.FlyingAttackChance);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.CSGDDataTypeState = this.CSGDDataTypeState.Combine(rhs.CSGDDataTypeState);
                 ret.CSMEDataTypeState = this.CSMEDataTypeState.Combine(rhs.CSMEDataTypeState);
-                ret.CSCRDataTypeState = this.CSCRDataTypeState.Combine(rhs.CSCRDataTypeState);
                 ret.CSLRDataTypeState = this.CSLRDataTypeState.Combine(rhs.CSLRDataTypeState);
-                ret.CSFLDataTypeState = this.CSFLDataTypeState.Combine(rhs.CSFLDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2025,11 +1937,8 @@ namespace Mutagen.Bethesda.Fallout4
             public bool PerchAttackTime;
             public bool FlyingAttackChance;
             public bool Flags;
-            public bool CSGDDataTypeState;
             public bool CSMEDataTypeState;
-            public bool CSCRDataTypeState;
             public bool CSLRDataTypeState;
-            public bool CSFLDataTypeState;
             #endregion
 
             #region Ctors
@@ -2088,11 +1997,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PerchAttackTime = defaultOn;
                 this.FlyingAttackChance = defaultOn;
                 this.Flags = defaultOn;
-                this.CSGDDataTypeState = defaultOn;
                 this.CSMEDataTypeState = defaultOn;
-                this.CSCRDataTypeState = defaultOn;
                 this.CSLRDataTypeState = defaultOn;
-                this.CSFLDataTypeState = defaultOn;
             }
 
             #endregion
@@ -2150,11 +2056,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((PerchAttackTime, null));
                 ret.Add((FlyingAttackChance, null));
                 ret.Add((Flags, null));
-                ret.Add((CSGDDataTypeState, null));
                 ret.Add((CSMEDataTypeState, null));
-                ret.Add((CSCRDataTypeState, null));
                 ret.Add((CSLRDataTypeState, null));
-                ret.Add((CSFLDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2215,27 +2118,15 @@ namespace Mutagen.Bethesda.Fallout4
             set => this.MajorRecordFlagsRaw = (int)value;
         }
         [Flags]
-        public enum CSGDDataType
-        {
-        }
-        [Flags]
         public enum CSMEDataType
         {
             Break0 = 1
-        }
-        [Flags]
-        public enum CSCRDataType
-        {
         }
         [Flags]
         public enum CSLRDataType
         {
             Break0 = 1,
             Break1 = 2
-        }
-        [Flags]
-        public enum CSFLDataType
-        {
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -2245,12 +2136,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ICombatStyleGetter rhs) return false;
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleGetter? obj)
         {
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2370,11 +2261,8 @@ namespace Mutagen.Bethesda.Fallout4
         new Single PerchAttackTime { get; set; }
         new Single FlyingAttackChance { get; set; }
         new CombatStyle.Flag? Flags { get; set; }
-        new CombatStyle.CSGDDataType CSGDDataTypeState { get; set; }
         new CombatStyle.CSMEDataType CSMEDataTypeState { get; set; }
-        new CombatStyle.CSCRDataType CSCRDataTypeState { get; set; }
         new CombatStyle.CSLRDataType CSLRDataTypeState { get; set; }
-        new CombatStyle.CSFLDataType CSFLDataTypeState { get; set; }
         #region Mutagen
         new CombatStyle.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2446,11 +2334,8 @@ namespace Mutagen.Bethesda.Fallout4
         Single PerchAttackTime { get; }
         Single FlyingAttackChance { get; }
         CombatStyle.Flag? Flags { get; }
-        CombatStyle.CSGDDataType CSGDDataTypeState { get; }
         CombatStyle.CSMEDataType CSMEDataTypeState { get; }
-        CombatStyle.CSCRDataType CSCRDataTypeState { get; }
         CombatStyle.CSLRDataType CSLRDataTypeState { get; }
-        CombatStyle.CSFLDataType CSFLDataTypeState { get; }
 
         #region Mutagen
         CombatStyle.MajorFlag MajorFlags { get; }
@@ -2511,7 +2396,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2587,6 +2472,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static CombatStyle Duplicate(
+            this ICombatStyleGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2619,61 +2515,59 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        OffensiveMult = 6,
-        DefensiveMult = 7,
-        GroupOffensiveMult = 8,
-        EquipmentScoreMultMelee = 9,
-        EquipmentScoreMultMagic = 10,
-        EquipmentScoreMultRanged = 11,
-        EquipmentScoreMultShout = 12,
-        EquipmentScoreMultUnarmed = 13,
-        EquipmentScoreMultStaff = 14,
-        AvoidThreatChance = 15,
-        DodgeThreadChance = 16,
-        EvadeThreatChance = 17,
-        CSMD = 18,
-        MeleeAttackStaggeredMult = 19,
-        MeleePowerAttackStaggeredMult = 20,
-        MeleePowerAttackBlockingMult = 21,
-        MeleeBashMult = 22,
-        MeleeBashRecoilMult = 23,
-        MeleeBashAttackMult = 24,
-        MeleeBashPowerAttackMult = 25,
-        MeleeSpecialAttackMult = 26,
-        MeleeBlockWhenStaggeredMult = 27,
-        MeleeAttackWhenStaggeredMult = 28,
-        RangedAccuracyMult = 29,
-        CloseRangeDuelingCircleMult = 30,
-        CloseRangeDuelingFallbackMult = 31,
-        CloseRangeFlankDistance = 32,
-        CloseRangeFlankingStalkTime = 33,
-        CloseRangeChargeDistance = 34,
-        CloseRangeChargingThrowProbability = 35,
-        CloseRangeChargingSprintFastProbability = 36,
-        CloseRangeChargingSideswipeProbability = 37,
-        CloseRangeChargingDisengageProbability = 38,
-        CloseRangeChargingThrowMaxTargets = 39,
-        CloseRangeFlankingVariance = 40,
-        LongRangeStrafeMult = 41,
-        LongRangeAdjustRangeMult = 42,
-        LongRangeCrouchMult = 43,
-        LongRangeWaitMult = 44,
-        LongRangeRangeMult = 45,
-        CoverSearchDistanceMult = 46,
-        HoverChance = 47,
-        DiveBombChance = 48,
-        GroundAttackChance = 49,
-        HoverTime = 50,
-        GroundAttackTime = 51,
-        PerchAttackChance = 52,
-        PerchAttackTime = 53,
-        FlyingAttackChance = 54,
-        Flags = 55,
-        CSGDDataTypeState = 56,
+        Fallout4MajorRecordFlags = 6,
+        OffensiveMult = 7,
+        DefensiveMult = 8,
+        GroupOffensiveMult = 9,
+        EquipmentScoreMultMelee = 10,
+        EquipmentScoreMultMagic = 11,
+        EquipmentScoreMultRanged = 12,
+        EquipmentScoreMultShout = 13,
+        EquipmentScoreMultUnarmed = 14,
+        EquipmentScoreMultStaff = 15,
+        AvoidThreatChance = 16,
+        DodgeThreadChance = 17,
+        EvadeThreatChance = 18,
+        CSMD = 19,
+        MeleeAttackStaggeredMult = 20,
+        MeleePowerAttackStaggeredMult = 21,
+        MeleePowerAttackBlockingMult = 22,
+        MeleeBashMult = 23,
+        MeleeBashRecoilMult = 24,
+        MeleeBashAttackMult = 25,
+        MeleeBashPowerAttackMult = 26,
+        MeleeSpecialAttackMult = 27,
+        MeleeBlockWhenStaggeredMult = 28,
+        MeleeAttackWhenStaggeredMult = 29,
+        RangedAccuracyMult = 30,
+        CloseRangeDuelingCircleMult = 31,
+        CloseRangeDuelingFallbackMult = 32,
+        CloseRangeFlankDistance = 33,
+        CloseRangeFlankingStalkTime = 34,
+        CloseRangeChargeDistance = 35,
+        CloseRangeChargingThrowProbability = 36,
+        CloseRangeChargingSprintFastProbability = 37,
+        CloseRangeChargingSideswipeProbability = 38,
+        CloseRangeChargingDisengageProbability = 39,
+        CloseRangeChargingThrowMaxTargets = 40,
+        CloseRangeFlankingVariance = 41,
+        LongRangeStrafeMult = 42,
+        LongRangeAdjustRangeMult = 43,
+        LongRangeCrouchMult = 44,
+        LongRangeWaitMult = 45,
+        LongRangeRangeMult = 46,
+        CoverSearchDistanceMult = 47,
+        HoverChance = 48,
+        DiveBombChance = 49,
+        GroundAttackChance = 50,
+        HoverTime = 51,
+        GroundAttackTime = 52,
+        PerchAttackChance = 53,
+        PerchAttackTime = 54,
+        FlyingAttackChance = 55,
+        Flags = 56,
         CSMEDataTypeState = 57,
-        CSCRDataTypeState = 58,
-        CSLRDataTypeState = 59,
-        CSFLDataTypeState = 60,
+        CSLRDataTypeState = 58,
     }
     #endregion
 
@@ -2691,9 +2585,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "f0309e97-d6cd-4bf1-8365-bd51a94e5c36";
 
-        public const ushort AdditionalFieldCount = 55;
+        public const ushort AdditionalFieldCount = 52;
 
-        public const ushort FieldCount = 61;
+        public const ushort FieldCount = 59;
 
         public static readonly Type MaskType = typeof(CombatStyle.Mask<>);
 
@@ -2829,11 +2723,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.PerchAttackTime = default;
             item.FlyingAttackChance = default;
             item.Flags = default;
-            item.CSGDDataTypeState = default;
             item.CSMEDataTypeState = default;
-            item.CSCRDataTypeState = default;
             item.CSLRDataTypeState = default;
-            item.CSFLDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2930,7 +2821,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AvoidThreatChance = item.AvoidThreatChance.EqualsWithin(rhs.AvoidThreatChance);
             ret.DodgeThreadChance = item.DodgeThreadChance.EqualsWithin(rhs.DodgeThreadChance);
             ret.EvadeThreatChance = item.EvadeThreatChance.EqualsWithin(rhs.EvadeThreatChance);
-            ret.CSMD = MemorySliceExt.Equal(item.CSMD, rhs.CSMD);
+            ret.CSMD = MemorySliceExt.SequenceEqual(item.CSMD, rhs.CSMD);
             ret.MeleeAttackStaggeredMult = item.MeleeAttackStaggeredMult.EqualsWithin(rhs.MeleeAttackStaggeredMult);
             ret.MeleePowerAttackStaggeredMult = item.MeleePowerAttackStaggeredMult.EqualsWithin(rhs.MeleePowerAttackStaggeredMult);
             ret.MeleePowerAttackBlockingMult = item.MeleePowerAttackBlockingMult.EqualsWithin(rhs.MeleePowerAttackBlockingMult);
@@ -2968,11 +2859,8 @@ namespace Mutagen.Bethesda.Fallout4
             ret.PerchAttackTime = item.PerchAttackTime.EqualsWithin(rhs.PerchAttackTime);
             ret.FlyingAttackChance = item.FlyingAttackChance.EqualsWithin(rhs.FlyingAttackChance);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.CSGDDataTypeState = item.CSGDDataTypeState == rhs.CSGDDataTypeState;
             ret.CSMEDataTypeState = item.CSMEDataTypeState == rhs.CSMEDataTypeState;
-            ret.CSCRDataTypeState = item.CSCRDataTypeState == rhs.CSCRDataTypeState;
             ret.CSLRDataTypeState = item.CSLRDataTypeState == rhs.CSLRDataTypeState;
-            ret.CSFLDataTypeState = item.CSFLDataTypeState == rhs.CSFLDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3226,25 +3114,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.CSGDDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CSGDDataTypeState, "CSGDDataTypeState");
-            }
             if (printMask?.CSMEDataTypeState ?? true)
             {
                 sb.AppendItem(item.CSMEDataTypeState, "CSMEDataTypeState");
             }
-            if (printMask?.CSCRDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CSCRDataTypeState, "CSCRDataTypeState");
-            }
             if (printMask?.CSLRDataTypeState ?? true)
             {
                 sb.AppendItem(item.CSLRDataTypeState, "CSLRDataTypeState");
-            }
-            if (printMask?.CSFLDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CSFLDataTypeState, "CSFLDataTypeState");
             }
         }
         
@@ -3264,8 +3140,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (CombatStyle_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (CombatStyle_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (CombatStyle_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3282,7 +3160,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (CombatStyle_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3290,229 +3168,217 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ICombatStyleGetter? lhs,
             ICombatStyleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.OffensiveMult) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.OffensiveMult) ?? true))
             {
                 if (!lhs.OffensiveMult.EqualsWithin(rhs.OffensiveMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.DefensiveMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DefensiveMult) ?? true))
             {
                 if (!lhs.DefensiveMult.EqualsWithin(rhs.DefensiveMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupOffensiveMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupOffensiveMult) ?? true))
             {
                 if (!lhs.GroupOffensiveMult.EqualsWithin(rhs.GroupOffensiveMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMelee) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMelee) ?? true))
             {
                 if (!lhs.EquipmentScoreMultMelee.EqualsWithin(rhs.EquipmentScoreMultMelee)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMagic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMagic) ?? true))
             {
                 if (!lhs.EquipmentScoreMultMagic.EqualsWithin(rhs.EquipmentScoreMultMagic)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultRanged) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultRanged) ?? true))
             {
                 if (!lhs.EquipmentScoreMultRanged.EqualsWithin(rhs.EquipmentScoreMultRanged)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultShout) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultShout) ?? true))
             {
                 if (!lhs.EquipmentScoreMultShout.EqualsWithin(rhs.EquipmentScoreMultShout)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed) ?? true))
             {
                 if (!lhs.EquipmentScoreMultUnarmed.EqualsWithin(rhs.EquipmentScoreMultUnarmed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultStaff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultStaff) ?? true))
             {
                 if (!lhs.EquipmentScoreMultStaff.EqualsWithin(rhs.EquipmentScoreMultStaff)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.AvoidThreatChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AvoidThreatChance) ?? true))
             {
                 if (!lhs.AvoidThreatChance.EqualsWithin(rhs.AvoidThreatChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeThreadChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeThreadChance) ?? true))
             {
                 if (!lhs.DodgeThreadChance.EqualsWithin(rhs.DodgeThreadChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EvadeThreatChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EvadeThreatChance) ?? true))
             {
                 if (!lhs.EvadeThreatChance.EqualsWithin(rhs.EvadeThreatChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMD) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CSMD, rhs.CSMD)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.CSMD, rhs.CSMD)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackStaggeredMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackStaggeredMult) ?? true))
             {
                 if (!lhs.MeleeAttackStaggeredMult.EqualsWithin(rhs.MeleeAttackStaggeredMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleePowerAttackStaggeredMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleePowerAttackStaggeredMult) ?? true))
             {
                 if (!lhs.MeleePowerAttackStaggeredMult.EqualsWithin(rhs.MeleePowerAttackStaggeredMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleePowerAttackBlockingMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleePowerAttackBlockingMult) ?? true))
             {
                 if (!lhs.MeleePowerAttackBlockingMult.EqualsWithin(rhs.MeleePowerAttackBlockingMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashMult) ?? true))
             {
                 if (!lhs.MeleeBashMult.EqualsWithin(rhs.MeleeBashMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashRecoilMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashRecoilMult) ?? true))
             {
                 if (!lhs.MeleeBashRecoilMult.EqualsWithin(rhs.MeleeBashRecoilMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashAttackMult) ?? true))
             {
                 if (!lhs.MeleeBashAttackMult.EqualsWithin(rhs.MeleeBashAttackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashPowerAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBashPowerAttackMult) ?? true))
             {
                 if (!lhs.MeleeBashPowerAttackMult.EqualsWithin(rhs.MeleeBashPowerAttackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeSpecialAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeSpecialAttackMult) ?? true))
             {
                 if (!lhs.MeleeSpecialAttackMult.EqualsWithin(rhs.MeleeSpecialAttackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBlockWhenStaggeredMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeBlockWhenStaggeredMult) ?? true))
             {
                 if (!lhs.MeleeBlockWhenStaggeredMult.EqualsWithin(rhs.MeleeBlockWhenStaggeredMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackWhenStaggeredMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackWhenStaggeredMult) ?? true))
             {
                 if (!lhs.MeleeAttackWhenStaggeredMult.EqualsWithin(rhs.MeleeAttackWhenStaggeredMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedAccuracyMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedAccuracyMult) ?? true))
             {
                 if (!lhs.RangedAccuracyMult.EqualsWithin(rhs.RangedAccuracyMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingCircleMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingCircleMult) ?? true))
             {
                 if (!lhs.CloseRangeDuelingCircleMult.EqualsWithin(rhs.CloseRangeDuelingCircleMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingFallbackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingFallbackMult) ?? true))
             {
                 if (!lhs.CloseRangeDuelingFallbackMult.EqualsWithin(rhs.CloseRangeDuelingFallbackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankDistance) ?? true))
             {
                 if (!lhs.CloseRangeFlankDistance.EqualsWithin(rhs.CloseRangeFlankDistance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankingStalkTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankingStalkTime) ?? true))
             {
                 if (!lhs.CloseRangeFlankingStalkTime.EqualsWithin(rhs.CloseRangeFlankingStalkTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargeDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargeDistance) ?? true))
             {
                 if (!lhs.CloseRangeChargeDistance.EqualsWithin(rhs.CloseRangeChargeDistance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingThrowProbability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingThrowProbability) ?? true))
             {
                 if (!lhs.CloseRangeChargingThrowProbability.EqualsWithin(rhs.CloseRangeChargingThrowProbability)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingSprintFastProbability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingSprintFastProbability) ?? true))
             {
                 if (!lhs.CloseRangeChargingSprintFastProbability.EqualsWithin(rhs.CloseRangeChargingSprintFastProbability)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingSideswipeProbability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingSideswipeProbability) ?? true))
             {
                 if (!lhs.CloseRangeChargingSideswipeProbability.EqualsWithin(rhs.CloseRangeChargingSideswipeProbability)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingDisengageProbability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingDisengageProbability) ?? true))
             {
                 if (!lhs.CloseRangeChargingDisengageProbability.EqualsWithin(rhs.CloseRangeChargingDisengageProbability)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingThrowMaxTargets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingThrowMaxTargets) ?? true))
             {
                 if (lhs.CloseRangeChargingThrowMaxTargets != rhs.CloseRangeChargingThrowMaxTargets) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankingVariance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankingVariance) ?? true))
             {
                 if (!lhs.CloseRangeFlankingVariance.EqualsWithin(rhs.CloseRangeFlankingVariance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeStrafeMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeStrafeMult) ?? true))
             {
                 if (!lhs.LongRangeStrafeMult.EqualsWithin(rhs.LongRangeStrafeMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeAdjustRangeMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeAdjustRangeMult) ?? true))
             {
                 if (!lhs.LongRangeAdjustRangeMult.EqualsWithin(rhs.LongRangeAdjustRangeMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeCrouchMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeCrouchMult) ?? true))
             {
                 if (!lhs.LongRangeCrouchMult.EqualsWithin(rhs.LongRangeCrouchMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeWaitMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeWaitMult) ?? true))
             {
                 if (!lhs.LongRangeWaitMult.EqualsWithin(rhs.LongRangeWaitMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRangeMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRangeMult) ?? true))
             {
                 if (!lhs.LongRangeRangeMult.EqualsWithin(rhs.LongRangeRangeMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CoverSearchDistanceMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CoverSearchDistanceMult) ?? true))
             {
                 if (!lhs.CoverSearchDistanceMult.EqualsWithin(rhs.CoverSearchDistanceMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverChance) ?? true))
             {
                 if (!lhs.HoverChance.EqualsWithin(rhs.HoverChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.DiveBombChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DiveBombChance) ?? true))
             {
                 if (!lhs.DiveBombChance.EqualsWithin(rhs.DiveBombChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackChance) ?? true))
             {
                 if (!lhs.GroundAttackChance.EqualsWithin(rhs.GroundAttackChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverTime) ?? true))
             {
                 if (!lhs.HoverTime.EqualsWithin(rhs.HoverTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackTime) ?? true))
             {
                 if (!lhs.GroundAttackTime.EqualsWithin(rhs.GroundAttackTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackChance) ?? true))
             {
                 if (!lhs.PerchAttackChance.EqualsWithin(rhs.PerchAttackChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackTime) ?? true))
             {
                 if (!lhs.PerchAttackTime.EqualsWithin(rhs.PerchAttackTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlyingAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlyingAttackChance) ?? true))
             {
                 if (!lhs.FlyingAttackChance.EqualsWithin(rhs.FlyingAttackChance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDDataTypeState) ?? true))
-            {
-                if (lhs.CSGDDataTypeState != rhs.CSGDDataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMEDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMEDataTypeState) ?? true))
             {
                 if (lhs.CSMEDataTypeState != rhs.CSMEDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCRDataTypeState) ?? true))
-            {
-                if (lhs.CSCRDataTypeState != rhs.CSCRDataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRDataTypeState) ?? true))
             {
                 if (lhs.CSLRDataTypeState != rhs.CSLRDataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSFLDataTypeState) ?? true))
-            {
-                if (lhs.CSFLDataTypeState != rhs.CSFLDataTypeState) return false;
             }
             return true;
         }
@@ -3520,23 +3386,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICombatStyleGetter?)lhs,
                 rhs: rhs as ICombatStyleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICombatStyleGetter?)lhs,
                 rhs: rhs as ICombatStyleGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ICombatStyleGetter item)
@@ -3604,11 +3470,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(Flagsitem);
             }
-            hash.Add(item.CSGDDataTypeState);
             hash.Add(item.CSMEDataTypeState);
-            hash.Add(item.CSCRDataTypeState);
             hash.Add(item.CSLRDataTypeState);
-            hash.Add(item.CSFLDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3919,25 +3782,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDDataTypeState) ?? true))
-            {
-                item.CSGDDataTypeState = rhs.CSGDDataTypeState;
-            }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMEDataTypeState) ?? true))
             {
                 item.CSMEDataTypeState = rhs.CSMEDataTypeState;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCRDataTypeState) ?? true))
-            {
-                item.CSCRDataTypeState = rhs.CSCRDataTypeState;
-            }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRDataTypeState) ?? true))
             {
                 item.CSLRDataTypeState = rhs.CSLRDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSFLDataTypeState) ?? true))
-            {
-                item.CSFLDataTypeState = rhs.CSFLDataTypeState;
             }
         }
         
@@ -4599,7 +4450,6 @@ namespace Mutagen.Bethesda.Fallout4
         public CombatStyle.MajorFlag MajorFlags => (CombatStyle.MajorFlag)this.MajorRecordFlagsRaw;
 
         private RangeInt32? _CSGDLocation;
-        public CombatStyle.CSGDDataType CSGDDataTypeState { get; private set; }
         #region OffensiveMult
         private int _OffensiveMultLocation => _CSGDLocation!.Value.Min;
         private bool _OffensiveMult_IsSet => _CSGDLocation.HasValue;
@@ -4721,7 +4571,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single? RangedAccuracyMult => _RangedAccuracyMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RangedAccuracyMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         private RangeInt32? _CSCRLocation;
-        public CombatStyle.CSCRDataType CSCRDataTypeState { get; private set; }
         #region CloseRangeDuelingCircleMult
         private int _CloseRangeDuelingCircleMultLocation => _CSCRLocation!.Value.Min;
         private bool _CloseRangeDuelingCircleMult_IsSet => _CSCRLocation.HasValue;
@@ -4809,7 +4658,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single? CoverSearchDistanceMult => _CoverSearchDistanceMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CoverSearchDistanceMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         private RangeInt32? _CSFLLocation;
-        public CombatStyle.CSFLDataType CSFLDataTypeState { get; private set; }
         #region HoverChance
         private int _HoverChanceLocation => _CSFLLocation!.Value.Min;
         private bool _HoverChance_IsSet => _CSFLLocation.HasValue;
@@ -5020,12 +4868,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ICombatStyleGetter rhs) return false;
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleGetter? obj)
         {
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);

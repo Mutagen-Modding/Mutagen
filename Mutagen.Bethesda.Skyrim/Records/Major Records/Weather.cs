@@ -156,7 +156,7 @@ partial class WeatherBinaryCreateTranslation
         for (int i = 0; i < NumLayers; i++)
         {
             // Inverse because we're exposing as enabled
-            clouds[i].Enabled = !EnumExt.HasFlag(raw, index);
+            clouds[i].Enabled = !Enums.HasFlag(raw, index);
             index <<= 1;
         }
     }
@@ -372,7 +372,7 @@ partial class WeatherBinaryWriteTranslation
             {
                 var enable = enabled[i] ?? true;
                 // Inverse because we're exposing as enabled
-                raw = EnumExt.SetFlag(raw, index, !enable);
+                raw = Enums.SetFlag(raw, index, !enable);
                 index <<= 1;
             }
             writer.Write(raw);

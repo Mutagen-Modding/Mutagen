@@ -147,6 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ENAM,
                 TItem Hdr,
                 TItem Cinematic,
@@ -158,7 +159,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ENAM = ENAM;
                 this.Hdr = new MaskItem<TItem, ImageSpaceHdr.Mask<TItem>?>(Hdr, new ImageSpaceHdr.Mask<TItem>(Hdr));
@@ -589,12 +591,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IImageSpaceGetter rhs) return false;
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceGetter? obj)
         {
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -747,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -823,6 +825,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ImageSpace Duplicate(
+            this IImageSpaceGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -855,11 +868,12 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ENAM = 6,
-        Hdr = 7,
-        Cinematic = 8,
-        Tint = 9,
-        DepthOfField = 10,
+        SkyrimMajorRecordFlags = 6,
+        ENAM = 7,
+        Hdr = 8,
+        Cinematic = 9,
+        Tint = 10,
+        DepthOfField = 11,
     }
     #endregion
 
@@ -879,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(ImageSpace.Mask<>);
 
@@ -1050,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
             ImageSpace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ENAM = MemorySliceExt.Equal(item.ENAM, rhs.ENAM);
+            ret.ENAM = MemorySliceExt.SequenceEqual(item.ENAM, rhs.ENAM);
             ret.Hdr = EqualsMaskHelper.EqualsHelper(
                 item.Hdr,
                 rhs.Hdr,
@@ -1163,8 +1177,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (ImageSpace_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (ImageSpace_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (ImageSpace_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1181,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (ImageSpace_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1189,43 +1205,43 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IImageSpaceGetter? lhs,
             IImageSpaceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.ENAM) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.ENAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ENAM, rhs.ENAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Hdr) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Hdr) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Hdr, rhs.Hdr, out var lhsHdr, out var rhsHdr, out var isHdrEqual))
                 {
-                    if (!((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)lhsHdr).CommonInstance()!).Equals(lhsHdr, rhsHdr, crystal?.GetSubCrystal((int)ImageSpace_FieldIndex.Hdr))) return false;
+                    if (!((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)lhsHdr).CommonInstance()!).Equals(lhsHdr, rhsHdr, equalsMask?.GetSubCrystal((int)ImageSpace_FieldIndex.Hdr))) return false;
                 }
                 else if (!isHdrEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Cinematic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Cinematic) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Cinematic, rhs.Cinematic, out var lhsCinematic, out var rhsCinematic, out var isCinematicEqual))
                 {
-                    if (!((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)lhsCinematic).CommonInstance()!).Equals(lhsCinematic, rhsCinematic, crystal?.GetSubCrystal((int)ImageSpace_FieldIndex.Cinematic))) return false;
+                    if (!((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)lhsCinematic).CommonInstance()!).Equals(lhsCinematic, rhsCinematic, equalsMask?.GetSubCrystal((int)ImageSpace_FieldIndex.Cinematic))) return false;
                 }
                 else if (!isCinematicEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Tint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Tint) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Tint, rhs.Tint, out var lhsTint, out var rhsTint, out var isTintEqual))
                 {
-                    if (!((ImageSpaceTintCommon)((IImageSpaceTintGetter)lhsTint).CommonInstance()!).Equals(lhsTint, rhsTint, crystal?.GetSubCrystal((int)ImageSpace_FieldIndex.Tint))) return false;
+                    if (!((ImageSpaceTintCommon)((IImageSpaceTintGetter)lhsTint).CommonInstance()!).Equals(lhsTint, rhsTint, equalsMask?.GetSubCrystal((int)ImageSpace_FieldIndex.Tint))) return false;
                 }
                 else if (!isTintEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfField) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfField) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DepthOfField, rhs.DepthOfField, out var lhsDepthOfField, out var rhsDepthOfField, out var isDepthOfFieldEqual))
                 {
-                    if (!((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)lhsDepthOfField).CommonInstance()!).Equals(lhsDepthOfField, rhsDepthOfField, crystal?.GetSubCrystal((int)ImageSpace_FieldIndex.DepthOfField))) return false;
+                    if (!((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)lhsDepthOfField).CommonInstance()!).Equals(lhsDepthOfField, rhsDepthOfField, equalsMask?.GetSubCrystal((int)ImageSpace_FieldIndex.DepthOfField))) return false;
                 }
                 else if (!isDepthOfFieldEqual) return false;
             }
@@ -1235,23 +1251,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImageSpaceGetter?)lhs,
                 rhs: rhs as IImageSpaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImageSpaceGetter?)lhs,
                 rhs: rhs as IImageSpaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IImageSpaceGetter item)
@@ -2005,12 +2021,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IImageSpaceGetter rhs) return false;
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImageSpaceGetter? obj)
         {
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).GetHashCode(this);

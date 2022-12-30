@@ -141,6 +141,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Conditions,
                 TItem RelatedPaths,
                 TItem Zoom,
@@ -152,7 +153,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.RelatedPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedPaths, Enumerable.Empty<(int Index, TItem Value)>());
@@ -637,11 +639,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.RelatedPaths = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RelatedPaths?.Overall, rhs.RelatedPaths?.Overall), ExceptionExt.Combine(this.RelatedPaths?.Specific, rhs.RelatedPaths?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.RelatedPaths = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RelatedPaths?.Overall, rhs.RelatedPaths?.Overall), Noggog.ExceptionExt.Combine(this.RelatedPaths?.Specific, rhs.RelatedPaths?.Specific));
                 ret.Zoom = this.Zoom.Combine(rhs.Zoom);
                 ret.ZoomMustHaveCameraShots = this.ZoomMustHaveCameraShots.Combine(rhs.ZoomMustHaveCameraShots);
-                ret.Shots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Shots?.Overall, rhs.Shots?.Overall), ExceptionExt.Combine(this.Shots?.Specific, rhs.Shots?.Specific));
+                ret.Shots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Shots?.Overall, rhs.Shots?.Overall), Noggog.ExceptionExt.Combine(this.Shots?.Specific, rhs.Shots?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -764,12 +766,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ICameraPathGetter rhs) return false;
-            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICameraPathGetter? obj)
         {
-            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).GetHashCode(this);
@@ -924,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CameraPathCommon)((ICameraPathGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1000,6 +1002,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static CameraPath Duplicate(
+            this ICameraPathGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((CameraPathCommon)((ICameraPathGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1032,11 +1045,12 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Conditions = 6,
-        RelatedPaths = 7,
-        Zoom = 8,
-        ZoomMustHaveCameraShots = 9,
-        Shots = 10,
+        SkyrimMajorRecordFlags = 6,
+        Conditions = 7,
+        RelatedPaths = 8,
+        Zoom = 9,
+        ZoomMustHaveCameraShots = 10,
+        Shots = 11,
     }
     #endregion
 
@@ -1056,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(CameraPath.Mask<>);
 
@@ -1362,8 +1376,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (CameraPath_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (CameraPath_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (CameraPath_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1380,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (CameraPath_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1388,27 +1404,27 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ICameraPathGetter? lhs,
             ICameraPathGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.Conditions) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)CameraPath_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)CameraPath_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.RelatedPaths) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.RelatedPaths) ?? true))
             {
                 if (!lhs.RelatedPaths.SequenceEqualNullable(rhs.RelatedPaths)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.Zoom) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Zoom) ?? true))
             {
                 if (lhs.Zoom != rhs.Zoom) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.ZoomMustHaveCameraShots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.ZoomMustHaveCameraShots) ?? true))
             {
                 if (lhs.ZoomMustHaveCameraShots != rhs.ZoomMustHaveCameraShots) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.Shots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Shots) ?? true))
             {
                 if (!lhs.Shots.SequenceEqualNullable(rhs.Shots)) return false;
             }
@@ -1418,23 +1434,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICameraPathGetter?)lhs,
                 rhs: rhs as ICameraPathGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICameraPathGetter?)lhs,
                 rhs: rhs as ICameraPathGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ICameraPathGetter item)
@@ -2203,12 +2219,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ICameraPathGetter rhs) return false;
-            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICameraPathGetter? obj)
         {
-            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).GetHashCode(this);

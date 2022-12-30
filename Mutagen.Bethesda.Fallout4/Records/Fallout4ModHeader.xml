@@ -26,7 +26,7 @@
     <Fields>
       <Float name="Version" default="1f" />
       <UInt32 name="NumRecords" />
-      <UInt32 name="NextFormID" />
+      <UInt32 name="NextFormID" default="0x800" />
     </Fields>
   </Object>
   <Object name="TransientType" recordType="TNAM" objType="Subrecord" GUID="8585f14c-55ea-4087-8212-937bdd6064a0" ID="30">

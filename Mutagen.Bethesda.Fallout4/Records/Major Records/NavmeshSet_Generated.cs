@@ -83,12 +83,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INavmeshSetGetter rhs) return false;
-            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavmeshSetGetter? obj)
         {
-            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Navmeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Navmeshes?.Overall, rhs.Navmeshes?.Overall), ExceptionExt.Combine(this.Navmeshes?.Specific, rhs.Navmeshes?.Specific));
+                ret.Navmeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Navmeshes?.Overall, rhs.Navmeshes?.Overall), Noggog.ExceptionExt.Combine(this.Navmeshes?.Specific, rhs.Navmeshes?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -884,10 +884,10 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INavmeshSetGetter? lhs,
             INavmeshSetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)NavmeshSet_FieldIndex.Navmeshes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshSet_FieldIndex.Navmeshes) ?? true))
             {
                 if (!lhs.Navmeshes.SequenceEqualNullable(rhs.Navmeshes)) return false;
             }
@@ -1236,12 +1236,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INavmeshSetGetter rhs) return false;
-            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavmeshSetGetter? obj)
         {
-            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).GetHashCode(this);

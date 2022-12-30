@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Road = this.Road.Combine(rhs.Road, (l, r) => l.Combine(r));
                 ret.TopCell = this.TopCell.Combine(rhs.TopCell, (l, r) => l.Combine(r));
                 ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
-                ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
+                ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), Noggog.ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1052,12 +1052,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IWorldspaceGetter rhs) return false;
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceGetter? obj)
         {
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1536,6 +1536,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Worldspace Duplicate(
+            this IWorldspaceGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -2055,7 +2066,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret.ObjectBoundsMin = item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
             ret.ObjectBoundsMax = item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
             ret.Music = item.Music == rhs.Music;
-            ret.OffsetData = MemorySliceExt.Equal(item.OffsetData, rhs.OffsetData);
+            ret.OffsetData = MemorySliceExt.SequenceEqual(item.OffsetData, rhs.OffsetData);
             ret.Road = EqualsMaskHelper.EqualsHelper(
                 item.Road,
                 rhs.Road,
@@ -2217,7 +2228,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Worldspace_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2234,7 +2245,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Worldspace_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2242,81 +2253,81 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IWorldspaceGetter? lhs,
             IWorldspaceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
                 if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
                 if (!lhs.Climate.Equals(rhs.Climate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
                 if (!lhs.Water.Equals(rhs.Water)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Icon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Icon) ?? true))
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MapData, rhs.MapData, out var lhsMapData, out var rhsMapData, out var isMapDataEqual))
                 {
-                    if (!((MapDataCommon)((IMapDataGetter)lhsMapData).CommonInstance()!).Equals(lhsMapData, rhsMapData, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.MapData))) return false;
+                    if (!((MapDataCommon)((IMapDataGetter)lhsMapData).CommonInstance()!).Equals(lhsMapData, rhsMapData, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.MapData))) return false;
                 }
                 else if (!isMapDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
             {
                 if (!lhs.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
             {
                 if (!lhs.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
                 if (lhs.Music != rhs.Music) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.OffsetData, rhs.OffsetData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.OffsetData, rhs.OffsetData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Road, rhs.Road, out var lhsRoad, out var rhsRoad, out var isRoadEqual))
                 {
-                    if (!((RoadCommon)((IRoadGetter)lhsRoad).CommonInstance()!).Equals(lhsRoad, rhsRoad, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.Road))) return false;
+                    if (!((RoadCommon)((IRoadGetter)lhsRoad).CommonInstance()!).Equals(lhsRoad, rhsRoad, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.Road))) return false;
                 }
                 else if (!isRoadEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.TopCell, rhs.TopCell, out var lhsTopCell, out var rhsTopCell, out var isTopCellEqual))
                 {
-                    if (!((CellCommon)((ICellGetter)lhsTopCell).CommonInstance()!).Equals(lhsTopCell, rhsTopCell, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell))) return false;
+                    if (!((CellCommon)((ICellGetter)lhsTopCell).CommonInstance()!).Equals(lhsTopCell, rhsTopCell, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell))) return false;
                 }
                 else if (!isTopCellEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
             {
                 if (lhs.SubCellsTimestamp != rhs.SubCellsTimestamp) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
-                if (!lhs.SubCells.SequenceEqual(rhs.SubCells, (l, r) => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells)))) return false;
+                if (!lhs.SubCells.SequenceEqual(rhs.SubCells, (l, r) => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells)))) return false;
             }
             return true;
         }
@@ -2324,23 +2335,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWorldspaceGetter?)lhs,
                 rhs: rhs as IWorldspaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWorldspaceGetter?)lhs,
                 rhs: rhs as IWorldspaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IWorldspaceGetter item)
@@ -4158,12 +4169,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IWorldspaceGetter rhs) return false;
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceGetter? obj)
         {
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).GetHashCode(this);

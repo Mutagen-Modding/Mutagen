@@ -101,12 +101,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IFaceGenDataGetter rhs) return false;
-            return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFaceGenDataGetter? obj)
         {
-            return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -842,9 +842,9 @@ namespace Mutagen.Bethesda.Oblivion
             FaceGenData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.SymmetricGeometry = MemorySliceExt.Equal(item.SymmetricGeometry, rhs.SymmetricGeometry);
-            ret.AsymmetricGeometry = MemorySliceExt.Equal(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
-            ret.SymmetricTexture = MemorySliceExt.Equal(item.SymmetricTexture, rhs.SymmetricTexture);
+            ret.SymmetricGeometry = MemorySliceExt.SequenceEqual(item.SymmetricGeometry, rhs.SymmetricGeometry);
+            ret.AsymmetricGeometry = MemorySliceExt.SequenceEqual(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
+            ret.SymmetricTexture = MemorySliceExt.SequenceEqual(item.SymmetricTexture, rhs.SymmetricTexture);
         }
         
         public string Print(
@@ -910,20 +910,20 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IFaceGenDataGetter? lhs,
             IFaceGenDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SymmetricTexture, rhs.SymmetricTexture)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SymmetricTexture, rhs.SymmetricTexture)) return false;
             }
             return true;
         }
@@ -1363,12 +1363,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IFaceGenDataGetter rhs) return false;
-            return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFaceGenDataGetter? obj)
         {
-            return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).GetHashCode(this);

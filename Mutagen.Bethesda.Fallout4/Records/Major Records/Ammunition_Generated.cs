@@ -243,12 +243,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IAmmunitionGetter.ModelInfo => this.ModelInfo;
         #endregion
-        #region DATADataTypeState
-        public Ammunition.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
-        #region DNAMDataTypeState
-        public Ammunition.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -292,8 +286,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ShortName = initialValue;
                 this.CasingModel = initialValue;
                 this.ModelInfo = initialValue;
-                this.DATADataTypeState = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -303,6 +295,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
                 TItem Name,
@@ -320,16 +313,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Health,
                 TItem ShortName,
                 TItem CasingModel,
-                TItem ModelInfo,
-                TItem DATADataTypeState,
-                TItem DNAMDataTypeState)
+                TItem ModelInfo)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.PreviewTransform = PreviewTransform;
@@ -349,8 +341,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ShortName = ShortName;
                 this.CasingModel = CasingModel;
                 this.ModelInfo = ModelInfo;
-                this.DATADataTypeState = DATADataTypeState;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -380,8 +370,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem ShortName;
             public TItem CasingModel;
             public TItem ModelInfo;
-            public TItem DATADataTypeState;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -413,8 +401,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
                 if (!object.Equals(this.CasingModel, rhs.CasingModel)) return false;
                 if (!object.Equals(this.ModelInfo, rhs.ModelInfo)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -438,8 +424,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ShortName);
                 hash.Add(this.CasingModel);
                 hash.Add(this.ModelInfo);
-                hash.Add(this.DATADataTypeState);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -490,8 +474,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.ShortName)) return false;
                 if (!eval(this.CasingModel)) return false;
                 if (!eval(this.ModelInfo)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -540,8 +522,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.ShortName)) return true;
                 if (eval(this.CasingModel)) return true;
                 if (eval(this.ModelInfo)) return true;
-                if (eval(this.DATADataTypeState)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -588,8 +568,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ShortName = eval(this.ShortName);
                 obj.CasingModel = eval(this.CasingModel);
                 obj.ModelInfo = eval(this.ModelInfo);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -697,14 +675,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(ModelInfo, "ModelInfo");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -734,8 +704,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? ShortName;
             public Exception? CasingModel;
             public Exception? ModelInfo;
-            public Exception? DATADataTypeState;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -780,10 +748,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return CasingModel;
                     case Ammunition_FieldIndex.ModelInfo:
                         return ModelInfo;
-                    case Ammunition_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
-                    case Ammunition_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -847,12 +811,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Ammunition_FieldIndex.ModelInfo:
                         this.ModelInfo = ex;
-                        break;
-                    case Ammunition_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
-                    case Ammunition_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -919,12 +877,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Ammunition_FieldIndex.ModelInfo:
                         this.ModelInfo = (Exception?)obj;
                         break;
-                    case Ammunition_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
-                    case Ammunition_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -952,8 +904,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ShortName != null) return true;
                 if (CasingModel != null) return true;
                 if (ModelInfo != null) return true;
-                if (DATADataTypeState != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1045,12 +995,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(ModelInfo, "ModelInfo");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1067,7 +1011,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.Projectile = this.Projectile.Combine(rhs.Projectile);
@@ -1077,8 +1021,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
                 ret.CasingModel = this.CasingModel.Combine(rhs.CasingModel);
                 ret.ModelInfo = this.ModelInfo.Combine(rhs.ModelInfo);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1119,8 +1061,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool ShortName;
             public bool CasingModel;
             public bool ModelInfo;
-            public bool DATADataTypeState;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1144,8 +1084,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ShortName = defaultOn;
                 this.CasingModel = defaultOn;
                 this.ModelInfo = defaultOn;
-                this.DATADataTypeState = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1171,8 +1109,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ShortName, null));
                 ret.Add((CasingModel, null));
                 ret.Add((ModelInfo, null));
-                ret.Add((DATADataTypeState, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1234,14 +1170,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum DATADataType
-        {
-        }
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1250,12 +1178,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAmmunitionGetter rhs) return false;
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAmmunitionGetter? obj)
         {
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1371,8 +1299,6 @@ namespace Mutagen.Bethesda.Fallout4
         new TranslatedString? ShortName { get; set; }
         new String? CasingModel { get; set; }
         new MemorySlice<Byte>? ModelInfo { get; set; }
-        new Ammunition.DATADataType DATADataTypeState { get; set; }
-        new Ammunition.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
         new Ammunition.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1448,8 +1374,6 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? ShortName { get; }
         String? CasingModel { get; }
         ReadOnlyMemorySlice<Byte>? ModelInfo { get; }
-        Ammunition.DATADataType DATADataTypeState { get; }
-        Ammunition.DNAMDataType DNAMDataTypeState { get; }
 
         #region Mutagen
         Ammunition.MajorFlag MajorFlags { get; }
@@ -1510,7 +1434,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1586,6 +1510,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Ammunition Duplicate(
+            this IAmmunitionGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1618,26 +1553,25 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        PreviewTransform = 7,
-        Name = 8,
-        Model = 9,
-        Destructible = 10,
-        PickUpSound = 11,
-        PutDownSound = 12,
-        Description = 13,
-        Keywords = 14,
-        Value = 15,
-        Weight = 16,
-        Projectile = 17,
-        Flags = 18,
-        Damage = 19,
-        Health = 20,
-        ShortName = 21,
-        CasingModel = 22,
-        ModelInfo = 23,
-        DATADataTypeState = 24,
-        DNAMDataTypeState = 25,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        PreviewTransform = 8,
+        Name = 9,
+        Model = 10,
+        Destructible = 11,
+        PickUpSound = 12,
+        PutDownSound = 13,
+        Description = 14,
+        Keywords = 15,
+        Value = 16,
+        Weight = 17,
+        Projectile = 18,
+        Flags = 19,
+        Damage = 20,
+        Health = 21,
+        ShortName = 22,
+        CasingModel = 23,
+        ModelInfo = 24,
     }
     #endregion
 
@@ -1655,9 +1589,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "e57765cc-e2e1-43c7-a220-8db84c93b1f1";
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(Ammunition.Mask<>);
 
@@ -1777,8 +1711,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.ShortName = default;
             item.CasingModel = default;
             item.ModelInfo = default;
-            item.DATADataTypeState = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1898,9 +1830,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Health = item.Health == rhs.Health;
             ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
             ret.CasingModel = string.Equals(item.CasingModel, rhs.CasingModel);
-            ret.ModelInfo = MemorySliceExt.Equal(item.ModelInfo, rhs.ModelInfo);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
+            ret.ModelInfo = MemorySliceExt.SequenceEqual(item.ModelInfo, rhs.ModelInfo);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2040,14 +1970,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendLine($"ModelInfo => {SpanExt.ToHexString(ModelInfoItem)}");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static Ammunition_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2066,8 +1988,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Ammunition_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Ammunition_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Ammunition_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2084,7 +2008,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Ammunition_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2092,101 +2016,93 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAmmunitionGetter? lhs,
             IAmmunitionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Ammunition_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Ammunition_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Ammunition_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Ammunition_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Ammunition_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Ammunition_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Projectile) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Projectile) ?? true))
             {
                 if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Damage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Damage) ?? true))
             {
                 if (!lhs.Damage.EqualsWithin(rhs.Damage)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Health) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Health) ?? true))
             {
                 if (lhs.Health != rhs.Health) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.ShortName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ShortName) ?? true))
             {
                 if (!object.Equals(lhs.ShortName, rhs.ShortName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.CasingModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.CasingModel) ?? true))
             {
                 if (!string.Equals(lhs.CasingModel, rhs.CasingModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.ModelInfo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ModelInfo) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ModelInfo, rhs.ModelInfo)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ModelInfo, rhs.ModelInfo)) return false;
             }
             return true;
         }
@@ -2194,23 +2110,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAmmunitionGetter?)lhs,
                 rhs: rhs as IAmmunitionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAmmunitionGetter?)lhs,
                 rhs: rhs as IAmmunitionGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAmmunitionGetter item)
@@ -2255,8 +2171,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(ModelInfoItem);
             }
-            hash.Add(item.DATADataTypeState);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2558,14 +2472,6 @@ namespace Mutagen.Bethesda.Fallout4
                     item.ModelInfo = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2714,15 +2620,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly AmmunitionBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IAmmunitionGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IAmmunitionGetter item,
             MutagenWriter writer,
@@ -2836,7 +2733,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2896,15 +2793,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly AmmunitionBinaryCreateTranslation Instance = new AmmunitionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AMMO;
-        public static void FillBinaryStructs(
-            IAmmunitionInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAmmunitionInternal item,
             MutagenFrame frame,
@@ -3144,7 +3032,6 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private RangeInt32? _DATALocation;
-        public Ammunition.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
@@ -3156,7 +3043,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Ammunition.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Projectile
         private int _ProjectileLocation => _DNAMLocation!.Value.Min;
         private bool _Projectile_IsSet => _DNAMLocation.HasValue;
@@ -3390,12 +3276,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAmmunitionGetter rhs) return false;
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAmmunitionGetter? obj)
         {
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).GetHashCode(this);

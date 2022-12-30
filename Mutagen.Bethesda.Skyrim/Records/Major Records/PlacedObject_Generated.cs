@@ -712,6 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Base,
                 TItem BoundHalfExtents,
@@ -777,7 +778,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Base = Base;
@@ -2853,18 +2855,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Primitive = this.Primitive.Combine(rhs.Primitive, (l, r) => l.Combine(r));
                 ret.XORD = this.XORD.Combine(rhs.XORD);
                 ret.OcclusionPlane = this.OcclusionPlane.Combine(rhs.OcclusionPlane, (l, r) => l.Combine(r));
-                ret.Portals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>(ExceptionExt.Combine(this.Portals?.Overall, rhs.Portals?.Overall), ExceptionExt.Combine(this.Portals?.Specific, rhs.Portals?.Specific));
+                ret.Portals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Portals?.Overall, rhs.Portals?.Overall), Noggog.ExceptionExt.Combine(this.Portals?.Specific, rhs.Portals?.Specific));
                 ret.RoomPortal = this.RoomPortal.Combine(rhs.RoomPortal, (l, r) => l.Combine(r));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.LightingTemplate = this.LightingTemplate.Combine(rhs.LightingTemplate);
                 ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
-                ret.LinkedRooms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LinkedRooms?.Overall, rhs.LinkedRooms?.Overall), ExceptionExt.Combine(this.LinkedRooms?.Specific, rhs.LinkedRooms?.Specific));
+                ret.LinkedRooms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LinkedRooms?.Overall, rhs.LinkedRooms?.Overall), Noggog.ExceptionExt.Combine(this.LinkedRooms?.Specific, rhs.LinkedRooms?.Specific));
                 ret.IsMultiBoundPrimitive = this.IsMultiBoundPrimitive.Combine(rhs.IsMultiBoundPrimitive);
                 ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
                 ret.RagdollBipedData = this.RagdollBipedData.Combine(rhs.RagdollBipedData);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
-                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
-                ret.LitWater = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LitWater?.Overall, rhs.LitWater?.Overall), ExceptionExt.Combine(this.LitWater?.Specific, rhs.LitWater?.Specific));
+                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), Noggog.ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
+                ret.LitWater = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LitWater?.Overall, rhs.LitWater?.Overall), Noggog.ExceptionExt.Combine(this.LitWater?.Specific, rhs.LitWater?.Specific));
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
                 ret.LightData = this.LightData.Combine(rhs.LightData, (l, r) => l.Combine(r));
                 ret.Alpha = this.Alpha.Combine(rhs.Alpha, (l, r) => l.Combine(r));
@@ -2888,7 +2890,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Lock = this.Lock.Combine(rhs.Lock, (l, r) => l.Combine(r));
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
                 ret.NavigationDoorLink = this.NavigationDoorLink.Combine(rhs.NavigationDoorLink, (l, r) => l.Combine(r));
-                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
+                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
                 ret.Owner = this.Owner.Combine(rhs.Owner);
                 ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
@@ -2896,7 +2898,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Charge = this.Charge.Combine(rhs.Charge);
                 ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
                 ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
-                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
                 ret.Patrol = this.Patrol.Combine(rhs.Patrol, (l, r) => l.Combine(r));
                 ret.Action = this.Action.Combine(rhs.Action);
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
@@ -3176,12 +3178,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedObjectGetter rhs) return false;
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedObjectGetter? obj)
         {
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -3469,7 +3471,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -3545,6 +3547,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static PlacedObject Duplicate(
+            this IPlacedObjectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3577,65 +3590,66 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Base = 7,
-        BoundHalfExtents = 8,
-        Primitive = 9,
-        XORD = 10,
-        OcclusionPlane = 11,
-        Portals = 12,
-        RoomPortal = 13,
-        Unknown = 14,
-        LightingTemplate = 15,
-        ImageSpace = 16,
-        LinkedRooms = 17,
-        IsMultiBoundPrimitive = 18,
-        RagdollData = 19,
-        RagdollBipedData = 20,
-        Radius = 21,
-        Reflections = 22,
-        LitWater = 23,
-        Emittance = 24,
-        LightData = 25,
-        Alpha = 26,
-        TeleportDestination = 27,
-        TeleportMessageBox = 28,
-        MultiboundReference = 29,
-        XWCN = 30,
-        XWCS = 31,
-        WaterVelocity = 32,
-        XCVL = 33,
-        XCZR = 34,
-        XCZA = 35,
-        XCZC = 36,
-        Scale = 37,
-        SpawnContainer = 38,
-        ActivateParents = 39,
-        LeveledItemBaseObject = 40,
-        LevelModifier = 41,
-        PersistentLocation = 42,
-        CollisionLayer = 43,
-        Lock = 44,
-        EncounterZone = 45,
-        NavigationDoorLink = 46,
-        LocationRefTypes = 47,
-        IsIgnoredBySandbox = 48,
-        Owner = 49,
-        FactionRank = 50,
-        ItemCount = 51,
-        Charge = 52,
-        LocationReference = 53,
-        EnableParent = 54,
-        LinkedReferences = 55,
-        Patrol = 56,
-        Action = 57,
-        HeadTrackingWeight = 58,
-        FavorCost = 59,
-        IsOpenByDefault = 60,
-        MapMarker = 61,
-        AttachRef = 62,
-        DistantLodData = 63,
-        Placement = 64,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Base = 8,
+        BoundHalfExtents = 9,
+        Primitive = 10,
+        XORD = 11,
+        OcclusionPlane = 12,
+        Portals = 13,
+        RoomPortal = 14,
+        Unknown = 15,
+        LightingTemplate = 16,
+        ImageSpace = 17,
+        LinkedRooms = 18,
+        IsMultiBoundPrimitive = 19,
+        RagdollData = 20,
+        RagdollBipedData = 21,
+        Radius = 22,
+        Reflections = 23,
+        LitWater = 24,
+        Emittance = 25,
+        LightData = 26,
+        Alpha = 27,
+        TeleportDestination = 28,
+        TeleportMessageBox = 29,
+        MultiboundReference = 30,
+        XWCN = 31,
+        XWCS = 32,
+        WaterVelocity = 33,
+        XCVL = 34,
+        XCZR = 35,
+        XCZA = 36,
+        XCZC = 37,
+        Scale = 38,
+        SpawnContainer = 39,
+        ActivateParents = 40,
+        LeveledItemBaseObject = 41,
+        LevelModifier = 42,
+        PersistentLocation = 43,
+        CollisionLayer = 44,
+        Lock = 45,
+        EncounterZone = 46,
+        NavigationDoorLink = 47,
+        LocationRefTypes = 48,
+        IsIgnoredBySandbox = 49,
+        Owner = 50,
+        FactionRank = 51,
+        ItemCount = 52,
+        Charge = 53,
+        LocationReference = 54,
+        EnableParent = 55,
+        LinkedReferences = 56,
+        Patrol = 57,
+        Action = 58,
+        HeadTrackingWeight = 59,
+        FavorCost = 60,
+        IsOpenByDefault = 61,
+        MapMarker = 62,
+        AttachRef = 63,
+        DistantLodData = 64,
+        Placement = 65,
     }
     #endregion
 
@@ -3655,7 +3669,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 59;
 
-        public const ushort FieldCount = 65;
+        public const ushort FieldCount = 66;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -3689,6 +3703,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.REFR,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.NAME,
                 RecordTypes.XMBO,
                 RecordTypes.XPRM,
@@ -3996,7 +4011,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Primitive,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.XORD = MemorySliceExt.Equal(item.XORD, rhs.XORD);
+            ret.XORD = MemorySliceExt.SequenceEqual(item.XORD, rhs.XORD);
             ret.OcclusionPlane = EqualsMaskHelper.EqualsHelper(
                 item.OcclusionPlane,
                 rhs.OcclusionPlane,
@@ -4019,8 +4034,8 @@ namespace Mutagen.Bethesda.Skyrim
                 (l, r) => object.Equals(l, r),
                 include);
             ret.IsMultiBoundPrimitive = item.IsMultiBoundPrimitive == rhs.IsMultiBoundPrimitive;
-            ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
-            ret.RagdollBipedData = MemorySliceExt.Equal(item.RagdollBipedData, rhs.RagdollBipedData);
+            ret.RagdollData = MemorySliceExt.SequenceEqual(item.RagdollData, rhs.RagdollData);
+            ret.RagdollBipedData = MemorySliceExt.SequenceEqual(item.RagdollBipedData, rhs.RagdollBipedData);
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
             ret.Reflections = item.Reflections.CollectionEqualsHelper(
                 rhs.Reflections,
@@ -4048,16 +4063,16 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
             ret.TeleportMessageBox = item.TeleportMessageBox.Equals(rhs.TeleportMessageBox);
             ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
-            ret.XWCN = MemorySliceExt.Equal(item.XWCN, rhs.XWCN);
-            ret.XWCS = MemorySliceExt.Equal(item.XWCS, rhs.XWCS);
+            ret.XWCN = MemorySliceExt.SequenceEqual(item.XWCN, rhs.XWCN);
+            ret.XWCS = MemorySliceExt.SequenceEqual(item.XWCS, rhs.XWCS);
             ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
                 item.WaterVelocity,
                 rhs.WaterVelocity,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.XCVL = MemorySliceExt.Equal(item.XCVL, rhs.XCVL);
+            ret.XCVL = MemorySliceExt.SequenceEqual(item.XCVL, rhs.XCVL);
             ret.XCZR = item.XCZR.Equals(rhs.XCZR);
-            ret.XCZA = MemorySliceExt.Equal(item.XCZA, rhs.XCZA);
+            ret.XCZA = MemorySliceExt.SequenceEqual(item.XCZA, rhs.XCZA);
             ret.XCZC = item.XCZC.Equals(rhs.XCZC);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.SpawnContainer = item.SpawnContainer.Equals(rhs.SpawnContainer);
@@ -4115,7 +4130,7 @@ namespace Mutagen.Bethesda.Skyrim
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.AttachRef = item.AttachRef.Equals(rhs.AttachRef);
-            ret.DistantLodData = MemorySliceExt.Equal(item.DistantLodData, rhs.DistantLodData);
+            ret.DistantLodData = MemorySliceExt.SequenceEqual(item.DistantLodData, rhs.DistantLodData);
             ret.Placement = EqualsMaskHelper.EqualsHelper(
                 item.Placement,
                 rhs.Placement,
@@ -4520,8 +4535,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (PlacedObject_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (PlacedObject_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (PlacedObject_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -4538,7 +4555,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (PlacedObject_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -4546,303 +4563,303 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPlacedObjectGetter? lhs,
             IPlacedObjectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
                 if (!lhs.Base.Equals(rhs.Base)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.BoundHalfExtents) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BoundHalfExtents) ?? true))
             {
                 if (!lhs.BoundHalfExtents.Equals(rhs.BoundHalfExtents)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Primitive) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Primitive) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Primitive, rhs.Primitive, out var lhsPrimitive, out var rhsPrimitive, out var isPrimitiveEqual))
                 {
-                    if (!((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)lhsPrimitive).CommonInstance()!).Equals(lhsPrimitive, rhsPrimitive, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Primitive))) return false;
+                    if (!((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)lhsPrimitive).CommonInstance()!).Equals(lhsPrimitive, rhsPrimitive, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Primitive))) return false;
                 }
                 else if (!isPrimitiveEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XORD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XORD) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XORD, rhs.XORD)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XORD, rhs.XORD)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.OcclusionPlane) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OcclusionPlane) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OcclusionPlane, rhs.OcclusionPlane, out var lhsOcclusionPlane, out var rhsOcclusionPlane, out var isOcclusionPlaneEqual))
                 {
-                    if (!((BoundingCommon)((IBoundingGetter)lhsOcclusionPlane).CommonInstance()!).Equals(lhsOcclusionPlane, rhsOcclusionPlane, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.OcclusionPlane))) return false;
+                    if (!((BoundingCommon)((IBoundingGetter)lhsOcclusionPlane).CommonInstance()!).Equals(lhsOcclusionPlane, rhsOcclusionPlane, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.OcclusionPlane))) return false;
                 }
                 else if (!isOcclusionPlaneEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Portals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Portals) ?? true))
             {
-                if (!lhs.Portals.SequenceEqualNullable(rhs.Portals, (l, r) => ((PortalCommon)((IPortalGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Portals)))) return false;
+                if (!lhs.Portals.SequenceEqualNullable(rhs.Portals, (l, r) => ((PortalCommon)((IPortalGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Portals)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.RoomPortal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RoomPortal) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.RoomPortal, rhs.RoomPortal, out var lhsRoomPortal, out var rhsRoomPortal, out var isRoomPortalEqual))
                 {
-                    if (!((BoundingCommon)((IBoundingGetter)lhsRoomPortal).CommonInstance()!).Equals(lhsRoomPortal, rhsRoomPortal, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.RoomPortal))) return false;
+                    if (!((BoundingCommon)((IBoundingGetter)lhsRoomPortal).CommonInstance()!).Equals(lhsRoomPortal, rhsRoomPortal, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.RoomPortal))) return false;
                 }
                 else if (!isRoomPortalEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightingTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightingTemplate) ?? true))
             {
                 if (!lhs.LightingTemplate.Equals(rhs.LightingTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.ImageSpace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ImageSpace) ?? true))
             {
                 if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedRooms) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedRooms) ?? true))
             {
                 if (!lhs.LinkedRooms.SequenceEqualNullable(rhs.LinkedRooms)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsMultiBoundPrimitive) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsMultiBoundPrimitive) ?? true))
             {
                 if (lhs.IsMultiBoundPrimitive != rhs.IsMultiBoundPrimitive) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.RagdollData, rhs.RagdollData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollBipedData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollBipedData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Radius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Radius) ?? true))
             {
                 if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Reflections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Reflections) ?? true))
             {
-                if (!lhs.Reflections.SequenceEqual(rhs.Reflections, (l, r) => ((WaterReflectionCommon)((IWaterReflectionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Reflections)))) return false;
+                if (!lhs.Reflections.SequenceEqual(rhs.Reflections, (l, r) => ((WaterReflectionCommon)((IWaterReflectionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Reflections)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LitWater) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LitWater) ?? true))
             {
                 if (!lhs.LitWater.SequenceEqualNullable(rhs.LitWater)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Emittance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Emittance) ?? true))
             {
                 if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LightData, rhs.LightData, out var lhsLightData, out var rhsLightData, out var isLightDataEqual))
                 {
-                    if (!((LightDataCommon)((ILightDataGetter)lhsLightData).CommonInstance()!).Equals(lhsLightData, rhsLightData, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.LightData))) return false;
+                    if (!((LightDataCommon)((ILightDataGetter)lhsLightData).CommonInstance()!).Equals(lhsLightData, rhsLightData, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightData))) return false;
                 }
                 else if (!isLightDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Alpha) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Alpha) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Alpha, rhs.Alpha, out var lhsAlpha, out var rhsAlpha, out var isAlphaEqual))
                 {
-                    if (!((AlphaCommon)((IAlphaGetter)lhsAlpha).CommonInstance()!).Equals(lhsAlpha, rhsAlpha, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Alpha))) return false;
+                    if (!((AlphaCommon)((IAlphaGetter)lhsAlpha).CommonInstance()!).Equals(lhsAlpha, rhsAlpha, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Alpha))) return false;
                 }
                 else if (!isAlphaEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.TeleportDestination, rhs.TeleportDestination, out var lhsTeleportDestination, out var rhsTeleportDestination, out var isTeleportDestinationEqual))
                 {
-                    if (!((TeleportDestinationCommon)((ITeleportDestinationGetter)lhsTeleportDestination).CommonInstance()!).Equals(lhsTeleportDestination, rhsTeleportDestination, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination))) return false;
+                    if (!((TeleportDestinationCommon)((ITeleportDestinationGetter)lhsTeleportDestination).CommonInstance()!).Equals(lhsTeleportDestination, rhsTeleportDestination, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination))) return false;
                 }
                 else if (!isTeleportDestinationEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportMessageBox) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportMessageBox) ?? true))
             {
                 if (!lhs.TeleportMessageBox.Equals(rhs.TeleportMessageBox)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiboundReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiboundReference) ?? true))
             {
                 if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XWCN, rhs.XWCN)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XWCN, rhs.XWCN)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCS) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCS) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XWCS, rhs.XWCS)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XWCS, rhs.XWCS)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.WaterVelocity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.WaterVelocity) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.WaterVelocity, rhs.WaterVelocity, out var lhsWaterVelocity, out var rhsWaterVelocity, out var isWaterVelocityEqual))
                 {
-                    if (!((WaterVelocityCommon)((IWaterVelocityGetter)lhsWaterVelocity).CommonInstance()!).Equals(lhsWaterVelocity, rhsWaterVelocity, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.WaterVelocity))) return false;
+                    if (!((WaterVelocityCommon)((IWaterVelocityGetter)lhsWaterVelocity).CommonInstance()!).Equals(lhsWaterVelocity, rhsWaterVelocity, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.WaterVelocity))) return false;
                 }
                 else if (!isWaterVelocityEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCVL) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCVL) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XCVL, rhs.XCVL)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XCVL, rhs.XCVL)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
             {
                 if (!lhs.XCZR.Equals(rhs.XCZR)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XCZA, rhs.XCZA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XCZA, rhs.XCZA)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZC) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZC) ?? true))
             {
                 if (!lhs.XCZC.Equals(rhs.XCZC)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
             {
                 if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpawnContainer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpawnContainer) ?? true))
             {
                 if (!lhs.SpawnContainer.Equals(rhs.SpawnContainer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActivateParents) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActivateParents) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ActivateParents, rhs.ActivateParents, out var lhsActivateParents, out var rhsActivateParents, out var isActivateParentsEqual))
                 {
-                    if (!((ActivateParentsCommon)((IActivateParentsGetter)lhsActivateParents).CommonInstance()!).Equals(lhsActivateParents, rhsActivateParents, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.ActivateParents))) return false;
+                    if (!((ActivateParentsCommon)((IActivateParentsGetter)lhsActivateParents).CommonInstance()!).Equals(lhsActivateParents, rhsActivateParents, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.ActivateParents))) return false;
                 }
                 else if (!isActivateParentsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LeveledItemBaseObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LeveledItemBaseObject) ?? true))
             {
                 if (!lhs.LeveledItemBaseObject.Equals(rhs.LeveledItemBaseObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
             {
                 if (lhs.LevelModifier != rhs.LevelModifier) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.PersistentLocation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PersistentLocation) ?? true))
             {
                 if (!lhs.PersistentLocation.Equals(rhs.PersistentLocation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.CollisionLayer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.CollisionLayer) ?? true))
             {
                 if (lhs.CollisionLayer != rhs.CollisionLayer) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Lock, rhs.Lock, out var lhsLock, out var rhsLock, out var isLockEqual))
                 {
-                    if (!((LockDataCommon)((ILockDataGetter)lhsLock).CommonInstance()!).Equals(lhsLock, rhsLock, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock))) return false;
+                    if (!((LockDataCommon)((ILockDataGetter)lhsLock).CommonInstance()!).Equals(lhsLock, rhsLock, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock))) return false;
                 }
                 else if (!isLockEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.EncounterZone) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EncounterZone) ?? true))
             {
                 if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NavigationDoorLink, rhs.NavigationDoorLink, out var lhsNavigationDoorLink, out var rhsNavigationDoorLink, out var isNavigationDoorLinkEqual))
                 {
-                    if (!((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)lhsNavigationDoorLink).CommonInstance()!).Equals(lhsNavigationDoorLink, rhsNavigationDoorLink, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.NavigationDoorLink))) return false;
+                    if (!((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)lhsNavigationDoorLink).CommonInstance()!).Equals(lhsNavigationDoorLink, rhsNavigationDoorLink, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.NavigationDoorLink))) return false;
                 }
                 else if (!isNavigationDoorLinkEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationRefTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationRefTypes) ?? true))
             {
                 if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsIgnoredBySandbox) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsIgnoredBySandbox) ?? true))
             {
                 if (lhs.IsIgnoredBySandbox != rhs.IsIgnoredBySandbox) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
             {
                 if (!lhs.Owner.Equals(rhs.Owner)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
             {
                 if (lhs.FactionRank != rhs.FactionRank) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.ItemCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ItemCount) ?? true))
             {
                 if (lhs.ItemCount != rhs.ItemCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Charge) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Charge) ?? true))
             {
                 if (!lhs.Charge.EqualsWithin(rhs.Charge)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationReference) ?? true))
             {
                 if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.EnableParent, rhs.EnableParent, out var lhsEnableParent, out var rhsEnableParent, out var isEnableParentEqual))
                 {
-                    if (!((EnableParentCommon)((IEnableParentGetter)lhsEnableParent).CommonInstance()!).Equals(lhsEnableParent, rhsEnableParent, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent))) return false;
+                    if (!((EnableParentCommon)((IEnableParentGetter)lhsEnableParent).CommonInstance()!).Equals(lhsEnableParent, rhsEnableParent, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent))) return false;
                 }
                 else if (!isEnableParentEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedReferences) ?? true))
             {
-                if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.LinkedReferences)))) return false;
+                if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LinkedReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Patrol) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Patrol) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Patrol, rhs.Patrol, out var lhsPatrol, out var rhsPatrol, out var isPatrolEqual))
                 {
-                    if (!((PatrolCommon)((IPatrolGetter)lhsPatrol).CommonInstance()!).Equals(lhsPatrol, rhsPatrol, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Patrol))) return false;
+                    if (!((PatrolCommon)((IPatrolGetter)lhsPatrol).CommonInstance()!).Equals(lhsPatrol, rhsPatrol, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Patrol))) return false;
                 }
                 else if (!isPatrolEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Action) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Action) ?? true))
             {
                 if (lhs.Action != rhs.Action) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.HeadTrackingWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.HeadTrackingWeight) ?? true))
             {
                 if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.FavorCost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FavorCost) ?? true))
             {
                 if (!lhs.FavorCost.EqualsWithin(rhs.FavorCost)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsOpenByDefault) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IsOpenByDefault) ?? true))
             {
                 if (lhs.IsOpenByDefault != rhs.IsOpenByDefault) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MapMarker, rhs.MapMarker, out var lhsMapMarker, out var rhsMapMarker, out var isMapMarkerEqual))
                 {
-                    if (!((MapMarkerCommon)((IMapMarkerGetter)lhsMapMarker).CommonInstance()!).Equals(lhsMapMarker, rhsMapMarker, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker))) return false;
+                    if (!((MapMarkerCommon)((IMapMarkerGetter)lhsMapMarker).CommonInstance()!).Equals(lhsMapMarker, rhsMapMarker, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker))) return false;
                 }
                 else if (!isMapMarkerEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.AttachRef) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AttachRef) ?? true))
             {
                 if (!lhs.AttachRef.Equals(rhs.AttachRef)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLodData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLodData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DistantLodData, rhs.DistantLodData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DistantLodData, rhs.DistantLodData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Placement) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Placement) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Placement, rhs.Placement, out var lhsPlacement, out var rhsPlacement, out var isPlacementEqual))
                 {
-                    if (!((PlacementCommon)((IPlacementGetter)lhsPlacement).CommonInstance()!).Equals(lhsPlacement, rhsPlacement, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Placement))) return false;
+                    if (!((PlacementCommon)((IPlacementGetter)lhsPlacement).CommonInstance()!).Equals(lhsPlacement, rhsPlacement, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Placement))) return false;
                 }
                 else if (!isPlacementEqual) return false;
             }
@@ -4852,23 +4869,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedObjectGetter?)lhs,
                 rhs: rhs as IPlacedObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedObjectGetter?)lhs,
                 rhs: rhs as IPlacedObjectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPlacedObjectGetter item)
@@ -6210,7 +6227,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -6625,7 +6642,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
@@ -6973,6 +6992,11 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Placement = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
                     return (int)PlacedObject_FieldIndex.Placement;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -7038,8 +7062,9 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Base
@@ -7305,6 +7330,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)PlacedObject_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
@@ -7644,6 +7674,11 @@ namespace Mutagen.Bethesda.Skyrim
                     _PlacementLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlacedObject_FieldIndex.Placement;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return base.FillRecordType(
                         stream: stream,
@@ -7682,12 +7717,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedObjectGetter rhs) return false;
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedObjectGetter? obj)
         {
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).GetHashCode(this);

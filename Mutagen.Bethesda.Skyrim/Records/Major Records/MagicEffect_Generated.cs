@@ -151,12 +151,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Single BaseCost { get; set; } = default;
         #endregion
         #region MagicSkill
-        public readonly static ActorValue _MagicSkill_Default = ActorValue.None;
-        public ActorValue MagicSkill { get; set; } = _MagicSkill_Default;
+        public static readonly ActorValue MagicSkillDefault = ActorValue.None;
+        public ActorValue MagicSkill { get; set; } = MagicSkillDefault;
         #endregion
         #region ResistValue
-        public readonly static ActorValue _ResistValue_Default = ActorValue.None;
-        public ActorValue ResistValue { get; set; } = _ResistValue_Default;
+        public static readonly ActorValue ResistValueDefault = ActorValue.None;
+        public ActorValue ResistValue { get; set; } = ResistValueDefault;
         #endregion
         #region Unknown1
         public UInt16 Unknown1 { get; set; } = default;
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Skyrim
         public TargetType TargetType { get; set; } = default;
         #endregion
         #region SecondActorValue
-        public readonly static ActorValue _SecondActorValue_Default = ActorValue.None;
-        public ActorValue SecondActorValue { get; set; } = _SecondActorValue_Default;
+        public static readonly ActorValue SecondActorValueDefault = ActorValue.None;
+        public ActorValue SecondActorValue { get; set; } = SecondActorValueDefault;
         #endregion
         #region CastingArt
         private readonly IFormLink<IArtObjectGetter> _CastingArt = new FormLink<IArtObjectGetter>();
@@ -409,9 +409,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region DATADataTypeState
-        public MagicEffect.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -481,7 +478,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>());
                 this.Description = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -491,6 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Name,
                 TItem MenuDisplayObject,
@@ -534,15 +531,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem CounterEffects,
                 TItem Sounds,
                 TItem Description,
-                TItem Conditions,
-                TItem DATADataTypeState)
+                TItem Conditions)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
@@ -588,7 +585,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>());
                 this.Description = Description;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -644,7 +640,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>? Sounds;
             public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -702,7 +697,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -752,7 +746,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Sounds);
                 hash.Add(this.Description);
                 hash.Add(this.Conditions);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -857,7 +850,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -960,7 +952,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1074,7 +1065,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -1333,10 +1323,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1392,7 +1378,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>? Sounds;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1489,8 +1474,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Description;
                     case MagicEffect_FieldIndex.Conditions:
                         return Conditions;
-                    case MagicEffect_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1632,9 +1615,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case MagicEffect_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
-                        break;
-                    case MagicEffect_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1779,9 +1759,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
-                    case MagicEffect_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1835,7 +1812,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Sounds != null) return true;
                 if (Description != null) return true;
                 if (Conditions != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -2054,9 +2030,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -2068,7 +2041,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.MenuDisplayObject = this.MenuDisplayObject.Combine(rhs.MenuDisplayObject);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
                 ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
@@ -2105,11 +2078,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.CastingSoundLevel = this.CastingSoundLevel.Combine(rhs.CastingSoundLevel);
                 ret.ScriptEffectAIScore = this.ScriptEffectAIScore.Combine(rhs.ScriptEffectAIScore);
                 ret.ScriptEffectAIDelayTime = this.ScriptEffectAIDelayTime.Combine(rhs.ScriptEffectAIDelayTime);
-                ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), Noggog.ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2176,7 +2148,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MagicEffectSound.TranslationMask? Sounds;
             public bool Description;
             public Condition.TranslationMask? Conditions;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -2225,7 +2196,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ScriptEffectAIDelayTime = defaultOn;
                 this.CounterEffects = defaultOn;
                 this.Description = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -2277,7 +2247,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2341,10 +2310,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IMagicEffect);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MagicEffectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MagicEffectSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MagicEffectSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -2356,12 +2321,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMagicEffectGetter rhs) return false;
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectGetter? obj)
         {
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2492,7 +2457,6 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<MagicEffectSound>? Sounds { get; set; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IMagicEffectInternal :
@@ -2578,7 +2542,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; }
         ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        MagicEffect.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -2635,7 +2598,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2711,6 +2674,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static MagicEffect Duplicate(
+            this IMagicEffectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2743,51 +2717,51 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Name = 7,
-        MenuDisplayObject = 8,
-        Keywords = 9,
-        Flags = 10,
-        BaseCost = 11,
-        MagicSkill = 12,
-        ResistValue = 13,
-        Unknown1 = 14,
-        CastingLight = 15,
-        TaperWeight = 16,
-        HitShader = 17,
-        EnchantShader = 18,
-        MinimumSkillLevel = 19,
-        SpellmakingArea = 20,
-        SpellmakingCastingTime = 21,
-        TaperCurve = 22,
-        TaperDuration = 23,
-        SecondActorValueWeight = 24,
-        Archetype = 25,
-        Projectile = 26,
-        Explosion = 27,
-        CastType = 28,
-        TargetType = 29,
-        SecondActorValue = 30,
-        CastingArt = 31,
-        HitEffectArt = 32,
-        ImpactData = 33,
-        SkillUsageMultiplier = 34,
-        DualCastArt = 35,
-        DualCastScale = 36,
-        EnchantArt = 37,
-        HitVisuals = 38,
-        EnchantVisuals = 39,
-        EquipAbility = 40,
-        ImageSpaceModifier = 41,
-        PerkToApply = 42,
-        CastingSoundLevel = 43,
-        ScriptEffectAIScore = 44,
-        ScriptEffectAIDelayTime = 45,
-        CounterEffects = 46,
-        Sounds = 47,
-        Description = 48,
-        Conditions = 49,
-        DATADataTypeState = 50,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        MenuDisplayObject = 9,
+        Keywords = 10,
+        Flags = 11,
+        BaseCost = 12,
+        MagicSkill = 13,
+        ResistValue = 14,
+        Unknown1 = 15,
+        CastingLight = 16,
+        TaperWeight = 17,
+        HitShader = 18,
+        EnchantShader = 19,
+        MinimumSkillLevel = 20,
+        SpellmakingArea = 21,
+        SpellmakingCastingTime = 22,
+        TaperCurve = 23,
+        TaperDuration = 24,
+        SecondActorValueWeight = 25,
+        Archetype = 26,
+        Projectile = 27,
+        Explosion = 28,
+        CastType = 29,
+        TargetType = 30,
+        SecondActorValue = 31,
+        CastingArt = 32,
+        HitEffectArt = 33,
+        ImpactData = 34,
+        SkillUsageMultiplier = 35,
+        DualCastArt = 36,
+        DualCastScale = 37,
+        EnchantArt = 38,
+        HitVisuals = 39,
+        EnchantVisuals = 40,
+        EquipAbility = 41,
+        ImageSpaceModifier = 42,
+        PerkToApply = 43,
+        CastingSoundLevel = 44,
+        ScriptEffectAIScore = 45,
+        ScriptEffectAIDelayTime = 46,
+        CounterEffects = 47,
+        Sounds = 48,
+        Description = 49,
+        Conditions = 50,
     }
     #endregion
 
@@ -2805,7 +2779,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "6f4b3983-51e3-47e9-894e-9c442948e6d1";
 
-        public const ushort AdditionalFieldCount = 45;
+        public const ushort AdditionalFieldCount = 44;
 
         public const ushort FieldCount = 51;
 
@@ -2841,6 +2815,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.MGEF,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.FULL,
                 RecordTypes.MDOB,
                 RecordTypes.KWDA,
@@ -2902,8 +2877,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.Keywords = null;
             item.Flags = default;
             item.BaseCost = default;
-            item.MagicSkill = MagicEffect._MagicSkill_Default;
-            item.ResistValue = MagicEffect._ResistValue_Default;
+            item.MagicSkill = MagicEffect.MagicSkillDefault;
+            item.ResistValue = MagicEffect.ResistValueDefault;
             item.Unknown1 = default;
             item.CastingLight.Clear();
             item.TaperWeight = default;
@@ -2920,7 +2895,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Explosion.Clear();
             item.CastType = default;
             item.TargetType = default;
-            item.SecondActorValue = MagicEffect._SecondActorValue_Default;
+            item.SecondActorValue = MagicEffect.SecondActorValueDefault;
             item.CastingArt.Clear();
             item.HitEffectArt.Clear();
             item.ImpactData.Clear();
@@ -2940,7 +2915,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Sounds = null;
             item.Description = default;
             item.Conditions.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -3128,7 +3102,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3399,10 +3372,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static MagicEffect_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -3421,8 +3390,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (MagicEffect_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (MagicEffect_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (MagicEffect_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3439,7 +3410,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (MagicEffect_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3447,197 +3418,193 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMagicEffectGetter? lhs,
             IMagicEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
             {
                 if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
             {
                 if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSkill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSkill) ?? true))
             {
                 if (lhs.MagicSkill != rhs.MagicSkill) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ResistValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ResistValue) ?? true))
             {
                 if (lhs.ResistValue != rhs.ResistValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
             {
                 if (lhs.Unknown1 != rhs.Unknown1) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingLight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingLight) ?? true))
             {
                 if (!lhs.CastingLight.Equals(rhs.CastingLight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
             {
                 if (!lhs.TaperWeight.EqualsWithin(rhs.TaperWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitShader) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitShader) ?? true))
             {
                 if (!lhs.HitShader.Equals(rhs.HitShader)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantShader) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantShader) ?? true))
             {
                 if (!lhs.EnchantShader.Equals(rhs.EnchantShader)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
             {
                 if (lhs.MinimumSkillLevel != rhs.MinimumSkillLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingArea) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingArea) ?? true))
             {
                 if (lhs.SpellmakingArea != rhs.SpellmakingArea) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingCastingTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingCastingTime) ?? true))
             {
                 if (!lhs.SpellmakingCastingTime.EqualsWithin(rhs.SpellmakingCastingTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperCurve) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperCurve) ?? true))
             {
                 if (!lhs.TaperCurve.EqualsWithin(rhs.TaperCurve)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperDuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperDuration) ?? true))
             {
                 if (!lhs.TaperDuration.EqualsWithin(rhs.TaperDuration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValueWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValueWeight) ?? true))
             {
                 if (!lhs.SecondActorValueWeight.EqualsWithin(rhs.SecondActorValueWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Archetype, rhs.Archetype, out var lhsArchetype, out var rhsArchetype, out var isArchetypeEqual))
                 {
-                    if (!((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)lhsArchetype).CommonInstance()!).Equals(lhsArchetype, rhsArchetype, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype))) return false;
+                    if (!((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)lhsArchetype).CommonInstance()!).Equals(lhsArchetype, rhsArchetype, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype))) return false;
                 }
                 else if (!isArchetypeEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
             {
                 if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Explosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Explosion) ?? true))
             {
                 if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
             {
                 if (lhs.CastType != rhs.CastType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.TargetType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TargetType) ?? true))
             {
                 if (lhs.TargetType != rhs.TargetType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValue) ?? true))
             {
                 if (lhs.SecondActorValue != rhs.SecondActorValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
             {
                 if (!lhs.CastingArt.Equals(rhs.CastingArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitEffectArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitEffectArt) ?? true))
             {
                 if (!lhs.HitEffectArt.Equals(rhs.HitEffectArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImpactData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImpactData) ?? true))
             {
                 if (!lhs.ImpactData.Equals(rhs.ImpactData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
             {
                 if (!lhs.SkillUsageMultiplier.EqualsWithin(rhs.SkillUsageMultiplier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastArt) ?? true))
             {
                 if (!lhs.DualCastArt.Equals(rhs.DualCastArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastScale) ?? true))
             {
                 if (!lhs.DualCastScale.EqualsWithin(rhs.DualCastScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantArt) ?? true))
             {
                 if (!lhs.EnchantArt.Equals(rhs.EnchantArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitVisuals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitVisuals) ?? true))
             {
                 if (!lhs.HitVisuals.Equals(rhs.HitVisuals)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantVisuals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantVisuals) ?? true))
             {
                 if (!lhs.EnchantVisuals.Equals(rhs.EnchantVisuals)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
             {
                 if (!lhs.EquipAbility.Equals(rhs.EquipAbility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImageSpaceModifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImageSpaceModifier) ?? true))
             {
                 if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.PerkToApply) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.PerkToApply) ?? true))
             {
                 if (!lhs.PerkToApply.Equals(rhs.PerkToApply)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
             {
                 if (lhs.CastingSoundLevel != rhs.CastingSoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIScore) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIScore) ?? true))
             {
                 if (!lhs.ScriptEffectAIScore.EqualsWithin(rhs.ScriptEffectAIScore)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime) ?? true))
             {
                 if (!lhs.ScriptEffectAIDelayTime.EqualsWithin(rhs.ScriptEffectAIDelayTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
                 if (!lhs.CounterEffects.SequenceEqualNullable(rhs.CounterEffects)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Sounds)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Conditions)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -3645,23 +3612,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMagicEffectGetter?)lhs,
                 rhs: rhs as IMagicEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMagicEffectGetter?)lhs,
                 rhs: rhs as IMagicEffectGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMagicEffectGetter item)
@@ -3720,7 +3687,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.Conditions);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -4194,10 +4160,6 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -4346,15 +4308,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly MagicEffectBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IMagicEffectGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IMagicEffectGetter item,
             MutagenWriter writer,
@@ -4369,7 +4322,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4607,7 +4560,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -4667,15 +4620,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly MagicEffectBinaryCreateTranslation Instance = new MagicEffectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MGEF;
-        public static void FillBinaryStructs(
-            IMagicEffectInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMagicEffectInternal item,
             MutagenFrame frame,
@@ -4690,7 +4634,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)MagicEffect_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FULL:
@@ -4857,6 +4803,11 @@ namespace Mutagen.Bethesda.Skyrim
                         item: item);
                     return (int)MagicEffect_FieldIndex.Conditions;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -4934,8 +4885,9 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
@@ -4959,7 +4911,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private RangeInt32? _DATALocation;
-        public MagicEffect.DATADataType DATADataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
@@ -5240,6 +5191,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)MagicEffect_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FULL:
@@ -5311,6 +5267,11 @@ namespace Mutagen.Bethesda.Skyrim
                         lastParsed: lastParsed);
                     return (int)MagicEffect_FieldIndex.Conditions;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return base.FillRecordType(
                         stream: stream,
@@ -5349,12 +5310,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMagicEffectGetter rhs) return false;
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectGetter? obj)
         {
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);

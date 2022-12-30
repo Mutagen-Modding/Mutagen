@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherAmbientColorSetGetter rhs) return false;
-            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherAmbientColorSetGetter? obj)
         {
-            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -956,38 +956,38 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IWeatherAmbientColorSetGetter? lhs,
             IWeatherAmbientColorSetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Sunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Sunrise) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Sunrise, rhs.Sunrise, out var lhsSunrise, out var rhsSunrise, out var isSunriseEqual))
                 {
-                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsSunrise).CommonInstance()!).Equals(lhsSunrise, rhsSunrise, crystal?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Sunrise))) return false;
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsSunrise).CommonInstance()!).Equals(lhsSunrise, rhsSunrise, equalsMask?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Sunrise))) return false;
                 }
                 else if (!isSunriseEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Day) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Day) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Day, rhs.Day, out var lhsDay, out var rhsDay, out var isDayEqual))
                 {
-                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsDay).CommonInstance()!).Equals(lhsDay, rhsDay, crystal?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Day))) return false;
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsDay).CommonInstance()!).Equals(lhsDay, rhsDay, equalsMask?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Day))) return false;
                 }
                 else if (!isDayEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Sunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Sunset) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Sunset, rhs.Sunset, out var lhsSunset, out var rhsSunset, out var isSunsetEqual))
                 {
-                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsSunset).CommonInstance()!).Equals(lhsSunset, rhsSunset, crystal?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Sunset))) return false;
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsSunset).CommonInstance()!).Equals(lhsSunset, rhsSunset, equalsMask?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Sunset))) return false;
                 }
                 else if (!isSunsetEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Night) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Night) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Night, rhs.Night, out var lhsNight, out var rhsNight, out var isNightEqual))
                 {
-                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsNight).CommonInstance()!).Equals(lhsNight, rhsNight, crystal?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Night))) return false;
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsNight).CommonInstance()!).Equals(lhsNight, rhsNight, equalsMask?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Night))) return false;
                 }
                 else if (!isNightEqual) return false;
             }
@@ -1390,12 +1390,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IWeatherAmbientColorSetGetter rhs) return false;
-            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherAmbientColorSetGetter? obj)
         {
-            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)this).CommonInstance()!).GetHashCode(this);

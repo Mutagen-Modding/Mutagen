@@ -102,6 +102,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Models)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -109,7 +110,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Models = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>?>(Models, Enumerable.Empty<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>());
             }
@@ -364,7 +366,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Models = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>(ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
+                ret.Models = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), Noggog.ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -466,12 +468,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IDebrisGetter rhs) return false;
-            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDebrisGetter? obj)
         {
-            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).GetHashCode(this);
@@ -618,7 +620,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -694,6 +696,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Debris Duplicate(
+            this IDebrisGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -726,7 +739,8 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Models = 6,
+        Fallout4MajorRecordFlags = 6,
+        Models = 7,
     }
     #endregion
 
@@ -746,7 +760,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(Debris.Mask<>);
 
@@ -995,8 +1009,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Debris_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Debris_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Debris_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1013,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Debris_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1021,13 +1037,13 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDebrisGetter? lhs,
             IDebrisGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Debris_FieldIndex.Models) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Debris_FieldIndex.Models) ?? true))
             {
-                if (!lhs.Models.SequenceEqual(rhs.Models, (l, r) => ((DebrisModelCommon)((IDebrisModelGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Debris_FieldIndex.Models)))) return false;
+                if (!lhs.Models.SequenceEqual(rhs.Models, (l, r) => ((DebrisModelCommon)((IDebrisModelGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Debris_FieldIndex.Models)))) return false;
             }
             return true;
         }
@@ -1035,23 +1051,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDebrisGetter?)lhs,
                 rhs: rhs as IDebrisGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDebrisGetter?)lhs,
                 rhs: rhs as IDebrisGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IDebrisGetter item)
@@ -1623,12 +1639,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IDebrisGetter rhs) return false;
-            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDebrisGetter? obj)
         {
-            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).GetHashCode(this);

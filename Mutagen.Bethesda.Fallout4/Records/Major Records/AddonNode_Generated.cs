@@ -122,9 +122,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         public AddonNode.Flag Flags { get; set; } = default;
         #endregion
-        #region DNAMDataTypeState
-        public AddonNode.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -157,7 +154,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Light = initialValue;
                 this.MasterParticleSystemCap = initialValue;
                 this.Flags = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -167,21 +163,22 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Model,
                 TItem NodeIndex,
                 TItem Sound,
                 TItem Light,
                 TItem MasterParticleSystemCap,
-                TItem Flags,
-                TItem DNAMDataTypeState)
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
@@ -190,7 +187,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Light = Light;
                 this.MasterParticleSystemCap = MasterParticleSystemCap;
                 this.Flags = Flags;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -209,7 +205,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Light;
             public TItem MasterParticleSystemCap;
             public TItem Flags;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -230,7 +225,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Light, rhs.Light)) return false;
                 if (!object.Equals(this.MasterParticleSystemCap, rhs.MasterParticleSystemCap)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -243,7 +237,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Light);
                 hash.Add(this.MasterParticleSystemCap);
                 hash.Add(this.Flags);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -269,7 +262,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Light)) return false;
                 if (!eval(this.MasterParticleSystemCap)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -293,7 +285,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Light)) return true;
                 if (eval(this.MasterParticleSystemCap)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -316,7 +307,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Light = eval(this.Light);
                 obj.MasterParticleSystemCap = eval(this.MasterParticleSystemCap);
                 obj.Flags = eval(this.Flags);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -363,10 +353,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -385,7 +371,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Light;
             public Exception? MasterParticleSystemCap;
             public Exception? Flags;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -408,8 +393,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return MasterParticleSystemCap;
                     case AddonNode_FieldIndex.Flags:
                         return Flags;
-                    case AddonNode_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -440,9 +423,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case AddonNode_FieldIndex.Flags:
                         this.Flags = ex;
-                        break;
-                    case AddonNode_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -476,9 +456,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case AddonNode_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case AddonNode_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -495,7 +472,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Light != null) return true;
                 if (MasterParticleSystemCap != null) return true;
                 if (Flags != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -539,9 +515,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -557,7 +530,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Light = this.Light.Combine(rhs.Light);
                 ret.MasterParticleSystemCap = this.MasterParticleSystemCap.Combine(rhs.MasterParticleSystemCap);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -587,7 +559,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Light;
             public bool MasterParticleSystemCap;
             public bool Flags;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -601,7 +572,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Light = defaultOn;
                 this.MasterParticleSystemCap = defaultOn;
                 this.Flags = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -616,7 +586,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Light, null));
                 ret.Add((MasterParticleSystemCap, null));
                 ret.Add((Flags, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -673,10 +642,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IAddonNode);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -685,12 +650,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAddonNodeGetter rhs) return false;
-            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAddonNodeGetter? obj)
         {
-            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -778,7 +743,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ILightGetter> Light { get; set; }
         new UInt16 MasterParticleSystemCap { get; set; }
         new AddonNode.Flag Flags { get; set; }
-        new AddonNode.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IAddonNodeInternal :
@@ -818,7 +782,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ILightGetter> Light { get; }
         UInt16 MasterParticleSystemCap { get; }
         AddonNode.Flag Flags { get; }
-        AddonNode.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -875,7 +838,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -951,6 +914,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static AddonNode Duplicate(
+            this IAddonNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -983,14 +957,14 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Model = 7,
-        NodeIndex = 8,
-        Sound = 9,
-        Light = 10,
-        MasterParticleSystemCap = 11,
-        Flags = 12,
-        DNAMDataTypeState = 13,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Model = 8,
+        NodeIndex = 9,
+        Sound = 10,
+        Light = 11,
+        MasterParticleSystemCap = 12,
+        Flags = 13,
     }
     #endregion
 
@@ -1008,7 +982,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "532676e2-896e-4295-b298-076f1cbe69cc";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 14;
 
@@ -1103,7 +1077,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Light.Clear();
             item.MasterParticleSystemCap = default;
             item.Flags = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1202,7 +1175,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Light = item.Light.Equals(rhs.Light);
             ret.MasterParticleSystemCap = item.MasterParticleSystemCap == rhs.MasterParticleSystemCap;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1281,10 +1253,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static AddonNode_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1303,8 +1271,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (AddonNode_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (AddonNode_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (AddonNode_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1321,7 +1291,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (AddonNode_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1329,49 +1299,45 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAddonNodeGetter? lhs,
             IAddonNodeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)AddonNode_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)AddonNode_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)AddonNode_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)AddonNode_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.NodeIndex) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.NodeIndex) ?? true))
             {
                 if (lhs.NodeIndex != rhs.NodeIndex) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.Light) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Light) ?? true))
             {
                 if (!lhs.Light.Equals(rhs.Light)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
             {
                 if (lhs.MasterParticleSystemCap != rhs.MasterParticleSystemCap) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -1379,23 +1345,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAddonNodeGetter?)lhs,
                 rhs: rhs as IAddonNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAddonNodeGetter?)lhs,
                 rhs: rhs as IAddonNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAddonNodeGetter item)
@@ -1411,7 +1377,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Light);
             hash.Add(item.MasterParticleSystemCap);
             hash.Add(item.Flags);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1598,10 +1563,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1750,15 +1711,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly AddonNodeBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IAddonNodeGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IAddonNodeGetter item,
             MutagenWriter writer,
@@ -1813,7 +1765,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1873,15 +1825,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly AddonNodeBinaryCreateTranslation Instance = new AddonNodeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ADDN;
-        public static void FillBinaryStructs(
-            IAddonNodeInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAddonNodeInternal item,
             MutagenFrame frame,
@@ -2017,7 +1960,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<ILightGetter> Light => _LightLocation.HasValue ? new FormLinkNullable<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightGetter>.Null;
         #endregion
         private RangeInt32? _DNAMLocation;
-        public AddonNode.DNAMDataType DNAMDataTypeState { get; private set; }
         #region MasterParticleSystemCap
         private int _MasterParticleSystemCapLocation => _DNAMLocation!.Value.Min;
         private bool _MasterParticleSystemCap_IsSet => _DNAMLocation.HasValue;
@@ -2171,12 +2113,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAddonNodeGetter rhs) return false;
-            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAddonNodeGetter? obj)
         {
-            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).GetHashCode(this);

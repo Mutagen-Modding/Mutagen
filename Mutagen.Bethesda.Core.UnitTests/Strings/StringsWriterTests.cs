@@ -1,6 +1,6 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Strings;
-using Mutagen.Bethesda.UnitTests.AutoData;
+using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Strings;

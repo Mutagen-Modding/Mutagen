@@ -441,8 +441,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.GiftFilter => this.GiftFilter;
         #endregion
         #region NAM5
-        public readonly static UInt16 _NAM5_Default = 0xFF00;
-        public UInt16 NAM5 { get; set; } = _NAM5_Default;
+        public static readonly UInt16 NAM5Default = 0xFF00;
+        public UInt16 NAM5 { get; set; } = NAM5Default;
         #endregion
         #region Height
         public Single Height { get; set; } = default;
@@ -634,6 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Configuration,
@@ -685,7 +686,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -2585,31 +2587,31 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Configuration = this.Configuration.Combine(rhs.Configuration, (l, r) => l.Combine(r));
-                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), Noggog.ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
                 ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
                 ret.Voice = this.Voice.Combine(rhs.Voice);
                 ret.Template = this.Template.Combine(rhs.Template);
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
+                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), Noggog.ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.WornArmor = this.WornArmor.Combine(rhs.WornArmor);
                 ret.FarAwayModel = this.FarAwayModel.Combine(rhs.FarAwayModel);
                 ret.AttackRace = this.AttackRace.Combine(rhs.AttackRace);
-                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
+                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), Noggog.ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
                 ret.SpectatorOverridePackageList = this.SpectatorOverridePackageList.Combine(rhs.SpectatorOverridePackageList);
                 ret.ObserveDeadBodyOverridePackageList = this.ObserveDeadBodyOverridePackageList.Combine(rhs.ObserveDeadBodyOverridePackageList);
                 ret.GuardWarnOverridePackageList = this.GuardWarnOverridePackageList.Combine(rhs.GuardWarnOverridePackageList);
                 ret.CombatOverridePackageList = this.CombatOverridePackageList.Combine(rhs.CombatOverridePackageList);
-                ret.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Perks?.Overall, rhs.Perks?.Overall), ExceptionExt.Combine(this.Perks?.Specific, rhs.Perks?.Specific));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Perks?.Overall, rhs.Perks?.Overall), Noggog.ExceptionExt.Combine(this.Perks?.Specific, rhs.Perks?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.AIData = this.AIData.Combine(rhs.AIData, (l, r) => l.Combine(r));
-                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Packages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Packages?.Overall, rhs.Packages?.Overall), Noggog.ExceptionExt.Combine(this.Packages?.Specific, rhs.Packages?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Class = this.Class.Combine(rhs.Class);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
                 ret.PlayerSkills = this.PlayerSkills.Combine(rhs.PlayerSkills, (l, r) => l.Combine(r));
-                ret.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
+                ret.HeadParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), Noggog.ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
                 ret.HairColor = this.HairColor.Combine(rhs.HairColor);
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
                 ret.GiftFilter = this.GiftFilter.Combine(rhs.GiftFilter);
@@ -2626,7 +2628,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.TextureLighting = this.TextureLighting.Combine(rhs.TextureLighting);
                 ret.FaceMorph = this.FaceMorph.Combine(rhs.FaceMorph, (l, r) => l.Combine(r));
                 ret.FaceParts = this.FaceParts.Combine(rhs.FaceParts, (l, r) => l.Combine(r));
-                ret.TintLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.TintLayers?.Overall, rhs.TintLayers?.Overall), ExceptionExt.Combine(this.TintLayers?.Specific, rhs.TintLayers?.Specific));
+                ret.TintLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TintLayers?.Overall, rhs.TintLayers?.Overall), Noggog.ExceptionExt.Combine(this.TintLayers?.Specific, rhs.TintLayers?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2864,12 +2866,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not INpcGetter rhs) return false;
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcGetter? obj)
         {
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
@@ -3169,7 +3171,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -3245,6 +3247,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Npc Duplicate(
+            this INpcGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3277,51 +3290,52 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Configuration = 8,
-        Factions = 9,
-        DeathItem = 10,
-        Voice = 11,
-        Template = 12,
-        Race = 13,
-        ActorEffect = 14,
-        Destructible = 15,
-        WornArmor = 16,
-        FarAwayModel = 17,
-        AttackRace = 18,
-        Attacks = 19,
-        SpectatorOverridePackageList = 20,
-        ObserveDeadBodyOverridePackageList = 21,
-        GuardWarnOverridePackageList = 22,
-        CombatOverridePackageList = 23,
-        Perks = 24,
-        Items = 25,
-        AIData = 26,
-        Packages = 27,
-        Keywords = 28,
-        Class = 29,
-        Name = 30,
-        ShortName = 31,
-        PlayerSkills = 32,
-        HeadParts = 33,
-        HairColor = 34,
-        CombatStyle = 35,
-        GiftFilter = 36,
-        NAM5 = 37,
-        Height = 38,
-        Weight = 39,
-        SoundLevel = 40,
-        Sound = 41,
-        DefaultOutfit = 42,
-        SleepingOutfit = 43,
-        DefaultPackageList = 44,
-        CrimeFaction = 45,
-        HeadTexture = 46,
-        TextureLighting = 47,
-        FaceMorph = 48,
-        FaceParts = 49,
-        TintLayers = 50,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Configuration = 9,
+        Factions = 10,
+        DeathItem = 11,
+        Voice = 12,
+        Template = 13,
+        Race = 14,
+        ActorEffect = 15,
+        Destructible = 16,
+        WornArmor = 17,
+        FarAwayModel = 18,
+        AttackRace = 19,
+        Attacks = 20,
+        SpectatorOverridePackageList = 21,
+        ObserveDeadBodyOverridePackageList = 22,
+        GuardWarnOverridePackageList = 23,
+        CombatOverridePackageList = 24,
+        Perks = 25,
+        Items = 26,
+        AIData = 27,
+        Packages = 28,
+        Keywords = 29,
+        Class = 30,
+        Name = 31,
+        ShortName = 32,
+        PlayerSkills = 33,
+        HeadParts = 34,
+        HairColor = 35,
+        CombatStyle = 36,
+        GiftFilter = 37,
+        NAM5 = 38,
+        Height = 39,
+        Weight = 40,
+        SoundLevel = 41,
+        Sound = 42,
+        DefaultOutfit = 43,
+        SleepingOutfit = 44,
+        DefaultPackageList = 45,
+        CrimeFaction = 46,
+        HeadTexture = 47,
+        TextureLighting = 48,
+        FaceMorph = 49,
+        FaceParts = 50,
+        TintLayers = 51,
     }
     #endregion
 
@@ -3341,7 +3355,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 45;
 
-        public const ushort FieldCount = 51;
+        public const ushort FieldCount = 52;
 
         public static readonly Type MaskType = typeof(Npc.Mask<>);
 
@@ -3375,6 +3389,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.NPC_,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ACBS,
                 RecordTypes.SNAM,
@@ -3509,7 +3524,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.HairColor.Clear();
             item.CombatStyle.Clear();
             item.GiftFilter.Clear();
-            item.NAM5 = Npc._NAM5_Default;
+            item.NAM5 = Npc.NAM5Default;
             item.Height = default;
             item.Weight = default;
             item.SoundLevel = default;
@@ -4114,8 +4129,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Npc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Npc_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Npc_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -4132,7 +4149,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Npc_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -4140,225 +4157,225 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             INpcGetter? lhs,
             INpcGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Npc_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Npc_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Configuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Configuration) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Configuration, rhs.Configuration, out var lhsConfiguration, out var rhsConfiguration, out var isConfigurationEqual))
                 {
-                    if (!((NpcConfigurationCommon)((INpcConfigurationGetter)lhsConfiguration).CommonInstance()!).Equals(lhsConfiguration, rhsConfiguration, crystal?.GetSubCrystal((int)Npc_FieldIndex.Configuration))) return false;
+                    if (!((NpcConfigurationCommon)((INpcConfigurationGetter)lhsConfiguration).CommonInstance()!).Equals(lhsConfiguration, rhsConfiguration, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Configuration))) return false;
                 }
                 else if (!isConfigurationEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
             {
-                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Factions)))) return false;
+                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Factions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
                 if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Voice) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Voice) ?? true))
             {
                 if (!lhs.Voice.Equals(rhs.Voice)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Template) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Template) ?? true))
             {
                 if (!lhs.Template.Equals(rhs.Template)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
             {
                 if (!lhs.Race.Equals(rhs.Race)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ActorEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ActorEffect) ?? true))
             {
                 if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Npc_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.WornArmor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.WornArmor) ?? true))
             {
                 if (!lhs.WornArmor.Equals(rhs.WornArmor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModel) ?? true))
             {
                 if (!lhs.FarAwayModel.Equals(rhs.FarAwayModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AttackRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.AttackRace) ?? true))
             {
                 if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Attacks)))) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Attacks)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
                 if (!lhs.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
             {
                 if (!lhs.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.GuardWarnOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.GuardWarnOverridePackageList) ?? true))
             {
                 if (!lhs.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CombatOverridePackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatOverridePackageList) ?? true))
             {
                 if (!lhs.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
             {
-                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks, (l, r) => ((PerkPlacementCommon)((IPerkPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Perks)))) return false;
+                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks, (l, r) => ((PerkPlacementCommon)((IPerkPlacementGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Perks)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Items)))) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Items)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AIData, rhs.AIData, out var lhsAIData, out var rhsAIData, out var isAIDataEqual))
                 {
-                    if (!((AIDataCommon)((IAIDataGetter)lhsAIData).CommonInstance()!).Equals(lhsAIData, rhsAIData, crystal?.GetSubCrystal((int)Npc_FieldIndex.AIData))) return false;
+                    if (!((AIDataCommon)((IAIDataGetter)lhsAIData).CommonInstance()!).Equals(lhsAIData, rhsAIData, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.AIData))) return false;
                 }
                 else if (!isAIDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Packages) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Packages) ?? true))
             {
                 if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
             {
                 if (!lhs.Class.Equals(rhs.Class)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
             {
                 if (!object.Equals(lhs.ShortName, rhs.ShortName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.PlayerSkills) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.PlayerSkills) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.PlayerSkills, rhs.PlayerSkills, out var lhsPlayerSkills, out var rhsPlayerSkills, out var isPlayerSkillsEqual))
                 {
-                    if (!((PlayerSkillsCommon)((IPlayerSkillsGetter)lhsPlayerSkills).CommonInstance()!).Equals(lhsPlayerSkills, rhsPlayerSkills, crystal?.GetSubCrystal((int)Npc_FieldIndex.PlayerSkills))) return false;
+                    if (!((PlayerSkillsCommon)((IPlayerSkillsGetter)lhsPlayerSkills).CommonInstance()!).Equals(lhsPlayerSkills, rhsPlayerSkills, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.PlayerSkills))) return false;
                 }
                 else if (!isPlayerSkillsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeadParts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadParts) ?? true))
             {
                 if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
             {
                 if (!lhs.HairColor.Equals(rhs.HairColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
             {
                 if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.GiftFilter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.GiftFilter) ?? true))
             {
                 if (!lhs.GiftFilter.Equals(rhs.GiftFilter)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
             {
                 if (lhs.NAM5 != rhs.NAM5) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Height) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Height) ?? true))
             {
                 if (!lhs.Height.EqualsWithin(rhs.Height)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.SoundLevel) ?? true))
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Sound) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Sound, rhs.Sound, out var lhsSound, out var rhsSound, out var isSoundEqual))
                 {
-                    if (!((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)lhsSound).CommonInstance()!).Equals(lhsSound, rhsSound, crystal?.GetSubCrystal((int)Npc_FieldIndex.Sound))) return false;
+                    if (!((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)lhsSound).CommonInstance()!).Equals(lhsSound, rhsSound, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Sound))) return false;
                 }
                 else if (!isSoundEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DefaultOutfit) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultOutfit) ?? true))
             {
                 if (!lhs.DefaultOutfit.Equals(rhs.DefaultOutfit)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SleepingOutfit) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.SleepingOutfit) ?? true))
             {
                 if (!lhs.SleepingOutfit.Equals(rhs.SleepingOutfit)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DefaultPackageList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultPackageList) ?? true))
             {
                 if (!lhs.DefaultPackageList.Equals(rhs.DefaultPackageList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.CrimeFaction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.CrimeFaction) ?? true))
             {
                 if (!lhs.CrimeFaction.Equals(rhs.CrimeFaction)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeadTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadTexture) ?? true))
             {
                 if (!lhs.HeadTexture.Equals(rhs.HeadTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.TextureLighting) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.TextureLighting) ?? true))
             {
                 if (!lhs.TextureLighting.ColorOnlyEquals(rhs.TextureLighting)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceMorph) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceMorph) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FaceMorph, rhs.FaceMorph, out var lhsFaceMorph, out var rhsFaceMorph, out var isFaceMorphEqual))
                 {
-                    if (!((NpcFaceMorphCommon)((INpcFaceMorphGetter)lhsFaceMorph).CommonInstance()!).Equals(lhsFaceMorph, rhsFaceMorph, crystal?.GetSubCrystal((int)Npc_FieldIndex.FaceMorph))) return false;
+                    if (!((NpcFaceMorphCommon)((INpcFaceMorphGetter)lhsFaceMorph).CommonInstance()!).Equals(lhsFaceMorph, rhsFaceMorph, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.FaceMorph))) return false;
                 }
                 else if (!isFaceMorphEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceParts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceParts) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FaceParts, rhs.FaceParts, out var lhsFaceParts, out var rhsFaceParts, out var isFacePartsEqual))
                 {
-                    if (!((NpcFacePartsCommon)((INpcFacePartsGetter)lhsFaceParts).CommonInstance()!).Equals(lhsFaceParts, rhsFaceParts, crystal?.GetSubCrystal((int)Npc_FieldIndex.FaceParts))) return false;
+                    if (!((NpcFacePartsCommon)((INpcFacePartsGetter)lhsFaceParts).CommonInstance()!).Equals(lhsFaceParts, rhsFaceParts, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.FaceParts))) return false;
                 }
                 else if (!isFacePartsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.TintLayers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.TintLayers) ?? true))
             {
-                if (!lhs.TintLayers.SequenceEqual(rhs.TintLayers, (l, r) => ((TintLayerCommon)((ITintLayerGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.TintLayers)))) return false;
+                if (!lhs.TintLayers.SequenceEqual(rhs.TintLayers, (l, r) => ((TintLayerCommon)((ITintLayerGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.TintLayers)))) return false;
             }
             return true;
         }
@@ -4366,23 +4383,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INpcGetter?)lhs,
                 rhs: rhs as INpcGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INpcGetter?)lhs,
                 rhs: rhs as INpcGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(INpcGetter item)
@@ -5458,7 +5475,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
@@ -5831,7 +5848,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Npc_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -6171,6 +6190,11 @@ namespace Mutagen.Bethesda.Skyrim
                             transl: TintLayer.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.TintLayers;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -6237,8 +6261,9 @@ namespace Mutagen.Bethesda.Skyrim
         public Npc.MajorFlag MajorFlags => (Npc.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
@@ -6475,6 +6500,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Npc_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -6795,6 +6825,11 @@ namespace Mutagen.Bethesda.Skyrim
                         factory: TintLayerBinaryOverlay.TintLayerFactory);
                     return (int)Npc_FieldIndex.TintLayers;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return base.FillRecordType(
                         stream: stream,
@@ -6833,12 +6868,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not INpcGetter rhs) return false;
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcGetter? obj)
         {
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);

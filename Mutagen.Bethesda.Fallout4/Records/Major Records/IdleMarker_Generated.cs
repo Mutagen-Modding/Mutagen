@@ -189,6 +189,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Keywords,
                 TItem Flags,
@@ -202,7 +203,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
@@ -682,10 +684,10 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.IdleTimer = this.IdleTimer.Combine(rhs.IdleTimer);
-                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
@@ -813,12 +815,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IIdleMarkerGetter rhs) return false;
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIdleMarkerGetter? obj)
         {
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1021,7 +1023,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((IdleMarkerCommon)((IIdleMarkerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1097,6 +1099,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static IdleMarker Duplicate(
+            this IIdleMarkerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1129,13 +1142,14 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Keywords = 7,
-        Flags = 8,
-        IdleTimer = 9,
-        Animations = 10,
-        Unknown = 11,
-        Model = 12,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Keywords = 8,
+        Flags = 9,
+        IdleTimer = 10,
+        Animations = 11,
+        Unknown = 12,
+        Model = 13,
     }
     #endregion
 
@@ -1155,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(IdleMarker.Mask<>);
 
@@ -1476,8 +1490,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (IdleMarker_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (IdleMarker_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (IdleMarker_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1494,7 +1510,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (IdleMarker_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1502,43 +1518,43 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IIdleMarkerGetter? lhs,
             IIdleMarkerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)IdleMarker_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)IdleMarker_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.IdleTimer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.IdleTimer) ?? true))
             {
                 if (!lhs.IdleTimer.EqualsWithin(rhs.IdleTimer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Animations) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Animations) ?? true))
             {
                 if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Unknown) ?? true))
             {
                 if (!lhs.Unknown.Equals(rhs.Unknown)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)IdleMarker_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)IdleMarker_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
@@ -1548,23 +1564,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IIdleMarkerGetter?)lhs,
                 rhs: rhs as IIdleMarkerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IIdleMarkerGetter?)lhs,
                 rhs: rhs as IIdleMarkerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IIdleMarkerGetter item)
@@ -2470,12 +2486,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IIdleMarkerGetter rhs) return false;
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIdleMarkerGetter? obj)
         {
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).GetHashCode(this);

@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class MagicEffectPeakValueModArchetype
 {
-    public FormLink<IKeywordGetter> Association => this.AssociationKey.AsLink<IKeywordGetter>();
+    public FormLink<IKeywordGetter> Association => this.AssociationKey.ToLink<IKeywordGetter>();
 
     IFormLink<IKeywordGetter> IMagicEffectPeakValueModArchetype.Association => this.Association;
     IFormLinkGetter<IKeywordGetter> IMagicEffectPeakValueModArchetypeGetter.Association => this.Association;
@@ -27,5 +27,5 @@ public partial interface IMagicEffectPeakValueModArchetypeGetter
 
 partial class MagicEffectPeakValueModArchetypeBinaryOverlay
 {
-    public IFormLinkGetter<IKeywordGetter> Association => this.AssociationKey.AsLink<IKeywordGetter>();
+    public IFormLinkGetter<IKeywordGetter> Association => this.AssociationKey.ToLink<IKeywordGetter>();
 }

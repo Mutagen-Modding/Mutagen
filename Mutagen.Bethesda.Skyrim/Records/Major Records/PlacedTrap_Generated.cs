@@ -100,6 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem EncounterZone,
                 TItem Owner,
@@ -126,6 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 VirtualMachineAdapter: VirtualMachineAdapter,
                 EncounterZone: EncounterZone,
                 Owner: Owner,
@@ -444,12 +446,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedTrapGetter rhs) return false;
-            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedTrapGetter? obj)
         {
-            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).GetHashCode(this);
@@ -599,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlacedTrapCommon)((IPlacedTrapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -675,6 +677,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static PlacedTrap Duplicate(
+            this IPlacedTrapGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((PlacedTrapCommon)((IPlacedTrapGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -707,25 +720,26 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        EncounterZone = 7,
-        Owner = 8,
-        FactionRank = 9,
-        HeadTrackingWeight = 10,
-        FavorCost = 11,
-        Reflections = 12,
-        LinkedReferences = 13,
-        ActivateParents = 14,
-        EnableParent = 15,
-        Emittance = 16,
-        MultiBoundReference = 17,
-        IgnoredBySandbox = 18,
-        LocationRefTypes = 19,
-        LocationReference = 20,
-        DistantLodData = 21,
-        Scale = 22,
-        Placement = 23,
-        Projectile = 24,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        EncounterZone = 8,
+        Owner = 9,
+        FactionRank = 10,
+        HeadTrackingWeight = 11,
+        FavorCost = 12,
+        Reflections = 13,
+        LinkedReferences = 14,
+        ActivateParents = 15,
+        EnableParent = 16,
+        Emittance = 17,
+        MultiBoundReference = 18,
+        IgnoredBySandbox = 19,
+        LocationRefTypes = 20,
+        LocationReference = 21,
+        DistantLodData = 22,
+        Scale = 23,
+        Placement = 24,
+        Projectile = 25,
     }
     #endregion
 
@@ -745,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 25;
+        public const ushort FieldCount = 26;
 
         public static readonly Type MaskType = typeof(PlacedTrap.Mask<>);
 
@@ -994,6 +1008,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return (PlacedTrap_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.Version2:
                     return (PlacedTrap_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.SkyrimMajorRecordFlags:
+                    return (PlacedTrap_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.VirtualMachineAdapter:
                     return (PlacedTrap_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.EncounterZone:
@@ -1031,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case APlacedTrap_FieldIndex.Placement:
                     return (PlacedTrap_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1051,8 +1067,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (PlacedTrap_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (PlacedTrap_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (PlacedTrap_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1069,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (PlacedTrap_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1077,11 +1095,11 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPlacedTrapGetter? lhs,
             IPlacedTrapGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PlacedTrap_FieldIndex.Projectile) ?? true))
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PlacedTrap_FieldIndex.Projectile) ?? true))
             {
                 if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
             }
@@ -1091,34 +1109,34 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IAPlacedTrapGetter? lhs,
             IAPlacedTrapGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedTrapGetter?)lhs,
                 rhs: rhs as IPlacedTrapGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedTrapGetter?)lhs,
                 rhs: rhs as IPlacedTrapGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedTrapGetter?)lhs,
                 rhs: rhs as IPlacedTrapGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPlacedTrapGetter item)
@@ -1656,12 +1674,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedTrapGetter rhs) return false;
-            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedTrapGetter? obj)
         {
-            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).GetHashCode(this);

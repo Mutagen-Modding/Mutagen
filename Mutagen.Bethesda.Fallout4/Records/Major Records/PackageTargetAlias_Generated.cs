@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageTargetAliasGetter rhs) return false;
-            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageTargetAliasGetter? obj)
         {
-            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).GetHashCode(this);
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case APackageTarget_FieldIndex.CountOrDistance:
                     return (PackageTargetAlias_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -784,11 +784,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPackageTargetAliasGetter? lhs,
             IPackageTargetAliasGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PackageTargetAlias_FieldIndex.Alias) ?? true))
+            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PackageTargetAlias_FieldIndex.Alias) ?? true))
             {
                 if (lhs.Alias != rhs.Alias) return false;
             }
@@ -798,12 +798,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAPackageTargetGetter? lhs,
             IAPackageTargetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackageTargetAliasGetter?)lhs,
                 rhs: rhs as IPackageTargetAliasGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPackageTargetAliasGetter item)
@@ -1137,12 +1137,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPackageTargetAliasGetter rhs) return false;
-            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageTargetAliasGetter? obj)
         {
-            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).GetHashCode(this);

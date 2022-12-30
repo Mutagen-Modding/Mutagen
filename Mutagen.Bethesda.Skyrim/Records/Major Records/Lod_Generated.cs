@@ -132,12 +132,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILodGetter rhs) return false;
-            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILodGetter? obj)
         {
-            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LodCommon)((ILodGetter)this).CommonInstance()!).GetHashCode(this);
@@ -777,7 +777,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LodCommon)((ILodGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1071,13 +1071,13 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Level0 = object.Equals(item.Level0, rhs.Level0);
-            ret.Level0Extra = MemorySliceExt.Equal(item.Level0Extra, rhs.Level0Extra);
+            ret.Level0Extra = MemorySliceExt.SequenceEqual(item.Level0Extra, rhs.Level0Extra);
             ret.Level1 = object.Equals(item.Level1, rhs.Level1);
-            ret.Level1Extra = MemorySliceExt.Equal(item.Level1Extra, rhs.Level1Extra);
+            ret.Level1Extra = MemorySliceExt.SequenceEqual(item.Level1Extra, rhs.Level1Extra);
             ret.Level2 = object.Equals(item.Level2, rhs.Level2);
-            ret.Level2Extra = MemorySliceExt.Equal(item.Level2Extra, rhs.Level2Extra);
+            ret.Level2Extra = MemorySliceExt.SequenceEqual(item.Level2Extra, rhs.Level2Extra);
             ret.Level3 = object.Equals(item.Level3, rhs.Level3);
-            ret.Level3Extra = MemorySliceExt.Equal(item.Level3Extra, rhs.Level3Extra);
+            ret.Level3Extra = MemorySliceExt.SequenceEqual(item.Level3Extra, rhs.Level3Extra);
         }
         
         public string Print(
@@ -1164,40 +1164,40 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILodGetter? lhs,
             ILodGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level0) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level0) ?? true))
             {
                 if (!object.Equals(lhs.Level0, rhs.Level0)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level0Extra) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level0Extra) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Level0Extra, rhs.Level0Extra)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Level0Extra, rhs.Level0Extra)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level1) ?? true))
             {
                 if (!object.Equals(lhs.Level1, rhs.Level1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level1Extra) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level1Extra) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Level1Extra, rhs.Level1Extra)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Level1Extra, rhs.Level1Extra)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level2) ?? true))
             {
                 if (!object.Equals(lhs.Level2, rhs.Level2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level2Extra) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level2Extra) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Level2Extra, rhs.Level2Extra)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Level2Extra, rhs.Level2Extra)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level3) ?? true))
             {
                 if (!object.Equals(lhs.Level3, rhs.Level3)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level3Extra) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level3Extra) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Level3Extra, rhs.Level3Extra)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Level3Extra, rhs.Level3Extra)) return false;
             }
             return true;
         }
@@ -1610,12 +1610,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILodGetter rhs) return false;
-            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILodGetter? obj)
         {
-            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LodCommon)((ILodGetter)this).CommonInstance()!).GetHashCode(this);

@@ -189,6 +189,9 @@
     <Compile Include="Records\Common Subrecords\WaterReflection.cs">
       <DependentUpon>WaterReflection.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\GlobalUnknown.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Landscape.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
@@ -2113,18 +2116,22 @@
     <Compile Include="Records\Major Records\PerkEntryPointModifyValues_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ANavigationMapInfoParent_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMapInfoWorldParent_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMapInfoCellParent_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalUnknown_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GitInfo" Version="2.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Loqui" Version="2.50.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.50.1" />
-    <PackageReference Include="NuGetizer" Version="0.8.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Loqui" />
+    <PackageReference Include="Noggog.CSharpExt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

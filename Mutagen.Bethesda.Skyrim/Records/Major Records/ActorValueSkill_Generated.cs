@@ -80,12 +80,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IActorValueSkillGetter rhs) return false;
-            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActorValueSkillGetter? obj)
         {
-            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).GetHashCode(this);
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActorValueSkillCommon)((IActorValueSkillGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -927,22 +927,22 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IActorValueSkillGetter? lhs,
             IActorValueSkillGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.UseMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.UseMult) ?? true))
             {
                 if (!lhs.UseMult.EqualsWithin(rhs.UseMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.OffsetMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.OffsetMult) ?? true))
             {
                 if (!lhs.OffsetMult.EqualsWithin(rhs.OffsetMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.ImproveMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.ImproveMult) ?? true))
             {
                 if (!lhs.ImproveMult.EqualsWithin(rhs.ImproveMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.ImproveOffset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.ImproveOffset) ?? true))
             {
                 if (!lhs.ImproveOffset.EqualsWithin(rhs.ImproveOffset)) return false;
             }
@@ -1293,12 +1293,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IActorValueSkillGetter rhs) return false;
-            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActorValueSkillGetter? obj)
         {
-            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).GetHashCode(this);

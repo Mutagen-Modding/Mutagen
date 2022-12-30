@@ -85,12 +85,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IModelGetter rhs) return false;
-            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IModelGetter? obj)
         {
-            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ModelCommon)((IModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ModelCommon)((IModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ret.File = string.Equals(item.File, rhs.File);
             ret.BoundRadius = item.BoundRadius.EqualsWithin(rhs.BoundRadius);
-            ret.Hashes = MemorySliceExt.Equal(item.Hashes, rhs.Hashes);
+            ret.Hashes = MemorySliceExt.SequenceEqual(item.Hashes, rhs.Hashes);
         }
         
         public string Print(
@@ -894,20 +894,20 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IModelGetter? lhs,
             IModelGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Model_FieldIndex.File) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.File) ?? true))
             {
                 if (!string.Equals(lhs.File, rhs.File)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Model_FieldIndex.BoundRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.BoundRadius) ?? true))
             {
                 if (!lhs.BoundRadius.EqualsWithin(rhs.BoundRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Model_FieldIndex.Hashes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.Hashes) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Hashes, rhs.Hashes)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Hashes, rhs.Hashes)) return false;
             }
             return true;
         }
@@ -1326,12 +1326,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IModelGetter rhs) return false;
-            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IModelGetter? obj)
         {
-            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ModelCommon)((IModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ModelCommon)((IModelGetter)this).CommonInstance()!).GetHashCode(this);

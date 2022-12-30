@@ -543,7 +543,7 @@ public abstract class PassthroughTest
         DirectoryPath processedDir,
         DirectoryPath writeDir)
     {
-        foreach (var source in EnumExt.GetValues<StringsSource>())
+        foreach (var source in Enums<StringsSource>.Values)
         {
             var stringsFileName = StringsUtility.GetFileName(GameRelease.GetLanguageFormat(), ModKey, Language.English, source);
             var sourcePath = Path.Combine(processedDir.Path, stringsFileName);

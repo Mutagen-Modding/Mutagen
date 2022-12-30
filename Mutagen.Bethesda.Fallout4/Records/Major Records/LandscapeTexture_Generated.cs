@@ -97,9 +97,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region HNAMDataTypeState
-        public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -131,7 +128,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.HavokRestitution = initialValue;
                 this.TextureSpecularExponent = initialValue;
                 this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.HNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -141,20 +137,21 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem TextureSet,
                 TItem MaterialType,
                 TItem HavokFriction,
                 TItem HavokRestitution,
                 TItem TextureSpecularExponent,
-                TItem Grasses,
-                TItem HNAMDataTypeState)
+                TItem Grasses)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.TextureSet = TextureSet;
                 this.MaterialType = MaterialType;
@@ -162,7 +159,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.HavokRestitution = HavokRestitution;
                 this.TextureSpecularExponent = TextureSpecularExponent;
                 this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Grasses, Enumerable.Empty<(int Index, TItem Value)>());
-                this.HNAMDataTypeState = HNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -180,7 +176,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem HavokRestitution;
             public TItem TextureSpecularExponent;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Grasses;
-            public TItem HNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -200,7 +195,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.HavokRestitution, rhs.HavokRestitution)) return false;
                 if (!object.Equals(this.TextureSpecularExponent, rhs.TextureSpecularExponent)) return false;
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
-                if (!object.Equals(this.HNAMDataTypeState, rhs.HNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -212,7 +206,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.HavokRestitution);
                 hash.Add(this.TextureSpecularExponent);
                 hash.Add(this.Grasses);
-                hash.Add(this.HNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -239,7 +232,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.HNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -264,7 +256,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.HNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -299,7 +290,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.HNAMDataTypeState = eval(this.HNAMDataTypeState);
             }
             #endregion
 
@@ -359,10 +349,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.HNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -380,7 +366,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? HavokRestitution;
             public Exception? TextureSpecularExponent;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Grasses;
-            public Exception? HNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -401,8 +386,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return TextureSpecularExponent;
                     case LandscapeTexture_FieldIndex.Grasses:
                         return Grasses;
-                    case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                        return HNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -430,9 +413,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case LandscapeTexture_FieldIndex.Grasses:
                         this.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                        break;
-                    case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                        this.HNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -463,9 +443,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case LandscapeTexture_FieldIndex.Grasses:
                         this.Grasses = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                        this.HNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -481,7 +458,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (HavokRestitution != null) return true;
                 if (TextureSpecularExponent != null) return true;
                 if (Grasses != null) return true;
-                if (HNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -543,9 +519,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -559,8 +532,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.HavokFriction = this.HavokFriction.Combine(rhs.HavokFriction);
                 ret.HavokRestitution = this.HavokRestitution.Combine(rhs.HavokRestitution);
                 ret.TextureSpecularExponent = this.TextureSpecularExponent.Combine(rhs.TextureSpecularExponent);
-                ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
-                ret.HNAMDataTypeState = this.HNAMDataTypeState.Combine(rhs.HNAMDataTypeState);
+                ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), Noggog.ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -589,7 +561,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool HavokRestitution;
             public bool TextureSpecularExponent;
             public bool Grasses;
-            public bool HNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -604,7 +575,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.HavokRestitution = defaultOn;
                 this.TextureSpecularExponent = defaultOn;
                 this.Grasses = defaultOn;
-                this.HNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -618,7 +588,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((HavokRestitution, null));
                 ret.Add((TextureSpecularExponent, null));
                 ret.Add((Grasses, null));
-                ret.Add((HNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -675,10 +644,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(ILandscapeTexture);
 
-        [Flags]
-        public enum HNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -687,12 +652,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeTextureGetter rhs) return false;
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeTextureGetter? obj)
         {
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -770,7 +735,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
         new ExtendedList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
-        new LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; }
     }
 
     public partial interface ILandscapeTextureInternal :
@@ -796,7 +760,6 @@ namespace Mutagen.Bethesda.Fallout4
         Byte HavokRestitution { get; }
         Byte TextureSpecularExponent { get; }
         IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
-        LandscapeTexture.HNAMDataType HNAMDataTypeState { get; }
 
     }
 
@@ -853,7 +816,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -929,6 +892,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static LandscapeTexture Duplicate(
+            this ILandscapeTextureGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -961,13 +935,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        TextureSet = 6,
-        MaterialType = 7,
-        HavokFriction = 8,
-        HavokRestitution = 9,
-        TextureSpecularExponent = 10,
-        Grasses = 11,
-        HNAMDataTypeState = 12,
+        Fallout4MajorRecordFlags = 6,
+        TextureSet = 7,
+        MaterialType = 8,
+        HavokFriction = 9,
+        HavokRestitution = 10,
+        TextureSpecularExponent = 11,
+        Grasses = 12,
     }
     #endregion
 
@@ -985,7 +959,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "3056ac9b-4016-4a65-bfe3-cab83274cd32";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
 
@@ -1075,7 +1049,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.HavokRestitution = default;
             item.TextureSpecularExponent = default;
             item.Grasses.Clear();
-            item.HNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1172,7 +1145,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Grasses,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.HNAMDataTypeState = item.HNAMDataTypeState == rhs.HNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1256,10 +1228,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.HNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
-            }
         }
         
         public static LandscapeTexture_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1278,8 +1246,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (LandscapeTexture_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (LandscapeTexture_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (LandscapeTexture_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1296,7 +1266,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (LandscapeTexture_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1304,37 +1274,33 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILandscapeTextureGetter? lhs,
             ILandscapeTextureGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
             {
                 if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
             {
                 if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
             {
                 if (lhs.HavokFriction != rhs.HavokFriction) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokRestitution) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokRestitution) ?? true))
             {
                 if (lhs.HavokRestitution != rhs.HavokRestitution) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSpecularExponent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSpecularExponent) ?? true))
             {
                 if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Grasses) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Grasses) ?? true))
             {
                 if (!lhs.Grasses.SequenceEqualNullable(rhs.Grasses)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HNAMDataTypeState) ?? true))
-            {
-                if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
             }
             return true;
         }
@@ -1342,23 +1308,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandscapeTextureGetter?)lhs,
                 rhs: rhs as ILandscapeTextureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandscapeTextureGetter?)lhs,
                 rhs: rhs as ILandscapeTextureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILandscapeTextureGetter item)
@@ -1370,7 +1336,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.HavokRestitution);
             hash.Add(item.TextureSpecularExponent);
             hash.Add(item.Grasses);
-            hash.Add(item.HNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1522,10 +1487,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HNAMDataTypeState) ?? true))
-            {
-                item.HNAMDataTypeState = rhs.HNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1674,15 +1635,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly LandscapeTextureBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ILandscapeTextureGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ILandscapeTextureGetter item,
             MutagenWriter writer,
@@ -1732,7 +1684,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1792,15 +1744,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly LandscapeTextureBinaryCreateTranslation Instance = new LandscapeTextureBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LTEX;
-        public static void FillBinaryStructs(
-            ILandscapeTextureInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILandscapeTextureInternal item,
             MutagenFrame frame,
@@ -1918,7 +1861,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
         #endregion
         private RangeInt32? _HNAMLocation;
-        public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; private set; }
         #region HavokFriction
         private int _HavokFrictionLocation => _HNAMLocation!.Value.Min;
         private bool _HavokFriction_IsSet => _HNAMLocation.HasValue;
@@ -2075,12 +2017,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeTextureGetter rhs) return false;
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeTextureGetter? obj)
         {
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).GetHashCode(this);

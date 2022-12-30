@@ -114,6 +114,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ColorInfluence,
                 TItem FadeDistanceRadiusScale,
                 TItem Sprites)
@@ -123,7 +124,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ColorInfluence = ColorInfluence;
                 this.FadeDistanceRadiusScale = FadeDistanceRadiusScale;
@@ -428,7 +430,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.ColorInfluence = this.ColorInfluence.Combine(rhs.ColorInfluence);
                 ret.FadeDistanceRadiusScale = this.FadeDistanceRadiusScale.Combine(rhs.FadeDistanceRadiusScale);
-                ret.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(ExceptionExt.Combine(this.Sprites?.Overall, rhs.Sprites?.Overall), ExceptionExt.Combine(this.Sprites?.Specific, rhs.Sprites?.Specific));
+                ret.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sprites?.Overall, rhs.Sprites?.Overall), Noggog.ExceptionExt.Combine(this.Sprites?.Specific, rhs.Sprites?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -536,12 +538,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILensFlareGetter rhs) return false;
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILensFlareGetter? obj)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).GetHashCode(this);
@@ -690,7 +692,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -766,6 +768,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static LensFlare Duplicate(
+            this ILensFlareGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -798,9 +811,10 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ColorInfluence = 6,
-        FadeDistanceRadiusScale = 7,
-        Sprites = 8,
+        Fallout4MajorRecordFlags = 6,
+        ColorInfluence = 7,
+        FadeDistanceRadiusScale = 8,
+        Sprites = 9,
     }
     #endregion
 
@@ -820,7 +834,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(LensFlare.Mask<>);
 
@@ -1087,8 +1101,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (LensFlare_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (LensFlare_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (LensFlare_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1105,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (LensFlare_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1113,21 +1129,21 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILensFlareGetter? lhs,
             ILensFlareGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LensFlare_FieldIndex.ColorInfluence) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ColorInfluence) ?? true))
             {
                 if (!lhs.ColorInfluence.EqualsWithin(rhs.ColorInfluence)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LensFlare_FieldIndex.FadeDistanceRadiusScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.FadeDistanceRadiusScale) ?? true))
             {
                 if (!lhs.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LensFlare_FieldIndex.Sprites) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.Sprites) ?? true))
             {
-                if (!lhs.Sprites.SequenceEqualNullable(rhs.Sprites, (l, r) => ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LensFlare_FieldIndex.Sprites)))) return false;
+                if (!lhs.Sprites.SequenceEqualNullable(rhs.Sprites, (l, r) => ((LensFlareSpriteCommon)((ILensFlareSpriteGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LensFlare_FieldIndex.Sprites)))) return false;
             }
             return true;
         }
@@ -1135,23 +1151,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILensFlareGetter?)lhs,
                 rhs: rhs as ILensFlareGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILensFlareGetter?)lhs,
                 rhs: rhs as ILensFlareGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILensFlareGetter item)
@@ -1794,12 +1810,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILensFlareGetter rhs) return false;
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILensFlareGetter? obj)
         {
-            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).GetHashCode(this);

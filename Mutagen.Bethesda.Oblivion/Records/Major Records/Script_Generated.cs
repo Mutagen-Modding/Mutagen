@@ -390,12 +390,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IScriptGetter rhs) return false;
-            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptGetter? obj)
         {
-            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).GetHashCode(this);
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -617,6 +617,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Script Duplicate(
+            this IScriptGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -905,7 +916,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Script_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -922,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Script_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -930,15 +941,15 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IScriptGetter? lhs,
             IScriptGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Fields, rhs.Fields, out var lhsFields, out var rhsFields, out var isFieldsEqual))
                 {
-                    if (!((ScriptFieldsCommon)((IScriptFieldsGetter)lhsFields).CommonInstance()!).Equals(lhsFields, rhsFields, crystal?.GetSubCrystal((int)Script_FieldIndex.Fields))) return false;
+                    if (!((ScriptFieldsCommon)((IScriptFieldsGetter)lhsFields).CommonInstance()!).Equals(lhsFields, rhsFields, equalsMask?.GetSubCrystal((int)Script_FieldIndex.Fields))) return false;
                 }
                 else if (!isFieldsEqual) return false;
             }
@@ -948,23 +959,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IScriptGetter?)lhs,
                 rhs: rhs as IScriptGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IScriptGetter?)lhs,
                 rhs: rhs as IScriptGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IScriptGetter item)
@@ -1535,12 +1546,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IScriptGetter rhs) return false;
-            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptGetter? obj)
         {
-            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).GetHashCode(this);

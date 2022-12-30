@@ -179,6 +179,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Diffuse,
                 TItem NormalOrGloss,
@@ -197,7 +198,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Diffuse = Diffuse;
@@ -807,12 +809,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ITextureSetGetter rhs) return false;
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITextureSetGetter? obj)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -995,7 +997,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1071,6 +1073,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static TextureSet Duplicate(
+            this ITextureSetGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1103,18 +1116,19 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Diffuse = 7,
-        NormalOrGloss = 8,
-        Glow = 9,
-        Height = 10,
-        Environment = 11,
-        Wrinkles = 12,
-        Multilayer = 13,
-        SmoothSpec = 14,
-        Decal = 15,
-        Flags = 16,
-        Material = 17,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Diffuse = 8,
+        NormalOrGloss = 9,
+        Glow = 10,
+        Height = 11,
+        Environment = 12,
+        Wrinkles = 13,
+        Multilayer = 14,
+        SmoothSpec = 15,
+        Decal = 16,
+        Flags = 17,
+        Material = 18,
     }
     #endregion
 
@@ -1134,7 +1148,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(TextureSet.Mask<>);
 
@@ -1460,8 +1474,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (TextureSet_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (TextureSet_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (TextureSet_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1478,7 +1494,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (TextureSet_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1486,63 +1502,63 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ITextureSetGetter? lhs,
             ITextureSetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Diffuse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Diffuse) ?? true))
             {
                 if (!string.Equals(lhs.Diffuse, rhs.Diffuse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.NormalOrGloss) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.NormalOrGloss) ?? true))
             {
                 if (!string.Equals(lhs.NormalOrGloss, rhs.NormalOrGloss)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Glow) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Glow) ?? true))
             {
                 if (!string.Equals(lhs.Glow, rhs.Glow)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Height) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Height) ?? true))
             {
                 if (!string.Equals(lhs.Height, rhs.Height)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Environment) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Environment) ?? true))
             {
                 if (!string.Equals(lhs.Environment, rhs.Environment)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Wrinkles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Wrinkles) ?? true))
             {
                 if (!string.Equals(lhs.Wrinkles, rhs.Wrinkles)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Multilayer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Multilayer) ?? true))
             {
                 if (!string.Equals(lhs.Multilayer, rhs.Multilayer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.SmoothSpec) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.SmoothSpec) ?? true))
             {
                 if (!string.Equals(lhs.SmoothSpec, rhs.SmoothSpec)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Decal, rhs.Decal, out var lhsDecal, out var rhsDecal, out var isDecalEqual))
                 {
-                    if (!((DecalCommon)((IDecalGetter)lhsDecal).CommonInstance()!).Equals(lhsDecal, rhsDecal, crystal?.GetSubCrystal((int)TextureSet_FieldIndex.Decal))) return false;
+                    if (!((DecalCommon)((IDecalGetter)lhsDecal).CommonInstance()!).Equals(lhsDecal, rhsDecal, equalsMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal))) return false;
                 }
                 else if (!isDecalEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Material) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Material) ?? true))
             {
                 if (!string.Equals(lhs.Material, rhs.Material)) return false;
             }
@@ -1552,23 +1568,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITextureSetGetter?)lhs,
                 rhs: rhs as ITextureSetGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITextureSetGetter?)lhs,
                 rhs: rhs as ITextureSetGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ITextureSetGetter item)
@@ -2475,12 +2491,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ITextureSetGetter rhs) return false;
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITextureSetGetter? obj)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);

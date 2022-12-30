@@ -182,6 +182,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ChanceNone,
                 TItem MaxCount,
@@ -196,7 +197,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ChanceNone = ChanceNone;
@@ -702,8 +704,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MaxCount = this.MaxCount.Combine(rhs.MaxCount);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Global = this.Global.Combine(rhs.Global);
-                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledNpcEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
-                ret.FilterKeywordChances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>(ExceptionExt.Combine(this.FilterKeywordChances?.Overall, rhs.FilterKeywordChances?.Overall), ExceptionExt.Combine(this.FilterKeywordChances?.Specific, rhs.FilterKeywordChances?.Specific));
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledNpcEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.FilterKeywordChances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FilterKeywordChances?.Overall, rhs.FilterKeywordChances?.Overall), Noggog.ExceptionExt.Combine(this.FilterKeywordChances?.Specific, rhs.FilterKeywordChances?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -826,12 +828,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILeveledNpcGetter rhs) return false;
-            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILeveledNpcGetter? obj)
         {
-            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1018,7 +1020,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LeveledNpcCommon)((ILeveledNpcGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1094,6 +1096,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static LeveledNpc Duplicate(
+            this ILeveledNpcGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1126,14 +1139,15 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        ChanceNone = 7,
-        MaxCount = 8,
-        Flags = 9,
-        Global = 10,
-        Entries = 11,
-        FilterKeywordChances = 12,
-        Model = 13,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        ChanceNone = 8,
+        MaxCount = 9,
+        Flags = 10,
+        Global = 11,
+        Entries = 12,
+        FilterKeywordChances = 13,
+        Model = 14,
     }
     #endregion
 
@@ -1153,7 +1167,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(LeveledNpc.Mask<>);
 
@@ -1479,8 +1493,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (LeveledNpc_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (LeveledNpc_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (LeveledNpc_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1497,7 +1513,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (LeveledNpc_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1505,47 +1521,47 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILeveledNpcGetter? lhs,
             ILeveledNpcGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)LeveledNpc_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ChanceNone) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ChanceNone) ?? true))
             {
                 if (lhs.ChanceNone != rhs.ChanceNone) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.MaxCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.MaxCount) ?? true))
             {
                 if (lhs.MaxCount != rhs.MaxCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Global) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Global) ?? true))
             {
                 if (!lhs.Global.Equals(rhs.Global)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Entries) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Entries) ?? true))
             {
-                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries, (l, r) => ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledNpc_FieldIndex.Entries)))) return false;
+                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries, (l, r) => ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.Entries)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.FilterKeywordChances) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.FilterKeywordChances) ?? true))
             {
-                if (!lhs.FilterKeywordChances.SequenceEqualNullable(rhs.FilterKeywordChances, (l, r) => ((FilterKeywordChanceCommon)((IFilterKeywordChanceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledNpc_FieldIndex.FilterKeywordChances)))) return false;
+                if (!lhs.FilterKeywordChances.SequenceEqualNullable(rhs.FilterKeywordChances, (l, r) => ((FilterKeywordChanceCommon)((IFilterKeywordChanceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.FilterKeywordChances)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)LeveledNpc_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
@@ -1555,23 +1571,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILeveledNpcGetter?)lhs,
                 rhs: rhs as ILeveledNpcGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILeveledNpcGetter?)lhs,
                 rhs: rhs as ILeveledNpcGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILeveledNpcGetter item)
@@ -2459,12 +2475,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILeveledNpcGetter rhs) return false;
-            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILeveledNpcGetter? obj)
         {
-            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).GetHashCode(this);

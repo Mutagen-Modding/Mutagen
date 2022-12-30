@@ -93,12 +93,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkPlacementGetter rhs) return false;
-            return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkPlacementGetter? obj)
         {
-            return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).GetHashCode(this);
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkPlacementCommon)((IPerkPlacementGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -909,18 +909,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPerkPlacementGetter? lhs,
             IPerkPlacementGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Perk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Perk) ?? true))
             {
                 if (!lhs.Perk.Equals(rhs.Perk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Rank) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Rank) ?? true))
             {
                 if (lhs.Rank != rhs.Rank) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Fluff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Fluff) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
             }
@@ -1261,12 +1261,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPerkPlacementGetter rhs) return false;
-            return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPerkPlacementGetter? obj)
         {
-            return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).GetHashCode(this);

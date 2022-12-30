@@ -131,6 +131,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Reference,
                 TItem PNAM)
@@ -140,7 +141,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Reference = Reference;
@@ -490,12 +492,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IReferenceGroupGetter rhs) return false;
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IReferenceGroupGetter? obj)
         {
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).GetHashCode(this);
@@ -658,7 +660,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -734,6 +736,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ReferenceGroup Duplicate(
+            this IReferenceGroupGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ReferenceGroupCommon)((IReferenceGroupGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -766,9 +779,10 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Reference = 7,
-        PNAM = 8,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Reference = 8,
+        PNAM = 9,
     }
     #endregion
 
@@ -788,7 +802,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(ReferenceGroup.Mask<>);
 
@@ -958,7 +972,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Reference = item.Reference.Equals(rhs.Reference);
-            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
+            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1040,8 +1054,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (ReferenceGroup_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (ReferenceGroup_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (ReferenceGroup_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1058,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (ReferenceGroup_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1066,21 +1082,21 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IReferenceGroupGetter? lhs,
             IReferenceGroupGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.Name) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.Reference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.Reference) ?? true))
             {
                 if (!lhs.Reference.Equals(rhs.Reference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.PNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ReferenceGroup_FieldIndex.PNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
             }
             return true;
         }
@@ -1088,23 +1104,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IReferenceGroupGetter?)lhs,
                 rhs: rhs as IReferenceGroupGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IReferenceGroupGetter?)lhs,
                 rhs: rhs as IReferenceGroupGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IReferenceGroupGetter item)
@@ -1717,12 +1733,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IReferenceGroupGetter rhs) return false;
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IReferenceGroupGetter? obj)
         {
-            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ReferenceGroupCommon)((IReferenceGroupGetter)this).CommonInstance()!).GetHashCode(this);

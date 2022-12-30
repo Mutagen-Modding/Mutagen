@@ -104,6 +104,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Description,
                 TItem Model,
@@ -127,6 +128,7 @@ namespace Mutagen.Bethesda.Fallout4
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags,
                 Name: Name,
                 Description: Description,
                 Model: Model,
@@ -396,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -500,12 +502,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IWeaponModificationGetter rhs) return false;
-            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeaponModificationGetter? obj)
         {
-            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -662,7 +664,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -738,6 +740,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static WeaponModification Duplicate(
+            this IWeaponModificationGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -770,22 +783,23 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Description = 7,
-        Model = 8,
-        Unknown = 9,
-        MaxRank = 10,
-        LevelTierScaledOffset = 11,
-        AttachPoint = 12,
-        AttachParentSlots = 13,
-        Items = 14,
-        Includes = 15,
-        TargetOmodKeywords = 16,
-        FilterKeywords = 17,
-        LooseMod = 18,
-        Priority = 19,
-        Filter = 20,
-        Properties = 21,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Description = 8,
+        Model = 9,
+        Unknown = 10,
+        MaxRank = 11,
+        LevelTierScaledOffset = 12,
+        AttachPoint = 13,
+        AttachParentSlots = 14,
+        Items = 15,
+        Includes = 16,
+        TargetOmodKeywords = 17,
+        FilterKeywords = 18,
+        LooseMod = 19,
+        Priority = 20,
+        Filter = 21,
+        Properties = 22,
     }
     #endregion
 
@@ -805,7 +819,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(WeaponModification.Mask<>);
 
@@ -1067,6 +1081,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return (WeaponModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Version2:
                     return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Fallout4MajorRecordFlags:
+                    return (WeaponModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Name:
                     return (WeaponModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Description:
@@ -1098,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case AObjectModification_FieldIndex.Filter:
                     return (WeaponModification_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1118,8 +1134,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (WeaponModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (WeaponModification_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (WeaponModification_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1136,7 +1154,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (WeaponModification_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1144,13 +1162,13 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWeaponModificationGetter? lhs,
             IWeaponModificationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)WeaponModification_FieldIndex.Properties) ?? true))
+            if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)WeaponModification_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<Weapon.Property>)((IAObjectModPropertyGetter<Weapon.Property>)l).CommonInstance(typeof(Weapon.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)WeaponModification_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<Weapon.Property>)((IAObjectModPropertyGetter<Weapon.Property>)l).CommonInstance(typeof(Weapon.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)WeaponModification_FieldIndex.Properties)))) return false;
             }
             return true;
         }
@@ -1158,34 +1176,34 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAObjectModificationGetter? lhs,
             IAObjectModificationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWeaponModificationGetter?)lhs,
                 rhs: rhs as IWeaponModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWeaponModificationGetter?)lhs,
                 rhs: rhs as IWeaponModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWeaponModificationGetter?)lhs,
                 rhs: rhs as IWeaponModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IWeaponModificationGetter item)
@@ -1747,12 +1765,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IWeaponModificationGetter rhs) return false;
-            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeaponModificationGetter? obj)
         {
-            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).GetHashCode(this);

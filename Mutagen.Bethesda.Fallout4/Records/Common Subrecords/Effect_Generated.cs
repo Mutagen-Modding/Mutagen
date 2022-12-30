@@ -105,12 +105,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IEffectGetter rhs) return false;
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEffectGetter? obj)
         {
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EffectCommon)((IEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.BaseEffect = this.BaseEffect.Combine(rhs.BaseEffect);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((EffectCommon)((IEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1014,24 +1014,24 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IEffectGetter? lhs,
             IEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
             {
                 if (!lhs.BaseEffect.Equals(rhs.BaseEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((EffectDataCommon)((IEffectDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Effect_FieldIndex.Data))) return false;
+                    if (!((EffectDataCommon)((IEffectDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Effect_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Effect_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Effect_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Effect_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1516,12 +1516,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IEffectGetter rhs) return false;
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEffectGetter? obj)
         {
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EffectCommon)((IEffectGetter)this).CommonInstance()!).GetHashCode(this);

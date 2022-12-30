@@ -125,6 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Model,
                 TItem Parts)
             : base(
@@ -133,7 +134,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>(Parts, Enumerable.Empty<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>());
@@ -419,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>(ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
+                ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), Noggog.ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -535,12 +537,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IBodyPartDataGetter rhs) return false;
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBodyPartDataGetter? obj)
         {
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -701,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BodyPartDataCommon)((IBodyPartDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -777,6 +779,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static BodyPartData Duplicate(
+            this IBodyPartDataGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -809,8 +822,9 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Model = 6,
-        Parts = 7,
+        SkyrimMajorRecordFlags = 6,
+        Model = 7,
+        Parts = 8,
     }
     #endregion
 
@@ -830,7 +844,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(BodyPartData.Mask<>);
 
@@ -1122,8 +1136,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (BodyPartData_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (BodyPartData_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (BodyPartData_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1140,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (BodyPartData_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1148,21 +1164,21 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IBodyPartDataGetter? lhs,
             IBodyPartDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)BodyPartData_FieldIndex.Model) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)BodyPartData_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPartData_FieldIndex.Parts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Parts) ?? true))
             {
-                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((BodyPartCommon)((IBodyPartGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)BodyPartData_FieldIndex.Parts)))) return false;
+                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((BodyPartCommon)((IBodyPartGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Parts)))) return false;
             }
             return true;
         }
@@ -1170,23 +1186,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBodyPartDataGetter?)lhs,
                 rhs: rhs as IBodyPartDataGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBodyPartDataGetter?)lhs,
                 rhs: rhs as IBodyPartDataGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IBodyPartDataGetter item)
@@ -1843,12 +1859,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IBodyPartDataGetter rhs) return false;
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBodyPartDataGetter? obj)
         {
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).GetHashCode(this);

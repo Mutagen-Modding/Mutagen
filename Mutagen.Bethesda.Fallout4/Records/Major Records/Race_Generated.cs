@@ -225,16 +225,16 @@ namespace Mutagen.Bethesda.Fallout4
         public Single InjuredHealthPercent { get; set; } = default;
         #endregion
         #region ShieldBipedObject
-        public readonly static BipedObject _ShieldBipedObject_Default = BipedObject.None;
-        public BipedObject ShieldBipedObject { get; set; } = _ShieldBipedObject_Default;
+        public static readonly BipedObject ShieldBipedObjectDefault = BipedObject.None;
+        public BipedObject ShieldBipedObject { get; set; } = ShieldBipedObjectDefault;
         #endregion
         #region BeardBipedObject
-        public readonly static BipedObject _BeardBipedObject_Default = BipedObject.None;
-        public BipedObject BeardBipedObject { get; set; } = _BeardBipedObject_Default;
+        public static readonly BipedObject BeardBipedObjectDefault = BipedObject.None;
+        public BipedObject BeardBipedObject { get; set; } = BeardBipedObjectDefault;
         #endregion
         #region BodyBipedObject
-        public readonly static BipedObject _BodyBipedObject_Default = BipedObject.None;
-        public BipedObject BodyBipedObject { get; set; } = _BodyBipedObject_Default;
+        public static readonly BipedObject BodyBipedObjectDefault = BipedObject.None;
+        public BipedObject BodyBipedObject { get; set; } = BodyBipedObjectDefault;
         #endregion
         #region AimAngleTolerance
         public Single AimAngleTolerance { get; set; } = default;
@@ -260,8 +260,8 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte> IRaceGetter.Unknown2 => this.Unknown2;
         #endregion
         #region PipboyBipedObject
-        public readonly static BipedObject _PipboyBipedObject_Default = BipedObject.None;
-        public BipedObject PipboyBipedObject { get; set; } = _PipboyBipedObject_Default;
+        public static readonly BipedObject PipboyBipedObjectDefault = BipedObject.None;
+        public BipedObject PipboyBipedObject { get; set; } = PipboyBipedObjectDefault;
         #endregion
         #region XPValue
         public Int16 XPValue { get; set; } = default;
@@ -751,9 +751,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; } = new GenderedItem<ExtendedList<Bone>?>(default, default);
         IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> IRaceGetter.BoneData => this.BoneData;
         #endregion
-        #region DATADataTypeState
-        public Race.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -869,7 +866,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.HairColorExtendedLookupTexture = initialValue;
                 this.DialogueQuest = initialValue;
                 this.BoneData = new GenderedItem<TItem>(initialValue, initialValue);
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -879,6 +875,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem AnimationSound,
                 TItem Name,
                 TItem Description,
@@ -968,15 +965,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem HairColorLookupTexture,
                 TItem HairColorExtendedLookupTexture,
                 TItem DialogueQuest,
-                TItem BoneData,
-                TItem DATADataTypeState)
+                TItem BoneData)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.AnimationSound = AnimationSound;
                 this.Name = Name;
@@ -1068,7 +1065,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.HairColorExtendedLookupTexture = HairColorExtendedLookupTexture;
                 this.DialogueQuest = DialogueQuest;
                 this.BoneData = new GenderedItem<TItem>(BoneData, BoneData);
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -1170,7 +1166,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem HairColorExtendedLookupTexture;
             public TItem DialogueQuest;
             public GenderedItem<TItem> BoneData;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -1274,7 +1269,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture)) return false;
                 if (!object.Equals(this.DialogueQuest, rhs.DialogueQuest)) return false;
                 if (!object.Equals(this.BoneData, rhs.BoneData)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1370,7 +1364,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.HairColorExtendedLookupTexture);
                 hash.Add(this.DialogueQuest);
                 hash.Add(this.BoneData);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1611,7 +1604,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.HairColorExtendedLookupTexture)) return false;
                 if (!eval(this.DialogueQuest)) return false;
                 if (!eval(this.BoneData.Male) || !eval(this.BoneData.Female)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -1850,7 +1842,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.HairColorExtendedLookupTexture)) return true;
                 if (eval(this.DialogueQuest)) return true;
                 if (eval(this.BoneData.Male) || eval(this.BoneData.Female)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -2127,7 +2118,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.BoneData = new GenderedItem<R>(
                     eval(this.BoneData.Male),
                     eval(this.BoneData.Female));
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -2700,10 +2690,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine($"BoneData => {BoneData}");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -2805,7 +2791,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? HairColorExtendedLookupTexture;
             public Exception? DialogueQuest;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? BoneData;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -2994,8 +2979,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return DialogueQuest;
                     case Race_FieldIndex.BoneData:
                         return BoneData;
-                    case Race_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -3275,9 +3258,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Race_FieldIndex.BoneData:
                         this.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
-                        break;
-                    case Race_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -3560,9 +3540,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Race_FieldIndex.BoneData:
                         this.BoneData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
-                    case Race_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -3662,7 +3639,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (HairColorExtendedLookupTexture != null) return true;
                 if (DialogueQuest != null) return true;
                 if (BoneData != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -4149,9 +4125,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine($"BoneData => {BoneData}");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -4163,14 +4136,14 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AnimationSound = this.AnimationSound.Combine(rhs.AnimationSound);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
+                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), Noggog.ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
                 ret.Skin = this.Skin.Combine(rhs.Skin);
                 ret.BipedBodyTemplate = this.BipedBodyTemplate.Combine(rhs.BipedBodyTemplate, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
-                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
-                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
-                ret.DefaultWeight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.DefaultWeight?.Overall, rhs.DefaultWeight?.Overall), GenderedItem.Combine(this.DefaultWeight?.Specific, rhs.DefaultWeight?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
+                ret.DefaultWeight = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.DefaultWeight?.Overall, rhs.DefaultWeight?.Overall), GenderedItem.Combine(this.DefaultWeight?.Specific, rhs.DefaultWeight?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.AccelerationRate = this.AccelerationRate.Combine(rhs.AccelerationRate);
                 ret.DecelerationRate = this.DecelerationRate.Combine(rhs.DecelerationRate);
@@ -4208,18 +4181,18 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ExplodableSubsegmentExplosion = this.ExplodableSubsegmentExplosion.Combine(rhs.ExplodableSubsegmentExplosion);
                 ret.OrientationLimitsPitch = this.OrientationLimitsPitch.Combine(rhs.OrientationLimitsPitch);
                 ret.OrientationLimitsRoll = this.OrientationLimitsRoll.Combine(rhs.OrientationLimitsRoll);
-                ret.SkeletalModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.SkeletalModel?.Overall, rhs.SkeletalModel?.Overall), GenderedItem.Combine(this.SkeletalModel?.Specific, rhs.SkeletalModel?.Specific));
-                ret.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.MovementTypeNames?.Overall, rhs.MovementTypeNames?.Overall), ExceptionExt.Combine(this.MovementTypeNames?.Specific, rhs.MovementTypeNames?.Specific));
-                ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
-                ret.DefaultHairColors = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.DefaultHairColors?.Overall, rhs.DefaultHairColors?.Overall), GenderedItem.Combine(this.DefaultHairColors?.Specific, rhs.DefaultHairColors?.Specific));
+                ret.SkeletalModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.SkeletalModel?.Overall, rhs.SkeletalModel?.Overall), GenderedItem.Combine(this.SkeletalModel?.Specific, rhs.SkeletalModel?.Specific));
+                ret.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MovementTypeNames?.Overall, rhs.MovementTypeNames?.Overall), Noggog.ExceptionExt.Combine(this.MovementTypeNames?.Specific, rhs.MovementTypeNames?.Specific));
+                ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
+                ret.DefaultHairColors = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.DefaultHairColors?.Overall, rhs.DefaultHairColors?.Overall), GenderedItem.Combine(this.DefaultHairColors?.Specific, rhs.DefaultHairColors?.Specific));
                 ret.NumberOfTintsInList = this.NumberOfTintsInList.Combine(rhs.NumberOfTintsInList);
                 ret.FacegenMainClamp = this.FacegenMainClamp.Combine(rhs.FacegenMainClamp);
                 ret.FacegenFaceClamp = this.FacegenFaceClamp.Combine(rhs.FacegenFaceClamp);
                 ret.AttackRace = this.AttackRace.Combine(rhs.AttackRace);
-                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
-                ret.BodyData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BodyData?.Overall, rhs.BodyData?.Overall), GenderedItem.Combine(this.BodyData?.Specific, rhs.BodyData?.Specific));
+                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), Noggog.ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
+                ret.BodyData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.BodyData?.Overall, rhs.BodyData?.Overall), GenderedItem.Combine(this.BodyData?.Specific, rhs.BodyData?.Specific));
                 ret.BodyPartData = this.BodyPartData.Combine(rhs.BodyPartData);
-                ret.BehaviorGraph = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BehaviorGraph?.Overall, rhs.BehaviorGraph?.Overall), GenderedItem.Combine(this.BehaviorGraph?.Specific, rhs.BehaviorGraph?.Specific));
+                ret.BehaviorGraph = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.BehaviorGraph?.Overall, rhs.BehaviorGraph?.Overall), GenderedItem.Combine(this.BehaviorGraph?.Specific, rhs.BehaviorGraph?.Specific));
                 ret.ImpactMaterialType = this.ImpactMaterialType.Combine(rhs.ImpactMaterialType);
                 ret.ImpactDataSet = this.ImpactDataSet.Combine(rhs.ImpactDataSet);
                 ret.DispemberBloodArt = this.DispemberBloodArt.Combine(rhs.DispemberBloodArt);
@@ -4227,30 +4200,29 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.CollarTextureSet = this.CollarTextureSet.Combine(rhs.CollarTextureSet);
                 ret.SoundOpenCorpse = this.SoundOpenCorpse.Combine(rhs.SoundOpenCorpse);
                 ret.SoundCloseCorpse = this.SoundCloseCorpse.Combine(rhs.SoundCloseCorpse);
-                ret.BipedObjects = new MaskItem<Exception?, IEnumerable<MaskItemIndexed<BipedObject, Exception?, BipedObjectData.ErrorMask?>>?>(ExceptionExt.Combine(this.BipedObjects?.Overall, rhs.BipedObjects?.Overall), ExceptionExt.Combine(this.BipedObjects?.Specific, rhs.BipedObjects?.Specific));
-                ret.MovementDataOverrides = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MovementDataOverride.ErrorMask?>>?>(ExceptionExt.Combine(this.MovementDataOverrides?.Overall, rhs.MovementDataOverrides?.Overall), ExceptionExt.Combine(this.MovementDataOverrides?.Specific, rhs.MovementDataOverrides?.Specific));
+                ret.BipedObjects = new MaskItem<Exception?, IEnumerable<MaskItemIndexed<BipedObject, Exception?, BipedObjectData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BipedObjects?.Overall, rhs.BipedObjects?.Overall), Noggog.ExceptionExt.Combine(this.BipedObjects?.Specific, rhs.BipedObjects?.Specific));
+                ret.MovementDataOverrides = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MovementDataOverride.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MovementDataOverrides?.Overall, rhs.MovementDataOverrides?.Overall), Noggog.ExceptionExt.Combine(this.MovementDataOverrides?.Specific, rhs.MovementDataOverrides?.Specific));
                 ret.EquipmentFlags = this.EquipmentFlags.Combine(rhs.EquipmentFlags);
-                ret.EquipmentSlots = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EquipmentSlot.ErrorMask?>>?>(ExceptionExt.Combine(this.EquipmentSlots?.Overall, rhs.EquipmentSlots?.Overall), ExceptionExt.Combine(this.EquipmentSlots?.Specific, rhs.EquipmentSlots?.Specific));
+                ret.EquipmentSlots = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EquipmentSlot.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EquipmentSlots?.Overall, rhs.EquipmentSlots?.Overall), Noggog.ExceptionExt.Combine(this.EquipmentSlots?.Specific, rhs.EquipmentSlots?.Specific));
                 ret.UnarmedWeapon = this.UnarmedWeapon.Combine(rhs.UnarmedWeapon);
                 ret.FaceFxPhonemes = this.FaceFxPhonemes.Combine(rhs.FaceFxPhonemes, (l, r) => l.Combine(r));
                 ret.BaseMovementDefault = this.BaseMovementDefault.Combine(rhs.BaseMovementDefault);
                 ret.BaseMovementDefaultSwim = this.BaseMovementDefaultSwim.Combine(rhs.BaseMovementDefaultSwim);
                 ret.BaseMovementDefaultFly = this.BaseMovementDefaultFly.Combine(rhs.BaseMovementDefaultFly);
                 ret.BaseMovementDefaultSneak = this.BaseMovementDefaultSneak.Combine(rhs.BaseMovementDefaultSneak);
-                ret.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.HeadData?.Overall, rhs.HeadData?.Overall), GenderedItem.Combine(this.HeadData?.Specific, rhs.HeadData?.Specific));
+                ret.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.HeadData?.Overall, rhs.HeadData?.Overall), GenderedItem.Combine(this.HeadData?.Specific, rhs.HeadData?.Specific));
                 ret.MorphRace = this.MorphRace.Combine(rhs.MorphRace);
                 ret.ArmorRace = this.ArmorRace.Combine(rhs.ArmorRace);
                 ret.SubgraphTemplateRace = this.SubgraphTemplateRace.Combine(rhs.SubgraphTemplateRace);
                 ret.SubgraphAdditiveRace = this.SubgraphAdditiveRace.Combine(rhs.SubgraphAdditiveRace);
-                ret.Subgraphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Subgraph.ErrorMask?>>?>(ExceptionExt.Combine(this.Subgraphs?.Overall, rhs.Subgraphs?.Overall), ExceptionExt.Combine(this.Subgraphs?.Specific, rhs.Subgraphs?.Specific));
+                ret.Subgraphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Subgraph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Subgraphs?.Overall, rhs.Subgraphs?.Overall), Noggog.ExceptionExt.Combine(this.Subgraphs?.Specific, rhs.Subgraphs?.Specific));
                 ret.IdleChatterTimeMin = this.IdleChatterTimeMin.Combine(rhs.IdleChatterTimeMin);
                 ret.IdleChatterTimeMax = this.IdleChatterTimeMax.Combine(rhs.IdleChatterTimeMax);
-                ret.MorphValues = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>(ExceptionExt.Combine(this.MorphValues?.Overall, rhs.MorphValues?.Overall), ExceptionExt.Combine(this.MorphValues?.Specific, rhs.MorphValues?.Specific));
+                ret.MorphValues = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphValue.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MorphValues?.Overall, rhs.MorphValues?.Overall), Noggog.ExceptionExt.Combine(this.MorphValues?.Specific, rhs.MorphValues?.Specific));
                 ret.HairColorLookupTexture = this.HairColorLookupTexture.Combine(rhs.HairColorLookupTexture);
                 ret.HairColorExtendedLookupTexture = this.HairColorExtendedLookupTexture.Combine(rhs.HairColorExtendedLookupTexture);
                 ret.DialogueQuest = this.DialogueQuest.Combine(rhs.DialogueQuest);
-                ret.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BoneData?.Overall, rhs.BoneData?.Overall), GenderedItem.Combine(this.BoneData?.Specific, rhs.BoneData?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.BoneData?.Overall, rhs.BoneData?.Overall), GenderedItem.Combine(this.BoneData?.Specific, rhs.BoneData?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4363,7 +4335,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool HairColorExtendedLookupTexture;
             public bool DialogueQuest;
             public GenderedItem<bool>? BoneData;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -4444,7 +4415,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.HairColorLookupTexture = defaultOn;
                 this.HairColorExtendedLookupTexture = defaultOn;
                 this.DialogueQuest = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -4542,7 +4512,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((HairColorExtendedLookupTexture, null));
                 ret.Add((DialogueQuest, null));
                 ret.Add((BoneData != null || DefaultOn, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4599,10 +4568,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IRace);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -4611,12 +4576,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRaceGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -4789,7 +4754,6 @@ namespace Mutagen.Bethesda.Fallout4
         new String? HairColorExtendedLookupTexture { get; set; }
         new IFormLinkNullable<IQuestGetter> DialogueQuest { get; set; }
         new IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; }
-        new Race.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IRaceInternal :
@@ -4924,7 +4888,6 @@ namespace Mutagen.Bethesda.Fallout4
         String? HairColorExtendedLookupTexture { get; }
         IFormLinkNullableGetter<IQuestGetter> DialogueQuest { get; }
         IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData { get; }
-        Race.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -4981,7 +4944,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -5057,6 +5020,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Race Duplicate(
+            this IRaceGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -5089,97 +5063,97 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        AnimationSound = 6,
-        Name = 7,
-        Description = 8,
-        ActorEffect = 9,
-        Skin = 10,
-        BipedBodyTemplate = 11,
-        Keywords = 12,
-        Properties = 13,
-        AttachParentSlots = 14,
-        Height = 15,
-        DefaultWeight = 16,
-        Flags = 17,
-        AccelerationRate = 18,
-        DecelerationRate = 19,
-        Size = 20,
-        Unknown = 21,
-        InjuredHealthPercent = 22,
-        ShieldBipedObject = 23,
-        BeardBipedObject = 24,
-        BodyBipedObject = 25,
-        AimAngleTolerance = 26,
-        FlightRadius = 27,
-        AngularAccelerationRate = 28,
-        AngularTolerance = 29,
-        Unknown2 = 30,
-        PipboyBipedObject = 31,
-        XPValue = 32,
-        SeverableDebrisScale = 33,
-        SeverableDebrisCount = 34,
-        SeverableDecalCount = 35,
-        ExplodableDebrisScale = 36,
-        ExplodableDebrisCount = 37,
-        ExplodableDecalCount = 38,
-        SeverableExplosion = 39,
-        SeverableDebris = 40,
-        SeverableImpactDataSet = 41,
-        ExplodableExplosion = 42,
-        ExplodableDebris = 43,
-        ExplodableImpactDataSet = 44,
-        OnCrippleDebrisScale = 45,
-        OnCrippleDebrisCount = 46,
-        OnCrippleDecalCount = 47,
-        OnCrippleExplosion = 48,
-        OnCrippleDebris = 49,
-        OnCrippleImpactDataSet = 50,
-        ExplodableSubsegmentExplosion = 51,
-        OrientationLimitsPitch = 52,
-        OrientationLimitsRoll = 53,
-        SkeletalModel = 54,
-        MovementTypeNames = 55,
-        Voices = 56,
-        DefaultHairColors = 57,
-        NumberOfTintsInList = 58,
-        FacegenMainClamp = 59,
-        FacegenFaceClamp = 60,
-        AttackRace = 61,
-        Attacks = 62,
-        BodyData = 63,
-        BodyPartData = 64,
-        BehaviorGraph = 65,
-        ImpactMaterialType = 66,
-        ImpactDataSet = 67,
-        DispemberBloodArt = 68,
-        MeatCapTextureSet = 69,
-        CollarTextureSet = 70,
-        SoundOpenCorpse = 71,
-        SoundCloseCorpse = 72,
-        BipedObjects = 73,
-        MovementDataOverrides = 74,
-        EquipmentFlags = 75,
-        EquipmentSlots = 76,
-        UnarmedWeapon = 77,
-        FaceFxPhonemes = 78,
-        BaseMovementDefault = 79,
-        BaseMovementDefaultSwim = 80,
-        BaseMovementDefaultFly = 81,
-        BaseMovementDefaultSneak = 82,
-        HeadData = 83,
-        MorphRace = 84,
-        ArmorRace = 85,
-        SubgraphTemplateRace = 86,
-        SubgraphAdditiveRace = 87,
-        Subgraphs = 88,
-        IdleChatterTimeMin = 89,
-        IdleChatterTimeMax = 90,
-        MorphValues = 91,
-        HairColorLookupTexture = 92,
-        HairColorExtendedLookupTexture = 93,
-        DialogueQuest = 94,
-        BoneData = 95,
-        DATADataTypeState = 96,
+        Fallout4MajorRecordFlags = 6,
+        AnimationSound = 7,
+        Name = 8,
+        Description = 9,
+        ActorEffect = 10,
+        Skin = 11,
+        BipedBodyTemplate = 12,
+        Keywords = 13,
+        Properties = 14,
+        AttachParentSlots = 15,
+        Height = 16,
+        DefaultWeight = 17,
+        Flags = 18,
+        AccelerationRate = 19,
+        DecelerationRate = 20,
+        Size = 21,
+        Unknown = 22,
+        InjuredHealthPercent = 23,
+        ShieldBipedObject = 24,
+        BeardBipedObject = 25,
+        BodyBipedObject = 26,
+        AimAngleTolerance = 27,
+        FlightRadius = 28,
+        AngularAccelerationRate = 29,
+        AngularTolerance = 30,
+        Unknown2 = 31,
+        PipboyBipedObject = 32,
+        XPValue = 33,
+        SeverableDebrisScale = 34,
+        SeverableDebrisCount = 35,
+        SeverableDecalCount = 36,
+        ExplodableDebrisScale = 37,
+        ExplodableDebrisCount = 38,
+        ExplodableDecalCount = 39,
+        SeverableExplosion = 40,
+        SeverableDebris = 41,
+        SeverableImpactDataSet = 42,
+        ExplodableExplosion = 43,
+        ExplodableDebris = 44,
+        ExplodableImpactDataSet = 45,
+        OnCrippleDebrisScale = 46,
+        OnCrippleDebrisCount = 47,
+        OnCrippleDecalCount = 48,
+        OnCrippleExplosion = 49,
+        OnCrippleDebris = 50,
+        OnCrippleImpactDataSet = 51,
+        ExplodableSubsegmentExplosion = 52,
+        OrientationLimitsPitch = 53,
+        OrientationLimitsRoll = 54,
+        SkeletalModel = 55,
+        MovementTypeNames = 56,
+        Voices = 57,
+        DefaultHairColors = 58,
+        NumberOfTintsInList = 59,
+        FacegenMainClamp = 60,
+        FacegenFaceClamp = 61,
+        AttackRace = 62,
+        Attacks = 63,
+        BodyData = 64,
+        BodyPartData = 65,
+        BehaviorGraph = 66,
+        ImpactMaterialType = 67,
+        ImpactDataSet = 68,
+        DispemberBloodArt = 69,
+        MeatCapTextureSet = 70,
+        CollarTextureSet = 71,
+        SoundOpenCorpse = 72,
+        SoundCloseCorpse = 73,
+        BipedObjects = 74,
+        MovementDataOverrides = 75,
+        EquipmentFlags = 76,
+        EquipmentSlots = 77,
+        UnarmedWeapon = 78,
+        FaceFxPhonemes = 79,
+        BaseMovementDefault = 80,
+        BaseMovementDefaultSwim = 81,
+        BaseMovementDefaultFly = 82,
+        BaseMovementDefaultSneak = 83,
+        HeadData = 84,
+        MorphRace = 85,
+        ArmorRace = 86,
+        SubgraphTemplateRace = 87,
+        SubgraphAdditiveRace = 88,
+        Subgraphs = 89,
+        IdleChatterTimeMin = 90,
+        IdleChatterTimeMax = 91,
+        MorphValues = 92,
+        HairColorLookupTexture = 93,
+        HairColorExtendedLookupTexture = 94,
+        DialogueQuest = 95,
+        BoneData = 96,
     }
     #endregion
 
@@ -5197,7 +5171,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "653cc994-ac13-436b-907d-6a4c43bcd98a";
 
-        public const ushort AdditionalFieldCount = 91;
+        public const ushort AdditionalFieldCount = 90;
 
         public const ushort FieldCount = 97;
 
@@ -5385,15 +5359,15 @@ namespace Mutagen.Bethesda.Fallout4
             item.Size = default;
             item.Unknown = new byte[8];
             item.InjuredHealthPercent = default;
-            item.ShieldBipedObject = Race._ShieldBipedObject_Default;
-            item.BeardBipedObject = Race._BeardBipedObject_Default;
-            item.BodyBipedObject = Race._BodyBipedObject_Default;
+            item.ShieldBipedObject = Race.ShieldBipedObjectDefault;
+            item.BeardBipedObject = Race.BeardBipedObjectDefault;
+            item.BodyBipedObject = Race.BodyBipedObjectDefault;
             item.AimAngleTolerance = default;
             item.FlightRadius = default;
             item.AngularAccelerationRate = default;
             item.AngularTolerance = default;
             item.Unknown2 = new byte[36];
-            item.PipboyBipedObject = Race._PipboyBipedObject_Default;
+            item.PipboyBipedObject = Race.PipboyBipedObjectDefault;
             item.XPValue = default;
             item.SeverableDebrisScale = default;
             item.SeverableDebrisCount = default;
@@ -5462,7 +5436,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.DialogueQuest.Clear();
             item.BoneData.Male = null;
             item.BoneData.Female = null;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -5511,6 +5484,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.CollarTextureSet.Relink(mapping);
             obj.SoundOpenCorpse.Relink(mapping);
             obj.SoundCloseCorpse.Relink(mapping);
+            obj.BipedObjects?.RemapLinks(mapping);
             obj.MovementDataOverrides.RemapLinks(mapping);
             obj.EquipmentSlots.RemapLinks(mapping);
             obj.UnarmedWeapon.Relink(mapping);
@@ -5750,7 +5724,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.BoneData = new GenderedItem<bool>(
                 male: item.BoneData.Male.SequenceEqualNullable(rhs.BoneData.Male),
                 female: item.BoneData.Female.SequenceEqualNullable(rhs.BoneData.Female));
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -6287,10 +6260,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.BoneData.Print(sb, "BoneData");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Race_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -6309,8 +6278,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Race_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Race_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Race_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -6327,7 +6298,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Race_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -6335,381 +6306,377 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IRaceGetter? lhs,
             IRaceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AnimationSound) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AnimationSound) ?? true))
             {
                 if (!lhs.AnimationSound.Equals(rhs.AnimationSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ActorEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ActorEffect) ?? true))
             {
                 if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
             {
                 if (!lhs.Skin.Equals(rhs.Skin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BipedBodyTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BipedBodyTemplate) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BipedBodyTemplate, rhs.BipedBodyTemplate, out var lhsBipedBodyTemplate, out var rhsBipedBodyTemplate, out var isBipedBodyTemplateEqual))
                 {
-                    if (!((BipedBodyTemplateCommon)((IBipedBodyTemplateGetter)lhsBipedBodyTemplate).CommonInstance()!).Equals(lhsBipedBodyTemplate, rhsBipedBodyTemplate, crystal?.GetSubCrystal((int)Race_FieldIndex.BipedBodyTemplate))) return false;
+                    if (!((BipedBodyTemplateCommon)((IBipedBodyTemplateGetter)lhsBipedBodyTemplate).CommonInstance()!).Equals(lhsBipedBodyTemplate, rhsBipedBodyTemplate, equalsMask?.GetSubCrystal((int)Race_FieldIndex.BipedBodyTemplate))) return false;
                 }
                 else if (!isBipedBodyTemplateEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.Properties)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AttachParentSlots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AttachParentSlots) ?? true))
             {
                 if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
             {
                 if (!Equals(lhs.Height, rhs.Height)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DefaultWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultWeight) ?? true))
             {
                 if (!Equals(lhs.DefaultWeight, rhs.DefaultWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
             {
                 if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
             {
                 if (!lhs.DecelerationRate.EqualsWithin(rhs.DecelerationRate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
             {
                 if (lhs.Size != rhs.Size) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
             {
                 if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
             {
                 if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BeardBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BeardBipedObject) ?? true))
             {
                 if (lhs.BeardBipedObject != rhs.BeardBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
             {
                 if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
             {
                 if (!lhs.AimAngleTolerance.EqualsWithin(rhs.AimAngleTolerance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
             {
                 if (!lhs.FlightRadius.EqualsWithin(rhs.FlightRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
             {
                 if (!lhs.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
             {
                 if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown2) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.PipboyBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.PipboyBipedObject) ?? true))
             {
                 if (lhs.PipboyBipedObject != rhs.PipboyBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.XPValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.XPValue) ?? true))
             {
                 if (lhs.XPValue != rhs.XPValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableDebrisScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SeverableDebrisScale) ?? true))
             {
                 if (!lhs.SeverableDebrisScale.EqualsWithin(rhs.SeverableDebrisScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableDebrisCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SeverableDebrisCount) ?? true))
             {
                 if (lhs.SeverableDebrisCount != rhs.SeverableDebrisCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableDecalCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SeverableDecalCount) ?? true))
             {
                 if (lhs.SeverableDecalCount != rhs.SeverableDecalCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDebrisScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDebrisScale) ?? true))
             {
                 if (!lhs.ExplodableDebrisScale.EqualsWithin(rhs.ExplodableDebrisScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDebrisCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDebrisCount) ?? true))
             {
                 if (lhs.ExplodableDebrisCount != rhs.ExplodableDebrisCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDecalCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDecalCount) ?? true))
             {
                 if (lhs.ExplodableDecalCount != rhs.ExplodableDecalCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SeverableExplosion) ?? true))
             {
                 if (!lhs.SeverableExplosion.Equals(rhs.SeverableExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableDebris) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SeverableDebris) ?? true))
             {
                 if (!lhs.SeverableDebris.Equals(rhs.SeverableDebris)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SeverableImpactDataSet) ?? true))
             {
                 if (!lhs.SeverableImpactDataSet.Equals(rhs.SeverableImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableExplosion) ?? true))
             {
                 if (!lhs.ExplodableExplosion.Equals(rhs.ExplodableExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDebris) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDebris) ?? true))
             {
                 if (!lhs.ExplodableDebris.Equals(rhs.ExplodableDebris)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableImpactDataSet) ?? true))
             {
                 if (!lhs.ExplodableImpactDataSet.Equals(rhs.ExplodableImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebrisScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebrisScale) ?? true))
             {
                 if (!lhs.OnCrippleDebrisScale.EqualsWithin(rhs.OnCrippleDebrisScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebrisCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebrisCount) ?? true))
             {
                 if (lhs.OnCrippleDebrisCount != rhs.OnCrippleDebrisCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDecalCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDecalCount) ?? true))
             {
                 if (lhs.OnCrippleDecalCount != rhs.OnCrippleDecalCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleExplosion) ?? true))
             {
                 if (!lhs.OnCrippleExplosion.Equals(rhs.OnCrippleExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebris) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebris) ?? true))
             {
                 if (!lhs.OnCrippleDebris.Equals(rhs.OnCrippleDebris)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleImpactDataSet) ?? true))
             {
                 if (!lhs.OnCrippleImpactDataSet.Equals(rhs.OnCrippleImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableSubsegmentExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableSubsegmentExplosion) ?? true))
             {
                 if (!lhs.ExplodableSubsegmentExplosion.Equals(rhs.ExplodableSubsegmentExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OrientationLimitsPitch) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.OrientationLimitsPitch) ?? true))
             {
                 if (!lhs.OrientationLimitsPitch.EqualsWithin(rhs.OrientationLimitsPitch)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OrientationLimitsRoll) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.OrientationLimitsRoll) ?? true))
             {
                 if (!lhs.OrientationLimitsRoll.EqualsWithin(rhs.OrientationLimitsRoll)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
             {
                 if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
             {
                 if (!lhs.MovementTypeNames.SequenceEqualNullable(rhs.MovementTypeNames)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
                 if (!Equals(lhs.Voices, rhs.Voices)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
             {
                 if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
             {
                 if (lhs.NumberOfTintsInList != rhs.NumberOfTintsInList) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
             {
                 if (!lhs.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
             {
                 if (!lhs.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
             {
                 if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Attacks)))) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.Attacks)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
                 if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
             {
                 if (!lhs.BodyPartData.Equals(rhs.BodyPartData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
             {
                 if (!Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ImpactMaterialType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ImpactMaterialType) ?? true))
             {
                 if (!lhs.ImpactMaterialType.Equals(rhs.ImpactMaterialType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
             {
                 if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DispemberBloodArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DispemberBloodArt) ?? true))
             {
                 if (!lhs.DispemberBloodArt.Equals(rhs.DispemberBloodArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MeatCapTextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MeatCapTextureSet) ?? true))
             {
                 if (!lhs.MeatCapTextureSet.Equals(rhs.MeatCapTextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.CollarTextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.CollarTextureSet) ?? true))
             {
                 if (!lhs.CollarTextureSet.Equals(rhs.CollarTextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SoundOpenCorpse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SoundOpenCorpse) ?? true))
             {
                 if (!lhs.SoundOpenCorpse.Equals(rhs.SoundOpenCorpse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SoundCloseCorpse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SoundCloseCorpse) ?? true))
             {
                 if (!lhs.SoundCloseCorpse.Equals(rhs.SoundCloseCorpse)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BipedObjects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BipedObjects) ?? true))
             {
                 if (!lhs.BipedObjects.SequenceEqualNullable(rhs.BipedObjects)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementDataOverrides) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MovementDataOverrides) ?? true))
             {
-                if (!lhs.MovementDataOverrides.SequenceEqual(rhs.MovementDataOverrides, (l, r) => ((MovementDataOverrideCommon)((IMovementDataOverrideGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.MovementDataOverrides)))) return false;
+                if (!lhs.MovementDataOverrides.SequenceEqual(rhs.MovementDataOverrides, (l, r) => ((MovementDataOverrideCommon)((IMovementDataOverrideGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.MovementDataOverrides)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
             {
                 if (lhs.EquipmentFlags != rhs.EquipmentFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
             {
-                if (!lhs.EquipmentSlots.SequenceEqual(rhs.EquipmentSlots, (l, r) => ((EquipmentSlotCommon)((IEquipmentSlotGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.EquipmentSlots)))) return false;
+                if (!lhs.EquipmentSlots.SequenceEqual(rhs.EquipmentSlots, (l, r) => ((EquipmentSlotCommon)((IEquipmentSlotGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.EquipmentSlots)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedWeapon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedWeapon) ?? true))
             {
                 if (!lhs.UnarmedWeapon.Equals(rhs.UnarmedWeapon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes, out var lhsFaceFxPhonemes, out var rhsFaceFxPhonemes, out var isFaceFxPhonemesEqual))
                 {
-                    if (!((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)lhsFaceFxPhonemes).CommonInstance()!).Equals(lhsFaceFxPhonemes, rhsFaceFxPhonemes, crystal?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes))) return false;
+                    if (!((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)lhsFaceFxPhonemes).CommonInstance()!).Equals(lhsFaceFxPhonemes, rhsFaceFxPhonemes, equalsMask?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes))) return false;
                 }
                 else if (!isFaceFxPhonemesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefault) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefault) ?? true))
             {
                 if (!lhs.BaseMovementDefault.Equals(rhs.BaseMovementDefault)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
             {
                 if (!lhs.BaseMovementDefaultSwim.Equals(rhs.BaseMovementDefaultSwim)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
             {
                 if (!lhs.BaseMovementDefaultFly.Equals(rhs.BaseMovementDefaultFly)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
             {
                 if (!lhs.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
             {
                 if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
             {
                 if (!lhs.MorphRace.Equals(rhs.MorphRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
             {
                 if (!lhs.ArmorRace.Equals(rhs.ArmorRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SubgraphTemplateRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SubgraphTemplateRace) ?? true))
             {
                 if (!lhs.SubgraphTemplateRace.Equals(rhs.SubgraphTemplateRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SubgraphAdditiveRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SubgraphAdditiveRace) ?? true))
             {
                 if (!lhs.SubgraphAdditiveRace.Equals(rhs.SubgraphAdditiveRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Subgraphs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Subgraphs) ?? true))
             {
-                if (!lhs.Subgraphs.SequenceEqual(rhs.Subgraphs, (l, r) => ((SubgraphCommon)((ISubgraphGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Subgraphs)))) return false;
+                if (!lhs.Subgraphs.SequenceEqual(rhs.Subgraphs, (l, r) => ((SubgraphCommon)((ISubgraphGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.Subgraphs)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.IdleChatterTimeMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.IdleChatterTimeMin) ?? true))
             {
                 if (!lhs.IdleChatterTimeMin.EqualsWithin(rhs.IdleChatterTimeMin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.IdleChatterTimeMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.IdleChatterTimeMax) ?? true))
             {
                 if (!lhs.IdleChatterTimeMax.EqualsWithin(rhs.IdleChatterTimeMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MorphValues) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MorphValues) ?? true))
             {
-                if (!lhs.MorphValues.SequenceEqual(rhs.MorphValues, (l, r) => ((MorphValueCommon)((IMorphValueGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.MorphValues)))) return false;
+                if (!lhs.MorphValues.SequenceEqual(rhs.MorphValues, (l, r) => ((MorphValueCommon)((IMorphValueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.MorphValues)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
             {
                 if (!string.Equals(lhs.HairColorLookupTexture, rhs.HairColorLookupTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HairColorExtendedLookupTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorExtendedLookupTexture) ?? true))
             {
                 if (!string.Equals(lhs.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DialogueQuest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DialogueQuest) ?? true))
             {
                 if (!lhs.DialogueQuest.Equals(rhs.DialogueQuest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BoneData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BoneData) ?? true))
             {
                 if (!Equals(lhs.BoneData, rhs.BoneData)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -6717,23 +6684,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRaceGetter?)lhs,
                 rhs: rhs as IRaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRaceGetter?)lhs,
                 rhs: rhs as IRaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRaceGetter item)
@@ -6862,7 +6829,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
             hash.Add(item.DialogueQuest);
             hash.Add(HashCode.Combine(item.BoneData.Male, item.BoneData.Female));
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -7791,10 +7757,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.BoneData = new GenderedItem<ExtendedList<Bone>?>(
                 male: rhs.BoneData.Male?.Select(x => x.DeepCopy()).ToExtendedList(),
                 female: rhs.BoneData.Female?.Select(x => x.DeepCopy()).ToExtendedList());
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -9331,7 +9293,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
         private RangeInt32? _DATALocation;
-        public Race.DATADataType DATADataTypeState { get; private set; }
         #region Height
         private int _HeightLocation => _DATALocation!.Value.Min;
         private bool _Height_IsSet => _DATALocation.HasValue;
@@ -10229,12 +10190,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRaceGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);

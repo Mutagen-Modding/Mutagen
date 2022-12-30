@@ -86,12 +86,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITransientTypeGetter rhs) return false;
-            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITransientTypeGetter? obj)
         {
-            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.FormType = this.FormType.Combine(rhs.FormType);
-                ret.Links = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Links?.Overall, rhs.Links?.Overall), ExceptionExt.Combine(this.Links?.Specific, rhs.Links?.Specific));
+                ret.Links = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Links?.Overall, rhs.Links?.Overall), Noggog.ExceptionExt.Combine(this.Links?.Specific, rhs.Links?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -943,14 +943,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ITransientTypeGetter? lhs,
             ITransientTypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)TransientType_FieldIndex.FormType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TransientType_FieldIndex.FormType) ?? true))
             {
                 if (lhs.FormType != rhs.FormType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TransientType_FieldIndex.Links) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TransientType_FieldIndex.Links) ?? true))
             {
                 if (!lhs.Links.SequenceEqualNullable(rhs.Links)) return false;
             }
@@ -1311,12 +1311,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITransientTypeGetter rhs) return false;
-            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITransientTypeGetter? obj)
         {
-            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).GetHashCode(this);

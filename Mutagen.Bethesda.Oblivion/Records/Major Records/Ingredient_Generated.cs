@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -715,12 +715,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IIngredientGetter rhs) return false;
-            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIngredientGetter? obj)
         {
-            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).GetHashCode(this);
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((IngredientCommon)((IIngredientGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -977,6 +977,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Ingredient Duplicate(
+            this IIngredientGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((IngredientCommon)((IIngredientGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1342,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Ingredient_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1359,7 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Ingredient_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1367,45 +1378,45 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IIngredientGetter? lhs,
             IIngredientGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Name) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Ingredient_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Ingredient_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Icon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Icon) ?? true))
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Script) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Script) ?? true))
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((IngredientDataCommon)((IIngredientDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Ingredient_FieldIndex.Data))) return false;
+                    if (!((IngredientDataCommon)((IIngredientDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Ingredient_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Effects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Ingredient_FieldIndex.Effects)))) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((EffectCommon)((IEffectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Ingredient_FieldIndex.Effects)))) return false;
             }
             return true;
         }
@@ -1413,23 +1424,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IIngredientGetter?)lhs,
                 rhs: rhs as IIngredientGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IIngredientGetter?)lhs,
                 rhs: rhs as IIngredientGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IIngredientGetter item)
@@ -2231,12 +2242,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IIngredientGetter rhs) return false;
-            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIngredientGetter? obj)
         {
-            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).GetHashCode(this);

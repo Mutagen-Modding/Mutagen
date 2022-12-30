@@ -88,12 +88,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWaterNoisePropertiesGetter rhs) return false;
-            return ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWaterNoisePropertiesGetter? obj)
         {
-            return ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1003,30 +1003,30 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWaterNoisePropertiesGetter? lhs,
             IWaterNoisePropertiesGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.WindDirection) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.WindDirection) ?? true))
             {
                 if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.WindSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.WindSpeed) ?? true))
             {
                 if (!lhs.WindSpeed.EqualsWithin(rhs.WindSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.AmplitudeScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.AmplitudeScale) ?? true))
             {
                 if (!lhs.AmplitudeScale.EqualsWithin(rhs.AmplitudeScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.UvScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.UvScale) ?? true))
             {
                 if (!lhs.UvScale.EqualsWithin(rhs.UvScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.NoiseFalloff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.NoiseFalloff) ?? true))
             {
                 if (!lhs.NoiseFalloff.EqualsWithin(rhs.NoiseFalloff)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.Texture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.Texture) ?? true))
             {
                 if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
             }
@@ -1362,12 +1362,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWaterNoisePropertiesGetter rhs) return false;
-            return ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWaterNoisePropertiesGetter? obj)
         {
-            return ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)this).CommonInstance()!).GetHashCode(this);

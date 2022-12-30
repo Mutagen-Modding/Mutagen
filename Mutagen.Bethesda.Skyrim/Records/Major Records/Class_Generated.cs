@@ -126,9 +126,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown2
         public Byte Unknown2 { get; set; } = default;
         #endregion
-        #region DATADataTypeState
-        public Class.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -165,7 +162,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VoicePoints = initialValue;
                 this.StatWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>(initialValue, null);
                 this.Unknown2 = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -175,6 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem Description,
                 TItem Icon,
@@ -185,15 +182,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem BleedoutDefault,
                 TItem VoicePoints,
                 TItem StatWeights,
-                TItem Unknown2,
-                TItem DATADataTypeState)
+                TItem Unknown2)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.Description = Description;
@@ -206,7 +203,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VoicePoints = VoicePoints;
                 this.StatWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>(StatWeights, null);
                 this.Unknown2 = Unknown2;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -229,7 +225,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem VoicePoints;
             public MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>? StatWeights;
             public TItem Unknown2;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -254,7 +249,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.VoicePoints, rhs.VoicePoints)) return false;
                 if (!object.Equals(this.StatWeights, rhs.StatWeights)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -271,7 +265,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.VoicePoints);
                 hash.Add(this.StatWeights);
                 hash.Add(this.Unknown2);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -313,7 +306,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (!eval(this.Unknown2)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -353,7 +345,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (eval(this.Unknown2)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -404,7 +395,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.Unknown2 = eval(this.Unknown2);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -537,10 +527,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Unknown2, "Unknown2");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -563,7 +549,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? VoicePoints;
             public MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>? StatWeights;
             public Exception? Unknown2;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -594,8 +579,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return StatWeights;
                     case Class_FieldIndex.Unknown2:
                         return Unknown2;
-                    case Class_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -638,9 +621,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Class_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
-                        break;
-                    case Class_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -686,9 +666,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Class_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
                         break;
-                    case Class_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -709,7 +686,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (VoicePoints != null) return true;
                 if (StatWeights != null) return true;
                 if (Unknown2 != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -839,9 +815,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Unknown2, "Unknown2");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -856,12 +829,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Teaches = this.Teaches.Combine(rhs.Teaches);
                 ret.MaxTrainingLevel = this.MaxTrainingLevel.Combine(rhs.MaxTrainingLevel);
-                ret.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(ExceptionExt.Combine(this.SkillWeights?.Overall, rhs.SkillWeights?.Overall), ExceptionExt.Combine(this.SkillWeights?.Specific, rhs.SkillWeights?.Specific));
+                ret.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(Noggog.ExceptionExt.Combine(this.SkillWeights?.Overall, rhs.SkillWeights?.Overall), Noggog.ExceptionExt.Combine(this.SkillWeights?.Specific, rhs.SkillWeights?.Specific));
                 ret.BleedoutDefault = this.BleedoutDefault.Combine(rhs.BleedoutDefault);
                 ret.VoicePoints = this.VoicePoints.Combine(rhs.VoicePoints);
-                ret.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(ExceptionExt.Combine(this.StatWeights?.Overall, rhs.StatWeights?.Overall), ExceptionExt.Combine(this.StatWeights?.Specific, rhs.StatWeights?.Specific));
+                ret.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(Noggog.ExceptionExt.Combine(this.StatWeights?.Overall, rhs.StatWeights?.Overall), Noggog.ExceptionExt.Combine(this.StatWeights?.Specific, rhs.StatWeights?.Specific));
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -895,7 +867,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool VoicePoints;
             public bool StatWeights;
             public bool Unknown2;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -915,7 +886,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VoicePoints = defaultOn;
                 this.StatWeights = defaultOn;
                 this.Unknown2 = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -934,7 +904,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((VoicePoints, null));
                 ret.Add((StatWeights, null));
                 ret.Add((Unknown2, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -996,10 +965,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IClass);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1008,12 +973,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IClassGetter rhs) return false;
-            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClassGetter? obj)
         {
-            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClassCommon)((IClassGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1099,7 +1064,6 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 VoicePoints { get; set; }
         new IDictionary<BasicStat, Byte> StatWeights { get; }
         new Byte Unknown2 { get; set; }
-        new Class.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IClassInternal :
@@ -1137,7 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32 VoicePoints { get; }
         IReadOnlyDictionary<BasicStat, Byte> StatWeights { get; }
         Byte Unknown2 { get; }
-        Class.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1194,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ClassCommon)((IClassGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1270,6 +1233,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Class Duplicate(
+            this IClassGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ClassCommon)((IClassGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1302,18 +1276,18 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Description = 7,
-        Icon = 8,
-        Unknown = 9,
-        Teaches = 10,
-        MaxTrainingLevel = 11,
-        SkillWeights = 12,
-        BleedoutDefault = 13,
-        VoicePoints = 14,
-        StatWeights = 15,
-        Unknown2 = 16,
-        DATADataTypeState = 17,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        Description = 8,
+        Icon = 9,
+        Unknown = 10,
+        Teaches = 11,
+        MaxTrainingLevel = 12,
+        SkillWeights = 13,
+        BleedoutDefault = 14,
+        VoicePoints = 15,
+        StatWeights = 16,
+        Unknown2 = 17,
     }
     #endregion
 
@@ -1331,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "faa1b071-96bf-43c3-be87-10d98e0b6cd8";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 18;
 
@@ -1425,7 +1399,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.VoicePoints = default;
             item.StatWeights.Clear();
             item.Unknown2 = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1527,7 +1500,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs.StatWeights,
                 include: include);
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1645,10 +1617,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Unknown2, "Unknown2");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Class_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1667,8 +1635,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Class_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Class_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Class_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1685,7 +1655,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Class_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1693,57 +1663,53 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IClassGetter? lhs,
             IClassGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
                 if (!string.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Teaches) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Teaches) ?? true))
             {
                 if (lhs.Teaches != rhs.Teaches) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.MaxTrainingLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.MaxTrainingLevel) ?? true))
             {
                 if (lhs.MaxTrainingLevel != rhs.MaxTrainingLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.SkillWeights) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.SkillWeights) ?? true))
             {
                 if (!lhs.SkillWeights.SequenceEqualNullable(rhs.SkillWeights)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
             {
                 if (!lhs.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.VoicePoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.VoicePoints) ?? true))
             {
                 if (lhs.VoicePoints != rhs.VoicePoints) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.StatWeights) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.StatWeights) ?? true))
             {
                 if (!lhs.StatWeights.SequenceEqualNullable(rhs.StatWeights)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1751,23 +1717,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IClassGetter?)lhs,
                 rhs: rhs as IClassGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IClassGetter?)lhs,
                 rhs: rhs as IClassGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IClassGetter item)
@@ -1790,7 +1756,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.VoicePoints);
             hash.Add(item.StatWeights);
             hash.Add(item.Unknown2);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1937,10 +1902,6 @@ namespace Mutagen.Bethesda.Skyrim
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -2090,15 +2051,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly ClassBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IClassGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IClassGetter item,
             MutagenWriter writer,
@@ -2159,7 +2111,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2219,15 +2171,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ClassBinaryCreateTranslation Instance = new ClassBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLAS;
-        public static void FillBinaryStructs(
-            IClassInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IClassInternal item,
             MutagenFrame frame,
@@ -2370,7 +2313,6 @@ namespace Mutagen.Bethesda.Skyrim
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         private RangeInt32? _DATALocation;
-        public Class.DATADataType DATADataTypeState { get; private set; }
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
@@ -2552,12 +2494,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IClassGetter rhs) return false;
-            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClassGetter? obj)
         {
-            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClassCommon)((IClassGetter)this).CommonInstance()!).GetHashCode(this);

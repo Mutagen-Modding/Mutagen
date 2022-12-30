@@ -3,6 +3,8 @@ using FluentAssertions;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis;
+using Mutagen.Bethesda.Inis.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Noggog;
 using Xunit;
 
@@ -22,7 +24,9 @@ sResourceArchiveList2=Skyrim - Voices_en0.bsa, Skyrim - Textures0.bsa") }
 
         var get = new GetArchiveIniListings(
             fileSystem,
-            new GameReleaseInjection(GameRelease.SkyrimSE));
+            new IniPathProvider(
+                new GameReleaseInjection(GameRelease.SkyrimSE),
+                new IniPathLookup()));
             
         get.Get(Ini.GetTypicalPath(GameRelease.SkyrimSE))
             .Should().Equal(new FileName[]

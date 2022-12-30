@@ -105,12 +105,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IFurnitureMarkerParametersGetter rhs) return false;
-            return ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFurnitureMarkerParametersGetter? obj)
         {
-            return ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)this).CommonInstance()!).GetHashCode(this);
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1072,34 +1072,34 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IFurnitureMarkerParametersGetter? lhs,
             IFurnitureMarkerParametersGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Enabled) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Enabled) ?? true))
             {
                 if (lhs.Enabled != rhs.Enabled) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Offset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Offset) ?? true))
             {
                 if (!lhs.Offset.Equals(rhs.Offset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.RotationZ) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.RotationZ) ?? true))
             {
                 if (!lhs.RotationZ.EqualsWithin(rhs.RotationZ)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Keyword) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Keyword) ?? true))
             {
                 if (!lhs.Keyword.Equals(rhs.Keyword)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.EntryTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.EntryTypes) ?? true))
             {
                 if (lhs.EntryTypes != rhs.EntryTypes) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Unknown) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Fallout4
         public FurnitureMarkerParameters.VersioningBreaks Versioning { get; private set; }
         public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
         public Single RotationZ => _structData.Slice(0xC, 0x4).Float() * 57.2958f;
-        public IFormLinkGetter<IKeywordGetter> Keyword => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
+        public IFormLinkGetter<IKeywordGetter> Keyword => _structData.Length <= 0x10 ? FormLink<IKeywordGetter>.Null : new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
         public Furniture.EntryParameterType EntryTypes => _structData.Span.Length <= 0x14 ? default : (Furniture.EntryParameterType)_structData.Span.Slice(0x14, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x15, 0x3).ToArray();
         partial void CustomFactoryEnd(
@@ -1499,12 +1499,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IFurnitureMarkerParametersGetter rhs) return false;
-            return ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFurnitureMarkerParametersGetter? obj)
         {
-            return ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FurnitureMarkerParametersCommon)((IFurnitureMarkerParametersGetter)this).CommonInstance()!).GetHashCode(this);

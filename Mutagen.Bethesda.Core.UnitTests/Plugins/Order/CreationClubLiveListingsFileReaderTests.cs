@@ -7,7 +7,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
-using Mutagen.Bethesda.UnitTests.AutoData;
+using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using Noggog.Testing.FileSystem;
 using Noggog.Testing.IO;

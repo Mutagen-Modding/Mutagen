@@ -222,9 +222,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IBodyPartGetter.TextureFilesHashes => this.TextureFilesHashes;
         #endregion
-        #region BPNDDataTypeState
-        public BodyPart.BPNDDataType BPNDDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -244,12 +241,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IBodyPartGetter rhs) return false;
-            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBodyPartGetter? obj)
         {
-            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).GetHashCode(this);
@@ -296,7 +293,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LimbReplacementModel = initialValue;
                 this.GoreTargetBone = initialValue;
                 this.TextureFilesHashes = initialValue;
-                this.BPNDDataTypeState = initialValue;
             }
 
             public Mask(
@@ -331,8 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem LimbReplacementScale,
                 TItem LimbReplacementModel,
                 TItem GoreTargetBone,
-                TItem TextureFilesHashes,
-                TItem BPNDDataTypeState)
+                TItem TextureFilesHashes)
             {
                 this.Name = Name;
                 this.PoseMatching = PoseMatching;
@@ -366,7 +361,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LimbReplacementModel = LimbReplacementModel;
                 this.GoreTargetBone = GoreTargetBone;
                 this.TextureFilesHashes = TextureFilesHashes;
-                this.BPNDDataTypeState = BPNDDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -410,7 +404,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem LimbReplacementModel;
             public TItem GoreTargetBone;
             public TItem TextureFilesHashes;
-            public TItem BPNDDataTypeState;
             #endregion
 
             #region Equals
@@ -455,7 +448,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.LimbReplacementModel, rhs.LimbReplacementModel)) return false;
                 if (!object.Equals(this.GoreTargetBone, rhs.GoreTargetBone)) return false;
                 if (!object.Equals(this.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
-                if (!object.Equals(this.BPNDDataTypeState, rhs.BPNDDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -493,7 +485,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.LimbReplacementModel);
                 hash.Add(this.GoreTargetBone);
                 hash.Add(this.TextureFilesHashes);
-                hash.Add(this.BPNDDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -534,7 +525,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.LimbReplacementModel)) return false;
                 if (!eval(this.GoreTargetBone)) return false;
                 if (!eval(this.TextureFilesHashes)) return false;
-                if (!eval(this.BPNDDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -574,7 +564,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.LimbReplacementModel)) return true;
                 if (eval(this.GoreTargetBone)) return true;
                 if (eval(this.TextureFilesHashes)) return true;
-                if (eval(this.BPNDDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -621,7 +610,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.LimbReplacementModel = eval(this.LimbReplacementModel);
                 obj.GoreTargetBone = eval(this.GoreTargetBone);
                 obj.TextureFilesHashes = eval(this.TextureFilesHashes);
-                obj.BPNDDataTypeState = eval(this.BPNDDataTypeState);
             }
             #endregion
 
@@ -768,10 +756,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
                     }
-                    if (printMask?.BPNDDataTypeState ?? true)
-                    {
-                        sb.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -828,7 +812,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? LimbReplacementModel;
             public Exception? GoreTargetBone;
             public Exception? TextureFilesHashes;
-            public Exception? BPNDDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -901,8 +884,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return GoreTargetBone;
                     case BodyPart_FieldIndex.TextureFilesHashes:
                         return TextureFilesHashes;
-                    case BodyPart_FieldIndex.BPNDDataTypeState:
-                        return BPNDDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1008,9 +989,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case BodyPart_FieldIndex.TextureFilesHashes:
                         this.TextureFilesHashes = ex;
-                        break;
-                    case BodyPart_FieldIndex.BPNDDataTypeState:
-                        this.BPNDDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1118,9 +1096,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case BodyPart_FieldIndex.TextureFilesHashes:
                         this.TextureFilesHashes = (Exception?)obj;
                         break;
-                    case BodyPart_FieldIndex.BPNDDataTypeState:
-                        this.BPNDDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1161,7 +1136,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (LimbReplacementModel != null) return true;
                 if (GoreTargetBone != null) return true;
                 if (TextureFilesHashes != null) return true;
-                if (BPNDDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1283,9 +1257,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
                 }
-                {
-                    sb.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
-                }
             }
             #endregion
 
@@ -1326,7 +1297,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.LimbReplacementModel = this.LimbReplacementModel.Combine(rhs.LimbReplacementModel);
                 ret.GoreTargetBone = this.GoreTargetBone.Combine(rhs.GoreTargetBone);
                 ret.TextureFilesHashes = this.TextureFilesHashes.Combine(rhs.TextureFilesHashes);
-                ret.BPNDDataTypeState = this.BPNDDataTypeState.Combine(rhs.BPNDDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1382,7 +1352,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool LimbReplacementModel;
             public bool GoreTargetBone;
             public bool TextureFilesHashes;
-            public bool BPNDDataTypeState;
             #endregion
 
             #region Ctors
@@ -1424,7 +1393,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LimbReplacementModel = defaultOn;
                 this.GoreTargetBone = defaultOn;
                 this.TextureFilesHashes = defaultOn;
-                this.BPNDDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1472,7 +1440,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LimbReplacementModel, null));
                 ret.Add((GoreTargetBone, null));
                 ret.Add((TextureFilesHashes, null));
-                ret.Add((BPNDDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1486,10 +1453,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartSetterCommon.Instance.RemapLinks(this, mapping);
-        [Flags]
-        public enum BPNDDataType
-        {
-        }
         #endregion
 
         #region Binary Translation
@@ -1592,7 +1555,6 @@ namespace Mutagen.Bethesda.Skyrim
         new String LimbReplacementModel { get; set; }
         new String GoreTargetBone { get; set; }
         new MemorySlice<Byte>? TextureFilesHashes { get; set; }
-        new BodyPart.BPNDDataType BPNDDataTypeState { get; set; }
     }
 
     public partial interface IBodyPartGetter :
@@ -1647,7 +1609,6 @@ namespace Mutagen.Bethesda.Skyrim
         String LimbReplacementModel { get; }
         String GoreTargetBone { get; }
         ReadOnlyMemorySlice<Byte>? TextureFilesHashes { get; }
-        BodyPart.BPNDDataType BPNDDataTypeState { get; }
 
     }
 
@@ -1704,7 +1665,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1849,7 +1810,6 @@ namespace Mutagen.Bethesda.Skyrim
         LimbReplacementModel = 29,
         GoreTargetBone = 30,
         TextureFilesHashes = 31,
-        BPNDDataTypeState = 32,
     }
     #endregion
 
@@ -1867,9 +1827,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "8a2f315d-0fc0-40ef-abc2-ee949928ba76";
 
-        public const ushort AdditionalFieldCount = 33;
+        public const ushort AdditionalFieldCount = 32;
 
-        public const ushort FieldCount = 33;
+        public const ushort FieldCount = 32;
 
         public static readonly Type MaskType = typeof(BodyPart.Mask<>);
 
@@ -1986,7 +1946,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.LimbReplacementModel = string.Empty;
             item.GoreTargetBone = string.Empty;
             item.TextureFilesHashes = default;
-            item.BPNDDataTypeState = default;
         }
         
         #region Mutagen
@@ -2012,7 +1971,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: BodyPartBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: BodyPartBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -2074,8 +2032,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.LimbReplacementScale = item.LimbReplacementScale.EqualsWithin(rhs.LimbReplacementScale);
             ret.LimbReplacementModel = string.Equals(item.LimbReplacementModel, rhs.LimbReplacementModel);
             ret.GoreTargetBone = string.Equals(item.GoreTargetBone, rhs.GoreTargetBone);
-            ret.TextureFilesHashes = MemorySliceExt.Equal(item.TextureFilesHashes, rhs.TextureFilesHashes);
-            ret.BPNDDataTypeState = item.BPNDDataTypeState == rhs.BPNDDataTypeState;
+            ret.TextureFilesHashes = MemorySliceExt.SequenceEqual(item.TextureFilesHashes, rhs.TextureFilesHashes);
         }
         
         public string Print(
@@ -2250,150 +2207,142 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
             }
-            if (printMask?.BPNDDataTypeState ?? true)
-            {
-                sb.AppendItem(item.BPNDDataTypeState, "BPNDDataTypeState");
-            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
             IBodyPartGetter? lhs,
             IBodyPartGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.PoseMatching) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.PoseMatching) ?? true))
             {
                 if (!string.Equals(lhs.PoseMatching, rhs.PoseMatching)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.PartNode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.PartNode) ?? true))
             {
                 if (!string.Equals(lhs.PartNode, rhs.PartNode)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.VatsTarget) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.VatsTarget) ?? true))
             {
                 if (!string.Equals(lhs.VatsTarget, rhs.VatsTarget)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.IkStartNode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.IkStartNode) ?? true))
             {
                 if (!string.Equals(lhs.IkStartNode, rhs.IkStartNode)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.DamageMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.DamageMult) ?? true))
             {
                 if (!lhs.DamageMult.EqualsWithin(rhs.DamageMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.HealthPercent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.HealthPercent) ?? true))
             {
                 if (lhs.HealthPercent != rhs.HealthPercent) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ActorValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ActorValue) ?? true))
             {
                 if (lhs.ActorValue != rhs.ActorValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ToHitChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ToHitChance) ?? true))
             {
                 if (lhs.ToHitChance != rhs.ToHitChance) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosionChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosionChance) ?? true))
             {
                 if (lhs.ExplodableExplosionChance != rhs.ExplodableExplosionChance) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisCount) ?? true))
             {
                 if (lhs.ExplodableDebrisCount != rhs.ExplodableDebrisCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebris) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebris) ?? true))
             {
                 if (!lhs.ExplodableDebris.Equals(rhs.ExplodableDebris)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosion) ?? true))
             {
                 if (!lhs.ExplodableExplosion.Equals(rhs.ExplodableExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.TrackingMaxAngle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.TrackingMaxAngle) ?? true))
             {
                 if (!lhs.TrackingMaxAngle.EqualsWithin(rhs.TrackingMaxAngle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisScale) ?? true))
             {
                 if (!lhs.ExplodableDebrisScale.EqualsWithin(rhs.ExplodableDebrisScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisCount) ?? true))
             {
                 if (lhs.SeverableDebrisCount != rhs.SeverableDebrisCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebris) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebris) ?? true))
             {
                 if (!lhs.SeverableDebris.Equals(rhs.SeverableDebris)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableExplosion) ?? true))
             {
                 if (!lhs.SeverableExplosion.Equals(rhs.SeverableExplosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisScale) ?? true))
             {
                 if (!lhs.SeverableDebrisScale.EqualsWithin(rhs.SeverableDebrisScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.GorePositioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GorePositioning) ?? true))
             {
                 if (!lhs.GorePositioning.Equals(rhs.GorePositioning)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreRotation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreRotation) ?? true))
             {
                 if (!lhs.GoreRotation.Equals(rhs.GoreRotation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableImpactData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableImpactData) ?? true))
             {
                 if (!lhs.SeverableImpactData.Equals(rhs.SeverableImpactData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableImpactData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableImpactData) ?? true))
             {
                 if (!lhs.ExplodableImpactData.Equals(rhs.ExplodableImpactData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDecalCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDecalCount) ?? true))
             {
                 if (lhs.SeverableDecalCount != rhs.SeverableDecalCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDecalCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDecalCount) ?? true))
             {
                 if (lhs.ExplodableDecalCount != rhs.ExplodableDecalCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.LimbReplacementScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.LimbReplacementScale) ?? true))
             {
                 if (!lhs.LimbReplacementScale.EqualsWithin(rhs.LimbReplacementScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.LimbReplacementModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.LimbReplacementModel) ?? true))
             {
                 if (!string.Equals(lhs.LimbReplacementModel, rhs.LimbReplacementModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreTargetBone) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreTargetBone) ?? true))
             {
                 if (!string.Equals(lhs.GoreTargetBone, rhs.GoreTargetBone)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.TextureFilesHashes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.TextureFilesHashes) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)BodyPart_FieldIndex.BPNDDataTypeState) ?? true))
-            {
-                if (lhs.BPNDDataTypeState != rhs.BPNDDataTypeState) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
             }
             return true;
         }
@@ -2439,7 +2388,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(TextureFilesHashesItem);
             }
-            hash.Add(item.BPNDDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -2613,10 +2561,6 @@ namespace Mutagen.Bethesda.Skyrim
                     item.TextureFilesHashes = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.BPNDDataTypeState) ?? true))
-            {
-                item.BPNDDataTypeState = rhs.BPNDDataTypeState;
-            }
         }
         
         #endregion
@@ -2708,12 +2652,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class BodyPartBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public static readonly BodyPartBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IBodyPartGetter item,
-            MutagenWriter writer)
-        {
-        }
 
         public static void WriteRecordTypes(
             IBodyPartGetter item,
@@ -2829,9 +2767,6 @@ namespace Mutagen.Bethesda.Skyrim
             IBodyPartGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -2854,12 +2789,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class BodyPartBinaryCreateTranslation
     {
         public static readonly BodyPartBinaryCreateTranslation Instance = new BodyPartBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IBodyPart item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IBodyPart item,
@@ -3091,7 +3020,6 @@ namespace Mutagen.Bethesda.Skyrim
         public String IkStartNode => _IkStartNodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IkStartNodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         private RangeInt32? _BPNDLocation;
-        public BodyPart.BPNDDataType BPNDDataTypeState { get; private set; }
         #region DamageMult
         private int _DamageMultLocation => _BPNDLocation!.Value.Min;
         private bool _DamageMult_IsSet => _BPNDLocation.HasValue;
@@ -3355,12 +3283,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IBodyPartGetter rhs) return false;
-            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBodyPartGetter? obj)
         {
-            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).GetHashCode(this);

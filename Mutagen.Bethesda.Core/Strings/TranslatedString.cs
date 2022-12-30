@@ -169,7 +169,7 @@ public sealed class TranslatedString : ITranslatedString, IEquatable<TranslatedS
         {
             if (_localization == null)
             {
-                if (language == DefaultLanguage
+                if (language == TargetLanguage
                     && !UsingLocalizationDictionary)
                 {
                     _directString = str;

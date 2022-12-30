@@ -88,12 +88,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ICellWaterVelocityGetter rhs) return false;
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellWaterVelocityGetter? obj)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Offset = default;
             item.Unknown = default;
             item.Angle = default;
-            item.Unknown2 = new byte[0];
+            item.Unknown2 = Array.Empty<byte>();
         }
         
         #region Mutagen
@@ -935,22 +935,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ICellWaterVelocityGetter? lhs,
             ICellWaterVelocityGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Offset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Offset) ?? true))
             {
                 if (!lhs.Offset.Equals(rhs.Offset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Angle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Angle) ?? true))
             {
                 if (!lhs.Angle.Equals(rhs.Angle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown2) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
             }
@@ -1301,12 +1301,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ICellWaterVelocityGetter rhs) return false;
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellWaterVelocityGetter? obj)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);

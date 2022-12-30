@@ -11,7 +11,7 @@ internal sealed class LinkInterfaceMapper : InterfaceMapGetter, ILinkInterfaceMa
     public static LinkInterfaceMapper AutomaticFactory(string nickname)
     {
         var ret = new LinkInterfaceMapper();
-        foreach (var category in EnumExt<GameCategory>.Values)
+        foreach (var category in Enums<GameCategory>.Values)
         {
             var t = Type.GetType(
                 $"Mutagen.Bethesda.{category}.{category}{nickname}Mapping, Mutagen.Bethesda.{category}");

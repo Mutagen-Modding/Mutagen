@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICellGridGetter rhs) return false;
-            return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellGridGetter? obj)
         {
-            return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CellGridCommon)((ICellGridGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -843,14 +843,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ICellGridGetter? lhs,
             ICellGridGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CellGrid_FieldIndex.Point) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellGrid_FieldIndex.Point) ?? true))
             {
                 if (!lhs.Point.Equals(rhs.Point)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellGrid_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellGrid_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
@@ -1184,12 +1184,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICellGridGetter rhs) return false;
-            return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellGridGetter? obj)
         {
-            return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).GetHashCode(this);

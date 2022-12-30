@@ -112,12 +112,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ITintAssetsGetter rhs) return false;
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITintAssetsGetter? obj)
         {
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.FileName = this.FileName.Combine(rhs.FileName);
                 ret.MaskType = this.MaskType.Combine(rhs.MaskType);
                 ret.PresetDefault = this.PresetDefault.Combine(rhs.PresetDefault);
-                ret.Presets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintPreset.ErrorMask?>>?>(ExceptionExt.Combine(this.Presets?.Overall, rhs.Presets?.Overall), ExceptionExt.Combine(this.Presets?.Specific, rhs.Presets?.Specific));
+                ret.Presets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintPreset.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Presets?.Overall, rhs.Presets?.Overall), Noggog.ExceptionExt.Combine(this.Presets?.Specific, rhs.Presets?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TintAssetsCommon)((ITintAssetsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1109,28 +1109,28 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ITintAssetsGetter? lhs,
             ITintAssetsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.FileName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintAssets_FieldIndex.FileName) ?? true))
             {
                 if (!object.Equals(lhs.FileName, rhs.FileName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.MaskType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintAssets_FieldIndex.MaskType) ?? true))
             {
                 if (lhs.MaskType != rhs.MaskType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.PresetDefault) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintAssets_FieldIndex.PresetDefault) ?? true))
             {
                 if (!lhs.PresetDefault.Equals(rhs.PresetDefault)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
             {
-                if (!lhs.Presets.SequenceEqual(rhs.Presets, (l, r) => ((TintPresetCommon)((ITintPresetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TintAssets_FieldIndex.Presets)))) return false;
+                if (!lhs.Presets.SequenceEqual(rhs.Presets, (l, r) => ((TintPresetCommon)((ITintPresetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TintAssets_FieldIndex.Presets)))) return false;
             }
             return true;
         }
@@ -1662,12 +1662,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ITintAssetsGetter rhs) return false;
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITintAssetsGetter? obj)
         {
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).GetHashCode(this);

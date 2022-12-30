@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class MagicEffectSummonCreatureArchetype
 {
-    public FormLink<INpcGetter> Association => this.AssociationKey.AsLink<INpcGetter>();
+    public FormLink<INpcGetter> Association => this.AssociationKey.ToLink<INpcGetter>();
 
     IFormLink<INpcGetter> IMagicEffectSummonCreatureArchetype.Association => this.Association;
     IFormLinkGetter<INpcGetter> IMagicEffectSummonCreatureArchetypeGetter.Association => this.Association;
@@ -27,5 +27,5 @@ public partial interface IMagicEffectSummonCreatureArchetypeGetter
 
 partial class MagicEffectSummonCreatureArchetypeBinaryOverlay
 {
-    public IFormLinkGetter<INpcGetter> Association => this.AssociationKey.AsLink<INpcGetter>();
+    public IFormLinkGetter<INpcGetter> Association => this.AssociationKey.ToLink<INpcGetter>();
 }

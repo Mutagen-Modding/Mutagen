@@ -216,9 +216,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region LeafFrequency
         public Single LeafFrequency { get; set; } = default;
         #endregion
-        #region CNAMDataTypeState
-        public Tree.CNAMDataType CNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -263,7 +260,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LeafFlexibility = initialValue;
                 this.LeafAmplitude = initialValue;
                 this.LeafFrequency = initialValue;
-                this.CNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -273,6 +269,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Model,
@@ -291,15 +288,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem SideFrequency,
                 TItem LeafFlexibility,
                 TItem LeafAmplitude,
-                TItem LeafFrequency,
-                TItem CNAMDataTypeState)
+                TItem LeafFrequency)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -320,7 +317,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LeafFlexibility = LeafFlexibility;
                 this.LeafAmplitude = LeafAmplitude;
                 this.LeafFrequency = LeafFrequency;
-                this.CNAMDataTypeState = CNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -351,7 +347,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem LeafFlexibility;
             public TItem LeafAmplitude;
             public TItem LeafFrequency;
-            public TItem CNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -384,7 +379,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.LeafFlexibility, rhs.LeafFlexibility)) return false;
                 if (!object.Equals(this.LeafAmplitude, rhs.LeafAmplitude)) return false;
                 if (!object.Equals(this.LeafFrequency, rhs.LeafFrequency)) return false;
-                if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -409,7 +403,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.LeafFlexibility);
                 hash.Add(this.LeafAmplitude);
                 hash.Add(this.LeafFrequency);
-                hash.Add(this.CNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -455,7 +448,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.LeafFlexibility)) return false;
                 if (!eval(this.LeafAmplitude)) return false;
                 if (!eval(this.LeafFrequency)) return false;
-                if (!eval(this.CNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -499,7 +491,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.LeafFlexibility)) return true;
                 if (eval(this.LeafAmplitude)) return true;
                 if (eval(this.LeafFrequency)) return true;
-                if (eval(this.CNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -534,7 +525,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.LeafFlexibility = eval(this.LeafFlexibility);
                 obj.LeafAmplitude = eval(this.LeafAmplitude);
                 obj.LeafFrequency = eval(this.LeafFrequency);
-                obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
             }
             #endregion
 
@@ -629,10 +619,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(LeafFrequency, "LeafFrequency");
                     }
-                    if (printMask?.CNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -663,7 +649,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? LeafFlexibility;
             public Exception? LeafAmplitude;
             public Exception? LeafFrequency;
-            public Exception? CNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -710,8 +695,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return LeafAmplitude;
                     case Tree_FieldIndex.LeafFrequency:
                         return LeafFrequency;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        return CNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -778,9 +761,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Tree_FieldIndex.LeafFrequency:
                         this.LeafFrequency = ex;
-                        break;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -850,9 +830,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Tree_FieldIndex.LeafFrequency:
                         this.LeafFrequency = (Exception?)obj;
                         break;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -881,7 +858,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (LeafFlexibility != null) return true;
                 if (LeafAmplitude != null) return true;
                 if (LeafFrequency != null) return true;
-                if (CNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -957,9 +933,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(LeafFrequency, "LeafFrequency");
                 }
-                {
-                    sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -987,7 +960,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.LeafFlexibility = this.LeafFlexibility.Combine(rhs.LeafFlexibility);
                 ret.LeafAmplitude = this.LeafAmplitude.Combine(rhs.LeafAmplitude);
                 ret.LeafFrequency = this.LeafFrequency.Combine(rhs.LeafFrequency);
-                ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1029,7 +1001,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool LeafFlexibility;
             public bool LeafAmplitude;
             public bool LeafFrequency;
-            public bool CNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1053,7 +1024,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LeafFlexibility = defaultOn;
                 this.LeafAmplitude = defaultOn;
                 this.LeafFrequency = defaultOn;
-                this.CNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1080,7 +1050,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((LeafFlexibility, null));
                 ret.Add((LeafAmplitude, null));
                 ret.Add((LeafFrequency, null));
-                ret.Add((CNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1142,10 +1111,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum CNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1154,12 +1119,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ITreeGetter rhs) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITreeGetter? obj)
         {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1272,7 +1237,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single LeafFlexibility { get; set; }
         new Single LeafAmplitude { get; set; }
         new Single LeafFrequency { get; set; }
-        new Tree.CNAMDataType CNAMDataTypeState { get; set; }
         #region Mutagen
         new Tree.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1346,7 +1310,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single LeafFlexibility { get; }
         Single LeafAmplitude { get; }
         Single LeafFrequency { get; }
-        Tree.CNAMDataType CNAMDataTypeState { get; }
 
         #region Mutagen
         Tree.MajorFlag MajorFlags { get; }
@@ -1407,7 +1370,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1483,6 +1446,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Tree Duplicate(
+            this ITreeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1515,26 +1489,26 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Model = 8,
-        Ingredient = 9,
-        HarvestSound = 10,
-        Production = 11,
-        Name = 12,
-        TrunkFlexibility = 13,
-        BranchFlexibility = 14,
-        TrunkAmplitude = 15,
-        FrontAmplitude = 16,
-        BackAmplitude = 17,
-        SideAmplitude = 18,
-        FrontFrequency = 19,
-        BackFrequency = 20,
-        SideFrequency = 21,
-        LeafFlexibility = 22,
-        LeafAmplitude = 23,
-        LeafFrequency = 24,
-        CNAMDataTypeState = 25,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Model = 9,
+        Ingredient = 10,
+        HarvestSound = 11,
+        Production = 12,
+        Name = 13,
+        TrunkFlexibility = 14,
+        BranchFlexibility = 15,
+        TrunkAmplitude = 16,
+        FrontAmplitude = 17,
+        BackAmplitude = 18,
+        SideAmplitude = 19,
+        FrontFrequency = 20,
+        BackFrequency = 21,
+        SideFrequency = 22,
+        LeafFlexibility = 23,
+        LeafAmplitude = 24,
+        LeafFrequency = 25,
     }
     #endregion
 
@@ -1552,7 +1526,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "0cc3a259-8223-4da7-9ef5-9fcb393486a2";
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 19;
 
         public const ushort FieldCount = 26;
 
@@ -1662,7 +1636,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.LeafFlexibility = default;
             item.LeafAmplitude = default;
             item.LeafFrequency = default;
-            item.CNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1782,7 +1755,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.LeafFlexibility = item.LeafFlexibility.EqualsWithin(rhs.LeafFlexibility);
             ret.LeafAmplitude = item.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude);
             ret.LeafFrequency = item.LeafFrequency.EqualsWithin(rhs.LeafFrequency);
-            ret.CNAMDataTypeState = item.CNAMDataTypeState == rhs.CNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1912,10 +1884,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.LeafFrequency, "LeafFrequency");
             }
-            if (printMask?.CNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
-            }
         }
         
         public static Tree_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1934,8 +1902,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Tree_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Tree_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Tree_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1952,7 +1922,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Tree_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1960,105 +1930,101 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ITreeGetter? lhs,
             ITreeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Tree_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Tree_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Tree_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
             {
                 if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
             {
                 if (!lhs.HarvestSound.Equals(rhs.HarvestSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Production, rhs.Production, out var lhsProduction, out var rhsProduction, out var isProductionEqual))
                 {
-                    if (!((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)lhsProduction).CommonInstance()!).Equals(lhsProduction, rhsProduction, crystal?.GetSubCrystal((int)Tree_FieldIndex.Production))) return false;
+                    if (!((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)lhsProduction).CommonInstance()!).Equals(lhsProduction, rhsProduction, equalsMask?.GetSubCrystal((int)Tree_FieldIndex.Production))) return false;
                 }
                 else if (!isProductionEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
             {
                 if (!lhs.TrunkFlexibility.EqualsWithin(rhs.TrunkFlexibility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.BranchFlexibility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchFlexibility) ?? true))
             {
                 if (!lhs.BranchFlexibility.EqualsWithin(rhs.BranchFlexibility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.TrunkAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.TrunkAmplitude) ?? true))
             {
                 if (!lhs.TrunkAmplitude.EqualsWithin(rhs.TrunkAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.FrontAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.FrontAmplitude) ?? true))
             {
                 if (!lhs.FrontAmplitude.EqualsWithin(rhs.FrontAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.BackAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.BackAmplitude) ?? true))
             {
                 if (!lhs.BackAmplitude.EqualsWithin(rhs.BackAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.SideAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.SideAmplitude) ?? true))
             {
                 if (!lhs.SideAmplitude.EqualsWithin(rhs.SideAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.FrontFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.FrontFrequency) ?? true))
             {
                 if (!lhs.FrontFrequency.EqualsWithin(rhs.FrontFrequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.BackFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.BackFrequency) ?? true))
             {
                 if (!lhs.BackFrequency.EqualsWithin(rhs.BackFrequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.SideFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.SideFrequency) ?? true))
             {
                 if (!lhs.SideFrequency.EqualsWithin(rhs.SideFrequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.LeafFlexibility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafFlexibility) ?? true))
             {
                 if (!lhs.LeafFlexibility.EqualsWithin(rhs.LeafFlexibility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.LeafAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafAmplitude) ?? true))
             {
                 if (!lhs.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.LeafFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafFrequency) ?? true))
             {
                 if (!lhs.LeafFrequency.EqualsWithin(rhs.LeafFrequency)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
             }
             return true;
         }
@@ -2066,23 +2032,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITreeGetter?)lhs,
                 rhs: rhs as ITreeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ITreeGetter?)lhs,
                 rhs: rhs as ITreeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ITreeGetter item)
@@ -2119,7 +2085,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.LeafFlexibility);
             hash.Add(item.LeafAmplitude);
             hash.Add(item.LeafFrequency);
-            hash.Add(item.CNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2405,10 +2370,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.LeafFrequency = rhs.LeafFrequency;
             }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                item.CNAMDataTypeState = rhs.CNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2557,15 +2518,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly TreeBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ITreeGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ITreeGetter item,
             MutagenWriter writer,
@@ -2667,7 +2619,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2727,15 +2679,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TREE;
-        public static void FillBinaryStructs(
-            ITreeInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ITreeInternal item,
             MutagenFrame frame,
@@ -2928,7 +2871,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         private RangeInt32? _CNAMLocation;
-        public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
         #region TrunkFlexibility
         private int _TrunkFlexibilityLocation => _CNAMLocation!.Value.Min;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;
@@ -3152,12 +3094,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ITreeGetter rhs) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITreeGetter? obj)
         {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);

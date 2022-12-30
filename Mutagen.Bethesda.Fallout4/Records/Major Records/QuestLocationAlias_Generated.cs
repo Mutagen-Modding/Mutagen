@@ -165,12 +165,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestLocationAliasGetter rhs) return false;
-            return ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestLocationAliasGetter? obj)
         {
-            return ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)this).CommonInstance()!).GetHashCode(this);
@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ReferenceAliasLocation = this.ReferenceAliasLocation.Combine(rhs.ReferenceAliasLocation, (l, r) => l.Combine(r));
                 ret.ExternalAliasLocation = this.ExternalAliasLocation.Combine(rhs.ExternalAliasLocation, (l, r) => l.Combine(r));
                 ret.FindMatchingRefFromEvent = this.FindMatchingRefFromEvent.Combine(rhs.FindMatchingRefFromEvent, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.ClosestToAlias = this.ClosestToAlias.Combine(rhs.ClosestToAlias);
                 return ret;
             }
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1373,7 +1373,7 @@ namespace Mutagen.Bethesda.Fallout4
             switch (index)
             {
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1381,59 +1381,59 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IQuestLocationAliasGetter? lhs,
             IQuestLocationAliasGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAQuestAliasGetter)lhs, (IAQuestAliasGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ID) ?? true))
+            if (!base.Equals((IAQuestAliasGetter)lhs, (IAQuestAliasGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ID) ?? true))
             {
                 if (lhs.ID != rhs.ID) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.AliasIDToForceIntoWhenFilled) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.AliasIDToForceIntoWhenFilled) ?? true))
             {
                 if (lhs.AliasIDToForceIntoWhenFilled != rhs.AliasIDToForceIntoWhenFilled) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.SpecificLocation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.SpecificLocation) ?? true))
             {
                 if (!lhs.SpecificLocation.Equals(rhs.SpecificLocation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ReferenceAliasLocation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ReferenceAliasLocation) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ReferenceAliasLocation, rhs.ReferenceAliasLocation, out var lhsReferenceAliasLocation, out var rhsReferenceAliasLocation, out var isReferenceAliasLocationEqual))
                 {
-                    if (!((ReferenceAliasLocationCommon)((IReferenceAliasLocationGetter)lhsReferenceAliasLocation).CommonInstance()!).Equals(lhsReferenceAliasLocation, rhsReferenceAliasLocation, crystal?.GetSubCrystal((int)QuestLocationAlias_FieldIndex.ReferenceAliasLocation))) return false;
+                    if (!((ReferenceAliasLocationCommon)((IReferenceAliasLocationGetter)lhsReferenceAliasLocation).CommonInstance()!).Equals(lhsReferenceAliasLocation, rhsReferenceAliasLocation, equalsMask?.GetSubCrystal((int)QuestLocationAlias_FieldIndex.ReferenceAliasLocation))) return false;
                 }
                 else if (!isReferenceAliasLocationEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ExternalAliasLocation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ExternalAliasLocation) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ExternalAliasLocation, rhs.ExternalAliasLocation, out var lhsExternalAliasLocation, out var rhsExternalAliasLocation, out var isExternalAliasLocationEqual))
                 {
-                    if (!((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)lhsExternalAliasLocation).CommonInstance()!).Equals(lhsExternalAliasLocation, rhsExternalAliasLocation, crystal?.GetSubCrystal((int)QuestLocationAlias_FieldIndex.ExternalAliasLocation))) return false;
+                    if (!((ExternalAliasLocationCommon)((IExternalAliasLocationGetter)lhsExternalAliasLocation).CommonInstance()!).Equals(lhsExternalAliasLocation, rhsExternalAliasLocation, equalsMask?.GetSubCrystal((int)QuestLocationAlias_FieldIndex.ExternalAliasLocation))) return false;
                 }
                 else if (!isExternalAliasLocationEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.FindMatchingRefFromEvent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.FindMatchingRefFromEvent) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FindMatchingRefFromEvent, rhs.FindMatchingRefFromEvent, out var lhsFindMatchingRefFromEvent, out var rhsFindMatchingRefFromEvent, out var isFindMatchingRefFromEventEqual))
                 {
-                    if (!((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)lhsFindMatchingRefFromEvent).CommonInstance()!).Equals(lhsFindMatchingRefFromEvent, rhsFindMatchingRefFromEvent, crystal?.GetSubCrystal((int)QuestLocationAlias_FieldIndex.FindMatchingRefFromEvent))) return false;
+                    if (!((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)lhsFindMatchingRefFromEvent).CommonInstance()!).Equals(lhsFindMatchingRefFromEvent, rhsFindMatchingRefFromEvent, equalsMask?.GetSubCrystal((int)QuestLocationAlias_FieldIndex.FindMatchingRefFromEvent))) return false;
                 }
                 else if (!isFindMatchingRefFromEventEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestLocationAlias_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestLocationAlias_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ClosestToAlias) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ClosestToAlias) ?? true))
             {
                 if (lhs.ClosestToAlias != rhs.ClosestToAlias) return false;
             }
@@ -1443,12 +1443,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAQuestAliasGetter? lhs,
             IAQuestAliasGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IQuestLocationAliasGetter?)lhs,
                 rhs: rhs as IQuestLocationAliasGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IQuestLocationAliasGetter item)
@@ -2222,12 +2222,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestLocationAliasGetter rhs) return false;
-            return ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestLocationAliasGetter? obj)
         {
-            return ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestLocationAliasCommon)((IQuestLocationAliasGetter)this).CommonInstance()!).GetHashCode(this);

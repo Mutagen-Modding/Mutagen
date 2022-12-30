@@ -108,6 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Description,
                 TItem Model,
@@ -132,6 +133,7 @@ namespace Mutagen.Bethesda.Fallout4
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags,
                 Name: Name,
                 Description: Description,
                 Model: Model,
@@ -425,7 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.ModificationType = this.ModificationType.Combine(rhs.ModificationType);
                 return ret;
             }
@@ -533,12 +535,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IUnknownObjectModificationGetter rhs) return false;
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IUnknownObjectModificationGetter? obj)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -697,7 +699,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -773,6 +775,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static UnknownObjectModification Duplicate(
+            this IUnknownObjectModificationGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -805,23 +818,24 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Description = 7,
-        Model = 8,
-        Unknown = 9,
-        MaxRank = 10,
-        LevelTierScaledOffset = 11,
-        AttachPoint = 12,
-        AttachParentSlots = 13,
-        Items = 14,
-        Includes = 15,
-        TargetOmodKeywords = 16,
-        FilterKeywords = 17,
-        LooseMod = 18,
-        Priority = 19,
-        Filter = 20,
-        Properties = 21,
-        ModificationType = 22,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Description = 8,
+        Model = 9,
+        Unknown = 10,
+        MaxRank = 11,
+        LevelTierScaledOffset = 12,
+        AttachPoint = 13,
+        AttachParentSlots = 14,
+        Items = 15,
+        Includes = 16,
+        TargetOmodKeywords = 17,
+        FilterKeywords = 18,
+        LooseMod = 19,
+        Priority = 20,
+        Filter = 21,
+        Properties = 22,
+        ModificationType = 23,
     }
     #endregion
 
@@ -841,7 +855,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(UnknownObjectModification.Mask<>);
 
@@ -1109,6 +1123,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Version2:
                     return (UnknownObjectModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Fallout4MajorRecordFlags:
+                    return (UnknownObjectModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Name:
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Description:
@@ -1140,7 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case AObjectModification_FieldIndex.Filter:
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1160,8 +1176,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (UnknownObjectModification_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (UnknownObjectModification_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1178,7 +1196,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1186,15 +1204,15 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IUnknownObjectModificationGetter? lhs,
             IUnknownObjectModificationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.Properties) ?? true))
+            if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<AObjectModification.NoneProperty>)((IAObjectModPropertyGetter<AObjectModification.NoneProperty>)l).CommonInstance(typeof(AObjectModification.NoneProperty))!).Equals(l, r, crystal?.GetSubCrystal((int)UnknownObjectModification_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<AObjectModification.NoneProperty>)((IAObjectModPropertyGetter<AObjectModification.NoneProperty>)l).CommonInstance(typeof(AObjectModification.NoneProperty))!).Equals(l, r, equalsMask?.GetSubCrystal((int)UnknownObjectModification_FieldIndex.Properties)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.ModificationType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.ModificationType) ?? true))
             {
                 if (lhs.ModificationType != rhs.ModificationType) return false;
             }
@@ -1204,34 +1222,34 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAObjectModificationGetter? lhs,
             IAObjectModificationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IUnknownObjectModificationGetter?)lhs,
                 rhs: rhs as IUnknownObjectModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IUnknownObjectModificationGetter?)lhs,
                 rhs: rhs as IUnknownObjectModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IUnknownObjectModificationGetter?)lhs,
                 rhs: rhs as IUnknownObjectModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IUnknownObjectModificationGetter item)
@@ -1798,12 +1816,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IUnknownObjectModificationGetter rhs) return false;
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IUnknownObjectModificationGetter? obj)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);

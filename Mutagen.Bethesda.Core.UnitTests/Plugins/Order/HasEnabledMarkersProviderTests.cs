@@ -10,7 +10,7 @@ public class HasEnabledMarkersProviderTests
     [Fact]
     public void CoversAllReleases()
     {
-        foreach (var release in EnumExt.GetValues<GameRelease>())
+        foreach (var release in Enums<GameRelease>.Values)
         {
             new HasEnabledMarkersProvider(
                     new GameReleaseInjection(release))

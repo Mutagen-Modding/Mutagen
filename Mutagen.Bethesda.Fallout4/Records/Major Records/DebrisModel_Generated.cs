@@ -101,12 +101,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDebrisModelGetter rhs) return false;
-            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDebrisModelGetter? obj)
         {
-            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Percentage = item.Percentage == rhs.Percentage;
             ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.TextureFileHashes = MemorySliceExt.Equal(item.TextureFileHashes, rhs.TextureFileHashes);
+            ret.TextureFileHashes = MemorySliceExt.SequenceEqual(item.TextureFileHashes, rhs.TextureFileHashes);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
         }
         
@@ -996,26 +996,26 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDebrisModelGetter? lhs,
             IDebrisModelGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.Percentage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Percentage) ?? true))
             {
                 if (lhs.Percentage != rhs.Percentage) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
             {
                 if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.TextureFileHashes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.TextureFileHashes) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TextureFileHashes, rhs.TextureFileHashes)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TextureFileHashes, rhs.TextureFileHashes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -1484,12 +1484,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDebrisModelGetter rhs) return false;
-            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDebrisModelGetter? obj)
         {
-            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).GetHashCode(this);

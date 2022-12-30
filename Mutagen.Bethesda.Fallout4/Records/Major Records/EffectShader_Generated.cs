@@ -96,16 +96,16 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte Unknown { get; set; } = default;
         #endregion
         #region MembraneSourceBlendMode
-        public readonly static EffectShader.BlendMode _MembraneSourceBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode MembraneSourceBlendMode { get; set; } = _MembraneSourceBlendMode_Default;
+        public static readonly EffectShader.BlendMode MembraneSourceBlendModeDefault = BlendMode.Zero;
+        public EffectShader.BlendMode MembraneSourceBlendMode { get; set; } = MembraneSourceBlendModeDefault;
         #endregion
         #region MembraneBlendOperation
-        public readonly static EffectShader.BlendOperation _MembraneBlendOperation_Default = BlendOperation.Add;
-        public EffectShader.BlendOperation MembraneBlendOperation { get; set; } = _MembraneBlendOperation_Default;
+        public static readonly EffectShader.BlendOperation MembraneBlendOperationDefault = BlendOperation.Add;
+        public EffectShader.BlendOperation MembraneBlendOperation { get; set; } = MembraneBlendOperationDefault;
         #endregion
         #region MembraneZTest
-        public readonly static EffectShader.ZTest _MembraneZTest_Default = ZTest.EqualTo;
-        public EffectShader.ZTest MembraneZTest { get; set; } = _MembraneZTest_Default;
+        public static readonly EffectShader.ZTest MembraneZTestDefault = ZTest.EqualTo;
+        public EffectShader.ZTest MembraneZTest { get; set; } = MembraneZTestDefault;
         #endregion
         #region FillColorKey1
         public Color FillColorKey1 { get; set; } = default;
@@ -165,8 +165,8 @@ namespace Mutagen.Bethesda.Fallout4
         public Single EdgeEffectFullAlphaRatio { get; set; } = default;
         #endregion
         #region MembraneDestBlendMode
-        public readonly static EffectShader.BlendMode _MembraneDestBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode MembraneDestBlendMode { get; set; } = _MembraneDestBlendMode_Default;
+        public static readonly EffectShader.BlendMode MembraneDestBlendModeDefault = BlendMode.Zero;
+        public EffectShader.BlendMode MembraneDestBlendMode { get; set; } = MembraneDestBlendModeDefault;
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -280,9 +280,6 @@ namespace Mutagen.Bethesda.Fallout4
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region DNAMDataTypeState
-        public EffectShader.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -360,7 +357,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FillTextureScaleV = initialValue;
                 this.Unknown6 = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -370,6 +366,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem FillTexture,
                 TItem ParticleShaderTexture,
                 TItem HolesTexture,
@@ -421,15 +418,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem FillTextureScaleU,
                 TItem FillTextureScaleV,
                 TItem Unknown6,
-                TItem Model,
-                TItem DNAMDataTypeState)
+                TItem Model)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.FillTexture = FillTexture;
                 this.ParticleShaderTexture = ParticleShaderTexture;
@@ -483,7 +480,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FillTextureScaleV = FillTextureScaleV;
                 this.Unknown6 = Unknown6;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -547,7 +543,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem FillTextureScaleV;
             public TItem Unknown6;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -613,7 +608,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.FillTextureScaleV, rhs.FillTextureScaleV)) return false;
                 if (!object.Equals(this.Unknown6, rhs.Unknown6)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -671,7 +665,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.FillTextureScaleV);
                 hash.Add(this.Unknown6);
                 hash.Add(this.Model);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -738,7 +731,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -803,7 +795,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -871,7 +862,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.FillTextureScaleV = eval(this.FillTextureScaleV);
                 obj.Unknown6 = eval(this.Unknown6);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -1098,10 +1088,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1165,7 +1151,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? FillTextureScaleV;
             public Exception? Unknown6;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1278,8 +1263,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Unknown6;
                     case EffectShader_FieldIndex.Model:
                         return Model;
-                    case EffectShader_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1445,9 +1428,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case EffectShader_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
-                        break;
-                    case EffectShader_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1616,9 +1596,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case EffectShader_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1680,7 +1657,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (FillTextureScaleV != null) return true;
                 if (Unknown6 != null) return true;
                 if (Model != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1861,9 +1837,6 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Unknown6, "Unknown6");
                 }
                 Model?.Print(sb);
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1924,7 +1897,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.FillTextureScaleV = this.FillTextureScaleV.Combine(rhs.FillTextureScaleV);
                 ret.Unknown6 = this.Unknown6.Combine(rhs.Unknown6);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1999,7 +1971,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool FillTextureScaleV;
             public bool Unknown6;
             public Model.TranslationMask? Model;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -2059,7 +2030,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FillTextureScaleU = defaultOn;
                 this.FillTextureScaleV = defaultOn;
                 this.Unknown6 = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -2119,7 +2089,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((FillTextureScaleV, null));
                 ret.Add((Unknown6, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2176,10 +2145,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IEffectShader);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2188,12 +2153,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IEffectShaderGetter rhs) return false;
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEffectShaderGetter? obj)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2320,7 +2285,6 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new EffectShader.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IEffectShaderInternal :
@@ -2397,7 +2361,6 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        EffectShader.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -2454,7 +2417,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2530,6 +2493,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static EffectShader Duplicate(
+            this IEffectShaderGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2562,59 +2536,59 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        FillTexture = 6,
-        ParticleShaderTexture = 7,
-        HolesTexture = 8,
-        MembranePaletteTexture = 9,
-        ParticlePaletteTexture = 10,
-        DATA = 11,
-        Unknown = 12,
-        MembraneSourceBlendMode = 13,
-        MembraneBlendOperation = 14,
-        MembraneZTest = 15,
-        FillColorKey1 = 16,
-        FillAlphaFadeInTime = 17,
-        FillFullAlphaTime = 18,
-        FillFadeOutTime = 19,
-        FillPersistentAlphaRatio = 20,
-        FillAlphaPulseAmplitude = 21,
-        FillAlphaPulseFrequency = 22,
-        FillTextureAnimationSpeedU = 23,
-        FillTextureAnimationSpeedV = 24,
-        EdgeEffectFallOff = 25,
-        EdgeEffectColor = 26,
-        EdgeEffectAlphaFadeInTime = 27,
-        EdgeEffectFullAlphaTime = 28,
-        EdgeEffectAlphaFadeOutTime = 29,
-        EdgeEffectPersistentAlphaRatio = 30,
-        EdgeEffectAlphaPulseAmplitude = 31,
-        EdgeEffectAlphaPulseFrequency = 32,
-        FillFullAlphaRatio = 33,
-        EdgeEffectFullAlphaRatio = 34,
-        MembraneDestBlendMode = 35,
-        Unknown2 = 36,
-        HolesAnimationStartTime = 37,
-        HolesAnimationEndTime = 38,
-        HolesAnimationStartValue = 39,
-        HolesAnimationEndValue = 40,
-        Unknown3 = 41,
-        AmbientSound = 42,
-        FillColorKey2 = 43,
-        FillColorKey3 = 44,
-        Unknown4 = 45,
-        FillColorKey1Scale = 46,
-        FillColorKey2Scale = 47,
-        FillColorKey3Scale = 48,
-        FillColorKey1Time = 49,
-        FillColorKey2Time = 50,
-        FillColorKey3Time = 51,
-        Unknown5 = 52,
-        Flags = 53,
-        FillTextureScaleU = 54,
-        FillTextureScaleV = 55,
-        Unknown6 = 56,
-        Model = 57,
-        DNAMDataTypeState = 58,
+        Fallout4MajorRecordFlags = 6,
+        FillTexture = 7,
+        ParticleShaderTexture = 8,
+        HolesTexture = 9,
+        MembranePaletteTexture = 10,
+        ParticlePaletteTexture = 11,
+        DATA = 12,
+        Unknown = 13,
+        MembraneSourceBlendMode = 14,
+        MembraneBlendOperation = 15,
+        MembraneZTest = 16,
+        FillColorKey1 = 17,
+        FillAlphaFadeInTime = 18,
+        FillFullAlphaTime = 19,
+        FillFadeOutTime = 20,
+        FillPersistentAlphaRatio = 21,
+        FillAlphaPulseAmplitude = 22,
+        FillAlphaPulseFrequency = 23,
+        FillTextureAnimationSpeedU = 24,
+        FillTextureAnimationSpeedV = 25,
+        EdgeEffectFallOff = 26,
+        EdgeEffectColor = 27,
+        EdgeEffectAlphaFadeInTime = 28,
+        EdgeEffectFullAlphaTime = 29,
+        EdgeEffectAlphaFadeOutTime = 30,
+        EdgeEffectPersistentAlphaRatio = 31,
+        EdgeEffectAlphaPulseAmplitude = 32,
+        EdgeEffectAlphaPulseFrequency = 33,
+        FillFullAlphaRatio = 34,
+        EdgeEffectFullAlphaRatio = 35,
+        MembraneDestBlendMode = 36,
+        Unknown2 = 37,
+        HolesAnimationStartTime = 38,
+        HolesAnimationEndTime = 39,
+        HolesAnimationStartValue = 40,
+        HolesAnimationEndValue = 41,
+        Unknown3 = 42,
+        AmbientSound = 43,
+        FillColorKey2 = 44,
+        FillColorKey3 = 45,
+        Unknown4 = 46,
+        FillColorKey1Scale = 47,
+        FillColorKey2Scale = 48,
+        FillColorKey3Scale = 49,
+        FillColorKey1Time = 50,
+        FillColorKey2Time = 51,
+        FillColorKey3Time = 52,
+        Unknown5 = 53,
+        Flags = 54,
+        FillTextureScaleU = 55,
+        FillTextureScaleV = 56,
+        Unknown6 = 57,
+        Model = 58,
     }
     #endregion
 
@@ -2632,7 +2606,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "998828d0-071f-422e-b81d-7897d9765458";
 
-        public const ushort AdditionalFieldCount = 53;
+        public const ushort AdditionalFieldCount = 52;
 
         public const ushort FieldCount = 59;
 
@@ -2729,9 +2703,9 @@ namespace Mutagen.Bethesda.Fallout4
             item.ParticlePaletteTexture = default;
             item.DATA = default;
             item.Unknown = default;
-            item.MembraneSourceBlendMode = EffectShader._MembraneSourceBlendMode_Default;
-            item.MembraneBlendOperation = EffectShader._MembraneBlendOperation_Default;
-            item.MembraneZTest = EffectShader._MembraneZTest_Default;
+            item.MembraneSourceBlendMode = EffectShader.MembraneSourceBlendModeDefault;
+            item.MembraneBlendOperation = EffectShader.MembraneBlendOperationDefault;
+            item.MembraneZTest = EffectShader.MembraneZTestDefault;
             item.FillColorKey1 = default;
             item.FillAlphaFadeInTime = default;
             item.FillFullAlphaTime = default;
@@ -2751,7 +2725,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.EdgeEffectAlphaPulseFrequency = default;
             item.FillFullAlphaRatio = default;
             item.EdgeEffectFullAlphaRatio = default;
-            item.MembraneDestBlendMode = EffectShader._MembraneDestBlendMode_Default;
+            item.MembraneDestBlendMode = EffectShader.MembraneDestBlendModeDefault;
             item.Unknown2 = new byte[152];
             item.HolesAnimationStartTime = default;
             item.HolesAnimationEndTime = default;
@@ -2774,7 +2748,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.FillTextureScaleV = default;
             item.Unknown6 = default;
             item.Model = null;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2866,7 +2839,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.HolesTexture = string.Equals(item.HolesTexture, rhs.HolesTexture);
             ret.MembranePaletteTexture = string.Equals(item.MembranePaletteTexture, rhs.MembranePaletteTexture);
             ret.ParticlePaletteTexture = string.Equals(item.ParticlePaletteTexture, rhs.ParticlePaletteTexture);
-            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.MembraneSourceBlendMode = item.MembraneSourceBlendMode == rhs.MembraneSourceBlendMode;
             ret.MembraneBlendOperation = item.MembraneBlendOperation == rhs.MembraneBlendOperation;
@@ -2917,7 +2890,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3182,10 +3154,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static EffectShader_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -3204,8 +3172,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (EffectShader_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (EffectShader_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (EffectShader_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3222,7 +3192,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (EffectShader_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3230,225 +3200,221 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IEffectShaderGetter? lhs,
             IEffectShaderGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
             {
                 if (!string.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
             {
                 if (!string.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
             {
                 if (!string.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembranePaletteTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembranePaletteTexture) ?? true))
             {
                 if (!string.Equals(lhs.MembranePaletteTexture, rhs.MembranePaletteTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePaletteTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePaletteTexture) ?? true))
             {
                 if (!string.Equals(lhs.ParticlePaletteTexture, rhs.ParticlePaletteTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.DATA) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DATA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneSourceBlendMode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneSourceBlendMode) ?? true))
             {
                 if (lhs.MembraneSourceBlendMode != rhs.MembraneSourceBlendMode) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneBlendOperation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneBlendOperation) ?? true))
             {
                 if (lhs.MembraneBlendOperation != rhs.MembraneBlendOperation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneZTest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneZTest) ?? true))
             {
                 if (lhs.MembraneZTest != rhs.MembraneZTest) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1) ?? true))
             {
                 if (!lhs.FillColorKey1.ColorOnlyEquals(rhs.FillColorKey1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaFadeInTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaFadeInTime) ?? true))
             {
                 if (!lhs.FillAlphaFadeInTime.EqualsWithin(rhs.FillAlphaFadeInTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaTime) ?? true))
             {
                 if (!lhs.FillFullAlphaTime.EqualsWithin(rhs.FillFullAlphaTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFadeOutTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFadeOutTime) ?? true))
             {
                 if (!lhs.FillFadeOutTime.EqualsWithin(rhs.FillFadeOutTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillPersistentAlphaRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillPersistentAlphaRatio) ?? true))
             {
                 if (!lhs.FillPersistentAlphaRatio.EqualsWithin(rhs.FillPersistentAlphaRatio)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseAmplitude) ?? true))
             {
                 if (!lhs.FillAlphaPulseAmplitude.EqualsWithin(rhs.FillAlphaPulseAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseFrequency) ?? true))
             {
                 if (!lhs.FillAlphaPulseFrequency.EqualsWithin(rhs.FillAlphaPulseFrequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedU) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedU) ?? true))
             {
                 if (!lhs.FillTextureAnimationSpeedU.EqualsWithin(rhs.FillTextureAnimationSpeedU)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedV) ?? true))
             {
                 if (!lhs.FillTextureAnimationSpeedV.EqualsWithin(rhs.FillTextureAnimationSpeedV)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
             {
                 if (!lhs.EdgeEffectFallOff.EqualsWithin(rhs.EdgeEffectFallOff)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
             {
                 if (!lhs.EdgeEffectColor.ColorOnlyEquals(rhs.EdgeEffectColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
             {
                 if (!lhs.EdgeEffectAlphaFadeInTime.EqualsWithin(rhs.EdgeEffectAlphaFadeInTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
             {
                 if (!lhs.EdgeEffectFullAlphaTime.EqualsWithin(rhs.EdgeEffectFullAlphaTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
             {
                 if (!lhs.EdgeEffectAlphaFadeOutTime.EqualsWithin(rhs.EdgeEffectAlphaFadeOutTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
             {
                 if (!lhs.EdgeEffectPersistentAlphaRatio.EqualsWithin(rhs.EdgeEffectPersistentAlphaRatio)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
             {
                 if (!lhs.EdgeEffectAlphaPulseAmplitude.EqualsWithin(rhs.EdgeEffectAlphaPulseAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
             {
                 if (!lhs.EdgeEffectAlphaPulseFrequency.EqualsWithin(rhs.EdgeEffectAlphaPulseFrequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaRatio) ?? true))
             {
                 if (!lhs.FillFullAlphaRatio.EqualsWithin(rhs.FillFullAlphaRatio)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
             {
                 if (!lhs.EdgeEffectFullAlphaRatio.EqualsWithin(rhs.EdgeEffectFullAlphaRatio)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneDestBlendMode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneDestBlendMode) ?? true))
             {
                 if (lhs.MembraneDestBlendMode != rhs.MembraneDestBlendMode) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown2) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAnimationStartTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAnimationStartTime) ?? true))
             {
                 if (!lhs.HolesAnimationStartTime.EqualsWithin(rhs.HolesAnimationStartTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAnimationEndTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAnimationEndTime) ?? true))
             {
                 if (!lhs.HolesAnimationEndTime.EqualsWithin(rhs.HolesAnimationEndTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAnimationStartValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAnimationStartValue) ?? true))
             {
                 if (!lhs.HolesAnimationStartValue.EqualsWithin(rhs.HolesAnimationStartValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAnimationEndValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAnimationEndValue) ?? true))
             {
                 if (!lhs.HolesAnimationEndValue.EqualsWithin(rhs.HolesAnimationEndValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown3) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
             {
                 if (!lhs.AmbientSound.Equals(rhs.AmbientSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
             {
                 if (!lhs.FillColorKey2.ColorOnlyEquals(rhs.FillColorKey2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3) ?? true))
             {
                 if (!lhs.FillColorKey3.ColorOnlyEquals(rhs.FillColorKey3)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown4) ?? true))
             {
                 if (lhs.Unknown4 != rhs.Unknown4) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Scale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Scale) ?? true))
             {
                 if (!lhs.FillColorKey1Scale.EqualsWithin(rhs.FillColorKey1Scale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Scale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Scale) ?? true))
             {
                 if (!lhs.FillColorKey2Scale.EqualsWithin(rhs.FillColorKey2Scale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Scale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Scale) ?? true))
             {
                 if (!lhs.FillColorKey3Scale.EqualsWithin(rhs.FillColorKey3Scale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Time) ?? true))
             {
                 if (!lhs.FillColorKey1Time.EqualsWithin(rhs.FillColorKey1Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Time) ?? true))
             {
                 if (!lhs.FillColorKey2Time.EqualsWithin(rhs.FillColorKey2Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Time) ?? true))
             {
                 if (!lhs.FillColorKey3Time.EqualsWithin(rhs.FillColorKey3Time)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown5) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown5.Span, rhs.Unknown5.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleU) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleU) ?? true))
             {
                 if (!lhs.FillTextureScaleU.EqualsWithin(rhs.FillTextureScaleU)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleV) ?? true))
             {
                 if (!lhs.FillTextureScaleV.EqualsWithin(rhs.FillTextureScaleV)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown6) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown6) ?? true))
             {
                 if (lhs.Unknown6 != rhs.Unknown6) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)EffectShader_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)EffectShader_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -3456,23 +3422,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IEffectShaderGetter?)lhs,
                 rhs: rhs as IEffectShaderGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IEffectShaderGetter?)lhs,
                 rhs: rhs as IEffectShaderGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IEffectShaderGetter item)
@@ -3551,7 +3517,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3900,10 +3865,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -4051,15 +4012,6 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryWriteTranslator
     {
         public new static readonly EffectShaderBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IEffectShaderGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IEffectShaderGetter item,
@@ -4274,7 +4226,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -4334,15 +4286,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EFSH;
-        public static void FillBinaryStructs(
-            IEffectShaderInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IEffectShaderInternal item,
             MutagenFrame frame,
@@ -4616,7 +4559,6 @@ namespace Mutagen.Bethesda.Fallout4
         public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         private RangeInt32? _DNAMLocation;
-        public EffectShader.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value < 106;
@@ -5002,12 +4944,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IEffectShaderGetter rhs) return false;
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEffectShaderGetter? obj)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).GetHashCode(this);

@@ -85,12 +85,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not INpcSoundTypesGetter rhs) return false;
-            return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcSoundTypesGetter? obj)
         {
-            return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Types = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSoundType.ErrorMask?>>?>(ExceptionExt.Combine(this.Types?.Overall, rhs.Types?.Overall), ExceptionExt.Combine(this.Types?.Specific, rhs.Types?.Specific));
+                ret.Types = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NpcSoundType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Types?.Overall, rhs.Types?.Overall), Noggog.ExceptionExt.Combine(this.Types?.Specific, rhs.Types?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim
             switch (index)
             {
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -880,13 +880,13 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             INpcSoundTypesGetter? lhs,
             INpcSoundTypesGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IANpcSoundDefinitionGetter)lhs, (IANpcSoundDefinitionGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)NpcSoundTypes_FieldIndex.Types) ?? true))
+            if (!base.Equals((IANpcSoundDefinitionGetter)lhs, (IANpcSoundDefinitionGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)NpcSoundTypes_FieldIndex.Types) ?? true))
             {
-                if (!lhs.Types.SequenceEqual(rhs.Types, (l, r) => ((NpcSoundTypeCommon)((INpcSoundTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NpcSoundTypes_FieldIndex.Types)))) return false;
+                if (!lhs.Types.SequenceEqual(rhs.Types, (l, r) => ((NpcSoundTypeCommon)((INpcSoundTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NpcSoundTypes_FieldIndex.Types)))) return false;
             }
             return true;
         }
@@ -894,12 +894,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IANpcSoundDefinitionGetter? lhs,
             IANpcSoundDefinitionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INpcSoundTypesGetter?)lhs,
                 rhs: rhs as INpcSoundTypesGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(INpcSoundTypesGetter item)
@@ -1316,12 +1316,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not INpcSoundTypesGetter rhs) return false;
-            return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcSoundTypesGetter? obj)
         {
-            return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).GetHashCode(this);

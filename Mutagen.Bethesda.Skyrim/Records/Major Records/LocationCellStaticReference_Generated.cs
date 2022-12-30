@@ -102,12 +102,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILocationCellStaticReferenceGetter rhs) return false;
-            return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationCellStaticReferenceGetter? obj)
         {
-            return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -948,22 +948,22 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILocationCellStaticReferenceGetter? lhs,
             ILocationCellStaticReferenceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.LocationRefType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.LocationRefType) ?? true))
             {
                 if (!lhs.LocationRefType.Equals(rhs.LocationRefType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Marker) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Marker) ?? true))
             {
                 if (!lhs.Marker.Equals(rhs.Marker)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Grid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Grid) ?? true))
             {
                 if (!lhs.Grid.Equals(rhs.Grid)) return false;
             }
@@ -1314,12 +1314,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILocationCellStaticReferenceGetter rhs) return false;
-            return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationCellStaticReferenceGetter? obj)
         {
-            return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).GetHashCode(this);

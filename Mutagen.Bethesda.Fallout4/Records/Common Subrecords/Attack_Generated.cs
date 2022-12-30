@@ -111,12 +111,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAttackGetter rhs) return false;
-            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAttackGetter? obj)
         {
-            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AttackCommon)((IAttackGetter)this).CommonInstance()!).GetHashCode(this);
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AttackCommon)((IAttackGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1019,30 +1019,30 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAttackGetter? lhs,
             IAttackGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Attack_FieldIndex.AttackData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Attack_FieldIndex.AttackData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AttackData, rhs.AttackData, out var lhsAttackData, out var rhsAttackData, out var isAttackDataEqual))
                 {
-                    if (!((AttackDataCommon)((IAttackDataGetter)lhsAttackData).CommonInstance()!).Equals(lhsAttackData, rhsAttackData, crystal?.GetSubCrystal((int)Attack_FieldIndex.AttackData))) return false;
+                    if (!((AttackDataCommon)((IAttackDataGetter)lhsAttackData).CommonInstance()!).Equals(lhsAttackData, rhsAttackData, equalsMask?.GetSubCrystal((int)Attack_FieldIndex.AttackData))) return false;
                 }
                 else if (!isAttackDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Attack_FieldIndex.AttackEvent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Attack_FieldIndex.AttackEvent) ?? true))
             {
                 if (!string.Equals(lhs.AttackEvent, rhs.AttackEvent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Attack_FieldIndex.WeaponSlot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Attack_FieldIndex.WeaponSlot) ?? true))
             {
                 if (!lhs.WeaponSlot.Equals(rhs.WeaponSlot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Attack_FieldIndex.RequiredSlot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Attack_FieldIndex.RequiredSlot) ?? true))
             {
                 if (!lhs.RequiredSlot.Equals(rhs.RequiredSlot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Attack_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Attack_FieldIndex.Description) ?? true))
             {
                 if (!string.Equals(lhs.Description, rhs.Description)) return false;
             }
@@ -1561,12 +1561,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAttackGetter rhs) return false;
-            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAttackGetter? obj)
         {
-            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AttackCommon)((IAttackGetter)this).CommonInstance()!).GetHashCode(this);

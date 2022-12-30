@@ -1099,12 +1099,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IFallout4ModGetter rhs) return false;
-            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFallout4ModGetter? obj)
         {
-            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).GetHashCode(this);
@@ -5801,6 +5801,8 @@ namespace Mutagen.Bethesda.Fallout4
         IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
+        void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => Fallout4ModMixIn.GetEqualsMask(this, (IFallout4ModGetter)rhs, include);
         public override bool CanUseLocalization => true;
         public override bool UsingLocalization
@@ -6678,7 +6680,7 @@ namespace Mutagen.Bethesda.Fallout4
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -6715,7 +6717,7 @@ namespace Mutagen.Bethesda.Fallout4
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -7181,7 +7183,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((Fallout4ModCommon)((IFallout4ModGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -7331,7 +7333,7 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
             bool disposeStrings = param.StringsWriter != null;
             using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
             {
@@ -7639,7 +7641,7 @@ namespace Mutagen.Bethesda.Fallout4
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -10635,18 +10637,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IFallout4ModGetter? lhs,
             IFallout4ModGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ModHeader) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ModHeader) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ModHeader, rhs.ModHeader, out var lhsModHeader, out var rhsModHeader, out var isModHeaderEqual))
                 {
-                    if (!((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)lhsModHeader).CommonInstance()!).Equals(lhsModHeader, rhsModHeader, crystal?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ModHeader))) return false;
+                    if (!((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)lhsModHeader).CommonInstance()!).Equals(lhsModHeader, rhsModHeader, equalsMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ModHeader))) return false;
                 }
                 else if (!isModHeaderEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.GameSettings) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.GameSettings) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.GameSettings, rhs.GameSettings, out var lhsGameSettings, out var rhsGameSettings, out var isGameSettingsEqual))
                 {
@@ -10654,7 +10656,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isGameSettingsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Keywords) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Keywords, rhs.Keywords, out var lhsKeywords, out var rhsKeywords, out var isKeywordsEqual))
                 {
@@ -10662,7 +10664,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isKeywordsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LocationReferenceTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LocationReferenceTypes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes, out var lhsLocationReferenceTypes, out var rhsLocationReferenceTypes, out var isLocationReferenceTypesEqual))
                 {
@@ -10670,7 +10672,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLocationReferenceTypesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Actions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Actions) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Actions, rhs.Actions, out var lhsActions, out var rhsActions, out var isActionsEqual))
                 {
@@ -10678,7 +10680,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isActionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Transforms) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Transforms) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
                 {
@@ -10686,7 +10688,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isTransformsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Components) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Components) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Components, rhs.Components, out var lhsComponents, out var rhsComponents, out var isComponentsEqual))
                 {
@@ -10694,7 +10696,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isComponentsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.TextureSets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.TextureSets) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.TextureSets, rhs.TextureSets, out var lhsTextureSets, out var rhsTextureSets, out var isTextureSetsEqual))
                 {
@@ -10702,7 +10704,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isTextureSetsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Globals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Globals) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Globals, rhs.Globals, out var lhsGlobals, out var rhsGlobals, out var isGlobalsEqual))
                 {
@@ -10710,7 +10712,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isGlobalsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DamageTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DamageTypes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DamageTypes, rhs.DamageTypes, out var lhsDamageTypes, out var rhsDamageTypes, out var isDamageTypesEqual))
                 {
@@ -10718,7 +10720,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isDamageTypesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Classes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Classes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Classes, rhs.Classes, out var lhsClasses, out var rhsClasses, out var isClassesEqual))
                 {
@@ -10726,7 +10728,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isClassesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Factions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Factions) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Factions, rhs.Factions, out var lhsFactions, out var rhsFactions, out var isFactionsEqual))
                 {
@@ -10734,7 +10736,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isFactionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.HeadParts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.HeadParts) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.HeadParts, rhs.HeadParts, out var lhsHeadParts, out var rhsHeadParts, out var isHeadPartsEqual))
                 {
@@ -10742,7 +10744,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isHeadPartsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Races) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Races) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Races, rhs.Races, out var lhsRaces, out var rhsRaces, out var isRacesEqual))
                 {
@@ -10750,7 +10752,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isRacesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundMarkers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundMarkers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SoundMarkers, rhs.SoundMarkers, out var lhsSoundMarkers, out var rhsSoundMarkers, out var isSoundMarkersEqual))
                 {
@@ -10758,7 +10760,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSoundMarkersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AcousticSpaces) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AcousticSpaces) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AcousticSpaces, rhs.AcousticSpaces, out var lhsAcousticSpaces, out var rhsAcousticSpaces, out var isAcousticSpacesEqual))
                 {
@@ -10766,7 +10768,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAcousticSpacesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MagicEffects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MagicEffects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MagicEffects, rhs.MagicEffects, out var lhsMagicEffects, out var rhsMagicEffects, out var isMagicEffectsEqual))
                 {
@@ -10774,7 +10776,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMagicEffectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LandscapeTextures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LandscapeTextures) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LandscapeTextures, rhs.LandscapeTextures, out var lhsLandscapeTextures, out var rhsLandscapeTextures, out var isLandscapeTexturesEqual))
                 {
@@ -10782,7 +10784,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLandscapeTexturesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ObjectEffects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ObjectEffects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectEffects, rhs.ObjectEffects, out var lhsObjectEffects, out var rhsObjectEffects, out var isObjectEffectsEqual))
                 {
@@ -10790,7 +10792,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isObjectEffectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Spells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Spells) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Spells, rhs.Spells, out var lhsSpells, out var rhsSpells, out var isSpellsEqual))
                 {
@@ -10798,7 +10800,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSpellsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Activators) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Activators) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Activators, rhs.Activators, out var lhsActivators, out var rhsActivators, out var isActivatorsEqual))
                 {
@@ -10806,7 +10808,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isActivatorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.TalkingActivators) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.TalkingActivators) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.TalkingActivators, rhs.TalkingActivators, out var lhsTalkingActivators, out var rhsTalkingActivators, out var isTalkingActivatorsEqual))
                 {
@@ -10814,7 +10816,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isTalkingActivatorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Armors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Armors) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Armors, rhs.Armors, out var lhsArmors, out var rhsArmors, out var isArmorsEqual))
                 {
@@ -10822,7 +10824,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isArmorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Books) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Books) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Books, rhs.Books, out var lhsBooks, out var rhsBooks, out var isBooksEqual))
                 {
@@ -10830,7 +10832,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isBooksEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Containers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Containers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Containers, rhs.Containers, out var lhsContainers, out var rhsContainers, out var isContainersEqual))
                 {
@@ -10838,7 +10840,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isContainersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Doors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Doors) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Doors, rhs.Doors, out var lhsDoors, out var rhsDoors, out var isDoorsEqual))
                 {
@@ -10846,7 +10848,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isDoorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Ingredients) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Ingredients) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Ingredients, rhs.Ingredients, out var lhsIngredients, out var rhsIngredients, out var isIngredientsEqual))
                 {
@@ -10854,7 +10856,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isIngredientsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Lights) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Lights) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Lights, rhs.Lights, out var lhsLights, out var rhsLights, out var isLightsEqual))
                 {
@@ -10862,7 +10864,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLightsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MiscItems) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MiscItems) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MiscItems, rhs.MiscItems, out var lhsMiscItems, out var rhsMiscItems, out var isMiscItemsEqual))
                 {
@@ -10870,7 +10872,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMiscItemsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Statics) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Statics) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Statics, rhs.Statics, out var lhsStatics, out var rhsStatics, out var isStaticsEqual))
                 {
@@ -10878,7 +10880,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isStaticsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StaticCollections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StaticCollections) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.StaticCollections, rhs.StaticCollections, out var lhsStaticCollections, out var rhsStaticCollections, out var isStaticCollectionsEqual))
                 {
@@ -10886,7 +10888,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isStaticCollectionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MovableStatics) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MovableStatics) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MovableStatics, rhs.MovableStatics, out var lhsMovableStatics, out var rhsMovableStatics, out var isMovableStaticsEqual))
                 {
@@ -10894,7 +10896,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMovableStaticsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Grasses) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Grasses) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Grasses, rhs.Grasses, out var lhsGrasses, out var rhsGrasses, out var isGrassesEqual))
                 {
@@ -10902,7 +10904,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isGrassesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Trees) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Trees) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Trees, rhs.Trees, out var lhsTrees, out var rhsTrees, out var isTreesEqual))
                 {
@@ -10910,7 +10912,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isTreesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Florae) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Florae) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Florae, rhs.Florae, out var lhsFlorae, out var rhsFlorae, out var isFloraeEqual))
                 {
@@ -10918,7 +10920,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isFloraeEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Furniture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Furniture) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Furniture, rhs.Furniture, out var lhsFurniture, out var rhsFurniture, out var isFurnitureEqual))
                 {
@@ -10926,7 +10928,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isFurnitureEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Weapons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Weapons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Weapons, rhs.Weapons, out var lhsWeapons, out var rhsWeapons, out var isWeaponsEqual))
                 {
@@ -10934,7 +10936,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isWeaponsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Ammunitions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Ammunitions) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Ammunitions, rhs.Ammunitions, out var lhsAmmunitions, out var rhsAmmunitions, out var isAmmunitionsEqual))
                 {
@@ -10942,7 +10944,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAmmunitionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Npcs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Npcs) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Npcs, rhs.Npcs, out var lhsNpcs, out var rhsNpcs, out var isNpcsEqual))
                 {
@@ -10950,7 +10952,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isNpcsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LeveledNpcs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LeveledNpcs) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LeveledNpcs, rhs.LeveledNpcs, out var lhsLeveledNpcs, out var rhsLeveledNpcs, out var isLeveledNpcsEqual))
                 {
@@ -10958,7 +10960,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLeveledNpcsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Keys) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Keys) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Keys, rhs.Keys, out var lhsKeys, out var rhsKeys, out var isKeysEqual))
                 {
@@ -10966,7 +10968,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isKeysEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Ingestibles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Ingestibles) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Ingestibles, rhs.Ingestibles, out var lhsIngestibles, out var rhsIngestibles, out var isIngestiblesEqual))
                 {
@@ -10974,7 +10976,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isIngestiblesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.IdleMarkers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.IdleMarkers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.IdleMarkers, rhs.IdleMarkers, out var lhsIdleMarkers, out var rhsIdleMarkers, out var isIdleMarkersEqual))
                 {
@@ -10982,7 +10984,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isIdleMarkersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Holotapes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Holotapes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Holotapes, rhs.Holotapes, out var lhsHolotapes, out var rhsHolotapes, out var isHolotapesEqual))
                 {
@@ -10990,7 +10992,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isHolotapesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Projectiles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Projectiles) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Projectiles, rhs.Projectiles, out var lhsProjectiles, out var rhsProjectiles, out var isProjectilesEqual))
                 {
@@ -10998,7 +11000,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isProjectilesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Hazards) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Hazards) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Hazards, rhs.Hazards, out var lhsHazards, out var rhsHazards, out var isHazardsEqual))
                 {
@@ -11006,7 +11008,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isHazardsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.BendableSplines) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.BendableSplines) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BendableSplines, rhs.BendableSplines, out var lhsBendableSplines, out var rhsBendableSplines, out var isBendableSplinesEqual))
                 {
@@ -11014,7 +11016,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isBendableSplinesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Terminals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Terminals) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Terminals, rhs.Terminals, out var lhsTerminals, out var rhsTerminals, out var isTerminalsEqual))
                 {
@@ -11022,7 +11024,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isTerminalsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LeveledItems) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LeveledItems) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LeveledItems, rhs.LeveledItems, out var lhsLeveledItems, out var rhsLeveledItems, out var isLeveledItemsEqual))
                 {
@@ -11030,7 +11032,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLeveledItemsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Weather) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Weather) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Weather, rhs.Weather, out var lhsWeather, out var rhsWeather, out var isWeatherEqual))
                 {
@@ -11038,7 +11040,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isWeatherEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Climates) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Climates) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Climates, rhs.Climates, out var lhsClimates, out var rhsClimates, out var isClimatesEqual))
                 {
@@ -11046,7 +11048,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isClimatesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ShaderParticleGeometries) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ShaderParticleGeometries) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ShaderParticleGeometries, rhs.ShaderParticleGeometries, out var lhsShaderParticleGeometries, out var rhsShaderParticleGeometries, out var isShaderParticleGeometriesEqual))
                 {
@@ -11054,7 +11056,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isShaderParticleGeometriesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.VisualEffects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.VisualEffects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VisualEffects, rhs.VisualEffects, out var lhsVisualEffects, out var rhsVisualEffects, out var isVisualEffectsEqual))
                 {
@@ -11062,7 +11064,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isVisualEffectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Regions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Regions) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Regions, rhs.Regions, out var lhsRegions, out var rhsRegions, out var isRegionsEqual))
                 {
@@ -11070,7 +11072,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isRegionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.NavigationMeshInfoMaps) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.NavigationMeshInfoMaps) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps, out var lhsNavigationMeshInfoMaps, out var rhsNavigationMeshInfoMaps, out var isNavigationMeshInfoMapsEqual))
                 {
@@ -11078,7 +11080,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isNavigationMeshInfoMapsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Cells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Cells) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Cells, rhs.Cells, out var lhsCells, out var rhsCells, out var isCellsEqual))
                 {
@@ -11086,7 +11088,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isCellsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Worldspaces) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Worldspaces) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Worldspaces, rhs.Worldspaces, out var lhsWorldspaces, out var rhsWorldspaces, out var isWorldspacesEqual))
                 {
@@ -11094,7 +11096,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isWorldspacesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Quests) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Quests) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Quests, rhs.Quests, out var lhsQuests, out var rhsQuests, out var isQuestsEqual))
                 {
@@ -11102,7 +11104,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isQuestsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.IdleAnimations) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.IdleAnimations) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.IdleAnimations, rhs.IdleAnimations, out var lhsIdleAnimations, out var rhsIdleAnimations, out var isIdleAnimationsEqual))
                 {
@@ -11110,7 +11112,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isIdleAnimationsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Packages) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Packages) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Packages, rhs.Packages, out var lhsPackages, out var rhsPackages, out var isPackagesEqual))
                 {
@@ -11118,7 +11120,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isPackagesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CombatStyles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CombatStyles) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CombatStyles, rhs.CombatStyles, out var lhsCombatStyles, out var rhsCombatStyles, out var isCombatStylesEqual))
                 {
@@ -11126,7 +11128,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isCombatStylesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LoadScreens) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LoadScreens) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LoadScreens, rhs.LoadScreens, out var lhsLoadScreens, out var rhsLoadScreens, out var isLoadScreensEqual))
                 {
@@ -11134,7 +11136,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLoadScreensEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AnimatedObjects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AnimatedObjects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AnimatedObjects, rhs.AnimatedObjects, out var lhsAnimatedObjects, out var rhsAnimatedObjects, out var isAnimatedObjectsEqual))
                 {
@@ -11142,7 +11144,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAnimatedObjectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Waters) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Waters) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Waters, rhs.Waters, out var lhsWaters, out var rhsWaters, out var isWatersEqual))
                 {
@@ -11150,7 +11152,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isWatersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EffectShaders) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EffectShaders) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.EffectShaders, rhs.EffectShaders, out var lhsEffectShaders, out var rhsEffectShaders, out var isEffectShadersEqual))
                 {
@@ -11158,7 +11160,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isEffectShadersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Explosions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Explosions) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Explosions, rhs.Explosions, out var lhsExplosions, out var rhsExplosions, out var isExplosionsEqual))
                 {
@@ -11166,7 +11168,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isExplosionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Debris) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Debris) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Debris, rhs.Debris, out var lhsDebris, out var rhsDebris, out var isDebrisEqual))
                 {
@@ -11174,7 +11176,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isDebrisEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ImageSpaces) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ImageSpaces) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ImageSpaces, rhs.ImageSpaces, out var lhsImageSpaces, out var rhsImageSpaces, out var isImageSpacesEqual))
                 {
@@ -11182,7 +11184,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isImageSpacesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ImageSpaceAdapters) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ImageSpaceAdapters) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ImageSpaceAdapters, rhs.ImageSpaceAdapters, out var lhsImageSpaceAdapters, out var rhsImageSpaceAdapters, out var isImageSpaceAdaptersEqual))
                 {
@@ -11190,7 +11192,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isImageSpaceAdaptersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.FormLists) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.FormLists) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FormLists, rhs.FormLists, out var lhsFormLists, out var rhsFormLists, out var isFormListsEqual))
                 {
@@ -11198,7 +11200,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isFormListsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Perks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Perks) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Perks, rhs.Perks, out var lhsPerks, out var rhsPerks, out var isPerksEqual))
                 {
@@ -11206,7 +11208,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isPerksEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.BodyParts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.BodyParts) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BodyParts, rhs.BodyParts, out var lhsBodyParts, out var rhsBodyParts, out var isBodyPartsEqual))
                 {
@@ -11214,7 +11216,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isBodyPartsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AddonNodes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AddonNodes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AddonNodes, rhs.AddonNodes, out var lhsAddonNodes, out var rhsAddonNodes, out var isAddonNodesEqual))
                 {
@@ -11222,7 +11224,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAddonNodesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ActorValueInformation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ActorValueInformation) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ActorValueInformation, rhs.ActorValueInformation, out var lhsActorValueInformation, out var rhsActorValueInformation, out var isActorValueInformationEqual))
                 {
@@ -11230,7 +11232,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isActorValueInformationEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CameraShots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CameraShots) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CameraShots, rhs.CameraShots, out var lhsCameraShots, out var rhsCameraShots, out var isCameraShotsEqual))
                 {
@@ -11238,7 +11240,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isCameraShotsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CameraPaths) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CameraPaths) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CameraPaths, rhs.CameraPaths, out var lhsCameraPaths, out var rhsCameraPaths, out var isCameraPathsEqual))
                 {
@@ -11246,7 +11248,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isCameraPathsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.VoiceTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.VoiceTypes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VoiceTypes, rhs.VoiceTypes, out var lhsVoiceTypes, out var rhsVoiceTypes, out var isVoiceTypesEqual))
                 {
@@ -11254,7 +11256,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isVoiceTypesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialTypes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MaterialTypes, rhs.MaterialTypes, out var lhsMaterialTypes, out var rhsMaterialTypes, out var isMaterialTypesEqual))
                 {
@@ -11262,7 +11264,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMaterialTypesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Impacts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Impacts) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Impacts, rhs.Impacts, out var lhsImpacts, out var rhsImpacts, out var isImpactsEqual))
                 {
@@ -11270,7 +11272,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isImpactsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ImpactDataSets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ImpactDataSets) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ImpactDataSets, rhs.ImpactDataSets, out var lhsImpactDataSets, out var rhsImpactDataSets, out var isImpactDataSetsEqual))
                 {
@@ -11278,7 +11280,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isImpactDataSetsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ArmorAddons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ArmorAddons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ArmorAddons, rhs.ArmorAddons, out var lhsArmorAddons, out var rhsArmorAddons, out var isArmorAddonsEqual))
                 {
@@ -11286,7 +11288,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isArmorAddonsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EncounterZones) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EncounterZones) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.EncounterZones, rhs.EncounterZones, out var lhsEncounterZones, out var rhsEncounterZones, out var isEncounterZonesEqual))
                 {
@@ -11294,7 +11296,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isEncounterZonesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Locations) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Locations) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Locations, rhs.Locations, out var lhsLocations, out var rhsLocations, out var isLocationsEqual))
                 {
@@ -11302,7 +11304,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLocationsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Messages) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Messages) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Messages, rhs.Messages, out var lhsMessages, out var rhsMessages, out var isMessagesEqual))
                 {
@@ -11310,7 +11312,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMessagesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DefaultObjectManagers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DefaultObjectManagers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DefaultObjectManagers, rhs.DefaultObjectManagers, out var lhsDefaultObjectManagers, out var rhsDefaultObjectManagers, out var isDefaultObjectManagersEqual))
                 {
@@ -11318,7 +11320,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isDefaultObjectManagersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DefaultObjects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DefaultObjects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DefaultObjects, rhs.DefaultObjects, out var lhsDefaultObjects, out var rhsDefaultObjects, out var isDefaultObjectsEqual))
                 {
@@ -11326,7 +11328,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isDefaultObjectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LightingTemplates) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LightingTemplates) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LightingTemplates, rhs.LightingTemplates, out var lhsLightingTemplates, out var rhsLightingTemplates, out var isLightingTemplatesEqual))
                 {
@@ -11334,7 +11336,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLightingTemplatesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MusicTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MusicTypes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MusicTypes, rhs.MusicTypes, out var lhsMusicTypes, out var rhsMusicTypes, out var isMusicTypesEqual))
                 {
@@ -11342,7 +11344,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMusicTypesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Footsteps) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Footsteps) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Footsteps, rhs.Footsteps, out var lhsFootsteps, out var rhsFootsteps, out var isFootstepsEqual))
                 {
@@ -11350,7 +11352,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isFootstepsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.FootstepSets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.FootstepSets) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FootstepSets, rhs.FootstepSets, out var lhsFootstepSets, out var rhsFootstepSets, out var isFootstepSetsEqual))
                 {
@@ -11358,7 +11360,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isFootstepSetsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerBranchNodes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerBranchNodes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.StoryManagerBranchNodes, rhs.StoryManagerBranchNodes, out var lhsStoryManagerBranchNodes, out var rhsStoryManagerBranchNodes, out var isStoryManagerBranchNodesEqual))
                 {
@@ -11366,7 +11368,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isStoryManagerBranchNodesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerQuestNodes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerQuestNodes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes, out var lhsStoryManagerQuestNodes, out var rhsStoryManagerQuestNodes, out var isStoryManagerQuestNodesEqual))
                 {
@@ -11374,7 +11376,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isStoryManagerQuestNodesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerEventNodes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.StoryManagerEventNodes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.StoryManagerEventNodes, rhs.StoryManagerEventNodes, out var lhsStoryManagerEventNodes, out var rhsStoryManagerEventNodes, out var isStoryManagerEventNodesEqual))
                 {
@@ -11382,7 +11384,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isStoryManagerEventNodesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MusicTracks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MusicTracks) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MusicTracks, rhs.MusicTracks, out var lhsMusicTracks, out var rhsMusicTracks, out var isMusicTracksEqual))
                 {
@@ -11390,7 +11392,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMusicTracksEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DialogViews) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DialogViews) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DialogViews, rhs.DialogViews, out var lhsDialogViews, out var rhsDialogViews, out var isDialogViewsEqual))
                 {
@@ -11398,7 +11400,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isDialogViewsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EquipTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.EquipTypes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.EquipTypes, rhs.EquipTypes, out var lhsEquipTypes, out var rhsEquipTypes, out var isEquipTypesEqual))
                 {
@@ -11406,7 +11408,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isEquipTypesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Relationships) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Relationships) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Relationships, rhs.Relationships, out var lhsRelationships, out var rhsRelationships, out var isRelationshipsEqual))
                 {
@@ -11414,7 +11416,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isRelationshipsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AssociationTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AssociationTypes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AssociationTypes, rhs.AssociationTypes, out var lhsAssociationTypes, out var rhsAssociationTypes, out var isAssociationTypesEqual))
                 {
@@ -11422,7 +11424,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAssociationTypesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Outfits) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Outfits) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Outfits, rhs.Outfits, out var lhsOutfits, out var rhsOutfits, out var isOutfitsEqual))
                 {
@@ -11430,7 +11432,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isOutfitsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ArtObjects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ArtObjects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ArtObjects, rhs.ArtObjects, out var lhsArtObjects, out var rhsArtObjects, out var isArtObjectsEqual))
                 {
@@ -11438,7 +11440,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isArtObjectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialObjects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialObjects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MaterialObjects, rhs.MaterialObjects, out var lhsMaterialObjects, out var rhsMaterialObjects, out var isMaterialObjectsEqual))
                 {
@@ -11446,7 +11448,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMaterialObjectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MovementTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MovementTypes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MovementTypes, rhs.MovementTypes, out var lhsMovementTypes, out var rhsMovementTypes, out var isMovementTypesEqual))
                 {
@@ -11454,7 +11456,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMovementTypesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundDescriptors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundDescriptors) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SoundDescriptors, rhs.SoundDescriptors, out var lhsSoundDescriptors, out var rhsSoundDescriptors, out var isSoundDescriptorsEqual))
                 {
@@ -11462,7 +11464,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSoundDescriptorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundCategories) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundCategories) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SoundCategories, rhs.SoundCategories, out var lhsSoundCategories, out var rhsSoundCategories, out var isSoundCategoriesEqual))
                 {
@@ -11470,7 +11472,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSoundCategoriesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundOutputModels) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundOutputModels) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SoundOutputModels, rhs.SoundOutputModels, out var lhsSoundOutputModels, out var rhsSoundOutputModels, out var isSoundOutputModelsEqual))
                 {
@@ -11478,7 +11480,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSoundOutputModelsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CollisionLayers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.CollisionLayers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CollisionLayers, rhs.CollisionLayers, out var lhsCollisionLayers, out var rhsCollisionLayers, out var isCollisionLayersEqual))
                 {
@@ -11486,7 +11488,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isCollisionLayersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Colors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Colors) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Colors, rhs.Colors, out var lhsColors, out var rhsColors, out var isColorsEqual))
                 {
@@ -11494,7 +11496,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isColorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ReverbParameters) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ReverbParameters) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ReverbParameters, rhs.ReverbParameters, out var lhsReverbParameters, out var rhsReverbParameters, out var isReverbParametersEqual))
                 {
@@ -11502,7 +11504,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isReverbParametersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.PackIns) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.PackIns) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.PackIns, rhs.PackIns, out var lhsPackIns, out var rhsPackIns, out var isPackInsEqual))
                 {
@@ -11510,7 +11512,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isPackInsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ReferenceGroups) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ReferenceGroups) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ReferenceGroups, rhs.ReferenceGroups, out var lhsReferenceGroups, out var rhsReferenceGroups, out var isReferenceGroupsEqual))
                 {
@@ -11518,7 +11520,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isReferenceGroupsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AimModels) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AimModels) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AimModels, rhs.AimModels, out var lhsAimModels, out var rhsAimModels, out var isAimModelsEqual))
                 {
@@ -11526,7 +11528,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAimModelsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Layers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Layers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Layers, rhs.Layers, out var lhsLayers, out var rhsLayers, out var isLayersEqual))
                 {
@@ -11534,7 +11536,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLayersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ConstructibleObjects) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ConstructibleObjects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ConstructibleObjects, rhs.ConstructibleObjects, out var lhsConstructibleObjects, out var rhsConstructibleObjects, out var isConstructibleObjectsEqual))
                 {
@@ -11542,7 +11544,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isConstructibleObjectsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ObjectModifications) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ObjectModifications) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectModifications, rhs.ObjectModifications, out var lhsObjectModifications, out var rhsObjectModifications, out var isObjectModificationsEqual))
                 {
@@ -11550,7 +11552,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isObjectModificationsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialSwaps) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.MaterialSwaps) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MaterialSwaps, rhs.MaterialSwaps, out var lhsMaterialSwaps, out var rhsMaterialSwaps, out var isMaterialSwapsEqual))
                 {
@@ -11558,7 +11560,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isMaterialSwapsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Zooms) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Zooms) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Zooms, rhs.Zooms, out var lhsZooms, out var rhsZooms, out var isZoomsEqual))
                 {
@@ -11566,7 +11568,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isZoomsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.InstanceNamingRules) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.InstanceNamingRules) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.InstanceNamingRules, rhs.InstanceNamingRules, out var lhsInstanceNamingRules, out var rhsInstanceNamingRules, out var isInstanceNamingRulesEqual))
                 {
@@ -11574,7 +11576,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isInstanceNamingRulesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundKeywordMappings) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SoundKeywordMappings) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SoundKeywordMappings, rhs.SoundKeywordMappings, out var lhsSoundKeywordMappings, out var rhsSoundKeywordMappings, out var isSoundKeywordMappingsEqual))
                 {
@@ -11582,7 +11584,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSoundKeywordMappingsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AudioEffectChains) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AudioEffectChains) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AudioEffectChains, rhs.AudioEffectChains, out var lhsAudioEffectChains, out var rhsAudioEffectChains, out var isAudioEffectChainsEqual))
                 {
@@ -11590,7 +11592,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAudioEffectChainsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SceneCollections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.SceneCollections) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SceneCollections, rhs.SceneCollections, out var lhsSceneCollections, out var rhsSceneCollections, out var isSceneCollectionsEqual))
                 {
@@ -11598,7 +11600,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isSceneCollectionsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AttractionRules) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AttractionRules) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AttractionRules, rhs.AttractionRules, out var lhsAttractionRules, out var rhsAttractionRules, out var isAttractionRulesEqual))
                 {
@@ -11606,7 +11608,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAttractionRulesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AudioCategorySnapshots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AudioCategorySnapshots) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AudioCategorySnapshots, rhs.AudioCategorySnapshots, out var lhsAudioCategorySnapshots, out var rhsAudioCategorySnapshots, out var isAudioCategorySnapshotsEqual))
                 {
@@ -11614,7 +11616,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAudioCategorySnapshotsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AnimationSoundTagSets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AnimationSoundTagSets) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AnimationSoundTagSets, rhs.AnimationSoundTagSets, out var lhsAnimationSoundTagSets, out var rhsAnimationSoundTagSets, out var isAnimationSoundTagSetsEqual))
                 {
@@ -11622,7 +11624,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isAnimationSoundTagSetsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.NavigationMeshObstacleManagers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NavigationMeshObstacleManagers, rhs.NavigationMeshObstacleManagers, out var lhsNavigationMeshObstacleManagers, out var rhsNavigationMeshObstacleManagers, out var isNavigationMeshObstacleManagersEqual))
                 {
@@ -11630,7 +11632,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isNavigationMeshObstacleManagersEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LensFlares) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LensFlares) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LensFlares, rhs.LensFlares, out var lhsLensFlares, out var rhsLensFlares, out var isLensFlaresEqual))
                 {
@@ -11638,7 +11640,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isLensFlaresEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.GodRays) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.GodRays) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.GodRays, rhs.GodRays, out var lhsGodRays, out var rhsGodRays, out var isGodRaysEqual))
                 {
@@ -11646,7 +11648,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 else if (!isGodRaysEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ObjectVisibilityManagers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ObjectVisibilityManagers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectVisibilityManagers, rhs.ObjectVisibilityManagers, out var lhsObjectVisibilityManagers, out var rhsObjectVisibilityManagers, out var isObjectVisibilityManagersEqual))
                 {
@@ -24287,7 +24289,7 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null);
+            param.StringsWriter ??= (Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null);
             bool disposeStrings = param.StringsWriter != null;
             var bundle = new WritingBundle(GameRelease.Fallout4)
             {
@@ -24378,6 +24380,8 @@ namespace Mutagen.Bethesda.Fallout4
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
+        void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);
@@ -25077,7 +25081,7 @@ namespace Mutagen.Bethesda.Fallout4
                     throw new ArgumentException("File stream was too short to parse flags");
                 }
                 var flags = stream.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
                     meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                 }
@@ -25910,12 +25914,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IFallout4ModGetter rhs) return false;
-            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFallout4ModGetter? obj)
         {
-            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).GetHashCode(this);

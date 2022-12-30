@@ -58,14 +58,14 @@ partial class AIPackageDataBinaryCreateTranslation
         if (frame.Remaining == 8)
         {
             var span = frame.Reader.ReadSpan(8);
-            item.Flags = EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span));
-            item.Type = EnumExt<AIPackage.Types>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4)));
+            item.Flags = Enums<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span));
+            item.Type = Enums<AIPackage.Types>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4)));
         }
         else if (frame.Remaining == 4)
         {
             var span = frame.Reader.ReadSpan(4);
-            item.Flags = EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(span));
-            item.Type = EnumExt<AIPackage.Types>.Convert(span[2]);
+            item.Flags = Enums<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(span));
+            item.Type = Enums<AIPackage.Types>.Convert(span[2]);
         }
         else
         {
@@ -103,11 +103,11 @@ partial class AIPackageDataBinaryOverlay
     {
         if (_structData.Length > 4)
         {
-            return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_structData));
+            return Enums<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_structData));
         }
         else
         {
-            return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(_structData));
+            return Enums<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(_structData));
         }
     }
 
@@ -115,11 +115,11 @@ partial class AIPackageDataBinaryOverlay
     {
         if (_structData.Length > 4)
         {
-            return EnumExt<AIPackage.Types>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(4)));
+            return Enums<AIPackage.Types>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(4)));
         }
         else
         {
-            return EnumExt<AIPackage.Types>.Convert(_structData[2]);
+            return Enums<AIPackage.Types>.Convert(_structData[2]);
         }
     }
 }

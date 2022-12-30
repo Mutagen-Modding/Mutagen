@@ -9,8 +9,8 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
 {
     public static readonly EnumBinaryTranslation<TEnum, TReader, TWriter> Instance = new();
     public static readonly UnderlyingType Underlying;
-    public static readonly int EnumSize = EnumExt.GetSize<TEnum>();
-    public static readonly IReadOnlyList<TEnum> Values = EnumExt.GetValues<TEnum>().ToExtendedList();
+    public static readonly int EnumSize = Enums<TEnum>.Values.Count;
+    public static readonly IReadOnlyList<TEnum> Values = Enums<TEnum>.Values;
 
     public enum UnderlyingType
     {
@@ -81,7 +81,7 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
             4 => reader.ReadInt32(),
             _ => throw new NotImplementedException(),
         };
-        return EnumExt<TEnum>.Convert(i);
+        return Enums<TEnum>.Convert(i);
     }
 
     public TEnum ParseValue(TReader reader)
@@ -101,7 +101,7 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
             default:
                 throw new NotImplementedException();
         }
-        return EnumExt<TEnum>.Convert(i);
+        return Enums<TEnum>.Convert(i);
     }
 
     public void Write(TWriter writer, TEnum item, long length)

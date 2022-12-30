@@ -2,6 +2,8 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Masters;
 
@@ -89,19 +91,17 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
         Masters = masters.ToList();
         _masterIndices.Clear();
 
-        const byte max = 0xFE;
-
         byte index = 0;
         foreach (var master in Masters)
         {
             var modKey = master.Master;
-            if (index >= max)
+            if (index >= Constants.PluginMasterLimit)
             {
-                throw new ArgumentException($"{CurrentMod} has too many masters on masters list. {Masters.Count} >= {max}.");
+                throw new TooManyMastersException(CurrentMod, Masters.Select(x => x.Master).ToArray());
             }
             if (modKey == CurrentMod)
             {
-                throw new ArgumentException($"Cannot add mod to itself as a master: {CurrentMod}");
+                throw new SelfReferenceException(CurrentMod);
             }
             // Don't care about duplicates too much, just skip
             if (!_masterIndices.ContainsKey(modKey))

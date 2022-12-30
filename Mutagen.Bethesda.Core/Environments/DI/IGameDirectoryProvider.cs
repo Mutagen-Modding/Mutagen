@@ -1,10 +1,11 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Installs.DI;
+using Noggog;
 
 namespace Mutagen.Bethesda.Environments.DI;
 
 public interface IGameDirectoryProvider
 {
-    DirectoryPath Path { get; }
+    DirectoryPath? Path { get; }
 }
 
 public sealed class GameDirectoryProvider : IGameDirectoryProvider
@@ -12,7 +13,7 @@ public sealed class GameDirectoryProvider : IGameDirectoryProvider
     private readonly IGameReleaseContext _release;
     private readonly IGameDirectoryLookup _locator;
 
-    public DirectoryPath Path => _locator.Get(_release.Release);
+    public DirectoryPath? Path => Get();
 
     public GameDirectoryProvider(
         IGameReleaseContext release,
@@ -21,6 +22,24 @@ public sealed class GameDirectoryProvider : IGameDirectoryProvider
         _release = release;
         _locator = locator;
     }
+
+    private DirectoryPath? Get()
+    {
+        return _locator.TryGet(_release.Release);
+    }
 }
 
-public record GameDirectoryInjection(DirectoryPath Path) : IGameDirectoryProvider;
+public sealed class GameDirectoryRelativeProvider : IGameDirectoryProvider
+{
+    private readonly IDataDirectoryProvider _dataDirectoryProvider;
+
+    public GameDirectoryRelativeProvider(
+        IDataDirectoryProvider dataDirectoryProvider)
+    {
+        _dataDirectoryProvider = dataDirectoryProvider;
+    }
+
+    public DirectoryPath? Path => _dataDirectoryProvider.Path.Directory;
+}
+
+public record GameDirectoryInjection(DirectoryPath? Path) : IGameDirectoryProvider;

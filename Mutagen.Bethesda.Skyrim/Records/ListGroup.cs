@@ -1,11 +1,26 @@
+using System.Collections;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Translations.Binary;
+using Noggog;
 
 namespace Mutagen.Bethesda.Skyrim;
+
+public partial class SkyrimListGroup<T> : AListGroup<T>
+{
+    public IEnumerator<T> GetEnumerator() => Records.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    protected override IExtendedList<T> ProtectedList => Records;
+}
+
 
 partial class SkyrimListGroupBinaryCreateTranslation<T>
 {
@@ -15,6 +30,14 @@ partial class SkyrimListGroupBinaryCreateTranslation<T>
     {
         frame.Reader.Position += 4;
     }
+}
+
+public partial interface ISkyrimListGroup<T> : IListGroup<T>
+{
+}
+
+public partial interface ISkyrimListGroupGetter<out T> : IReadOnlyCollection<T>
+{
 }
 
 partial class SkyrimListGroupBinaryWriteTranslation
@@ -44,4 +67,13 @@ partial class SkyrimListGroupBinaryOverlay<T> : AListGroupBinaryOverlay<T>
             offset: offset,
             objectType: ObjectType.Group);
     }
+
+    public IEnumerator<T> GetEnumerator() => Records.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public int Count => Records.Count;
 }

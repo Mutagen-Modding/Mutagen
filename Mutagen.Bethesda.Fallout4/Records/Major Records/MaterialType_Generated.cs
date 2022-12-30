@@ -167,6 +167,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Parent,
                 TItem Name,
                 TItem HavokDisplayColor,
@@ -181,7 +182,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Parent = Parent;
                 this.Name = Name;
@@ -671,12 +673,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMaterialTypeGetter rhs) return false;
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMaterialTypeGetter? obj)
         {
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -849,7 +851,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -925,6 +927,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static MaterialType Duplicate(
+            this IMaterialTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -957,14 +970,15 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        Name = 7,
-        HavokDisplayColor = 8,
-        Buoyancy = 9,
-        Flags = 10,
-        HavokImpactDataSet = 11,
-        BreakableFX = 12,
-        ModelData = 13,
+        Fallout4MajorRecordFlags = 6,
+        Parent = 7,
+        Name = 8,
+        HavokDisplayColor = 9,
+        Buoyancy = 10,
+        Flags = 11,
+        HavokImpactDataSet = 12,
+        BreakableFX = 13,
+        ModelData = 14,
     }
     #endregion
 
@@ -984,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(MaterialType.Mask<>);
 
@@ -1170,7 +1184,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Flags = item.Flags == rhs.Flags;
             ret.HavokImpactDataSet = item.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet);
             ret.BreakableFX = string.Equals(item.BreakableFX, rhs.BreakableFX);
-            ret.ModelData = MemorySliceExt.Equal(item.ModelData, rhs.ModelData);
+            ret.ModelData = MemorySliceExt.SequenceEqual(item.ModelData, rhs.ModelData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1276,8 +1290,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (MaterialType_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (MaterialType_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (MaterialType_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1294,7 +1310,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (MaterialType_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1302,41 +1318,41 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMaterialTypeGetter? lhs,
             IMaterialTypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
             {
                 if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokDisplayColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokDisplayColor) ?? true))
             {
                 if (!lhs.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.Buoyancy) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Buoyancy) ?? true))
             {
                 if (!lhs.Buoyancy.EqualsWithin(rhs.Buoyancy)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
             {
                 if (!lhs.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.BreakableFX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.BreakableFX) ?? true))
             {
                 if (!string.Equals(lhs.BreakableFX, rhs.BreakableFX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.ModelData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.ModelData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ModelData, rhs.ModelData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ModelData, rhs.ModelData)) return false;
             }
             return true;
         }
@@ -1344,23 +1360,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMaterialTypeGetter?)lhs,
                 rhs: rhs as IMaterialTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMaterialTypeGetter?)lhs,
                 rhs: rhs as IMaterialTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMaterialTypeGetter item)
@@ -2116,12 +2132,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMaterialTypeGetter rhs) return false;
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMaterialTypeGetter? obj)
         {
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).GetHashCode(this);

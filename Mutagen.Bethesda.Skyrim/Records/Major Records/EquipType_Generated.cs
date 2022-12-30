@@ -109,6 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem SlotParents,
                 TItem UseAllParents)
             : base(
@@ -117,7 +118,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SlotParents, Enumerable.Empty<(int Index, TItem Value)>());
                 this.UseAllParents = UseAllParents;
@@ -397,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SlotParents?.Overall, rhs.SlotParents?.Overall), ExceptionExt.Combine(this.SlotParents?.Specific, rhs.SlotParents?.Specific));
+                ret.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SlotParents?.Overall, rhs.SlotParents?.Overall), Noggog.ExceptionExt.Combine(this.SlotParents?.Specific, rhs.SlotParents?.Specific));
                 ret.UseAllParents = this.UseAllParents.Combine(rhs.UseAllParents);
                 return ret;
             }
@@ -513,12 +515,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IEquipTypeGetter rhs) return false;
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEquipTypeGetter? obj)
         {
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -667,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -743,6 +745,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static EquipType Duplicate(
+            this IEquipTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -775,8 +788,9 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        SlotParents = 6,
-        UseAllParents = 7,
+        SkyrimMajorRecordFlags = 6,
+        SlotParents = 7,
+        UseAllParents = 8,
     }
     #endregion
 
@@ -796,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(EquipType.Mask<>);
 
@@ -1054,8 +1068,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (EquipType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (EquipType_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (EquipType_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1072,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (EquipType_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1080,15 +1096,15 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IEquipTypeGetter? lhs,
             IEquipTypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)EquipType_FieldIndex.SlotParents) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)EquipType_FieldIndex.SlotParents) ?? true))
             {
                 if (!lhs.SlotParents.SequenceEqualNullable(rhs.SlotParents)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EquipType_FieldIndex.UseAllParents) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EquipType_FieldIndex.UseAllParents) ?? true))
             {
                 if (lhs.UseAllParents != rhs.UseAllParents) return false;
             }
@@ -1098,23 +1114,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IEquipTypeGetter?)lhs,
                 rhs: rhs as IEquipTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IEquipTypeGetter?)lhs,
                 rhs: rhs as IEquipTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IEquipTypeGetter item)
@@ -1729,12 +1745,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IEquipTypeGetter rhs) return false;
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEquipTypeGetter? obj)
         {
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).GetHashCode(this);

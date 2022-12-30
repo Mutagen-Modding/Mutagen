@@ -158,6 +158,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Flags,
                 TItem IdleTimer,
@@ -169,7 +170,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Flags = Flags;
@@ -536,7 +538,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.IdleTimer = this.IdleTimer.Combine(rhs.IdleTimer);
-                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -667,12 +669,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IIdleMarkerGetter rhs) return false;
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIdleMarkerGetter? obj)
         {
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -863,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((IdleMarkerCommon)((IIdleMarkerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -939,6 +941,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static IdleMarker Duplicate(
+            this IIdleMarkerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -971,11 +984,12 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Flags = 7,
-        IdleTimer = 8,
-        Animations = 9,
-        Model = 10,
+        SkyrimMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Flags = 8,
+        IdleTimer = 9,
+        Animations = 10,
+        Model = 11,
     }
     #endregion
 
@@ -995,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(IdleMarker.Mask<>);
 
@@ -1304,8 +1318,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (IdleMarker_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (IdleMarker_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (IdleMarker_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1322,7 +1338,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (IdleMarker_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1330,35 +1346,35 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IIdleMarkerGetter? lhs,
             IIdleMarkerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)IdleMarker_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)IdleMarker_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.IdleTimer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.IdleTimer) ?? true))
             {
                 if (!lhs.IdleTimer.EqualsWithin(rhs.IdleTimer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Animations) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Animations) ?? true))
             {
                 if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)IdleMarker_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)IdleMarker_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
@@ -1368,23 +1384,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IIdleMarkerGetter?)lhs,
                 rhs: rhs as IIdleMarkerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IIdleMarkerGetter?)lhs,
                 rhs: rhs as IIdleMarkerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IIdleMarkerGetter item)
@@ -2199,12 +2215,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IIdleMarkerGetter rhs) return false;
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIdleMarkerGetter? obj)
         {
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).GetHashCode(this);

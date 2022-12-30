@@ -102,9 +102,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         LandscapeTexture.Flag? ILandscapeTextureGetter.Flags => this.Flags;
         #endregion
-        #region HNAMDataTypeState
-        public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -137,7 +134,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TextureSpecularExponent = initialValue;
                 this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flags = initialValue;
-                this.HNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -147,21 +143,22 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem TextureSet,
                 TItem MaterialType,
                 TItem HavokFriction,
                 TItem HavokRestitution,
                 TItem TextureSpecularExponent,
                 TItem Grasses,
-                TItem Flags,
-                TItem HNAMDataTypeState)
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.TextureSet = TextureSet;
                 this.MaterialType = MaterialType;
@@ -170,7 +167,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TextureSpecularExponent = TextureSpecularExponent;
                 this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Grasses, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flags = Flags;
-                this.HNAMDataTypeState = HNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -189,7 +185,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem TextureSpecularExponent;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Grasses;
             public TItem Flags;
-            public TItem HNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -210,7 +205,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.TextureSpecularExponent, rhs.TextureSpecularExponent)) return false;
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.HNAMDataTypeState, rhs.HNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -223,7 +217,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.TextureSpecularExponent);
                 hash.Add(this.Grasses);
                 hash.Add(this.Flags);
-                hash.Add(this.HNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -251,7 +244,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.HNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -277,7 +269,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (eval(this.Flags)) return true;
-                if (eval(this.HNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -313,7 +304,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.Flags = eval(this.Flags);
-                obj.HNAMDataTypeState = eval(this.HNAMDataTypeState);
             }
             #endregion
 
@@ -377,10 +367,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.HNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -399,7 +385,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? TextureSpecularExponent;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Grasses;
             public Exception? Flags;
-            public Exception? HNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -422,8 +407,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Grasses;
                     case LandscapeTexture_FieldIndex.Flags:
                         return Flags;
-                    case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                        return HNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -454,9 +437,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case LandscapeTexture_FieldIndex.Flags:
                         this.Flags = ex;
-                        break;
-                    case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                        this.HNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -490,9 +470,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case LandscapeTexture_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                        this.HNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -509,7 +486,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (TextureSpecularExponent != null) return true;
                 if (Grasses != null) return true;
                 if (Flags != null) return true;
-                if (HNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -574,9 +550,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
-                {
-                    sb.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -590,9 +563,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.HavokFriction = this.HavokFriction.Combine(rhs.HavokFriction);
                 ret.HavokRestitution = this.HavokRestitution.Combine(rhs.HavokRestitution);
                 ret.TextureSpecularExponent = this.TextureSpecularExponent.Combine(rhs.TextureSpecularExponent);
-                ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
+                ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), Noggog.ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.HNAMDataTypeState = this.HNAMDataTypeState.Combine(rhs.HNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -622,7 +594,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool TextureSpecularExponent;
             public bool Grasses;
             public bool Flags;
-            public bool HNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -638,7 +609,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TextureSpecularExponent = defaultOn;
                 this.Grasses = defaultOn;
                 this.Flags = defaultOn;
-                this.HNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -653,7 +623,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((TextureSpecularExponent, null));
                 ret.Add((Grasses, null));
                 ret.Add((Flags, null));
-                ret.Add((HNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -717,10 +686,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(ILandscapeTexture);
 
-        [Flags]
-        public enum HNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -729,12 +694,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeTextureGetter rhs) return false;
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeTextureGetter? obj)
         {
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -813,7 +778,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte TextureSpecularExponent { get; set; }
         new ExtendedList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
         new LandscapeTexture.Flag? Flags { get; set; }
-        new LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; }
     }
 
     public partial interface ILandscapeTextureInternal :
@@ -840,7 +804,6 @@ namespace Mutagen.Bethesda.Skyrim
         Byte TextureSpecularExponent { get; }
         IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
         LandscapeTexture.Flag? Flags { get; }
-        LandscapeTexture.HNAMDataType HNAMDataTypeState { get; }
 
     }
 
@@ -897,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -973,6 +936,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static LandscapeTexture Duplicate(
+            this ILandscapeTextureGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1005,14 +979,14 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        TextureSet = 6,
-        MaterialType = 7,
-        HavokFriction = 8,
-        HavokRestitution = 9,
-        TextureSpecularExponent = 10,
-        Grasses = 11,
-        Flags = 12,
-        HNAMDataTypeState = 13,
+        SkyrimMajorRecordFlags = 6,
+        TextureSet = 7,
+        MaterialType = 8,
+        HavokFriction = 9,
+        HavokRestitution = 10,
+        TextureSpecularExponent = 11,
+        Grasses = 12,
+        Flags = 13,
     }
     #endregion
 
@@ -1030,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "f6e8d6f6-773c-4c3b-b09b-d892c0114ed7";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 14;
 
@@ -1122,7 +1096,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.TextureSpecularExponent = default;
             item.Grasses.Clear();
             item.Flags = default;
-            item.HNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1220,7 +1193,6 @@ namespace Mutagen.Bethesda.Skyrim
                 (l, r) => object.Equals(l, r),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.HNAMDataTypeState = item.HNAMDataTypeState == rhs.HNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1309,10 +1281,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.HNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
-            }
         }
         
         public static LandscapeTexture_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1331,8 +1299,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (LandscapeTexture_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (LandscapeTexture_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (LandscapeTexture_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1349,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (LandscapeTexture_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1357,41 +1327,37 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILandscapeTextureGetter? lhs,
             ILandscapeTextureGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
             {
                 if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
             {
                 if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
             {
                 if (lhs.HavokFriction != rhs.HavokFriction) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokRestitution) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokRestitution) ?? true))
             {
                 if (lhs.HavokRestitution != rhs.HavokRestitution) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSpecularExponent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSpecularExponent) ?? true))
             {
                 if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Grasses) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Grasses) ?? true))
             {
                 if (!lhs.Grasses.SequenceEqualNullable(rhs.Grasses)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HNAMDataTypeState) ?? true))
-            {
-                if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
             }
             return true;
         }
@@ -1399,23 +1365,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandscapeTextureGetter?)lhs,
                 rhs: rhs as ILandscapeTextureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILandscapeTextureGetter?)lhs,
                 rhs: rhs as ILandscapeTextureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILandscapeTextureGetter item)
@@ -1431,7 +1397,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(Flagsitem);
             }
-            hash.Add(item.HNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1587,10 +1552,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HNAMDataTypeState) ?? true))
-            {
-                item.HNAMDataTypeState = rhs.HNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1739,15 +1700,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly LandscapeTextureBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ILandscapeTextureGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ILandscapeTextureGetter item,
             MutagenWriter writer,
@@ -1805,7 +1757,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1865,15 +1817,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly LandscapeTextureBinaryCreateTranslation Instance = new LandscapeTextureBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LTEX;
-        public static void FillBinaryStructs(
-            ILandscapeTextureInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ILandscapeTextureInternal item,
             MutagenFrame frame,
@@ -2002,7 +1945,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
         #endregion
         private RangeInt32? _HNAMLocation;
-        public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; private set; }
         #region HavokFriction
         private int _HavokFrictionLocation => _HNAMLocation!.Value.Min;
         private bool _HavokFriction_IsSet => _HNAMLocation.HasValue;
@@ -2168,12 +2110,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeTextureGetter rhs) return false;
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILandscapeTextureGetter? obj)
         {
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).GetHashCode(this);

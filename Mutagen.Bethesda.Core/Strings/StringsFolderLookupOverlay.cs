@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Archives.Exceptions;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings;

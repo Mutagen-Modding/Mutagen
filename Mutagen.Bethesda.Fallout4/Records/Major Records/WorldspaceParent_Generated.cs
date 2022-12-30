@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWorldspaceParentGetter rhs) return false;
-            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceParentGetter? obj)
         {
-            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WorldspaceParentCommon)((IWorldspaceParentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -858,14 +858,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWorldspaceParentGetter? lhs,
             IWorldspaceParentGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Worldspace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Worldspace) ?? true))
             {
                 if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
@@ -1254,12 +1254,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWorldspaceParentGetter rhs) return false;
-            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceParentGetter? obj)
         {
-            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).GetHashCode(this);

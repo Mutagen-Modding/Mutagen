@@ -84,12 +84,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IFindMatchingRefFromEventGetter rhs) return false;
-            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFindMatchingRefFromEventGetter? obj)
         {
-            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).GetHashCode(this);
@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.FromEvent = item.FromEvent == rhs.FromEvent;
-            ret.EventData = MemorySliceExt.Equal(item.EventData, rhs.EventData);
+            ret.EventData = MemorySliceExt.SequenceEqual(item.EventData, rhs.EventData);
         }
         
         public string Print(
@@ -852,16 +852,16 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IFindMatchingRefFromEventGetter? lhs,
             IFindMatchingRefFromEventGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)FindMatchingRefFromEvent_FieldIndex.FromEvent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FindMatchingRefFromEvent_FieldIndex.FromEvent) ?? true))
             {
                 if (lhs.FromEvent != rhs.FromEvent) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)FindMatchingRefFromEvent_FieldIndex.EventData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FindMatchingRefFromEvent_FieldIndex.EventData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.EventData, rhs.EventData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.EventData, rhs.EventData)) return false;
             }
             return true;
         }
@@ -1258,12 +1258,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IFindMatchingRefFromEventGetter rhs) return false;
-            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFindMatchingRefFromEventGetter? obj)
         {
-            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).GetHashCode(this);

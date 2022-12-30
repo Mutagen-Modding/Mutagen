@@ -207,9 +207,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region TaperCurse
         public Single TaperCurse { get; set; } = default;
         #endregion
-        #region DNAMDataTypeState
-        public Hazard.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -252,7 +249,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TaperFullEffectRadius = initialValue;
                 this.TaperWeight = initialValue;
                 this.TaperCurse = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -262,6 +258,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
@@ -278,15 +275,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Sound,
                 TItem TaperFullEffectRadius,
                 TItem TaperWeight,
-                TItem TaperCurse,
-                TItem DNAMDataTypeState)
+                TItem TaperCurse)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -305,7 +302,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TaperFullEffectRadius = TaperFullEffectRadius;
                 this.TaperWeight = TaperWeight;
                 this.TaperCurse = TaperCurse;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -334,7 +330,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem TaperFullEffectRadius;
             public TItem TaperWeight;
             public TItem TaperCurse;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -365,7 +360,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.TaperFullEffectRadius, rhs.TaperFullEffectRadius)) return false;
                 if (!object.Equals(this.TaperWeight, rhs.TaperWeight)) return false;
                 if (!object.Equals(this.TaperCurse, rhs.TaperCurse)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -388,7 +382,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.TaperFullEffectRadius);
                 hash.Add(this.TaperWeight);
                 hash.Add(this.TaperCurse);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -424,7 +417,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.TaperFullEffectRadius)) return false;
                 if (!eval(this.TaperWeight)) return false;
                 if (!eval(this.TaperCurse)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -458,7 +450,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.TaperFullEffectRadius)) return true;
                 if (eval(this.TaperWeight)) return true;
                 if (eval(this.TaperCurse)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -491,7 +482,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.TaperFullEffectRadius = eval(this.TaperFullEffectRadius);
                 obj.TaperWeight = eval(this.TaperWeight);
                 obj.TaperCurse = eval(this.TaperCurse);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -578,10 +568,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(TaperCurse, "TaperCurse");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -610,7 +596,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? TaperFullEffectRadius;
             public Exception? TaperWeight;
             public Exception? TaperCurse;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -653,8 +638,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return TaperWeight;
                     case Hazard_FieldIndex.TaperCurse:
                         return TaperCurse;
-                    case Hazard_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -715,9 +698,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Hazard_FieldIndex.TaperCurse:
                         this.TaperCurse = ex;
-                        break;
-                    case Hazard_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -781,9 +761,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Hazard_FieldIndex.TaperCurse:
                         this.TaperCurse = (Exception?)obj;
                         break;
-                    case Hazard_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -810,7 +787,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (TaperFullEffectRadius != null) return true;
                 if (TaperWeight != null) return true;
                 if (TaperCurse != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -884,9 +860,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(TaperCurse, "TaperCurse");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -912,7 +885,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.TaperFullEffectRadius = this.TaperFullEffectRadius.Combine(rhs.TaperFullEffectRadius);
                 ret.TaperWeight = this.TaperWeight.Combine(rhs.TaperWeight);
                 ret.TaperCurse = this.TaperCurse.Combine(rhs.TaperCurse);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -952,7 +924,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool TaperFullEffectRadius;
             public bool TaperWeight;
             public bool TaperCurse;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -976,7 +947,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TaperFullEffectRadius = defaultOn;
                 this.TaperWeight = defaultOn;
                 this.TaperCurse = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1001,7 +971,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((TaperFullEffectRadius, null));
                 ret.Add((TaperWeight, null));
                 ret.Add((TaperCurse, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1058,10 +1027,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IHazard);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1070,12 +1035,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IHazardGetter rhs) return false;
-            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHazardGetter? obj)
         {
-            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HazardCommon)((IHazardGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1182,7 +1147,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single TaperFullEffectRadius { get; set; }
         new Single TaperWeight { get; set; }
         new Single TaperCurse { get; set; }
-        new Hazard.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IHazardInternal :
@@ -1243,7 +1207,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single TaperFullEffectRadius { get; }
         Single TaperWeight { get; }
         Single TaperCurse { get; }
-        Hazard.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -1300,7 +1263,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((HazardCommon)((IHazardGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1376,6 +1339,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Hazard Duplicate(
+            this IHazardGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((HazardCommon)((IHazardGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1408,24 +1382,24 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Model = 8,
-        ImageSpaceModifier = 9,
-        Limit = 10,
-        Radius = 11,
-        Lifetime = 12,
-        ImageSpaceRadius = 13,
-        TargetInterval = 14,
-        Flags = 15,
-        Effect = 16,
-        Light = 17,
-        ImpactDataSet = 18,
-        Sound = 19,
-        TaperFullEffectRadius = 20,
-        TaperWeight = 21,
-        TaperCurse = 22,
-        DNAMDataTypeState = 23,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        ImageSpaceModifier = 10,
+        Limit = 11,
+        Radius = 12,
+        Lifetime = 13,
+        ImageSpaceRadius = 14,
+        TargetInterval = 15,
+        Flags = 16,
+        Effect = 17,
+        Light = 18,
+        ImpactDataSet = 19,
+        Sound = 20,
+        TaperFullEffectRadius = 21,
+        TaperWeight = 22,
+        TaperCurse = 23,
     }
     #endregion
 
@@ -1443,7 +1417,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "d61b1bde-1cf4-40d1-9eec-63626d1f147a";
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 17;
 
         public const ushort FieldCount = 24;
 
@@ -1547,7 +1521,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.TaperFullEffectRadius = default;
             item.TaperWeight = default;
             item.TaperCurse = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1659,7 +1632,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.TaperFullEffectRadius = item.TaperFullEffectRadius.EqualsWithin(rhs.TaperFullEffectRadius);
             ret.TaperWeight = item.TaperWeight.EqualsWithin(rhs.TaperWeight);
             ret.TaperCurse = item.TaperCurse.EqualsWithin(rhs.TaperCurse);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1779,10 +1751,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.TaperCurse, "TaperCurse");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static Hazard_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1801,8 +1769,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Hazard_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Hazard_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Hazard_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1819,7 +1789,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Hazard_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1827,89 +1797,85 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IHazardGetter? lhs,
             IHazardGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Hazard_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Hazard_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Hazard_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Hazard_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
             {
                 if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
             {
                 if (lhs.Limit != rhs.Limit) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Radius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Radius) ?? true))
             {
                 if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Lifetime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Lifetime) ?? true))
             {
                 if (!lhs.Lifetime.EqualsWithin(rhs.Lifetime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceRadius) ?? true))
             {
                 if (!lhs.ImageSpaceRadius.EqualsWithin(rhs.ImageSpaceRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.TargetInterval) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.TargetInterval) ?? true))
             {
                 if (!lhs.TargetInterval.EqualsWithin(rhs.TargetInterval)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Effect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Effect) ?? true))
             {
                 if (!lhs.Effect.Equals(rhs.Effect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
             {
                 if (!lhs.Light.Equals(rhs.Light)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
             {
                 if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.TaperFullEffectRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.TaperFullEffectRadius) ?? true))
             {
                 if (!lhs.TaperFullEffectRadius.EqualsWithin(rhs.TaperFullEffectRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.TaperWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.TaperWeight) ?? true))
             {
                 if (!lhs.TaperWeight.EqualsWithin(rhs.TaperWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.TaperCurse) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Hazard_FieldIndex.TaperCurse) ?? true))
             {
                 if (!lhs.TaperCurse.EqualsWithin(rhs.TaperCurse)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Hazard_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -1917,23 +1883,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHazardGetter?)lhs,
                 rhs: rhs as IHazardGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHazardGetter?)lhs,
                 rhs: rhs as IHazardGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IHazardGetter item)
@@ -1962,7 +1928,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.TaperFullEffectRadius);
             hash.Add(item.TaperWeight);
             hash.Add(item.TaperCurse);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2189,10 +2154,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.TaperCurse = rhs.TaperCurse;
             }
-            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2341,15 +2302,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly HazardBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IHazardGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IHazardGetter item,
             MutagenWriter writer,
@@ -2435,7 +2387,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2495,15 +2447,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly HazardBinaryCreateTranslation Instance = new HazardBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.HAZD;
-        public static void FillBinaryStructs(
-            IHazardInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IHazardInternal item,
             MutagenFrame frame,
@@ -2662,7 +2605,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Hazard.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Limit
         private int _LimitLocation => _DNAMLocation!.Value.Min;
         private bool _Limit_IsSet => _DNAMLocation.HasValue;
@@ -2866,12 +2808,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IHazardGetter rhs) return false;
-            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHazardGetter? obj)
         {
-            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HazardCommon)((IHazardGetter)this).CommonInstance()!).GetHashCode(this);

@@ -310,9 +310,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAPlacedTrapGetter.Comments => this.Comments;
         #endregion
-        #region DATADataTypeState
-        public APlacedTrap.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -366,7 +363,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Position = initialValue;
                 this.Rotation = initialValue;
                 this.Comments = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -376,6 +372,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem EncounterZone,
                 TItem HeadTrackingWeight,
@@ -403,15 +400,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem DistantLodData,
                 TItem Position,
                 TItem Rotation,
-                TItem Comments,
-                TItem DATADataTypeState)
+                TItem Comments)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.EncounterZone = EncounterZone;
@@ -441,7 +438,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Position = Position;
                 this.Rotation = Rotation;
                 this.Comments = Comments;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -481,7 +477,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Position;
             public TItem Rotation;
             public TItem Comments;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -523,7 +518,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Position, rhs.Position)) return false;
                 if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
                 if (!object.Equals(this.Comments, rhs.Comments)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -557,7 +551,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Position);
                 hash.Add(this.Rotation);
                 hash.Add(this.Comments);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -654,7 +647,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Position)) return false;
                 if (!eval(this.Rotation)) return false;
                 if (!eval(this.Comments)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -749,7 +741,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Position)) return true;
                 if (eval(this.Rotation)) return true;
                 if (eval(this.Comments)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -847,7 +838,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Position = eval(this.Position);
                 obj.Rotation = eval(this.Rotation);
                 obj.Comments = eval(this.Comments);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -1042,10 +1032,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Comments, "Comments");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1085,7 +1071,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Position;
             public Exception? Rotation;
             public Exception? Comments;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1150,8 +1135,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Rotation;
                     case APlacedTrap_FieldIndex.Comments:
                         return Comments;
-                    case APlacedTrap_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1245,9 +1228,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case APlacedTrap_FieldIndex.Comments:
                         this.Comments = ex;
-                        break;
-                    case APlacedTrap_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1344,9 +1324,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case APlacedTrap_FieldIndex.Comments:
                         this.Comments = (Exception?)obj;
                         break;
-                    case APlacedTrap_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1384,7 +1361,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Position != null) return true;
                 if (Rotation != null) return true;
                 if (Comments != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1551,9 +1527,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Comments, "Comments");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -1566,8 +1539,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
                 ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
-                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
-                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), Noggog.ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
+                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), Noggog.ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
                 ret.ActivateParents = this.ActivateParents.Combine(rhs.ActivateParents, (l, r) => l.Combine(r));
                 ret.UnknownReference = this.UnknownReference.Combine(rhs.UnknownReference);
                 ret.XATP = this.XATP.Combine(rhs.XATP);
@@ -1583,14 +1556,13 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
                 ret.MultiBoundReference = this.MultiBoundReference.Combine(rhs.MultiBoundReference);
                 ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
-                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
+                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
-                ret.DistantLodData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DistantLodData?.Overall, rhs.DistantLodData?.Overall), ExceptionExt.Combine(this.DistantLodData?.Specific, rhs.DistantLodData?.Specific));
+                ret.DistantLodData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.DistantLodData?.Overall, rhs.DistantLodData?.Overall), Noggog.ExceptionExt.Combine(this.DistantLodData?.Specific, rhs.DistantLodData?.Specific));
                 ret.Position = this.Position.Combine(rhs.Position);
                 ret.Rotation = this.Rotation.Combine(rhs.Rotation);
                 ret.Comments = this.Comments.Combine(rhs.Comments);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1641,7 +1613,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Position;
             public bool Rotation;
             public bool Comments;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1672,7 +1643,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Position = defaultOn;
                 this.Rotation = defaultOn;
                 this.Comments = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1708,7 +1678,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Position, null));
                 ret.Add((Rotation, null));
                 ret.Add((Comments, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1767,10 +1736,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1779,12 +1744,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAPlacedTrapGetter rhs) return false;
-            return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAPlacedTrapGetter? obj)
         {
-            return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1870,7 +1835,6 @@ namespace Mutagen.Bethesda.Fallout4
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
         new String? Comments { get; set; }
-        new APlacedTrap.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new APlacedTrap.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1935,7 +1899,6 @@ namespace Mutagen.Bethesda.Fallout4
         P3Float Position { get; }
         P3Float Rotation { get; }
         String? Comments { get; }
-        APlacedTrap.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         APlacedTrap.MajorFlag MajorFlags { get; }
@@ -1996,7 +1959,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((APlacedTrapCommon)((IAPlacedTrapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2072,6 +2035,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static APlacedTrap Duplicate(
+            this IAPlacedTrapGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((APlacedTrapCommon)((IAPlacedTrapGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2104,35 +2078,35 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        EncounterZone = 7,
-        HeadTrackingWeight = 8,
-        FavorCost = 9,
-        Reflections = 10,
-        LinkedReferences = 11,
-        ActivateParents = 12,
-        UnknownReference = 13,
-        XATP = 14,
-        AmmoCount = 15,
-        IsLinkedRefTransient = 16,
-        Layer = 17,
-        MaterialSwap = 18,
-        ReferenceGroup = 19,
-        XCVR = 20,
-        EnableParent = 21,
-        Ownership = 22,
-        FactionRank = 23,
-        Emittance = 24,
-        MultiBoundReference = 25,
-        IsIgnoredBySandbox = 26,
-        LocationRefTypes = 27,
-        LocationReference = 28,
-        Scale = 29,
-        DistantLodData = 30,
-        Position = 31,
-        Rotation = 32,
-        Comments = 33,
-        DATADataTypeState = 34,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        EncounterZone = 8,
+        HeadTrackingWeight = 9,
+        FavorCost = 10,
+        Reflections = 11,
+        LinkedReferences = 12,
+        ActivateParents = 13,
+        UnknownReference = 14,
+        XATP = 15,
+        AmmoCount = 16,
+        IsLinkedRefTransient = 17,
+        Layer = 18,
+        MaterialSwap = 19,
+        ReferenceGroup = 20,
+        XCVR = 21,
+        EnableParent = 22,
+        Ownership = 23,
+        FactionRank = 24,
+        Emittance = 25,
+        MultiBoundReference = 26,
+        IsIgnoredBySandbox = 27,
+        LocationRefTypes = 28,
+        LocationReference = 29,
+        Scale = 30,
+        DistantLodData = 31,
+        Position = 32,
+        Rotation = 33,
+        Comments = 34,
     }
     #endregion
 
@@ -2150,7 +2124,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "31d1155a-457d-4775-ab46-54c028d5613e";
 
-        public const ushort AdditionalFieldCount = 29;
+        public const ushort AdditionalFieldCount = 28;
 
         public const ushort FieldCount = 35;
 
@@ -2327,7 +2301,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Position = default;
             item.Rotation = default;
             item.Comments = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -2449,13 +2422,13 @@ namespace Mutagen.Bethesda.Fallout4
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.UnknownReference = item.UnknownReference.Equals(rhs.UnknownReference);
-            ret.XATP = MemorySliceExt.Equal(item.XATP, rhs.XATP);
+            ret.XATP = MemorySliceExt.SequenceEqual(item.XATP, rhs.XATP);
             ret.AmmoCount = item.AmmoCount == rhs.AmmoCount;
             ret.IsLinkedRefTransient = item.IsLinkedRefTransient == rhs.IsLinkedRefTransient;
             ret.Layer = item.Layer.Equals(rhs.Layer);
             ret.MaterialSwap = item.MaterialSwap.Equals(rhs.MaterialSwap);
             ret.ReferenceGroup = item.ReferenceGroup.Equals(rhs.ReferenceGroup);
-            ret.XCVR = MemorySliceExt.Equal(item.XCVR, rhs.XCVR);
+            ret.XCVR = MemorySliceExt.SequenceEqual(item.XCVR, rhs.XCVR);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent,
                 rhs.EnableParent,
@@ -2483,7 +2456,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.Comments = string.Equals(item.Comments, rhs.Comments);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2699,10 +2671,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(CommentsItem, "Comments");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static APlacedTrap_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2721,8 +2689,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (APlacedTrap_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (APlacedTrap_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (APlacedTrap_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2739,7 +2709,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (APlacedTrap_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2747,141 +2717,137 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAPlacedTrapGetter? lhs,
             IAPlacedTrapGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.EncounterZone) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.EncounterZone) ?? true))
             {
                 if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.HeadTrackingWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.HeadTrackingWeight) ?? true))
             {
                 if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.FavorCost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.FavorCost) ?? true))
             {
                 if (!lhs.FavorCost.EqualsWithin(rhs.FavorCost)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Reflections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Reflections) ?? true))
             {
-                if (!lhs.Reflections.SequenceEqual(rhs.Reflections, (l, r) => ((WaterReflectionCommon)((IWaterReflectionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.Reflections)))) return false;
+                if (!lhs.Reflections.SequenceEqual(rhs.Reflections, (l, r) => ((WaterReflectionCommon)((IWaterReflectionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.Reflections)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LinkedReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LinkedReferences) ?? true))
             {
-                if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.LinkedReferences)))) return false;
+                if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.LinkedReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.ActivateParents) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.ActivateParents) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ActivateParents, rhs.ActivateParents, out var lhsActivateParents, out var rhsActivateParents, out var isActivateParentsEqual))
                 {
-                    if (!((ActivateParentsCommon)((IActivateParentsGetter)lhsActivateParents).CommonInstance()!).Equals(lhsActivateParents, rhsActivateParents, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.ActivateParents))) return false;
+                    if (!((ActivateParentsCommon)((IActivateParentsGetter)lhsActivateParents).CommonInstance()!).Equals(lhsActivateParents, rhsActivateParents, equalsMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.ActivateParents))) return false;
                 }
                 else if (!isActivateParentsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.UnknownReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.UnknownReference) ?? true))
             {
                 if (!lhs.UnknownReference.Equals(rhs.UnknownReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.XATP) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.XATP) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XATP, rhs.XATP)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XATP, rhs.XATP)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.AmmoCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.AmmoCount) ?? true))
             {
                 if (lhs.AmmoCount != rhs.AmmoCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.IsLinkedRefTransient) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.IsLinkedRefTransient) ?? true))
             {
                 if (lhs.IsLinkedRefTransient != rhs.IsLinkedRefTransient) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Layer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Layer) ?? true))
             {
                 if (!lhs.Layer.Equals(rhs.Layer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.MaterialSwap) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.MaterialSwap) ?? true))
             {
                 if (!lhs.MaterialSwap.Equals(rhs.MaterialSwap)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.ReferenceGroup) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.ReferenceGroup) ?? true))
             {
                 if (!lhs.ReferenceGroup.Equals(rhs.ReferenceGroup)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.XCVR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.XCVR) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.XCVR, rhs.XCVR)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.XCVR, rhs.XCVR)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.EnableParent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.EnableParent) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.EnableParent, rhs.EnableParent, out var lhsEnableParent, out var rhsEnableParent, out var isEnableParentEqual))
                 {
-                    if (!((EnableParentCommon)((IEnableParentGetter)lhsEnableParent).CommonInstance()!).Equals(lhsEnableParent, rhsEnableParent, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.EnableParent))) return false;
+                    if (!((EnableParentCommon)((IEnableParentGetter)lhsEnableParent).CommonInstance()!).Equals(lhsEnableParent, rhsEnableParent, equalsMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.EnableParent))) return false;
                 }
                 else if (!isEnableParentEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Ownership) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Ownership) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
                 {
-                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.Ownership))) return false;
+                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, equalsMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.Ownership))) return false;
                 }
                 else if (!isOwnershipEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.FactionRank) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.FactionRank) ?? true))
             {
                 if (lhs.FactionRank != rhs.FactionRank) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Emittance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Emittance) ?? true))
             {
                 if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.MultiBoundReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.MultiBoundReference) ?? true))
             {
                 if (!lhs.MultiBoundReference.Equals(rhs.MultiBoundReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.IsIgnoredBySandbox) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.IsIgnoredBySandbox) ?? true))
             {
                 if (lhs.IsIgnoredBySandbox != rhs.IsIgnoredBySandbox) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LocationRefTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LocationRefTypes) ?? true))
             {
                 if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LocationReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LocationReference) ?? true))
             {
                 if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Scale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Scale) ?? true))
             {
                 if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.DistantLodData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.DistantLodData) ?? true))
             {
                 if (!lhs.DistantLodData.SequenceEqualNullable(rhs.DistantLodData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Position) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Position) ?? true))
             {
                 if (!lhs.Position.Equals(rhs.Position)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Rotation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Rotation) ?? true))
             {
                 if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Comments) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Comments) ?? true))
             {
                 if (!string.Equals(lhs.Comments, rhs.Comments)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -2889,23 +2855,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAPlacedTrapGetter?)lhs,
                 rhs: rhs as IAPlacedTrapGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAPlacedTrapGetter?)lhs,
                 rhs: rhs as IAPlacedTrapGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAPlacedTrapGetter item)
@@ -2975,7 +2941,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(Commentsitem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3451,10 +3416,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Comments = rhs.Comments;
             }
-            if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -3602,15 +3563,6 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryWriteTranslator
     {
         public new static readonly APlacedTrapBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IAPlacedTrapGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IAPlacedTrapGetter item,
@@ -3793,7 +3745,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             try
             {
-                WriteEmbedded(
+                Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 if (!item.IsDeleted)
@@ -3852,15 +3804,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly APlacedTrapBinaryCreateTranslation Instance = new APlacedTrapBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
-        public static void FillBinaryStructs(
-            IAPlacedTrapInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAPlacedTrapInternal item,
             MutagenFrame frame,
@@ -4218,7 +4161,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         public IReadOnlyList<Single>? DistantLodData { get; private set; }
         private RangeInt32? _DATALocation;
-        public APlacedTrap.DATADataType DATADataTypeState { get; private set; }
         #region Position
         private int _PositionLocation => _DATALocation!.Value.Min;
         private bool _Position_IsSet => _DATALocation.HasValue;
@@ -4491,12 +4433,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAPlacedTrapGetter rhs) return false;
-            return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAPlacedTrapGetter? obj)
         {
-            return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).GetHashCode(this);

@@ -96,12 +96,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IOblivionGroupGetter<T> rhs) return false;
-            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOblivionGroupGetter<T>? obj)
         {
-            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: null);
+                equalsMask: null);
         }
 
         public static bool Equals<T, T_TranslMask>(
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask.GetCrystal());
+                equalsMask: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter>(
@@ -995,18 +995,18 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IOblivionGroupGetter<T>? lhs,
             IOblivionGroupGetter<T>? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)OblivionGroup_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionGroup_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionGroup_FieldIndex.LastModified) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionGroup_FieldIndex.LastModified) ?? true))
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)OblivionGroup_FieldIndex.RecordCache) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OblivionGroup_FieldIndex.RecordCache) ?? true))
             {
                 if (!lhs.RecordCache.SequenceEqualNullable(rhs.RecordCache)) return false;
             }
@@ -1553,12 +1553,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IOblivionGroupGetter<T> rhs) return false;
-            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IOblivionGroupGetter<T>? obj)
         {
-            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((OblivionGroupCommon<T>)((IOblivionGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask<T_ErrMask>();
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
-                ret.RecordCache = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ExceptionExt.Combine(this.RecordCache?.Overall, rhs.RecordCache?.Overall), ExceptionExt.Combine(this.RecordCache?.Specific, rhs.RecordCache?.Specific));
+                ret.RecordCache = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(Noggog.ExceptionExt.Combine(this.RecordCache?.Overall, rhs.RecordCache?.Overall), Noggog.ExceptionExt.Combine(this.RecordCache?.Specific, rhs.RecordCache?.Specific));
                 return ret;
             }
             public static ErrorMask<T_ErrMask>? Combine(ErrorMask<T_ErrMask>? lhs, ErrorMask<T_ErrMask>? rhs)

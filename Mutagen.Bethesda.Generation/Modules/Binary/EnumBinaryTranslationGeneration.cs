@@ -282,7 +282,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         if (eType.IsGeneric)
         {
-            return $"EnumExt<{eType.TypeName(getter: true)}>.Convert({retrieval})";
+            return $"Enums<{eType.TypeName(getter: true)}>.Convert({retrieval})";
         }
         else
         {

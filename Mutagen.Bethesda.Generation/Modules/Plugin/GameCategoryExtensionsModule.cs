@@ -49,7 +49,7 @@ public class GameCategoryExtensionsModule : GenerationModule
                     sb.AppendLine("switch (typeof(TMod).Name)");
                     using (sb.CurlyBrace())
                     {
-                        foreach (var cat in EnumExt.GetValues<GameCategory>())
+                        foreach (var cat in Enums<GameCategory>.Values)
                         {
                             sb.AppendLine($"case \"I{cat}Mod\":");
                             sb.AppendLine($"case \"I{cat}ModGetter\":");

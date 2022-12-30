@@ -96,12 +96,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionObjectsGetter rhs) return false;
-            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionObjectsGetter? obj)
         {
-            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionObject.ErrorMask?>>?>(ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), ExceptionExt.Combine(this.Objects?.Specific, rhs.Objects?.Specific));
+                ret.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionObject.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), Noggog.ExceptionExt.Combine(this.Objects?.Specific, rhs.Objects?.Specific));
                 ret.LodDisplayDistanceMultiplier = this.LodDisplayDistanceMultiplier.Combine(rhs.LodDisplayDistanceMultiplier);
                 ret.OcclusionAccuracyDist = this.OcclusionAccuracyDist.Combine(rhs.OcclusionAccuracyDist);
                 return ret;
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((RegionObjectsCommon)((IRegionObjectsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RegionData_FieldIndex.Icons:
                     return (RegionObjects_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -998,19 +998,19 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IRegionObjectsGetter? lhs,
             IRegionObjectsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)RegionObjects_FieldIndex.Objects) ?? true))
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)RegionObjects_FieldIndex.Objects) ?? true))
             {
-                if (!lhs.Objects.SequenceEqualNullable(rhs.Objects, (l, r) => ((RegionObjectCommon)((IRegionObjectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)RegionObjects_FieldIndex.Objects)))) return false;
+                if (!lhs.Objects.SequenceEqualNullable(rhs.Objects, (l, r) => ((RegionObjectCommon)((IRegionObjectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)RegionObjects_FieldIndex.Objects)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RegionObjects_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionObjects_FieldIndex.LodDisplayDistanceMultiplier) ?? true))
             {
                 if (!lhs.LodDisplayDistanceMultiplier.EqualsWithin(rhs.LodDisplayDistanceMultiplier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)RegionObjects_FieldIndex.OcclusionAccuracyDist) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionObjects_FieldIndex.OcclusionAccuracyDist) ?? true))
             {
                 if (!lhs.OcclusionAccuracyDist.EqualsWithin(rhs.OcclusionAccuracyDist)) return false;
             }
@@ -1020,12 +1020,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IRegionDataGetter? lhs,
             IRegionDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRegionObjectsGetter?)lhs,
                 rhs: rhs as IRegionObjectsGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRegionObjectsGetter item)
@@ -1523,12 +1523,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IRegionObjectsGetter rhs) return false;
-            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRegionObjectsGetter? obj)
         {
-            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).GetHashCode(this);

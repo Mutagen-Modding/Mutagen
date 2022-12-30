@@ -228,19 +228,19 @@ namespace Mutagen.Bethesda.Skyrim
         public Size Size { get; set; } = default;
         #endregion
         #region HeadBipedObject
-        public readonly static BipedObject _HeadBipedObject_Default = BipedObject.None;
-        public BipedObject HeadBipedObject { get; set; } = _HeadBipedObject_Default;
+        public static readonly BipedObject HeadBipedObjectDefault = BipedObject.None;
+        public BipedObject HeadBipedObject { get; set; } = HeadBipedObjectDefault;
         #endregion
         #region HairBipedObject
-        public readonly static BipedObject _HairBipedObject_Default = BipedObject.None;
-        public BipedObject HairBipedObject { get; set; } = _HairBipedObject_Default;
+        public static readonly BipedObject HairBipedObjectDefault = BipedObject.None;
+        public BipedObject HairBipedObject { get; set; } = HairBipedObjectDefault;
         #endregion
         #region InjuredHealthPercent
         public Single InjuredHealthPercent { get; set; } = default;
         #endregion
         #region ShieldBipedObject
-        public readonly static BipedObject _ShieldBipedObject_Default = BipedObject.None;
-        public BipedObject ShieldBipedObject { get; set; } = _ShieldBipedObject_Default;
+        public static readonly BipedObject ShieldBipedObjectDefault = BipedObject.None;
+        public BipedObject ShieldBipedObject { get; set; } = ShieldBipedObjectDefault;
         #endregion
         #region Regen
         private readonly Dictionary<BasicStat, Single> _Regen = new Dictionary<BasicStat, Single>();
@@ -258,8 +258,8 @@ namespace Mutagen.Bethesda.Skyrim
         public Single UnarmedReach { get; set; } = default;
         #endregion
         #region BodyBipedObject
-        public readonly static BipedObject _BodyBipedObject_Default = BipedObject.None;
-        public BipedObject BodyBipedObject { get; set; } = _BodyBipedObject_Default;
+        public static readonly BipedObject BodyBipedObjectDefault = BipedObject.None;
+        public BipedObject BodyBipedObject { get; set; } = BodyBipedObjectDefault;
         #endregion
         #region AimAngleTolerance
         public Single AimAngleTolerance { get; set; } = default;
@@ -689,6 +689,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem Description,
                 TItem ActorEffect,
@@ -767,7 +768,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.Description = Description;
@@ -3616,10 +3618,10 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
+                ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), Noggog.ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
                 ret.Skin = this.Skin.Combine(rhs.Skin);
                 ret.BodyTemplate = this.BodyTemplate.Combine(rhs.BodyTemplate, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.SkillBoost0 = this.SkillBoost0.Combine(rhs.SkillBoost0, (l, r) => l.Combine(r));
                 ret.SkillBoost1 = this.SkillBoost1.Combine(rhs.SkillBoost1, (l, r) => l.Combine(r));
                 ret.SkillBoost2 = this.SkillBoost2.Combine(rhs.SkillBoost2, (l, r) => l.Combine(r));
@@ -3628,10 +3630,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SkillBoost5 = this.SkillBoost5.Combine(rhs.SkillBoost5, (l, r) => l.Combine(r));
                 ret.SkillBoost6 = this.SkillBoost6.Combine(rhs.SkillBoost6, (l, r) => l.Combine(r));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
-                ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
+                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
+                ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Starting = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(ExceptionExt.Combine(this.Starting?.Overall, rhs.Starting?.Overall), ExceptionExt.Combine(this.Starting?.Specific, rhs.Starting?.Specific));
+                ret.Starting = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(Noggog.ExceptionExt.Combine(this.Starting?.Overall, rhs.Starting?.Overall), Noggog.ExceptionExt.Combine(this.Starting?.Specific, rhs.Starting?.Specific));
                 ret.BaseCarryWeight = this.BaseCarryWeight.Combine(rhs.BaseCarryWeight);
                 ret.BaseMass = this.BaseMass.Combine(rhs.BaseMass);
                 ret.AccelerationRate = this.AccelerationRate.Combine(rhs.AccelerationRate);
@@ -3641,7 +3643,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.HairBipedObject = this.HairBipedObject.Combine(rhs.HairBipedObject);
                 ret.InjuredHealthPercent = this.InjuredHealthPercent.Combine(rhs.InjuredHealthPercent);
                 ret.ShieldBipedObject = this.ShieldBipedObject.Combine(rhs.ShieldBipedObject);
-                ret.Regen = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(ExceptionExt.Combine(this.Regen?.Overall, rhs.Regen?.Overall), ExceptionExt.Combine(this.Regen?.Specific, rhs.Regen?.Specific));
+                ret.Regen = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(Noggog.ExceptionExt.Combine(this.Regen?.Overall, rhs.Regen?.Overall), Noggog.ExceptionExt.Combine(this.Regen?.Specific, rhs.Regen?.Specific));
                 ret.UnarmedDamage = this.UnarmedDamage.Combine(rhs.UnarmedDamage);
                 ret.UnarmedReach = this.UnarmedReach.Combine(rhs.UnarmedReach);
                 ret.BodyBipedObject = this.BodyBipedObject.Combine(rhs.BodyBipedObject);
@@ -3650,30 +3652,30 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.AngularAccelerationRate = this.AngularAccelerationRate.Combine(rhs.AngularAccelerationRate);
                 ret.AngularTolerance = this.AngularTolerance.Combine(rhs.AngularTolerance);
                 ret.MountData = this.MountData.Combine(rhs.MountData, (l, r) => l.Combine(r));
-                ret.SkeletalModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.SkeletalModel?.Overall, rhs.SkeletalModel?.Overall), GenderedItem.Combine(this.SkeletalModel?.Specific, rhs.SkeletalModel?.Specific));
-                ret.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.MovementTypeNames?.Overall, rhs.MovementTypeNames?.Overall), ExceptionExt.Combine(this.MovementTypeNames?.Specific, rhs.MovementTypeNames?.Specific));
-                ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
-                ret.DecapitateArmors = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.DecapitateArmors?.Overall, rhs.DecapitateArmors?.Overall), GenderedItem.Combine(this.DecapitateArmors?.Specific, rhs.DecapitateArmors?.Specific));
-                ret.DefaultHairColors = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.DefaultHairColors?.Overall, rhs.DefaultHairColors?.Overall), GenderedItem.Combine(this.DefaultHairColors?.Specific, rhs.DefaultHairColors?.Specific));
+                ret.SkeletalModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.SkeletalModel?.Overall, rhs.SkeletalModel?.Overall), GenderedItem.Combine(this.SkeletalModel?.Specific, rhs.SkeletalModel?.Specific));
+                ret.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MovementTypeNames?.Overall, rhs.MovementTypeNames?.Overall), Noggog.ExceptionExt.Combine(this.MovementTypeNames?.Specific, rhs.MovementTypeNames?.Specific));
+                ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
+                ret.DecapitateArmors = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.DecapitateArmors?.Overall, rhs.DecapitateArmors?.Overall), GenderedItem.Combine(this.DecapitateArmors?.Specific, rhs.DecapitateArmors?.Specific));
+                ret.DefaultHairColors = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.DefaultHairColors?.Overall, rhs.DefaultHairColors?.Overall), GenderedItem.Combine(this.DefaultHairColors?.Specific, rhs.DefaultHairColors?.Specific));
                 ret.NumberOfTintsInList = this.NumberOfTintsInList.Combine(rhs.NumberOfTintsInList);
                 ret.FacegenMainClamp = this.FacegenMainClamp.Combine(rhs.FacegenMainClamp);
                 ret.FacegenFaceClamp = this.FacegenFaceClamp.Combine(rhs.FacegenFaceClamp);
                 ret.AttackRace = this.AttackRace.Combine(rhs.AttackRace);
-                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
-                ret.BodyData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BodyData?.Overall, rhs.BodyData?.Overall), GenderedItem.Combine(this.BodyData?.Specific, rhs.BodyData?.Specific));
-                ret.Hairs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Hairs?.Overall, rhs.Hairs?.Overall), ExceptionExt.Combine(this.Hairs?.Specific, rhs.Hairs?.Specific));
-                ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
+                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), Noggog.ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
+                ret.BodyData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.BodyData?.Overall, rhs.BodyData?.Overall), GenderedItem.Combine(this.BodyData?.Specific, rhs.BodyData?.Specific));
+                ret.Hairs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Hairs?.Overall, rhs.Hairs?.Overall), Noggog.ExceptionExt.Combine(this.Hairs?.Specific, rhs.Hairs?.Specific));
+                ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), Noggog.ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
                 ret.BodyPartData = this.BodyPartData.Combine(rhs.BodyPartData);
-                ret.BehaviorGraph = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BehaviorGraph?.Overall, rhs.BehaviorGraph?.Overall), GenderedItem.Combine(this.BehaviorGraph?.Specific, rhs.BehaviorGraph?.Specific));
+                ret.BehaviorGraph = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.BehaviorGraph?.Overall, rhs.BehaviorGraph?.Overall), GenderedItem.Combine(this.BehaviorGraph?.Specific, rhs.BehaviorGraph?.Specific));
                 ret.MaterialType = this.MaterialType.Combine(rhs.MaterialType);
                 ret.ImpactDataSet = this.ImpactDataSet.Combine(rhs.ImpactDataSet);
                 ret.DecapitationFX = this.DecapitationFX.Combine(rhs.DecapitationFX);
                 ret.OpenLootSound = this.OpenLootSound.Combine(rhs.OpenLootSound);
                 ret.CloseLootSound = this.CloseLootSound.Combine(rhs.CloseLootSound);
-                ret.BipedObjectNames = new MaskItem<Exception?, IEnumerable<KeyValuePair<BipedObject, Exception?>>?>(ExceptionExt.Combine(this.BipedObjectNames?.Overall, rhs.BipedObjectNames?.Overall), ExceptionExt.Combine(this.BipedObjectNames?.Specific, rhs.BipedObjectNames?.Specific));
-                ret.MovementTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceMovementType.ErrorMask?>>?>(ExceptionExt.Combine(this.MovementTypes?.Overall, rhs.MovementTypes?.Overall), ExceptionExt.Combine(this.MovementTypes?.Specific, rhs.MovementTypes?.Specific));
+                ret.BipedObjectNames = new MaskItem<Exception?, IEnumerable<KeyValuePair<BipedObject, Exception?>>?>(Noggog.ExceptionExt.Combine(this.BipedObjectNames?.Overall, rhs.BipedObjectNames?.Overall), Noggog.ExceptionExt.Combine(this.BipedObjectNames?.Specific, rhs.BipedObjectNames?.Specific));
+                ret.MovementTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceMovementType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MovementTypes?.Overall, rhs.MovementTypes?.Overall), Noggog.ExceptionExt.Combine(this.MovementTypes?.Specific, rhs.MovementTypes?.Specific));
                 ret.EquipmentFlags = this.EquipmentFlags.Combine(rhs.EquipmentFlags);
-                ret.EquipmentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.EquipmentSlots?.Overall, rhs.EquipmentSlots?.Overall), ExceptionExt.Combine(this.EquipmentSlots?.Specific, rhs.EquipmentSlots?.Specific));
+                ret.EquipmentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.EquipmentSlots?.Overall, rhs.EquipmentSlots?.Overall), Noggog.ExceptionExt.Combine(this.EquipmentSlots?.Specific, rhs.EquipmentSlots?.Specific));
                 ret.UnarmedEquipSlot = this.UnarmedEquipSlot.Combine(rhs.UnarmedEquipSlot);
                 ret.FaceFxPhonemes = this.FaceFxPhonemes.Combine(rhs.FaceFxPhonemes, (l, r) => l.Combine(r));
                 ret.BaseMovementDefaultWalk = this.BaseMovementDefaultWalk.Combine(rhs.BaseMovementDefaultWalk);
@@ -3682,7 +3684,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.BaseMovementDefaultFly = this.BaseMovementDefaultFly.Combine(rhs.BaseMovementDefaultFly);
                 ret.BaseMovementDefaultSneak = this.BaseMovementDefaultSneak.Combine(rhs.BaseMovementDefaultSneak);
                 ret.BaseMovementDefaultSprint = this.BaseMovementDefaultSprint.Combine(rhs.BaseMovementDefaultSprint);
-                ret.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.HeadData?.Overall, rhs.HeadData?.Overall), GenderedItem.Combine(this.HeadData?.Specific, rhs.HeadData?.Specific));
+                ret.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.HeadData?.Overall, rhs.HeadData?.Overall), GenderedItem.Combine(this.HeadData?.Specific, rhs.HeadData?.Specific));
                 ret.MorphRace = this.MorphRace.Combine(rhs.MorphRace);
                 ret.ArmorRace = this.ArmorRace.Combine(rhs.ArmorRace);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
@@ -4002,12 +4004,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRaceGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -4346,7 +4348,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -4422,6 +4424,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Race Duplicate(
+            this IRaceGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -4454,78 +4467,79 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Description = 7,
-        ActorEffect = 8,
-        Skin = 9,
-        BodyTemplate = 10,
-        Keywords = 11,
-        SkillBoost0 = 12,
-        SkillBoost1 = 13,
-        SkillBoost2 = 14,
-        SkillBoost3 = 15,
-        SkillBoost4 = 16,
-        SkillBoost5 = 17,
-        SkillBoost6 = 18,
-        Unknown = 19,
-        Height = 20,
-        Weight = 21,
-        Flags = 22,
-        Starting = 23,
-        BaseCarryWeight = 24,
-        BaseMass = 25,
-        AccelerationRate = 26,
-        DecelerationRate = 27,
-        Size = 28,
-        HeadBipedObject = 29,
-        HairBipedObject = 30,
-        InjuredHealthPercent = 31,
-        ShieldBipedObject = 32,
-        Regen = 33,
-        UnarmedDamage = 34,
-        UnarmedReach = 35,
-        BodyBipedObject = 36,
-        AimAngleTolerance = 37,
-        FlightRadius = 38,
-        AngularAccelerationRate = 39,
-        AngularTolerance = 40,
-        MountData = 41,
-        SkeletalModel = 42,
-        MovementTypeNames = 43,
-        Voices = 44,
-        DecapitateArmors = 45,
-        DefaultHairColors = 46,
-        NumberOfTintsInList = 47,
-        FacegenMainClamp = 48,
-        FacegenFaceClamp = 49,
-        AttackRace = 50,
-        Attacks = 51,
-        BodyData = 52,
-        Hairs = 53,
-        Eyes = 54,
-        BodyPartData = 55,
-        BehaviorGraph = 56,
-        MaterialType = 57,
-        ImpactDataSet = 58,
-        DecapitationFX = 59,
-        OpenLootSound = 60,
-        CloseLootSound = 61,
-        BipedObjectNames = 62,
-        MovementTypes = 63,
-        EquipmentFlags = 64,
-        EquipmentSlots = 65,
-        UnarmedEquipSlot = 66,
-        FaceFxPhonemes = 67,
-        BaseMovementDefaultWalk = 68,
-        BaseMovementDefaultRun = 69,
-        BaseMovementDefaultSwim = 70,
-        BaseMovementDefaultFly = 71,
-        BaseMovementDefaultSneak = 72,
-        BaseMovementDefaultSprint = 73,
-        HeadData = 74,
-        MorphRace = 75,
-        ArmorRace = 76,
-        DATADataTypeState = 77,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        Description = 8,
+        ActorEffect = 9,
+        Skin = 10,
+        BodyTemplate = 11,
+        Keywords = 12,
+        SkillBoost0 = 13,
+        SkillBoost1 = 14,
+        SkillBoost2 = 15,
+        SkillBoost3 = 16,
+        SkillBoost4 = 17,
+        SkillBoost5 = 18,
+        SkillBoost6 = 19,
+        Unknown = 20,
+        Height = 21,
+        Weight = 22,
+        Flags = 23,
+        Starting = 24,
+        BaseCarryWeight = 25,
+        BaseMass = 26,
+        AccelerationRate = 27,
+        DecelerationRate = 28,
+        Size = 29,
+        HeadBipedObject = 30,
+        HairBipedObject = 31,
+        InjuredHealthPercent = 32,
+        ShieldBipedObject = 33,
+        Regen = 34,
+        UnarmedDamage = 35,
+        UnarmedReach = 36,
+        BodyBipedObject = 37,
+        AimAngleTolerance = 38,
+        FlightRadius = 39,
+        AngularAccelerationRate = 40,
+        AngularTolerance = 41,
+        MountData = 42,
+        SkeletalModel = 43,
+        MovementTypeNames = 44,
+        Voices = 45,
+        DecapitateArmors = 46,
+        DefaultHairColors = 47,
+        NumberOfTintsInList = 48,
+        FacegenMainClamp = 49,
+        FacegenFaceClamp = 50,
+        AttackRace = 51,
+        Attacks = 52,
+        BodyData = 53,
+        Hairs = 54,
+        Eyes = 55,
+        BodyPartData = 56,
+        BehaviorGraph = 57,
+        MaterialType = 58,
+        ImpactDataSet = 59,
+        DecapitationFX = 60,
+        OpenLootSound = 61,
+        CloseLootSound = 62,
+        BipedObjectNames = 63,
+        MovementTypes = 64,
+        EquipmentFlags = 65,
+        EquipmentSlots = 66,
+        UnarmedEquipSlot = 67,
+        FaceFxPhonemes = 68,
+        BaseMovementDefaultWalk = 69,
+        BaseMovementDefaultRun = 70,
+        BaseMovementDefaultSwim = 71,
+        BaseMovementDefaultFly = 72,
+        BaseMovementDefaultSneak = 73,
+        BaseMovementDefaultSprint = 74,
+        HeadData = 75,
+        MorphRace = 76,
+        ArmorRace = 77,
+        DATADataTypeState = 78,
     }
     #endregion
 
@@ -4545,7 +4559,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 72;
 
-        public const ushort FieldCount = 78;
+        public const ushort FieldCount = 79;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -4718,14 +4732,14 @@ namespace Mutagen.Bethesda.Skyrim
             item.AccelerationRate = default;
             item.DecelerationRate = default;
             item.Size = default;
-            item.HeadBipedObject = Race._HeadBipedObject_Default;
-            item.HairBipedObject = Race._HairBipedObject_Default;
+            item.HeadBipedObject = Race.HeadBipedObjectDefault;
+            item.HairBipedObject = Race.HairBipedObjectDefault;
             item.InjuredHealthPercent = default;
-            item.ShieldBipedObject = Race._ShieldBipedObject_Default;
+            item.ShieldBipedObject = Race.ShieldBipedObjectDefault;
             item.Regen.Clear();
             item.UnarmedDamage = default;
             item.UnarmedReach = default;
-            item.BodyBipedObject = Race._BodyBipedObject_Default;
+            item.BodyBipedObject = Race.BodyBipedObjectDefault;
             item.AimAngleTolerance = default;
             item.FlightRadius = default;
             item.AngularAccelerationRate = default;
@@ -5545,8 +5559,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Race_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Race_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Race_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -5563,7 +5579,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Race_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -5571,335 +5587,335 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IRaceGetter? lhs,
             IRaceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ActorEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ActorEffect) ?? true))
             {
                 if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
             {
                 if (!lhs.Skin.Equals(rhs.Skin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BodyTemplate, rhs.BodyTemplate, out var lhsBodyTemplate, out var rhsBodyTemplate, out var isBodyTemplateEqual))
                 {
-                    if (!((BodyTemplateCommon)((IBodyTemplateGetter)lhsBodyTemplate).CommonInstance()!).Equals(lhsBodyTemplate, rhsBodyTemplate, crystal?.GetSubCrystal((int)Race_FieldIndex.BodyTemplate))) return false;
+                    if (!((BodyTemplateCommon)((IBodyTemplateGetter)lhsBodyTemplate).CommonInstance()!).Equals(lhsBodyTemplate, rhsBodyTemplate, equalsMask?.GetSubCrystal((int)Race_FieldIndex.BodyTemplate))) return false;
                 }
                 else if (!isBodyTemplateEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost0, rhs.SkillBoost0, out var lhsSkillBoost0, out var rhsSkillBoost0, out var isSkillBoost0Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost0).CommonInstance()!).Equals(lhsSkillBoost0, rhsSkillBoost0, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost0).CommonInstance()!).Equals(lhsSkillBoost0, rhsSkillBoost0, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0))) return false;
                 }
                 else if (!isSkillBoost0Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost1, rhs.SkillBoost1, out var lhsSkillBoost1, out var rhsSkillBoost1, out var isSkillBoost1Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost1).CommonInstance()!).Equals(lhsSkillBoost1, rhsSkillBoost1, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost1).CommonInstance()!).Equals(lhsSkillBoost1, rhsSkillBoost1, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1))) return false;
                 }
                 else if (!isSkillBoost1Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost2, rhs.SkillBoost2, out var lhsSkillBoost2, out var rhsSkillBoost2, out var isSkillBoost2Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost2).CommonInstance()!).Equals(lhsSkillBoost2, rhsSkillBoost2, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost2).CommonInstance()!).Equals(lhsSkillBoost2, rhsSkillBoost2, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2))) return false;
                 }
                 else if (!isSkillBoost2Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost3, rhs.SkillBoost3, out var lhsSkillBoost3, out var rhsSkillBoost3, out var isSkillBoost3Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost3).CommonInstance()!).Equals(lhsSkillBoost3, rhsSkillBoost3, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost3).CommonInstance()!).Equals(lhsSkillBoost3, rhsSkillBoost3, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3))) return false;
                 }
                 else if (!isSkillBoost3Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost4, rhs.SkillBoost4, out var lhsSkillBoost4, out var rhsSkillBoost4, out var isSkillBoost4Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost4).CommonInstance()!).Equals(lhsSkillBoost4, rhsSkillBoost4, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost4).CommonInstance()!).Equals(lhsSkillBoost4, rhsSkillBoost4, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4))) return false;
                 }
                 else if (!isSkillBoost4Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost5, rhs.SkillBoost5, out var lhsSkillBoost5, out var rhsSkillBoost5, out var isSkillBoost5Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost5).CommonInstance()!).Equals(lhsSkillBoost5, rhsSkillBoost5, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost5).CommonInstance()!).Equals(lhsSkillBoost5, rhsSkillBoost5, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5))) return false;
                 }
                 else if (!isSkillBoost5Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkillBoost6, rhs.SkillBoost6, out var lhsSkillBoost6, out var rhsSkillBoost6, out var isSkillBoost6Equal))
                 {
-                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost6).CommonInstance()!).Equals(lhsSkillBoost6, rhsSkillBoost6, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6))) return false;
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost6).CommonInstance()!).Equals(lhsSkillBoost6, rhsSkillBoost6, equalsMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6))) return false;
                 }
                 else if (!isSkillBoost6Equal) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
             {
                 if (!Equals(lhs.Height, rhs.Height)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
             {
                 if (!Equals(lhs.Weight, rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Starting) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Starting) ?? true))
             {
                 if (!lhs.Starting.SequenceEqualNullable(rhs.Starting)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseCarryWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseCarryWeight) ?? true))
             {
                 if (!lhs.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMass) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMass) ?? true))
             {
                 if (!lhs.BaseMass.EqualsWithin(rhs.BaseMass)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
             {
                 if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
             {
                 if (!lhs.DecelerationRate.EqualsWithin(rhs.DecelerationRate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
             {
                 if (lhs.Size != rhs.Size) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HeadBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HeadBipedObject) ?? true))
             {
                 if (lhs.HeadBipedObject != rhs.HeadBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HairBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HairBipedObject) ?? true))
             {
                 if (lhs.HairBipedObject != rhs.HairBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
             {
                 if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
             {
                 if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Regen) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Regen) ?? true))
             {
                 if (!lhs.Regen.SequenceEqualNullable(rhs.Regen)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedDamage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedDamage) ?? true))
             {
                 if (!lhs.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedReach) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedReach) ?? true))
             {
                 if (!lhs.UnarmedReach.EqualsWithin(rhs.UnarmedReach)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
             {
                 if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
             {
                 if (!lhs.AimAngleTolerance.EqualsWithin(rhs.AimAngleTolerance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
             {
                 if (!lhs.FlightRadius.EqualsWithin(rhs.FlightRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
             {
                 if (!lhs.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
             {
                 if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MountData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MountData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MountData, rhs.MountData, out var lhsMountData, out var rhsMountData, out var isMountDataEqual))
                 {
-                    if (!((MountDataCommon)((IMountDataGetter)lhsMountData).CommonInstance()!).Equals(lhsMountData, rhsMountData, crystal?.GetSubCrystal((int)Race_FieldIndex.MountData))) return false;
+                    if (!((MountDataCommon)((IMountDataGetter)lhsMountData).CommonInstance()!).Equals(lhsMountData, rhsMountData, equalsMask?.GetSubCrystal((int)Race_FieldIndex.MountData))) return false;
                 }
                 else if (!isMountDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
             {
                 if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
             {
                 if (!lhs.MovementTypeNames.SequenceEqualNullable(rhs.MovementTypeNames)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
                 if (!Equals(lhs.Voices, rhs.Voices)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
             {
                 if (!Equals(lhs.DecapitateArmors, rhs.DecapitateArmors)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
             {
                 if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
             {
                 if (lhs.NumberOfTintsInList != rhs.NumberOfTintsInList) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
             {
                 if (!lhs.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
             {
                 if (!lhs.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
             {
                 if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Attacks)))) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.Attacks)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
                 if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
             {
                 if (!lhs.Hairs.SequenceEqualNullable(rhs.Hairs)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
             {
                 if (!lhs.Eyes.SequenceEqualNullable(rhs.Eyes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
             {
                 if (!lhs.BodyPartData.Equals(rhs.BodyPartData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
             {
                 if (!Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MaterialType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MaterialType) ?? true))
             {
                 if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
             {
                 if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecapitationFX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitationFX) ?? true))
             {
                 if (!lhs.DecapitationFX.Equals(rhs.DecapitationFX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OpenLootSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.OpenLootSound) ?? true))
             {
                 if (!lhs.OpenLootSound.Equals(rhs.OpenLootSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.CloseLootSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.CloseLootSound) ?? true))
             {
                 if (!lhs.CloseLootSound.Equals(rhs.CloseLootSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BipedObjectNames) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BipedObjectNames) ?? true))
             {
                 if (!lhs.BipedObjectNames.SequenceEqualNullable(rhs.BipedObjectNames)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypes) ?? true))
             {
-                if (!lhs.MovementTypes.SequenceEqual(rhs.MovementTypes, (l, r) => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.MovementTypes)))) return false;
+                if (!lhs.MovementTypes.SequenceEqual(rhs.MovementTypes, (l, r) => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.MovementTypes)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
             {
                 if (lhs.EquipmentFlags != rhs.EquipmentFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
             {
                 if (!lhs.EquipmentSlots.SequenceEqualNullable(rhs.EquipmentSlots)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedEquipSlot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedEquipSlot) ?? true))
             {
                 if (!lhs.UnarmedEquipSlot.Equals(rhs.UnarmedEquipSlot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes, out var lhsFaceFxPhonemes, out var rhsFaceFxPhonemes, out var isFaceFxPhonemesEqual))
                 {
-                    if (!((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)lhsFaceFxPhonemes).CommonInstance()!).Equals(lhsFaceFxPhonemes, rhsFaceFxPhonemes, crystal?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes))) return false;
+                    if (!((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)lhsFaceFxPhonemes).CommonInstance()!).Equals(lhsFaceFxPhonemes, rhsFaceFxPhonemes, equalsMask?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes))) return false;
                 }
                 else if (!isFaceFxPhonemesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultWalk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultWalk) ?? true))
             {
                 if (!lhs.BaseMovementDefaultWalk.Equals(rhs.BaseMovementDefaultWalk)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultRun) ?? true))
             {
                 if (!lhs.BaseMovementDefaultRun.Equals(rhs.BaseMovementDefaultRun)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
             {
                 if (!lhs.BaseMovementDefaultSwim.Equals(rhs.BaseMovementDefaultSwim)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
             {
                 if (!lhs.BaseMovementDefaultFly.Equals(rhs.BaseMovementDefaultFly)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
             {
                 if (!lhs.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSprint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSprint) ?? true))
             {
                 if (!lhs.BaseMovementDefaultSprint.Equals(rhs.BaseMovementDefaultSprint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
             {
                 if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
             {
                 if (!lhs.MorphRace.Equals(rhs.MorphRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
             {
                 if (!lhs.ArmorRace.Equals(rhs.ArmorRace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -5909,23 +5925,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRaceGetter?)lhs,
                 rhs: rhs as IRaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IRaceGetter?)lhs,
                 rhs: rhs as IRaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IRaceGetter item)
@@ -9064,12 +9080,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRaceGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);

@@ -119,12 +119,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPatrolGetter rhs) return false;
-            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPatrolGetter? obj)
         {
-            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).GetHashCode(this);
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Idle = this.Idle.Combine(rhs.Idle);
                 ret.SCHR = this.SCHR.Combine(rhs.SCHR);
                 ret.SCTX = this.SCTX.Combine(rhs.SCTX);
-                ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
+                ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), Noggog.ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -732,7 +732,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PatrolCommon)((IPatrolGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1009,8 +1009,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ret.IdleTime = item.IdleTime.EqualsWithin(rhs.IdleTime);
             ret.Idle = item.Idle.Equals(rhs.Idle);
-            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
-            ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
+            ret.SCHR = MemorySliceExt.SequenceEqual(item.SCHR, rhs.SCHR);
+            ret.SCTX = MemorySliceExt.SequenceEqual(item.SCTX, rhs.SCTX);
             ret.Topics = item.Topics.CollectionEqualsHelper(
                 rhs.Topics,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1097,28 +1097,28 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IPatrolGetter? lhs,
             IPatrolGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.IdleTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Patrol_FieldIndex.IdleTime) ?? true))
             {
                 if (!lhs.IdleTime.EqualsWithin(rhs.IdleTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.Idle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Patrol_FieldIndex.Idle) ?? true))
             {
                 if (!lhs.Idle.Equals(rhs.Idle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCHR, rhs.SCHR)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.SCTX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCTX) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCTX, rhs.SCTX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.Topics) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Patrol_FieldIndex.Topics) ?? true))
             {
-                if (!lhs.Topics.SequenceEqual(rhs.Topics, (l, r) => ((ATopicReferenceCommon)((IATopicReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Patrol_FieldIndex.Topics)))) return false;
+                if (!lhs.Topics.SequenceEqual(rhs.Topics, (l, r) => ((ATopicReferenceCommon)((IATopicReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Patrol_FieldIndex.Topics)))) return false;
             }
             return true;
         }
@@ -1686,12 +1686,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IPatrolGetter rhs) return false;
-            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPatrolGetter? obj)
         {
-            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).GetHashCode(this);

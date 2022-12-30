@@ -79,12 +79,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAObjectModPropertyGetter<T> rhs) return false;
-            return ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAObjectModPropertyGetter<T>? obj)
         {
-            return ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: null);
+                equalsMask: null);
         }
 
         public static bool Equals<T>(
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask.GetCrystal());
+                equalsMask: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T>(
@@ -562,14 +562,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAObjectModPropertyGetter<T>? lhs,
             IAObjectModPropertyGetter<T>? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)AObjectModProperty_FieldIndex.Property) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModProperty_FieldIndex.Property) ?? true))
             {
                 if (!EqualityComparer<T>.Default.Equals(lhs.Property, rhs.Property)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModProperty_FieldIndex.Step) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModProperty_FieldIndex.Step) ?? true))
             {
                 if (!lhs.Step.EqualsWithin(rhs.Step)) return false;
             }
@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public T Property => EnumExt<T>.Convert(_structData.Span.Slice(0x0, 0x1)[0]);
+        public T Property => Enums<T>.Convert(_structData.Span.Slice(0x0, 0x1)[0]);
         public Single Step => _structData.Slice(0x1, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -871,12 +871,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAObjectModPropertyGetter<T> rhs) return false;
-            return ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAObjectModPropertyGetter<T>? obj)
         {
-            return ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AObjectModPropertyCommon<T>)((IAObjectModPropertyGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);

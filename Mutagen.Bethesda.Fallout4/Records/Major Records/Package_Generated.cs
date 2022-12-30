@@ -242,12 +242,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPackageEventGetter? IPackageGetter.OnChange => this.OnChange;
         #endregion
-        #region PKDTDataTypeState
-        public Package.PKDTDataType PKDTDataTypeState { get; set; } = default;
-        #endregion
-        #region PSDTDataTypeState
-        public Package.PSDTDataType PSDTDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -300,8 +294,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OnBegin = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
                 this.OnEnd = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
                 this.OnChange = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
-                this.PKDTDataTypeState = initialValue;
-                this.PSDTDataTypeState = initialValue;
             }
 
             public Mask(
@@ -311,6 +303,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Flags,
                 TItem Type,
@@ -337,16 +330,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ProcedureTree,
                 TItem OnBegin,
                 TItem OnEnd,
-                TItem OnChange,
-                TItem PKDTDataTypeState,
-                TItem PSDTDataTypeState)
+                TItem OnChange)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, PackageAdapter.Mask<TItem>?>(VirtualMachineAdapter, new PackageAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Flags = Flags;
@@ -375,8 +367,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OnBegin = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnBegin, new PackageEvent.Mask<TItem>(OnBegin));
                 this.OnEnd = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnEnd, new PackageEvent.Mask<TItem>(OnEnd));
                 this.OnChange = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnChange, new PackageEvent.Mask<TItem>(OnChange));
-                this.PKDTDataTypeState = PKDTDataTypeState;
-                this.PSDTDataTypeState = PSDTDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -415,8 +405,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnBegin { get; set; }
             public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnEnd { get; set; }
             public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnChange { get; set; }
-            public TItem PKDTDataTypeState;
-            public TItem PSDTDataTypeState;
             #endregion
 
             #region Equals
@@ -457,8 +445,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.OnBegin, rhs.OnBegin)) return false;
                 if (!object.Equals(this.OnEnd, rhs.OnEnd)) return false;
                 if (!object.Equals(this.OnChange, rhs.OnChange)) return false;
-                if (!object.Equals(this.PKDTDataTypeState, rhs.PKDTDataTypeState)) return false;
-                if (!object.Equals(this.PSDTDataTypeState, rhs.PSDTDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -491,8 +477,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.OnBegin);
                 hash.Add(this.OnEnd);
                 hash.Add(this.OnChange);
-                hash.Add(this.PKDTDataTypeState);
-                hash.Add(this.PSDTDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -586,8 +570,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.OnChange.Overall)) return false;
                     if (this.OnChange.Specific != null && !this.OnChange.Specific.All(eval)) return false;
                 }
-                if (!eval(this.PKDTDataTypeState)) return false;
-                if (!eval(this.PSDTDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -679,8 +661,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.OnChange.Overall)) return true;
                     if (this.OnChange.Specific != null && this.OnChange.Specific.Any(eval)) return true;
                 }
-                if (eval(this.PKDTDataTypeState)) return true;
-                if (eval(this.PSDTDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -763,8 +743,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.OnBegin = this.OnBegin == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnBegin.Overall), this.OnBegin.Specific?.Translate(eval));
                 obj.OnEnd = this.OnEnd == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnEnd.Overall), this.OnEnd.Specific?.Translate(eval));
                 obj.OnChange = this.OnChange == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnChange.Overall), this.OnChange.Specific?.Translate(eval));
-                obj.PKDTDataTypeState = eval(this.PKDTDataTypeState);
-                obj.PSDTDataTypeState = eval(this.PSDTDataTypeState);
             }
             #endregion
 
@@ -954,14 +932,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         OnChange?.Print(sb);
                     }
-                    if (printMask?.PKDTDataTypeState ?? true)
-                    {
-                        sb.AppendItem(PKDTDataTypeState, "PKDTDataTypeState");
-                    }
-                    if (printMask?.PSDTDataTypeState ?? true)
-                    {
-                        sb.AppendItem(PSDTDataTypeState, "PSDTDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1000,8 +970,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnBegin;
             public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnEnd;
             public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnChange;
-            public Exception? PKDTDataTypeState;
-            public Exception? PSDTDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1064,10 +1032,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return OnEnd;
                     case Package_FieldIndex.OnChange:
                         return OnChange;
-                    case Package_FieldIndex.PKDTDataTypeState:
-                        return PKDTDataTypeState;
-                    case Package_FieldIndex.PSDTDataTypeState:
-                        return PSDTDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1158,12 +1122,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Package_FieldIndex.OnChange:
                         this.OnChange = new MaskItem<Exception?, PackageEvent.ErrorMask?>(ex, null);
-                        break;
-                    case Package_FieldIndex.PKDTDataTypeState:
-                        this.PKDTDataTypeState = ex;
-                        break;
-                    case Package_FieldIndex.PSDTDataTypeState:
-                        this.PSDTDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1257,12 +1215,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Package_FieldIndex.OnChange:
                         this.OnChange = (MaskItem<Exception?, PackageEvent.ErrorMask?>?)obj;
                         break;
-                    case Package_FieldIndex.PKDTDataTypeState:
-                        this.PKDTDataTypeState = (Exception?)obj;
-                        break;
-                    case Package_FieldIndex.PSDTDataTypeState:
-                        this.PSDTDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1299,8 +1251,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (OnBegin != null) return true;
                 if (OnEnd != null) return true;
                 if (OnChange != null) return true;
-                if (PKDTDataTypeState != null) return true;
-                if (PSDTDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1461,12 +1411,6 @@ namespace Mutagen.Bethesda.Fallout4
                 OnBegin?.Print(sb);
                 OnEnd?.Print(sb);
                 OnChange?.Print(sb);
-                {
-                    sb.AppendItem(PKDTDataTypeState, "PKDTDataTypeState");
-                }
-                {
-                    sb.AppendItem(PSDTDataTypeState, "PSDTDataTypeState");
-                }
             }
             #endregion
 
@@ -1490,20 +1434,18 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ScheduleMinute = this.ScheduleMinute.Combine(rhs.ScheduleMinute);
                 ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
                 ret.ScheduleDurationInMinutes = this.ScheduleDurationInMinutes.Combine(rhs.ScheduleDurationInMinutes);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
                 ret.OwnerQuest = this.OwnerQuest.Combine(rhs.OwnerQuest);
                 ret.PackageTemplate = this.PackageTemplate.Combine(rhs.PackageTemplate);
                 ret.DataInputVersion = this.DataInputVersion.Combine(rhs.DataInputVersion);
-                ret.Data = new MaskItem<Exception?, IEnumerable<MaskItemIndexed<SByte, Exception?, APackageData.ErrorMask?>>?>(ExceptionExt.Combine(this.Data?.Overall, rhs.Data?.Overall), ExceptionExt.Combine(this.Data?.Specific, rhs.Data?.Specific));
+                ret.Data = new MaskItem<Exception?, IEnumerable<MaskItemIndexed<SByte, Exception?, APackageData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Data?.Overall, rhs.Data?.Overall), Noggog.ExceptionExt.Combine(this.Data?.Specific, rhs.Data?.Specific));
                 ret.XnamMarker = this.XnamMarker.Combine(rhs.XnamMarker);
-                ret.ProcedureTree = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PackageBranch.ErrorMask?>>?>(ExceptionExt.Combine(this.ProcedureTree?.Overall, rhs.ProcedureTree?.Overall), ExceptionExt.Combine(this.ProcedureTree?.Specific, rhs.ProcedureTree?.Specific));
+                ret.ProcedureTree = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PackageBranch.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ProcedureTree?.Overall, rhs.ProcedureTree?.Overall), Noggog.ExceptionExt.Combine(this.ProcedureTree?.Specific, rhs.ProcedureTree?.Specific));
                 ret.OnBegin = this.OnBegin.Combine(rhs.OnBegin, (l, r) => l.Combine(r));
                 ret.OnEnd = this.OnEnd.Combine(rhs.OnEnd, (l, r) => l.Combine(r));
                 ret.OnChange = this.OnChange.Combine(rhs.OnChange, (l, r) => l.Combine(r));
-                ret.PKDTDataTypeState = this.PKDTDataTypeState.Combine(rhs.PKDTDataTypeState);
-                ret.PSDTDataTypeState = this.PSDTDataTypeState.Combine(rhs.PSDTDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1553,8 +1495,6 @@ namespace Mutagen.Bethesda.Fallout4
             public PackageEvent.TranslationMask? OnBegin;
             public PackageEvent.TranslationMask? OnEnd;
             public PackageEvent.TranslationMask? OnChange;
-            public bool PKDTDataTypeState;
-            public bool PSDTDataTypeState;
             #endregion
 
             #region Ctors
@@ -1582,8 +1522,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PackageTemplate = defaultOn;
                 this.DataInputVersion = defaultOn;
                 this.XnamMarker = defaultOn;
-                this.PKDTDataTypeState = defaultOn;
-                this.PSDTDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1618,8 +1556,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((OnBegin != null ? OnBegin.OnOverall : DefaultOn, OnBegin?.GetCrystal()));
                 ret.Add((OnEnd != null ? OnEnd.OnOverall : DefaultOn, OnEnd?.GetCrystal()));
                 ret.Add((OnChange != null ? OnChange.OnOverall : DefaultOn, OnChange?.GetCrystal()));
-                ret.Add((PKDTDataTypeState, null));
-                ret.Add((PSDTDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1676,14 +1612,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IPackage);
 
-        [Flags]
-        public enum PKDTDataType
-        {
-        }
-        [Flags]
-        public enum PSDTDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1692,12 +1620,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPackageGetter rhs) return false;
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageGetter? obj)
         {
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageCommon)((IPackageGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1795,8 +1723,6 @@ namespace Mutagen.Bethesda.Fallout4
         new PackageEvent? OnBegin { get; set; }
         new PackageEvent? OnEnd { get; set; }
         new PackageEvent? OnChange { get; set; }
-        new Package.PKDTDataType PKDTDataTypeState { get; set; }
-        new Package.PSDTDataType PSDTDataTypeState { get; set; }
     }
 
     public partial interface IPackageInternal :
@@ -1849,8 +1775,6 @@ namespace Mutagen.Bethesda.Fallout4
         IPackageEventGetter? OnBegin { get; }
         IPackageEventGetter? OnEnd { get; }
         IPackageEventGetter? OnChange { get; }
-        Package.PKDTDataType PKDTDataTypeState { get; }
-        Package.PSDTDataType PSDTDataTypeState { get; }
 
     }
 
@@ -1907,7 +1831,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PackageCommon)((IPackageGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1983,6 +1907,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Package Duplicate(
+            this IPackageGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((PackageCommon)((IPackageGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2015,35 +1950,34 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Flags = 7,
-        Type = 8,
-        InterruptOverride = 9,
-        PreferredSpeed = 10,
-        Unknown = 11,
-        InteruptFlags = 12,
-        Unknown2 = 13,
-        ScheduleMonth = 14,
-        ScheduleDayOfWeek = 15,
-        ScheduleDate = 16,
-        ScheduleHour = 17,
-        ScheduleMinute = 18,
-        Unknown3 = 19,
-        ScheduleDurationInMinutes = 20,
-        Conditions = 21,
-        IdleAnimations = 22,
-        CombatStyle = 23,
-        OwnerQuest = 24,
-        PackageTemplate = 25,
-        DataInputVersion = 26,
-        Data = 27,
-        XnamMarker = 28,
-        ProcedureTree = 29,
-        OnBegin = 30,
-        OnEnd = 31,
-        OnChange = 32,
-        PKDTDataTypeState = 33,
-        PSDTDataTypeState = 34,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Flags = 8,
+        Type = 9,
+        InterruptOverride = 10,
+        PreferredSpeed = 11,
+        Unknown = 12,
+        InteruptFlags = 13,
+        Unknown2 = 14,
+        ScheduleMonth = 15,
+        ScheduleDayOfWeek = 16,
+        ScheduleDate = 17,
+        ScheduleHour = 18,
+        ScheduleMinute = 19,
+        Unknown3 = 20,
+        ScheduleDurationInMinutes = 21,
+        Conditions = 22,
+        IdleAnimations = 23,
+        CombatStyle = 24,
+        OwnerQuest = 25,
+        PackageTemplate = 26,
+        DataInputVersion = 27,
+        Data = 28,
+        XnamMarker = 29,
+        ProcedureTree = 30,
+        OnBegin = 31,
+        OnEnd = 32,
+        OnChange = 33,
     }
     #endregion
 
@@ -2061,9 +1995,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "04e6122f-851d-4177-afc4-9f645560c389";
 
-        public const ushort AdditionalFieldCount = 29;
+        public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 35;
+        public const ushort FieldCount = 34;
 
         public static readonly Type MaskType = typeof(Package.Mask<>);
 
@@ -2187,13 +2121,11 @@ namespace Mutagen.Bethesda.Fallout4
             item.PackageTemplate.Clear();
             item.DataInputVersion = default;
             item.Data.Clear();
-            item.XnamMarker = new byte[0];
+            item.XnamMarker = Array.Empty<byte>();
             item.ProcedureTree.Clear();
             item.OnBegin = null;
             item.OnEnd = null;
             item.OnChange = null;
-            item.PKDTDataTypeState = default;
-            item.PSDTDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2217,6 +2149,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.CombatStyle.Relink(mapping);
             obj.OwnerQuest.Relink(mapping);
             obj.PackageTemplate.Relink(mapping);
+            obj.Data.RemapLinks(mapping);
             obj.ProcedureTree.RemapLinks(mapping);
             obj.OnBegin?.RemapLinks(mapping);
             obj.OnEnd?.RemapLinks(mapping);
@@ -2345,8 +2278,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.OnChange,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PKDTDataTypeState = item.PKDTDataTypeState == rhs.PKDTDataTypeState;
-            ret.PSDTDataTypeState = item.PSDTDataTypeState == rhs.PSDTDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2540,14 +2471,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 OnChangeItem?.Print(sb, "OnChange");
             }
-            if (printMask?.PKDTDataTypeState ?? true)
-            {
-                sb.AppendItem(item.PKDTDataTypeState, "PKDTDataTypeState");
-            }
-            if (printMask?.PSDTDataTypeState ?? true)
-            {
-                sb.AppendItem(item.PSDTDataTypeState, "PSDTDataTypeState");
-            }
         }
         
         public static Package_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2566,8 +2489,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Package_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Package_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Package_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2584,7 +2509,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Package_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2592,145 +2517,137 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPackageGetter? lhs,
             IPackageGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((PackageAdapterCommon)((IPackageAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Package_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((PackageAdapterCommon)((IPackageAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Package_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.InterruptOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.InterruptOverride) ?? true))
             {
                 if (lhs.InterruptOverride != rhs.InterruptOverride) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PreferredSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.PreferredSpeed) ?? true))
             {
                 if (lhs.PreferredSpeed != rhs.PreferredSpeed) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.InteruptFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.InteruptFlags) ?? true))
             {
                 if (lhs.InteruptFlags != rhs.InteruptFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMonth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMonth) ?? true))
             {
                 if (lhs.ScheduleMonth != rhs.ScheduleMonth) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDayOfWeek) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDayOfWeek) ?? true))
             {
                 if (lhs.ScheduleDayOfWeek != rhs.ScheduleDayOfWeek) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDate) ?? true))
             {
                 if (lhs.ScheduleDate != rhs.ScheduleDate) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleHour) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleHour) ?? true))
             {
                 if (lhs.ScheduleHour != rhs.ScheduleHour) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMinute) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMinute) ?? true))
             {
                 if (lhs.ScheduleMinute != rhs.ScheduleMinute) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unknown3) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDurationInMinutes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDurationInMinutes) ?? true))
             {
                 if (lhs.ScheduleDurationInMinutes != rhs.ScheduleDurationInMinutes) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Package_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.IdleAnimations) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.IdleAnimations) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.IdleAnimations, rhs.IdleAnimations, out var lhsIdleAnimations, out var rhsIdleAnimations, out var isIdleAnimationsEqual))
                 {
-                    if (!((PackageIdlesCommon)((IPackageIdlesGetter)lhsIdleAnimations).CommonInstance()!).Equals(lhsIdleAnimations, rhsIdleAnimations, crystal?.GetSubCrystal((int)Package_FieldIndex.IdleAnimations))) return false;
+                    if (!((PackageIdlesCommon)((IPackageIdlesGetter)lhsIdleAnimations).CommonInstance()!).Equals(lhsIdleAnimations, rhsIdleAnimations, equalsMask?.GetSubCrystal((int)Package_FieldIndex.IdleAnimations))) return false;
                 }
                 else if (!isIdleAnimationsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
             {
                 if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
             {
                 if (!lhs.OwnerQuest.Equals(rhs.OwnerQuest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
             {
                 if (!lhs.PackageTemplate.Equals(rhs.PackageTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.DataInputVersion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.DataInputVersion) ?? true))
             {
                 if (lhs.DataInputVersion != rhs.DataInputVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Data) ?? true))
             {
                 if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.XnamMarker) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.XnamMarker) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.XnamMarker.Span, rhs.XnamMarker.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ProcedureTree) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ProcedureTree) ?? true))
             {
-                if (!lhs.ProcedureTree.SequenceEqual(rhs.ProcedureTree, (l, r) => ((PackageBranchCommon)((IPackageBranchGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Package_FieldIndex.ProcedureTree)))) return false;
+                if (!lhs.ProcedureTree.SequenceEqual(rhs.ProcedureTree, (l, r) => ((PackageBranchCommon)((IPackageBranchGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Package_FieldIndex.ProcedureTree)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnBegin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OnBegin) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OnBegin, rhs.OnBegin, out var lhsOnBegin, out var rhsOnBegin, out var isOnBeginEqual))
                 {
-                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnBegin).CommonInstance()!).Equals(lhsOnBegin, rhsOnBegin, crystal?.GetSubCrystal((int)Package_FieldIndex.OnBegin))) return false;
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnBegin).CommonInstance()!).Equals(lhsOnBegin, rhsOnBegin, equalsMask?.GetSubCrystal((int)Package_FieldIndex.OnBegin))) return false;
                 }
                 else if (!isOnBeginEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OnEnd) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OnEnd, rhs.OnEnd, out var lhsOnEnd, out var rhsOnEnd, out var isOnEndEqual))
                 {
-                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnEnd).CommonInstance()!).Equals(lhsOnEnd, rhsOnEnd, crystal?.GetSubCrystal((int)Package_FieldIndex.OnEnd))) return false;
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnEnd).CommonInstance()!).Equals(lhsOnEnd, rhsOnEnd, equalsMask?.GetSubCrystal((int)Package_FieldIndex.OnEnd))) return false;
                 }
                 else if (!isOnEndEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnChange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OnChange) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OnChange, rhs.OnChange, out var lhsOnChange, out var rhsOnChange, out var isOnChangeEqual))
                 {
-                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnChange).CommonInstance()!).Equals(lhsOnChange, rhsOnChange, crystal?.GetSubCrystal((int)Package_FieldIndex.OnChange))) return false;
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnChange).CommonInstance()!).Equals(lhsOnChange, rhsOnChange, equalsMask?.GetSubCrystal((int)Package_FieldIndex.OnChange))) return false;
                 }
                 else if (!isOnChangeEqual) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PKDTDataTypeState) ?? true))
-            {
-                if (lhs.PKDTDataTypeState != rhs.PKDTDataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PSDTDataTypeState) ?? true))
-            {
-                if (lhs.PSDTDataTypeState != rhs.PSDTDataTypeState) return false;
             }
             return true;
         }
@@ -2738,23 +2655,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackageGetter?)lhs,
                 rhs: rhs as IPackageGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPackageGetter?)lhs,
                 rhs: rhs as IPackageGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPackageGetter item)
@@ -2802,8 +2719,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(OnChangeitem);
             }
-            hash.Add(item.PKDTDataTypeState);
-            hash.Add(item.PSDTDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3231,14 +3146,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PKDTDataTypeState) ?? true))
-            {
-                item.PKDTDataTypeState = rhs.PKDTDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PSDTDataTypeState) ?? true))
-            {
-                item.PSDTDataTypeState = rhs.PSDTDataTypeState;
             }
         }
         
@@ -3833,7 +3740,6 @@ namespace Mutagen.Bethesda.Fallout4
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         private RangeInt32? _PKDTLocation;
-        public Package.PKDTDataType PKDTDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _PKDTLocation!.Value.Min;
         private bool _Flags_IsSet => _PKDTLocation.HasValue;
@@ -3870,7 +3776,6 @@ namespace Mutagen.Bethesda.Fallout4
         public UInt16 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown2Location, 2)) : default;
         #endregion
         private RangeInt32? _PSDTLocation;
-        public Package.PSDTDataType PSDTDataTypeState { get; private set; }
         #region ScheduleMonth
         private int _ScheduleMonthLocation => _PSDTLocation!.Value.Min;
         private bool _ScheduleMonth_IsSet => _PSDTLocation.HasValue;
@@ -4143,12 +4048,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPackageGetter rhs) return false;
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPackageGetter? obj)
         {
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PackageCommon)((IPackageGetter)this).CommonInstance()!).GetHashCode(this);

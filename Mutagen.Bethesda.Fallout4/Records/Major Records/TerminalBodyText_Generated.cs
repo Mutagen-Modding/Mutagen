@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITerminalBodyTextGetter rhs) return false;
-            return ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITerminalBodyTextGetter? obj)
         {
-            return ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)this).CommonInstance()!).GetHashCode(this);
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Text = this.Text.Combine(rhs.Text);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -945,16 +945,16 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ITerminalBodyTextGetter? lhs,
             ITerminalBodyTextGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)TerminalBodyText_FieldIndex.Text) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalBodyText_FieldIndex.Text) ?? true))
             {
                 if (!object.Equals(lhs.Text, rhs.Text)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TerminalBodyText_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TerminalBodyText_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)TerminalBodyText_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TerminalBodyText_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1385,12 +1385,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITerminalBodyTextGetter rhs) return false;
-            return ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITerminalBodyTextGetter? obj)
         {
-            return ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TerminalBodyTextCommon)((ITerminalBodyTextGetter)this).CommonInstance()!).GetHashCode(this);

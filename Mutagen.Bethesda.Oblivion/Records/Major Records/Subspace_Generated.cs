@@ -380,12 +380,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ISubspaceGetter rhs) return false;
-            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISubspaceGetter? obj)
         {
-            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -604,6 +604,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Subspace Duplicate(
+            this ISubspaceGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -892,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Subspace_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -909,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Subspace_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -917,11 +928,11 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ISubspaceGetter? lhs,
             ISubspaceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Subspace_FieldIndex.Point) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Subspace_FieldIndex.Point) ?? true))
             {
                 if (!lhs.Point.Equals(rhs.Point)) return false;
             }
@@ -931,23 +942,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISubspaceGetter?)lhs,
                 rhs: rhs as ISubspaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISubspaceGetter?)lhs,
                 rhs: rhs as ISubspaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISubspaceGetter item)
@@ -1490,12 +1501,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ISubspaceGetter rhs) return false;
-            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISubspaceGetter? obj)
         {
-            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).GetHashCode(this);

@@ -639,12 +639,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Weapon.MeleeSpeeds? IWeaponGetter.MeleeSpeed => this.MeleeSpeed;
         #endregion
-        #region DNAMDataTypeState
-        public Weapon.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
-        #region CRDTDataTypeState
-        public Weapon.CRDTDataType CRDTDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -741,8 +735,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>());
                 this.Filter = initialValue;
                 this.MeleeSpeed = initialValue;
-                this.DNAMDataTypeState = initialValue;
-                this.CRDTDataTypeState = initialValue;
             }
 
             public Mask(
@@ -752,6 +744,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -822,16 +815,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Template,
                 TItem DamageTypes,
                 TItem Filter,
-                TItem MeleeSpeed,
-                TItem DNAMDataTypeState,
-                TItem CRDTDataTypeState)
+                TItem MeleeSpeed)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -904,8 +896,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>(DamageTypes, Enumerable.Empty<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>());
                 this.Filter = Filter;
                 this.MeleeSpeed = MeleeSpeed;
-                this.DNAMDataTypeState = DNAMDataTypeState;
-                this.CRDTDataTypeState = CRDTDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -988,8 +978,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>? DamageTypes;
             public TItem Filter;
             public TItem MeleeSpeed;
-            public TItem DNAMDataTypeState;
-            public TItem CRDTDataTypeState;
             #endregion
 
             #region Equals
@@ -1074,8 +1062,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.DamageTypes, rhs.DamageTypes)) return false;
                 if (!object.Equals(this.Filter, rhs.Filter)) return false;
                 if (!object.Equals(this.MeleeSpeed, rhs.MeleeSpeed)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
-                if (!object.Equals(this.CRDTDataTypeState, rhs.CRDTDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1152,8 +1138,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.DamageTypes);
                 hash.Add(this.Filter);
                 hash.Add(this.MeleeSpeed);
-                hash.Add(this.DNAMDataTypeState);
-                hash.Add(this.CRDTDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1305,8 +1289,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (!eval(this.Filter)) return false;
                 if (!eval(this.MeleeSpeed)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
-                if (!eval(this.CRDTDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -1456,8 +1438,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (eval(this.Filter)) return true;
                 if (eval(this.MeleeSpeed)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
-                if (eval(this.CRDTDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1598,8 +1578,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 obj.Filter = eval(this.Filter);
                 obj.MeleeSpeed = eval(this.MeleeSpeed);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
-                obj.CRDTDataTypeState = eval(this.CRDTDataTypeState);
             }
             #endregion
 
@@ -1966,14 +1944,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(MeleeSpeed, "MeleeSpeed");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
-                    if (printMask?.CRDTDataTypeState ?? true)
-                    {
-                        sb.AppendItem(CRDTDataTypeState, "CRDTDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -2056,8 +2026,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>? DamageTypes;
             public Exception? Filter;
             public Exception? MeleeSpeed;
-            public Exception? DNAMDataTypeState;
-            public Exception? CRDTDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -2208,10 +2176,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Filter;
                     case Weapon_FieldIndex.MeleeSpeed:
                         return MeleeSpeed;
-                    case Weapon_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
-                    case Weapon_FieldIndex.CRDTDataTypeState:
-                        return CRDTDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -2434,12 +2398,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Weapon_FieldIndex.MeleeSpeed:
                         this.MeleeSpeed = ex;
-                        break;
-                    case Weapon_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
-                        break;
-                    case Weapon_FieldIndex.CRDTDataTypeState:
-                        this.CRDTDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -2665,12 +2623,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Weapon_FieldIndex.MeleeSpeed:
                         this.MeleeSpeed = (Exception?)obj;
                         break;
-                    case Weapon_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
-                    case Weapon_FieldIndex.CRDTDataTypeState:
-                        this.CRDTDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -2751,8 +2703,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (DamageTypes != null) return true;
                 if (Filter != null) return true;
                 if (MeleeSpeed != null) return true;
-                if (DNAMDataTypeState != null) return true;
-                if (CRDTDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -3042,12 +2992,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(MeleeSpeed, "MeleeSpeed");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
-                {
-                    sb.AppendItem(CRDTDataTypeState, "CRDTDataTypeState");
-                }
             }
             #endregion
 
@@ -3071,11 +3015,11 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AlternateBlockMaterial = this.AlternateBlockMaterial.Combine(rhs.AlternateBlockMaterial);
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.InstanceNaming = this.InstanceNaming.Combine(rhs.InstanceNaming);
-                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
-                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
                 ret.EmbeddedWeaponMod = this.EmbeddedWeaponMod.Combine(rhs.EmbeddedWeaponMod);
                 ret.FirstPersonModel = this.FirstPersonModel.Combine(rhs.FirstPersonModel, (l, r) => l.Combine(r));
                 ret.MO4F = this.MO4F.Combine(rhs.MO4F);
@@ -3124,11 +3068,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.AimModel = this.AimModel.Combine(rhs.AimModel);
                 ret.Zoom = this.Zoom.Combine(rhs.Zoom);
                 ret.Template = this.Template.Combine(rhs.Template);
-                ret.DamageTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>(ExceptionExt.Combine(this.DamageTypes?.Overall, rhs.DamageTypes?.Overall), ExceptionExt.Combine(this.DamageTypes?.Specific, rhs.DamageTypes?.Specific));
+                ret.DamageTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DamageTypes?.Overall, rhs.DamageTypes?.Overall), Noggog.ExceptionExt.Combine(this.DamageTypes?.Specific, rhs.DamageTypes?.Specific));
                 ret.Filter = this.Filter.Combine(rhs.Filter);
                 ret.MeleeSpeed = this.MeleeSpeed.Combine(rhs.MeleeSpeed);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
-                ret.CRDTDataTypeState = this.CRDTDataTypeState.Combine(rhs.CRDTDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3222,8 +3164,6 @@ namespace Mutagen.Bethesda.Fallout4
             public WeaponDamageType.TranslationMask? DamageTypes;
             public bool Filter;
             public bool MeleeSpeed;
-            public bool DNAMDataTypeState;
-            public bool CRDTDataTypeState;
             #endregion
 
             #region Ctors
@@ -3294,8 +3234,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Template = defaultOn;
                 this.Filter = defaultOn;
                 this.MeleeSpeed = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
-                this.CRDTDataTypeState = defaultOn;
             }
 
             #endregion
@@ -3374,8 +3312,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((DamageTypes == null ? DefaultOn : !DamageTypes.GetCrystal().CopyNothing, DamageTypes?.GetCrystal()));
                 ret.Add((Filter, null));
                 ret.Add((MeleeSpeed, null));
-                ret.Add((DNAMDataTypeState, null));
-                ret.Add((CRDTDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3437,14 +3373,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
-        [Flags]
-        public enum CRDTDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -3453,12 +3381,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IWeaponGetter rhs) return false;
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeaponGetter? obj)
         {
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).GetHashCode(this);
@@ -3636,8 +3564,6 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<WeaponDamageType>? DamageTypes { get; set; }
         new String? Filter { get; set; }
         new Weapon.MeleeSpeeds? MeleeSpeed { get; set; }
-        new Weapon.DNAMDataType DNAMDataTypeState { get; set; }
-        new Weapon.CRDTDataType CRDTDataTypeState { get; set; }
         #region Mutagen
         new Weapon.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -3780,8 +3706,6 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IWeaponDamageTypeGetter>? DamageTypes { get; }
         String? Filter { get; }
         Weapon.MeleeSpeeds? MeleeSpeed { get; }
-        Weapon.DNAMDataType DNAMDataTypeState { get; }
-        Weapon.CRDTDataType CRDTDataTypeState { get; }
 
         #region Mutagen
         Weapon.MajorFlag MajorFlags { get; }
@@ -3842,7 +3766,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -3918,6 +3842,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Weapon Duplicate(
+            this IWeaponGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3950,79 +3885,78 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        AnimationSound = 9,
-        Name = 10,
-        Model = 11,
-        Icons = 12,
-        ObjectEffect = 13,
-        EnchantmentAmount = 14,
-        Destructible = 15,
-        EquipmentType = 16,
-        BlockBashImpactDataSet = 17,
-        AlternateBlockMaterial = 18,
-        PickUpSound = 19,
-        PutDownSound = 20,
-        Keywords = 21,
-        Description = 22,
-        InstanceNaming = 23,
-        AttachParentSlots = 24,
-        ObjectTemplates = 25,
-        EmbeddedWeaponMod = 26,
-        FirstPersonModel = 27,
-        MO4F = 28,
-        Ammo = 29,
-        Speed = 30,
-        ReloadSpeed = 31,
-        Reach = 32,
-        MinRange = 33,
-        MaxRange = 34,
-        AttackDelay = 35,
-        Unknown = 36,
-        DamageOutOfRangeMult = 37,
-        OnHit = 38,
-        Skill = 39,
-        Resist = 40,
-        Flags = 41,
-        Capacity = 42,
-        AnimationType = 43,
-        SecondaryDamage = 44,
-        Weight = 45,
-        Value = 46,
-        BaseDamage = 47,
-        SoundLevel = 48,
-        AttackSound = 49,
-        Attack2dSound = 50,
-        AttackLoopSound = 51,
-        AttackFailSound = 52,
-        IdleSound = 53,
-        EquipSound = 54,
-        UnequipSound = 55,
-        FastEquipSound = 56,
-        AccuracyBonus = 57,
-        AnimationAttackSeconds = 58,
-        Unknown2 = 59,
-        ActionPointCost = 60,
-        FullPowerSeconds = 61,
-        MinPowerPerShot = 62,
-        Stagger = 63,
-        Unknown3 = 64,
-        ExtraData = 65,
-        CritDamageMult = 66,
-        CritChargeBonus = 67,
-        CritEffect = 68,
-        ImpactDataSet = 69,
-        NpcAddAmmoList = 70,
-        AimModel = 71,
-        Zoom = 72,
-        Template = 73,
-        DamageTypes = 74,
-        Filter = 75,
-        MeleeSpeed = 76,
-        DNAMDataTypeState = 77,
-        CRDTDataTypeState = 78,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        AnimationSound = 10,
+        Name = 11,
+        Model = 12,
+        Icons = 13,
+        ObjectEffect = 14,
+        EnchantmentAmount = 15,
+        Destructible = 16,
+        EquipmentType = 17,
+        BlockBashImpactDataSet = 18,
+        AlternateBlockMaterial = 19,
+        PickUpSound = 20,
+        PutDownSound = 21,
+        Keywords = 22,
+        Description = 23,
+        InstanceNaming = 24,
+        AttachParentSlots = 25,
+        ObjectTemplates = 26,
+        EmbeddedWeaponMod = 27,
+        FirstPersonModel = 28,
+        MO4F = 29,
+        Ammo = 30,
+        Speed = 31,
+        ReloadSpeed = 32,
+        Reach = 33,
+        MinRange = 34,
+        MaxRange = 35,
+        AttackDelay = 36,
+        Unknown = 37,
+        DamageOutOfRangeMult = 38,
+        OnHit = 39,
+        Skill = 40,
+        Resist = 41,
+        Flags = 42,
+        Capacity = 43,
+        AnimationType = 44,
+        SecondaryDamage = 45,
+        Weight = 46,
+        Value = 47,
+        BaseDamage = 48,
+        SoundLevel = 49,
+        AttackSound = 50,
+        Attack2dSound = 51,
+        AttackLoopSound = 52,
+        AttackFailSound = 53,
+        IdleSound = 54,
+        EquipSound = 55,
+        UnequipSound = 56,
+        FastEquipSound = 57,
+        AccuracyBonus = 58,
+        AnimationAttackSeconds = 59,
+        Unknown2 = 60,
+        ActionPointCost = 61,
+        FullPowerSeconds = 62,
+        MinPowerPerShot = 63,
+        Stagger = 64,
+        Unknown3 = 65,
+        ExtraData = 66,
+        CritDamageMult = 67,
+        CritChargeBonus = 68,
+        CritEffect = 69,
+        ImpactDataSet = 70,
+        NpcAddAmmoList = 71,
+        AimModel = 72,
+        Zoom = 73,
+        Template = 74,
+        DamageTypes = 75,
+        Filter = 76,
+        MeleeSpeed = 77,
     }
     #endregion
 
@@ -4040,9 +3974,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "ea1189a0-716d-4099-ad06-721ccd313caa";
 
-        public const ushort AdditionalFieldCount = 73;
+        public const ushort AdditionalFieldCount = 71;
 
-        public const ushort FieldCount = 79;
+        public const ushort FieldCount = 78;
 
         public static readonly Type MaskType = typeof(Weapon.Mask<>);
 
@@ -4256,8 +4190,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.DamageTypes = null;
             item.Filter = default;
             item.MeleeSpeed = default;
-            item.DNAMDataTypeState = default;
-            item.CRDTDataTypeState = default;
             base.Clear(item);
         }
         
@@ -4485,8 +4417,6 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Filter = string.Equals(item.Filter, rhs.Filter);
             ret.MeleeSpeed = item.MeleeSpeed == rhs.MeleeSpeed;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
-            ret.CRDTDataTypeState = item.CRDTDataTypeState == rhs.CRDTDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -4876,14 +4806,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(MeleeSpeedItem, "MeleeSpeed");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
-            if (printMask?.CRDTDataTypeState ?? true)
-            {
-                sb.AppendItem(item.CRDTDataTypeState, "CRDTDataTypeState");
-            }
         }
         
         public static Weapon_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -4902,8 +4824,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Weapon_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Weapon_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Weapon_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -4920,7 +4844,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Weapon_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -4928,329 +4852,321 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWeaponGetter? lhs,
             IWeaponGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Weapon_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Weapon_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AnimationSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AnimationSound) ?? true))
             {
                 if (!lhs.AnimationSound.Equals(rhs.AnimationSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Weapon_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Weapon_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
             {
                 if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
             {
                 if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Weapon_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
             {
                 if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpactDataSet) ?? true))
             {
                 if (!lhs.BlockBashImpactDataSet.Equals(rhs.BlockBashImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
             {
                 if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.InstanceNaming) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.InstanceNaming) ?? true))
             {
                 if (!lhs.InstanceNaming.Equals(rhs.InstanceNaming)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttachParentSlots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttachParentSlots) ?? true))
             {
                 if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectTemplates) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectTemplates) ?? true))
             {
-                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Weapon.Property>)((IObjectTemplateGetter<Weapon.Property>)l).CommonInstance(typeof(Weapon.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)Weapon_FieldIndex.ObjectTemplates)))) return false;
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Weapon.Property>)((IObjectTemplateGetter<Weapon.Property>)l).CommonInstance(typeof(Weapon.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.ObjectTemplates)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EmbeddedWeaponMod) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.EmbeddedWeaponMod) ?? true))
             {
                 if (!lhs.EmbeddedWeaponMod.Equals(rhs.EmbeddedWeaponMod)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FirstPersonModel, rhs.FirstPersonModel, out var lhsFirstPersonModel, out var rhsFirstPersonModel, out var isFirstPersonModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsFirstPersonModel).CommonInstance()!).Equals(lhsFirstPersonModel, rhsFirstPersonModel, crystal?.GetSubCrystal((int)Weapon_FieldIndex.FirstPersonModel))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsFirstPersonModel).CommonInstance()!).Equals(lhsFirstPersonModel, rhsFirstPersonModel, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.FirstPersonModel))) return false;
                 }
                 else if (!isFirstPersonModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.MO4F) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.MO4F) ?? true))
             {
                 if (lhs.MO4F != rhs.MO4F) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Ammo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Ammo) ?? true))
             {
                 if (!lhs.Ammo.Equals(rhs.Ammo)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Speed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Speed) ?? true))
             {
                 if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ReloadSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ReloadSpeed) ?? true))
             {
                 if (!lhs.ReloadSpeed.EqualsWithin(rhs.ReloadSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Reach) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Reach) ?? true))
             {
                 if (!lhs.Reach.EqualsWithin(rhs.Reach)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.MinRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.MinRange) ?? true))
             {
                 if (!lhs.MinRange.EqualsWithin(rhs.MinRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.MaxRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.MaxRange) ?? true))
             {
                 if (!lhs.MaxRange.EqualsWithin(rhs.MaxRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackDelay) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackDelay) ?? true))
             {
                 if (!lhs.AttackDelay.EqualsWithin(rhs.AttackDelay)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Unknown) ?? true))
             {
                 if (!lhs.Unknown.EqualsWithin(rhs.Unknown)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.DamageOutOfRangeMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.DamageOutOfRangeMult) ?? true))
             {
                 if (!lhs.DamageOutOfRangeMult.EqualsWithin(rhs.DamageOutOfRangeMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.OnHit) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.OnHit) ?? true))
             {
                 if (lhs.OnHit != rhs.OnHit) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Skill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Skill) ?? true))
             {
                 if (!lhs.Skill.Equals(rhs.Skill)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Resist) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Resist) ?? true))
             {
                 if (!lhs.Resist.Equals(rhs.Resist)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Capacity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Capacity) ?? true))
             {
                 if (lhs.Capacity != rhs.Capacity) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AnimationType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AnimationType) ?? true))
             {
                 if (lhs.AnimationType != rhs.AnimationType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.SecondaryDamage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.SecondaryDamage) ?? true))
             {
                 if (!lhs.SecondaryDamage.EqualsWithin(rhs.SecondaryDamage)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.BaseDamage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.BaseDamage) ?? true))
             {
                 if (lhs.BaseDamage != rhs.BaseDamage) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.SoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.SoundLevel) ?? true))
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound) ?? true))
             {
                 if (!lhs.AttackSound.Equals(rhs.AttackSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Attack2dSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Attack2dSound) ?? true))
             {
                 if (!lhs.Attack2dSound.Equals(rhs.Attack2dSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackLoopSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackLoopSound) ?? true))
             {
                 if (!lhs.AttackLoopSound.Equals(rhs.AttackLoopSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackFailSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackFailSound) ?? true))
             {
                 if (!lhs.AttackFailSound.Equals(rhs.AttackFailSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.IdleSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.IdleSound) ?? true))
             {
                 if (!lhs.IdleSound.Equals(rhs.IdleSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EquipSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipSound) ?? true))
             {
                 if (!lhs.EquipSound.Equals(rhs.EquipSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.UnequipSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.UnequipSound) ?? true))
             {
                 if (!lhs.UnequipSound.Equals(rhs.UnequipSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.FastEquipSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.FastEquipSound) ?? true))
             {
                 if (!lhs.FastEquipSound.Equals(rhs.FastEquipSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AccuracyBonus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AccuracyBonus) ?? true))
             {
                 if (lhs.AccuracyBonus != rhs.AccuracyBonus) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AnimationAttackSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AnimationAttackSeconds) ?? true))
             {
                 if (!lhs.AnimationAttackSeconds.EqualsWithin(rhs.AnimationAttackSeconds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ActionPointCost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ActionPointCost) ?? true))
             {
                 if (!lhs.ActionPointCost.EqualsWithin(rhs.ActionPointCost)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.FullPowerSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.FullPowerSeconds) ?? true))
             {
                 if (!lhs.FullPowerSeconds.EqualsWithin(rhs.FullPowerSeconds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.MinPowerPerShot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.MinPowerPerShot) ?? true))
             {
                 if (!lhs.MinPowerPerShot.EqualsWithin(rhs.MinPowerPerShot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Stagger) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Stagger) ?? true))
             {
                 if (lhs.Stagger != rhs.Stagger) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Unknown3) ?? true))
             {
                 if (lhs.Unknown3 != rhs.Unknown3) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ExtraData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ExtraData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ExtraData, rhs.ExtraData, out var lhsExtraData, out var rhsExtraData, out var isExtraDataEqual))
                 {
-                    if (!((WeaponExtraDataCommon)((IWeaponExtraDataGetter)lhsExtraData).CommonInstance()!).Equals(lhsExtraData, rhsExtraData, crystal?.GetSubCrystal((int)Weapon_FieldIndex.ExtraData))) return false;
+                    if (!((WeaponExtraDataCommon)((IWeaponExtraDataGetter)lhsExtraData).CommonInstance()!).Equals(lhsExtraData, rhsExtraData, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.ExtraData))) return false;
                 }
                 else if (!isExtraDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.CritDamageMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.CritDamageMult) ?? true))
             {
                 if (!lhs.CritDamageMult.EqualsWithin(rhs.CritDamageMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.CritChargeBonus) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.CritChargeBonus) ?? true))
             {
                 if (!lhs.CritChargeBonus.EqualsWithin(rhs.CritChargeBonus)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.CritEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.CritEffect) ?? true))
             {
                 if (!lhs.CritEffect.Equals(rhs.CritEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
             {
                 if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.NpcAddAmmoList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.NpcAddAmmoList) ?? true))
             {
                 if (!lhs.NpcAddAmmoList.Equals(rhs.NpcAddAmmoList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AimModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AimModel) ?? true))
             {
                 if (!lhs.AimModel.Equals(rhs.AimModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Zoom) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Zoom) ?? true))
             {
                 if (!lhs.Zoom.Equals(rhs.Zoom)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Template) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Template) ?? true))
             {
                 if (!lhs.Template.Equals(rhs.Template)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.DamageTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.DamageTypes) ?? true))
             {
-                if (!lhs.DamageTypes.SequenceEqualNullable(rhs.DamageTypes, (l, r) => ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Weapon_FieldIndex.DamageTypes)))) return false;
+                if (!lhs.DamageTypes.SequenceEqualNullable(rhs.DamageTypes, (l, r) => ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.DamageTypes)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Filter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Filter) ?? true))
             {
                 if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.MeleeSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.MeleeSpeed) ?? true))
             {
                 if (lhs.MeleeSpeed != rhs.MeleeSpeed) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.CRDTDataTypeState) ?? true))
-            {
-                if (lhs.CRDTDataTypeState != rhs.CRDTDataTypeState) return false;
             }
             return true;
         }
@@ -5258,23 +5174,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWeaponGetter?)lhs,
                 rhs: rhs as IWeaponGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWeaponGetter?)lhs,
                 rhs: rhs as IWeaponGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IWeaponGetter item)
@@ -5387,8 +5303,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(MeleeSpeeditem);
             }
-            hash.Add(item.DNAMDataTypeState);
-            hash.Add(item.CRDTDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -6163,14 +6077,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.MeleeSpeed = rhs.MeleeSpeed;
             }
-            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.CRDTDataTypeState) ?? true))
-            {
-                item.CRDTDataTypeState = rhs.CRDTDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -6318,15 +6224,6 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryWriteTranslator
     {
         public new static readonly WeaponBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IWeaponGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IWeaponGetter item,
@@ -6651,7 +6548,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -6711,15 +6608,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly WeaponBinaryCreateTranslation Instance = new WeaponBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WEAP;
-        public static void FillBinaryStructs(
-            IWeaponInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IWeaponInternal item,
             MutagenFrame frame,
@@ -7224,7 +7112,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Int32? MO4F => _MO4FLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MO4FLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Weapon.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Ammo
         private int _AmmoLocation => _DNAMLocation!.Value.Min;
         private bool _Ammo_IsSet => _DNAMLocation.HasValue;
@@ -7410,7 +7297,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IWeaponExtraDataGetter? ExtraData => _ExtraDataLocation.HasValue ? WeaponExtraDataBinaryOverlay.WeaponExtraDataFactory(_recordData.Slice(_ExtraDataLocation!.Value.Min), _package) : default;
         #endregion
         private RangeInt32? _CRDTLocation;
-        public Weapon.CRDTDataType CRDTDataTypeState { get; private set; }
         #region CritDamageMult
         private int _CritDamageMultLocation => _CRDTLocation!.Value.Min;
         private bool _CritDamageMult_IsSet => _CRDTLocation.HasValue;
@@ -7798,12 +7684,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IWeaponGetter rhs) return false;
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeaponGetter? obj)
         {
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).GetHashCode(this);

@@ -113,7 +113,7 @@ public sealed class ModHeaderWriteLogic
         {
             modHeader.NextFormID = _nextFormID + 1;
         }
-        if (EnumExt.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.LightMaster)
+        if (Enums.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.LightMaster)
             && _uniqueRecordsFromMod > Constants.LightMasterLimit)
         {
             throw new ArgumentException($"Light Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.LightMasterLimit}");
@@ -256,18 +256,18 @@ public sealed class ModHeaderWriteLogic
             case MasterFlagOption.NoCheck:
                 break;
             case MasterFlagOption.ChangeToMatchModKey:
-                header.RawFlags = EnumExt.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, _modKey.Type == ModType.Master);
+                header.RawFlags = Enums.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, _modKey.Type == ModType.Master);
                 if (_modKey.Type != ModType.Plugin)
                 {
-                    header.RawFlags = EnumExt.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, true);
+                    header.RawFlags = Enums.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, true);
                 }
                 break;
             case MasterFlagOption.ExceptionOnMismatch:
-                if ((_modKey.Type == ModType.Master) != EnumExt.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master))
+                if ((_modKey.Type == ModType.Master) != Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master))
                 {
                     throw new ArgumentException($"Master flag did not match ModKey type. ({_modKey})");
                 }
-                if ((_modKey.Type == ModType.LightMaster) != EnumExt.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.LightMaster))
+                if ((_modKey.Type == ModType.LightMaster) != Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.LightMaster))
                 {
                     throw new ArgumentException($"LightMaster flag did not match ModKey type. ({_modKey})");
                 }
@@ -281,7 +281,7 @@ public sealed class ModHeaderWriteLogic
     #region Light Master Form Limit
     private void AddLightMasterFormLimit(IModHeaderCommon header)
     {
-        if (!EnumExt.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.LightMaster)) return;
+        if (!Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.LightMaster)) return;
         _recordIterationActions.Add(maj =>
         {
             if (maj.FormKey.ModKey == _modKey)

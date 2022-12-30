@@ -352,6 +352,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Name,
                 TItem Data,
@@ -379,7 +380,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(VirtualMachineAdapter, new QuestAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
@@ -1661,21 +1663,21 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Event = this.Event.Combine(rhs.Event);
                 ret.Location = this.Location.Combine(rhs.Location);
                 ret.QuestCompletionXp = this.QuestCompletionXp.Combine(rhs.QuestCompletionXp);
-                ret.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.TextDisplayGlobals?.Overall, rhs.TextDisplayGlobals?.Overall), ExceptionExt.Combine(this.TextDisplayGlobals?.Specific, rhs.TextDisplayGlobals?.Specific));
+                ret.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TextDisplayGlobals?.Overall, rhs.TextDisplayGlobals?.Overall), Noggog.ExceptionExt.Combine(this.TextDisplayGlobals?.Specific, rhs.TextDisplayGlobals?.Specific));
                 ret.Filter = this.Filter.Combine(rhs.Filter);
-                ret.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogConditions?.Overall, rhs.DialogConditions?.Overall), ExceptionExt.Combine(this.DialogConditions?.Specific, rhs.DialogConditions?.Specific));
-                ret.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.UnusedConditions?.Overall, rhs.UnusedConditions?.Overall), ExceptionExt.Combine(this.UnusedConditions?.Specific, rhs.UnusedConditions?.Specific));
-                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
-                ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
-                ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AQuestAlias.ErrorMask?>>?>(ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
+                ret.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DialogConditions?.Overall, rhs.DialogConditions?.Overall), Noggog.ExceptionExt.Combine(this.DialogConditions?.Specific, rhs.DialogConditions?.Specific));
+                ret.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UnusedConditions?.Overall, rhs.UnusedConditions?.Overall), Noggog.ExceptionExt.Combine(this.UnusedConditions?.Specific, rhs.UnusedConditions?.Specific));
+                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), Noggog.ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
+                ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), Noggog.ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
+                ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AQuestAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), Noggog.ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.QuestGroup = this.QuestGroup.Combine(rhs.QuestGroup);
                 ret.SwfFile = this.SwfFile.Combine(rhs.SwfFile);
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.DialogBranches = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogBranches?.Overall, rhs.DialogBranches?.Overall), ExceptionExt.Combine(this.DialogBranches?.Specific, rhs.DialogBranches?.Specific));
-                ret.DialogTopics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogTopics?.Overall, rhs.DialogTopics?.Overall), ExceptionExt.Combine(this.DialogTopics?.Specific, rhs.DialogTopics?.Specific));
-                ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>(ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
+                ret.DialogBranches = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogBranch.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DialogBranches?.Overall, rhs.DialogBranches?.Overall), Noggog.ExceptionExt.Combine(this.DialogBranches?.Specific, rhs.DialogBranches?.Specific));
+                ret.DialogTopics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogTopic.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DialogTopics?.Overall, rhs.DialogTopics?.Overall), Noggog.ExceptionExt.Combine(this.DialogTopics?.Specific, rhs.DialogTopics?.Specific));
+                ret.Scenes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Scene.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Scenes?.Overall, rhs.Scenes?.Overall), Noggog.ExceptionExt.Combine(this.Scenes?.Specific, rhs.Scenes?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1869,12 +1871,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IQuestGetter rhs) return false;
-            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestGetter? obj)
         {
-            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestCommon)((IQuestGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2093,7 +2095,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((QuestCommon)((IQuestGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2381,6 +2383,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Quest Duplicate(
+            this IQuestGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((QuestCommon)((IQuestGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2413,27 +2426,28 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        Name = 7,
-        Data = 8,
-        Event = 9,
-        Location = 10,
-        QuestCompletionXp = 11,
-        TextDisplayGlobals = 12,
-        Filter = 13,
-        DialogConditions = 14,
-        UnusedConditions = 15,
-        Stages = 16,
-        Objectives = 17,
-        Aliases = 18,
-        Description = 19,
-        QuestGroup = 20,
-        SwfFile = 21,
-        Timestamp = 22,
-        Unknown = 23,
-        DialogBranches = 24,
-        DialogTopics = 25,
-        Scenes = 26,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        Data = 9,
+        Event = 10,
+        Location = 11,
+        QuestCompletionXp = 12,
+        TextDisplayGlobals = 13,
+        Filter = 14,
+        DialogConditions = 15,
+        UnusedConditions = 16,
+        Stages = 17,
+        Objectives = 18,
+        Aliases = 19,
+        Description = 20,
+        QuestGroup = 21,
+        SwfFile = 22,
+        Timestamp = 23,
+        Unknown = 24,
+        DialogBranches = 25,
+        DialogTopics = 26,
+        Scenes = 27,
     }
     #endregion
 
@@ -2453,7 +2467,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(Quest.Mask<>);
 
@@ -3191,8 +3205,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Quest_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Quest_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Quest_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3209,7 +3225,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Quest_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3217,101 +3233,101 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IQuestGetter? lhs,
             IQuestGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((QuestAdapterCommon)((IQuestAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Quest_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((QuestAdapterCommon)((IQuestAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((QuestDataCommon)((IQuestDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Quest_FieldIndex.Data))) return false;
+                    if (!((QuestDataCommon)((IQuestDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Event) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Event) ?? true))
             {
                 if (lhs.Event != rhs.Event) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.QuestCompletionXp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestCompletionXp) ?? true))
             {
                 if (!lhs.QuestCompletionXp.Equals(rhs.QuestCompletionXp)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.TextDisplayGlobals) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.TextDisplayGlobals) ?? true))
             {
                 if (!lhs.TextDisplayGlobals.SequenceEqualNullable(rhs.TextDisplayGlobals)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Filter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Filter) ?? true))
             {
                 if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DialogConditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.DialogConditions) ?? true))
             {
-                if (!lhs.DialogConditions.SequenceEqual(rhs.DialogConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.DialogConditions)))) return false;
+                if (!lhs.DialogConditions.SequenceEqual(rhs.DialogConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.DialogConditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.UnusedConditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.UnusedConditions) ?? true))
             {
-                if (!lhs.UnusedConditions.SequenceEqualNullable(rhs.UnusedConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.UnusedConditions)))) return false;
+                if (!lhs.UnusedConditions.SequenceEqualNullable(rhs.UnusedConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.UnusedConditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
             {
-                if (!lhs.Stages.SequenceEqual(rhs.Stages, (l, r) => ((QuestStageCommon)((IQuestStageGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Stages)))) return false;
+                if (!lhs.Stages.SequenceEqual(rhs.Stages, (l, r) => ((QuestStageCommon)((IQuestStageGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Stages)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Objectives) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Objectives) ?? true))
             {
-                if (!lhs.Objectives.SequenceEqual(rhs.Objectives, (l, r) => ((QuestObjectiveCommon)((IQuestObjectiveGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Objectives)))) return false;
+                if (!lhs.Objectives.SequenceEqual(rhs.Objectives, (l, r) => ((QuestObjectiveCommon)((IQuestObjectiveGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Objectives)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Aliases) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Aliases) ?? true))
             {
-                if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases, (l, r) => ((AQuestAliasCommon)((IAQuestAliasGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Aliases)))) return false;
+                if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases, (l, r) => ((AQuestAliasCommon)((IAQuestAliasGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Aliases)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.QuestGroup) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestGroup) ?? true))
             {
                 if (!lhs.QuestGroup.Equals(rhs.QuestGroup)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.SwfFile) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.SwfFile) ?? true))
             {
                 if (!string.Equals(lhs.SwfFile, rhs.SwfFile)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Timestamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Timestamp) ?? true))
             {
                 if (lhs.Timestamp != rhs.Timestamp) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DialogBranches) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.DialogBranches) ?? true))
             {
-                if (!lhs.DialogBranches.SequenceEqual(rhs.DialogBranches, (l, r) => ((DialogBranchCommon)((IDialogBranchGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.DialogBranches)))) return false;
+                if (!lhs.DialogBranches.SequenceEqual(rhs.DialogBranches, (l, r) => ((DialogBranchCommon)((IDialogBranchGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.DialogBranches)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.DialogTopics) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.DialogTopics) ?? true))
             {
-                if (!lhs.DialogTopics.SequenceEqual(rhs.DialogTopics, (l, r) => ((DialogTopicCommon)((IDialogTopicGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.DialogTopics)))) return false;
+                if (!lhs.DialogTopics.SequenceEqual(rhs.DialogTopics, (l, r) => ((DialogTopicCommon)((IDialogTopicGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.DialogTopics)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Scenes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Scenes) ?? true))
             {
-                if (!lhs.Scenes.SequenceEqual(rhs.Scenes, (l, r) => ((SceneCommon)((ISceneGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Quest_FieldIndex.Scenes)))) return false;
+                if (!lhs.Scenes.SequenceEqual(rhs.Scenes, (l, r) => ((SceneCommon)((ISceneGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Scenes)))) return false;
             }
             return true;
         }
@@ -3319,23 +3335,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IQuestGetter?)lhs,
                 rhs: rhs as IQuestGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IQuestGetter?)lhs,
                 rhs: rhs as IQuestGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IQuestGetter item)
@@ -5303,12 +5319,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IQuestGetter rhs) return false;
-            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestGetter? obj)
         {
-            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestCommon)((IQuestGetter)this).CommonInstance()!).GetHashCode(this);

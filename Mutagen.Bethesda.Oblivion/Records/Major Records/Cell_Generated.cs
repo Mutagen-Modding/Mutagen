@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Grid = this.Grid.Combine(rhs.Grid);
                 ret.Lighting = this.Lighting.Combine(rhs.Lighting, (l, r) => l.Combine(r));
-                ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
+                ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), Noggog.ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
                 ret.MusicType = this.MusicType.Combine(rhs.MusicType);
                 ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
                 ret.Climate = this.Climate.Combine(rhs.Climate);
@@ -1292,11 +1292,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Landscape = this.Landscape.Combine(rhs.Landscape, (l, r) => l.Combine(r));
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
-                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
+                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), Noggog.ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
                 ret.TemporaryTimestamp = this.TemporaryTimestamp.Combine(rhs.TemporaryTimestamp);
-                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
+                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), Noggog.ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
                 ret.VisibleWhenDistantTimestamp = this.VisibleWhenDistantTimestamp.Combine(rhs.VisibleWhenDistantTimestamp);
-                ret.VisibleWhenDistant = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.VisibleWhenDistant?.Overall, rhs.VisibleWhenDistant?.Overall), ExceptionExt.Combine(this.VisibleWhenDistant?.Specific, rhs.VisibleWhenDistant?.Specific));
+                ret.VisibleWhenDistant = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.VisibleWhenDistant?.Overall, rhs.VisibleWhenDistant?.Overall), Noggog.ExceptionExt.Combine(this.VisibleWhenDistant?.Specific, rhs.VisibleWhenDistant?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1485,12 +1485,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ICellGetter rhs) return false;
-            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellGetter? obj)
         {
-            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1693,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellCommon)((ICellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1979,6 +1979,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Cell Duplicate(
+            this ICellGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -2670,7 +2681,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Cell_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2687,7 +2698,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Cell_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2695,103 +2706,103 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ICellGetter? lhs,
             ICellGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
             {
                 if (!lhs.Grid.Equals(rhs.Grid)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Lighting, rhs.Lighting, out var lhsLighting, out var rhsLighting, out var isLightingEqual))
                 {
-                    if (!((CellLightingCommon)((ICellLightingGetter)lhsLighting).CommonInstance()!).Equals(lhsLighting, rhsLighting, crystal?.GetSubCrystal((int)Cell_FieldIndex.Lighting))) return false;
+                    if (!((CellLightingCommon)((ICellLightingGetter)lhsLighting).CommonInstance()!).Equals(lhsLighting, rhsLighting, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting))) return false;
                 }
                 else if (!isLightingEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
             {
                 if (!lhs.Regions.SequenceEqualNullable(rhs.Regions)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.MusicType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.MusicType) ?? true))
             {
                 if (lhs.MusicType != rhs.MusicType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
             {
                 if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
             {
                 if (!lhs.Climate.Equals(rhs.Climate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
                 if (!lhs.Water.Equals(rhs.Water)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
                 if (!lhs.Owner.Equals(rhs.Owner)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
             {
                 if (lhs.FactionRank != rhs.FactionRank) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
                 if (!lhs.GlobalVariable.Equals(rhs.GlobalVariable)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.PathGrid, rhs.PathGrid, out var lhsPathGrid, out var rhsPathGrid, out var isPathGridEqual))
                 {
-                    if (!((PathGridCommon)((IPathGridGetter)lhsPathGrid).CommonInstance()!).Equals(lhsPathGrid, rhsPathGrid, crystal?.GetSubCrystal((int)Cell_FieldIndex.PathGrid))) return false;
+                    if (!((PathGridCommon)((IPathGridGetter)lhsPathGrid).CommonInstance()!).Equals(lhsPathGrid, rhsPathGrid, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid))) return false;
                 }
                 else if (!isPathGridEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Landscape, rhs.Landscape, out var lhsLandscape, out var rhsLandscape, out var isLandscapeEqual))
                 {
-                    if (!((LandscapeCommon)((ILandscapeGetter)lhsLandscape).CommonInstance()!).Equals(lhsLandscape, rhsLandscape, crystal?.GetSubCrystal((int)Cell_FieldIndex.Landscape))) return false;
+                    if (!((LandscapeCommon)((ILandscapeGetter)lhsLandscape).CommonInstance()!).Equals(lhsLandscape, rhsLandscape, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape))) return false;
                 }
                 else if (!isLandscapeEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
             {
                 if (lhs.Timestamp != rhs.Timestamp) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
             {
                 if (lhs.PersistentTimestamp != rhs.PersistentTimestamp) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
             {
                 if (!lhs.Persistent.SequenceEqualNullable(rhs.Persistent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
             {
                 if (lhs.TemporaryTimestamp != rhs.TemporaryTimestamp) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
             {
                 if (!lhs.Temporary.SequenceEqualNullable(rhs.Temporary)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistantTimestamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistantTimestamp) ?? true))
             {
                 if (lhs.VisibleWhenDistantTimestamp != rhs.VisibleWhenDistantTimestamp) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
             {
                 if (!lhs.VisibleWhenDistant.SequenceEqualNullable(rhs.VisibleWhenDistant)) return false;
             }
@@ -2801,23 +2812,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICellGetter?)lhs,
                 rhs: rhs as ICellGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICellGetter?)lhs,
                 rhs: rhs as ICellGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ICellGetter item)
@@ -4902,12 +4913,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ICellGetter rhs) return false;
-            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellGetter? obj)
         {
-            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);

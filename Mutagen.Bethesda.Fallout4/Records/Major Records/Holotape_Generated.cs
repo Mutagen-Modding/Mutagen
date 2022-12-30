@@ -206,9 +206,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IAHolotapeDataGetter IHolotapeGetter.Data => Data;
         #endregion
-        #region DATADataTypeState
-        public Holotape.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -245,7 +242,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Value = initialValue;
                 this.Weight = initialValue;
                 this.Data = new MaskItem<TItem, AHolotapeData.Mask<TItem>?>(initialValue, new AHolotapeData.Mask<TItem>(initialValue));
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -255,6 +251,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -265,15 +262,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem PutDownSound,
                 TItem Value,
                 TItem Weight,
-                TItem Data,
-                TItem DATADataTypeState)
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -286,7 +283,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Value = Value;
                 this.Weight = Weight;
                 this.Data = new MaskItem<TItem, AHolotapeData.Mask<TItem>?>(Data, new AHolotapeData.Mask<TItem>(Data));
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -309,7 +305,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Value;
             public TItem Weight;
             public MaskItem<TItem, AHolotapeData.Mask<TItem>?>? Data { get; set; }
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -334,7 +329,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Value, rhs.Value)) return false;
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -351,7 +345,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Value);
                 hash.Add(this.Weight);
                 hash.Add(this.Data);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -393,7 +386,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Data.Overall)) return false;
                     if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
                 }
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -433,7 +425,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Data.Overall)) return true;
                     if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
                 }
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -460,7 +451,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Value = eval(this.Value);
                 obj.Weight = eval(this.Weight);
                 obj.Data = this.Data == null ? null : new MaskItem<R, AHolotapeData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -523,10 +513,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Data?.Print(sb);
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -549,7 +535,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Value;
             public Exception? Weight;
             public MaskItem<Exception?, AHolotapeData.ErrorMask?>? Data;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -580,8 +565,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Weight;
                     case Holotape_FieldIndex.Data:
                         return Data;
-                    case Holotape_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -624,9 +607,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Holotape_FieldIndex.Data:
                         this.Data = new MaskItem<Exception?, AHolotapeData.ErrorMask?>(ex, null);
-                        break;
-                    case Holotape_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -672,9 +652,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Holotape_FieldIndex.Data:
                         this.Data = (MaskItem<Exception?, AHolotapeData.ErrorMask?>?)obj;
                         break;
-                    case Holotape_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -695,7 +672,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Value != null) return true;
                 if (Weight != null) return true;
                 if (Data != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -745,9 +721,6 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Weight, "Weight");
                 }
                 Data?.Print(sb);
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -767,7 +740,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -801,7 +773,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Value;
             public bool Weight;
             public AHolotapeData.TranslationMask? Data;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -816,7 +787,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PutDownSound = defaultOn;
                 this.Value = defaultOn;
                 this.Weight = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -835,7 +805,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Value, null));
                 ret.Add((Weight, null));
                 ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -892,10 +861,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IHolotape);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -904,12 +869,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IHolotapeGetter rhs) return false;
-            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHolotapeGetter? obj)
         {
-            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1021,7 +986,6 @@ namespace Mutagen.Bethesda.Fallout4
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new AHolotapeData Data { get; set; }
-        new Holotape.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IHolotapeInternal :
@@ -1092,7 +1056,6 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32 Value { get; }
         Single Weight { get; }
         IAHolotapeDataGetter Data { get; }
-        Holotape.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1149,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1225,6 +1188,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Holotape Duplicate(
+            this IHolotapeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((HolotapeCommon)((IHolotapeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1257,18 +1231,18 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        Name = 9,
-        Model = 10,
-        Icons = 11,
-        PickUpSound = 12,
-        PutDownSound = 13,
-        Value = 14,
-        Weight = 15,
-        Data = 16,
-        DATADataTypeState = 17,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        Name = 10,
+        Model = 11,
+        Icons = 12,
+        PickUpSound = 13,
+        PutDownSound = 14,
+        Value = 15,
+        Weight = 16,
+        Data = 17,
     }
     #endregion
 
@@ -1286,7 +1260,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "2bbbff8d-bde9-4838-8c78-87cbd8407d32";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 18;
 
@@ -1393,7 +1367,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Value = default;
             item.Weight = default;
             item.Data.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1511,7 +1484,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1610,10 +1582,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Data?.Print(sb, "Data");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Holotape_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1632,8 +1600,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Holotape_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Holotape_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Holotape_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1650,7 +1620,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Holotape_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1658,77 +1628,73 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IHolotapeGetter? lhs,
             IHolotapeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Holotape_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Holotape_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Holotape_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Holotape_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Holotape_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Holotape_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Holotape_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Holotape_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Holotape_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((AHolotapeDataCommon)((IAHolotapeDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Holotape_FieldIndex.Data))) return false;
+                    if (!((AHolotapeDataCommon)((IAHolotapeDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Holotape_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Holotape_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1736,23 +1702,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHolotapeGetter?)lhs,
                 rhs: rhs as IHolotapeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHolotapeGetter?)lhs,
                 rhs: rhs as IHolotapeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IHolotapeGetter item)
@@ -1784,7 +1750,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Value);
             hash.Add(item.Weight);
             hash.Add(item.Data);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2070,10 +2035,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Holotape_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -2614,7 +2575,6 @@ namespace Mutagen.Bethesda.Fallout4
             int offset);
         #endregion
         private RangeInt32? _DATALocation;
-        public Holotape.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
@@ -2815,12 +2775,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IHolotapeGetter rhs) return false;
-            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHolotapeGetter? obj)
         {
-            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HolotapeCommon)((IHolotapeGetter)this).CommonInstance()!).GetHashCode(this);

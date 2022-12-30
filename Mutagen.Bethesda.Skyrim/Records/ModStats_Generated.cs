@@ -50,14 +50,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Version
-        public readonly static Single _Version_Default = 1.7f;
-        public Single Version { get; set; } = _Version_Default;
+        public static readonly Single VersionDefault = 1.7f;
+        public Single Version { get; set; } = VersionDefault;
         #endregion
         #region NumRecords
         public UInt32 NumRecords { get; set; } = default;
         #endregion
         #region NextFormID
-        public UInt32 NextFormID { get; set; } = default;
+        public static readonly UInt32 NextFormIDDefault = 0x800;
+        public UInt32 NextFormID { get; set; } = NextFormIDDefault;
         #endregion
 
         #region To String
@@ -78,12 +79,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IModStatsGetter rhs) return false;
-            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IModStatsGetter? obj)
         {
-            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -555,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -765,9 +766,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IModStats item)
         {
             ClearPartial();
-            item.Version = ModStats._Version_Default;
+            item.Version = ModStats.VersionDefault;
             item.NumRecords = default;
-            item.NextFormID = default;
+            item.NextFormID = ModStats.NextFormIDDefault;
         }
         
         #region Mutagen
@@ -886,18 +887,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IModStatsGetter? lhs,
             IModStatsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ModStats_FieldIndex.Version) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ModStats_FieldIndex.Version) ?? true))
             {
                 if (!lhs.Version.EqualsWithin(rhs.Version)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ModStats_FieldIndex.NumRecords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ModStats_FieldIndex.NumRecords) ?? true))
             {
                 if (lhs.NumRecords != rhs.NumRecords) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ModStats_FieldIndex.NextFormID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ModStats_FieldIndex.NextFormID) ?? true))
             {
                 if (lhs.NextFormID != rhs.NextFormID) return false;
             }
@@ -1234,12 +1235,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IModStatsGetter rhs) return false;
-            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IModStatsGetter? obj)
         {
-            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).GetHashCode(this);

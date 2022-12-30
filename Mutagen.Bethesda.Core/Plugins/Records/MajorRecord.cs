@@ -74,14 +74,14 @@ public partial class MajorRecord : IFormLinkContainer
 
     public bool IsCompressed
     {
-        get => EnumExt.HasFlag(MajorRecordFlagsRaw, Constants.CompressedFlag);
-        set => MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, Constants.CompressedFlag, value);
+        get => Enums.HasFlag(MajorRecordFlagsRaw, Constants.CompressedFlag);
+        set => MajorRecordFlagsRaw = Enums.SetFlag(MajorRecordFlagsRaw, Constants.CompressedFlag, value);
     }
 
     public bool IsDeleted
     {
-        get => EnumExt.HasFlag(MajorRecordFlagsRaw, Constants.DeletedFlag);
-        set => MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, Constants.DeletedFlag, value);
+        get => Enums.HasFlag(MajorRecordFlagsRaw, Constants.DeletedFlag);
+        set => MajorRecordFlagsRaw = Enums.SetFlag(MajorRecordFlagsRaw, Constants.DeletedFlag, value);
     }
 
     protected abstract ushort? FormVersionAbstract { get; }
@@ -91,7 +91,7 @@ public partial class MajorRecord : IFormLinkContainer
     public virtual bool Disable()
     {
         if (IsDeleted) return false;
-        MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, (int)Constants.InitiallyDisabled, true);
+        MajorRecordFlagsRaw = Enums.SetFlag(MajorRecordFlagsRaw, (int)Constants.InitiallyDisabled, true);
         return true;
     }
 
@@ -136,8 +136,8 @@ public static class IMajorRecordGetterExt
 [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
 internal abstract partial class MajorRecordBinaryOverlay : IMajorRecordGetter
 {
-    public bool IsCompressed => EnumExt.HasFlag(MajorRecordFlagsRaw, Constants.CompressedFlag);
-    public bool IsDeleted => EnumExt.HasFlag(MajorRecordFlagsRaw, Constants.DeletedFlag);
+    public bool IsCompressed => Enums.HasFlag(MajorRecordFlagsRaw, Constants.CompressedFlag);
+    public bool IsDeleted => Enums.HasFlag(MajorRecordFlagsRaw, Constants.DeletedFlag);
 
     protected abstract ushort? FormVersionAbstract { get; }
     ushort? IMajorRecordGetter.FormVersion => FormVersionAbstract;

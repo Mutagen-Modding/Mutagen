@@ -71,12 +71,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAColorRecordDataGetter rhs) return false;
-            return ((AColorRecordDataCommon)((IAColorRecordDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AColorRecordDataCommon)((IAColorRecordDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAColorRecordDataGetter? obj)
         {
-            return ((AColorRecordDataCommon)((IAColorRecordDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AColorRecordDataCommon)((IAColorRecordDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AColorRecordDataCommon)((IAColorRecordDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AColorRecordDataCommon)((IAColorRecordDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAColorRecordDataGetter? lhs,
             IAColorRecordDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             return true;
@@ -975,12 +975,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAColorRecordDataGetter rhs) return false;
-            return ((AColorRecordDataCommon)((IAColorRecordDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AColorRecordDataCommon)((IAColorRecordDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAColorRecordDataGetter? obj)
         {
-            return ((AColorRecordDataCommon)((IAColorRecordDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AColorRecordDataCommon)((IAColorRecordDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AColorRecordDataCommon)((IAColorRecordDataGetter)this).CommonInstance()!).GetHashCode(this);

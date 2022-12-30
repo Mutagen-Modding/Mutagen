@@ -55,12 +55,12 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Version
-        public readonly static Int16 _Version_Default = 6;
-        public Int16 Version { get; set; } = _Version_Default;
+        public static readonly Int16 VersionDefault = 6;
+        public Int16 Version { get; set; } = VersionDefault;
         #endregion
         #region ObjectFormat
-        public readonly static UInt16 _ObjectFormat_Default = 2;
-        public UInt16 ObjectFormat { get; set; } = _ObjectFormat_Default;
+        public static readonly UInt16 ObjectFormatDefault = 2;
+        public UInt16 ObjectFormat { get; set; } = ObjectFormatDefault;
         #endregion
         #region Scripts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -95,12 +95,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAVirtualMachineAdapterGetter rhs) return false;
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAVirtualMachineAdapterGetter? obj)
         {
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.Version = this.Version.Combine(rhs.Version);
                 ret.ObjectFormat = this.ObjectFormat.Combine(rhs.ObjectFormat);
-                ret.Scripts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), ExceptionExt.Combine(this.Scripts?.Specific, rhs.Scripts?.Specific));
+                ret.Scripts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), Noggog.ExceptionExt.Combine(this.Scripts?.Specific, rhs.Scripts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -834,8 +834,8 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IAVirtualMachineAdapter item)
         {
             ClearPartial();
-            item.Version = AVirtualMachineAdapter._Version_Default;
-            item.ObjectFormat = AVirtualMachineAdapter._ObjectFormat_Default;
+            item.Version = AVirtualMachineAdapter.VersionDefault;
+            item.ObjectFormat = AVirtualMachineAdapter.ObjectFormatDefault;
             item.Scripts.Clear();
         }
         
@@ -969,20 +969,20 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAVirtualMachineAdapterGetter? lhs,
             IAVirtualMachineAdapterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Version) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Version) ?? true))
             {
                 if (lhs.Version != rhs.Version) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.ObjectFormat) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.ObjectFormat) ?? true))
             {
                 if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Scripts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Scripts) ?? true))
             {
-                if (!lhs.Scripts.SequenceEqual(rhs.Scripts, (l, r) => ((ScriptEntryCommon)((IScriptEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)AVirtualMachineAdapter_FieldIndex.Scripts)))) return false;
+                if (!lhs.Scripts.SequenceEqual(rhs.Scripts, (l, r) => ((ScriptEntryCommon)((IScriptEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AVirtualMachineAdapter_FieldIndex.Scripts)))) return false;
             }
             return true;
         }
@@ -1332,12 +1332,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAVirtualMachineAdapterGetter rhs) return false;
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAVirtualMachineAdapterGetter? obj)
         {
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);

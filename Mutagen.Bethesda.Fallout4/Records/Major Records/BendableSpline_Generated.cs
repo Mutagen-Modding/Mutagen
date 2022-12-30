@@ -158,6 +158,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem DefaultNumberOfTiles,
                 TItem DefaultNumberOfSlices,
@@ -173,7 +174,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DefaultNumberOfTiles = DefaultNumberOfTiles;
@@ -701,12 +703,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IBendableSplineGetter rhs) return false;
-            return ((BendableSplineCommon)((IBendableSplineGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BendableSplineCommon)((IBendableSplineGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBendableSplineGetter? obj)
         {
-            return ((BendableSplineCommon)((IBendableSplineGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BendableSplineCommon)((IBendableSplineGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BendableSplineCommon)((IBendableSplineGetter)this).CommonInstance()!).GetHashCode(this);
@@ -883,7 +885,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((BendableSplineCommon)((IBendableSplineGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -959,6 +961,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static BendableSpline Duplicate(
+            this IBendableSplineGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((BendableSplineCommon)((IBendableSplineGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -991,15 +1004,16 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        DefaultNumberOfTiles = 7,
-        DefaultNumberOfSlices = 8,
-        DefaultNumberOfTilesIsRelativeToLength = 9,
-        DefaultColor = 10,
-        WindSensibility = 11,
-        WindFlexibility = 12,
-        Texture = 13,
-        DNAMDataTypeState = 14,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        DefaultNumberOfTiles = 8,
+        DefaultNumberOfSlices = 9,
+        DefaultNumberOfTilesIsRelativeToLength = 10,
+        DefaultColor = 11,
+        WindSensibility = 12,
+        WindFlexibility = 13,
+        Texture = 14,
+        DNAMDataTypeState = 15,
     }
     #endregion
 
@@ -1019,7 +1033,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(BendableSpline.Mask<>);
 
@@ -1310,8 +1324,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (BendableSpline_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (BendableSpline_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (BendableSpline_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1328,7 +1344,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (BendableSpline_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1336,47 +1352,47 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IBendableSplineGetter? lhs,
             IBendableSplineGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)BendableSpline_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)BendableSpline_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)BendableSpline_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfTiles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfTiles) ?? true))
             {
                 if (!lhs.DefaultNumberOfTiles.EqualsWithin(rhs.DefaultNumberOfTiles)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfSlices) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfSlices) ?? true))
             {
                 if (lhs.DefaultNumberOfSlices != rhs.DefaultNumberOfSlices) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfTilesIsRelativeToLength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfTilesIsRelativeToLength) ?? true))
             {
                 if (lhs.DefaultNumberOfTilesIsRelativeToLength != rhs.DefaultNumberOfTilesIsRelativeToLength) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultColor) ?? true))
             {
                 if (!lhs.DefaultColor.ColorOnlyEquals(rhs.DefaultColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BendableSpline_FieldIndex.WindSensibility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.WindSensibility) ?? true))
             {
                 if (!lhs.WindSensibility.EqualsWithin(rhs.WindSensibility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BendableSpline_FieldIndex.WindFlexibility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.WindFlexibility) ?? true))
             {
                 if (!lhs.WindFlexibility.EqualsWithin(rhs.WindFlexibility)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BendableSpline_FieldIndex.Texture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.Texture) ?? true))
             {
                 if (!lhs.Texture.Equals(rhs.Texture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)BendableSpline_FieldIndex.DNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
@@ -1386,23 +1402,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBendableSplineGetter?)lhs,
                 rhs: rhs as IBendableSplineGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBendableSplineGetter?)lhs,
                 rhs: rhs as IBendableSplineGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IBendableSplineGetter item)
@@ -2139,12 +2155,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IBendableSplineGetter rhs) return false;
-            return ((BendableSplineCommon)((IBendableSplineGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BendableSplineCommon)((IBendableSplineGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBendableSplineGetter? obj)
         {
-            return ((BendableSplineCommon)((IBendableSplineGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BendableSplineCommon)((IBendableSplineGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BendableSplineCommon)((IBendableSplineGetter)this).CommonInstance()!).GetHashCode(this);

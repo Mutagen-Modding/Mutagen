@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Parent,
                 TItem PreviousSibling,
                 TItem Conditions)
@@ -137,7 +138,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Parent = Parent;
                 this.PreviousSibling = PreviousSibling;
@@ -442,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.Parent = this.Parent.Combine(rhs.Parent);
                 ret.PreviousSibling = this.PreviousSibling.Combine(rhs.PreviousSibling);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -556,12 +558,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IAStoryManagerNodeGetter rhs) return false;
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAStoryManagerNodeGetter? obj)
         {
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -690,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -766,6 +768,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static AStoryManagerNode Duplicate(
+            this IAStoryManagerNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -798,9 +811,10 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        PreviousSibling = 7,
-        Conditions = 8,
+        SkyrimMajorRecordFlags = 6,
+        Parent = 7,
+        PreviousSibling = 8,
+        Conditions = 9,
     }
     #endregion
 
@@ -820,7 +834,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(AStoryManagerNode.Mask<>);
 
@@ -1096,8 +1110,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (AStoryManagerNode_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (AStoryManagerNode_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (AStoryManagerNode_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1114,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (AStoryManagerNode_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1122,21 +1138,21 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IAStoryManagerNodeGetter? lhs,
             IAStoryManagerNodeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Parent) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Parent) ?? true))
             {
                 if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.PreviousSibling) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.PreviousSibling) ?? true))
             {
                 if (!lhs.PreviousSibling.Equals(rhs.PreviousSibling)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)AStoryManagerNode_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AStoryManagerNode_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1144,23 +1160,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAStoryManagerNodeGetter?)lhs,
                 rhs: rhs as IAStoryManagerNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAStoryManagerNodeGetter?)lhs,
                 rhs: rhs as IAStoryManagerNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAStoryManagerNodeGetter item)
@@ -1755,12 +1771,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IAStoryManagerNodeGetter rhs) return false;
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAStoryManagerNodeGetter? obj)
         {
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).GetHashCode(this);

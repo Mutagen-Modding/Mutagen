@@ -77,12 +77,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INeckFatAdjustmentsScaleGetter rhs) return false;
-            return ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INeckFatAdjustmentsScaleGetter? obj)
         {
-            return ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -874,18 +874,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INeckFatAdjustmentsScaleGetter? lhs,
             INeckFatAdjustmentsScaleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)NeckFatAdjustmentsScale_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NeckFatAdjustmentsScale_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NeckFatAdjustmentsScale_FieldIndex.X) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NeckFatAdjustmentsScale_FieldIndex.X) ?? true))
             {
                 if (!lhs.X.EqualsWithin(rhs.X)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NeckFatAdjustmentsScale_FieldIndex.Y) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NeckFatAdjustmentsScale_FieldIndex.Y) ?? true))
             {
                 if (!lhs.Y.EqualsWithin(rhs.Y)) return false;
             }
@@ -1217,12 +1217,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INeckFatAdjustmentsScaleGetter rhs) return false;
-            return ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INeckFatAdjustmentsScaleGetter? obj)
         {
-            return ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)this).CommonInstance()!).GetHashCode(this);

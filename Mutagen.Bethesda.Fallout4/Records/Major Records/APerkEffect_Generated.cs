@@ -74,9 +74,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region PRKEDataTypeState
-        public APerkEffect.PRKEDataType PRKEDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -96,12 +93,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAPerkEffectGetter rhs) return false;
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAPerkEffectGetter? obj)
         {
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -119,19 +116,16 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Rank = initialValue;
                 this.Priority = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>());
-                this.PRKEDataTypeState = initialValue;
             }
 
             public Mask(
                 TItem Rank,
                 TItem Priority,
-                TItem Conditions,
-                TItem PRKEDataTypeState)
+                TItem Conditions)
             {
                 this.Rank = Rank;
                 this.Priority = Priority;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>());
-                this.PRKEDataTypeState = PRKEDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -146,7 +140,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Rank;
             public TItem Priority;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>? Conditions;
-            public TItem PRKEDataTypeState;
             #endregion
 
             #region Equals
@@ -162,7 +155,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Rank, rhs.Rank)) return false;
                 if (!object.Equals(this.Priority, rhs.Priority)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.PRKEDataTypeState, rhs.PRKEDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -171,7 +163,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Rank);
                 hash.Add(this.Priority);
                 hash.Add(this.Conditions);
-                hash.Add(this.PRKEDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -194,7 +185,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.PRKEDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -216,7 +206,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.PRKEDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -248,7 +237,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.PRKEDataTypeState = eval(this.PRKEDataTypeState);
             }
             #endregion
 
@@ -294,10 +282,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.PRKEDataTypeState ?? true)
-                    {
-                        sb.AppendItem(PRKEDataTypeState, "PRKEDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -325,7 +309,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Rank;
             public Exception? Priority;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>? Conditions;
-            public Exception? PRKEDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -340,8 +323,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Priority;
                     case APerkEffect_FieldIndex.Conditions:
                         return Conditions;
-                    case APerkEffect_FieldIndex.PRKEDataTypeState:
-                        return PRKEDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -360,9 +341,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case APerkEffect_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>(ex, null);
-                        break;
-                    case APerkEffect_FieldIndex.PRKEDataTypeState:
-                        this.PRKEDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -383,9 +361,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case APerkEffect_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>)obj;
                         break;
-                    case APerkEffect_FieldIndex.PRKEDataTypeState:
-                        this.PRKEDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -397,7 +372,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Rank != null) return true;
                 if (Priority != null) return true;
                 if (Conditions != null) return true;
-                if (PRKEDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -447,9 +421,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(PRKEDataTypeState, "PRKEDataTypeState");
-                }
             }
             #endregion
 
@@ -460,8 +431,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.Rank = this.Rank.Combine(rhs.Rank);
                 ret.Priority = this.Priority.Combine(rhs.Priority);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.PRKEDataTypeState = this.PRKEDataTypeState.Combine(rhs.PRKEDataTypeState);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -488,7 +458,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Rank;
             public bool Priority;
             public PerkCondition.TranslationMask? Conditions;
-            public bool PRKEDataTypeState;
             #endregion
 
             #region Ctors
@@ -500,7 +469,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OnOverall = onOverall;
                 this.Rank = defaultOn;
                 this.Priority = defaultOn;
-                this.PRKEDataTypeState = defaultOn;
             }
 
             #endregion
@@ -519,7 +487,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Rank, null));
                 ret.Add((Priority, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((PRKEDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -533,10 +500,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => APerkEffectCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectSetterCommon.Instance.RemapLinks(this, mapping);
-        [Flags]
-        public enum PRKEDataType
-        {
-        }
         #endregion
 
         #region Binary Translation
@@ -582,7 +545,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Byte Rank { get; set; }
         new Byte Priority { get; set; }
         new ExtendedList<PerkCondition> Conditions { get; }
-        new APerkEffect.PRKEDataType PRKEDataTypeState { get; set; }
     }
 
     /// <summary>
@@ -604,7 +566,6 @@ namespace Mutagen.Bethesda.Fallout4
         Byte Rank { get; }
         Byte Priority { get; }
         IReadOnlyList<IPerkConditionGetter> Conditions { get; }
-        APerkEffect.PRKEDataType PRKEDataTypeState { get; }
 
     }
 
@@ -661,7 +622,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((APerkEffectCommon)((IAPerkEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -777,7 +738,6 @@ namespace Mutagen.Bethesda.Fallout4
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        PRKEDataTypeState = 3,
     }
     #endregion
 
@@ -795,9 +755,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "f15dc4f7-81a8-4b37-935a-6c26aa4fc4de";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(APerkEffect.Mask<>);
 
@@ -882,7 +842,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Rank = default;
             item.Priority = default;
             item.Conditions.Clear();
-            item.PRKEDataTypeState = default;
         }
         
         #region Mutagen
@@ -903,7 +862,6 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: APerkEffectBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: APerkEffectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -940,7 +898,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.PRKEDataTypeState = item.PRKEDataTypeState == rhs.PRKEDataTypeState;
         }
         
         public string Print(
@@ -1007,34 +964,26 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.PRKEDataTypeState ?? true)
-            {
-                sb.AppendItem(item.PRKEDataTypeState, "PRKEDataTypeState");
-            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
             IAPerkEffectGetter? lhs,
             IAPerkEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.Rank) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Rank) ?? true))
             {
                 if (lhs.Rank != rhs.Rank) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.Priority) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Priority) ?? true))
             {
                 if (lhs.Priority != rhs.Priority) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((PerkConditionCommon)((IPerkConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)APerkEffect_FieldIndex.Conditions)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.PRKEDataTypeState) ?? true))
-            {
-                if (lhs.PRKEDataTypeState != rhs.PRKEDataTypeState) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((PerkConditionCommon)((IPerkConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)APerkEffect_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1045,7 +994,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Rank);
             hash.Add(item.Priority);
             hash.Add(item.Conditions);
-            hash.Add(item.PRKEDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1114,10 +1062,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.PRKEDataTypeState) ?? true))
-            {
-                item.PRKEDataTypeState = rhs.PRKEDataTypeState;
             }
         }
         
@@ -1211,12 +1155,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static readonly APerkEffectBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IAPerkEffectGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IAPerkEffectGetter item,
             MutagenWriter writer,
@@ -1233,9 +1171,6 @@ namespace Mutagen.Bethesda.Fallout4
             IAPerkEffectGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1258,12 +1193,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal partial class APerkEffectBinaryCreateTranslation
     {
         public static readonly APerkEffectBinaryCreateTranslation Instance = new APerkEffectBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IAPerkEffect item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IAPerkEffect item,
@@ -1359,7 +1288,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         private RangeInt32? _PRKELocation;
-        public APerkEffect.PRKEDataType PRKEDataTypeState { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1422,12 +1350,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAPerkEffectGetter rhs) return false;
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAPerkEffectGetter? obj)
         {
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).GetHashCode(this);

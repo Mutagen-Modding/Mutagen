@@ -78,9 +78,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region QSTADataTypeState
-        public QuestTarget.QSTADataType QSTADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -100,12 +97,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestTargetGetter rhs) return false;
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestTargetGetter? obj)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -123,19 +120,16 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Target = initialValue;
                 this.Flags = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.QSTADataTypeState = initialValue;
             }
 
             public Mask(
                 TItem Target,
                 TItem Flags,
-                TItem Conditions,
-                TItem QSTADataTypeState)
+                TItem Conditions)
             {
                 this.Target = Target;
                 this.Flags = Flags;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.QSTADataTypeState = QSTADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -150,7 +144,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Target;
             public TItem Flags;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public TItem QSTADataTypeState;
             #endregion
 
             #region Equals
@@ -166,7 +159,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Target, rhs.Target)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.QSTADataTypeState, rhs.QSTADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -175,7 +167,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Target);
                 hash.Add(this.Flags);
                 hash.Add(this.Conditions);
-                hash.Add(this.QSTADataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -198,7 +189,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.QSTADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -220,7 +210,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.QSTADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -252,7 +241,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.QSTADataTypeState = eval(this.QSTADataTypeState);
             }
             #endregion
 
@@ -298,10 +286,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.QSTADataTypeState ?? true)
-                    {
-                        sb.AppendItem(QSTADataTypeState, "QSTADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -329,7 +313,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Target;
             public Exception? Flags;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public Exception? QSTADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -344,8 +327,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Flags;
                     case QuestTarget_FieldIndex.Conditions:
                         return Conditions;
-                    case QuestTarget_FieldIndex.QSTADataTypeState:
-                        return QSTADataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -364,9 +345,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case QuestTarget_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
-                        break;
-                    case QuestTarget_FieldIndex.QSTADataTypeState:
-                        this.QSTADataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -387,9 +365,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestTarget_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
-                    case QuestTarget_FieldIndex.QSTADataTypeState:
-                        this.QSTADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -401,7 +376,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Target != null) return true;
                 if (Flags != null) return true;
                 if (Conditions != null) return true;
-                if (QSTADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -451,9 +425,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(QSTADataTypeState, "QSTADataTypeState");
-                }
             }
             #endregion
 
@@ -464,8 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.Target = this.Target.Combine(rhs.Target);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.QSTADataTypeState = this.QSTADataTypeState.Combine(rhs.QSTADataTypeState);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -492,7 +462,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Target;
             public bool Flags;
             public Condition.TranslationMask? Conditions;
-            public bool QSTADataTypeState;
             #endregion
 
             #region Ctors
@@ -504,7 +473,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OnOverall = onOverall;
                 this.Target = defaultOn;
                 this.Flags = defaultOn;
-                this.QSTADataTypeState = defaultOn;
             }
 
             #endregion
@@ -523,7 +491,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Target, null));
                 ret.Add((Flags, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((QSTADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -537,10 +504,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestTargetCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetSetterCommon.Instance.RemapLinks(this, mapping);
-        [Flags]
-        public enum QSTADataType
-        {
-        }
         #endregion
 
         #region Binary Translation
@@ -609,7 +572,6 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLink<IPlacedGetter> Target { get; set; }
         new Quest.TargetFlag Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new QuestTarget.QSTADataType QSTADataTypeState { get; set; }
     }
 
     public partial interface IQuestTargetGetter :
@@ -628,7 +590,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IPlacedGetter> Target { get; }
         Quest.TargetFlag Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        QuestTarget.QSTADataType QSTADataTypeState { get; }
 
     }
 
@@ -685,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -801,7 +762,6 @@ namespace Mutagen.Bethesda.Skyrim
         Target = 0,
         Flags = 1,
         Conditions = 2,
-        QSTADataTypeState = 3,
     }
     #endregion
 
@@ -819,9 +779,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "37f43515-81c6-41a2-9d11-d42e333a4ccc";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(QuestTarget.Mask<>);
 
@@ -904,7 +864,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Target.Clear();
             item.Flags = default;
             item.Conditions.Clear();
-            item.QSTADataTypeState = default;
         }
         
         #region Mutagen
@@ -926,7 +885,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: QuestTargetBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: QuestTargetBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -963,7 +921,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.QSTADataTypeState = item.QSTADataTypeState == rhs.QSTADataTypeState;
         }
         
         public string Print(
@@ -1030,34 +987,26 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.QSTADataTypeState ?? true)
-            {
-                sb.AppendItem(item.QSTADataTypeState, "QSTADataTypeState");
-            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
             IQuestTargetGetter? lhs,
             IQuestTargetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
             {
                 if (!lhs.Target.Equals(rhs.Target)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestTarget_FieldIndex.Conditions)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.QSTADataTypeState) ?? true))
-            {
-                if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestTarget_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1068,7 +1017,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Target);
             hash.Add(item.Flags);
             hash.Add(item.Conditions);
-            hash.Add(item.QSTADataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1138,10 +1086,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.QSTADataTypeState) ?? true))
-            {
-                item.QSTADataTypeState = rhs.QSTADataTypeState;
             }
         }
         
@@ -1235,12 +1179,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static readonly QuestTargetBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IQuestTargetGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IQuestTargetGetter item,
             MutagenWriter writer,
@@ -1274,9 +1212,6 @@ namespace Mutagen.Bethesda.Skyrim
             IQuestTargetGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1299,12 +1234,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class QuestTargetBinaryCreateTranslation
     {
         public static readonly QuestTargetBinaryCreateTranslation Instance = new QuestTargetBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IQuestTarget item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IQuestTarget item,
@@ -1411,7 +1340,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         private RangeInt32? _QSTALocation;
-        public QuestTarget.QSTADataType QSTADataTypeState { get; private set; }
         #region Target
         private int _TargetLocation => _QSTALocation!.Value.Min;
         private bool _Target_IsSet => _QSTALocation.HasValue;
@@ -1529,12 +1457,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestTargetGetter rhs) return false;
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestTargetGetter? obj)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).GetHashCode(this);

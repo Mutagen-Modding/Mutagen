@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAAudioEffectGetter rhs) return false;
-            return ((AAudioEffectCommon)((IAAudioEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AAudioEffectCommon)((IAAudioEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAAudioEffectGetter? obj)
         {
-            return ((AAudioEffectCommon)((IAAudioEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AAudioEffectCommon)((IAAudioEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AAudioEffectCommon)((IAAudioEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AAudioEffectCommon)((IAAudioEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -767,10 +767,10 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAAudioEffectGetter? lhs,
             IAAudioEffectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)AAudioEffect_FieldIndex.Enabled) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AAudioEffect_FieldIndex.Enabled) ?? true))
             {
                 if (lhs.Enabled != rhs.Enabled) return false;
             }
@@ -1051,12 +1051,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAAudioEffectGetter rhs) return false;
-            return ((AAudioEffectCommon)((IAAudioEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AAudioEffectCommon)((IAAudioEffectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAAudioEffectGetter? obj)
         {
-            return ((AAudioEffectCommon)((IAAudioEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AAudioEffectCommon)((IAAudioEffectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AAudioEffectCommon)((IAAudioEffectGetter)this).CommonInstance()!).GetHashCode(this);

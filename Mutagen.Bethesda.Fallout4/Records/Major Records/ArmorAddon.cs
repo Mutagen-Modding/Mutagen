@@ -26,7 +26,7 @@ public partial class ArmorAddon
 
 partial class ArmorAddonBinaryCreateTranslation
 {
-    public static bool IsEnabled(byte b) => EnumExt.HasFlag(b, (byte)2);
+    public static bool IsEnabled(byte b) => Enums.HasFlag(b, (byte)2);
 
     public static partial void FillBinaryWeightSliderEnabledCustom(MutagenFrame frame, IArmorAddonInternal item)
     {

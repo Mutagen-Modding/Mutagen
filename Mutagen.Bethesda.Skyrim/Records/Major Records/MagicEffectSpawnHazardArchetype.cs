@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class MagicEffectSpawnHazardArchetype
 {
-    public FormLink<IHazardGetter> Association => this.AssociationKey.AsLink<IHazardGetter>();
+    public FormLink<IHazardGetter> Association => this.AssociationKey.ToLink<IHazardGetter>();
 
     IFormLink<IHazardGetter> IMagicEffectSpawnHazardArchetype.Association => this.Association;
     IFormLinkGetter<IHazardGetter> IMagicEffectSpawnHazardArchetypeGetter.Association => this.Association;
@@ -27,5 +27,5 @@ public partial interface IMagicEffectSpawnHazardArchetypeGetter
 
 partial class MagicEffectSpawnHazardArchetypeBinaryOverlay
 {
-    public IFormLinkGetter<IHazardGetter> Association => this.AssociationKey.AsLink<IHazardGetter>();
+    public IFormLinkGetter<IHazardGetter> Association => this.AssociationKey.ToLink<IHazardGetter>();
 }

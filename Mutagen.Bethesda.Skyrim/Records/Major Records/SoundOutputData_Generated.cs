@@ -77,12 +77,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ISoundOutputDataGetter rhs) return false;
-            return ((SoundOutputDataCommon)((ISoundOutputDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundOutputDataCommon)((ISoundOutputDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundOutputDataGetter? obj)
         {
-            return ((SoundOutputDataCommon)((ISoundOutputDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundOutputDataCommon)((ISoundOutputDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundOutputDataCommon)((ISoundOutputDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundOutputDataCommon)((ISoundOutputDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -885,18 +885,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISoundOutputDataGetter? lhs,
             ISoundOutputDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SoundOutputData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundOutputData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundOutputData_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundOutputData_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundOutputData_FieldIndex.ReverbSendPercent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundOutputData_FieldIndex.ReverbSendPercent) ?? true))
             {
                 if (!lhs.ReverbSendPercent.Equals(rhs.ReverbSendPercent)) return false;
             }
@@ -1241,12 +1241,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ISoundOutputDataGetter rhs) return false;
-            return ((SoundOutputDataCommon)((ISoundOutputDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundOutputDataCommon)((ISoundOutputDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundOutputDataGetter? obj)
         {
-            return ((SoundOutputDataCommon)((ISoundOutputDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundOutputDataCommon)((ISoundOutputDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundOutputDataCommon)((ISoundOutputDataGetter)this).CommonInstance()!).GetHashCode(this);

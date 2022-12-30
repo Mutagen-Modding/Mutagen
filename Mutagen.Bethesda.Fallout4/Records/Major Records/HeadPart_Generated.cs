@@ -234,6 +234,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Model,
                 TItem Flags,
@@ -250,7 +251,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
@@ -864,12 +866,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Type = this.Type.Combine(rhs.Type);
-                ret.ExtraParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ExtraParts?.Overall, rhs.ExtraParts?.Overall), ExceptionExt.Combine(this.ExtraParts?.Specific, rhs.ExtraParts?.Specific));
-                ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Part.ErrorMask?>>?>(ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
+                ret.ExtraParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ExtraParts?.Overall, rhs.ExtraParts?.Overall), Noggog.ExceptionExt.Combine(this.ExtraParts?.Specific, rhs.ExtraParts?.Specific));
+                ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Part.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), Noggog.ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
                 ret.TextureSet = this.TextureSet.Combine(rhs.TextureSet);
                 ret.Color = this.Color.Combine(rhs.Color);
                 ret.ValidRaces = this.ValidRaces.Combine(rhs.ValidRaces);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1003,12 +1005,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IHeadPartGetter rhs) return false;
-            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHeadPartGetter? obj)
         {
-            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1207,7 +1209,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((HeadPartCommon)((IHeadPartGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1283,6 +1285,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static HeadPart Duplicate(
+            this IHeadPartGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((HeadPartCommon)((IHeadPartGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1315,16 +1328,17 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Model = 7,
-        Flags = 8,
-        Type = 9,
-        ExtraParts = 10,
-        Parts = 11,
-        TextureSet = 12,
-        Color = 13,
-        ValidRaces = 14,
-        Conditions = 15,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Model = 8,
+        Flags = 9,
+        Type = 10,
+        ExtraParts = 11,
+        Parts = 12,
+        TextureSet = 13,
+        Color = 14,
+        ValidRaces = 15,
+        Conditions = 16,
     }
     #endregion
 
@@ -1344,7 +1358,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(HeadPart.Mask<>);
 
@@ -1700,8 +1714,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (HeadPart_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (HeadPart_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (HeadPart_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1718,7 +1734,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (HeadPart_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1726,53 +1742,53 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IHeadPartGetter? lhs,
             IHeadPartGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Name) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)HeadPart_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)HeadPart_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.ExtraParts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ExtraParts) ?? true))
             {
                 if (!lhs.ExtraParts.SequenceEqualNullable(rhs.ExtraParts)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Parts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Parts) ?? true))
             {
-                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((PartCommon)((IPartGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadPart_FieldIndex.Parts)))) return false;
+                if (!lhs.Parts.SequenceEqual(rhs.Parts, (l, r) => ((PartCommon)((IPartGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadPart_FieldIndex.Parts)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {
                 if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.Equals(rhs.Color)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.ValidRaces) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ValidRaces) ?? true))
             {
                 if (!lhs.ValidRaces.Equals(rhs.ValidRaces)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadPart_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadPart_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1780,23 +1796,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHeadPartGetter?)lhs,
                 rhs: rhs as IHeadPartGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IHeadPartGetter?)lhs,
                 rhs: rhs as IHeadPartGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IHeadPartGetter item)
@@ -2744,12 +2760,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IHeadPartGetter rhs) return false;
-            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHeadPartGetter? obj)
         {
-            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).GetHashCode(this);

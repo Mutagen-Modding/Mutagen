@@ -68,12 +68,12 @@ namespace Mutagen.Bethesda.Pex
         public override bool Equals(object? obj)
         {
             if (obj is not IDebugStructOrderGetter rhs) return false;
-            return ((DebugStructOrderCommon)((IDebugStructOrderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DebugStructOrderCommon)((IDebugStructOrderGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDebugStructOrderGetter? obj)
         {
-            return ((DebugStructOrderCommon)((IDebugStructOrderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DebugStructOrderCommon)((IDebugStructOrderGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DebugStructOrderCommon)((IDebugStructOrderGetter)this).CommonInstance()!).GetHashCode(this);
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Pex
                 var ret = new ErrorMask();
                 ret.ObjectName = this.ObjectName.Combine(rhs.ObjectName);
                 ret.OrderName = this.OrderName.Combine(rhs.OrderName);
-                ret.Names = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Names?.Overall, rhs.Names?.Overall), ExceptionExt.Combine(this.Names?.Specific, rhs.Names?.Specific));
+                ret.Names = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Names?.Overall, rhs.Names?.Overall), Noggog.ExceptionExt.Combine(this.Names?.Specific, rhs.Names?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Pex
             return ((DebugStructOrderCommon)((IDebugStructOrderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -865,18 +865,18 @@ namespace Mutagen.Bethesda.Pex
         public virtual bool Equals(
             IDebugStructOrderGetter? lhs,
             IDebugStructOrderGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DebugStructOrder_FieldIndex.ObjectName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugStructOrder_FieldIndex.ObjectName) ?? true))
             {
                 if (!string.Equals(lhs.ObjectName, rhs.ObjectName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugStructOrder_FieldIndex.OrderName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugStructOrder_FieldIndex.OrderName) ?? true))
             {
                 if (!string.Equals(lhs.OrderName, rhs.OrderName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DebugStructOrder_FieldIndex.Names) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebugStructOrder_FieldIndex.Names) ?? true))
             {
                 if (!lhs.Names.SequenceEqualNullable(rhs.Names)) return false;
             }

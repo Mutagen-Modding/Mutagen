@@ -19,7 +19,8 @@ public partial class Global : GlobalCustomParsing.IGlobalCommon
     public static readonly RecordType FLTV = new RecordType("FLTV");
 
     public abstract float? RawFloat { get; set; }
-    public abstract char TypeChar { get; }
+
+    char IGlobalGetter.TypeChar => throw new NotImplementedException();
 
     public static Global CreateFromBinary(
         MutagenFrame frame,
@@ -38,7 +39,7 @@ public partial class Global : GlobalCustomParsing.IGlobalCommon
                     case GlobalFloat.TRIGGER_CHAR:
                         return GlobalFloat.CreateFromBinary(f);
                     default:
-                        throw new ArgumentException($"Unknown trigger char: {triggerChar}");
+                        return GlobalUnknown.CreateFromBinary(f);
                 }
             });
     }
@@ -68,7 +69,7 @@ partial class GlobalBinaryCreateTranslation
 abstract partial class GlobalBinaryOverlay
 {
     public abstract float? RawFloat { get; }
-    public abstract char TypeChar { get; }
+    char IGlobalGetter.TypeChar => throw new NotImplementedException();
 
     public static IGlobalGetter GlobalFactory(
         OverlayStream stream,
@@ -95,7 +96,9 @@ abstract partial class GlobalBinaryOverlay
                     package,
                     translationParams);
             default:
-                throw new ArgumentException($"Unknown trigger char: {globalChar}");
+                return GlobalUnknownBinaryOverlay.GlobalUnknownFactory(
+                    stream,
+                    package);
         }
     }
 

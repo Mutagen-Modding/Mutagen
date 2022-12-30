@@ -284,12 +284,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IBookGetter.InventoryArt => this.InventoryArt;
         #endregion
-        #region DATADataTypeState
-        public Book.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
-        #region DNAMDataTypeState
-        public Book.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -335,8 +329,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextOffsetY = initialValue;
                 this.Description = initialValue;
                 this.InventoryArt = initialValue;
-                this.DATADataTypeState = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -346,6 +338,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -365,16 +358,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem TextOffsetX,
                 TItem TextOffsetY,
                 TItem Description,
-                TItem InventoryArt,
-                TItem DATADataTypeState,
-                TItem DNAMDataTypeState)
+                TItem InventoryArt)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -396,8 +388,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextOffsetY = TextOffsetY;
                 this.Description = Description;
                 this.InventoryArt = InventoryArt;
-                this.DATADataTypeState = DATADataTypeState;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -429,8 +419,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem TextOffsetY;
             public TItem Description;
             public TItem InventoryArt;
-            public TItem DATADataTypeState;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -464,8 +452,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.TextOffsetY, rhs.TextOffsetY)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.InventoryArt, rhs.InventoryArt)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -491,8 +477,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.TextOffsetY);
                 hash.Add(this.Description);
                 hash.Add(this.InventoryArt);
-                hash.Add(this.DATADataTypeState);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -557,8 +541,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.TextOffsetY)) return false;
                 if (!eval(this.Description)) return false;
                 if (!eval(this.InventoryArt)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -621,8 +603,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.TextOffsetY)) return true;
                 if (eval(this.Description)) return true;
                 if (eval(this.InventoryArt)) return true;
-                if (eval(this.DATADataTypeState)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -671,8 +651,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.TextOffsetY = eval(this.TextOffsetY);
                 obj.Description = eval(this.Description);
                 obj.InventoryArt = eval(this.InventoryArt);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -788,14 +766,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(InventoryArt, "InventoryArt");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -827,8 +797,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? TextOffsetY;
             public Exception? Description;
             public Exception? InventoryArt;
-            public Exception? DATADataTypeState;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -877,10 +845,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Description;
                     case Book_FieldIndex.InventoryArt:
                         return InventoryArt;
-                    case Book_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
-                    case Book_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -950,12 +914,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Book_FieldIndex.InventoryArt:
                         this.InventoryArt = ex;
-                        break;
-                    case Book_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
-                    case Book_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1028,12 +986,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Book_FieldIndex.InventoryArt:
                         this.InventoryArt = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
-                    case Book_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1063,8 +1015,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (TextOffsetY != null) return true;
                 if (Description != null) return true;
                 if (InventoryArt != null) return true;
-                if (DATADataTypeState != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1156,12 +1106,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(InventoryArt, "InventoryArt");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1180,7 +1124,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.FeaturedItemMessage = this.FeaturedItemMessage.Combine(rhs.FeaturedItemMessage);
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
@@ -1190,8 +1134,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.TextOffsetY = this.TextOffsetY.Combine(rhs.TextOffsetY);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.InventoryArt = this.InventoryArt.Combine(rhs.InventoryArt);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1234,8 +1176,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool TextOffsetY;
             public bool Description;
             public bool InventoryArt;
-            public bool DATADataTypeState;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1258,8 +1198,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TextOffsetY = defaultOn;
                 this.Description = defaultOn;
                 this.InventoryArt = defaultOn;
-                this.DATADataTypeState = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1287,8 +1225,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((TextOffsetY, null));
                 ret.Add((Description, null));
                 ret.Add((InventoryArt, null));
-                ret.Add((DATADataTypeState, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1345,14 +1281,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IBook);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1361,12 +1289,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IBookGetter rhs) return false;
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBookGetter? obj)
         {
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BookCommon)((IBookGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1493,8 +1421,6 @@ namespace Mutagen.Bethesda.Fallout4
         new UInt32 TextOffsetY { get; set; }
         new TranslatedString? Description { get; set; }
         new IFormLinkNullable<IStaticGetter> InventoryArt { get; set; }
-        new Book.DATADataType DATADataTypeState { get; set; }
-        new Book.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IBookInternal :
@@ -1582,8 +1508,6 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32 TextOffsetY { get; }
         ITranslatedStringGetter? Description { get; }
         IFormLinkNullableGetter<IStaticGetter> InventoryArt { get; }
-        Book.DATADataType DATADataTypeState { get; }
-        Book.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -1640,7 +1564,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((BookCommon)((IBookGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1716,6 +1640,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Book Duplicate(
+            this IBookGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((BookCommon)((IBookGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1748,28 +1683,27 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        Name = 9,
-        Model = 10,
-        Icons = 11,
-        BookText = 12,
-        Destructible = 13,
-        PickUpSound = 14,
-        PutDownSound = 15,
-        Keywords = 16,
-        FeaturedItemMessage = 17,
-        Value = 18,
-        Weight = 19,
-        Flags = 20,
-        Teaches = 21,
-        TextOffsetX = 22,
-        TextOffsetY = 23,
-        Description = 24,
-        InventoryArt = 25,
-        DATADataTypeState = 26,
-        DNAMDataTypeState = 27,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        Name = 10,
+        Model = 11,
+        Icons = 12,
+        BookText = 13,
+        Destructible = 14,
+        PickUpSound = 15,
+        PutDownSound = 16,
+        Keywords = 17,
+        FeaturedItemMessage = 18,
+        Value = 19,
+        Weight = 20,
+        Flags = 21,
+        Teaches = 22,
+        TextOffsetX = 23,
+        TextOffsetY = 24,
+        Description = 25,
+        InventoryArt = 26,
     }
     #endregion
 
@@ -1787,9 +1721,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "c56f0c8d-eb97-4ab3-9fd8-1eb891d6ac5a";
 
-        public const ushort AdditionalFieldCount = 22;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 28;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Book.Mask<>);
 
@@ -1915,8 +1849,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.TextOffsetY = default;
             item.Description = default;
             item.InventoryArt.Clear();
-            item.DATADataTypeState = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2054,8 +1986,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.TextOffsetY = item.TextOffsetY == rhs.TextOffsetY;
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.InventoryArt = item.InventoryArt.Equals(rhs.InventoryArt);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2203,14 +2133,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.InventoryArt.FormKeyNullable, "InventoryArt");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static Book_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2229,8 +2151,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Book_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Book_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Book_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2247,7 +2171,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Book_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2255,121 +2179,113 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IBookGetter? lhs,
             IBookGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Book_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Book_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Book_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Book_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Book_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Book_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.BookText) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.BookText) ?? true))
             {
                 if (!object.Equals(lhs.BookText, rhs.BookText)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Book_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.FeaturedItemMessage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.FeaturedItemMessage) ?? true))
             {
                 if (!lhs.FeaturedItemMessage.Equals(rhs.FeaturedItemMessage)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Teaches, rhs.Teaches, out var lhsTeaches, out var rhsTeaches, out var isTeachesEqual))
                 {
-                    if (!((BookTeachTargetCommon)((IBookTeachTargetGetter)lhsTeaches).CommonInstance()!).Equals(lhsTeaches, rhsTeaches, crystal?.GetSubCrystal((int)Book_FieldIndex.Teaches))) return false;
+                    if (!((BookTeachTargetCommon)((IBookTeachTargetGetter)lhsTeaches).CommonInstance()!).Equals(lhsTeaches, rhsTeaches, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Teaches))) return false;
                 }
                 else if (!isTeachesEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.TextOffsetX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.TextOffsetX) ?? true))
             {
                 if (lhs.TextOffsetX != rhs.TextOffsetX) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.TextOffsetY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.TextOffsetY) ?? true))
             {
                 if (lhs.TextOffsetY != rhs.TextOffsetY) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.InventoryArt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.InventoryArt) ?? true))
             {
                 if (!lhs.InventoryArt.Equals(rhs.InventoryArt)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Book_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -2377,23 +2293,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBookGetter?)lhs,
                 rhs: rhs as IBookGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IBookGetter?)lhs,
                 rhs: rhs as IBookGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IBookGetter item)
@@ -2440,8 +2356,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.InventoryArt);
-            hash.Add(item.DATADataTypeState);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2831,14 +2745,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.InventoryArt.SetTo(rhs.InventoryArt.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2986,15 +2892,6 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryWriteTranslator
     {
         public new static readonly BookBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IBookGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IBookGetter item,
@@ -3145,7 +3042,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3205,15 +3102,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly BookBinaryCreateTranslation Instance = new BookBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BOOK;
-        public static void FillBinaryStructs(
-            IBookInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IBookInternal item,
             MutagenFrame frame,
@@ -3489,7 +3377,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage => _FeaturedItemMessageLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FeaturedItemMessageLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
         #endregion
         private RangeInt32? _DATALocation;
-        public Book.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
@@ -3501,7 +3388,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Book.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         public partial Book.Flag GetFlagsCustom();
@@ -3755,12 +3641,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IBookGetter rhs) return false;
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IBookGetter? obj)
         {
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((BookCommon)((IBookGetter)this).CommonInstance()!).GetHashCode(this);

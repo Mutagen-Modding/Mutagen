@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using System.Collections.Immutable;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
@@ -16,11 +17,12 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     where TModGetter : class, IContextGetterMod<TMod, TModGetter>
 {
     private IGameReleaseContext Release { get; }
-
     internal IDataDirectoryProvider? DataDirectoryProvider { get; init; }
     internal ILoadOrderListingsProvider? ListingsProvider { get; init; }
-    internal IPluginListingsPathProvider? PluginListingsPathProvider { get; init; }
+    internal IPluginListingsPathContext? PluginListingsPathContext { get; init; }
     internal ICreationClubListingsPathProvider? CccListingsPathProvider { get; init; }
+    internal IFileSystem? FileSystem { get; init; }
+    internal Func<Type, object?>? Resolver { get; init; }
 
     private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
 
@@ -40,13 +42,13 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         IGameReleaseContext releaseProvider,
         IDataDirectoryProvider dataDirectoryProvider,
         ILoadOrderListingsProvider listingsProvider,
-        IPluginListingsPathProvider pluginListingsPathProvider,
+        IPluginListingsPathContext pluginListingsPathContext,
         ICreationClubListingsPathProvider cccListingsPathProvider)
     {
         Release = releaseProvider;
         DataDirectoryProvider = dataDirectoryProvider;
         ListingsProvider = listingsProvider;
-        PluginListingsPathProvider = pluginListingsPathProvider;
+        PluginListingsPathContext = pluginListingsPathContext;
         CccListingsPathProvider = cccListingsPathProvider;
         LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
         ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>>.Empty;
@@ -128,6 +130,35 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         return this with { DataDirectoryProvider = new DataDirectoryInjection(path) };
     }
 
+    public GameEnvironmentBuilder<TMod, TModGetter> WithFileSystem(IFileSystem fileSystem)
+    {
+        return this with { FileSystem = fileSystem };
+    }
+
+    public GameEnvironmentBuilder<TMod, TModGetter> WithResolver(Func<Type, object?> resolver)
+    {
+        return this with { Resolver = resolver };
+    }
+
+    private TObject Resolve<TObject>(Func<TObject> fallback, TObject? value = default)
+    {
+        if (value != null)
+        {
+            return value;
+        }
+        
+        if (Resolver != null)
+        {
+            var ret = Resolver(typeof(TObject));
+            if (ret != null)
+            {
+                return (TObject)ret;
+            }
+        }
+
+        return fallback();
+    }
+
     /// <summary>
     /// Creates an environment with all the given rules added to the builder
     /// </summary>
@@ -135,46 +166,70 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     public IGameEnvironment<TMod, TModGetter> Build()
     {
         Warmup.Init();
-        var category = new GameCategoryContext(Release);
-        var gameLocator = new GameLocator();
-        var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(Release, gameLocator);
-        var pluginPathProvider = PluginListingsPathProvider ?? new PluginListingsPathProvider(Release);
-        var cccPath = CccListingsPathProvider ?? new CreationClubListingsPathProvider(
-            category,
-            new CreationClubEnabledProvider(category),
-            new GameDirectoryProvider(
-                Release,
-                gameLocator));
-        var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
-            new PluginListingsParser(
-                new LoadOrderListingParser(
-                    new HasEnabledMarkersProvider(
-                        Release))));
+        var fs = Resolve<IFileSystem>(() => IFileSystemExt.DefaultFilesystem, FileSystem);
 
-        var listingsProv = ListingsProvider ?? new LoadOrderListingsProvider(
-            new OrderListings(),
-            new ImplicitListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                new ImplicitListingModKeyProvider(
-                    Release)),
-            new PluginListingsProvider(
+        var gameLocator = new Lazy<GameLocator>(() => new GameLocator());
+        var dataDirectory = Resolve<IDataDirectoryProvider>(
+            () => new DataDirectoryProvider(
                 Release,
-                new TimestampedPluginListingsProvider(
-                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
-                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                    pluginRawListingsReader,
-                    dataDirectory,
-                    pluginPathProvider),
-                new EnabledPluginListingsProvider(
-                    pluginRawListingsReader,
-                    pluginPathProvider)),
-            new CreationClubListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                cccPath,
-                new CreationClubRawListingsReader()));
+                gameLocator.Value), 
+            DataDirectoryProvider);
+
+        var pluginPathProvider = Resolve<IPluginListingsPathContext>(
+            () => new PluginListingsPathContext(
+                new PluginListingsPathProvider(),
+                Release),
+            PluginListingsPathContext);
+
+        var cccPath = Resolve<ICreationClubListingsPathProvider>(
+            () =>
+            {
+                var category = new GameCategoryContext(Release);
+                return new CreationClubListingsPathProvider(
+                    category,
+                    new CreationClubEnabledProvider(category),
+                    new GameDirectoryProvider(
+                        Release,
+                        gameLocator.Value));
+            },
+            CccListingsPathProvider);
+
+        var listingsProv = Resolve<ILoadOrderListingsProvider>(
+            () =>
+            {
+                var pluginRawListingsReader = new PluginRawListingsReader(
+                    fs,
+                    new PluginListingsParser(
+                        new PluginListingCommentTrimmer(),
+                        new LoadOrderListingParser(
+                            new HasEnabledMarkersProvider(
+                                Release))));
+
+                return new LoadOrderListingsProvider(
+                    new OrderListings(),
+                    new ImplicitListingsProvider(
+                        fs,
+                        dataDirectory,
+                        new ImplicitListingModKeyProvider(
+                            Release)),
+                    new PluginListingsProvider(
+                        Release,
+                        new TimestampedPluginListingsProvider(
+                            new TimestampAligner(fs),
+                            new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                            pluginRawListingsReader,
+                            dataDirectory,
+                            pluginPathProvider),
+                        new EnabledPluginListingsProvider(
+                            pluginRawListingsReader,
+                            pluginPathProvider)),
+                    new CreationClubListingsProvider(
+                        fs,
+                        dataDirectory,
+                        cccPath,
+                        new CreationClubRawListingsReader()));
+            },
+            ListingsProvider);
 
         var filteredListings = listingsProv.Get();
         foreach (var filter in LoadOrderListingProcessors)
@@ -183,11 +238,11 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         }
 
         var loGetter = new LoadOrderImporter<TModGetter>(
-            IFileSystemExt.DefaultFilesystem,
+            fs,
             dataDirectory,
             new LoadOrderListingsInjection(filteredListings),
             new ModImporter<TModGetter>(
-                IFileSystemExt.DefaultFilesystem,
+                fs,
                 Release));
 
         ILoadOrderGetter<IModListingGetter<TModGetter>> lo = loGetter.Import();
@@ -203,7 +258,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             dataFolderPath: dataDirectory.Path,
             loadOrderFilePath: pluginPathProvider.Path,
             creationClubListingsFilePath: cccPath.Path,
-            loadOrder: loGetter.Import(),
+            loadOrder: lo,
             linkCache: linkCache);
     }
 }
@@ -211,11 +266,12 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
 public sealed record GameEnvironmentBuilder
 {
     private IGameReleaseContext Release { get; }
-
     internal IDataDirectoryProvider? DataDirectoryProvider { get; init; }
     internal ILoadOrderListingsProvider? ListingsProvider { get; init; }
-    internal IPluginListingsPathProvider? PluginListingsPathProvider { get; init; }
+    internal IPluginListingsPathContext? PluginListingsPathContext { get; init; }
     internal ICreationClubListingsPathProvider? CccListingsPathProvider { get; init; }
+    internal IFileSystem? FileSystem { get; init; }
+    internal Func<Type, object?>? Resolver { get; init; }
 
     private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
 
@@ -235,13 +291,13 @@ public sealed record GameEnvironmentBuilder
         IGameReleaseContext releaseProvider,
         IDataDirectoryProvider dataDirectoryProvider,
         ILoadOrderListingsProvider listingsProvider,
-        IPluginListingsPathProvider pluginListingsPathProvider,
+        IPluginListingsPathContext pluginListingsPathContext,
         ICreationClubListingsPathProvider cccListingsPathProvider)
     {
         Release = releaseProvider;
         DataDirectoryProvider = dataDirectoryProvider;
         ListingsProvider = listingsProvider;
-        PluginListingsPathProvider = pluginListingsPathProvider;
+        PluginListingsPathContext = pluginListingsPathContext;
         CccListingsPathProvider = cccListingsPathProvider;
         LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
         ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>>.Empty;
@@ -322,6 +378,35 @@ public sealed record GameEnvironmentBuilder
     {
         return this with { DataDirectoryProvider = new DataDirectoryInjection(path) };
     }
+    
+    public GameEnvironmentBuilder WithFileSystem(IFileSystem fileSystem)
+    {
+        return this with { FileSystem = fileSystem };
+    }
+
+    public GameEnvironmentBuilder WithResolver(Func<Type, object?> resolver)
+    {
+        return this with { Resolver = resolver };
+    }
+
+    private TObject Resolve<TObject>(Func<TObject> fallback, TObject? value = default)
+    {
+        if (value != null)
+        {
+            return value;
+        }
+        
+        if (Resolver != null)
+        {
+            var ret = Resolver(typeof(TObject));
+            if (ret != null)
+            {
+                return (TObject)ret;
+            }
+        }
+
+        return fallback();
+    }
 
     /// <summary>
     /// Creates an environment with all the given rules added to the builder
@@ -330,46 +415,70 @@ public sealed record GameEnvironmentBuilder
     public IGameEnvironment Build()
     {
         Warmup.Init();
-        var category = new GameCategoryContext(Release);
-        var gameLocator = new GameLocator();
-        var dataDirectory = DataDirectoryProvider ?? new DataDirectoryProvider(Release, gameLocator);
-        var pluginPathProvider = PluginListingsPathProvider ?? new PluginListingsPathProvider(Release);
-        var cccPath = CccListingsPathProvider ?? new CreationClubListingsPathProvider(
-            category,
-            new CreationClubEnabledProvider(category),
-            new GameDirectoryProvider(
+        var fs = Resolve<IFileSystem>(() => IFileSystemExt.DefaultFilesystem, FileSystem);
+        
+        var gameLocator = new Lazy<GameLocator>(() => new GameLocator());
+        var dataDirectory = Resolve<IDataDirectoryProvider>(
+            () => new DataDirectoryProvider(
                 Release,
-                gameLocator));
-        var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
-            new PluginListingsParser(
-                new LoadOrderListingParser(
-                    new HasEnabledMarkersProvider(
-                        Release))));
+                gameLocator.Value), 
+            DataDirectoryProvider);
+        
+        var pluginPathProvider = Resolve<IPluginListingsPathContext>(
+            () => new PluginListingsPathContext(
+                new PluginListingsPathProvider(),
+                Release),
+            PluginListingsPathContext);
+        
+        var cccPath = Resolve<ICreationClubListingsPathProvider>(
+            () =>
+            {
+                var category = new GameCategoryContext(Release);
+                return new CreationClubListingsPathProvider(
+                    category,
+                    new CreationClubEnabledProvider(category),
+                    new GameDirectoryProvider(
+                        Release,
+                        gameLocator.Value));
+            },
+            CccListingsPathProvider);
 
-        var listingsProv = ListingsProvider ?? new LoadOrderListingsProvider(
-            new OrderListings(),
-            new ImplicitListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                new ImplicitListingModKeyProvider(
-                    Release)),
-            new PluginListingsProvider(
-                Release,
-                new TimestampedPluginListingsProvider(
-                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
-                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                    pluginRawListingsReader,
-                    dataDirectory,
-                    pluginPathProvider),
-                new EnabledPluginListingsProvider(
-                    pluginRawListingsReader,
-                    pluginPathProvider)),
-            new CreationClubListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                cccPath,
-                new CreationClubRawListingsReader()));
+        var listingsProv = Resolve<ILoadOrderListingsProvider>(
+            () =>
+            {
+                var pluginRawListingsReader = new PluginRawListingsReader(
+                    fs,
+                    new PluginListingsParser(
+                        new PluginListingCommentTrimmer(),
+                        new LoadOrderListingParser(
+                            new HasEnabledMarkersProvider(
+                                Release))));
+
+                return new LoadOrderListingsProvider(
+                    new OrderListings(),
+                    new ImplicitListingsProvider(
+                        fs,
+                        dataDirectory,
+                        new ImplicitListingModKeyProvider(
+                            Release)),
+                    new PluginListingsProvider(
+                        Release,
+                        new TimestampedPluginListingsProvider(
+                            new TimestampAligner(fs),
+                            new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                            pluginRawListingsReader,
+                            dataDirectory,
+                            pluginPathProvider),
+                        new EnabledPluginListingsProvider(
+                            pluginRawListingsReader,
+                            pluginPathProvider)),
+                    new CreationClubListingsProvider(
+                        fs,
+                        dataDirectory,
+                        cccPath,
+                        new CreationClubRawListingsReader()));
+            },
+            ListingsProvider);
 
         var filteredListings = listingsProv.Get();
         foreach (var filter in LoadOrderListingProcessors)
@@ -378,11 +487,11 @@ public sealed record GameEnvironmentBuilder
         }
 
         var loGetter = new LoadOrderImporter(
-            IFileSystemExt.DefaultFilesystem,
+            fs,
             dataDirectory,
             new LoadOrderListingsInjection(filteredListings),
             new ModImporter(
-                IFileSystemExt.DefaultFilesystem,
+                fs,
                 Release));
 
         ILoadOrderGetter<IModListingGetter<IModGetter>> lo = loGetter.Import();
@@ -398,7 +507,7 @@ public sealed record GameEnvironmentBuilder
             dataFolderPath: dataDirectory.Path,
             loadOrderFilePath: pluginPathProvider.Path,
             creationClubListingsFilePath: cccPath.Path,
-            loadOrder: loGetter.Import(),
+            loadOrder: lo,
             linkCache: linkCache);
     }
 }

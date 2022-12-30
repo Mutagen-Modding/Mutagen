@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILoadScreenRotationGetter rhs) return false;
-            return ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILoadScreenRotationGetter? obj)
         {
-            return ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -832,14 +832,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILoadScreenRotationGetter? lhs,
             ILoadScreenRotationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)LoadScreenRotation_FieldIndex.Min) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LoadScreenRotation_FieldIndex.Min) ?? true))
             {
                 if (lhs.Min != rhs.Min) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LoadScreenRotation_FieldIndex.Max) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LoadScreenRotation_FieldIndex.Max) ?? true))
             {
                 if (lhs.Max != rhs.Max) return false;
             }
@@ -1159,12 +1159,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ILoadScreenRotationGetter rhs) return false;
-            return ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILoadScreenRotationGetter? obj)
         {
-            return ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LoadScreenRotationCommon)((ILoadScreenRotationGetter)this).CommonInstance()!).GetHashCode(this);

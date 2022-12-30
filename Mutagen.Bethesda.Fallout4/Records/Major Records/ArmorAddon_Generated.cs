@@ -145,9 +145,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; } = new GenderedItem<ExtendedList<Bone>?>(default, default);
         IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> IArmorAddonGetter.BoneData => this.BoneData;
         #endregion
-        #region DNAMDataTypeState
-        public ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -189,7 +186,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FootstepSound = initialValue;
                 this.ArtObject = initialValue;
                 this.BoneData = new GenderedItem<TItem>(initialValue, initialValue);
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -199,6 +195,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem BodyTemplate,
                 TItem Race,
                 TItem Priority,
@@ -214,15 +211,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem AdditionalRaces,
                 TItem FootstepSound,
                 TItem ArtObject,
-                TItem BoneData,
-                TItem DNAMDataTypeState)
+                TItem BoneData)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(BodyTemplate, new BodyTemplate.Mask<TItem>(BodyTemplate));
                 this.Race = Race;
@@ -240,7 +237,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FootstepSound = FootstepSound;
                 this.ArtObject = ArtObject;
                 this.BoneData = new GenderedItem<TItem>(BoneData, BoneData);
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -268,7 +264,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem FootstepSound;
             public TItem ArtObject;
             public GenderedItem<TItem> BoneData;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -298,7 +293,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.FootstepSound, rhs.FootstepSound)) return false;
                 if (!object.Equals(this.ArtObject, rhs.ArtObject)) return false;
                 if (!object.Equals(this.BoneData, rhs.BoneData)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -320,7 +314,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.FootstepSound);
                 hash.Add(this.ArtObject);
                 hash.Add(this.BoneData);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -369,7 +362,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.FootstepSound)) return false;
                 if (!eval(this.ArtObject)) return false;
                 if (!eval(this.BoneData.Male) || !eval(this.BoneData.Female)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -416,7 +408,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.FootstepSound)) return true;
                 if (eval(this.ArtObject)) return true;
                 if (eval(this.BoneData.Male) || eval(this.BoneData.Female)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -477,7 +468,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.BoneData = new GenderedItem<R>(
                     eval(this.BoneData.Male),
                     eval(this.BoneData.Female));
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -581,10 +571,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine($"BoneData => {BoneData}");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -612,7 +598,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? FootstepSound;
             public Exception? ArtObject;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? BoneData;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -653,8 +638,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return ArtObject;
                     case ArmorAddon_FieldIndex.BoneData:
                         return BoneData;
-                    case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -712,9 +695,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case ArmorAddon_FieldIndex.BoneData:
                         this.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
-                        break;
-                    case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -775,9 +755,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case ArmorAddon_FieldIndex.BoneData:
                         this.BoneData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -803,7 +780,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (FootstepSound != null) return true;
                 if (ArtObject != null) return true;
                 if (BoneData != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -897,9 +873,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendLine($"BoneData => {BoneData}");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -910,21 +883,20 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.BodyTemplate = this.BodyTemplate.Combine(rhs.BodyTemplate, (l, r) => l.Combine(r));
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.Priority = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Priority?.Overall, rhs.Priority?.Overall), GenderedItem.Combine(this.Priority?.Specific, rhs.Priority?.Specific));
-                ret.WeightSliderEnabled = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WeightSliderEnabled?.Overall, rhs.WeightSliderEnabled?.Overall), GenderedItem.Combine(this.WeightSliderEnabled?.Specific, rhs.WeightSliderEnabled?.Specific));
+                ret.Priority = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Priority?.Overall, rhs.Priority?.Overall), GenderedItem.Combine(this.Priority?.Specific, rhs.Priority?.Specific));
+                ret.WeightSliderEnabled = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WeightSliderEnabled?.Overall, rhs.WeightSliderEnabled?.Overall), GenderedItem.Combine(this.WeightSliderEnabled?.Specific, rhs.WeightSliderEnabled?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.DetectionSoundValue = this.DetectionSoundValue.Combine(rhs.DetectionSoundValue);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.WeaponAdjust = this.WeaponAdjust.Combine(rhs.WeaponAdjust);
-                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
-                ret.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.FirstPersonModel?.Overall, rhs.FirstPersonModel?.Overall), GenderedItem.Combine(this.FirstPersonModel?.Specific, rhs.FirstPersonModel?.Specific));
-                ret.SkinTexture = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.SkinTexture?.Overall, rhs.SkinTexture?.Overall), GenderedItem.Combine(this.SkinTexture?.Specific, rhs.SkinTexture?.Specific));
-                ret.TextureSwapList = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.TextureSwapList?.Overall, rhs.TextureSwapList?.Overall), GenderedItem.Combine(this.TextureSwapList?.Specific, rhs.TextureSwapList?.Specific));
-                ret.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AdditionalRaces?.Overall, rhs.AdditionalRaces?.Overall), ExceptionExt.Combine(this.AdditionalRaces?.Specific, rhs.AdditionalRaces?.Specific));
+                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
+                ret.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.FirstPersonModel?.Overall, rhs.FirstPersonModel?.Overall), GenderedItem.Combine(this.FirstPersonModel?.Specific, rhs.FirstPersonModel?.Specific));
+                ret.SkinTexture = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.SkinTexture?.Overall, rhs.SkinTexture?.Overall), GenderedItem.Combine(this.SkinTexture?.Specific, rhs.SkinTexture?.Specific));
+                ret.TextureSwapList = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.TextureSwapList?.Overall, rhs.TextureSwapList?.Overall), GenderedItem.Combine(this.TextureSwapList?.Specific, rhs.TextureSwapList?.Specific));
+                ret.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AdditionalRaces?.Overall, rhs.AdditionalRaces?.Overall), Noggog.ExceptionExt.Combine(this.AdditionalRaces?.Specific, rhs.AdditionalRaces?.Specific));
                 ret.FootstepSound = this.FootstepSound.Combine(rhs.FootstepSound);
                 ret.ArtObject = this.ArtObject.Combine(rhs.ArtObject);
-                ret.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.BoneData?.Overall, rhs.BoneData?.Overall), GenderedItem.Combine(this.BoneData?.Specific, rhs.BoneData?.Specific));
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
+                ret.BoneData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.BoneData?.Overall, rhs.BoneData?.Overall), GenderedItem.Combine(this.BoneData?.Specific, rhs.BoneData?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -963,7 +935,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool FootstepSound;
             public bool ArtObject;
             public GenderedItem<bool>? BoneData;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -980,7 +951,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AdditionalRaces = defaultOn;
                 this.FootstepSound = defaultOn;
                 this.ArtObject = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1004,7 +974,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((FootstepSound, null));
                 ret.Add((ArtObject, null));
                 ret.Add((BoneData != null || DefaultOn, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1066,10 +1035,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1078,12 +1043,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IArmorAddonGetter rhs) return false;
-            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IArmorAddonGetter? obj)
         {
-            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1171,7 +1136,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; }
         new IFormLinkNullable<IArtObjectGetter> ArtObject { get; set; }
         new IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; }
-        new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
         new ArmorAddon.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1218,7 +1182,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound { get; }
         IFormLinkNullableGetter<IArtObjectGetter> ArtObject { get; }
         IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData { get; }
-        ArmorAddon.DNAMDataType DNAMDataTypeState { get; }
 
         #region Mutagen
         ArmorAddon.MajorFlag MajorFlags { get; }
@@ -1279,7 +1242,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1355,6 +1318,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ArmorAddon Duplicate(
+            this IArmorAddonGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1387,23 +1361,23 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        BodyTemplate = 6,
-        Race = 7,
-        Priority = 8,
-        WeightSliderEnabled = 9,
-        Unknown = 10,
-        DetectionSoundValue = 11,
-        Unknown2 = 12,
-        WeaponAdjust = 13,
-        WorldModel = 14,
-        FirstPersonModel = 15,
-        SkinTexture = 16,
-        TextureSwapList = 17,
-        AdditionalRaces = 18,
-        FootstepSound = 19,
-        ArtObject = 20,
-        BoneData = 21,
-        DNAMDataTypeState = 22,
+        Fallout4MajorRecordFlags = 6,
+        BodyTemplate = 7,
+        Race = 8,
+        Priority = 9,
+        WeightSliderEnabled = 10,
+        Unknown = 11,
+        DetectionSoundValue = 12,
+        Unknown2 = 13,
+        WeaponAdjust = 14,
+        WorldModel = 15,
+        FirstPersonModel = 16,
+        SkinTexture = 17,
+        TextureSwapList = 18,
+        AdditionalRaces = 19,
+        FootstepSound = 20,
+        ArtObject = 21,
+        BoneData = 22,
     }
     #endregion
 
@@ -1421,7 +1395,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "591e9041-abf3-4466-82af-d6ef0d1db771";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 16;
 
         public const ushort FieldCount = 23;
 
@@ -1614,7 +1588,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.ArtObject.Clear();
             item.BoneData.Male = null;
             item.BoneData.Female = null;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1752,7 +1725,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.BoneData = new GenderedItem<bool>(
                 male: item.BoneData.Male.SequenceEqualNullable(rhs.BoneData.Male),
                 female: item.BoneData.Female.SequenceEqualNullable(rhs.BoneData.Female));
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1881,10 +1853,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.BoneData.Print(sb, "BoneData");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static ArmorAddon_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1903,8 +1871,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (ArmorAddon_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (ArmorAddon_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (ArmorAddon_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1921,7 +1891,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (ArmorAddon_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1929,81 +1899,77 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IArmorAddonGetter? lhs,
             IArmorAddonGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BodyTemplate) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BodyTemplate) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BodyTemplate, rhs.BodyTemplate, out var lhsBodyTemplate, out var rhsBodyTemplate, out var isBodyTemplateEqual))
                 {
-                    if (!((BodyTemplateCommon)((IBodyTemplateGetter)lhsBodyTemplate).CommonInstance()!).Equals(lhsBodyTemplate, rhsBodyTemplate, crystal?.GetSubCrystal((int)ArmorAddon_FieldIndex.BodyTemplate))) return false;
+                    if (!((BodyTemplateCommon)((IBodyTemplateGetter)lhsBodyTemplate).CommonInstance()!).Equals(lhsBodyTemplate, rhsBodyTemplate, equalsMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.BodyTemplate))) return false;
                 }
                 else if (!isBodyTemplateEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
             {
                 if (!lhs.Race.Equals(rhs.Race)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Priority) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Priority) ?? true))
             {
                 if (!Equals(lhs.Priority, rhs.Priority)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeightSliderEnabled) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeightSliderEnabled) ?? true))
             {
                 if (!Equals(lhs.WeightSliderEnabled, rhs.WeightSliderEnabled)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DetectionSoundValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DetectionSoundValue) ?? true))
             {
                 if (lhs.DetectionSoundValue != rhs.DetectionSoundValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeaponAdjust) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeaponAdjust) ?? true))
             {
                 if (!lhs.WeaponAdjust.EqualsWithin(rhs.WeaponAdjust)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WorldModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WorldModel) ?? true))
             {
                 if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FirstPersonModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FirstPersonModel) ?? true))
             {
                 if (!Equals(lhs.FirstPersonModel, rhs.FirstPersonModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.SkinTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.SkinTexture) ?? true))
             {
                 if (!Equals(lhs.SkinTexture, rhs.SkinTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TextureSwapList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TextureSwapList) ?? true))
             {
                 if (!Equals(lhs.TextureSwapList, rhs.TextureSwapList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
             {
                 if (!lhs.AdditionalRaces.SequenceEqualNullable(rhs.AdditionalRaces)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
             {
                 if (!lhs.FootstepSound.Equals(rhs.FootstepSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
             {
                 if (!lhs.ArtObject.Equals(rhs.ArtObject)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BoneData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BoneData) ?? true))
             {
                 if (!Equals(lhs.BoneData, rhs.BoneData)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -2011,23 +1977,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IArmorAddonGetter?)lhs,
                 rhs: rhs as IArmorAddonGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IArmorAddonGetter?)lhs,
                 rhs: rhs as IArmorAddonGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IArmorAddonGetter item)
@@ -2064,7 +2030,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.FootstepSound);
             hash.Add(item.ArtObject);
             hash.Add(HashCode.Combine(item.BoneData.Male, item.BoneData.Female));
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2342,10 +2307,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.BoneData = new GenderedItem<ExtendedList<Bone>?>(
                 male: rhs.BoneData.Male?.Select(x => x.DeepCopy()).ToExtendedList(),
                 female: rhs.BoneData.Female?.Select(x => x.DeepCopy()).ToExtendedList());
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2924,7 +2885,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         private RangeInt32? _DNAMLocation;
-        public ArmorAddon.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Priority
         private int _PriorityLocation => _DNAMLocation!.Value.Min;
         private bool _Priority_IsSet => _DNAMLocation.HasValue;
@@ -3205,12 +3165,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IArmorAddonGetter rhs) return false;
-            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IArmorAddonGetter? obj)
         {
-            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).GetHashCode(this);

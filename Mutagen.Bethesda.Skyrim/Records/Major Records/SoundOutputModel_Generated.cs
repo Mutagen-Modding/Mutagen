@@ -165,6 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Data,
                 TItem FNAM,
                 TItem Type,
@@ -178,7 +179,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Data = new MaskItem<TItem, SoundOutputData.Mask<TItem>?>(Data, new SoundOutputData.Mask<TItem>(Data));
                 this.FNAM = FNAM;
@@ -660,12 +662,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISoundOutputModelGetter rhs) return false;
-            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundOutputModelGetter? obj)
         {
-            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -822,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundOutputModelCommon)((ISoundOutputModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -898,6 +900,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static SoundOutputModel Duplicate(
+            this ISoundOutputModelGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -930,13 +943,14 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Data = 6,
-        FNAM = 7,
-        Type = 8,
-        CNAM = 9,
-        SNAM = 10,
-        OutputChannels = 11,
-        Attenuation = 12,
+        SkyrimMajorRecordFlags = 6,
+        Data = 7,
+        FNAM = 8,
+        Type = 9,
+        CNAM = 10,
+        SNAM = 11,
+        OutputChannels = 12,
+        Attenuation = 13,
     }
     #endregion
 
@@ -956,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(SoundOutputModel.Mask<>);
 
@@ -1136,10 +1150,10 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Data,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
+            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
             ret.Type = item.Type == rhs.Type;
-            ret.CNAM = MemorySliceExt.Equal(item.CNAM, rhs.CNAM);
-            ret.SNAM = MemorySliceExt.Equal(item.SNAM, rhs.SNAM);
+            ret.CNAM = MemorySliceExt.SequenceEqual(item.CNAM, rhs.CNAM);
+            ret.SNAM = MemorySliceExt.SequenceEqual(item.SNAM, rhs.SNAM);
             ret.OutputChannels = EqualsMaskHelper.EqualsHelper(
                 item.OutputChannels,
                 rhs.OutputChannels,
@@ -1252,8 +1266,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (SoundOutputModel_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (SoundOutputModel_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (SoundOutputModel_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1270,7 +1286,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (SoundOutputModel_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1278,47 +1294,47 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISoundOutputModelGetter? lhs,
             ISoundOutputModelGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Data) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((SoundOutputDataCommon)((ISoundOutputDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)SoundOutputModel_FieldIndex.Data))) return false;
+                    if (!((SoundOutputDataCommon)((ISoundOutputDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)SoundOutputModel_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.FNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.FNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.CNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.CNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.CNAM, rhs.CNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.SNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.SNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SNAM, rhs.SNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SNAM, rhs.SNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.OutputChannels) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.OutputChannels) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.OutputChannels, rhs.OutputChannels, out var lhsOutputChannels, out var rhsOutputChannels, out var isOutputChannelsEqual))
                 {
-                    if (!((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)lhsOutputChannels).CommonInstance()!).Equals(lhsOutputChannels, rhsOutputChannels, crystal?.GetSubCrystal((int)SoundOutputModel_FieldIndex.OutputChannels))) return false;
+                    if (!((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)lhsOutputChannels).CommonInstance()!).Equals(lhsOutputChannels, rhsOutputChannels, equalsMask?.GetSubCrystal((int)SoundOutputModel_FieldIndex.OutputChannels))) return false;
                 }
                 else if (!isOutputChannelsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Attenuation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Attenuation) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Attenuation, rhs.Attenuation, out var lhsAttenuation, out var rhsAttenuation, out var isAttenuationEqual))
                 {
-                    if (!((SoundOutputAttenuationCommon)((ISoundOutputAttenuationGetter)lhsAttenuation).CommonInstance()!).Equals(lhsAttenuation, rhsAttenuation, crystal?.GetSubCrystal((int)SoundOutputModel_FieldIndex.Attenuation))) return false;
+                    if (!((SoundOutputAttenuationCommon)((ISoundOutputAttenuationGetter)lhsAttenuation).CommonInstance()!).Equals(lhsAttenuation, rhsAttenuation, equalsMask?.GetSubCrystal((int)SoundOutputModel_FieldIndex.Attenuation))) return false;
                 }
                 else if (!isAttenuationEqual) return false;
             }
@@ -1328,23 +1344,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundOutputModelGetter?)lhs,
                 rhs: rhs as ISoundOutputModelGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundOutputModelGetter?)lhs,
                 rhs: rhs as ISoundOutputModelGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoundOutputModelGetter item)
@@ -2145,12 +2161,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISoundOutputModelGetter rhs) return false;
-            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundOutputModelGetter? obj)
         {
-            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).GetHashCode(this);

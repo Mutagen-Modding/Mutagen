@@ -37,6 +37,8 @@ internal class SkyrimGroupWrapper<TMajor> : ISkyrimGroupGetter<TMajor>
     public TMajor this[FormKey key] => _groupMerge[key];
 
     IEnumerable<TMajor> IGroupGetter<TMajor>.Records => _groupMerge.Records;
+    IEnumerable<ILoquiObject> IGroupCommonGetter.Records => _groupMerge.Records;
+    IEnumerable<TMajor> IGroupCommonGetter<TMajor>.Records => _groupMerge.Records;
 
     IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => ((IGroupGetter)_groupMerge).RecordCache;
 

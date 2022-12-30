@@ -103,6 +103,13 @@ public class ModKeyTests
     }
 
     [Fact]
+    public void TryFactory_Null()
+    {
+        Assert.True(ModKey.TryFromNameAndExtension("Null", out var modKey));
+        Assert.Equal("Null", modKey.FileName);
+    }
+
+    [Fact]
     public void CaseEquality()
     {
         ModKey modKey = new ModKey("Oblivion", ModType.Master);

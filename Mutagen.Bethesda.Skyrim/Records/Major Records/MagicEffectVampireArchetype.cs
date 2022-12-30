@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class MagicEffectVampireArchetype
 {
-    public FormLink<IRaceGetter> Association => this.AssociationKey.AsLink<IRaceGetter>();
+    public FormLink<IRaceGetter> Association => this.AssociationKey.ToLink<IRaceGetter>();
 
     IFormLink<IRaceGetter> IMagicEffectVampireArchetype.Association => this.Association;
     IFormLinkGetter<IRaceGetter> IMagicEffectVampireArchetypeGetter.Association => this.Association;
@@ -27,5 +27,5 @@ public partial interface IMagicEffectVampireArchetypeGetter
 
 partial class MagicEffectVampireArchetypeBinaryOverlay
 {
-    public IFormLinkGetter<IRaceGetter> Association => this.AssociationKey.AsLink<IRaceGetter>();
+    public IFormLinkGetter<IRaceGetter> Association => this.AssociationKey.ToLink<IRaceGetter>();
 }

@@ -14,7 +14,9 @@ public class DataTypeModule : GenerationModule
         await base.LoadWrapup(obj);
         foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
         {
-            if (!(field is DataType dataType)) continue;
+            if (field is not DataType dataType) continue;
+            var types = dataType.GetEnumTypes();
+            if (types.Count == 0) continue;
             XElement elem = new XElement("Enum");
             elem.Add(new XAttribute(Loqui.Generation.Constants.NAME, dataType.StateName));
             elem.Add(new XAttribute(Loqui.Generation.Constants.ENUM_NAME, $"{obj.ObjectName}.{dataType.EnumName}"));
@@ -29,28 +31,12 @@ public class DataTypeModule : GenerationModule
     {
         await base.GenerateInClass(obj, sb);
 
-        List<string> enumTypes;
-        int breaks;
         foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
         {
-            if (!(field is DataType dataType)) continue;
-            enumTypes = new List<string>();
-            breaks = 0;
-            int ranges = 0;
-            foreach (var node in dataType.Node.Element(XName.Get(Loqui.Generation.Constants.FIELDS, LoquiGenerator.Namespace)).Elements())
-            {
-                switch (node.Name.LocalName)
-                {
-                    case DataType.BREAK:
-                        enumTypes.Add("Break" + breaks++);
-                        break;
-                    case DataType.RANGE:
-                        enumTypes.Add("Range" + ranges++);
-                        break;
-                    default:
-                        break;
-                }
-            }
+            if (field is not DataType dataType) continue;
+            var enumTypes = dataType.GetEnumTypes();
+            
+            if (enumTypes.Count == 0) continue;
             sb.AppendLine("[Flags]");
             sb.AppendLine($"public enum {dataType.EnumName}");
             using (sb.CurlyBrace())

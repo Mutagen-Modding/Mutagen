@@ -1596,17 +1596,17 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
-                ret.Models = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), Noggog.ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
+                ret.Models = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), Noggog.ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
                 ret.NIFT = this.NIFT.Combine(rhs.NIFT);
                 ret.Configuration = this.Configuration.Combine(rhs.Configuration, (l, r) => l.Combine(r));
-                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), Noggog.ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
                 ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.AIData = this.AIData.Combine(rhs.AIData, (l, r) => l.Combine(r));
-                ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
-                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), Noggog.ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
+                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.AttackReach = this.AttackReach.Combine(rhs.AttackReach);
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.BloodSpray = this.BloodSpray.Combine(rhs.BloodSpray);
                 ret.BloodDecal = this.BloodDecal.Combine(rhs.BloodDecal);
                 ret.InheritsSoundFrom = this.InheritsSoundFrom.Combine(rhs.InheritsSoundFrom);
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1770,12 +1770,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ICreatureGetter rhs) return false;
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICreatureGetter? obj)
         {
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1992,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2066,6 +2066,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static Creature Duplicate(
+            this ICreatureGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -2377,7 +2388,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs.Models,
                 (l, r) => string.Equals(l, r),
                 include);
-            ret.NIFT = MemorySliceExt.Equal(item.NIFT, rhs.NIFT);
+            ret.NIFT = MemorySliceExt.SequenceEqual(item.NIFT, rhs.NIFT);
             ret.Configuration = EqualsMaskHelper.EqualsHelper(
                 item.Configuration,
                 rhs.Configuration,
@@ -2661,7 +2672,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Creature_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2678,7 +2689,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (Creature_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2686,117 +2697,117 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ICreatureGetter? lhs,
             ICreatureGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Name) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Creature_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Creature_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Items) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((ItemEntryCommon)((IItemEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Creature_FieldIndex.Items)))) return false;
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((ItemEntryCommon)((IItemEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Creature_FieldIndex.Items)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Spells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Spells) ?? true))
             {
                 if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Models) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Models) ?? true))
             {
                 if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.NIFT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.NIFT) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.NIFT, rhs.NIFT)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.NIFT, rhs.NIFT)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Configuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Configuration) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Configuration, rhs.Configuration, out var lhsConfiguration, out var rhsConfiguration, out var isConfigurationEqual))
                 {
-                    if (!((CreatureConfigurationCommon)((ICreatureConfigurationGetter)lhsConfiguration).CommonInstance()!).Equals(lhsConfiguration, rhsConfiguration, crystal?.GetSubCrystal((int)Creature_FieldIndex.Configuration))) return false;
+                    if (!((CreatureConfigurationCommon)((ICreatureConfigurationGetter)lhsConfiguration).CommonInstance()!).Equals(lhsConfiguration, rhsConfiguration, equalsMask?.GetSubCrystal((int)Creature_FieldIndex.Configuration))) return false;
                 }
                 else if (!isConfigurationEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Factions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Factions) ?? true))
             {
-                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Creature_FieldIndex.Factions)))) return false;
+                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Creature_FieldIndex.Factions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
             {
                 if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Script) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Script) ?? true))
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AIData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.AIData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AIData, rhs.AIData, out var lhsAIData, out var rhsAIData, out var isAIDataEqual))
                 {
-                    if (!((CreatureAIDataCommon)((ICreatureAIDataGetter)lhsAIData).CommonInstance()!).Equals(lhsAIData, rhsAIData, crystal?.GetSubCrystal((int)Creature_FieldIndex.AIData))) return false;
+                    if (!((CreatureAIDataCommon)((ICreatureAIDataGetter)lhsAIData).CommonInstance()!).Equals(lhsAIData, rhsAIData, equalsMask?.GetSubCrystal((int)Creature_FieldIndex.AIData))) return false;
                 }
                 else if (!isAIDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AIPackages) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.AIPackages) ?? true))
             {
                 if (!lhs.AIPackages.SequenceEqualNullable(rhs.AIPackages)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Animations) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Animations) ?? true))
             {
                 if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((CreatureDataCommon)((ICreatureDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Creature_FieldIndex.Data))) return false;
+                    if (!((CreatureDataCommon)((ICreatureDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Creature_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AttackReach) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.AttackReach) ?? true))
             {
                 if (lhs.AttackReach != rhs.AttackReach) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.CombatStyle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatStyle) ?? true))
             {
                 if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.TurningSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.TurningSpeed) ?? true))
             {
                 if (!lhs.TurningSpeed.EqualsWithin(rhs.TurningSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.BaseScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.BaseScale) ?? true))
             {
                 if (!lhs.BaseScale.EqualsWithin(rhs.BaseScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.FootWeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.FootWeight) ?? true))
             {
                 if (!lhs.FootWeight.EqualsWithin(rhs.FootWeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.BloodSpray) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.BloodSpray) ?? true))
             {
                 if (!string.Equals(lhs.BloodSpray, rhs.BloodSpray)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.BloodDecal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.BloodDecal) ?? true))
             {
                 if (!string.Equals(lhs.BloodDecal, rhs.BloodDecal)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.InheritsSoundFrom) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.InheritsSoundFrom) ?? true))
             {
                 if (!lhs.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((CreatureSoundCommon)((ICreatureSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Creature_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((CreatureSoundCommon)((ICreatureSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Creature_FieldIndex.Sounds)))) return false;
             }
             return true;
         }
@@ -2804,23 +2815,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICreatureGetter?)lhs,
                 rhs: rhs as ICreatureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICreatureGetter?)lhs,
                 rhs: rhs as ICreatureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ICreatureGetter item)
@@ -4325,12 +4336,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ICreatureGetter rhs) return false;
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICreatureGetter? obj)
         {
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).GetHashCode(this);

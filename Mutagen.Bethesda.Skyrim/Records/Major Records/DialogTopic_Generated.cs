@@ -149,9 +149,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region DATADataTypeState
-        public DialogTopic.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -188,7 +185,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Timestamp = initialValue;
                 this.Unknown = initialValue;
                 this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -198,6 +194,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Name,
                 TItem Priority,
                 TItem Branch,
@@ -208,15 +205,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SubtypeName,
                 TItem Timestamp,
                 TItem Unknown,
-                TItem Responses,
-                TItem DATADataTypeState)
+                TItem Responses)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
                 this.Priority = Priority;
@@ -229,7 +226,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Timestamp = Timestamp;
                 this.Unknown = Unknown;
                 this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -252,7 +248,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Timestamp;
             public TItem Unknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>? Responses;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -277,7 +272,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Responses, rhs.Responses)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -294,7 +288,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Timestamp);
                 hash.Add(this.Unknown);
                 hash.Add(this.Responses);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -327,7 +320,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -358,7 +350,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -399,7 +390,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -477,10 +467,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -503,7 +489,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Timestamp;
             public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>? Responses;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -534,8 +519,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Unknown;
                     case DialogTopic_FieldIndex.Responses:
                         return Responses;
-                    case DialogTopic_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -578,9 +561,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case DialogTopic_FieldIndex.Responses:
                         this.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(ex, null);
-                        break;
-                    case DialogTopic_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -626,9 +606,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case DialogTopic_FieldIndex.Responses:
                         this.Responses = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>)obj;
                         break;
-                    case DialogTopic_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -649,7 +626,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Timestamp != null) return true;
                 if (Unknown != null) return true;
                 if (Responses != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -724,9 +700,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -745,8 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SubtypeName = this.SubtypeName.Combine(rhs.SubtypeName);
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -780,7 +752,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Timestamp;
             public bool Unknown;
             public DialogResponses.TranslationMask? Responses;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -799,7 +770,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SubtypeName = defaultOn;
                 this.Timestamp = defaultOn;
                 this.Unknown = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -818,7 +788,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Timestamp, null));
                 ret.Add((Unknown, null));
                 ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -894,10 +863,6 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
-        [Flags]
-        public enum DATADataType
-        {
-        }
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -931,12 +896,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDialogTopicGetter rhs) return false;
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogTopicGetter? obj)
         {
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1028,7 +993,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
         new ExtendedList<DialogResponses> Responses { get; }
-        new DialogTopic.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IDialogTopicInternal :
@@ -1070,7 +1034,6 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 Timestamp { get; }
         Int32 Unknown { get; }
         IReadOnlyList<IDialogResponsesGetter> Responses { get; }
-        DialogTopic.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1127,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1415,6 +1378,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static DialogTopic Duplicate(
+            this IDialogTopicGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1447,18 +1421,18 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Priority = 7,
-        Branch = 8,
-        Quest = 9,
-        TopicFlags = 10,
-        Category = 11,
-        Subtype = 12,
-        SubtypeName = 13,
-        Timestamp = 14,
-        Unknown = 15,
-        Responses = 16,
-        DATADataTypeState = 17,
+        SkyrimMajorRecordFlags = 6,
+        Name = 7,
+        Priority = 8,
+        Branch = 9,
+        Quest = 10,
+        TopicFlags = 11,
+        Category = 12,
+        Subtype = 13,
+        SubtypeName = 14,
+        Timestamp = 15,
+        Unknown = 16,
+        Responses = 17,
     }
     #endregion
 
@@ -1476,7 +1450,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "29f5de6a-ecd3-4ce8-8ffb-b443aad13295";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 18;
 
@@ -1520,6 +1494,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.TIFC,
                 RecordTypes.INFO,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.ENAM,
                 RecordTypes.TPIC,
                 RecordTypes.CNAM,
@@ -1594,7 +1569,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Timestamp = default;
             item.Unknown = default;
             item.Responses.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1788,7 +1762,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Responses,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1893,10 +1866,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static DialogTopic_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1915,8 +1884,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (DialogTopic_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (DialogTopic_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (DialogTopic_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1933,7 +1904,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (DialogTopic_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1941,57 +1912,53 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IDialogTopicGetter? lhs,
             IDialogTopicGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Priority) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Priority) ?? true))
             {
                 if (!lhs.Priority.EqualsWithin(rhs.Priority)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
             {
                 if (!lhs.Branch.Equals(rhs.Branch)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
             {
                 if (lhs.TopicFlags != rhs.TopicFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
             {
                 if (lhs.Category != rhs.Category) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
             {
                 if (lhs.Subtype != rhs.Subtype) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
             {
                 if (lhs.SubtypeName != rhs.SubtypeName) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
             {
                 if (lhs.Timestamp != rhs.Timestamp) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
             {
-                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponsesCommon)((IDialogResponsesGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogTopic_FieldIndex.Responses)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponsesCommon)((IDialogResponsesGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Responses)))) return false;
             }
             return true;
         }
@@ -1999,23 +1966,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDialogTopicGetter?)lhs,
                 rhs: rhs as IDialogTopicGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDialogTopicGetter?)lhs,
                 rhs: rhs as IDialogTopicGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IDialogTopicGetter item)
@@ -2035,7 +2002,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Timestamp);
             hash.Add(item.Unknown);
             hash.Add(item.Responses);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2461,10 +2427,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -2959,7 +2921,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         private RangeInt32? _DATALocation;
-        public DialogTopic.DATADataType DATADataTypeState { get; private set; }
         #region TopicFlags
         private int _TopicFlagsLocation => _DATALocation!.Value.Min;
         private bool _TopicFlags_IsSet => _DATALocation.HasValue;
@@ -3136,12 +3097,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDialogTopicGetter rhs) return false;
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogTopicGetter? obj)
         {
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).GetHashCode(this);

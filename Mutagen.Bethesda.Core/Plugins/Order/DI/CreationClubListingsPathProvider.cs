@@ -35,7 +35,10 @@ public sealed class CreationClubListingsPathProvider : ICreationClubListingsPath
         {
             if (IsUsed.Used)
             {
-                return System.IO.Path.Combine(DirectoryProvider.Path, $"{CategoryContext.Category}.ccc");
+                var dir = DirectoryProvider.Path;
+                if (dir == null) return null;
+
+                return System.IO.Path.Combine(dir, $"{CategoryContext.Category}.ccc");
             }
 
             return null;

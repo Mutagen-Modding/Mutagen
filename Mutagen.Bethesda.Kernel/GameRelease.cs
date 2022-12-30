@@ -21,4 +21,6 @@ public enum GameRelease
     EnderalSE = 6,
     [Description("Fallout 4")]
     Fallout4 = 4,
+    [Description("Skyrim Special Edition GOG")]
+    SkyrimSEGog = 7,
 }

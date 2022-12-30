@@ -74,9 +74,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region INDXDataTypeState
-        public QuestStage.INDXDataType INDXDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -96,12 +93,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestStageGetter rhs) return false;
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestStageGetter? obj)
         {
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).GetHashCode(this);
@@ -120,21 +117,18 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = initialValue;
                 this.Unknown = initialValue;
                 this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>());
-                this.INDXDataTypeState = initialValue;
             }
 
             public Mask(
                 TItem Index,
                 TItem Flags,
                 TItem Unknown,
-                TItem LogEntries,
-                TItem INDXDataTypeState)
+                TItem LogEntries)
             {
                 this.Index = Index;
                 this.Flags = Flags;
                 this.Unknown = Unknown;
                 this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>?>(LogEntries, Enumerable.Empty<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>());
-                this.INDXDataTypeState = INDXDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -150,7 +144,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Flags;
             public TItem Unknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>?>? LogEntries;
-            public TItem INDXDataTypeState;
             #endregion
 
             #region Equals
@@ -167,7 +160,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.LogEntries, rhs.LogEntries)) return false;
-                if (!object.Equals(this.INDXDataTypeState, rhs.INDXDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -177,7 +169,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Flags);
                 hash.Add(this.Unknown);
                 hash.Add(this.LogEntries);
-                hash.Add(this.INDXDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -201,7 +192,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.INDXDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -224,7 +214,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.INDXDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -257,7 +246,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.INDXDataTypeState = eval(this.INDXDataTypeState);
             }
             #endregion
 
@@ -307,10 +295,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.INDXDataTypeState ?? true)
-                    {
-                        sb.AppendItem(INDXDataTypeState, "INDXDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -339,7 +323,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Flags;
             public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestLogEntry.ErrorMask?>>?>? LogEntries;
-            public Exception? INDXDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -356,8 +339,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Unknown;
                     case QuestStage_FieldIndex.LogEntries:
                         return LogEntries;
-                    case QuestStage_FieldIndex.INDXDataTypeState:
-                        return INDXDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -379,9 +360,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case QuestStage_FieldIndex.LogEntries:
                         this.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestLogEntry.ErrorMask?>>?>(ex, null);
-                        break;
-                    case QuestStage_FieldIndex.INDXDataTypeState:
-                        this.INDXDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -405,9 +383,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestStage_FieldIndex.LogEntries:
                         this.LogEntries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestLogEntry.ErrorMask?>>?>)obj;
                         break;
-                    case QuestStage_FieldIndex.INDXDataTypeState:
-                        this.INDXDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -420,7 +395,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Flags != null) return true;
                 if (Unknown != null) return true;
                 if (LogEntries != null) return true;
-                if (INDXDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -473,9 +447,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(INDXDataTypeState, "INDXDataTypeState");
-                }
             }
             #endregion
 
@@ -487,8 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Index = this.Index.Combine(rhs.Index);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestLogEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.LogEntries?.Overall, rhs.LogEntries?.Overall), ExceptionExt.Combine(this.LogEntries?.Specific, rhs.LogEntries?.Specific));
-                ret.INDXDataTypeState = this.INDXDataTypeState.Combine(rhs.INDXDataTypeState);
+                ret.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestLogEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LogEntries?.Overall, rhs.LogEntries?.Overall), Noggog.ExceptionExt.Combine(this.LogEntries?.Specific, rhs.LogEntries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -516,7 +486,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Flags;
             public bool Unknown;
             public QuestLogEntry.TranslationMask? LogEntries;
-            public bool INDXDataTypeState;
             #endregion
 
             #region Ctors
@@ -529,7 +498,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Index = defaultOn;
                 this.Flags = defaultOn;
                 this.Unknown = defaultOn;
-                this.INDXDataTypeState = defaultOn;
             }
 
             #endregion
@@ -549,7 +517,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((Unknown, null));
                 ret.Add((LogEntries == null ? DefaultOn : !LogEntries.GetCrystal().CopyNothing, LogEntries?.GetCrystal()));
-                ret.Add((INDXDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -563,10 +530,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestStageCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestStageSetterCommon.Instance.RemapLinks(this, mapping);
-        [Flags]
-        public enum INDXDataType
-        {
-        }
         #endregion
 
         #region Binary Translation
@@ -636,7 +599,6 @@ namespace Mutagen.Bethesda.Skyrim
         new QuestStage.Flag Flags { get; set; }
         new Byte Unknown { get; set; }
         new ExtendedList<QuestLogEntry> LogEntries { get; }
-        new QuestStage.INDXDataType INDXDataTypeState { get; set; }
     }
 
     public partial interface IQuestStageGetter :
@@ -656,7 +618,6 @@ namespace Mutagen.Bethesda.Skyrim
         QuestStage.Flag Flags { get; }
         Byte Unknown { get; }
         IReadOnlyList<IQuestLogEntryGetter> LogEntries { get; }
-        QuestStage.INDXDataType INDXDataTypeState { get; }
 
     }
 
@@ -713,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -830,7 +791,6 @@ namespace Mutagen.Bethesda.Skyrim
         Flags = 1,
         Unknown = 2,
         LogEntries = 3,
-        INDXDataTypeState = 4,
     }
     #endregion
 
@@ -848,9 +808,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "dae57571-8e38-4aa0-a556-27689280b6b6";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(QuestStage.Mask<>);
 
@@ -940,7 +900,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Flags = default;
             item.Unknown = default;
             item.LogEntries.Clear();
-            item.INDXDataTypeState = default;
         }
         
         #region Mutagen
@@ -961,7 +920,6 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: QuestStageBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: QuestStageBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -999,7 +957,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.LogEntries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.INDXDataTypeState = item.INDXDataTypeState == rhs.INDXDataTypeState;
         }
         
         public string Print(
@@ -1070,38 +1027,30 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.INDXDataTypeState ?? true)
-            {
-                sb.AppendItem(item.INDXDataTypeState, "INDXDataTypeState");
-            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
             IQuestStageGetter? lhs,
             IQuestStageGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestStage_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestStage_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestStage_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
             {
-                if (!lhs.LogEntries.SequenceEqual(rhs.LogEntries, (l, r) => ((QuestLogEntryCommon)((IQuestLogEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.INDXDataTypeState) ?? true))
-            {
-                if (lhs.INDXDataTypeState != rhs.INDXDataTypeState) return false;
+                if (!lhs.LogEntries.SequenceEqual(rhs.LogEntries, (l, r) => ((QuestLogEntryCommon)((IQuestLogEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries)))) return false;
             }
             return true;
         }
@@ -1113,7 +1062,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Flags);
             hash.Add(item.Unknown);
             hash.Add(item.LogEntries);
-            hash.Add(item.INDXDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1185,10 +1133,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)QuestStage_FieldIndex.INDXDataTypeState) ?? true))
-            {
-                item.INDXDataTypeState = rhs.INDXDataTypeState;
             }
         }
         
@@ -1282,12 +1226,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static readonly QuestStageBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IQuestStageGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IQuestStageGetter item,
             MutagenWriter writer,
@@ -1320,9 +1258,6 @@ namespace Mutagen.Bethesda.Skyrim
             IQuestStageGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1345,12 +1280,6 @@ namespace Mutagen.Bethesda.Skyrim
     internal partial class QuestStageBinaryCreateTranslation
     {
         public static readonly QuestStageBinaryCreateTranslation Instance = new QuestStageBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IQuestStage item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IQuestStage item,
@@ -1465,7 +1394,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         private RangeInt32? _INDXLocation;
-        public QuestStage.INDXDataType INDXDataTypeState { get; private set; }
         #region Index
         private int _IndexLocation => _INDXLocation!.Value.Min;
         private bool _Index_IsSet => _INDXLocation.HasValue;
@@ -1588,12 +1516,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestStageGetter rhs) return false;
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestStageGetter? obj)
         {
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).GetHashCode(this);

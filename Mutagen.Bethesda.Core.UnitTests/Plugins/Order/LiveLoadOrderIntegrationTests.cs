@@ -9,7 +9,7 @@ using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Testing;
-using Mutagen.Bethesda.UnitTests.AutoData;
+using Mutagen.Bethesda.Testing.AutoData;
 using Noggog.Testing.FileSystem;
 using Xunit;
 using Path = System.IO.Path;
@@ -24,7 +24,7 @@ public class LiveLoadOrderIntegrationTests
         [Frozen]MockFileSystemWatcher watcher,
         [Frozen]MockFileSystem fs,
         [Frozen]ILiveLoadOrderTimings timings, 
-        [Frozen]IPluginListingsPathProvider pluginPath,
+        [Frozen]IPluginListingsPathContext pluginPath,
         [Frozen]IDataDirectoryProvider dataDir,
         [Frozen]ICreationClubListingsPathProvider cccPath)
     {
@@ -143,7 +143,7 @@ public class LiveLoadOrderIntegrationTests
         [Frozen]MockFileSystemWatcher watcher,
         [Frozen]MockFileSystem fs,
         [Frozen]ILiveLoadOrderTimings timings, 
-        [Frozen]IPluginListingsPathProvider pluginPath,
+        [Frozen]IPluginListingsPathContext pluginPath,
         [Frozen]IDataDirectoryProvider dataDir,
         [Frozen]ICreationClubListingsPathProvider cccPath)
     {
@@ -232,7 +232,7 @@ public class LiveLoadOrderIntegrationTests
         [Frozen]MockFileSystem fs,
         [Frozen]IImplicitListingModKeyProvider implicitListingsProvider,
         [Frozen]ILiveLoadOrderTimings timings, 
-        [Frozen]IPluginListingsPathProvider pluginPath,
+        [Frozen]IPluginListingsPathContext pluginPath,
         [Frozen]IDataDirectoryProvider dataDir,
         [Frozen]ICreationClubListingsPathProvider cccPath)
     {
@@ -317,7 +317,7 @@ public class LiveLoadOrderIntegrationTests
         [Frozen]IScheduler scheduler,
         [Frozen]MockFileSystem fs,
         [Frozen]ILiveLoadOrderTimings timings, 
-        [Frozen]IPluginListingsPathProvider pluginPath,
+        [Frozen]IPluginListingsPathContext pluginPath,
         [Frozen]IDataDirectoryProvider dataDir,
         [Frozen]ICreationClubListingsPathProvider cccPath)
     {

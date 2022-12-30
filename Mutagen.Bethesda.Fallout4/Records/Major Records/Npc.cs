@@ -128,7 +128,7 @@ partial class NpcBinaryCreateTranslation
 
     public static partial void FillBinaryLevelCustom(MutagenFrame frame, INpcInternal item)
     {
-        if (EnumExt.HasFlag((uint)item.Flags, PcLevelMultFlag))
+        if (Enums.HasFlag((uint)item.Flags, PcLevelMultFlag))
         {
             var raw = frame.ReadUInt16();
             float f = (float)raw;
@@ -268,7 +268,7 @@ partial class NpcBinaryOverlay
     public partial IANpcLevelGetter GetLevelCustom()
     {
         uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_FlagsLocation));
-        if (EnumExt.HasFlag(rawFlags, NpcBinaryCreateTranslation.PcLevelMultFlag))
+        if (Enums.HasFlag(rawFlags, NpcBinaryCreateTranslation.PcLevelMultFlag))
         {
             var raw = BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_LevelLocation));
             float f = (float)raw;

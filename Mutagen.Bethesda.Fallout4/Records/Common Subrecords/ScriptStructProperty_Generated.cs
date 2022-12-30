@@ -86,12 +86,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptStructPropertyGetter rhs) return false;
-            return ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptStructPropertyGetter? obj)
         {
-            return ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)this).CommonInstance()!).GetHashCode(this);
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Members = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Members?.Overall, rhs.Members?.Overall), ExceptionExt.Combine(this.Members?.Specific, rhs.Members?.Specific));
+                ret.Members = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Members?.Overall, rhs.Members?.Overall), Noggog.ExceptionExt.Combine(this.Members?.Specific, rhs.Members?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case ScriptProperty_FieldIndex.Flags:
                     return (ScriptStructProperty_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -884,13 +884,13 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IScriptStructPropertyGetter? lhs,
             IScriptStructPropertyGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ScriptStructProperty_FieldIndex.Members) ?? true))
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ScriptStructProperty_FieldIndex.Members) ?? true))
             {
-                if (!lhs.Members.SequenceEqual(rhs.Members, (l, r) => ((ScriptEntryCommon)((IScriptEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScriptStructProperty_FieldIndex.Members)))) return false;
+                if (!lhs.Members.SequenceEqual(rhs.Members, (l, r) => ((ScriptEntryCommon)((IScriptEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ScriptStructProperty_FieldIndex.Members)))) return false;
             }
             return true;
         }
@@ -898,12 +898,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IScriptPropertyGetter? lhs,
             IScriptPropertyGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IScriptStructPropertyGetter?)lhs,
                 rhs: rhs as IScriptStructPropertyGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IScriptStructPropertyGetter item)
@@ -1282,12 +1282,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptStructPropertyGetter rhs) return false;
-            return ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptStructPropertyGetter? obj)
         {
-            return ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptStructPropertyCommon)((IScriptStructPropertyGetter)this).CommonInstance()!).GetHashCode(this);

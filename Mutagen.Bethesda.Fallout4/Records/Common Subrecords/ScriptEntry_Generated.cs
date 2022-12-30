@@ -94,12 +94,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptEntryGetter rhs) return false;
-            return ((ScriptEntryCommon)((IScriptEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptEntryCommon)((IScriptEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptEntryGetter? obj)
         {
-            return ((ScriptEntryCommon)((IScriptEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptEntryCommon)((IScriptEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptEntryCommon)((IScriptEntryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ScriptEntryCommon)((IScriptEntryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -987,20 +987,20 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IScriptEntryGetter? lhs,
             IScriptEntryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScriptEntry_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptEntry_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptEntry_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptEntry_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptEntry_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptEntry_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((ScriptPropertyCommon)((IScriptPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScriptEntry_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((ScriptPropertyCommon)((IScriptPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ScriptEntry_FieldIndex.Properties)))) return false;
             }
             return true;
         }
@@ -1342,12 +1342,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptEntryGetter rhs) return false;
-            return ((ScriptEntryCommon)((IScriptEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptEntryCommon)((IScriptEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptEntryGetter? obj)
         {
-            return ((ScriptEntryCommon)((IScriptEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptEntryCommon)((IScriptEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptEntryCommon)((IScriptEntryGetter)this).CommonInstance()!).GetHashCode(this);

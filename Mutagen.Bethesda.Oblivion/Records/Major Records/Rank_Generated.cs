@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IRankGetter rhs) return false;
-            return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRankGetter? obj)
         {
-            return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RankCommon)((IRankGetter)this).CommonInstance()!).GetHashCode(this);
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.RankNumber = this.RankNumber.Combine(rhs.RankNumber);
-                ret.Name = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Name?.Overall, rhs.Name?.Overall), GenderedItem.Combine(this.Name?.Specific, rhs.Name?.Specific));
+                ret.Name = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Name?.Overall, rhs.Name?.Overall), GenderedItem.Combine(this.Name?.Specific, rhs.Name?.Specific));
                 ret.Insignia = this.Insignia.Combine(rhs.Insignia);
                 return ret;
             }
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RankCommon)((IRankGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -903,18 +903,18 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IRankGetter? lhs,
             IRankGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Rank_FieldIndex.RankNumber) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.RankNumber) ?? true))
             {
                 if (lhs.RankNumber != rhs.RankNumber) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Rank_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.Name) ?? true))
             {
                 if (!Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
                 if (!string.Equals(lhs.Insignia, rhs.Insignia)) return false;
             }
@@ -1357,12 +1357,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IRankGetter rhs) return false;
-            return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IRankGetter? obj)
         {
-            return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((RankCommon)((IRankGetter)this).CommonInstance()!).GetHashCode(this);

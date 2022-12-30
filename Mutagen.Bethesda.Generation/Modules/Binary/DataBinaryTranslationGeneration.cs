@@ -71,7 +71,13 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         DataType dataType = typeGen as DataType;
 
         sb.AppendLine($"private {nameof(RangeInt32)}? _{dataType.GetFieldData().RecordType}Location;");
-        sb.AppendLine($"public {objGen.ObjectName}.{dataType.EnumName} {dataType.StateName} {{ get; private set; }}");
+
+        var enumTypes = dataType.GetEnumTypes();
+        if (enumTypes.Count > 0)
+        {
+            sb.AppendLine($"public {objGen.ObjectName}.{dataType.EnumName} {dataType.StateName} {{ get; private set; }}");
+        }
+
         switch (typeGen.GetFieldData().BinaryOverlayFallback)
         {
             case BinaryGenerationType.Custom:

@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Location = this.Location.Combine(rhs.Location, (l, r) => l.Combine(r));
                 ret.Schedule = this.Schedule.Combine(rhs.Schedule, (l, r) => l.Combine(r));
                 ret.Target = this.Target.Combine(rhs.Target, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -641,12 +641,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IAIPackageGetter rhs) return false;
-            return ((AIPackageCommon)((IAIPackageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AIPackageCommon)((IAIPackageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAIPackageGetter? obj)
         {
-            return ((AIPackageCommon)((IAIPackageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AIPackageCommon)((IAIPackageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AIPackageCommon)((IAIPackageGetter)this).CommonInstance()!).GetHashCode(this);
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -875,6 +875,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static AIPackage Duplicate(
+            this IAIPackageGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1229,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (AIPackage_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1246,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (AIPackage_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1254,45 +1265,45 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IAIPackageGetter? lhs,
             IAIPackageGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AIPackage_FieldIndex.Data) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((AIPackageDataCommon)((IAIPackageDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)AIPackage_FieldIndex.Data))) return false;
+                    if (!((AIPackageDataCommon)((IAIPackageDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)AIPackage_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AIPackage_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Location) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Location, rhs.Location, out var lhsLocation, out var rhsLocation, out var isLocationEqual))
                 {
-                    if (!((AIPackageLocationCommon)((IAIPackageLocationGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, crystal?.GetSubCrystal((int)AIPackage_FieldIndex.Location))) return false;
+                    if (!((AIPackageLocationCommon)((IAIPackageLocationGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, equalsMask?.GetSubCrystal((int)AIPackage_FieldIndex.Location))) return false;
                 }
                 else if (!isLocationEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AIPackage_FieldIndex.Schedule) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Schedule) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Schedule, rhs.Schedule, out var lhsSchedule, out var rhsSchedule, out var isScheduleEqual))
                 {
-                    if (!((AIPackageScheduleCommon)((IAIPackageScheduleGetter)lhsSchedule).CommonInstance()!).Equals(lhsSchedule, rhsSchedule, crystal?.GetSubCrystal((int)AIPackage_FieldIndex.Schedule))) return false;
+                    if (!((AIPackageScheduleCommon)((IAIPackageScheduleGetter)lhsSchedule).CommonInstance()!).Equals(lhsSchedule, rhsSchedule, equalsMask?.GetSubCrystal((int)AIPackage_FieldIndex.Schedule))) return false;
                 }
                 else if (!isScheduleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AIPackage_FieldIndex.Target) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Target) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Target, rhs.Target, out var lhsTarget, out var rhsTarget, out var isTargetEqual))
                 {
-                    if (!((AIPackageTargetCommon)((IAIPackageTargetGetter)lhsTarget).CommonInstance()!).Equals(lhsTarget, rhsTarget, crystal?.GetSubCrystal((int)AIPackage_FieldIndex.Target))) return false;
+                    if (!((AIPackageTargetCommon)((IAIPackageTargetGetter)lhsTarget).CommonInstance()!).Equals(lhsTarget, rhsTarget, equalsMask?.GetSubCrystal((int)AIPackage_FieldIndex.Target))) return false;
                 }
                 else if (!isTargetEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AIPackage_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)AIPackage_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AIPackage_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1300,23 +1311,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAIPackageGetter?)lhs,
                 rhs: rhs as IAIPackageGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAIPackageGetter?)lhs,
                 rhs: rhs as IAIPackageGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAIPackageGetter item)
@@ -2108,12 +2119,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IAIPackageGetter rhs) return false;
-            return ((AIPackageCommon)((IAIPackageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AIPackageCommon)((IAIPackageGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAIPackageGetter? obj)
         {
-            return ((AIPackageCommon)((IAIPackageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AIPackageCommon)((IAIPackageGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AIPackageCommon)((IAIPackageGetter)this).CommonInstance()!).GetHashCode(this);

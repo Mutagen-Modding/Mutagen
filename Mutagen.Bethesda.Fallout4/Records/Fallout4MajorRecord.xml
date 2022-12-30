@@ -4,6 +4,7 @@
     <Fields>
       <UInt16 name="FormVersion" />
       <UInt16 name="Version2" />
+      <Enum name="Fallout4MajorRecordFlags" enumName="Fallout4MajorRecord.Fallout4MajorRecordFlag" binary="NoGeneration" generateClassMembers="false" />
     </Fields>
   </Object>
 </Loqui>

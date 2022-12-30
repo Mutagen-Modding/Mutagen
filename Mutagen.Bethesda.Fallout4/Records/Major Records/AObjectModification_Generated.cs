@@ -276,6 +276,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Description,
                 TItem Model,
@@ -297,7 +298,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Description = Description;
@@ -1168,11 +1170,11 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MaxRank = this.MaxRank.Combine(rhs.MaxRank);
                 ret.LevelTierScaledOffset = this.LevelTierScaledOffset.Combine(rhs.LevelTierScaledOffset);
                 ret.AttachPoint = this.AttachPoint.Combine(rhs.AttachPoint);
-                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModItem.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-                ret.Includes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModInclude.ErrorMask?>>?>(ExceptionExt.Combine(this.Includes?.Overall, rhs.Includes?.Overall), ExceptionExt.Combine(this.Includes?.Specific, rhs.Includes?.Specific));
-                ret.TargetOmodKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.TargetOmodKeywords?.Overall, rhs.TargetOmodKeywords?.Overall), ExceptionExt.Combine(this.TargetOmodKeywords?.Specific, rhs.TargetOmodKeywords?.Specific));
-                ret.FilterKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.FilterKeywords?.Overall, rhs.FilterKeywords?.Overall), ExceptionExt.Combine(this.FilterKeywords?.Specific, rhs.FilterKeywords?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Includes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModInclude.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Includes?.Overall, rhs.Includes?.Overall), Noggog.ExceptionExt.Combine(this.Includes?.Specific, rhs.Includes?.Specific));
+                ret.TargetOmodKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TargetOmodKeywords?.Overall, rhs.TargetOmodKeywords?.Overall), Noggog.ExceptionExt.Combine(this.TargetOmodKeywords?.Specific, rhs.TargetOmodKeywords?.Specific));
+                ret.FilterKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.FilterKeywords?.Overall, rhs.FilterKeywords?.Overall), Noggog.ExceptionExt.Combine(this.FilterKeywords?.Specific, rhs.FilterKeywords?.Specific));
                 ret.LooseMod = this.LooseMod.Combine(rhs.LooseMod);
                 ret.Priority = this.Priority.Combine(rhs.Priority);
                 ret.Filter = this.Filter.Combine(rhs.Filter);
@@ -1322,12 +1324,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAObjectModificationGetter rhs) return false;
-            return ((AObjectModificationCommon)((IAObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AObjectModificationCommon)((IAObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAObjectModificationGetter? obj)
         {
-            return ((AObjectModificationCommon)((IAObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AObjectModificationCommon)((IAObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AObjectModificationCommon)((IAObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1520,7 +1522,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AObjectModificationCommon)((IAObjectModificationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1596,6 +1598,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static AObjectModification Duplicate(
+            this IAObjectModificationGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AObjectModificationCommon)((IAObjectModificationGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1628,21 +1641,22 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Description = 7,
-        Model = 8,
-        Unknown = 9,
-        MaxRank = 10,
-        LevelTierScaledOffset = 11,
-        AttachPoint = 12,
-        AttachParentSlots = 13,
-        Items = 14,
-        Includes = 15,
-        TargetOmodKeywords = 16,
-        FilterKeywords = 17,
-        LooseMod = 18,
-        Priority = 19,
-        Filter = 20,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Description = 8,
+        Model = 9,
+        Unknown = 10,
+        MaxRank = 11,
+        LevelTierScaledOffset = 12,
+        AttachPoint = 13,
+        AttachParentSlots = 14,
+        Items = 15,
+        Includes = 16,
+        TargetOmodKeywords = 17,
+        FilterKeywords = 18,
+        LooseMod = 19,
+        Priority = 20,
+        Filter = 21,
     }
     #endregion
 
@@ -1662,7 +1676,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(AObjectModification.Mask<>);
 
@@ -2076,8 +2090,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (AObjectModification_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (AObjectModification_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (AObjectModification_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2094,7 +2110,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (AObjectModification_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2102,71 +2118,71 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAObjectModificationGetter? lhs,
             IAObjectModificationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.Name) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)AObjectModification_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)AObjectModification_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.MaxRank) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.MaxRank) ?? true))
             {
                 if (lhs.MaxRank != rhs.MaxRank) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.LevelTierScaledOffset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.LevelTierScaledOffset) ?? true))
             {
                 if (lhs.LevelTierScaledOffset != rhs.LevelTierScaledOffset) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.AttachPoint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.AttachPoint) ?? true))
             {
                 if (!lhs.AttachPoint.Equals(rhs.AttachPoint)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.AttachParentSlots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.AttachParentSlots) ?? true))
             {
                 if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.Items) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((ObjectModItemCommon)((IObjectModItemGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)AObjectModification_FieldIndex.Items)))) return false;
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((ObjectModItemCommon)((IObjectModItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AObjectModification_FieldIndex.Items)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.Includes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Includes) ?? true))
             {
-                if (!lhs.Includes.SequenceEqual(rhs.Includes, (l, r) => ((ObjectModIncludeCommon)((IObjectModIncludeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)AObjectModification_FieldIndex.Includes)))) return false;
+                if (!lhs.Includes.SequenceEqual(rhs.Includes, (l, r) => ((ObjectModIncludeCommon)((IObjectModIncludeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AObjectModification_FieldIndex.Includes)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.TargetOmodKeywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.TargetOmodKeywords) ?? true))
             {
                 if (!lhs.TargetOmodKeywords.SequenceEqualNullable(rhs.TargetOmodKeywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.FilterKeywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.FilterKeywords) ?? true))
             {
                 if (!lhs.FilterKeywords.SequenceEqualNullable(rhs.FilterKeywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.LooseMod) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.LooseMod) ?? true))
             {
                 if (!lhs.LooseMod.Equals(rhs.LooseMod)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.Priority) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Priority) ?? true))
             {
                 if (lhs.Priority != rhs.Priority) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AObjectModification_FieldIndex.Filter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Filter) ?? true))
             {
                 if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
             }
@@ -2176,23 +2192,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAObjectModificationGetter?)lhs,
                 rhs: rhs as IAObjectModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAObjectModificationGetter?)lhs,
                 rhs: rhs as IAObjectModificationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAObjectModificationGetter item)
@@ -3179,12 +3195,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAObjectModificationGetter rhs) return false;
-            return ((AObjectModificationCommon)((IAObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AObjectModificationCommon)((IAObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAObjectModificationGetter? obj)
         {
-            return ((AObjectModificationCommon)((IAObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AObjectModificationCommon)((IAObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AObjectModificationCommon)((IAObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);

@@ -98,12 +98,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptEffectDataGetter rhs) return false;
-            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptEffectDataGetter? obj)
         {
-            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -998,26 +998,26 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IScriptEffectDataGetter? lhs,
             IScriptEffectDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Script) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Script) ?? true))
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.MagicSchool) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.MagicSchool) ?? true))
             {
                 if (lhs.MagicSchool != rhs.MagicSchool) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.VisualEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.VisualEffect) ?? true))
             {
                 if (!lhs.VisualEffect.Equals(rhs.VisualEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ScriptEffectData.VersioningBreaks Versioning { get; private set; }
         public IFormLinkGetter<IScriptGetter> Script => new FormLink<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         public MagicSchool MagicSchool => _structData.Span.Length <= 0x4 ? default : (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
-        public IEDIDLinkGetter<IMagicEffectGetter> VisualEffect => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IEDIDLinkGetter<IMagicEffectGetter> VisualEffect => _structData.Length <= 0x8 ? EDIDLink<IMagicEffectGetter>.Null : new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
         public ScriptEffect.Flag Flags => _structData.Span.Length <= 0xC ? default : (ScriptEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1407,12 +1407,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptEffectDataGetter rhs) return false;
-            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptEffectDataGetter? obj)
         {
-            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).GetHashCode(this);

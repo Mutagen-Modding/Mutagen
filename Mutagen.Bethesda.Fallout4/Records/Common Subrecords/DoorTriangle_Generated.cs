@@ -85,12 +85,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDoorTriangleGetter rhs) return false;
-            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDoorTriangleGetter? obj)
         {
-            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DoorTriangleCommon)((IDoorTriangleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -890,18 +890,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDoorTriangleGetter? lhs,
             IDoorTriangleGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)DoorTriangle_FieldIndex.TriangleBeforeDoor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DoorTriangle_FieldIndex.TriangleBeforeDoor) ?? true))
             {
                 if (lhs.TriangleBeforeDoor != rhs.TriangleBeforeDoor) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DoorTriangle_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DoorTriangle_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DoorTriangle_FieldIndex.Door) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DoorTriangle_FieldIndex.Door) ?? true))
             {
                 if (!lhs.Door.Equals(rhs.Door)) return false;
             }
@@ -1233,12 +1233,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IDoorTriangleGetter rhs) return false;
-            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDoorTriangleGetter? obj)
         {
-            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).GetHashCode(this);

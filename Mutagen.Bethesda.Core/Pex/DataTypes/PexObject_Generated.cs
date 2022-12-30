@@ -129,12 +129,12 @@ namespace Mutagen.Bethesda.Pex
         public override bool Equals(object? obj)
         {
             if (obj is not IPexObjectGetter rhs) return false;
-            return ((PexObjectCommon)((IPexObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PexObjectCommon)((IPexObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPexObjectGetter? obj)
         {
-            return ((PexObjectCommon)((IPexObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PexObjectCommon)((IPexObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PexObjectCommon)((IPexObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -851,10 +851,10 @@ namespace Mutagen.Bethesda.Pex
                 ret.IsConst = this.IsConst.Combine(rhs.IsConst);
                 ret.RawUserFlags = this.RawUserFlags.Combine(rhs.RawUserFlags);
                 ret.AutoStateName = this.AutoStateName.Combine(rhs.AutoStateName);
-                ret.StructInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectStructInfo.ErrorMask?>>?>(ExceptionExt.Combine(this.StructInfos?.Overall, rhs.StructInfos?.Overall), ExceptionExt.Combine(this.StructInfos?.Specific, rhs.StructInfos?.Specific));
-                ret.Variables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectVariable.ErrorMask?>>?>(ExceptionExt.Combine(this.Variables?.Overall, rhs.Variables?.Overall), ExceptionExt.Combine(this.Variables?.Specific, rhs.Variables?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
-                ret.States = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectState.ErrorMask?>>?>(ExceptionExt.Combine(this.States?.Overall, rhs.States?.Overall), ExceptionExt.Combine(this.States?.Specific, rhs.States?.Specific));
+                ret.StructInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectStructInfo.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.StructInfos?.Overall, rhs.StructInfos?.Overall), Noggog.ExceptionExt.Combine(this.StructInfos?.Specific, rhs.StructInfos?.Specific));
+                ret.Variables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectVariable.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Variables?.Overall, rhs.Variables?.Overall), Noggog.ExceptionExt.Combine(this.Variables?.Specific, rhs.Variables?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.States = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectState.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.States?.Overall, rhs.States?.Overall), Noggog.ExceptionExt.Combine(this.States?.Specific, rhs.States?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Pex
             return ((PexObjectCommon)((IPexObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1436,48 +1436,48 @@ namespace Mutagen.Bethesda.Pex
         public virtual bool Equals(
             IPexObjectGetter? lhs,
             IPexObjectGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObject_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.ParentClassName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObject_FieldIndex.ParentClassName) ?? true))
             {
                 if (!string.Equals(lhs.ParentClassName, rhs.ParentClassName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.DocString) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObject_FieldIndex.DocString) ?? true))
             {
                 if (!string.Equals(lhs.DocString, rhs.DocString)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.IsConst) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObject_FieldIndex.IsConst) ?? true))
             {
                 if (lhs.IsConst != rhs.IsConst) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.RawUserFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObject_FieldIndex.RawUserFlags) ?? true))
             {
                 if (lhs.RawUserFlags != rhs.RawUserFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.AutoStateName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObject_FieldIndex.AutoStateName) ?? true))
             {
                 if (!string.Equals(lhs.AutoStateName, rhs.AutoStateName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.StructInfos) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObject_FieldIndex.StructInfos) ?? true))
             {
-                if (!lhs.StructInfos.SequenceEqual(rhs.StructInfos, (l, r) => ((PexObjectStructInfoCommon)((IPexObjectStructInfoGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.StructInfos)))) return false;
+                if (!lhs.StructInfos.SequenceEqual(rhs.StructInfos, (l, r) => ((PexObjectStructInfoCommon)((IPexObjectStructInfoGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PexObject_FieldIndex.StructInfos)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.Variables) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObject_FieldIndex.Variables) ?? true))
             {
-                if (!lhs.Variables.SequenceEqual(rhs.Variables, (l, r) => ((PexObjectVariableCommon)((IPexObjectVariableGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.Variables)))) return false;
+                if (!lhs.Variables.SequenceEqual(rhs.Variables, (l, r) => ((PexObjectVariableCommon)((IPexObjectVariableGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PexObject_FieldIndex.Variables)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObject_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((PexObjectPropertyCommon)((IPexObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((PexObjectPropertyCommon)((IPexObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PexObject_FieldIndex.Properties)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.States) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObject_FieldIndex.States) ?? true))
             {
-                if (!lhs.States.SequenceEqual(rhs.States, (l, r) => ((PexObjectStateCommon)((IPexObjectStateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.States)))) return false;
+                if (!lhs.States.SequenceEqual(rhs.States, (l, r) => ((PexObjectStateCommon)((IPexObjectStateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PexObject_FieldIndex.States)))) return false;
             }
             return true;
         }

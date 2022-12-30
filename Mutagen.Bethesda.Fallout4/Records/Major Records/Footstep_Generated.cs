@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ImpactDataSet,
                 TItem Tag)
             : base(
@@ -111,7 +112,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ImpactDataSet = ImpactDataSet;
                 this.Tag = Tag;
@@ -433,12 +435,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepGetter rhs) return false;
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFootstepGetter? obj)
         {
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).GetHashCode(this);
@@ -587,7 +589,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((FootstepCommon)((IFootstepGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -663,6 +665,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Footstep Duplicate(
+            this IFootstepGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((FootstepCommon)((IFootstepGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -695,8 +708,9 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ImpactDataSet = 6,
-        Tag = 7,
+        Fallout4MajorRecordFlags = 6,
+        ImpactDataSet = 7,
+        Tag = 8,
     }
     #endregion
 
@@ -716,7 +730,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(Footstep.Mask<>);
 
@@ -959,8 +973,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Footstep_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Footstep_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Footstep_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -977,7 +993,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Footstep_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -985,15 +1001,15 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IFootstepGetter? lhs,
             IFootstepGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
             {
                 if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
             {
                 if (!string.Equals(lhs.Tag, rhs.Tag)) return false;
             }
@@ -1003,23 +1019,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFootstepGetter?)lhs,
                 rhs: rhs as IFootstepGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IFootstepGetter?)lhs,
                 rhs: rhs as IFootstepGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IFootstepGetter item)
@@ -1588,12 +1604,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepGetter rhs) return false;
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IFootstepGetter? obj)
         {
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).GetHashCode(this);

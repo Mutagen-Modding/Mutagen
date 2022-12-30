@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ISceneActorGetter rhs) return false;
-            return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneActorGetter? obj)
         {
-            return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SceneActorCommon)((ISceneActorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -891,18 +891,18 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISceneActorGetter? lhs,
             ISceneActorGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SceneActor_FieldIndex.ID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneActor_FieldIndex.ID) ?? true))
             {
                 if (lhs.ID != rhs.ID) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneActor_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneActor_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SceneActor_FieldIndex.BehaviorFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SceneActor_FieldIndex.BehaviorFlags) ?? true))
             {
                 if (lhs.BehaviorFlags != rhs.BehaviorFlags) return false;
             }
@@ -1322,12 +1322,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ISceneActorGetter rhs) return false;
-            return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneActorGetter? obj)
         {
-            return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).GetHashCode(this);

@@ -59,12 +59,12 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptObjectPropertyGetter IQuestFragmentAliasGetter.Property => Property;
         #endregion
         #region Version
-        public readonly static Int16 _Version_Default = 5;
-        public Int16 Version { get; set; } = _Version_Default;
+        public static readonly Int16 VersionDefault = 5;
+        public Int16 Version { get; set; } = VersionDefault;
         #endregion
         #region ObjectFormat
-        public readonly static UInt16 _ObjectFormat_Default = 2;
-        public UInt16 ObjectFormat { get; set; } = _ObjectFormat_Default;
+        public static readonly UInt16 ObjectFormatDefault = 2;
+        public UInt16 ObjectFormat { get; set; } = ObjectFormatDefault;
         #endregion
         #region Scripts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,12 +99,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestFragmentAliasGetter rhs) return false;
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestFragmentAliasGetter? obj)
         {
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).GetHashCode(this);
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Property = this.Property.Combine(rhs.Property, (l, r) => l.Combine(r));
                 ret.Version = this.Version.Combine(rhs.Version);
                 ret.ObjectFormat = this.ObjectFormat.Combine(rhs.ObjectFormat);
-                ret.Scripts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), ExceptionExt.Combine(this.Scripts?.Specific, rhs.Scripts?.Specific));
+                ret.Scripts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), Noggog.ExceptionExt.Combine(this.Scripts?.Specific, rhs.Scripts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -895,8 +895,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Property.Clear();
-            item.Version = QuestFragmentAlias._Version_Default;
-            item.ObjectFormat = QuestFragmentAlias._ObjectFormat_Default;
+            item.Version = QuestFragmentAlias.VersionDefault;
+            item.ObjectFormat = QuestFragmentAlias.ObjectFormatDefault;
             item.Scripts.Clear();
         }
         
@@ -1046,28 +1046,28 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IQuestFragmentAliasGetter? lhs,
             IQuestFragmentAliasGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Property) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Property) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Property, rhs.Property, out var lhsProperty, out var rhsProperty, out var isPropertyEqual))
                 {
-                    if (!((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)lhsProperty).CommonInstance()!).Equals(lhsProperty, rhsProperty, crystal?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Property))) return false;
+                    if (!((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)lhsProperty).CommonInstance()!).Equals(lhsProperty, rhsProperty, equalsMask?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Property))) return false;
                 }
                 else if (!isPropertyEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Version) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Version) ?? true))
             {
                 if (lhs.Version != rhs.Version) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.ObjectFormat) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.ObjectFormat) ?? true))
             {
                 if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Scripts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Scripts) ?? true))
             {
-                if (!lhs.Scripts.SequenceEqual(rhs.Scripts, (l, r) => ((ScriptEntryCommon)((IScriptEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Scripts)))) return false;
+                if (!lhs.Scripts.SequenceEqual(rhs.Scripts, (l, r) => ((ScriptEntryCommon)((IScriptEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Scripts)))) return false;
             }
             return true;
         }
@@ -1513,12 +1513,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestFragmentAliasGetter rhs) return false;
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestFragmentAliasGetter? obj)
         {
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).GetHashCode(this);

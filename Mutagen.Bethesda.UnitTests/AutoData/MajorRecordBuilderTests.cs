@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.AutoData;
@@ -9,6 +10,16 @@ public class MajorRecordBuilderTests
     [Theory]
     [MutagenModAutoData]
     public void Typical(
+        SkyrimMod mod,
+        Npc npc)
+    {
+        npc.FormKey.ModKey.Should().Be(mod.ModKey);
+        mod.Npcs.Records.Should().Contain(n => n == npc);
+    }
+    
+    [Theory]
+    [MutagenModAutoData(ConfigureMembers: true)]
+    public void ConfigureMembers(
         SkyrimMod mod,
         Npc npc)
     {

@@ -27,6 +27,7 @@ public class PluginListingsParserTests
     public void Typical()
     {
         var parser = new PluginListingsParser( 
+            new PluginListingCommentTrimmer(),
             new LoadOrderListingParser(
                 new HasEnabledMarkersInjection(true)));
         var result = parser.Parse(GetStream(@"*ModA.esm
@@ -42,7 +43,8 @@ ModB.esp
     [Fact]
     public void CommentsWithNoEntry()
     {
-        var parser = new PluginListingsParser(
+        var parser = new PluginListingsParser( 
+            new PluginListingCommentTrimmer(),
             new LoadOrderListingParser(
                 new HasEnabledMarkersInjection(true)));
         var result = parser.Parse(GetStream(@"*ModA.esm
@@ -51,13 +53,15 @@ ModB.esp
             .ToList();
         result.Should().Equal(
             new LoadOrderListing("ModA.esm", true),
+            new LoadOrderListing("#ModB.esp", false),
             new LoadOrderListing("ModC.esp", true));
     }
         
     [Fact]
     public void CommentTrimming()
     {
-        var parser = new PluginListingsParser(
+        var parser = new PluginListingsParser( 
+            new PluginListingCommentTrimmer(),
             new LoadOrderListingParser(
                 new HasEnabledMarkersInjection(true)));
         var result = parser.Parse(GetStream(@"*ModA.esm

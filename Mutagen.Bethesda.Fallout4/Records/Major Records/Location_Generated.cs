@@ -452,6 +452,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ActorCellPersistentReferences,
                 TItem LocationCellPersistentReferences,
                 TItem ReferenceCellPersistentReferences,
@@ -483,7 +484,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ActorCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(ActorCellPersistentReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
                 this.LocationCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(LocationCellPersistentReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
@@ -2376,24 +2378,24 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ActorCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellPersistentReferences?.Overall, rhs.ActorCellPersistentReferences?.Overall), ExceptionExt.Combine(this.ActorCellPersistentReferences?.Specific, rhs.ActorCellPersistentReferences?.Specific));
-                ret.LocationCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellPersistentReferences?.Overall, rhs.LocationCellPersistentReferences?.Overall), ExceptionExt.Combine(this.LocationCellPersistentReferences?.Specific, rhs.LocationCellPersistentReferences?.Specific));
-                ret.ReferenceCellPersistentReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ReferenceCellPersistentReferences?.Overall, rhs.ReferenceCellPersistentReferences?.Overall), ExceptionExt.Combine(this.ReferenceCellPersistentReferences?.Specific, rhs.ReferenceCellPersistentReferences?.Specific));
-                ret.ActorCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellUniques?.Overall, rhs.ActorCellUniques?.Overall), ExceptionExt.Combine(this.ActorCellUniques?.Specific, rhs.ActorCellUniques?.Specific));
-                ret.LocationCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellUniques?.Overall, rhs.LocationCellUniques?.Overall), ExceptionExt.Combine(this.LocationCellUniques?.Specific, rhs.LocationCellUniques?.Specific));
-                ret.ReferenceCellUnique = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ReferenceCellUnique?.Overall, rhs.ReferenceCellUnique?.Overall), ExceptionExt.Combine(this.ReferenceCellUnique?.Specific, rhs.ReferenceCellUnique?.Specific));
-                ret.ActorCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellStaticReferences?.Overall, rhs.ActorCellStaticReferences?.Overall), ExceptionExt.Combine(this.ActorCellStaticReferences?.Specific, rhs.ActorCellStaticReferences?.Specific));
-                ret.LocationCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellStaticReferences?.Overall, rhs.LocationCellStaticReferences?.Overall), ExceptionExt.Combine(this.LocationCellStaticReferences?.Specific, rhs.LocationCellStaticReferences?.Specific));
-                ret.ReferenceCellStaticReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ReferenceCellStaticReferences?.Overall, rhs.ReferenceCellStaticReferences?.Overall), ExceptionExt.Combine(this.ReferenceCellStaticReferences?.Specific, rhs.ReferenceCellStaticReferences?.Specific));
-                ret.ActorCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellEncounterCell?.Overall, rhs.ActorCellEncounterCell?.Overall), ExceptionExt.Combine(this.ActorCellEncounterCell?.Specific, rhs.ActorCellEncounterCell?.Specific));
-                ret.LocationCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellEncounterCell?.Overall, rhs.LocationCellEncounterCell?.Overall), ExceptionExt.Combine(this.LocationCellEncounterCell?.Specific, rhs.LocationCellEncounterCell?.Specific));
-                ret.ReferenceCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ExceptionExt.Combine(this.ReferenceCellEncounterCell?.Overall, rhs.ReferenceCellEncounterCell?.Overall), ExceptionExt.Combine(this.ReferenceCellEncounterCell?.Specific, rhs.ReferenceCellEncounterCell?.Specific));
-                ret.ActorCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorCellMarkerReference?.Overall, rhs.ActorCellMarkerReference?.Overall), ExceptionExt.Combine(this.ActorCellMarkerReference?.Specific, rhs.ActorCellMarkerReference?.Specific));
-                ret.LocationCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationCellMarkerReference?.Overall, rhs.LocationCellMarkerReference?.Overall), ExceptionExt.Combine(this.LocationCellMarkerReference?.Specific, rhs.LocationCellMarkerReference?.Specific));
-                ret.ActorCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellEnablePoint?.Overall, rhs.ActorCellEnablePoint?.Overall), ExceptionExt.Combine(this.ActorCellEnablePoint?.Specific, rhs.ActorCellEnablePoint?.Specific));
-                ret.LocationCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellEnablePoint?.Overall, rhs.LocationCellEnablePoint?.Overall), ExceptionExt.Combine(this.LocationCellEnablePoint?.Specific, rhs.LocationCellEnablePoint?.Specific));
+                ret.ActorCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorCellPersistentReferences?.Overall, rhs.ActorCellPersistentReferences?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellPersistentReferences?.Specific, rhs.ActorCellPersistentReferences?.Specific));
+                ret.LocationCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationCellPersistentReferences?.Overall, rhs.LocationCellPersistentReferences?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellPersistentReferences?.Specific, rhs.LocationCellPersistentReferences?.Specific));
+                ret.ReferenceCellPersistentReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ReferenceCellPersistentReferences?.Overall, rhs.ReferenceCellPersistentReferences?.Overall), Noggog.ExceptionExt.Combine(this.ReferenceCellPersistentReferences?.Specific, rhs.ReferenceCellPersistentReferences?.Specific));
+                ret.ActorCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorCellUniques?.Overall, rhs.ActorCellUniques?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellUniques?.Specific, rhs.ActorCellUniques?.Specific));
+                ret.LocationCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationCellUniques?.Overall, rhs.LocationCellUniques?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellUniques?.Specific, rhs.LocationCellUniques?.Specific));
+                ret.ReferenceCellUnique = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ReferenceCellUnique?.Overall, rhs.ReferenceCellUnique?.Overall), Noggog.ExceptionExt.Combine(this.ReferenceCellUnique?.Specific, rhs.ReferenceCellUnique?.Specific));
+                ret.ActorCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorCellStaticReferences?.Overall, rhs.ActorCellStaticReferences?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellStaticReferences?.Specific, rhs.ActorCellStaticReferences?.Specific));
+                ret.LocationCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationCellStaticReferences?.Overall, rhs.LocationCellStaticReferences?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellStaticReferences?.Specific, rhs.LocationCellStaticReferences?.Specific));
+                ret.ReferenceCellStaticReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ReferenceCellStaticReferences?.Overall, rhs.ReferenceCellStaticReferences?.Overall), Noggog.ExceptionExt.Combine(this.ReferenceCellStaticReferences?.Specific, rhs.ReferenceCellStaticReferences?.Specific));
+                ret.ActorCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorCellEncounterCell?.Overall, rhs.ActorCellEncounterCell?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellEncounterCell?.Specific, rhs.ActorCellEncounterCell?.Specific));
+                ret.LocationCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationCellEncounterCell?.Overall, rhs.LocationCellEncounterCell?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellEncounterCell?.Specific, rhs.LocationCellEncounterCell?.Specific));
+                ret.ReferenceCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ReferenceCellEncounterCell?.Overall, rhs.ReferenceCellEncounterCell?.Overall), Noggog.ExceptionExt.Combine(this.ReferenceCellEncounterCell?.Specific, rhs.ReferenceCellEncounterCell?.Specific));
+                ret.ActorCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorCellMarkerReference?.Overall, rhs.ActorCellMarkerReference?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellMarkerReference?.Specific, rhs.ActorCellMarkerReference?.Specific));
+                ret.LocationCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationCellMarkerReference?.Overall, rhs.LocationCellMarkerReference?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellMarkerReference?.Specific, rhs.LocationCellMarkerReference?.Specific));
+                ret.ActorCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorCellEnablePoint?.Overall, rhs.ActorCellEnablePoint?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellEnablePoint?.Specific, rhs.ActorCellEnablePoint?.Specific));
+                ret.LocationCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationCellEnablePoint?.Overall, rhs.LocationCellEnablePoint?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellEnablePoint?.Specific, rhs.LocationCellEnablePoint?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.ParentLocation = this.ParentLocation.Combine(rhs.ParentLocation);
                 ret.Music = this.Music.Combine(rhs.Music);
                 ret.UnreportedCrimeFaction = this.UnreportedCrimeFaction.Combine(rhs.UnreportedCrimeFaction);
@@ -2571,12 +2573,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILocationGetter rhs) return false;
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationGetter? obj)
         {
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2807,7 +2809,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2883,6 +2885,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Location Duplicate(
+            this ILocationGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2915,31 +2928,32 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ActorCellPersistentReferences = 6,
-        LocationCellPersistentReferences = 7,
-        ReferenceCellPersistentReferences = 8,
-        ActorCellUniques = 9,
-        LocationCellUniques = 10,
-        ReferenceCellUnique = 11,
-        ActorCellStaticReferences = 12,
-        LocationCellStaticReferences = 13,
-        ReferenceCellStaticReferences = 14,
-        ActorCellEncounterCell = 15,
-        LocationCellEncounterCell = 16,
-        ReferenceCellEncounterCell = 17,
-        ActorCellMarkerReference = 18,
-        LocationCellMarkerReference = 19,
-        ActorCellEnablePoint = 20,
-        LocationCellEnablePoint = 21,
-        Name = 22,
-        Keywords = 23,
-        ParentLocation = 24,
-        Music = 25,
-        UnreportedCrimeFaction = 26,
-        WorldLocationMarkerRef = 27,
-        WorldLocationRadius = 28,
-        ActorFadeMult = 29,
-        Color = 30,
+        Fallout4MajorRecordFlags = 6,
+        ActorCellPersistentReferences = 7,
+        LocationCellPersistentReferences = 8,
+        ReferenceCellPersistentReferences = 9,
+        ActorCellUniques = 10,
+        LocationCellUniques = 11,
+        ReferenceCellUnique = 12,
+        ActorCellStaticReferences = 13,
+        LocationCellStaticReferences = 14,
+        ReferenceCellStaticReferences = 15,
+        ActorCellEncounterCell = 16,
+        LocationCellEncounterCell = 17,
+        ReferenceCellEncounterCell = 18,
+        ActorCellMarkerReference = 19,
+        LocationCellMarkerReference = 20,
+        ActorCellEnablePoint = 21,
+        LocationCellEnablePoint = 22,
+        Name = 23,
+        Keywords = 24,
+        ParentLocation = 25,
+        Music = 26,
+        UnreportedCrimeFaction = 27,
+        WorldLocationMarkerRef = 28,
+        WorldLocationRadius = 29,
+        ActorFadeMult = 30,
+        Color = 31,
     }
     #endregion
 
@@ -2959,7 +2973,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 25;
 
-        public const ushort FieldCount = 31;
+        public const ushort FieldCount = 32;
 
         public static readonly Type MaskType = typeof(Location.Mask<>);
 
@@ -3624,8 +3638,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Location_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Location_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Location_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3642,7 +3658,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Location_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3650,107 +3666,107 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILocationGetter? lhs,
             ILocationGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
             {
-                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellPersistentReferences)))) return false;
+                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellPersistentReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
             {
-                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellPersistentReferences)))) return false;
+                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellPersistentReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
             {
                 if (!lhs.ReferenceCellPersistentReferences.SequenceEqualNullable(rhs.ReferenceCellPersistentReferences)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
             {
-                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellUniques)))) return false;
+                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellUniques)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
             {
-                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellUniques)))) return false;
+                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellUniques)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
             {
                 if (!lhs.ReferenceCellUnique.SequenceEqualNullable(rhs.ReferenceCellUnique)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
             {
-                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellStaticReferences)))) return false;
+                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellStaticReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
             {
-                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellStaticReferences)))) return false;
+                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellStaticReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
             {
                 if (!lhs.ReferenceCellStaticReferences.SequenceEqualNullable(rhs.ReferenceCellStaticReferences)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
             {
-                if (!lhs.ActorCellEncounterCell.SequenceEqual(rhs.ActorCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellEncounterCell)))) return false;
+                if (!lhs.ActorCellEncounterCell.SequenceEqual(rhs.ActorCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellEncounterCell)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
             {
-                if (!lhs.LocationCellEncounterCell.SequenceEqual(rhs.LocationCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellEncounterCell)))) return false;
+                if (!lhs.LocationCellEncounterCell.SequenceEqual(rhs.LocationCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellEncounterCell)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
             {
-                if (!lhs.ReferenceCellEncounterCell.SequenceEqual(rhs.ReferenceCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellEncounterCell)))) return false;
+                if (!lhs.ReferenceCellEncounterCell.SequenceEqual(rhs.ReferenceCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellEncounterCell)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
             {
                 if (!lhs.ActorCellMarkerReference.SequenceEqualNullable(rhs.ActorCellMarkerReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
             {
                 if (!lhs.LocationCellMarkerReference.SequenceEqualNullable(rhs.LocationCellMarkerReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
             {
-                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellEnablePoint)))) return false;
+                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellEnablePoint)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
             {
-                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellEnablePoint)))) return false;
+                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellEnablePoint)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
             {
                 if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
             {
                 if (!lhs.Music.Equals(rhs.Music)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
                 if (!lhs.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
             {
                 if (!lhs.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
             {
                 if (!lhs.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorFadeMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorFadeMult) ?? true))
             {
                 if (!lhs.ActorFadeMult.EqualsWithin(rhs.ActorFadeMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
@@ -3760,23 +3776,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILocationGetter?)lhs,
                 rhs: rhs as ILocationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILocationGetter?)lhs,
                 rhs: rhs as ILocationGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILocationGetter item)
@@ -5739,12 +5755,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILocationGetter rhs) return false;
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationGetter? obj)
         {
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);

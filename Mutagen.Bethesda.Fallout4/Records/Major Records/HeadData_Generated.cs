@@ -194,12 +194,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IHeadDataGetter rhs) return false;
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHeadDataGetter? obj)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1118,14 +1118,14 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.NeckFatAdjustmentsScale = this.NeckFatAdjustmentsScale.Combine(rhs.NeckFatAdjustmentsScale, (l, r) => l.Combine(r));
-                ret.HeadParts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, HeadPartReference.ErrorMask?>>?>(ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
-                ret.RacePresets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RacePresets?.Overall, rhs.RacePresets?.Overall), ExceptionExt.Combine(this.RacePresets?.Specific, rhs.RacePresets?.Specific));
-                ret.AvailableHairColors = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AvailableHairColors?.Overall, rhs.AvailableHairColors?.Overall), ExceptionExt.Combine(this.AvailableHairColors?.Specific, rhs.AvailableHairColors?.Specific));
-                ret.FaceDetails = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.FaceDetails?.Overall, rhs.FaceDetails?.Overall), ExceptionExt.Combine(this.FaceDetails?.Specific, rhs.FaceDetails?.Specific));
+                ret.HeadParts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, HeadPartReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.HeadParts?.Overall, rhs.HeadParts?.Overall), Noggog.ExceptionExt.Combine(this.HeadParts?.Specific, rhs.HeadParts?.Specific));
+                ret.RacePresets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RacePresets?.Overall, rhs.RacePresets?.Overall), Noggog.ExceptionExt.Combine(this.RacePresets?.Specific, rhs.RacePresets?.Specific));
+                ret.AvailableHairColors = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AvailableHairColors?.Overall, rhs.AvailableHairColors?.Overall), Noggog.ExceptionExt.Combine(this.AvailableHairColors?.Specific, rhs.AvailableHairColors?.Specific));
+                ret.FaceDetails = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.FaceDetails?.Overall, rhs.FaceDetails?.Overall), Noggog.ExceptionExt.Combine(this.FaceDetails?.Specific, rhs.FaceDetails?.Specific));
                 ret.DefaultFaceTexture = this.DefaultFaceTexture.Combine(rhs.DefaultFaceTexture);
-                ret.TintLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintGroup.ErrorMask?>>?>(ExceptionExt.Combine(this.TintLayers?.Overall, rhs.TintLayers?.Overall), ExceptionExt.Combine(this.TintLayers?.Specific, rhs.TintLayers?.Specific));
-                ret.MorphGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphGroup.ErrorMask?>>?>(ExceptionExt.Combine(this.MorphGroups?.Overall, rhs.MorphGroups?.Overall), ExceptionExt.Combine(this.MorphGroups?.Specific, rhs.MorphGroups?.Specific));
-                ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorph.ErrorMask?>>?>(ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
+                ret.TintLayers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintGroup.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TintLayers?.Overall, rhs.TintLayers?.Overall), Noggog.ExceptionExt.Combine(this.TintLayers?.Specific, rhs.TintLayers?.Specific));
+                ret.MorphGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphGroup.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MorphGroups?.Overall, rhs.MorphGroups?.Overall), Noggog.ExceptionExt.Combine(this.MorphGroups?.Specific, rhs.MorphGroups?.Specific));
+                ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), Noggog.ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
                 ret.MaleWrinkleMapPath = this.MaleWrinkleMapPath.Combine(rhs.MaleWrinkleMapPath);
                 return ret;
             }
@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1900,50 +1900,50 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IHeadDataGetter? lhs,
             IHeadDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.NeckFatAdjustmentsScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.NeckFatAdjustmentsScale) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NeckFatAdjustmentsScale, rhs.NeckFatAdjustmentsScale, out var lhsNeckFatAdjustmentsScale, out var rhsNeckFatAdjustmentsScale, out var isNeckFatAdjustmentsScaleEqual))
                 {
-                    if (!((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)lhsNeckFatAdjustmentsScale).CommonInstance()!).Equals(lhsNeckFatAdjustmentsScale, rhsNeckFatAdjustmentsScale, crystal?.GetSubCrystal((int)HeadData_FieldIndex.NeckFatAdjustmentsScale))) return false;
+                    if (!((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)lhsNeckFatAdjustmentsScale).CommonInstance()!).Equals(lhsNeckFatAdjustmentsScale, rhsNeckFatAdjustmentsScale, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.NeckFatAdjustmentsScale))) return false;
                 }
                 else if (!isNeckFatAdjustmentsScaleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.HeadParts) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.HeadParts) ?? true))
             {
-                if (!lhs.HeadParts.SequenceEqual(rhs.HeadParts, (l, r) => ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.HeadParts)))) return false;
+                if (!lhs.HeadParts.SequenceEqual(rhs.HeadParts, (l, r) => ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.HeadParts)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
             {
                 if (!lhs.RacePresets.SequenceEqualNullable(rhs.RacePresets)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableHairColors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableHairColors) ?? true))
             {
                 if (!lhs.AvailableHairColors.SequenceEqualNullable(rhs.AvailableHairColors)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.FaceDetails) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.FaceDetails) ?? true))
             {
                 if (!lhs.FaceDetails.SequenceEqualNullable(rhs.FaceDetails)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
             {
                 if (!lhs.DefaultFaceTexture.Equals(rhs.DefaultFaceTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.TintLayers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.TintLayers) ?? true))
             {
-                if (!lhs.TintLayers.SequenceEqual(rhs.TintLayers, (l, r) => ((TintGroupCommon)((ITintGroupGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.TintLayers)))) return false;
+                if (!lhs.TintLayers.SequenceEqual(rhs.TintLayers, (l, r) => ((TintGroupCommon)((ITintGroupGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.TintLayers)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.MorphGroups) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.MorphGroups) ?? true))
             {
-                if (!lhs.MorphGroups.SequenceEqual(rhs.MorphGroups, (l, r) => ((MorphGroupCommon)((IMorphGroupGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.MorphGroups)))) return false;
+                if (!lhs.MorphGroups.SequenceEqual(rhs.MorphGroups, (l, r) => ((MorphGroupCommon)((IMorphGroupGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.MorphGroups)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.FaceMorphs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.FaceMorphs) ?? true))
             {
-                if (!lhs.FaceMorphs.SequenceEqual(rhs.FaceMorphs, (l, r) => ((FaceMorphCommon)((IFaceMorphGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.FaceMorphs)))) return false;
+                if (!lhs.FaceMorphs.SequenceEqual(rhs.FaceMorphs, (l, r) => ((FaceMorphCommon)((IFaceMorphGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.FaceMorphs)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.MaleWrinkleMapPath) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.MaleWrinkleMapPath) ?? true))
             {
                 if (!string.Equals(lhs.MaleWrinkleMapPath, rhs.MaleWrinkleMapPath)) return false;
             }
@@ -2847,12 +2847,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IHeadDataGetter rhs) return false;
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IHeadDataGetter? obj)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);

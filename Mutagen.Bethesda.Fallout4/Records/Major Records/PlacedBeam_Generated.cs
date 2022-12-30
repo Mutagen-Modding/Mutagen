@@ -100,6 +100,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem EncounterZone,
                 TItem HeadTrackingWeight,
@@ -128,7 +129,6 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Position,
                 TItem Rotation,
                 TItem Comments,
-                TItem DATADataTypeState,
                 TItem Projectile)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -137,6 +137,7 @@ namespace Mutagen.Bethesda.Fallout4
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags,
                 VirtualMachineAdapter: VirtualMachineAdapter,
                 EncounterZone: EncounterZone,
                 HeadTrackingWeight: HeadTrackingWeight,
@@ -164,8 +165,7 @@ namespace Mutagen.Bethesda.Fallout4
                 DistantLodData: DistantLodData,
                 Position: Position,
                 Rotation: Rotation,
-                Comments: Comments,
-                DATADataTypeState: DATADataTypeState)
+                Comments: Comments)
             {
                 this.Projectile = Projectile;
             }
@@ -459,12 +459,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedBeamGetter rhs) return false;
-            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedBeamGetter? obj)
         {
-            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).GetHashCode(this);
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -692,6 +692,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static PlacedBeam Duplicate(
+            this IPlacedBeamGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -724,35 +735,35 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        EncounterZone = 7,
-        HeadTrackingWeight = 8,
-        FavorCost = 9,
-        Reflections = 10,
-        LinkedReferences = 11,
-        ActivateParents = 12,
-        UnknownReference = 13,
-        XATP = 14,
-        AmmoCount = 15,
-        IsLinkedRefTransient = 16,
-        Layer = 17,
-        MaterialSwap = 18,
-        ReferenceGroup = 19,
-        XCVR = 20,
-        EnableParent = 21,
-        Ownership = 22,
-        FactionRank = 23,
-        Emittance = 24,
-        MultiBoundReference = 25,
-        IsIgnoredBySandbox = 26,
-        LocationRefTypes = 27,
-        LocationReference = 28,
-        Scale = 29,
-        DistantLodData = 30,
-        Position = 31,
-        Rotation = 32,
-        Comments = 33,
-        DATADataTypeState = 34,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        EncounterZone = 8,
+        HeadTrackingWeight = 9,
+        FavorCost = 10,
+        Reflections = 11,
+        LinkedReferences = 12,
+        ActivateParents = 13,
+        UnknownReference = 14,
+        XATP = 15,
+        AmmoCount = 16,
+        IsLinkedRefTransient = 17,
+        Layer = 18,
+        MaterialSwap = 19,
+        ReferenceGroup = 20,
+        XCVR = 21,
+        EnableParent = 22,
+        Ownership = 23,
+        FactionRank = 24,
+        Emittance = 25,
+        MultiBoundReference = 26,
+        IsIgnoredBySandbox = 27,
+        LocationRefTypes = 28,
+        LocationReference = 29,
+        Scale = 30,
+        DistantLodData = 31,
+        Position = 32,
+        Rotation = 33,
+        Comments = 34,
         Projectile = 35,
     }
     #endregion
@@ -1022,6 +1033,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PlacedBeam_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.Version2:
                     return (PlacedBeam_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.Fallout4MajorRecordFlags:
+                    return (PlacedBeam_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.VirtualMachineAdapter:
                     return (PlacedBeam_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.EncounterZone:
@@ -1078,10 +1091,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PlacedBeam_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.Comments:
                     return (PlacedBeam_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.DATADataTypeState:
-                    return (PlacedBeam_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1101,8 +1112,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PlacedBeam_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (PlacedBeam_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (PlacedBeam_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1119,7 +1132,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (PlacedBeam_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1127,11 +1140,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPlacedBeamGetter? lhs,
             IPlacedBeamGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)PlacedBeam_FieldIndex.Projectile) ?? true))
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PlacedBeam_FieldIndex.Projectile) ?? true))
             {
                 if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
             }
@@ -1141,34 +1154,34 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAPlacedTrapGetter? lhs,
             IAPlacedTrapGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedBeamGetter?)lhs,
                 rhs: rhs as IPlacedBeamGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedBeamGetter?)lhs,
                 rhs: rhs as IPlacedBeamGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IPlacedBeamGetter?)lhs,
                 rhs: rhs as IPlacedBeamGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IPlacedBeamGetter item)
@@ -1481,7 +1494,7 @@ namespace Mutagen.Bethesda.Fallout4
             IPlacedBeamGetter item,
             MutagenWriter writer)
         {
-            APlacedTrapBinaryWriteTranslation.WriteEmbedded(
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
         }
@@ -1706,12 +1719,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedBeamGetter rhs) return false;
-            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPlacedBeamGetter? obj)
         {
-            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).GetHashCode(this);

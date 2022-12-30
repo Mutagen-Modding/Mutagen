@@ -5,7 +5,10 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Noggog;
 using System.Buffers.Binary;
 using System.Collections;
+using Loqui;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Assets;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
@@ -97,10 +100,16 @@ internal sealed class GroupListOverlay<T> : IReadOnlyList<T>
     }
 }
 
-internal abstract class AListGroupBinaryOverlay<T> : PluginBinaryOverlay
+internal abstract class AListGroupBinaryOverlay<TObject> : PluginBinaryOverlay, IListGroupGetter<TObject>
+    where TObject : class, ILoquiObject
 {
-    protected GroupListOverlay<T>? _Records;
-    public IReadOnlyList<T> Records => _Records!;
+    protected GroupListOverlay<TObject>? _Records;
+    public IReadOnlyList<TObject> Records => _Records!;
+    IEnumerable<TObject> IGroupCommonGetter<TObject>.Records => Records;
+    IReadOnlyList<ILoquiObject> IListGroupGetter.Records => Records;
+    IEnumerable<ILoquiObject> IGroupCommonGetter.Records => Records;
+
+    public ILoquiRegistration ContainedRecordRegistration => throw new NotImplementedException();
 
     protected AListGroupBinaryOverlay(
         PluginBinaryOverlay.MemoryPair memoryPair,
@@ -108,4 +117,26 @@ internal abstract class AListGroupBinaryOverlay<T> : PluginBinaryOverlay
         : base(memoryPair, package)
     {
     }
+
+    public IEnumerator<TObject> GetEnumerator()
+    {
+        return Records.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return ((IEnumerable)Records).GetEnumerator();
+    }
+
+    IEnumerable<TObject> IListGroupGetter<TObject>.GetEnumerator() => Records;
+
+    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
+
+    public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null);
+
+    public int Count => Records.Count;
+
+    public Type ContainedRecordType => typeof(TObject);
+
+    public TObject this[int index] => Records[index];
 }

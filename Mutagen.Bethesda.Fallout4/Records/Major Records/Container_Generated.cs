@@ -285,9 +285,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IContainerGetter.FilterList => this.FilterList;
         #endregion
-        #region DATADataTypeState
-        public Container.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -330,7 +327,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CloseSound = initialValue;
                 this.TakeAllSound = initialValue;
                 this.FilterList = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -340,6 +336,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -356,15 +353,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem OpenSound,
                 TItem CloseSound,
                 TItem TakeAllSound,
-                TItem FilterList,
-                TItem DATADataTypeState)
+                TItem FilterList)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -383,7 +380,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CloseSound = CloseSound;
                 this.TakeAllSound = TakeAllSound;
                 this.FilterList = FilterList;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -412,7 +408,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem CloseSound;
             public TItem TakeAllSound;
             public TItem FilterList;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -443,7 +438,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
                 if (!object.Equals(this.TakeAllSound, rhs.TakeAllSound)) return false;
                 if (!object.Equals(this.FilterList, rhs.FilterList)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -466,7 +460,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.CloseSound);
                 hash.Add(this.TakeAllSound);
                 hash.Add(this.FilterList);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -542,7 +535,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.CloseSound)) return false;
                 if (!eval(this.TakeAllSound)) return false;
                 if (!eval(this.FilterList)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -616,7 +608,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.CloseSound)) return true;
                 if (eval(this.TakeAllSound)) return true;
                 if (eval(this.FilterList)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -690,7 +681,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.CloseSound = eval(this.CloseSound);
                 obj.TakeAllSound = eval(this.TakeAllSound);
                 obj.FilterList = eval(this.FilterList);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -824,10 +814,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(FilterList, "FilterList");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -856,7 +842,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? CloseSound;
             public Exception? TakeAllSound;
             public Exception? FilterList;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -899,8 +884,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return TakeAllSound;
                     case Container_FieldIndex.FilterList:
                         return FilterList;
-                    case Container_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -961,9 +944,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Container_FieldIndex.FilterList:
                         this.FilterList = ex;
-                        break;
-                    case Container_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1027,9 +1007,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Container_FieldIndex.FilterList:
                         this.FilterList = (Exception?)obj;
                         break;
-                    case Container_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1056,7 +1033,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (CloseSound != null) return true;
                 if (TakeAllSound != null) return true;
                 if (FilterList != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1173,9 +1149,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(FilterList, "FilterList");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -1189,19 +1162,18 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
                 ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
                 ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
                 ret.TakeAllSound = this.TakeAllSound.Combine(rhs.TakeAllSound);
                 ret.FilterList = this.FilterList.Combine(rhs.FilterList);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1241,7 +1213,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool CloseSound;
             public bool TakeAllSound;
             public bool FilterList;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1261,7 +1232,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CloseSound = defaultOn;
                 this.TakeAllSound = defaultOn;
                 this.FilterList = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1286,7 +1256,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((CloseSound, null));
                 ret.Add((TakeAllSound, null));
                 ret.Add((FilterList, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1348,10 +1317,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1360,12 +1325,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IContainerGetter rhs) return false;
-            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IContainerGetter? obj)
         {
-            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1481,7 +1446,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> TakeAllSound { get; set; }
         new IFormLinkNullable<IFormListGetter> FilterList { get; set; }
-        new Container.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Container.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1560,7 +1524,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> TakeAllSound { get; }
         IFormLinkNullableGetter<IFormListGetter> FilterList { get; }
-        Container.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         Container.MajorFlag MajorFlags { get; }
@@ -1621,7 +1584,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1697,6 +1660,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Container Duplicate(
+            this IContainerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1729,24 +1703,24 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        Name = 9,
-        Model = 10,
-        Items = 11,
-        Destructible = 12,
-        Flags = 13,
-        Weight = 14,
-        Keywords = 15,
-        ForcedLocRefType = 16,
-        Properties = 17,
-        NativeTerminal = 18,
-        OpenSound = 19,
-        CloseSound = 20,
-        TakeAllSound = 21,
-        FilterList = 22,
-        DATADataTypeState = 23,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        Name = 10,
+        Model = 11,
+        Items = 12,
+        Destructible = 13,
+        Flags = 14,
+        Weight = 15,
+        Keywords = 16,
+        ForcedLocRefType = 17,
+        Properties = 18,
+        NativeTerminal = 19,
+        OpenSound = 20,
+        CloseSound = 21,
+        TakeAllSound = 22,
+        FilterList = 23,
     }
     #endregion
 
@@ -1764,7 +1738,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "d5eebb15-76fe-43cd-9ba9-7ad6eac2b785";
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 17;
 
         public const ushort FieldCount = 24;
 
@@ -1890,7 +1864,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.CloseSound.Clear();
             item.TakeAllSound.Clear();
             item.FilterList.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -2026,7 +1999,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.CloseSound = item.CloseSound.Equals(rhs.CloseSound);
             ret.TakeAllSound = item.TakeAllSound.Equals(rhs.TakeAllSound);
             ret.FilterList = item.FilterList.Equals(rhs.FilterList);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2181,10 +2153,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.FilterList.FormKeyNullable, "FilterList");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Container_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2203,8 +2171,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Container_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Container_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Container_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2221,7 +2191,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Container_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2229,97 +2199,93 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IContainerGetter? lhs,
             IContainerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Container_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Container_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Container_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Container_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Container_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Container_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Container_FieldIndex.Items)))) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Container_FieldIndex.Items)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Container_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Container_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.ForcedLocRefType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.ForcedLocRefType) ?? true))
             {
                 if (!lhs.ForcedLocRefType.Equals(rhs.ForcedLocRefType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Container_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Container_FieldIndex.Properties)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.NativeTerminal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.NativeTerminal) ?? true))
             {
                 if (!lhs.NativeTerminal.Equals(rhs.NativeTerminal)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
                 if (!lhs.OpenSound.Equals(rhs.OpenSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
                 if (!lhs.CloseSound.Equals(rhs.CloseSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.TakeAllSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.TakeAllSound) ?? true))
             {
                 if (!lhs.TakeAllSound.Equals(rhs.TakeAllSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.FilterList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.FilterList) ?? true))
             {
                 if (!lhs.FilterList.Equals(rhs.FilterList)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Container_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -2327,23 +2293,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IContainerGetter?)lhs,
                 rhs: rhs as IContainerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IContainerGetter?)lhs,
                 rhs: rhs as IContainerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IContainerGetter item)
@@ -2378,7 +2344,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.CloseSound);
             hash.Add(item.TakeAllSound);
             hash.Add(item.FilterList);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2784,10 +2749,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FilterList.SetTo(rhs.FilterList.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2936,15 +2897,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ContainerBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IContainerGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IContainerGetter item,
             MutagenWriter writer,
@@ -3074,7 +3026,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3134,15 +3086,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ContainerBinaryCreateTranslation Instance = new ContainerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CONT;
-        public static void FillBinaryStructs(
-            IContainerInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IContainerInternal item,
             MutagenFrame frame,
@@ -3387,7 +3330,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         private RangeInt32? _DATALocation;
-        public Container.DATADataType DATADataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
@@ -3664,12 +3606,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IContainerGetter rhs) return false;
-            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IContainerGetter? obj)
         {
-            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).GetHashCode(this);

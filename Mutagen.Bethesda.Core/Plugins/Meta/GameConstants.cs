@@ -303,6 +303,7 @@ public sealed record GameConstants
             case GameRelease.EnderalLE:
                 return SkyrimLE;
             case GameRelease.SkyrimSE:
+            case GameRelease.SkyrimSEGog:
             case GameRelease.EnderalSE:
                 return SkyrimSE;
             case GameRelease.SkyrimVR:

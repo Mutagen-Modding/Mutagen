@@ -84,12 +84,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestCollectionAliasGetter rhs) return false;
-            return ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestCollectionAliasGetter? obj)
         {
-            return ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)this).CommonInstance()!).GetHashCode(this);
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Collection = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CollectionAlias.ErrorMask?>>?>(ExceptionExt.Combine(this.Collection?.Overall, rhs.Collection?.Overall), ExceptionExt.Combine(this.Collection?.Specific, rhs.Collection?.Specific));
+                ret.Collection = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CollectionAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Collection?.Overall, rhs.Collection?.Overall), Noggog.ExceptionExt.Combine(this.Collection?.Specific, rhs.Collection?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Fallout4
             switch (index)
             {
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -872,13 +872,13 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IQuestCollectionAliasGetter? lhs,
             IQuestCollectionAliasGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAQuestAliasGetter)lhs, (IAQuestAliasGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)QuestCollectionAlias_FieldIndex.Collection) ?? true))
+            if (!base.Equals((IAQuestAliasGetter)lhs, (IAQuestAliasGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)QuestCollectionAlias_FieldIndex.Collection) ?? true))
             {
-                if (!lhs.Collection.SequenceEqual(rhs.Collection, (l, r) => ((CollectionAliasCommon)((ICollectionAliasGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestCollectionAlias_FieldIndex.Collection)))) return false;
+                if (!lhs.Collection.SequenceEqual(rhs.Collection, (l, r) => ((CollectionAliasCommon)((ICollectionAliasGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestCollectionAlias_FieldIndex.Collection)))) return false;
             }
             return true;
         }
@@ -886,12 +886,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAQuestAliasGetter? lhs,
             IAQuestAliasGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IQuestCollectionAliasGetter?)lhs,
                 rhs: rhs as IQuestCollectionAliasGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IQuestCollectionAliasGetter item)
@@ -1299,12 +1299,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestCollectionAliasGetter rhs) return false;
-            return ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestCollectionAliasGetter? obj)
         {
-            return ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestCollectionAliasCommon)((IQuestCollectionAliasGetter)this).CommonInstance()!).GetHashCode(this);

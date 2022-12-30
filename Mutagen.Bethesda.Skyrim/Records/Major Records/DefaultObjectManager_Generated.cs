@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Objects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -110,7 +111,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DefaultObject.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, DefaultObject.Mask<TItem>?>>());
             }
@@ -365,7 +367,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DefaultObject.ErrorMask?>>?>(ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), ExceptionExt.Combine(this.Objects?.Specific, rhs.Objects?.Specific));
+                ret.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DefaultObject.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), Noggog.ExceptionExt.Combine(this.Objects?.Specific, rhs.Objects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -476,12 +478,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDefaultObjectManagerGetter rhs) return false;
-            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDefaultObjectManagerGetter? obj)
         {
-            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -628,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -704,6 +706,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static DefaultObjectManager Duplicate(
+            this IDefaultObjectManagerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -736,7 +749,8 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Objects = 6,
+        SkyrimMajorRecordFlags = 6,
+        Objects = 7,
     }
     #endregion
 
@@ -756,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(DefaultObjectManager.Mask<>);
 
@@ -1006,8 +1020,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (DefaultObjectManager_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (DefaultObjectManager_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (DefaultObjectManager_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1024,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (DefaultObjectManager_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1032,13 +1048,13 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IDefaultObjectManagerGetter? lhs,
             IDefaultObjectManagerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)DefaultObjectManager_FieldIndex.Objects) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DefaultObjectManager_FieldIndex.Objects) ?? true))
             {
-                if (!lhs.Objects.SequenceEqualNullable(rhs.Objects, (l, r) => ((DefaultObjectCommon)((IDefaultObjectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DefaultObjectManager_FieldIndex.Objects)))) return false;
+                if (!lhs.Objects.SequenceEqualNullable(rhs.Objects, (l, r) => ((DefaultObjectCommon)((IDefaultObjectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DefaultObjectManager_FieldIndex.Objects)))) return false;
             }
             return true;
         }
@@ -1046,23 +1062,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDefaultObjectManagerGetter?)lhs,
                 rhs: rhs as IDefaultObjectManagerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDefaultObjectManagerGetter?)lhs,
                 rhs: rhs as IDefaultObjectManagerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IDefaultObjectManagerGetter item)
@@ -1654,12 +1670,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDefaultObjectManagerGetter rhs) return false;
-            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDefaultObjectManagerGetter? obj)
         {
-            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).GetHashCode(this);

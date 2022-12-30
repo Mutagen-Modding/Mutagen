@@ -105,6 +105,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Parent,
                 TItem PreviousSibling,
                 TItem Conditions,
@@ -118,6 +119,7 @@ namespace Mutagen.Bethesda.Fallout4
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags,
                 Parent: Parent,
                 PreviousSibling: PreviousSibling,
                 Conditions: Conditions)
@@ -468,12 +470,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IStoryManagerEventNodeGetter rhs) return false;
-            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStoryManagerEventNodeGetter? obj)
         {
-            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -622,7 +624,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -698,6 +700,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static StoryManagerEventNode Duplicate(
+            this IStoryManagerEventNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -730,12 +743,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        PreviousSibling = 7,
-        Conditions = 8,
-        Flags = 9,
-        MaxConcurrentQuests = 10,
-        Type = 11,
+        Fallout4MajorRecordFlags = 6,
+        Parent = 7,
+        PreviousSibling = 8,
+        Conditions = 9,
+        Flags = 10,
+        MaxConcurrentQuests = 11,
+        Type = 12,
     }
     #endregion
 
@@ -755,7 +769,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(StoryManagerEventNode.Mask<>);
 
@@ -1066,6 +1080,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return (StoryManagerEventNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.Version2:
                     return (StoryManagerEventNode_FieldIndex)((int)index);
+                case AStoryManagerNode_FieldIndex.Fallout4MajorRecordFlags:
+                    return (StoryManagerEventNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.Parent:
                     return (StoryManagerEventNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.PreviousSibling:
@@ -1073,7 +1089,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case AStoryManagerNode_FieldIndex.Conditions:
                     return (StoryManagerEventNode_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1093,8 +1109,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (StoryManagerEventNode_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (StoryManagerEventNode_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (StoryManagerEventNode_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1111,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (StoryManagerEventNode_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1119,19 +1137,19 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IStoryManagerEventNodeGetter? lhs,
             IStoryManagerEventNodeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)StoryManagerEventNode_FieldIndex.Flags) ?? true))
+            if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerEventNode_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerEventNode_FieldIndex.MaxConcurrentQuests) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerEventNode_FieldIndex.MaxConcurrentQuests) ?? true))
             {
                 if (lhs.MaxConcurrentQuests != rhs.MaxConcurrentQuests) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerEventNode_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerEventNode_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
@@ -1141,34 +1159,34 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAStoryManagerNodeGetter? lhs,
             IAStoryManagerNodeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStoryManagerEventNodeGetter?)lhs,
                 rhs: rhs as IStoryManagerEventNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStoryManagerEventNodeGetter?)lhs,
                 rhs: rhs as IStoryManagerEventNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStoryManagerEventNodeGetter?)lhs,
                 rhs: rhs as IStoryManagerEventNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IStoryManagerEventNodeGetter item)
@@ -1825,12 +1843,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IStoryManagerEventNodeGetter rhs) return false;
-            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStoryManagerEventNodeGetter? obj)
         {
-            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).GetHashCode(this);

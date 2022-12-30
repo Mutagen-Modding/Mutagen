@@ -4,6 +4,7 @@
     <Fields>
       <UInt16 name="FormVersion" />
       <UInt16 name="Version2" />
+      <Enum name="SkyrimMajorRecordFlags" enumName="SkyrimMajorRecord.SkyrimMajorRecordFlag" binary="NoGeneration" generateClassMembers="false" />
     </Fields>
   </Object>
 </Loqui>

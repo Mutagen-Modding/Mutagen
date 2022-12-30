@@ -83,12 +83,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INpcBodyMorphRegionValuesGetter rhs) return false;
-            return ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcBodyMorphRegionValuesGetter? obj)
         {
-            return ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -958,26 +958,26 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INpcBodyMorphRegionValuesGetter? lhs,
             INpcBodyMorphRegionValuesGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)NpcBodyMorphRegionValues_FieldIndex.Head) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcBodyMorphRegionValues_FieldIndex.Head) ?? true))
             {
                 if (!lhs.Head.EqualsWithin(rhs.Head)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcBodyMorphRegionValues_FieldIndex.UpperTorso) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcBodyMorphRegionValues_FieldIndex.UpperTorso) ?? true))
             {
                 if (!lhs.UpperTorso.EqualsWithin(rhs.UpperTorso)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcBodyMorphRegionValues_FieldIndex.Arms) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcBodyMorphRegionValues_FieldIndex.Arms) ?? true))
             {
                 if (!lhs.Arms.EqualsWithin(rhs.Arms)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcBodyMorphRegionValues_FieldIndex.LowerTorso) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcBodyMorphRegionValues_FieldIndex.LowerTorso) ?? true))
             {
                 if (!lhs.LowerTorso.EqualsWithin(rhs.LowerTorso)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NpcBodyMorphRegionValues_FieldIndex.Legs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcBodyMorphRegionValues_FieldIndex.Legs) ?? true))
             {
                 if (!lhs.Legs.EqualsWithin(rhs.Legs)) return false;
             }
@@ -1331,12 +1331,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INpcBodyMorphRegionValuesGetter rhs) return false;
-            return ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INpcBodyMorphRegionValuesGetter? obj)
         {
-            return ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NpcBodyMorphRegionValuesCommon)((INpcBodyMorphRegionValuesGetter)this).CommonInstance()!).GetHashCode(this);

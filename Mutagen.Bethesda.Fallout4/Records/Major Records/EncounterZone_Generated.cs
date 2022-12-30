@@ -86,9 +86,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region MaxLevel
         public SByte MaxLevel { get; set; } = default;
         #endregion
-        #region DATADataTypeState
-        public EncounterZone.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -120,7 +117,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MinLevel = initialValue;
                 this.Flags = initialValue;
                 this.MaxLevel = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -130,20 +126,21 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Owner,
                 TItem Location,
                 TItem Rank,
                 TItem MinLevel,
                 TItem Flags,
-                TItem MaxLevel,
-                TItem DATADataTypeState)
+                TItem MaxLevel)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Owner = Owner;
                 this.Location = Location;
@@ -151,7 +148,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MinLevel = MinLevel;
                 this.Flags = Flags;
                 this.MaxLevel = MaxLevel;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -169,7 +165,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem MinLevel;
             public TItem Flags;
             public TItem MaxLevel;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -189,7 +184,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.MinLevel, rhs.MinLevel)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.MaxLevel, rhs.MaxLevel)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -201,7 +195,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.MinLevel);
                 hash.Add(this.Flags);
                 hash.Add(this.MaxLevel);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -218,7 +211,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.MinLevel)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.MaxLevel)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -233,7 +225,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.MinLevel)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.MaxLevel)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -255,7 +246,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.MinLevel = eval(this.MinLevel);
                 obj.Flags = eval(this.Flags);
                 obj.MaxLevel = eval(this.MaxLevel);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -298,10 +288,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(MaxLevel, "MaxLevel");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -319,7 +305,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? MinLevel;
             public Exception? Flags;
             public Exception? MaxLevel;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -340,8 +325,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Flags;
                     case EncounterZone_FieldIndex.MaxLevel:
                         return MaxLevel;
-                    case EncounterZone_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -369,9 +352,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case EncounterZone_FieldIndex.MaxLevel:
                         this.MaxLevel = ex;
-                        break;
-                    case EncounterZone_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -402,9 +382,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case EncounterZone_FieldIndex.MaxLevel:
                         this.MaxLevel = (Exception?)obj;
                         break;
-                    case EncounterZone_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -420,7 +397,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (MinLevel != null) return true;
                 if (Flags != null) return true;
                 if (MaxLevel != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -465,9 +441,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(MaxLevel, "MaxLevel");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -482,7 +455,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MinLevel = this.MinLevel.Combine(rhs.MinLevel);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.MaxLevel = this.MaxLevel.Combine(rhs.MaxLevel);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -511,7 +483,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool MinLevel;
             public bool Flags;
             public bool MaxLevel;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -526,7 +497,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MinLevel = defaultOn;
                 this.Flags = defaultOn;
                 this.MaxLevel = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -540,7 +510,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((MinLevel, null));
                 ret.Add((Flags, null));
                 ret.Add((MaxLevel, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -597,10 +566,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IEncounterZone);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -609,12 +574,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IEncounterZoneGetter rhs) return false;
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEncounterZoneGetter? obj)
         {
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).GetHashCode(this);
@@ -691,7 +656,6 @@ namespace Mutagen.Bethesda.Fallout4
         new SByte MinLevel { get; set; }
         new EncounterZone.Flag Flags { get; set; }
         new SByte MaxLevel { get; set; }
-        new EncounterZone.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IEncounterZoneInternal :
@@ -716,7 +680,6 @@ namespace Mutagen.Bethesda.Fallout4
         SByte MinLevel { get; }
         EncounterZone.Flag Flags { get; }
         SByte MaxLevel { get; }
-        EncounterZone.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -773,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((EncounterZoneCommon)((IEncounterZoneGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -849,6 +812,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static EncounterZone Duplicate(
+            this IEncounterZoneGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -881,13 +855,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Owner = 6,
-        Location = 7,
-        Rank = 8,
-        MinLevel = 9,
-        Flags = 10,
-        MaxLevel = 11,
-        DATADataTypeState = 12,
+        Fallout4MajorRecordFlags = 6,
+        Owner = 7,
+        Location = 8,
+        Rank = 9,
+        MinLevel = 10,
+        Flags = 11,
+        MaxLevel = 12,
     }
     #endregion
 
@@ -905,7 +879,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "c458c51c-ed0d-4453-b148-737ce5c34e4d";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 13;
 
@@ -991,7 +965,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.MinLevel = default;
             item.Flags = default;
             item.MaxLevel = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1084,7 +1057,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.MinLevel = item.MinLevel == rhs.MinLevel;
             ret.Flags = item.Flags == rhs.Flags;
             ret.MaxLevel = item.MaxLevel == rhs.MaxLevel;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1158,10 +1130,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.MaxLevel, "MaxLevel");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static EncounterZone_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1180,8 +1148,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (EncounterZone_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (EncounterZone_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (EncounterZone_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1198,7 +1168,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (EncounterZone_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1206,37 +1176,33 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IEncounterZoneGetter? lhs,
             IEncounterZoneGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
             {
                 if (!lhs.Owner.Equals(rhs.Owner)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
             {
                 if (lhs.Rank != rhs.Rank) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.MinLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MinLevel) ?? true))
             {
                 if (lhs.MinLevel != rhs.MinLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.MaxLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MaxLevel) ?? true))
             {
                 if (lhs.MaxLevel != rhs.MaxLevel) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1244,23 +1210,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IEncounterZoneGetter?)lhs,
                 rhs: rhs as IEncounterZoneGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IEncounterZoneGetter?)lhs,
                 rhs: rhs as IEncounterZoneGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IEncounterZoneGetter item)
@@ -1272,7 +1238,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.MinLevel);
             hash.Add(item.Flags);
             hash.Add(item.MaxLevel);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1401,10 +1366,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MaxLevel) ?? true))
             {
                 item.MaxLevel = rhs.MaxLevel;
-            }
-            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -1554,15 +1515,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly EncounterZoneBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IEncounterZoneGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IEncounterZoneGetter item,
             MutagenWriter writer,
@@ -1601,7 +1553,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1661,15 +1613,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly EncounterZoneBinaryCreateTranslation Instance = new EncounterZoneBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ECZN;
-        public static void FillBinaryStructs(
-            IEncounterZoneInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IEncounterZoneInternal item,
             MutagenFrame frame,
@@ -1762,7 +1705,6 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         private RangeInt32? _DATALocation;
-        public EncounterZone.DATADataType DATADataTypeState { get; private set; }
         #region Owner
         private int _OwnerLocation => _DATALocation!.Value.Min;
         private bool _Owner_IsSet => _DATALocation.HasValue;
@@ -1905,12 +1847,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IEncounterZoneGetter rhs) return false;
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IEncounterZoneGetter? obj)
         {
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).GetHashCode(this);

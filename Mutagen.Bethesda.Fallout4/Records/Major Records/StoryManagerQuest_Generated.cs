@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IStoryManagerQuestGetter rhs) return false;
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStoryManagerQuestGetter? obj)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).GetHashCode(this);
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -905,18 +905,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IStoryManagerQuestGetter? lhs,
             IStoryManagerQuestGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
             {
                 if (lhs.FNAM != rhs.FNAM) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.HoursUntilReset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.HoursUntilReset) ?? true))
             {
                 if (!lhs.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset)) return false;
             }
@@ -1342,12 +1342,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IStoryManagerQuestGetter rhs) return false;
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStoryManagerQuestGetter? obj)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).GetHashCode(this);

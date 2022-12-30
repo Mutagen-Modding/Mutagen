@@ -23,9 +23,9 @@ public class OrderBuilder : ISpecimenBuilder
                 ret.Used.Returns(def);
                 return ret;
             }
-            else if (t == typeof(IPluginListingsPathProvider))
+            else if (t == typeof(IPluginListingsPathContext))
             {
-                var ret = Substitute.For<IPluginListingsPathProvider>();
+                var ret = Substitute.For<IPluginListingsPathContext>();
                 ret.Path.Returns(new FilePath($"{PathingUtil.DrivePrefix}{Path.Combine("ExistingDirectory", "Plugins.txt")}"));
                 return ret;
             }

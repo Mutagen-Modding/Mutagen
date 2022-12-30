@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledCreatureEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledCreatureEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Template = this.Template.Combine(rhs.Template);
                 return ret;
@@ -607,12 +607,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ILeveledCreatureGetter rhs) return false;
-            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILeveledCreatureGetter? obj)
         {
-            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -843,6 +843,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static LeveledCreature Duplicate(
+            this ILeveledCreatureGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -1180,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (LeveledCreature_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1197,7 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (LeveledCreature_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1205,27 +1216,27 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ILeveledCreatureGetter? lhs,
             ILeveledCreatureGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LeveledCreature_FieldIndex.ChanceNone) ?? true))
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.ChanceNone) ?? true))
             {
                 if (lhs.ChanceNone != rhs.ChanceNone) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Entries) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Entries) ?? true))
             {
-                if (!lhs.Entries.SequenceEqual(rhs.Entries, (l, r) => ((LeveledCreatureEntryCommon)((ILeveledCreatureEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries)))) return false;
+                if (!lhs.Entries.SequenceEqual(rhs.Entries, (l, r) => ((LeveledCreatureEntryCommon)((ILeveledCreatureEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Template) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Template) ?? true))
             {
                 if (!lhs.Template.Equals(rhs.Template)) return false;
             }
@@ -1235,23 +1246,23 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILeveledCreatureGetter?)lhs,
                 rhs: rhs as ILeveledCreatureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILeveledCreatureGetter?)lhs,
                 rhs: rhs as ILeveledCreatureGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILeveledCreatureGetter item)
@@ -1947,12 +1958,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ILeveledCreatureGetter rhs) return false;
-            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILeveledCreatureGetter? obj)
         {
-            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).GetHashCode(this);

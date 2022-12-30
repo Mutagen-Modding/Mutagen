@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptVariableReferenceGetter rhs) return false;
-            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptVariableReferenceGetter? obj)
         {
-            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (index)
             {
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -780,11 +780,11 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IScriptVariableReferenceGetter? lhs,
             IScriptVariableReferenceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAScriptReferenceGetter)lhs, (IAScriptReferenceGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ScriptVariableReference_FieldIndex.VariableIndex) ?? true))
+            if (!base.Equals((IAScriptReferenceGetter)lhs, (IAScriptReferenceGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ScriptVariableReference_FieldIndex.VariableIndex) ?? true))
             {
                 if (lhs.VariableIndex != rhs.VariableIndex) return false;
             }
@@ -794,12 +794,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IAScriptReferenceGetter? lhs,
             IAScriptReferenceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IScriptVariableReferenceGetter?)lhs,
                 rhs: rhs as IScriptVariableReferenceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IScriptVariableReferenceGetter item)
@@ -1175,12 +1175,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptVariableReferenceGetter rhs) return false;
-            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptVariableReferenceGetter? obj)
         {
-            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).GetHashCode(this);

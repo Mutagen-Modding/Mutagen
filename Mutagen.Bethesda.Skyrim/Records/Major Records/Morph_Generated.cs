@@ -79,12 +79,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMorphGetter rhs) return false;
-            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMorphGetter? obj)
         {
-            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MorphCommon)((IMorphGetter)this).CommonInstance()!).GetHashCode(this);
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MorphCommon)((IMorphGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IMorphGetter? lhs,
             IMorphGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Morph_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Morph_FieldIndex.Data) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Data.Span, rhs.Data.Span)) return false;
             }
@@ -1109,12 +1109,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IMorphGetter rhs) return false;
-            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMorphGetter? obj)
         {
-            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MorphCommon)((IMorphGetter)this).CommonInstance()!).GetHashCode(this);

@@ -20,7 +20,7 @@ public static class IHasUserFlagExtensions
         int index = 1;
         for (byte i = 0; i < 32; i++)
         {
-            if (EnumExt.HasFlag(flags, index))
+            if (Enums.HasFlag(flags, index))
             {
                 yield return new NullableUserFlag(pexFile.UserFlags[i], i);
             }
@@ -34,7 +34,7 @@ public static class IHasUserFlagExtensions
         {
             throw new ArgumentException("Tried to set a flag that was not registered in the reference pex file.");
         }
-        hasFlags.RawUserFlags = EnumExt.SetFlag(hasFlags.RawUserFlags, flag.Index, on);
+        hasFlags.RawUserFlags = Enums.SetFlag(hasFlags.RawUserFlags, flag.Index, on);
     }
 
     public static bool HasFlag(this IHasUserFlags hasFlags, IPexFileGetter pexFile, UserFlag flag)
@@ -43,6 +43,6 @@ public static class IHasUserFlagExtensions
         {
             throw new ArgumentException("Tried to set a flag that was not registered in the reference pex file.");
         }
-        return EnumExt.HasFlag(hasFlags.RawUserFlags, flag.Index);
+        return Enums.HasFlag(hasFlags.RawUserFlags, flag.Index);
     }
 }

@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILocationCellGetter rhs) return false;
-            return ((LocationCellCommon)((ILocationCellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCellCommon)((ILocationCellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationCellGetter? obj)
         {
-            return ((LocationCellCommon)((ILocationCellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCellCommon)((ILocationCellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCellCommon)((ILocationCellGetter)this).CommonInstance()!).GetHashCode(this);
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationCellCommon)((ILocationCellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
             switch (index)
             {
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -789,11 +789,11 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ILocationCellGetter? lhs,
             ILocationCellGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)LocationCell_FieldIndex.Link) ?? true))
+            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LocationCell_FieldIndex.Link) ?? true))
             {
                 if (!lhs.Link.Equals(rhs.Link)) return false;
             }
@@ -803,12 +803,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IALocationTargetGetter? lhs,
             IALocationTargetGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILocationCellGetter?)lhs,
                 rhs: rhs as ILocationCellGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILocationCellGetter item)
@@ -1140,12 +1140,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ILocationCellGetter rhs) return false;
-            return ((LocationCellCommon)((ILocationCellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LocationCellCommon)((ILocationCellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILocationCellGetter? obj)
         {
-            return ((LocationCellCommon)((ILocationCellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LocationCellCommon)((ILocationCellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LocationCellCommon)((ILocationCellGetter)this).CommonInstance()!).GetHashCode(this);

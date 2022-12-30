@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class MagicEffectLightArchetype
 {
-    public FormLink<ILightGetter> Association => this.AssociationKey.AsLink<ILightGetter>();
+    public FormLink<ILightGetter> Association => this.AssociationKey.ToLink<ILightGetter>();
 
     IFormLink<ILightGetter> IMagicEffectLightArchetype.Association => this.Association;
     IFormLinkGetter<ILightGetter> IMagicEffectLightArchetypeGetter.Association => this.Association;
@@ -27,5 +27,5 @@ public partial interface IMagicEffectLightArchetypeGetter
 
 partial class MagicEffectLightArchetypeBinaryOverlay
 {
-    public IFormLinkGetter<ILightGetter> Association => this.AssociationKey.AsLink<ILightGetter>();
+    public IFormLinkGetter<ILightGetter> Association => this.AssociationKey.ToLink<ILightGetter>();
 }

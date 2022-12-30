@@ -8,11 +8,11 @@ public interface IEnabledPluginListingsProvider
 public sealed class EnabledPluginListingsProvider : IEnabledPluginListingsProvider, IListingsProvider
 {
     public IPluginRawListingsReader Reader { get; }
-    public IPluginListingsPathProvider PluginListingsPath { get; }
+    public IPluginListingsPathContext PluginListingsPath { get; }
 
     public EnabledPluginListingsProvider(
         IPluginRawListingsReader reader,
-        IPluginListingsPathProvider pluginListingsPath)
+        IPluginListingsPathContext pluginListingsPath)
     {
         Reader = reader;
         PluginListingsPath = pluginListingsPath;

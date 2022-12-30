@@ -143,9 +143,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArtObjectGetter> IArmorAddonGetter.ArtObject => this.ArtObject;
         #endregion
-        #region DNAMDataTypeState
-        public ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -186,7 +183,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FootstepSound = initialValue;
                 this.ArtObject = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -196,6 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem BodyTemplate,
                 TItem Race,
                 TItem Priority,
@@ -210,15 +207,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem TextureSwapList,
                 TItem AdditionalRaces,
                 TItem FootstepSound,
-                TItem ArtObject,
-                TItem DNAMDataTypeState)
+                TItem ArtObject)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(BodyTemplate, new BodyTemplate.Mask<TItem>(BodyTemplate));
                 this.Race = Race;
@@ -235,7 +232,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdditionalRaces, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FootstepSound = FootstepSound;
                 this.ArtObject = ArtObject;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -262,7 +258,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AdditionalRaces;
             public TItem FootstepSound;
             public TItem ArtObject;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -291,7 +286,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.AdditionalRaces, rhs.AdditionalRaces)) return false;
                 if (!object.Equals(this.FootstepSound, rhs.FootstepSound)) return false;
                 if (!object.Equals(this.ArtObject, rhs.ArtObject)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -312,7 +306,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.AdditionalRaces);
                 hash.Add(this.FootstepSound);
                 hash.Add(this.ArtObject);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -360,7 +353,6 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.FootstepSound)) return false;
                 if (!eval(this.ArtObject)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -406,7 +398,6 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (eval(this.FootstepSound)) return true;
                 if (eval(this.ArtObject)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -464,7 +455,6 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 obj.FootstepSound = eval(this.FootstepSound);
                 obj.ArtObject = eval(this.ArtObject);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -564,10 +554,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(ArtObject, "ArtObject");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -594,7 +580,6 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AdditionalRaces;
             public Exception? FootstepSound;
             public Exception? ArtObject;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -633,8 +618,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return FootstepSound;
                     case ArmorAddon_FieldIndex.ArtObject:
                         return ArtObject;
-                    case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -689,9 +672,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case ArmorAddon_FieldIndex.ArtObject:
                         this.ArtObject = ex;
-                        break;
-                    case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -749,9 +729,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case ArmorAddon_FieldIndex.ArtObject:
                         this.ArtObject = (Exception?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -776,7 +753,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (AdditionalRaces != null) return true;
                 if (FootstepSound != null) return true;
                 if (ArtObject != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -867,9 +843,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(ArtObject, "ArtObject");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -880,20 +853,19 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.BodyTemplate = this.BodyTemplate.Combine(rhs.BodyTemplate, (l, r) => l.Combine(r));
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.Priority = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Priority?.Overall, rhs.Priority?.Overall), GenderedItem.Combine(this.Priority?.Specific, rhs.Priority?.Specific));
-                ret.WeightSliderEnabled = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WeightSliderEnabled?.Overall, rhs.WeightSliderEnabled?.Overall), GenderedItem.Combine(this.WeightSliderEnabled?.Specific, rhs.WeightSliderEnabled?.Specific));
+                ret.Priority = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Priority?.Overall, rhs.Priority?.Overall), GenderedItem.Combine(this.Priority?.Specific, rhs.Priority?.Specific));
+                ret.WeightSliderEnabled = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WeightSliderEnabled?.Overall, rhs.WeightSliderEnabled?.Overall), GenderedItem.Combine(this.WeightSliderEnabled?.Specific, rhs.WeightSliderEnabled?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.DetectionSoundValue = this.DetectionSoundValue.Combine(rhs.DetectionSoundValue);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.WeaponAdjust = this.WeaponAdjust.Combine(rhs.WeaponAdjust);
-                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
-                ret.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.FirstPersonModel?.Overall, rhs.FirstPersonModel?.Overall), GenderedItem.Combine(this.FirstPersonModel?.Specific, rhs.FirstPersonModel?.Specific));
-                ret.SkinTexture = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.SkinTexture?.Overall, rhs.SkinTexture?.Overall), GenderedItem.Combine(this.SkinTexture?.Specific, rhs.SkinTexture?.Specific));
-                ret.TextureSwapList = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.TextureSwapList?.Overall, rhs.TextureSwapList?.Overall), GenderedItem.Combine(this.TextureSwapList?.Specific, rhs.TextureSwapList?.Specific));
-                ret.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AdditionalRaces?.Overall, rhs.AdditionalRaces?.Overall), ExceptionExt.Combine(this.AdditionalRaces?.Specific, rhs.AdditionalRaces?.Specific));
+                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
+                ret.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.FirstPersonModel?.Overall, rhs.FirstPersonModel?.Overall), GenderedItem.Combine(this.FirstPersonModel?.Specific, rhs.FirstPersonModel?.Specific));
+                ret.SkinTexture = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.SkinTexture?.Overall, rhs.SkinTexture?.Overall), GenderedItem.Combine(this.SkinTexture?.Specific, rhs.SkinTexture?.Specific));
+                ret.TextureSwapList = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.TextureSwapList?.Overall, rhs.TextureSwapList?.Overall), GenderedItem.Combine(this.TextureSwapList?.Specific, rhs.TextureSwapList?.Specific));
+                ret.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AdditionalRaces?.Overall, rhs.AdditionalRaces?.Overall), Noggog.ExceptionExt.Combine(this.AdditionalRaces?.Specific, rhs.AdditionalRaces?.Specific));
                 ret.FootstepSound = this.FootstepSound.Combine(rhs.FootstepSound);
                 ret.ArtObject = this.ArtObject.Combine(rhs.ArtObject);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -931,7 +903,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool AdditionalRaces;
             public bool FootstepSound;
             public bool ArtObject;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -948,7 +919,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AdditionalRaces = defaultOn;
                 this.FootstepSound = defaultOn;
                 this.ArtObject = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -971,7 +941,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((AdditionalRaces, null));
                 ret.Add((FootstepSound, null));
                 ret.Add((ArtObject, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1035,10 +1004,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IArmorAddon);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ArmorAddonCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ArmorAddonSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ArmorAddonSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -1050,12 +1015,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IArmorAddonGetter rhs) return false;
-            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IArmorAddonGetter? obj)
         {
-            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1143,7 +1108,6 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
         new IFormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; }
         new IFormLinkNullable<IArtObjectGetter> ArtObject { get; set; }
-        new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IArmorAddonInternal :
@@ -1185,7 +1149,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
         IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound { get; }
         IFormLinkNullableGetter<IArtObjectGetter> ArtObject { get; }
-        ArmorAddon.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -1242,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1318,6 +1281,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static ArmorAddon Duplicate(
+            this IArmorAddonGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1350,22 +1324,22 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        BodyTemplate = 6,
-        Race = 7,
-        Priority = 8,
-        WeightSliderEnabled = 9,
-        Unknown = 10,
-        DetectionSoundValue = 11,
-        Unknown2 = 12,
-        WeaponAdjust = 13,
-        WorldModel = 14,
-        FirstPersonModel = 15,
-        SkinTexture = 16,
-        TextureSwapList = 17,
-        AdditionalRaces = 18,
-        FootstepSound = 19,
-        ArtObject = 20,
-        DNAMDataTypeState = 21,
+        SkyrimMajorRecordFlags = 6,
+        BodyTemplate = 7,
+        Race = 8,
+        Priority = 9,
+        WeightSliderEnabled = 10,
+        Unknown = 11,
+        DetectionSoundValue = 12,
+        Unknown2 = 13,
+        WeaponAdjust = 14,
+        WorldModel = 15,
+        FirstPersonModel = 16,
+        SkinTexture = 17,
+        TextureSwapList = 18,
+        AdditionalRaces = 19,
+        FootstepSound = 20,
+        ArtObject = 21,
     }
     #endregion
 
@@ -1383,7 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "4b6db51f-a0b8-4378-8e8b-8103dfdcd353";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 15;
 
         public const ushort FieldCount = 22;
 
@@ -1542,7 +1516,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.AdditionalRaces.Clear();
             item.FootstepSound.Clear();
             item.ArtObject.Clear();
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1707,7 +1680,6 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
             ret.FootstepSound = item.FootstepSound.Equals(rhs.FootstepSound);
             ret.ArtObject = item.ArtObject.Equals(rhs.ArtObject);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1832,10 +1804,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.ArtObject.FormKeyNullable, "ArtObject");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static ArmorAddon_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1854,8 +1822,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (ArmorAddon_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (ArmorAddon_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (ArmorAddon_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1872,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (ArmorAddon_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1880,77 +1850,73 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IArmorAddonGetter? lhs,
             IArmorAddonGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BodyTemplate) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BodyTemplate) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BodyTemplate, rhs.BodyTemplate, out var lhsBodyTemplate, out var rhsBodyTemplate, out var isBodyTemplateEqual))
                 {
-                    if (!((BodyTemplateCommon)((IBodyTemplateGetter)lhsBodyTemplate).CommonInstance()!).Equals(lhsBodyTemplate, rhsBodyTemplate, crystal?.GetSubCrystal((int)ArmorAddon_FieldIndex.BodyTemplate))) return false;
+                    if (!((BodyTemplateCommon)((IBodyTemplateGetter)lhsBodyTemplate).CommonInstance()!).Equals(lhsBodyTemplate, rhsBodyTemplate, equalsMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.BodyTemplate))) return false;
                 }
                 else if (!isBodyTemplateEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
             {
                 if (!lhs.Race.Equals(rhs.Race)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Priority) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Priority) ?? true))
             {
                 if (!Equals(lhs.Priority, rhs.Priority)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeightSliderEnabled) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeightSliderEnabled) ?? true))
             {
                 if (!Equals(lhs.WeightSliderEnabled, rhs.WeightSliderEnabled)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DetectionSoundValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DetectionSoundValue) ?? true))
             {
                 if (lhs.DetectionSoundValue != rhs.DetectionSoundValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeaponAdjust) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeaponAdjust) ?? true))
             {
                 if (!lhs.WeaponAdjust.EqualsWithin(rhs.WeaponAdjust)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WorldModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WorldModel) ?? true))
             {
                 if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FirstPersonModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FirstPersonModel) ?? true))
             {
                 if (!Equals(lhs.FirstPersonModel, rhs.FirstPersonModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.SkinTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.SkinTexture) ?? true))
             {
                 if (!Equals(lhs.SkinTexture, rhs.SkinTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TextureSwapList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TextureSwapList) ?? true))
             {
                 if (!Equals(lhs.TextureSwapList, rhs.TextureSwapList)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
             {
                 if (!lhs.AdditionalRaces.SequenceEqualNullable(rhs.AdditionalRaces)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
             {
                 if (!lhs.FootstepSound.Equals(rhs.FootstepSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
             {
                 if (!lhs.ArtObject.Equals(rhs.ArtObject)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -1958,23 +1924,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IArmorAddonGetter?)lhs,
                 rhs: rhs as IArmorAddonGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IArmorAddonGetter?)lhs,
                 rhs: rhs as IArmorAddonGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IArmorAddonGetter item)
@@ -2010,7 +1976,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.AdditionalRaces);
             hash.Add(item.FootstepSound);
             hash.Add(item.ArtObject);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2319,10 +2284,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ArtObject.SetTo(rhs.ArtObject.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2471,15 +2432,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly ArmorAddonBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IArmorAddonGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IArmorAddonGetter item,
             MutagenWriter writer,
@@ -2621,7 +2573,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2681,15 +2633,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ArmorAddonBinaryCreateTranslation Instance = new ArmorAddonBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ARMA;
-        public static void FillBinaryStructs(
-            IArmorAddonInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IArmorAddonInternal item,
             MutagenFrame frame,
@@ -2883,7 +2826,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         private RangeInt32? _DNAMLocation;
-        public ArmorAddon.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Priority
         private int _PriorityLocation => _DNAMLocation!.Value.Min;
         private bool _Priority_IsSet => _DNAMLocation.HasValue;
@@ -3145,12 +3087,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IArmorAddonGetter rhs) return false;
-            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IArmorAddonGetter? obj)
         {
-            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).GetHashCode(this);

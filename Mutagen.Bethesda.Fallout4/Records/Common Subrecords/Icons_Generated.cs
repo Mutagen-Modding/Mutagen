@@ -78,12 +78,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IIconsGetter rhs) return false;
-            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIconsGetter? obj)
         {
-            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IconsCommon)((IIconsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((IconsCommon)((IIconsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -846,14 +846,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IIconsGetter? lhs,
             IIconsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Icons_FieldIndex.InventoryImage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Icons_FieldIndex.InventoryImage) ?? true))
             {
                 if (!string.Equals(lhs.InventoryImage, rhs.InventoryImage)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Icons_FieldIndex.MessageIcon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Icons_FieldIndex.MessageIcon) ?? true))
             {
                 if (!string.Equals(lhs.MessageIcon, rhs.MessageIcon)) return false;
             }
@@ -1251,12 +1251,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IIconsGetter rhs) return false;
-            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IIconsGetter? obj)
         {
-            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((IconsCommon)((IIconsGetter)this).CommonInstance()!).GetHashCode(this);

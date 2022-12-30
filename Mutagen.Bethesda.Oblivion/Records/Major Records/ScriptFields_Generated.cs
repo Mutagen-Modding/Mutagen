@@ -110,12 +110,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptFieldsGetter rhs) return false;
-            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptFieldsGetter? obj)
         {
-            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -573,8 +573,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.MetadataSummary = this.MetadataSummary.Combine(rhs.MetadataSummary, (l, r) => l.Combine(r));
                 ret.CompiledScript = this.CompiledScript.Combine(rhs.CompiledScript);
                 ret.SourceCode = this.SourceCode.Combine(rhs.SourceCode);
-                ret.LocalVariables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocalVariable.ErrorMask?>>?>(ExceptionExt.Combine(this.LocalVariables?.Overall, rhs.LocalVariables?.Overall), ExceptionExt.Combine(this.LocalVariables?.Specific, rhs.LocalVariables?.Specific));
-                ret.References = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>(ExceptionExt.Combine(this.References?.Overall, rhs.References?.Overall), ExceptionExt.Combine(this.References?.Specific, rhs.References?.Specific));
+                ret.LocalVariables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocalVariable.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocalVariables?.Overall, rhs.LocalVariables?.Overall), Noggog.ExceptionExt.Combine(this.LocalVariables?.Specific, rhs.LocalVariables?.Specific));
+                ret.References = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.References?.Overall, rhs.References?.Overall), Noggog.ExceptionExt.Combine(this.References?.Specific, rhs.References?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptFieldsCommon)((IScriptFieldsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.MetadataSummary = MaskItemExt.Factory(item.MetadataSummary.GetEqualsMask(rhs.MetadataSummary, include), include);
-            ret.CompiledScript = MemorySliceExt.Equal(item.CompiledScript, rhs.CompiledScript);
+            ret.CompiledScript = MemorySliceExt.SequenceEqual(item.CompiledScript, rhs.CompiledScript);
             ret.SourceCode = string.Equals(item.SourceCode, rhs.SourceCode);
             ret.LocalVariables = item.LocalVariables.CollectionEqualsHelper(
                 rhs.LocalVariables,
@@ -1172,32 +1172,32 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IScriptFieldsGetter? lhs,
             IScriptFieldsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MetadataSummary, rhs.MetadataSummary, out var lhsMetadataSummary, out var rhsMetadataSummary, out var isMetadataSummaryEqual))
                 {
-                    if (!((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)lhsMetadataSummary).CommonInstance()!).Equals(lhsMetadataSummary, rhsMetadataSummary, crystal?.GetSubCrystal((int)ScriptFields_FieldIndex.MetadataSummary))) return false;
+                    if (!((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)lhsMetadataSummary).CommonInstance()!).Equals(lhsMetadataSummary, rhsMetadataSummary, equalsMask?.GetSubCrystal((int)ScriptFields_FieldIndex.MetadataSummary))) return false;
                 }
                 else if (!isMetadataSummaryEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.CompiledScript) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.CompiledScript) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.CompiledScript, rhs.CompiledScript)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.CompiledScript, rhs.CompiledScript)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.SourceCode) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.SourceCode) ?? true))
             {
                 if (!string.Equals(lhs.SourceCode, rhs.SourceCode)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.LocalVariables) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.LocalVariables) ?? true))
             {
-                if (!lhs.LocalVariables.SequenceEqual(rhs.LocalVariables, (l, r) => ((LocalVariableCommon)((ILocalVariableGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScriptFields_FieldIndex.LocalVariables)))) return false;
+                if (!lhs.LocalVariables.SequenceEqual(rhs.LocalVariables, (l, r) => ((LocalVariableCommon)((ILocalVariableGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ScriptFields_FieldIndex.LocalVariables)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.References) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.References) ?? true))
             {
-                if (!lhs.References.SequenceEqual(rhs.References, (l, r) => ((AScriptReferenceCommon)((IAScriptReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ScriptFields_FieldIndex.References)))) return false;
+                if (!lhs.References.SequenceEqual(rhs.References, (l, r) => ((AScriptReferenceCommon)((IAScriptReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ScriptFields_FieldIndex.References)))) return false;
             }
             return true;
         }
@@ -1833,12 +1833,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptFieldsGetter rhs) return false;
-            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptFieldsGetter? obj)
         {
-            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).GetHashCode(this);

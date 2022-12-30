@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IColorRemappingIndexGetter rhs) return false;
-            return ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IColorRemappingIndexGetter? obj)
         {
-            return ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)this).CommonInstance()!).GetHashCode(this);
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Fallout4
             switch (index)
             {
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -772,11 +772,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IColorRemappingIndexGetter? lhs,
             IColorRemappingIndexGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAColorRecordDataGetter)lhs, (IAColorRecordDataGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ColorRemappingIndex_FieldIndex.Index) ?? true))
+            if (!base.Equals((IAColorRecordDataGetter)lhs, (IAColorRecordDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ColorRemappingIndex_FieldIndex.Index) ?? true))
             {
                 if (!lhs.Index.EqualsWithin(rhs.Index)) return false;
             }
@@ -786,12 +786,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAColorRecordDataGetter? lhs,
             IAColorRecordDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IColorRemappingIndexGetter?)lhs,
                 rhs: rhs as IColorRemappingIndexGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IColorRemappingIndexGetter item)
@@ -1117,12 +1117,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IColorRemappingIndexGetter rhs) return false;
-            return ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IColorRemappingIndexGetter? obj)
         {
-            return ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ColorRemappingIndexCommon)((IColorRemappingIndexGetter)this).CommonInstance()!).GetHashCode(this);

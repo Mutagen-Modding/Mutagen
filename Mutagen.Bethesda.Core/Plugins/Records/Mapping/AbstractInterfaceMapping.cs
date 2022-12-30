@@ -11,7 +11,7 @@ internal sealed class IsolatedAbstractInterfaceMapper : InterfaceMapGetter, IIso
     public static IsolatedAbstractInterfaceMapper AutomaticFactory()
     {
         var ret = new IsolatedAbstractInterfaceMapper();
-        foreach (var category in EnumExt<GameCategory>.Values)
+        foreach (var category in Enums<GameCategory>.Values)
         {
             var t = Type.GetType(
                 $"Mutagen.Bethesda.{category}.{category}IsolatedAbstractInterfaceMapping, Mutagen.Bethesda.{category}");

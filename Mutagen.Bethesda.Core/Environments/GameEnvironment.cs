@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Installs;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
@@ -83,7 +84,7 @@ public interface IGameEnvironment<TMod> : IGameEnvironment
     /// <summary>
     /// Load Order object containing all the mods present in the environment.
     /// </summary>
-    new ILoadOrder<IModListing<TMod>> LoadOrder { get; }
+    new ILoadOrderGetter<IModListingGetter<TMod>> LoadOrder { get; }
 }
 
 public interface IGameEnvironment<TModSetter, TModGetter> : IGameEnvironment<TModGetter>
@@ -93,7 +94,7 @@ public interface IGameEnvironment<TModSetter, TModGetter> : IGameEnvironment<TMo
     /// <summary>
     /// Load Order object containing all the mods present in the environment.
     /// </summary>
-    new ILoadOrder<IModListing<TModGetter>> LoadOrder { get; }
+    new ILoadOrderGetter<IModListingGetter<TModGetter>> LoadOrder { get; }
 
     /// <summary>
     /// Convenience Link Cache to use created from the provided Load Order object
@@ -106,7 +107,7 @@ public interface IGameEnvironment<TModSetter, TModGetter> : IGameEnvironment<TMo
 /// </summary>
 public sealed class GameEnvironmentState :
     IDataDirectoryProvider,
-    IPluginListingsPathProvider,
+    IPluginListingsPathContext,
     ICreationClubListingsPathProvider,
     IGameEnvironment
 {
@@ -159,11 +160,14 @@ public sealed class GameEnvironmentState :
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
-        var pluginListingsPathProvider = new PluginListingsPathProvider(gameReleaseInjection);
+        var pluginListingsPathProvider = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            gameReleaseInjection);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(
@@ -208,7 +212,7 @@ public sealed class GameEnvironmentState :
 
     DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
 
-    FilePath IPluginListingsPathProvider.Path => LoadOrderFilePath;
+    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath;
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 }
@@ -218,7 +222,7 @@ public sealed class GameEnvironmentState :
 /// </summary>
 public sealed class GameEnvironmentState<TMod> :
     IDataDirectoryProvider,
-    IPluginListingsPathProvider,
+    IPluginListingsPathContext,
     ICreationClubListingsPathProvider,
     IGameEnvironment<TMod>
     where TMod : class, IModGetter
@@ -232,7 +236,7 @@ public sealed class GameEnvironmentState<TMod> :
 
     public FilePath? CreationClubListingsFilePath { get; }
 
-    public ILoadOrder<IModListing<TMod>> LoadOrder { get; }
+    public ILoadOrderGetter<IModListingGetter<TMod>> LoadOrder { get; }
 
     public ILinkCache LinkCache { get; }
 
@@ -272,11 +276,14 @@ public sealed class GameEnvironmentState<TMod> :
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
-        var pluginListingsPathProvider = new PluginListingsPathProvider(gameReleaseInjection);
+        var pluginListingsPathProvider = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            gameReleaseInjection);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(
@@ -321,7 +328,7 @@ public sealed class GameEnvironmentState<TMod> :
 
     DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
 
-    FilePath IPluginListingsPathProvider.Path => LoadOrderFilePath;
+    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath;
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 
@@ -333,7 +340,7 @@ public sealed class GameEnvironmentState<TMod> :
 /// </summary>
 public sealed class GameEnvironmentState<TModSetter, TModGetter> : 
     IDataDirectoryProvider, 
-    IPluginListingsPathProvider,
+    IPluginListingsPathContext,
     ICreationClubListingsPathProvider,
     IGameEnvironment<TModSetter, TModGetter> 
     where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
@@ -351,7 +358,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
     /// <summary>
     /// Load Order object containing all the mods present in the environment.
     /// </summary>
-    public ILoadOrder<IModListing<TModGetter>> LoadOrder { get; }
+    public ILoadOrderGetter<IModListingGetter<TModGetter>> LoadOrder { get; }
 
     /// <summary>
     /// Convenience Link Cache to use created from the provided Load Order object
@@ -363,7 +370,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
         DirectoryPath dataFolderPath,
         FilePath loadOrderFilePath,
         FilePath? creationClubListingsFilePath,
-        ILoadOrder<IModListing<TModGetter>> loadOrder,
+        ILoadOrderGetter<IModListingGetter<TModGetter>> loadOrder,
         ILinkCache<TModSetter, TModGetter> linkCache,
         bool dispose = true)
     {
@@ -394,11 +401,14 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
         var pluginRawListingsReader = new PluginRawListingsReader(
             IFileSystemExt.DefaultFilesystem,
             new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
                 new LoadOrderListingParser(
                     new HasEnabledMarkersProvider(
                         gameReleaseInjection))));
         var category = new GameCategoryContext(gameReleaseInjection);
-        var pluginListingsPathProvider = new PluginListingsPathProvider(gameReleaseInjection);
+        var pluginListingsPathProvider = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            gameReleaseInjection);
         var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
             category,
             new CreationClubEnabledProvider(
@@ -443,7 +453,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
 
     DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
 
-    FilePath IPluginListingsPathProvider.Path => LoadOrderFilePath;
+    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath;
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 

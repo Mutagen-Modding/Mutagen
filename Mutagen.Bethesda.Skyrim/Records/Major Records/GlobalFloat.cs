@@ -3,7 +3,7 @@ namespace Mutagen.Bethesda.Skyrim;
 public partial class GlobalFloat
 {
     public const char TRIGGER_CHAR = 'f';
-    public override char TypeChar => TRIGGER_CHAR;
+    char IGlobalGetter.TypeChar => TRIGGER_CHAR;
 
     public override float? RawFloat
     {
@@ -14,6 +14,6 @@ public partial class GlobalFloat
 
 partial class GlobalFloatBinaryOverlay
 {
-    public override char TypeChar => GlobalFloat.TRIGGER_CHAR;
+    char IGlobalGetter.TypeChar => GlobalFloat.TRIGGER_CHAR;
     public override float? RawFloat => this.Data;
 }

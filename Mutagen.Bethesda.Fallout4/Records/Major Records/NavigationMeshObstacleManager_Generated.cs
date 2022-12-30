@@ -102,6 +102,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem SubObjects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -109,7 +110,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.SubObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>(SubObjects, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>());
             }
@@ -364,7 +366,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.SubObjects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshObstacleManagerSubObject.ErrorMask?>>?>(ExceptionExt.Combine(this.SubObjects?.Overall, rhs.SubObjects?.Overall), ExceptionExt.Combine(this.SubObjects?.Specific, rhs.SubObjects?.Specific));
+                ret.SubObjects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshObstacleManagerSubObject.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SubObjects?.Overall, rhs.SubObjects?.Overall), Noggog.ExceptionExt.Combine(this.SubObjects?.Specific, rhs.SubObjects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -466,12 +468,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not INavigationMeshObstacleManagerGetter rhs) return false;
-            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavigationMeshObstacleManagerGetter? obj)
         {
-            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -616,7 +618,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -692,6 +694,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static NavigationMeshObstacleManager Duplicate(
+            this INavigationMeshObstacleManagerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -724,7 +737,8 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        SubObjects = 6,
+        Fallout4MajorRecordFlags = 6,
+        SubObjects = 7,
     }
     #endregion
 
@@ -744,7 +758,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(NavigationMeshObstacleManager.Mask<>);
 
@@ -995,8 +1009,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (NavigationMeshObstacleManager_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1013,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (NavigationMeshObstacleManager_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1021,13 +1037,13 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INavigationMeshObstacleManagerGetter? lhs,
             INavigationMeshObstacleManagerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)NavigationMeshObstacleManager_FieldIndex.SubObjects) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshObstacleManager_FieldIndex.SubObjects) ?? true))
             {
-                if (!lhs.SubObjects.SequenceEqual(rhs.SubObjects, (l, r) => ((NavigationMeshObstacleManagerSubObjectCommon)((INavigationMeshObstacleManagerSubObjectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavigationMeshObstacleManager_FieldIndex.SubObjects)))) return false;
+                if (!lhs.SubObjects.SequenceEqual(rhs.SubObjects, (l, r) => ((NavigationMeshObstacleManagerSubObjectCommon)((INavigationMeshObstacleManagerSubObjectGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMeshObstacleManager_FieldIndex.SubObjects)))) return false;
             }
             return true;
         }
@@ -1035,23 +1051,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INavigationMeshObstacleManagerGetter?)lhs,
                 rhs: rhs as INavigationMeshObstacleManagerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (INavigationMeshObstacleManagerGetter?)lhs,
                 rhs: rhs as INavigationMeshObstacleManagerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(INavigationMeshObstacleManagerGetter item)
@@ -1629,12 +1645,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not INavigationMeshObstacleManagerGetter rhs) return false;
-            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavigationMeshObstacleManagerGetter? obj)
         {
-            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavigationMeshObstacleManagerCommon)((INavigationMeshObstacleManagerGetter)this).CommonInstance()!).GetHashCode(this);

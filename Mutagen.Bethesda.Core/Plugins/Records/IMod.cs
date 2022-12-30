@@ -76,6 +76,24 @@ public interface IModGetter :
     void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null, ParallelWriteParameters? parallelWriteParameters = null);
 
     /// <summary>
+    /// Exports to disk in Bethesda binary format.
+    /// Access and iterates through the mod object's contents in a single thread.
+    /// </summary>
+    /// <param name="stream">Path to export to</param>
+    /// <param name="param">Optional customization parameters</param>
+    void WriteToBinary(Stream stream, BinaryWriteParameters? param = null);
+
+    /// <summary>
+    /// Exports to disk in Bethesda binary format.
+    /// Access and iterates through the mod groups in separate threads.  All provided mod objects
+    /// are thread safe to use with this function.
+    /// </summary>
+    /// <param name="stream">Path to export to</param>
+    /// <param name="param">Optional customization parameters</param>
+    /// <param name="parallelWriteParameters">Optional customization parameters related to parallelization</param>
+    void WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param = null, ParallelWriteParameters? parallelWriteParameters = null);
+
+    /// <summary>
     /// Whether a mod supports localization features
     /// </summary>
     bool CanUseLocalization { get; }

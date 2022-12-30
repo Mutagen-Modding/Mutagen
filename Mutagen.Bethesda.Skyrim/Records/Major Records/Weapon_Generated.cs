@@ -496,6 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem Name,
@@ -533,7 +534,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1576,7 +1578,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.AlternateBlockMaterial = this.AlternateBlockMaterial.Combine(rhs.AlternateBlockMaterial);
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.ScopeModel = this.ScopeModel.Combine(rhs.ScopeModel, (l, r) => l.Combine(r));
                 ret.Unused = this.Unused.Combine(rhs.Unused);
@@ -1794,12 +1796,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IWeaponGetter rhs) return false;
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeaponGetter? obj)
         {
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2097,7 +2099,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2173,6 +2175,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Weapon Duplicate(
+            this IWeaponGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2205,37 +2218,38 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        Name = 8,
-        Model = 9,
-        Icons = 10,
-        ObjectEffect = 11,
-        EnchantmentAmount = 12,
-        Destructible = 13,
-        EquipmentType = 14,
-        BlockBashImpact = 15,
-        AlternateBlockMaterial = 16,
-        PickUpSound = 17,
-        PutDownSound = 18,
-        Keywords = 19,
-        Description = 20,
-        ScopeModel = 21,
-        Unused = 22,
-        ImpactDataSet = 23,
-        FirstPersonModel = 24,
-        AttackSound = 25,
-        AttackSound2D = 26,
-        AttackLoopSound = 27,
-        AttackFailSound = 28,
-        IdleSound = 29,
-        EquipSound = 30,
-        UnequipSound = 31,
-        BasicStats = 32,
-        Data = 33,
-        Critical = 34,
-        DetectionSoundLevel = 35,
-        Template = 36,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        Name = 9,
+        Model = 10,
+        Icons = 11,
+        ObjectEffect = 12,
+        EnchantmentAmount = 13,
+        Destructible = 14,
+        EquipmentType = 15,
+        BlockBashImpact = 16,
+        AlternateBlockMaterial = 17,
+        PickUpSound = 18,
+        PutDownSound = 19,
+        Keywords = 20,
+        Description = 21,
+        ScopeModel = 22,
+        Unused = 23,
+        ImpactDataSet = 24,
+        FirstPersonModel = 25,
+        AttackSound = 26,
+        AttackSound2D = 27,
+        AttackLoopSound = 28,
+        AttackFailSound = 29,
+        IdleSound = 30,
+        EquipSound = 31,
+        UnequipSound = 32,
+        BasicStats = 33,
+        Data = 34,
+        Critical = 35,
+        DetectionSoundLevel = 36,
+        Template = 37,
     }
     #endregion
 
@@ -2255,7 +2269,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 38;
 
         public static readonly Type MaskType = typeof(Weapon.Mask<>);
 
@@ -2289,6 +2303,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.WEAP,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
@@ -2608,7 +2623,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.ScopeModel,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unused = MemorySliceExt.Equal(item.Unused, rhs.Unused);
+            ret.Unused = MemorySliceExt.SequenceEqual(item.Unused, rhs.Unused);
             ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
             ret.FirstPersonModel = item.FirstPersonModel.Equals(rhs.FirstPersonModel);
             ret.AttackSound = item.AttackSound.Equals(rhs.AttackSound);
@@ -2850,8 +2865,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Weapon_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Weapon_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Weapon_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2868,7 +2885,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Weapon_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2876,167 +2893,167 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IWeaponGetter? lhs,
             IWeaponGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Weapon_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Weapon_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Weapon_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Weapon_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
             {
                 if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
             {
                 if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Weapon_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
             {
                 if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpact) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpact) ?? true))
             {
                 if (!lhs.BlockBashImpact.Equals(rhs.BlockBashImpact)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
             {
                 if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ScopeModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ScopeModel) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ScopeModel, rhs.ScopeModel, out var lhsScopeModel, out var rhsScopeModel, out var isScopeModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsScopeModel).CommonInstance()!).Equals(lhsScopeModel, rhsScopeModel, crystal?.GetSubCrystal((int)Weapon_FieldIndex.ScopeModel))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsScopeModel).CommonInstance()!).Equals(lhsScopeModel, rhsScopeModel, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.ScopeModel))) return false;
                 }
                 else if (!isScopeModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Unused) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Unused, rhs.Unused)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Unused, rhs.Unused)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
             {
                 if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
             {
                 if (!lhs.FirstPersonModel.Equals(rhs.FirstPersonModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound) ?? true))
             {
                 if (!lhs.AttackSound.Equals(rhs.AttackSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound2D) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound2D) ?? true))
             {
                 if (!lhs.AttackSound2D.Equals(rhs.AttackSound2D)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackLoopSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackLoopSound) ?? true))
             {
                 if (!lhs.AttackLoopSound.Equals(rhs.AttackLoopSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackFailSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackFailSound) ?? true))
             {
                 if (!lhs.AttackFailSound.Equals(rhs.AttackFailSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.IdleSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.IdleSound) ?? true))
             {
                 if (!lhs.IdleSound.Equals(rhs.IdleSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EquipSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipSound) ?? true))
             {
                 if (!lhs.EquipSound.Equals(rhs.EquipSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.UnequipSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.UnequipSound) ?? true))
             {
                 if (!lhs.UnequipSound.Equals(rhs.UnequipSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.BasicStats) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.BasicStats) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BasicStats, rhs.BasicStats, out var lhsBasicStats, out var rhsBasicStats, out var isBasicStatsEqual))
                 {
-                    if (!((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)lhsBasicStats).CommonInstance()!).Equals(lhsBasicStats, rhsBasicStats, crystal?.GetSubCrystal((int)Weapon_FieldIndex.BasicStats))) return false;
+                    if (!((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)lhsBasicStats).CommonInstance()!).Equals(lhsBasicStats, rhsBasicStats, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.BasicStats))) return false;
                 }
                 else if (!isBasicStatsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((WeaponDataCommon)((IWeaponDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Weapon_FieldIndex.Data))) return false;
+                    if (!((WeaponDataCommon)((IWeaponDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Critical) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Critical) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Critical, rhs.Critical, out var lhsCritical, out var rhsCritical, out var isCriticalEqual))
                 {
-                    if (!((CriticalDataCommon)((ICriticalDataGetter)lhsCritical).CommonInstance()!).Equals(lhsCritical, rhsCritical, crystal?.GetSubCrystal((int)Weapon_FieldIndex.Critical))) return false;
+                    if (!((CriticalDataCommon)((ICriticalDataGetter)lhsCritical).CommonInstance()!).Equals(lhsCritical, rhsCritical, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Critical))) return false;
                 }
                 else if (!isCriticalEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.DetectionSoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.DetectionSoundLevel) ?? true))
             {
                 if (lhs.DetectionSoundLevel != rhs.DetectionSoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Template) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Template) ?? true))
             {
                 if (!lhs.Template.Equals(rhs.Template)) return false;
             }
@@ -3046,23 +3063,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWeaponGetter?)lhs,
                 rhs: rhs as IWeaponGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWeaponGetter?)lhs,
                 rhs: rhs as IWeaponGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IWeaponGetter item)
@@ -3904,7 +3921,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
@@ -4148,7 +4165,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)Weapon_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -4348,6 +4367,11 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.Template;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -4410,8 +4434,9 @@ namespace Mutagen.Bethesda.Skyrim
         public Weapon.MajorFlag MajorFlags => (Weapon.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
@@ -4603,6 +4628,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)Weapon_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
@@ -4777,6 +4807,11 @@ namespace Mutagen.Bethesda.Skyrim
                     _TemplateLocation = (stream.Position - offset);
                     return (int)Weapon_FieldIndex.Template;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return base.FillRecordType(
                         stream: stream,
@@ -4815,12 +4850,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IWeaponGetter rhs) return false;
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeaponGetter? obj)
         {
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).GetHashCode(this);

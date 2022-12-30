@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Oblivion;
 public partial class GlobalShort
 {
     public const char TRIGGER_CHAR = 's';
-    public override char TypeChar => TRIGGER_CHAR;
+    char IGlobalGetter.TypeChar => TRIGGER_CHAR;
 
     public override float? RawFloat
     {
@@ -49,7 +49,7 @@ partial class GlobalShortBinaryWriteTranslation
 
 partial class GlobalShortBinaryOverlay
 {
-    public override char TypeChar => GlobalShort.TRIGGER_CHAR;
+    char IGlobalGetter.TypeChar => GlobalShort.TRIGGER_CHAR;
     public override float? RawFloat => this.Data is { } data? (float)data : default;
 
     private int? _DataLocation;

@@ -170,6 +170,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem PrimaryDescriptor,
                 TItem ExteriorTail,
                 TItem VatsDescriptor,
@@ -182,7 +183,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.PrimaryDescriptor = PrimaryDescriptor;
                 this.ExteriorTail = ExteriorTail;
@@ -628,8 +630,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ExteriorTail = this.ExteriorTail.Combine(rhs.ExteriorTail);
                 ret.VatsDescriptor = this.VatsDescriptor.Combine(rhs.VatsDescriptor);
                 ret.VatsThreshold = this.VatsThreshold.Combine(rhs.VatsThreshold);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MappingSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MappingSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -748,12 +750,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISoundKeywordMappingGetter rhs) return false;
-            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundKeywordMappingGetter? obj)
         {
-            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -920,7 +922,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -996,6 +998,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static SoundKeywordMapping Duplicate(
+            this ISoundKeywordMappingGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1028,12 +1041,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        PrimaryDescriptor = 6,
-        ExteriorTail = 7,
-        VatsDescriptor = 8,
-        VatsThreshold = 9,
-        Keywords = 10,
-        Sounds = 11,
+        Fallout4MajorRecordFlags = 6,
+        PrimaryDescriptor = 7,
+        ExteriorTail = 8,
+        VatsDescriptor = 9,
+        VatsThreshold = 10,
+        Keywords = 11,
+        Sounds = 12,
     }
     #endregion
 
@@ -1053,7 +1067,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(SoundKeywordMapping.Mask<>);
 
@@ -1355,8 +1369,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (SoundKeywordMapping_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (SoundKeywordMapping_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (SoundKeywordMapping_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1373,7 +1389,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (SoundKeywordMapping_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1381,33 +1397,33 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISoundKeywordMappingGetter? lhs,
             ISoundKeywordMappingGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.PrimaryDescriptor) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.PrimaryDescriptor) ?? true))
             {
                 if (!lhs.PrimaryDescriptor.Equals(rhs.PrimaryDescriptor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.ExteriorTail) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.ExteriorTail) ?? true))
             {
                 if (!lhs.ExteriorTail.Equals(rhs.ExteriorTail)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.VatsDescriptor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.VatsDescriptor) ?? true))
             {
                 if (!lhs.VatsDescriptor.Equals(rhs.VatsDescriptor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.VatsThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.VatsThreshold) ?? true))
             {
                 if (!lhs.VatsThreshold.EqualsWithin(rhs.VatsThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundKeywordMapping_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((MappingSoundCommon)((IMappingSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SoundKeywordMapping_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((MappingSoundCommon)((IMappingSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SoundKeywordMapping_FieldIndex.Sounds)))) return false;
             }
             return true;
         }
@@ -1415,23 +1431,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundKeywordMappingGetter?)lhs,
                 rhs: rhs as ISoundKeywordMappingGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoundKeywordMappingGetter?)lhs,
                 rhs: rhs as ISoundKeywordMappingGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoundKeywordMappingGetter item)
@@ -2186,12 +2202,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ISoundKeywordMappingGetter rhs) return false;
-            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundKeywordMappingGetter? obj)
         {
-            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundKeywordMappingCommon)((ISoundKeywordMappingGetter)this).CommonInstance()!).GetHashCode(this);

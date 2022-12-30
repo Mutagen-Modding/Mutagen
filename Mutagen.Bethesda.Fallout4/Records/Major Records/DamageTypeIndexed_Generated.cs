@@ -102,6 +102,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem DamageTypes)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -109,7 +110,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.DamageTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DamageTypes, Enumerable.Empty<(int Index, TItem Value)>());
             }
@@ -365,7 +367,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.DamageTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.DamageTypes?.Overall, rhs.DamageTypes?.Overall), ExceptionExt.Combine(this.DamageTypes?.Specific, rhs.DamageTypes?.Specific));
+                ret.DamageTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.DamageTypes?.Overall, rhs.DamageTypes?.Overall), Noggog.ExceptionExt.Combine(this.DamageTypes?.Specific, rhs.DamageTypes?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -468,12 +470,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IDamageTypeIndexedGetter rhs) return false;
-            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDamageTypeIndexedGetter? obj)
         {
-            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).GetHashCode(this);
@@ -618,7 +620,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -694,6 +696,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static DamageTypeIndexed Duplicate(
+            this IDamageTypeIndexedGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -726,7 +739,8 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        DamageTypes = 6,
+        Fallout4MajorRecordFlags = 6,
+        DamageTypes = 7,
     }
     #endregion
 
@@ -746,7 +760,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(DamageTypeIndexed.Mask<>);
 
@@ -1011,8 +1025,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (DamageTypeIndexed_FieldIndex)((int)index);
                 case ADamageType_FieldIndex.Version2:
                     return (DamageTypeIndexed_FieldIndex)((int)index);
+                case ADamageType_FieldIndex.Fallout4MajorRecordFlags:
+                    return (DamageTypeIndexed_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1032,8 +1048,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (DamageTypeIndexed_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (DamageTypeIndexed_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (DamageTypeIndexed_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1050,7 +1068,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (DamageTypeIndexed_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1058,11 +1076,11 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IDamageTypeIndexedGetter? lhs,
             IDamageTypeIndexedGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IADamageTypeGetter)lhs, (IADamageTypeGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)DamageTypeIndexed_FieldIndex.DamageTypes) ?? true))
+            if (!base.Equals((IADamageTypeGetter)lhs, (IADamageTypeGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DamageTypeIndexed_FieldIndex.DamageTypes) ?? true))
             {
                 if (!lhs.DamageTypes.SequenceEqualNullable(rhs.DamageTypes)) return false;
             }
@@ -1072,34 +1090,34 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IADamageTypeGetter? lhs,
             IADamageTypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDamageTypeIndexedGetter?)lhs,
                 rhs: rhs as IDamageTypeIndexedGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDamageTypeIndexedGetter?)lhs,
                 rhs: rhs as IDamageTypeIndexedGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDamageTypeIndexedGetter?)lhs,
                 rhs: rhs as IDamageTypeIndexedGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IDamageTypeIndexedGetter item)
@@ -1727,12 +1745,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IDamageTypeIndexedGetter rhs) return false;
-            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDamageTypeIndexedGetter? obj)
         {
-            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).GetHashCode(this);

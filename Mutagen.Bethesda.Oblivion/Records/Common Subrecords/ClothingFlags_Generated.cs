@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IClothingFlagsGetter rhs) return false;
-            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClothingFlagsGetter? obj)
         {
-            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClothingFlagsCommon)((IClothingFlagsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -843,14 +843,14 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IClothingFlagsGetter? lhs,
             IClothingFlagsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ClothingFlags_FieldIndex.BipedFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClothingFlags_FieldIndex.BipedFlags) ?? true))
             {
                 if (lhs.BipedFlags != rhs.BipedFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ClothingFlags_FieldIndex.GeneralFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ClothingFlags_FieldIndex.GeneralFlags) ?? true))
             {
                 if (lhs.GeneralFlags != rhs.GeneralFlags) return false;
             }
@@ -1187,12 +1187,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IClothingFlagsGetter rhs) return false;
-            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClothingFlagsGetter? obj)
         {
-            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).GetHashCode(this);

@@ -204,12 +204,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPhonemeGetter rhs) return false;
-            return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPhonemeGetter? obj)
         {
-            return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PhonemeCommon)((IPhonemeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2610,182 +2610,182 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPhonemeGetter? lhs,
             IPhonemeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.IY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.IY) ?? true))
             {
                 if (!lhs.IY.EqualsWithin(rhs.IY)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.IH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.IH) ?? true))
             {
                 if (!lhs.IH.EqualsWithin(rhs.IH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.EH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.EH) ?? true))
             {
                 if (!lhs.EH.EqualsWithin(rhs.EH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.EY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.EY) ?? true))
             {
                 if (!lhs.EY.EqualsWithin(rhs.EY)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.AE) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AE) ?? true))
             {
                 if (!lhs.AE.EqualsWithin(rhs.AE)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.AA) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AA) ?? true))
             {
                 if (!lhs.AA.EqualsWithin(rhs.AA)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.AW) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AW) ?? true))
             {
                 if (!lhs.AW.EqualsWithin(rhs.AW)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.AY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AY) ?? true))
             {
                 if (!lhs.AY.EqualsWithin(rhs.AY)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.AH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AH) ?? true))
             {
                 if (!lhs.AH.EqualsWithin(rhs.AH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.AO) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AO) ?? true))
             {
                 if (!lhs.AO.EqualsWithin(rhs.AO)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.OY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.OY) ?? true))
             {
                 if (!lhs.OY.EqualsWithin(rhs.OY)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.OW) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.OW) ?? true))
             {
                 if (!lhs.OW.EqualsWithin(rhs.OW)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.UH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.UH) ?? true))
             {
                 if (!lhs.UH.EqualsWithin(rhs.UH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.UW) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.UW) ?? true))
             {
                 if (!lhs.UW.EqualsWithin(rhs.UW)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.ER) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.ER) ?? true))
             {
                 if (!lhs.ER.EqualsWithin(rhs.ER)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.AX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AX) ?? true))
             {
                 if (!lhs.AX.EqualsWithin(rhs.AX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.S) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.S) ?? true))
             {
                 if (!lhs.S.EqualsWithin(rhs.S)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.SH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.SH) ?? true))
             {
                 if (!lhs.SH.EqualsWithin(rhs.SH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.Z) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.Z) ?? true))
             {
                 if (!lhs.Z.EqualsWithin(rhs.Z)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.ZH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.ZH) ?? true))
             {
                 if (!lhs.ZH.EqualsWithin(rhs.ZH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.F) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.F) ?? true))
             {
                 if (!lhs.F.EqualsWithin(rhs.F)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.TH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.TH) ?? true))
             {
                 if (!lhs.TH.EqualsWithin(rhs.TH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.V) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.V) ?? true))
             {
                 if (!lhs.V.EqualsWithin(rhs.V)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.DH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.DH) ?? true))
             {
                 if (!lhs.DH.EqualsWithin(rhs.DH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.M) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.M) ?? true))
             {
                 if (!lhs.M.EqualsWithin(rhs.M)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.N) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.N) ?? true))
             {
                 if (!lhs.N.EqualsWithin(rhs.N)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.NG) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.NG) ?? true))
             {
                 if (!lhs.NG.EqualsWithin(rhs.NG)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.L) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.L) ?? true))
             {
                 if (!lhs.L.EqualsWithin(rhs.L)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.R) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.R) ?? true))
             {
                 if (!lhs.R.EqualsWithin(rhs.R)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.W) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.W) ?? true))
             {
                 if (!lhs.W.EqualsWithin(rhs.W)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.Y) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.Y) ?? true))
             {
                 if (!lhs.Y.EqualsWithin(rhs.Y)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.HH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.HH) ?? true))
             {
                 if (!lhs.HH.EqualsWithin(rhs.HH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.B) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.B) ?? true))
             {
                 if (!lhs.B.EqualsWithin(rhs.B)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.D) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.D) ?? true))
             {
                 if (!lhs.D.EqualsWithin(rhs.D)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.JH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.JH) ?? true))
             {
                 if (!lhs.JH.EqualsWithin(rhs.JH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.G) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.G) ?? true))
             {
                 if (!lhs.G.EqualsWithin(rhs.G)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.P) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.P) ?? true))
             {
                 if (!lhs.P.EqualsWithin(rhs.P)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.T) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.T) ?? true))
             {
                 if (!lhs.T.EqualsWithin(rhs.T)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.K) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.K) ?? true))
             {
                 if (!lhs.K.EqualsWithin(rhs.K)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.CH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.CH) ?? true))
             {
                 if (!lhs.CH.EqualsWithin(rhs.CH)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.SIL) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.SIL) ?? true))
             {
                 if (!lhs.SIL.EqualsWithin(rhs.SIL)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.SHOTSIL) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.SHOTSIL) ?? true))
             {
                 if (!lhs.SHOTSIL.EqualsWithin(rhs.SHOTSIL)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Phoneme_FieldIndex.FLAP) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Phoneme_FieldIndex.FLAP) ?? true))
             {
                 if (!lhs.FLAP.EqualsWithin(rhs.FLAP)) return false;
             }
@@ -3308,12 +3308,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPhonemeGetter rhs) return false;
-            return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPhonemeGetter? obj)
         {
-            return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).GetHashCode(this);

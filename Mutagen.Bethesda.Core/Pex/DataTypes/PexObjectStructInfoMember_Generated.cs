@@ -81,12 +81,12 @@ namespace Mutagen.Bethesda.Pex
         public override bool Equals(object? obj)
         {
             if (obj is not IPexObjectStructInfoMemberGetter rhs) return false;
-            return ((PexObjectStructInfoMemberCommon)((IPexObjectStructInfoMemberGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PexObjectStructInfoMemberCommon)((IPexObjectStructInfoMemberGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPexObjectStructInfoMemberGetter? obj)
         {
-            return ((PexObjectStructInfoMemberCommon)((IPexObjectStructInfoMemberGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PexObjectStructInfoMemberCommon)((IPexObjectStructInfoMemberGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PexObjectStructInfoMemberCommon)((IPexObjectStructInfoMemberGetter)this).CommonInstance()!).GetHashCode(this);
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Pex
             return ((PexObjectStructInfoMemberCommon)((IPexObjectStructInfoMemberGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -930,34 +930,34 @@ namespace Mutagen.Bethesda.Pex
         public virtual bool Equals(
             IPexObjectStructInfoMemberGetter? lhs,
             IPexObjectStructInfoMemberGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.TypeName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.TypeName) ?? true))
             {
                 if (!string.Equals(lhs.TypeName, rhs.TypeName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.Value) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Value, rhs.Value, out var lhsValue, out var rhsValue, out var isValueEqual))
                 {
-                    if (!((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)lhsValue).CommonInstance()!).Equals(lhsValue, rhsValue, crystal?.GetSubCrystal((int)PexObjectStructInfoMember_FieldIndex.Value))) return false;
+                    if (!((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)lhsValue).CommonInstance()!).Equals(lhsValue, rhsValue, equalsMask?.GetSubCrystal((int)PexObjectStructInfoMember_FieldIndex.Value))) return false;
                 }
                 else if (!isValueEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.IsConst) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.IsConst) ?? true))
             {
                 if (lhs.IsConst != rhs.IsConst) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.DocString) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.DocString) ?? true))
             {
                 if (!string.Equals(lhs.DocString, rhs.DocString)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.RawUserFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectStructInfoMember_FieldIndex.RawUserFlags) ?? true))
             {
                 if (lhs.RawUserFlags != rhs.RawUserFlags) return false;
             }

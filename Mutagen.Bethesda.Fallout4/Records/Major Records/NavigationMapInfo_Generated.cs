@@ -150,12 +150,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INavigationMapInfoGetter rhs) return false;
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavigationMapInfoGetter? obj)
         {
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).GetHashCode(this);
@@ -818,9 +818,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Point = this.Point.Combine(rhs.Point);
                 ret.PreferredMergesFlag = this.PreferredMergesFlag.Combine(rhs.PreferredMergesFlag);
-                ret.MergedTo = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.MergedTo?.Overall, rhs.MergedTo?.Overall), ExceptionExt.Combine(this.MergedTo?.Specific, rhs.MergedTo?.Specific));
-                ret.PreferredMerges = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PreferredMerges?.Overall, rhs.PreferredMerges?.Overall), ExceptionExt.Combine(this.PreferredMerges?.Specific, rhs.PreferredMerges?.Specific));
-                ret.LinkedDoors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedDoor.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedDoors?.Overall, rhs.LinkedDoors?.Overall), ExceptionExt.Combine(this.LinkedDoors?.Specific, rhs.LinkedDoors?.Specific));
+                ret.MergedTo = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MergedTo?.Overall, rhs.MergedTo?.Overall), Noggog.ExceptionExt.Combine(this.MergedTo?.Specific, rhs.MergedTo?.Specific));
+                ret.PreferredMerges = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PreferredMerges?.Overall, rhs.PreferredMerges?.Overall), Noggog.ExceptionExt.Combine(this.PreferredMerges?.Specific, rhs.PreferredMerges?.Specific));
+                ret.LinkedDoors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedDoor.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedDoors?.Overall, rhs.LinkedDoors?.Overall), Noggog.ExceptionExt.Combine(this.LinkedDoors?.Specific, rhs.LinkedDoors?.Specific));
                 ret.Island = this.Island.Combine(rhs.Island, (l, r) => l.Combine(r));
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.Parent = this.Parent.Combine(rhs.Parent, (l, r) => l.Combine(r));
@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1496,54 +1496,54 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INavigationMapInfoGetter? lhs,
             INavigationMapInfoGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.NavigationMesh) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.NavigationMesh) ?? true))
             {
                 if (!lhs.NavigationMesh.Equals(rhs.NavigationMesh)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Point) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Point) ?? true))
             {
                 if (!lhs.Point.Equals(rhs.Point)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMergesFlag) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMergesFlag) ?? true))
             {
                 if (lhs.PreferredMergesFlag != rhs.PreferredMergesFlag) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.MergedTo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.MergedTo) ?? true))
             {
                 if (!lhs.MergedTo.SequenceEqualNullable(rhs.MergedTo)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMerges) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMerges) ?? true))
             {
                 if (!lhs.PreferredMerges.SequenceEqualNullable(rhs.PreferredMerges)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.LinkedDoors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.LinkedDoors) ?? true))
             {
-                if (!lhs.LinkedDoors.SequenceEqual(rhs.LinkedDoors, (l, r) => ((LinkedDoorCommon)((ILinkedDoorGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.LinkedDoors)))) return false;
+                if (!lhs.LinkedDoors.SequenceEqual(rhs.LinkedDoors, (l, r) => ((LinkedDoorCommon)((ILinkedDoorGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.LinkedDoors)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Island) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Island) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Island, rhs.Island, out var lhsIsland, out var rhsIsland, out var isIslandEqual))
                 {
-                    if (!((IslandDataCommon)((IIslandDataGetter)lhsIsland).CommonInstance()!).Equals(lhsIsland, rhsIsland, crystal?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.Island))) return false;
+                    if (!((IslandDataCommon)((IIslandDataGetter)lhsIsland).CommonInstance()!).Equals(lhsIsland, rhsIsland, equalsMask?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.Island))) return false;
                 }
                 else if (!isIslandEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Parent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Parent) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Parent, rhs.Parent, out var lhsParent, out var rhsParent, out var isParentEqual))
                 {
-                    if (!((ANavigationMapInfoParentCommon)((IANavigationMapInfoParentGetter)lhsParent).CommonInstance()!).Equals(lhsParent, rhsParent, crystal?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.Parent))) return false;
+                    if (!((ANavigationMapInfoParentCommon)((IANavigationMapInfoParentGetter)lhsParent).CommonInstance()!).Equals(lhsParent, rhsParent, equalsMask?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.Parent))) return false;
                 }
                 else if (!isParentEqual) return false;
             }
@@ -2159,12 +2159,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INavigationMapInfoGetter rhs) return false;
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavigationMapInfoGetter? obj)
         {
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).GetHashCode(this);

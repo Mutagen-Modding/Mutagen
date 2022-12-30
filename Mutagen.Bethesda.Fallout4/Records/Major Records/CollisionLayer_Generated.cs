@@ -130,6 +130,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Description,
                 TItem Index,
                 TItem DebugColor,
@@ -142,7 +143,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Description = Description;
                 this.Index = Index;
@@ -523,7 +525,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.DebugColor = this.DebugColor.Combine(rhs.DebugColor);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.CollidesWith = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CollidesWith?.Overall, rhs.CollidesWith?.Overall), ExceptionExt.Combine(this.CollidesWith?.Specific, rhs.CollidesWith?.Specific));
+                ret.CollidesWith = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CollidesWith?.Overall, rhs.CollidesWith?.Overall), Noggog.ExceptionExt.Combine(this.CollidesWith?.Specific, rhs.CollidesWith?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -643,12 +645,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ICollisionLayerGetter rhs) return false;
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICollisionLayerGetter? obj)
         {
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -815,7 +817,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((CollisionLayerCommon)((ICollisionLayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -891,6 +893,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static CollisionLayer Duplicate(
+            this ICollisionLayerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -923,12 +936,13 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Description = 6,
-        Index = 7,
-        DebugColor = 8,
-        Flags = 9,
-        Name = 10,
-        CollidesWith = 11,
+        Fallout4MajorRecordFlags = 6,
+        Description = 7,
+        Index = 8,
+        DebugColor = 9,
+        Flags = 10,
+        Name = 11,
+        CollidesWith = 12,
     }
     #endregion
 
@@ -948,7 +962,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(CollisionLayer.Mask<>);
 
@@ -1234,8 +1248,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (CollisionLayer_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (CollisionLayer_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (CollisionLayer_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1252,7 +1268,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (CollisionLayer_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1260,31 +1276,31 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ICollisionLayerGetter? lhs,
             ICollisionLayerGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.DebugColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.DebugColor) ?? true))
             {
                 if (!lhs.DebugColor.ColorOnlyEquals(rhs.DebugColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.CollidesWith) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.CollidesWith) ?? true))
             {
                 if (!lhs.CollidesWith.SequenceEqualNullable(rhs.CollidesWith)) return false;
             }
@@ -1294,23 +1310,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICollisionLayerGetter?)lhs,
                 rhs: rhs as ICollisionLayerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ICollisionLayerGetter?)lhs,
                 rhs: rhs as ICollisionLayerGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ICollisionLayerGetter item)
@@ -2034,12 +2050,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ICollisionLayerGetter rhs) return false;
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICollisionLayerGetter? obj)
         {
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).GetHashCode(this);

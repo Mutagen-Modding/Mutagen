@@ -62,12 +62,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IMagicEffectBoundArchetypeGetter rhs) return false;
-            return ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectBoundArchetypeGetter? obj)
         {
-            return ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MagicEffectArchetype_FieldIndex.ActorValue:
                     return (MagicEffectBoundArchetype_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -738,22 +738,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMagicEffectBoundArchetypeGetter? lhs,
             IMagicEffectBoundArchetypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, crystal)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, equalsMask)) return false;
             return true;
         }
         
         public override bool Equals(
             IMagicEffectArchetypeGetter? lhs,
             IMagicEffectArchetypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMagicEffectBoundArchetypeGetter?)lhs,
                 rhs: rhs as IMagicEffectBoundArchetypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMagicEffectBoundArchetypeGetter item)
@@ -1089,12 +1089,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IMagicEffectBoundArchetypeGetter rhs) return false;
-            return ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectBoundArchetypeGetter? obj)
         {
-            return ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).GetHashCode(this);

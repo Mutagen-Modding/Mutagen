@@ -119,9 +119,6 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte PhaseLength { get; set; } = default;
         public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 64);
         #endregion
-        #region TNAMDataTypeState
-        public Climate.TNAMDataType TNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -158,7 +155,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Volatility = initialValue;
                 this.Moons = initialValue;
                 this.PhaseLength = initialValue;
-                this.TNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -168,6 +164,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Weathers,
                 TItem SunTexture,
                 TItem SunGlareTexture,
@@ -178,15 +175,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem SunsetEndRaw,
                 TItem Volatility,
                 TItem Moons,
-                TItem PhaseLength,
-                TItem TNAMDataTypeState)
+                TItem PhaseLength)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(Weathers, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
                 this.SunTexture = SunTexture;
@@ -199,7 +196,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Volatility = Volatility;
                 this.Moons = Moons;
                 this.PhaseLength = PhaseLength;
-                this.TNAMDataTypeState = TNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -222,7 +218,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Volatility;
             public TItem Moons;
             public TItem PhaseLength;
-            public TItem TNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -247,7 +242,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Volatility, rhs.Volatility)) return false;
                 if (!object.Equals(this.Moons, rhs.Moons)) return false;
                 if (!object.Equals(this.PhaseLength, rhs.PhaseLength)) return false;
-                if (!object.Equals(this.TNAMDataTypeState, rhs.TNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -264,7 +258,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Volatility);
                 hash.Add(this.Moons);
                 hash.Add(this.PhaseLength);
-                hash.Add(this.TNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -301,7 +294,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Volatility)) return false;
                 if (!eval(this.Moons)) return false;
                 if (!eval(this.PhaseLength)) return false;
-                if (!eval(this.TNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -336,7 +328,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Volatility)) return true;
                 if (eval(this.Moons)) return true;
                 if (eval(this.PhaseLength)) return true;
-                if (eval(this.TNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -377,7 +368,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Volatility = eval(this.Volatility);
                 obj.Moons = eval(this.Moons);
                 obj.PhaseLength = eval(this.PhaseLength);
-                obj.TNAMDataTypeState = eval(this.TNAMDataTypeState);
             }
             #endregion
 
@@ -455,10 +445,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(PhaseLength, "PhaseLength");
                     }
-                    if (printMask?.TNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -481,7 +467,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Volatility;
             public Exception? Moons;
             public Exception? PhaseLength;
-            public Exception? TNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -512,8 +497,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Moons;
                     case Climate_FieldIndex.PhaseLength:
                         return PhaseLength;
-                    case Climate_FieldIndex.TNAMDataTypeState:
-                        return TNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -556,9 +539,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Climate_FieldIndex.PhaseLength:
                         this.PhaseLength = ex;
-                        break;
-                    case Climate_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -604,9 +584,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Climate_FieldIndex.PhaseLength:
                         this.PhaseLength = (Exception?)obj;
                         break;
-                    case Climate_FieldIndex.TNAMDataTypeState:
-                        this.TNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -627,7 +604,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Volatility != null) return true;
                 if (Moons != null) return true;
                 if (PhaseLength != null) return true;
-                if (TNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -700,9 +676,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(PhaseLength, "PhaseLength");
                 }
-                {
-                    sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -711,7 +684,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
+                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), Noggog.ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
                 ret.SunTexture = this.SunTexture.Combine(rhs.SunTexture);
                 ret.SunGlareTexture = this.SunGlareTexture.Combine(rhs.SunGlareTexture);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
@@ -722,7 +695,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Volatility = this.Volatility.Combine(rhs.Volatility);
                 ret.Moons = this.Moons.Combine(rhs.Moons);
                 ret.PhaseLength = this.PhaseLength.Combine(rhs.PhaseLength);
-                ret.TNAMDataTypeState = this.TNAMDataTypeState.Combine(rhs.TNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -756,7 +728,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Volatility;
             public bool Moons;
             public bool PhaseLength;
-            public bool TNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -774,7 +745,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Volatility = defaultOn;
                 this.Moons = defaultOn;
                 this.PhaseLength = defaultOn;
-                this.TNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -793,7 +763,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Volatility, null));
                 ret.Add((Moons, null));
                 ret.Add((PhaseLength, null));
-                ret.Add((TNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -850,10 +819,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IClimate);
 
-        [Flags]
-        public enum TNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -862,12 +827,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IClimateGetter rhs) return false;
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClimateGetter? obj)
         {
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).GetHashCode(this);
@@ -953,7 +918,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Byte Volatility { get; set; }
         new Climate.Moon Moons { get; set; }
         new Byte PhaseLength { get; set; }
-        new Climate.TNAMDataType TNAMDataTypeState { get; set; }
     }
 
     public partial interface IClimateInternal :
@@ -989,7 +953,6 @@ namespace Mutagen.Bethesda.Fallout4
         Byte Volatility { get; }
         Climate.Moon Moons { get; }
         Byte PhaseLength { get; }
-        Climate.TNAMDataType TNAMDataTypeState { get; }
 
     }
 
@@ -1046,7 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1122,6 +1085,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Climate Duplicate(
+            this IClimateGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1154,18 +1128,18 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Weathers = 6,
-        SunTexture = 7,
-        SunGlareTexture = 8,
-        Model = 9,
-        SunriseBeginRaw = 10,
-        SunriseEndRaw = 11,
-        SunsetBeginRaw = 12,
-        SunsetEndRaw = 13,
-        Volatility = 14,
-        Moons = 15,
-        PhaseLength = 16,
-        TNAMDataTypeState = 17,
+        Fallout4MajorRecordFlags = 6,
+        Weathers = 7,
+        SunTexture = 8,
+        SunGlareTexture = 9,
+        Model = 10,
+        SunriseBeginRaw = 11,
+        SunriseEndRaw = 12,
+        SunsetBeginRaw = 13,
+        SunsetEndRaw = 14,
+        Volatility = 15,
+        Moons = 16,
+        PhaseLength = 17,
     }
     #endregion
 
@@ -1183,7 +1157,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "3555492f-6e21-477f-99e9-65ff465443bc";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 18;
 
@@ -1281,7 +1255,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Volatility = default;
             item.Moons = default;
             item.PhaseLength = default;
-            item.TNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1386,7 +1359,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Volatility = item.Volatility == rhs.Volatility;
             ret.Moons = item.Moons == rhs.Moons;
             ret.PhaseLength = item.PhaseLength == rhs.PhaseLength;
-            ret.TNAMDataTypeState = item.TNAMDataTypeState == rhs.TNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1494,10 +1466,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.PhaseLength, "PhaseLength");
             }
-            if (printMask?.TNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
-            }
         }
         
         public static Climate_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1516,8 +1484,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Climate_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Climate_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Climate_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1534,7 +1504,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Climate_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1542,61 +1512,57 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IClimateGetter? lhs,
             IClimateGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Weathers) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Weathers) ?? true))
             {
-                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Climate_FieldIndex.Weathers)))) return false;
+                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Climate_FieldIndex.Weathers)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
             {
                 if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunGlareTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunGlareTexture) ?? true))
             {
                 if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Climate_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Climate_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBeginRaw) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBeginRaw) ?? true))
             {
                 if (lhs.SunriseBeginRaw != rhs.SunriseBeginRaw) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEndRaw) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEndRaw) ?? true))
             {
                 if (lhs.SunriseEndRaw != rhs.SunriseEndRaw) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBeginRaw) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBeginRaw) ?? true))
             {
                 if (lhs.SunsetBeginRaw != rhs.SunsetBeginRaw) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEndRaw) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEndRaw) ?? true))
             {
                 if (lhs.SunsetEndRaw != rhs.SunsetEndRaw) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
             {
                 if (lhs.Volatility != rhs.Volatility) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Moons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Moons) ?? true))
             {
                 if (lhs.Moons != rhs.Moons) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.PhaseLength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.PhaseLength) ?? true))
             {
                 if (lhs.PhaseLength != rhs.PhaseLength) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.TNAMDataTypeState) ?? true))
-            {
-                if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
             }
             return true;
         }
@@ -1604,23 +1570,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IClimateGetter?)lhs,
                 rhs: rhs as IClimateGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IClimateGetter?)lhs,
                 rhs: rhs as IClimateGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IClimateGetter item)
@@ -1646,7 +1612,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Volatility);
             hash.Add(item.Moons);
             hash.Add(item.PhaseLength);
-            hash.Add(item.TNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1858,10 +1823,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.PhaseLength = rhs.PhaseLength;
             }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.TNAMDataTypeState) ?? true))
-            {
-                item.TNAMDataTypeState = rhs.TNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2010,15 +1971,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ClimateBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IClimateGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IClimateGetter item,
             MutagenWriter writer,
@@ -2094,7 +2046,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2154,15 +2106,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLMT;
-        public static void FillBinaryStructs(
-            IClimateInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IClimateInternal item,
             MutagenFrame frame,
@@ -2304,7 +2247,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _TNAMLocation;
-        public Climate.TNAMDataType TNAMDataTypeState { get; private set; }
         #region SunriseBeginRaw
         private int _SunriseBeginRawLocation => _TNAMLocation!.Value.Min;
         private bool _SunriseBeginRaw_IsSet => _TNAMLocation.HasValue;
@@ -2485,12 +2427,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IClimateGetter rhs) return false;
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IClimateGetter? obj)
         {
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).GetHashCode(this);

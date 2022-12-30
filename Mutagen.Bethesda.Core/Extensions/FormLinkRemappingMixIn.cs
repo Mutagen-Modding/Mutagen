@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
@@ -83,6 +84,15 @@ public static class FormLinkRemappingMixIn
         where TMajorGetter : class, IMajorRecordGetter, IFormLinkContainer
     {
         foreach (var item in cache.Items)
+        {
+            item.RemapLinks(mapping);
+        }
+    }
+
+    public static void RemapLinks<TKey, TItem>(this IDictionary<TKey, TItem> cache, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        where TItem : class, IFormLinkContainer
+    {
+        foreach (var item in cache.Values)
         {
             item.RemapLinks(mapping);
         }

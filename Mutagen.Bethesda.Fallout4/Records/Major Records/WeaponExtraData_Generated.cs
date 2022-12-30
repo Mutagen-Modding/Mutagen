@@ -109,12 +109,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWeaponExtraDataGetter rhs) return false;
-            return ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeaponExtraDataGetter? obj)
         {
-            return ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1237,50 +1237,50 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWeaponExtraDataGetter? lhs,
             IWeaponExtraDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.AnimationFireSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.AnimationFireSeconds) ?? true))
             {
                 if (!lhs.AnimationFireSeconds.EqualsWithin(rhs.AnimationFireSeconds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.RumbleLeftMotorStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.RumbleLeftMotorStrength) ?? true))
             {
                 if (!lhs.RumbleLeftMotorStrength.EqualsWithin(rhs.RumbleLeftMotorStrength)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.RumbleRightMotorStrength) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.RumbleRightMotorStrength) ?? true))
             {
                 if (!lhs.RumbleRightMotorStrength.EqualsWithin(rhs.RumbleRightMotorStrength)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.RumbleDuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.RumbleDuration) ?? true))
             {
                 if (!lhs.RumbleDuration.EqualsWithin(rhs.RumbleDuration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.AnimationReloadSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.AnimationReloadSeconds) ?? true))
             {
                 if (!lhs.AnimationReloadSeconds.EqualsWithin(rhs.AnimationReloadSeconds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.BoltAnimSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.BoltAnimSeconds) ?? true))
             {
                 if (!lhs.BoltAnimSeconds.EqualsWithin(rhs.BoltAnimSeconds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.SightedTransitionSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.SightedTransitionSeconds) ?? true))
             {
                 if (!lhs.SightedTransitionSeconds.EqualsWithin(rhs.SightedTransitionSeconds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.NumProjectiles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.NumProjectiles) ?? true))
             {
                 if (lhs.NumProjectiles != rhs.NumProjectiles) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.ProjectileOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.ProjectileOverride) ?? true))
             {
                 if (!lhs.ProjectileOverride.Equals(rhs.ProjectileOverride)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.Pattern) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.Pattern) ?? true))
             {
                 if (lhs.Pattern != rhs.Pattern) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.RumblePeriodMs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponExtraData_FieldIndex.RumblePeriodMs) ?? true))
             {
                 if (lhs.RumblePeriodMs != rhs.RumblePeriodMs) return false;
             }
@@ -1702,12 +1702,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IWeaponExtraDataGetter rhs) return false;
-            return ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeaponExtraDataGetter? obj)
         {
-            return ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeaponExtraDataCommon)((IWeaponExtraDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -80,12 +80,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISoundRepeatGetter rhs) return false;
-            return ((SoundRepeatCommon)((ISoundRepeatGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundRepeatCommon)((ISoundRepeatGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundRepeatGetter? obj)
         {
-            return ((SoundRepeatCommon)((ISoundRepeatGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundRepeatCommon)((ISoundRepeatGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundRepeatCommon)((ISoundRepeatGetter)this).CommonInstance()!).GetHashCode(this);
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((SoundRepeatCommon)((ISoundRepeatGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -935,22 +935,22 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ISoundRepeatGetter? lhs,
             ISoundRepeatGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SoundRepeat_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundRepeat_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundRepeat_FieldIndex.MinTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundRepeat_FieldIndex.MinTime) ?? true))
             {
                 if (!lhs.MinTime.EqualsWithin(rhs.MinTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundRepeat_FieldIndex.MaxTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundRepeat_FieldIndex.MaxTime) ?? true))
             {
                 if (!lhs.MaxTime.EqualsWithin(rhs.MaxTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoundRepeat_FieldIndex.Stackable) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundRepeat_FieldIndex.Stackable) ?? true))
             {
                 if (lhs.Stackable != rhs.Stackable) return false;
             }
@@ -1307,12 +1307,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ISoundRepeatGetter rhs) return false;
-            return ((SoundRepeatCommon)((ISoundRepeatGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoundRepeatCommon)((ISoundRepeatGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoundRepeatGetter? obj)
         {
-            return ((SoundRepeatCommon)((ISoundRepeatGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoundRepeatCommon)((ISoundRepeatGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoundRepeatCommon)((ISoundRepeatGetter)this).CommonInstance()!).GetHashCode(this);

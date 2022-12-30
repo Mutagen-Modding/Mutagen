@@ -125,6 +125,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Flags,
                 TItem Data,
                 TItem FadeDuration,
@@ -135,7 +136,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Flags = Flags;
                 this.Data = new MaskItem<TItem, MusicTypeData.Mask<TItem>?>(Data, new MusicTypeData.Mask<TItem>(Data));
@@ -472,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.FadeDuration = this.FadeDuration.Combine(rhs.FadeDuration);
-                ret.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Tracks?.Overall, rhs.Tracks?.Overall), ExceptionExt.Combine(this.Tracks?.Specific, rhs.Tracks?.Specific));
+                ret.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Tracks?.Overall, rhs.Tracks?.Overall), Noggog.ExceptionExt.Combine(this.Tracks?.Specific, rhs.Tracks?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -585,12 +587,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMusicTypeGetter rhs) return false;
-            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMusicTypeGetter? obj)
         {
-            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -743,7 +745,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MusicTypeCommon)((IMusicTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -819,6 +821,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static MusicType Duplicate(
+            this IMusicTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MusicTypeCommon)((IMusicTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -851,10 +864,11 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Flags = 6,
-        Data = 7,
-        FadeDuration = 8,
-        Tracks = 9,
+        Fallout4MajorRecordFlags = 6,
+        Flags = 7,
+        Data = 8,
+        FadeDuration = 9,
+        Tracks = 10,
     }
     #endregion
 
@@ -874,7 +888,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(MusicType.Mask<>);
 
@@ -1151,8 +1165,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (MusicType_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (MusicType_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (MusicType_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1169,7 +1185,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (MusicType_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1177,27 +1193,27 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMusicTypeGetter? lhs,
             IMusicTypeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MusicType_FieldIndex.Flags) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MusicType_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicType_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicType_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
                 {
-                    if (!((MusicTypeDataCommon)((IMusicTypeDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)MusicType_FieldIndex.Data))) return false;
+                    if (!((MusicTypeDataCommon)((IMusicTypeDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)MusicType_FieldIndex.Data))) return false;
                 }
                 else if (!isDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicType_FieldIndex.FadeDuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicType_FieldIndex.FadeDuration) ?? true))
             {
                 if (!lhs.FadeDuration.EqualsWithin(rhs.FadeDuration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MusicType_FieldIndex.Tracks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MusicType_FieldIndex.Tracks) ?? true))
             {
                 if (!lhs.Tracks.SequenceEqualNullable(rhs.Tracks)) return false;
             }
@@ -1207,23 +1223,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMusicTypeGetter?)lhs,
                 rhs: rhs as IMusicTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMusicTypeGetter?)lhs,
                 rhs: rhs as IMusicTypeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMusicTypeGetter item)
@@ -1913,12 +1929,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMusicTypeGetter rhs) return false;
-            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMusicTypeGetter? obj)
         {
-            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).GetHashCode(this);

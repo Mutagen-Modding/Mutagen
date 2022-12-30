@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ISkillBoostGetter rhs) return false;
-            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISkillBoostGetter? obj)
         {
-            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -832,14 +832,14 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ISkillBoostGetter? lhs,
             ISkillBoostGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)SkillBoost_FieldIndex.Skill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkillBoost_FieldIndex.Skill) ?? true))
             {
                 if (lhs.Skill != rhs.Skill) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SkillBoost_FieldIndex.Boost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SkillBoost_FieldIndex.Boost) ?? true))
             {
                 if (lhs.Boost != rhs.Boost) return false;
             }
@@ -1164,12 +1164,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ISkillBoostGetter rhs) return false;
-            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISkillBoostGetter? obj)
         {
-            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).GetHashCode(this);

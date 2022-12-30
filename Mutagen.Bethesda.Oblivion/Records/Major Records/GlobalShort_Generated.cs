@@ -380,12 +380,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IGlobalShortGetter rhs) return false;
-            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGlobalShortGetter? obj)
         {
-            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).GetHashCode(this);
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GlobalShortCommon)((IGlobalShortGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -604,6 +604,17 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
+        }
+
+        public static GlobalShort Duplicate(
+            this IGlobalShortGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((GlobalShortCommon)((IGlobalShortGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
 
         #endregion
@@ -908,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case Global_FieldIndex.OblivionMajorRecordFlags:
                     return (GlobalShort_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -927,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (GlobalShort_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -944,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case MajorRecord_FieldIndex.EditorID:
                     return (GlobalShort_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -952,11 +963,11 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IGlobalShortGetter? lhs,
             IGlobalShortGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)GlobalShort_FieldIndex.Data) ?? true))
+            if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)GlobalShort_FieldIndex.Data) ?? true))
             {
                 if (lhs.Data != rhs.Data) return false;
             }
@@ -966,34 +977,34 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(
             IGlobalGetter? lhs,
             IGlobalGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGlobalShortGetter?)lhs,
                 rhs: rhs as IGlobalShortGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGlobalShortGetter?)lhs,
                 rhs: rhs as IGlobalShortGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IGlobalShortGetter?)lhs,
                 rhs: rhs as IGlobalShortGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IGlobalShortGetter item)
@@ -1617,12 +1628,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IGlobalShortGetter rhs) return false;
-            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IGlobalShortGetter? obj)
         {
-            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).GetHashCode(this);

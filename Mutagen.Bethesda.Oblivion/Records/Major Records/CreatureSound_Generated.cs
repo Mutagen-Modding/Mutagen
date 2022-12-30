@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ICreatureSoundGetter rhs) return false;
-            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICreatureSoundGetter? obj)
         {
-            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).GetHashCode(this);
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.SoundType = this.SoundType.Combine(rhs.SoundType);
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundItem.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CreatureSoundCommon)((ICreatureSoundGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -943,16 +943,16 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             ICreatureSoundGetter? lhs,
             ICreatureSoundGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CreatureSound_FieldIndex.SoundType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureSound_FieldIndex.SoundType) ?? true))
             {
                 if (lhs.SoundType != rhs.SoundType) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CreatureSound_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CreatureSound_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((SoundItemCommon)((ISoundItemGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)CreatureSound_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((SoundItemCommon)((ISoundItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)CreatureSound_FieldIndex.Sounds)))) return false;
             }
             return true;
         }
@@ -1381,12 +1381,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not ICreatureSoundGetter rhs) return false;
-            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICreatureSoundGetter? obj)
         {
-            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).GetHashCode(this);

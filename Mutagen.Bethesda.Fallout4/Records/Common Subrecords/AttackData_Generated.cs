@@ -109,12 +109,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAttackDataGetter rhs) return false;
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAttackDataGetter? obj)
         {
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AttackDataCommon)((IAttackDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1237,50 +1237,50 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAttackDataGetter? lhs,
             IAttackDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.DamageMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.DamageMult) ?? true))
             {
                 if (!lhs.DamageMult.EqualsWithin(rhs.DamageMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Chance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.Chance) ?? true))
             {
                 if (!lhs.Chance.EqualsWithin(rhs.Chance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
             {
                 if (!lhs.Spell.Equals(rhs.Spell)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.AttackAngle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.AttackAngle) ?? true))
             {
                 if (!lhs.AttackAngle.EqualsWithin(rhs.AttackAngle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.StrikeAngle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.StrikeAngle) ?? true))
             {
                 if (!lhs.StrikeAngle.EqualsWithin(rhs.StrikeAngle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Stagger) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.Stagger) ?? true))
             {
                 if (!lhs.Stagger.EqualsWithin(rhs.Stagger)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
             {
                 if (!lhs.Knockdown.EqualsWithin(rhs.Knockdown)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.RecoveryTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.RecoveryTime) ?? true))
             {
                 if (!lhs.RecoveryTime.EqualsWithin(rhs.RecoveryTime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.ActionPointsMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.ActionPointsMult) ?? true))
             {
                 if (!lhs.ActionPointsMult.EqualsWithin(rhs.ActionPointsMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.StaggerOffset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AttackData_FieldIndex.StaggerOffset) ?? true))
             {
                 if (lhs.StaggerOffset != rhs.StaggerOffset) return false;
             }
@@ -1704,12 +1704,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAttackDataGetter rhs) return false;
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAttackDataGetter? obj)
         {
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).GetHashCode(this);

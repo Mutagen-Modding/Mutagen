@@ -160,9 +160,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHazardGetter> IImpactGetter.Hazard => this.Hazard;
         #endregion
-        #region DATADataTypeState
-        public Impact.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -203,7 +200,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sound1 = initialValue;
                 this.Sound2 = initialValue;
                 this.Hazard = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -213,6 +209,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem Model,
                 TItem Duration,
                 TItem Orientation,
@@ -227,15 +224,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SecondaryTextureSet,
                 TItem Sound1,
                 TItem Sound2,
-                TItem Hazard,
-                TItem DATADataTypeState)
+                TItem Hazard)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Duration = Duration;
@@ -252,7 +249,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sound1 = Sound1;
                 this.Sound2 = Sound2;
                 this.Hazard = Hazard;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -279,7 +275,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Sound1;
             public TItem Sound2;
             public TItem Hazard;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -308,7 +303,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Sound1, rhs.Sound1)) return false;
                 if (!object.Equals(this.Sound2, rhs.Sound2)) return false;
                 if (!object.Equals(this.Hazard, rhs.Hazard)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -329,7 +323,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Sound1);
                 hash.Add(this.Sound2);
                 hash.Add(this.Hazard);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -363,7 +356,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Sound1)) return false;
                 if (!eval(this.Sound2)) return false;
                 if (!eval(this.Hazard)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -395,7 +387,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Sound1)) return true;
                 if (eval(this.Sound2)) return true;
                 if (eval(this.Hazard)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -426,7 +417,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Sound1 = eval(this.Sound1);
                 obj.Sound2 = eval(this.Sound2);
                 obj.Hazard = eval(this.Hazard);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -505,10 +495,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Hazard, "Hazard");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -535,7 +521,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Sound1;
             public Exception? Sound2;
             public Exception? Hazard;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -574,8 +559,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Sound2;
                     case Impact_FieldIndex.Hazard:
                         return Hazard;
-                    case Impact_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -630,9 +613,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Impact_FieldIndex.Hazard:
                         this.Hazard = ex;
-                        break;
-                    case Impact_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -690,9 +670,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Impact_FieldIndex.Hazard:
                         this.Hazard = (Exception?)obj;
                         break;
-                    case Impact_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -717,7 +694,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Sound1 != null) return true;
                 if (Sound2 != null) return true;
                 if (Hazard != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -785,9 +761,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Hazard, "Hazard");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -811,7 +784,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Sound1 = this.Sound1.Combine(rhs.Sound1);
                 ret.Sound2 = this.Sound2.Combine(rhs.Sound2);
                 ret.Hazard = this.Hazard.Combine(rhs.Hazard);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -849,7 +821,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Sound1;
             public bool Sound2;
             public bool Hazard;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -871,7 +842,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sound1 = defaultOn;
                 this.Sound2 = defaultOn;
                 this.Hazard = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -894,7 +864,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Sound1, null));
                 ret.Add((Sound2, null));
                 ret.Add((Hazard, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -958,10 +927,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IImpact);
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ImpactCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ImpactSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ImpactSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -973,12 +938,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IImpactGetter rhs) return false;
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImpactGetter? obj)
         {
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1069,7 +1034,6 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<ISoundGetter> Sound1 { get; set; }
         new IFormLinkNullable<ISoundGetter> Sound2 { get; set; }
         new IFormLinkNullable<IHazardGetter> Hazard { get; set; }
-        new Impact.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IImpactInternal :
@@ -1110,7 +1074,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundGetter> Sound1 { get; }
         IFormLinkNullableGetter<ISoundGetter> Sound2 { get; }
         IFormLinkNullableGetter<IHazardGetter> Hazard { get; }
-        Impact.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1167,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1243,6 +1206,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Impact Duplicate(
+            this IImpactGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1275,22 +1249,22 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Model = 6,
-        Duration = 7,
-        Orientation = 8,
-        AngleThreshold = 9,
-        PlacementRadius = 10,
-        SoundLevel = 11,
-        NoDecalData = 12,
-        Result = 13,
-        Unknown = 14,
-        Decal = 15,
-        TextureSet = 16,
-        SecondaryTextureSet = 17,
-        Sound1 = 18,
-        Sound2 = 19,
-        Hazard = 20,
-        DATADataTypeState = 21,
+        SkyrimMajorRecordFlags = 6,
+        Model = 7,
+        Duration = 8,
+        Orientation = 9,
+        AngleThreshold = 10,
+        PlacementRadius = 11,
+        SoundLevel = 12,
+        NoDecalData = 13,
+        Result = 14,
+        Unknown = 15,
+        Decal = 16,
+        TextureSet = 17,
+        SecondaryTextureSet = 18,
+        Sound1 = 19,
+        Sound2 = 20,
+        Hazard = 21,
     }
     #endregion
 
@@ -1308,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "d508129e-9303-4d72-bbb5-dc4abc363372";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 15;
 
         public const ushort FieldCount = 22;
 
@@ -1410,7 +1384,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Sound1.Clear();
             item.Sound2.Clear();
             item.Hazard.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1546,7 +1519,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Sound1 = item.Sound1.Equals(rhs.Sound1);
             ret.Sound2 = item.Sound2.Equals(rhs.Sound2);
             ret.Hazard = item.Hazard.Equals(rhs.Hazard);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1658,10 +1630,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Hazard.FormKeyNullable, "Hazard");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static Impact_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1680,8 +1648,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Impact_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Impact_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Impact_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1698,7 +1668,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Impact_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1706,81 +1676,77 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IImpactGetter? lhs,
             IImpactGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Model) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Impact_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Duration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Duration) ?? true))
             {
                 if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Orientation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Orientation) ?? true))
             {
                 if (lhs.Orientation != rhs.Orientation) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.AngleThreshold) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.AngleThreshold) ?? true))
             {
                 if (!lhs.AngleThreshold.EqualsWithin(rhs.AngleThreshold)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.PlacementRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.PlacementRadius) ?? true))
             {
                 if (!lhs.PlacementRadius.EqualsWithin(rhs.PlacementRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.SoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.SoundLevel) ?? true))
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
             {
                 if (lhs.NoDecalData != rhs.NoDecalData) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
             {
                 if (lhs.Result != rhs.Result) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Decal, rhs.Decal, out var lhsDecal, out var rhsDecal, out var isDecalEqual))
                 {
-                    if (!((DecalCommon)((IDecalGetter)lhsDecal).CommonInstance()!).Equals(lhsDecal, rhsDecal, crystal?.GetSubCrystal((int)Impact_FieldIndex.Decal))) return false;
+                    if (!((DecalCommon)((IDecalGetter)lhsDecal).CommonInstance()!).Equals(lhsDecal, rhsDecal, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.Decal))) return false;
                 }
                 else if (!isDecalEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
             {
                 if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
             {
                 if (!lhs.SecondaryTextureSet.Equals(rhs.SecondaryTextureSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
             {
                 if (!lhs.Sound1.Equals(rhs.Sound1)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
             {
                 if (!lhs.Sound2.Equals(rhs.Sound2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
             {
                 if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1788,23 +1754,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImpactGetter?)lhs,
                 rhs: rhs as IImpactGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IImpactGetter?)lhs,
                 rhs: rhs as IImpactGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IImpactGetter item)
@@ -1831,7 +1797,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Sound1);
             hash.Add(item.Sound2);
             hash.Add(item.Hazard);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2085,10 +2050,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Hazard.SetTo(rhs.Hazard.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2237,15 +2198,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly ImpactBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IImpactGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IImpactGetter item,
             MutagenWriter writer,
@@ -2328,7 +2280,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2388,15 +2340,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly ImpactBinaryCreateTranslation Instance = new ImpactBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IPCT;
-        public static void FillBinaryStructs(
-            IImpactInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IImpactInternal item,
             MutagenFrame frame,
@@ -2541,7 +2484,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _DATALocation;
-        public Impact.DATADataType DATADataTypeState { get; private set; }
         #region Duration
         private int _DurationLocation => _DATALocation!.Value.Min;
         private bool _Duration_IsSet => _DATALocation.HasValue;
@@ -2756,12 +2698,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IImpactGetter rhs) return false;
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IImpactGetter? obj)
         {
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);

@@ -54,6 +54,11 @@ internal class SkyrimInheritingInterfaceMapping : IInterfaceMapping
             Global_Registration.Instance,
         });
         dict[typeof(IGlobalShortGetter)] = dict[typeof(IGlobalShort)] with { Setter = false };
+        dict[typeof(IGlobalUnknown)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Global_Registration.Instance,
+        });
+        dict[typeof(IGlobalUnknownGetter)] = dict[typeof(IGlobalUnknown)] with { Setter = false };
         dict[typeof(IPlacedArrow)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             APlacedTrap_Registration.Instance,

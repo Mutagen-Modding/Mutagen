@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Tests.GUI;
 
 public class PassthroughGroupVM : ViewModel
 {
-    public static IReadOnlyList<GameRelease> GameReleases { get; } = EnumExt<GameRelease>.Values.ToList();
+    public static IReadOnlyList<GameRelease> GameReleases { get; } = Enums<GameRelease>.Values.ToList();
     public ObservableCollectionExtended<PassthroughVM> Passthroughs { get; } = new ObservableCollectionExtended<PassthroughVM>();
 
     [Reactive]

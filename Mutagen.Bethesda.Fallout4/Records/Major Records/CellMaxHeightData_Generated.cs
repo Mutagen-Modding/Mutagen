@@ -53,6 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Single Offset { get; set; } = default;
         #endregion
         #region HeightMap
+        public static readonly P2Int HeightMapFixedSize = new P2Int(32, 32);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IArray2d<Byte> _HeightMap = new Array2d<Byte>(32, 32);
         public IArray2d<Byte> HeightMap
@@ -85,12 +86,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ICellMaxHeightDataGetter rhs) return false;
-            return ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellMaxHeightDataGetter? obj)
         {
-            return ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -397,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Offset = this.Offset.Combine(rhs.Offset);
-                ret.HeightMap = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.HeightMap?.Overall, rhs.HeightMap?.Overall), ExceptionExt.Combine(this.HeightMap?.Specific, rhs.HeightMap?.Specific));
+                ret.HeightMap = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.HeightMap?.Overall, rhs.HeightMap?.Overall), Noggog.ExceptionExt.Combine(this.HeightMap?.Specific, rhs.HeightMap?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -597,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -934,14 +935,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ICellMaxHeightDataGetter? lhs,
             ICellMaxHeightDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CellMaxHeightData_FieldIndex.Offset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellMaxHeightData_FieldIndex.Offset) ?? true))
             {
                 if (!lhs.Offset.EqualsWithin(rhs.Offset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CellMaxHeightData_FieldIndex.HeightMap) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellMaxHeightData_FieldIndex.HeightMap) ?? true))
             {
                 if (!lhs.HeightMap.SequenceEqualNullable(rhs.HeightMap)) return false;
             }
@@ -1153,7 +1154,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.HeightMap.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<Byte>.Instance.Parse(
                     reader: frame,
-                    size: new P2Int(32, 32),
+                    size: CellMaxHeightData.HeightMapFixedSize,
                     transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
         }
 
@@ -1226,7 +1227,7 @@ namespace Mutagen.Bethesda.Fallout4
             mem: _structData.Slice(4),
             package: _package,
             itemLength: 1,
-            size: new P2Int(32, 32),
+            size: CellMaxHeightData.HeightMapFixedSize,
             getter: (s, p) => s[0]);
         #endregion
         partial void CustomFactoryEnd(
@@ -1297,12 +1298,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ICellMaxHeightDataGetter rhs) return false;
-            return ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICellMaxHeightDataGetter? obj)
         {
-            return ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)this).CommonInstance()!).GetHashCode(this);

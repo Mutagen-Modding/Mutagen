@@ -16,23 +16,17 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
-    <PackageReference Include="FluentAssertions" Version="6.7.0" />
-    <PackageReference Include="GitInfo" Version="2.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Loqui" Version="2.50.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.50.1" />
-    <PackageReference Include="NuGetizer" Version="0.8.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Loqui" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Noggog.CSharpExt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Json\Mutagen.Bethesda.Json.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Fallout4\Mutagen.Bethesda.Fallout4.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Testing\Mutagen.Bethesda.Testing.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
   </ItemGroup>
@@ -50,7 +44,14 @@
     <Compile Include="Exceptions\DidNotMatchException.cs" />
     <Compile Include="Exceptions\MoreDataException.cs" />
     <Compile Include="Exceptions\UnexpectedlyMoreData.cs" />
+    <Compile Include="Json\JsonConverterTests.cs" />
     <Compile Include="Passthrough Tests\Fallout4PassthroughTest.cs" />
+    <Compile Include="Plugins\Exceptions\RecordExceptionTests.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookupTests.cs" />
     <Compile Include="Processing\BinaryFileProcessor.cs" />
     <Compile Include="ComparisonStream.cs" />
     <Compile Include="FlattenedMod_Tests.cs" />

@@ -138,12 +138,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestLogEntryGetter rhs) return false;
-            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestLogEntryGetter? obj)
         {
-            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Entry = this.Entry.Combine(rhs.Entry);
                 ret.NextQuest = this.NextQuest.Combine(rhs.NextQuest);
                 ret.SCHR = this.SCHR.Combine(rhs.SCHR);
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestLogEntryCommon)((IQuestLogEntryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1110,9 +1110,9 @@ namespace Mutagen.Bethesda.Skyrim
                 include);
             ret.Entry = object.Equals(item.Entry, rhs.Entry);
             ret.NextQuest = item.NextQuest.Equals(rhs.NextQuest);
-            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
-            ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
-            ret.QNAM = MemorySliceExt.Equal(item.QNAM, rhs.QNAM);
+            ret.SCHR = MemorySliceExt.SequenceEqual(item.SCHR, rhs.SCHR);
+            ret.SCTX = MemorySliceExt.SequenceEqual(item.SCTX, rhs.SCTX);
+            ret.QNAM = MemorySliceExt.SequenceEqual(item.QNAM, rhs.QNAM);
         }
         
         public string Print(
@@ -1206,36 +1206,36 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IQuestLogEntryGetter? lhs,
             IQuestLogEntryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestLogEntry_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestLogEntry_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Entry) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Entry) ?? true))
             {
                 if (!object.Equals(lhs.Entry, rhs.Entry)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.NextQuest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.NextQuest) ?? true))
             {
                 if (!lhs.NextQuest.Equals(rhs.NextQuest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCHR, rhs.SCHR)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCTX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCTX) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCTX, rhs.SCTX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.QNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.QNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.QNAM, rhs.QNAM)) return false;
             }
             return true;
         }
@@ -1841,12 +1841,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestLogEntryGetter rhs) return false;
-            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestLogEntryGetter? obj)
         {
-            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).GetHashCode(this);

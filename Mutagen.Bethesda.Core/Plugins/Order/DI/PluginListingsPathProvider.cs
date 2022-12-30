@@ -1,45 +1,39 @@
-using Mutagen.Bethesda.Environments.DI;
-using Noggog;
+﻿using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;
 
 public interface IPluginListingsPathProvider
 {
-    /// <summary>
-    /// Returns expected location of the plugin load order file
-    /// </summary>
-    /// <returns>Expected path to load order file</returns>
-    FilePath Path { get; }
+    FilePath Get(GameRelease release);
 }
 
-public sealed class PluginListingsPathProvider : IPluginListingsPathProvider
+public class PluginListingsPathProvider : IPluginListingsPathProvider
 {
-    private readonly IGameReleaseContext _gameReleaseContext;
-
-    public PluginListingsPathProvider(IGameReleaseContext gameReleaseContext)
+    private string GetGameFolder(GameRelease release)
     {
-        _gameReleaseContext = gameReleaseContext;
-    }
-    
-    private string GetRelativePluginsPath()
-    {
-        return _gameReleaseContext.Release switch
+        return release switch
         {
-            GameRelease.Oblivion => "Oblivion/Plugins.txt",
-            GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
-            GameRelease.EnderalLE => "Enderal/Plugins.txt",
-            GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
-            GameRelease.EnderalSE => "Enderal Special Edition/Plugins.txt",
-            GameRelease.SkyrimVR => "Skyrim VR/Plugins.txt",
-            GameRelease.Fallout4 => "Fallout4/Plugins.txt",
+            GameRelease.Oblivion => "Oblivion",
+            GameRelease.SkyrimLE => "Skyrim",
+            GameRelease.EnderalLE => "Enderal",
+            GameRelease.SkyrimSE => "Skyrim Special Edition",
+            GameRelease.SkyrimSEGog => "Skyrim Special Edition GOG",
+            GameRelease.EnderalSE => "Enderal Special Edition",
+            GameRelease.SkyrimVR => "Skyrim VR",
+            GameRelease.Fallout4 => "Fallout4",
             _ => throw new NotImplementedException()
         };
     }
+    
+    private string GetRelativePluginsPath(GameRelease release)
+    {
+        var gameFolder = GetGameFolder(release);
+        return System.IO.Path.Combine(
+            gameFolder,
+            "Plugins.txt");
+    }
 
-    /// <inheritdoc />
-    public FilePath Path => System.IO.Path.Combine(
+    public FilePath Get(GameRelease release) => System.IO.Path.Combine(
         Environment.GetEnvironmentVariable("LocalAppData")!,
-        GetRelativePluginsPath());
+        GetRelativePluginsPath(release));
 }
-
-public sealed record PluginListingsPathInjection(FilePath Path) : IPluginListingsPathProvider;

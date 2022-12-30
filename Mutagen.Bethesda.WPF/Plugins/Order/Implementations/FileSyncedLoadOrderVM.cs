@@ -20,7 +20,7 @@ public class FileSyncedLoadOrderVM : ALoadOrderVM<FileSyncedLoadOrderListingVM>
     public FileSyncedLoadOrderVM(
         IPluginLiveLoadOrderProvider liveLoadOrderProvider,
         ILoadOrderWriter writer,
-        IPluginListingsPathProvider pluginPathContext,
+        IPluginListingsPathContext pluginPathContext,
         IDataDirectoryProvider dataDirectoryContext)
     {
         var loadOrder = liveLoadOrderProvider.Get(out var state)

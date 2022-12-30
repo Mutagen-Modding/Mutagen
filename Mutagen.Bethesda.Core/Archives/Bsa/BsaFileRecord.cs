@@ -59,7 +59,7 @@ class BsaFileRecord : IArchiveFile
         get
         {
             if (Name == null) return string.Empty;
-            return Folder.Path.IsNullOrWhitespace() ? Name.Value.String : $"{Folder.Path}\\{Name.Value.String}";
+            return Folder.Path.IsNullOrWhitespace() ? Name.Value.String : System.IO.Path.Combine(Folder.Path, Name.Value.String);
         }
     }
 

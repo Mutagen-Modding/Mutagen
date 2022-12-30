@@ -84,12 +84,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ISceneScriptFragmentsGetter rhs) return false;
-            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneScriptFragmentsGetter? obj)
         {
-            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.PhaseFragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScenePhaseFragment.ErrorMask?>>?>(ExceptionExt.Combine(this.PhaseFragments?.Overall, rhs.PhaseFragments?.Overall), ExceptionExt.Combine(this.PhaseFragments?.Specific, rhs.PhaseFragments?.Specific));
+                ret.PhaseFragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScenePhaseFragment.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PhaseFragments?.Overall, rhs.PhaseFragments?.Overall), Noggog.ExceptionExt.Combine(this.PhaseFragments?.Specific, rhs.PhaseFragments?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case ScriptFragments_FieldIndex.OnEnd:
                     return (SceneScriptFragments_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -888,13 +888,13 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISceneScriptFragmentsGetter? lhs,
             ISceneScriptFragmentsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IScriptFragmentsGetter)lhs, (IScriptFragmentsGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SceneScriptFragments_FieldIndex.PhaseFragments) ?? true))
+            if (!base.Equals((IScriptFragmentsGetter)lhs, (IScriptFragmentsGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SceneScriptFragments_FieldIndex.PhaseFragments) ?? true))
             {
-                if (!lhs.PhaseFragments.SequenceEqual(rhs.PhaseFragments, (l, r) => ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SceneScriptFragments_FieldIndex.PhaseFragments)))) return false;
+                if (!lhs.PhaseFragments.SequenceEqual(rhs.PhaseFragments, (l, r) => ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SceneScriptFragments_FieldIndex.PhaseFragments)))) return false;
             }
             return true;
         }
@@ -902,12 +902,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IScriptFragmentsGetter? lhs,
             IScriptFragmentsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISceneScriptFragmentsGetter?)lhs,
                 rhs: rhs as ISceneScriptFragmentsGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISceneScriptFragmentsGetter item)
@@ -1275,12 +1275,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ISceneScriptFragmentsGetter rhs) return false;
-            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISceneScriptFragmentsGetter? obj)
         {
-            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);

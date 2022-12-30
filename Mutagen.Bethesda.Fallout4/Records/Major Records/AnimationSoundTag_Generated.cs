@@ -82,12 +82,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAnimationSoundTagGetter rhs) return false;
-            return ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAnimationSoundTagGetter? obj)
         {
-            return ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)this).CommonInstance()!).GetHashCode(this);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -859,14 +859,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAnimationSoundTagGetter? lhs,
             IAnimationSoundTagGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Action) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Action) ?? true))
             {
                 if (!string.Equals(lhs.Action, rhs.Action)) return false;
             }
@@ -1207,12 +1207,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IAnimationSoundTagGetter rhs) return false;
-            return ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAnimationSoundTagGetter? obj)
         {
-            return ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)this).CommonInstance()!).GetHashCode(this);

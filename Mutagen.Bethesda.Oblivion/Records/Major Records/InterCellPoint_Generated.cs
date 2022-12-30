@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IInterCellPointGetter rhs) return false;
-            return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IInterCellPointGetter? obj)
         {
-            return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -832,14 +832,14 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IInterCellPointGetter? lhs,
             IInterCellPointGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)InterCellPoint_FieldIndex.PointID) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)InterCellPoint_FieldIndex.PointID) ?? true))
             {
                 if (lhs.PointID != rhs.PointID) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)InterCellPoint_FieldIndex.Point) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)InterCellPoint_FieldIndex.Point) ?? true))
             {
                 if (!lhs.Point.Equals(rhs.Point)) return false;
             }
@@ -1161,12 +1161,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IInterCellPointGetter rhs) return false;
-            return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IInterCellPointGetter? obj)
         {
-            return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).GetHashCode(this);

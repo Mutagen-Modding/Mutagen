@@ -52,12 +52,12 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region NavmeshVersion
-        public readonly static UInt32 _NavmeshVersion_Default = 15;
-        public UInt32 NavmeshVersion { get; set; } = _NavmeshVersion_Default;
+        public static readonly UInt32 NavmeshVersionDefault = 15;
+        public UInt32 NavmeshVersion { get; set; } = NavmeshVersionDefault;
         #endregion
         #region Magic
-        public readonly static UInt32 _Magic_Default = 0xA5E9A03C;
-        public UInt32 Magic { get; set; } = _Magic_Default;
+        public static readonly UInt32 MagicDefault = 0xA5E9A03C;
+        public UInt32 Magic { get; set; } = MagicDefault;
         #endregion
         #region Parent
         public ANavmeshParent Parent { get; set; } = default!;
@@ -199,12 +199,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INavmeshGeometryGetter rhs) return false;
-            return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavmeshGeometryGetter? obj)
         {
-            return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavmeshGeometryCommon)((INavmeshGeometryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1261,13 +1261,13 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.NavmeshVersion = this.NavmeshVersion.Combine(rhs.NavmeshVersion);
                 ret.Magic = this.Magic.Combine(rhs.Magic);
                 ret.Parent = this.Parent.Combine(rhs.Parent, (l, r) => l.Combine(r));
-                ret.Vertices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Vertices?.Overall, rhs.Vertices?.Overall), ExceptionExt.Combine(this.Vertices?.Specific, rhs.Vertices?.Specific));
-                ret.Triangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>(ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
-                ret.EdgeLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EdgeLink.ErrorMask?>>?>(ExceptionExt.Combine(this.EdgeLinks?.Overall, rhs.EdgeLinks?.Overall), ExceptionExt.Combine(this.EdgeLinks?.Specific, rhs.EdgeLinks?.Specific));
-                ret.DoorTriangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>(ExceptionExt.Combine(this.DoorTriangles?.Overall, rhs.DoorTriangles?.Overall), ExceptionExt.Combine(this.DoorTriangles?.Specific, rhs.DoorTriangles?.Specific));
-                ret.Unknown = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Unknown?.Overall, rhs.Unknown?.Overall), ExceptionExt.Combine(this.Unknown?.Specific, rhs.Unknown?.Specific));
-                ret.Unknown2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Unknown2?.Overall, rhs.Unknown2?.Overall), ExceptionExt.Combine(this.Unknown2?.Specific, rhs.Unknown2?.Specific));
-                ret.Waypoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>(ExceptionExt.Combine(this.Waypoints?.Overall, rhs.Waypoints?.Overall), ExceptionExt.Combine(this.Waypoints?.Specific, rhs.Waypoints?.Specific));
+                ret.Vertices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Vertices?.Overall, rhs.Vertices?.Overall), Noggog.ExceptionExt.Combine(this.Vertices?.Specific, rhs.Vertices?.Specific));
+                ret.Triangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), Noggog.ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
+                ret.EdgeLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EdgeLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EdgeLinks?.Overall, rhs.EdgeLinks?.Overall), Noggog.ExceptionExt.Combine(this.EdgeLinks?.Specific, rhs.EdgeLinks?.Specific));
+                ret.DoorTriangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DoorTriangles?.Overall, rhs.DoorTriangles?.Overall), Noggog.ExceptionExt.Combine(this.DoorTriangles?.Specific, rhs.DoorTriangles?.Specific));
+                ret.Unknown = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Unknown?.Overall, rhs.Unknown?.Overall), Noggog.ExceptionExt.Combine(this.Unknown?.Specific, rhs.Unknown?.Specific));
+                ret.Unknown2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Unknown2?.Overall, rhs.Unknown2?.Overall), Noggog.ExceptionExt.Combine(this.Unknown2?.Specific, rhs.Unknown2?.Specific));
+                ret.Waypoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Waypoints?.Overall, rhs.Waypoints?.Overall), Noggog.ExceptionExt.Combine(this.Waypoints?.Specific, rhs.Waypoints?.Specific));
                 ret.GridSize = this.GridSize.Combine(rhs.GridSize);
                 ret.GridMaxDistance = this.GridMaxDistance.Combine(rhs.GridMaxDistance);
                 ret.GridMin = this.GridMin.Combine(rhs.GridMin);
@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1760,8 +1760,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(INavmeshGeometry item)
         {
             ClearPartial();
-            item.NavmeshVersion = NavmeshGeometry._NavmeshVersion_Default;
-            item.Magic = NavmeshGeometry._Magic_Default;
+            item.NavmeshVersion = NavmeshGeometry.NavmeshVersionDefault;
+            item.Magic = NavmeshGeometry.MagicDefault;
             item.Parent.Clear();
             item.Vertices.Clear();
             item.Triangles.Clear();
@@ -2047,74 +2047,74 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             INavmeshGeometryGetter? lhs,
             INavmeshGeometryGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.NavmeshVersion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.NavmeshVersion) ?? true))
             {
                 if (lhs.NavmeshVersion != rhs.NavmeshVersion) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Magic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Magic) ?? true))
             {
                 if (lhs.Magic != rhs.Magic) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Parent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Parent) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Parent, rhs.Parent, out var lhsParent, out var rhsParent, out var isParentEqual))
                 {
-                    if (!((ANavmeshParentCommon)((IANavmeshParentGetter)lhsParent).CommonInstance()!).Equals(lhsParent, rhsParent, crystal?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Parent))) return false;
+                    if (!((ANavmeshParentCommon)((IANavmeshParentGetter)lhsParent).CommonInstance()!).Equals(lhsParent, rhsParent, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Parent))) return false;
                 }
                 else if (!isParentEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Vertices) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Vertices) ?? true))
             {
                 if (!lhs.Vertices.SequenceEqualNullable(rhs.Vertices)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Triangles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Triangles) ?? true))
             {
-                if (!lhs.Triangles.SequenceEqual(rhs.Triangles, (l, r) => ((NavmeshTriangleCommon)((INavmeshTriangleGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Triangles)))) return false;
+                if (!lhs.Triangles.SequenceEqual(rhs.Triangles, (l, r) => ((NavmeshTriangleCommon)((INavmeshTriangleGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Triangles)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.EdgeLinks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.EdgeLinks) ?? true))
             {
-                if (!lhs.EdgeLinks.SequenceEqual(rhs.EdgeLinks, (l, r) => ((EdgeLinkCommon)((IEdgeLinkGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.EdgeLinks)))) return false;
+                if (!lhs.EdgeLinks.SequenceEqual(rhs.EdgeLinks, (l, r) => ((EdgeLinkCommon)((IEdgeLinkGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.EdgeLinks)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.DoorTriangles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.DoorTriangles) ?? true))
             {
-                if (!lhs.DoorTriangles.SequenceEqual(rhs.DoorTriangles, (l, r) => ((DoorTriangleCommon)((IDoorTriangleGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.DoorTriangles)))) return false;
+                if (!lhs.DoorTriangles.SequenceEqual(rhs.DoorTriangles, (l, r) => ((DoorTriangleCommon)((IDoorTriangleGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.DoorTriangles)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown) ?? true))
             {
                 if (!lhs.Unknown.SequenceEqualNullable(rhs.Unknown)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown2) ?? true))
             {
                 if (!lhs.Unknown2.SequenceEqualNullable(rhs.Unknown2)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Waypoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Waypoints) ?? true))
             {
-                if (!lhs.Waypoints.SequenceEqual(rhs.Waypoints, (l, r) => ((NavmeshWaypointCommon)((INavmeshWaypointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Waypoints)))) return false;
+                if (!lhs.Waypoints.SequenceEqual(rhs.Waypoints, (l, r) => ((NavmeshWaypointCommon)((INavmeshWaypointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Waypoints)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridSize) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridSize) ?? true))
             {
                 if (lhs.GridSize != rhs.GridSize) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMaxDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMaxDistance) ?? true))
             {
                 if (!lhs.GridMaxDistance.Equals(rhs.GridMaxDistance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMin) ?? true))
             {
                 if (!lhs.GridMin.Equals(rhs.GridMin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridMax) ?? true))
             {
                 if (!lhs.GridMax.Equals(rhs.GridMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridArrays) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.GridArrays) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.GridArrays, rhs.GridArrays, out var lhsGridArrays, out var rhsGridArrays, out var isGridArraysEqual))
                 {
-                    if (!((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)lhsGridArrays).CommonInstance()!).Equals(lhsGridArrays, rhsGridArrays, crystal?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.GridArrays))) return false;
+                    if (!((NavmeshGridArrayCommon)((INavmeshGridArrayGetter)lhsGridArrays).CommonInstance()!).Equals(lhsGridArrays, rhsGridArrays, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.GridArrays))) return false;
                 }
                 else if (!isGridArraysEqual) return false;
             }
@@ -2863,12 +2863,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not INavmeshGeometryGetter rhs) return false;
-            return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(INavmeshGeometryGetter? obj)
         {
-            return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((NavmeshGeometryCommon)((INavmeshGeometryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((NavmeshGeometryCommon)((INavmeshGeometryGetter)this).CommonInstance()!).GetHashCode(this);

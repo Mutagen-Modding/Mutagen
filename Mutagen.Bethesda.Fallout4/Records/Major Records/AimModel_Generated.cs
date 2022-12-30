@@ -101,9 +101,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region BaseStability
         public Single BaseStability { get; set; } = default;
         #endregion
-        #region DNAMDataTypeState
-        public AimModel.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -145,7 +142,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.RecoilArcRotate = initialValue;
                 this.ConeOfFireIronSightsMult = initialValue;
                 this.BaseStability = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -155,6 +151,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ConeOfFireMinAngle,
                 TItem ConeOfFireMaxAngle,
                 TItem ConeOfFireIncreasePerShot,
@@ -170,15 +167,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem RecoilArc,
                 TItem RecoilArcRotate,
                 TItem ConeOfFireIronSightsMult,
-                TItem BaseStability,
-                TItem DNAMDataTypeState)
+                TItem BaseStability)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ConeOfFireMinAngle = ConeOfFireMinAngle;
                 this.ConeOfFireMaxAngle = ConeOfFireMaxAngle;
@@ -196,7 +193,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.RecoilArcRotate = RecoilArcRotate;
                 this.ConeOfFireIronSightsMult = ConeOfFireIronSightsMult;
                 this.BaseStability = BaseStability;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -224,7 +220,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem RecoilArcRotate;
             public TItem ConeOfFireIronSightsMult;
             public TItem BaseStability;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -254,7 +249,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.RecoilArcRotate, rhs.RecoilArcRotate)) return false;
                 if (!object.Equals(this.ConeOfFireIronSightsMult, rhs.ConeOfFireIronSightsMult)) return false;
                 if (!object.Equals(this.BaseStability, rhs.BaseStability)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -276,7 +270,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.RecoilArcRotate);
                 hash.Add(this.ConeOfFireIronSightsMult);
                 hash.Add(this.BaseStability);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -303,7 +296,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.RecoilArcRotate)) return false;
                 if (!eval(this.ConeOfFireIronSightsMult)) return false;
                 if (!eval(this.BaseStability)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -328,7 +320,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.RecoilArcRotate)) return true;
                 if (eval(this.ConeOfFireIronSightsMult)) return true;
                 if (eval(this.BaseStability)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -360,7 +351,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.RecoilArcRotate = eval(this.RecoilArcRotate);
                 obj.ConeOfFireIronSightsMult = eval(this.ConeOfFireIronSightsMult);
                 obj.BaseStability = eval(this.BaseStability);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -443,10 +433,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(BaseStability, "BaseStability");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -474,7 +460,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? RecoilArcRotate;
             public Exception? ConeOfFireIronSightsMult;
             public Exception? BaseStability;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -515,8 +500,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return ConeOfFireIronSightsMult;
                     case AimModel_FieldIndex.BaseStability:
                         return BaseStability;
-                    case AimModel_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -574,9 +557,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case AimModel_FieldIndex.BaseStability:
                         this.BaseStability = ex;
-                        break;
-                    case AimModel_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -637,9 +617,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case AimModel_FieldIndex.BaseStability:
                         this.BaseStability = (Exception?)obj;
                         break;
-                    case AimModel_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -665,7 +642,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (RecoilArcRotate != null) return true;
                 if (ConeOfFireIronSightsMult != null) return true;
                 if (BaseStability != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -740,9 +716,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(BaseStability, "BaseStability");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -767,7 +740,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.RecoilArcRotate = this.RecoilArcRotate.Combine(rhs.RecoilArcRotate);
                 ret.ConeOfFireIronSightsMult = this.ConeOfFireIronSightsMult.Combine(rhs.ConeOfFireIronSightsMult);
                 ret.BaseStability = this.BaseStability.Combine(rhs.BaseStability);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -806,7 +778,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool RecoilArcRotate;
             public bool ConeOfFireIronSightsMult;
             public bool BaseStability;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -831,7 +802,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.RecoilArcRotate = defaultOn;
                 this.ConeOfFireIronSightsMult = defaultOn;
                 this.BaseStability = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -855,7 +825,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((RecoilArcRotate, null));
                 ret.Add((ConeOfFireIronSightsMult, null));
                 ret.Add((BaseStability, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -910,10 +879,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IAimModel);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -922,12 +887,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAimModelGetter rhs) return false;
-            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAimModelGetter? obj)
         {
-            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1013,7 +978,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single RecoilArcRotate { get; set; }
         new Single ConeOfFireIronSightsMult { get; set; }
         new Single BaseStability { get; set; }
-        new AimModel.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IAimModelInternal :
@@ -1047,7 +1011,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single RecoilArcRotate { get; }
         Single ConeOfFireIronSightsMult { get; }
         Single BaseStability { get; }
-        AimModel.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -1104,7 +1067,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((AimModelCommon)((IAimModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1180,6 +1143,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static AimModel Duplicate(
+            this IAimModelGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((AimModelCommon)((IAimModelGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1212,23 +1186,23 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ConeOfFireMinAngle = 6,
-        ConeOfFireMaxAngle = 7,
-        ConeOfFireIncreasePerShot = 8,
-        ConeOfFireIncreasePerSec = 9,
-        ConeOfFireDecreaseDelayMilliseconds = 10,
-        ConeOfFireSneakMult = 11,
-        RecoilDiminishSpringForce = 12,
-        RecoilDiminishSightsMult = 13,
-        RecoilMaxPerShot = 14,
-        RecoilMinPerShot = 15,
-        RecoilHipMult = 16,
-        RunawayRecoilShots = 17,
-        RecoilArc = 18,
-        RecoilArcRotate = 19,
-        ConeOfFireIronSightsMult = 20,
-        BaseStability = 21,
-        DNAMDataTypeState = 22,
+        Fallout4MajorRecordFlags = 6,
+        ConeOfFireMinAngle = 7,
+        ConeOfFireMaxAngle = 8,
+        ConeOfFireIncreasePerShot = 9,
+        ConeOfFireIncreasePerSec = 10,
+        ConeOfFireDecreaseDelayMilliseconds = 11,
+        ConeOfFireSneakMult = 12,
+        RecoilDiminishSpringForce = 13,
+        RecoilDiminishSightsMult = 14,
+        RecoilMaxPerShot = 15,
+        RecoilMinPerShot = 16,
+        RecoilHipMult = 17,
+        RunawayRecoilShots = 18,
+        RecoilArc = 19,
+        RecoilArcRotate = 20,
+        ConeOfFireIronSightsMult = 21,
+        BaseStability = 22,
     }
     #endregion
 
@@ -1246,7 +1220,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "646f5dc0-24dd-45a1-a3e7-2bdfbc2bbcc7";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 16;
 
         public const ushort FieldCount = 23;
 
@@ -1342,7 +1316,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.RecoilArcRotate = default;
             item.ConeOfFireIronSightsMult = default;
             item.BaseStability = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1443,7 +1416,6 @@ namespace Mutagen.Bethesda.Fallout4
             ret.RecoilArcRotate = item.RecoilArcRotate.EqualsWithin(rhs.RecoilArcRotate);
             ret.ConeOfFireIronSightsMult = item.ConeOfFireIronSightsMult.EqualsWithin(rhs.ConeOfFireIronSightsMult);
             ret.BaseStability = item.BaseStability.EqualsWithin(rhs.BaseStability);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1557,10 +1529,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.BaseStability, "BaseStability");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static AimModel_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -1579,8 +1547,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (AimModel_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (AimModel_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (AimModel_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1597,7 +1567,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (AimModel_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1605,77 +1575,73 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IAimModelGetter? lhs,
             IAimModelGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMinAngle) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMinAngle) ?? true))
             {
                 if (!lhs.ConeOfFireMinAngle.EqualsWithin(rhs.ConeOfFireMinAngle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMaxAngle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMaxAngle) ?? true))
             {
                 if (!lhs.ConeOfFireMaxAngle.EqualsWithin(rhs.ConeOfFireMaxAngle)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerShot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerShot) ?? true))
             {
                 if (!lhs.ConeOfFireIncreasePerShot.EqualsWithin(rhs.ConeOfFireIncreasePerShot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerSec) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerSec) ?? true))
             {
                 if (!lhs.ConeOfFireIncreasePerSec.EqualsWithin(rhs.ConeOfFireIncreasePerSec)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDecreaseDelayMilliseconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDecreaseDelayMilliseconds) ?? true))
             {
                 if (lhs.ConeOfFireDecreaseDelayMilliseconds != rhs.ConeOfFireDecreaseDelayMilliseconds) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireSneakMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireSneakMult) ?? true))
             {
                 if (!lhs.ConeOfFireSneakMult.EqualsWithin(rhs.ConeOfFireSneakMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSpringForce) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSpringForce) ?? true))
             {
                 if (!lhs.RecoilDiminishSpringForce.EqualsWithin(rhs.RecoilDiminishSpringForce)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSightsMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDiminishSightsMult) ?? true))
             {
                 if (!lhs.RecoilDiminishSightsMult.EqualsWithin(rhs.RecoilDiminishSightsMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMaxPerShot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMaxPerShot) ?? true))
             {
                 if (!lhs.RecoilMaxPerShot.EqualsWithin(rhs.RecoilMaxPerShot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMinPerShot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMinPerShot) ?? true))
             {
                 if (!lhs.RecoilMinPerShot.EqualsWithin(rhs.RecoilMinPerShot)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilHipMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilHipMult) ?? true))
             {
                 if (!lhs.RecoilHipMult.EqualsWithin(rhs.RecoilHipMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RunawayRecoilShots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RunawayRecoilShots) ?? true))
             {
                 if (lhs.RunawayRecoilShots != rhs.RunawayRecoilShots) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArc) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArc) ?? true))
             {
                 if (!lhs.RecoilArc.EqualsWithin(rhs.RecoilArc)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArcRotate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArcRotate) ?? true))
             {
                 if (!lhs.RecoilArcRotate.EqualsWithin(rhs.RecoilArcRotate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIronSightsMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIronSightsMult) ?? true))
             {
                 if (!lhs.ConeOfFireIronSightsMult.EqualsWithin(rhs.ConeOfFireIronSightsMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.BaseStability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.BaseStability) ?? true))
             {
                 if (!lhs.BaseStability.EqualsWithin(rhs.BaseStability)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)AimModel_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -1683,23 +1649,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAimModelGetter?)lhs,
                 rhs: rhs as IAimModelGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IAimModelGetter?)lhs,
                 rhs: rhs as IAimModelGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IAimModelGetter item)
@@ -1721,7 +1687,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.RecoilArcRotate);
             hash.Add(item.ConeOfFireIronSightsMult);
             hash.Add(item.BaseStability);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1889,10 +1854,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.BaseStability = rhs.BaseStability;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2041,15 +2002,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly AimModelBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IAimModelGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IAimModelGetter item,
             MutagenWriter writer,
@@ -2119,7 +2071,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2179,15 +2131,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly AimModelBinaryCreateTranslation Instance = new AimModelBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AMDL;
-        public static void FillBinaryStructs(
-            IAimModelInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IAimModelInternal item,
             MutagenFrame frame,
@@ -2297,7 +2240,6 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         private RangeInt32? _DNAMLocation;
-        public AimModel.DNAMDataType DNAMDataTypeState { get; private set; }
         #region ConeOfFireMinAngle
         private int _ConeOfFireMinAngleLocation => _DNAMLocation!.Value.Min;
         private bool _ConeOfFireMinAngle_IsSet => _DNAMLocation.HasValue;
@@ -2490,12 +2432,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IAimModelGetter rhs) return false;
-            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IAimModelGetter? obj)
         {
-            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((AimModelCommon)((IAimModelGetter)this).CommonInstance()!).GetHashCode(this);

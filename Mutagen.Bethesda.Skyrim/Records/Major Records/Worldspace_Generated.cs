@@ -336,15 +336,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region ONAMDataTypeState
-        public Worldspace.ONAMDataType ONAMDataTypeState { get; set; } = default;
-        #endregion
-        #region NAM0DataTypeState
-        public Worldspace.NAM0DataType NAM0DataTypeState { get; set; } = default;
-        #endregion
-        #region NAM9DataTypeState
-        public Worldspace.NAM9DataType NAM9DataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -403,9 +394,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SubCellsTimestamp = initialValue;
                 this.SubCellsUnknown = initialValue;
                 this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
-                this.ONAMDataTypeState = initialValue;
-                this.NAM0DataTypeState = initialValue;
-                this.NAM9DataTypeState = initialValue;
             }
 
             public Mask(
@@ -415,6 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem LargeReferences,
                 TItem MaxHeight,
                 TItem Name,
@@ -447,17 +436,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem TopCell,
                 TItem SubCellsTimestamp,
                 TItem SubCellsUnknown,
-                TItem SubCells,
-                TItem ONAMDataTypeState,
-                TItem NAM0DataTypeState,
-                TItem NAM9DataTypeState)
+                TItem SubCells)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(LargeReferences, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>());
                 this.MaxHeight = new MaskItem<TItem, WorldspaceMaxHeight.Mask<TItem>?>(MaxHeight, new WorldspaceMaxHeight.Mask<TItem>(MaxHeight));
@@ -492,9 +479,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SubCellsTimestamp = SubCellsTimestamp;
                 this.SubCellsUnknown = SubCellsUnknown;
                 this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
-                this.ONAMDataTypeState = ONAMDataTypeState;
-                this.NAM0DataTypeState = NAM0DataTypeState;
-                this.NAM9DataTypeState = NAM9DataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -539,9 +523,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem SubCellsTimestamp;
             public TItem SubCellsUnknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>? SubCells;
-            public TItem ONAMDataTypeState;
-            public TItem NAM0DataTypeState;
-            public TItem NAM9DataTypeState;
             #endregion
 
             #region Equals
@@ -588,9 +569,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
                 if (!object.Equals(this.SubCellsUnknown, rhs.SubCellsUnknown)) return false;
                 if (!object.Equals(this.SubCells, rhs.SubCells)) return false;
-                if (!object.Equals(this.ONAMDataTypeState, rhs.ONAMDataTypeState)) return false;
-                if (!object.Equals(this.NAM0DataTypeState, rhs.NAM0DataTypeState)) return false;
-                if (!object.Equals(this.NAM9DataTypeState, rhs.NAM9DataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -629,9 +607,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.SubCellsTimestamp);
                 hash.Add(this.SubCellsUnknown);
                 hash.Add(this.SubCells);
-                hash.Add(this.ONAMDataTypeState);
-                hash.Add(this.NAM0DataTypeState);
-                hash.Add(this.NAM9DataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -721,9 +696,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.ONAMDataTypeState)) return false;
-                if (!eval(this.NAM0DataTypeState)) return false;
-                if (!eval(this.NAM9DataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -811,9 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.ONAMDataTypeState)) return true;
-                if (eval(this.NAM0DataTypeState)) return true;
-                if (eval(this.NAM9DataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -890,9 +859,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.ONAMDataTypeState = eval(this.ONAMDataTypeState);
-                obj.NAM0DataTypeState = eval(this.NAM0DataTypeState);
-                obj.NAM9DataTypeState = eval(this.NAM9DataTypeState);
             }
             #endregion
 
@@ -1073,18 +1039,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if (printMask?.ONAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(ONAMDataTypeState, "ONAMDataTypeState");
-                    }
-                    if (printMask?.NAM0DataTypeState ?? true)
-                    {
-                        sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
-                    }
-                    if (printMask?.NAM9DataTypeState ?? true)
-                    {
-                        sb.AppendItem(NAM9DataTypeState, "NAM9DataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1129,9 +1083,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? SubCellsTimestamp;
             public Exception? SubCellsUnknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>? SubCells;
-            public Exception? ONAMDataTypeState;
-            public Exception? NAM0DataTypeState;
-            public Exception? NAM9DataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1206,12 +1157,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return SubCellsUnknown;
                     case Worldspace_FieldIndex.SubCells:
                         return SubCells;
-                    case Worldspace_FieldIndex.ONAMDataTypeState:
-                        return ONAMDataTypeState;
-                    case Worldspace_FieldIndex.NAM0DataTypeState:
-                        return NAM0DataTypeState;
-                    case Worldspace_FieldIndex.NAM9DataTypeState:
-                        return NAM9DataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1320,15 +1265,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Worldspace_FieldIndex.SubCells:
                         this.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Worldspace_FieldIndex.ONAMDataTypeState:
-                        this.ONAMDataTypeState = ex;
-                        break;
-                    case Worldspace_FieldIndex.NAM0DataTypeState:
-                        this.NAM0DataTypeState = ex;
-                        break;
-                    case Worldspace_FieldIndex.NAM9DataTypeState:
-                        this.NAM9DataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1440,15 +1376,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Worldspace_FieldIndex.SubCells:
                         this.SubCells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>)obj;
                         break;
-                    case Worldspace_FieldIndex.ONAMDataTypeState:
-                        this.ONAMDataTypeState = (Exception?)obj;
-                        break;
-                    case Worldspace_FieldIndex.NAM0DataTypeState:
-                        this.NAM0DataTypeState = (Exception?)obj;
-                        break;
-                    case Worldspace_FieldIndex.NAM9DataTypeState:
-                        this.NAM9DataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1491,9 +1418,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (SubCellsTimestamp != null) return true;
                 if (SubCellsUnknown != null) return true;
                 if (SubCells != null) return true;
-                if (ONAMDataTypeState != null) return true;
-                if (NAM0DataTypeState != null) return true;
-                if (NAM9DataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1637,15 +1561,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                {
-                    sb.AppendItem(ONAMDataTypeState, "ONAMDataTypeState");
-                }
-                {
-                    sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
-                }
-                {
-                    sb.AppendItem(NAM9DataTypeState, "NAM9DataTypeState");
-                }
             }
             #endregion
 
@@ -1654,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.LargeReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceGridReference.ErrorMask?>>?>(ExceptionExt.Combine(this.LargeReferences?.Overall, rhs.LargeReferences?.Overall), ExceptionExt.Combine(this.LargeReferences?.Specific, rhs.LargeReferences?.Specific));
+                ret.LargeReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceGridReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LargeReferences?.Overall, rhs.LargeReferences?.Overall), Noggog.ExceptionExt.Combine(this.LargeReferences?.Specific, rhs.LargeReferences?.Specific));
                 ret.MaxHeight = this.MaxHeight.Combine(rhs.MaxHeight, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.FixedDimensionsCenterCell = this.FixedDimensionsCenterCell.Combine(rhs.FixedDimensionsCenterCell);
@@ -1686,10 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.TopCell = this.TopCell.Combine(rhs.TopCell, (l, r) => l.Combine(r));
                 ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
                 ret.SubCellsUnknown = this.SubCellsUnknown.Combine(rhs.SubCellsUnknown);
-                ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
-                ret.ONAMDataTypeState = this.ONAMDataTypeState.Combine(rhs.ONAMDataTypeState);
-                ret.NAM0DataTypeState = this.NAM0DataTypeState.Combine(rhs.NAM0DataTypeState);
-                ret.NAM9DataTypeState = this.NAM9DataTypeState.Combine(rhs.NAM9DataTypeState);
+                ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), Noggog.ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1745,9 +1657,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool SubCellsTimestamp;
             public bool SubCellsUnknown;
             public WorldspaceBlock.TranslationMask? SubCells;
-            public bool ONAMDataTypeState;
-            public bool NAM0DataTypeState;
-            public bool NAM9DataTypeState;
             #endregion
 
             #region Ctors
@@ -1781,9 +1690,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OffsetData = defaultOn;
                 this.SubCellsTimestamp = defaultOn;
                 this.SubCellsUnknown = defaultOn;
-                this.ONAMDataTypeState = defaultOn;
-                this.NAM0DataTypeState = defaultOn;
-                this.NAM9DataTypeState = defaultOn;
             }
 
             #endregion
@@ -1824,9 +1730,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SubCellsTimestamp, null));
                 ret.Add((SubCellsUnknown, null));
                 ret.Add((SubCells == null ? DefaultOn : !SubCells.GetCrystal().CopyNothing, SubCells?.GetCrystal()));
-                ret.Add((ONAMDataTypeState, null));
-                ret.Add((NAM0DataTypeState, null));
-                ret.Add((NAM9DataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1907,18 +1810,6 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum ONAMDataType
-        {
-        }
-        [Flags]
-        public enum NAM0DataType
-        {
-        }
-        [Flags]
-        public enum NAM9DataType
-        {
-        }
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -1952,12 +1843,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IWorldspaceGetter rhs) return false;
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceGetter? obj)
         {
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2071,9 +1962,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 SubCellsTimestamp { get; set; }
         new Int32 SubCellsUnknown { get; set; }
         new ExtendedList<WorldspaceBlock> SubCells { get; }
-        new Worldspace.ONAMDataType ONAMDataTypeState { get; set; }
-        new Worldspace.NAM0DataType NAM0DataTypeState { get; set; }
-        new Worldspace.NAM9DataType NAM9DataTypeState { get; set; }
         #region Mutagen
         new Worldspace.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2141,9 +2029,6 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 SubCellsTimestamp { get; }
         Int32 SubCellsUnknown { get; }
         IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; }
-        Worldspace.ONAMDataType ONAMDataTypeState { get; }
-        Worldspace.NAM0DataType NAM0DataTypeState { get; }
-        Worldspace.NAM9DataType NAM9DataTypeState { get; }
 
         #region Mutagen
         Worldspace.MajorFlag MajorFlags { get; }
@@ -2204,7 +2089,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2492,6 +2377,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Worldspace Duplicate(
+            this IWorldspaceGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2524,42 +2420,40 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        LargeReferences = 6,
-        MaxHeight = 7,
-        Name = 8,
-        FixedDimensionsCenterCell = 9,
-        InteriorLighting = 10,
-        EncounterZone = 11,
-        Location = 12,
-        Parent = 13,
-        Climate = 14,
-        Water = 15,
-        LodWater = 16,
-        LodWaterHeight = 17,
-        LandDefaults = 18,
-        MapImage = 19,
-        CloudModel = 20,
-        MapData = 21,
-        WorldMapOffsetScale = 22,
-        WorldMapCellOffset = 23,
-        DistantLodMultiplier = 24,
-        Flags = 25,
-        ObjectBoundsMin = 26,
-        ObjectBoundsMax = 27,
-        Music = 28,
-        CanopyShadow = 29,
-        WaterNoiseTexture = 30,
-        HdLodDiffuseTexture = 31,
-        HdLodNormalTexture = 32,
-        WaterEnvironmentMap = 33,
-        OffsetData = 34,
-        TopCell = 35,
-        SubCellsTimestamp = 36,
-        SubCellsUnknown = 37,
-        SubCells = 38,
-        ONAMDataTypeState = 39,
-        NAM0DataTypeState = 40,
-        NAM9DataTypeState = 41,
+        SkyrimMajorRecordFlags = 6,
+        LargeReferences = 7,
+        MaxHeight = 8,
+        Name = 9,
+        FixedDimensionsCenterCell = 10,
+        InteriorLighting = 11,
+        EncounterZone = 12,
+        Location = 13,
+        Parent = 14,
+        Climate = 15,
+        Water = 16,
+        LodWater = 17,
+        LodWaterHeight = 18,
+        LandDefaults = 19,
+        MapImage = 20,
+        CloudModel = 21,
+        MapData = 22,
+        WorldMapOffsetScale = 23,
+        WorldMapCellOffset = 24,
+        DistantLodMultiplier = 25,
+        Flags = 26,
+        ObjectBoundsMin = 27,
+        ObjectBoundsMax = 28,
+        Music = 29,
+        CanopyShadow = 30,
+        WaterNoiseTexture = 31,
+        HdLodDiffuseTexture = 32,
+        HdLodNormalTexture = 33,
+        WaterEnvironmentMap = 34,
+        OffsetData = 35,
+        TopCell = 36,
+        SubCellsTimestamp = 37,
+        SubCellsUnknown = 38,
+        SubCells = 39,
     }
     #endregion
 
@@ -2577,9 +2471,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "2ee9dfa0-e46f-43fe-b3e3-acc2314e4bce";
 
-        public const ushort AdditionalFieldCount = 36;
+        public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 42;
+        public const ushort FieldCount = 40;
 
         public static readonly Type MaskType = typeof(Worldspace.Mask<>);
 
@@ -2758,9 +2652,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.SubCellsTimestamp = default;
             item.SubCellsUnknown = default;
             item.SubCells.Clear();
-            item.ONAMDataTypeState = default;
-            item.NAM0DataTypeState = default;
-            item.NAM9DataTypeState = default;
             base.Clear(item);
         }
         
@@ -3279,7 +3170,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.HdLodDiffuseTexture = object.Equals(item.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture);
             ret.HdLodNormalTexture = object.Equals(item.HdLodNormalTexture, rhs.HdLodNormalTexture);
             ret.WaterEnvironmentMap = object.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
-            ret.OffsetData = MemorySliceExt.Equal(item.OffsetData, rhs.OffsetData);
+            ret.OffsetData = MemorySliceExt.SequenceEqual(item.OffsetData, rhs.OffsetData);
             ret.TopCell = EqualsMaskHelper.EqualsHelper(
                 item.TopCell,
                 rhs.TopCell,
@@ -3291,9 +3182,6 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.SubCells,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ONAMDataTypeState = item.ONAMDataTypeState == rhs.ONAMDataTypeState;
-            ret.NAM0DataTypeState = item.NAM0DataTypeState == rhs.NAM0DataTypeState;
-            ret.NAM9DataTypeState = item.NAM9DataTypeState == rhs.NAM9DataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3512,18 +3400,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.ONAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.ONAMDataTypeState, "ONAMDataTypeState");
-            }
-            if (printMask?.NAM0DataTypeState ?? true)
-            {
-                sb.AppendItem(item.NAM0DataTypeState, "NAM0DataTypeState");
-            }
-            if (printMask?.NAM9DataTypeState ?? true)
-            {
-                sb.AppendItem(item.NAM9DataTypeState, "NAM9DataTypeState");
-            }
         }
         
         public static Worldspace_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -3542,8 +3418,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (Worldspace_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (Worldspace_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Worldspace_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3560,7 +3438,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (Worldspace_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3568,177 +3446,165 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IWorldspaceGetter? lhs,
             IWorldspaceGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LargeReferences) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LargeReferences) ?? true))
             {
-                if (!lhs.LargeReferences.SequenceEqual(rhs.LargeReferences, (l, r) => ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.LargeReferences)))) return false;
+                if (!lhs.LargeReferences.SequenceEqual(rhs.LargeReferences, (l, r) => ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.LargeReferences)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MaxHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MaxHeight) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MaxHeight, rhs.MaxHeight, out var lhsMaxHeight, out var rhsMaxHeight, out var isMaxHeightEqual))
                 {
-                    if (!((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)lhsMaxHeight).CommonInstance()!).Equals(lhsMaxHeight, rhsMaxHeight, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.MaxHeight))) return false;
+                    if (!((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)lhsMaxHeight).CommonInstance()!).Equals(lhsMaxHeight, rhsMaxHeight, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.MaxHeight))) return false;
                 }
                 else if (!isMaxHeightEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.FixedDimensionsCenterCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.FixedDimensionsCenterCell) ?? true))
             {
                 if (!lhs.FixedDimensionsCenterCell.Equals(rhs.FixedDimensionsCenterCell)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.InteriorLighting) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.InteriorLighting) ?? true))
             {
                 if (!lhs.InteriorLighting.Equals(rhs.InteriorLighting)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.EncounterZone) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.EncounterZone) ?? true))
             {
                 if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Parent, rhs.Parent, out var lhsParent, out var rhsParent, out var isParentEqual))
                 {
-                    if (!((WorldspaceParentCommon)((IWorldspaceParentGetter)lhsParent).CommonInstance()!).Equals(lhsParent, rhsParent, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.Parent))) return false;
+                    if (!((WorldspaceParentCommon)((IWorldspaceParentGetter)lhsParent).CommonInstance()!).Equals(lhsParent, rhsParent, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.Parent))) return false;
                 }
                 else if (!isParentEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
                 if (!lhs.Climate.Equals(rhs.Climate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
                 if (!lhs.Water.Equals(rhs.Water)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWater) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWater) ?? true))
             {
                 if (!lhs.LodWater.Equals(rhs.LodWater)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWaterHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWaterHeight) ?? true))
             {
                 if (!lhs.LodWaterHeight.EqualsWithin(rhs.LodWaterHeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LandDefaults) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LandDefaults) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LandDefaults, rhs.LandDefaults, out var lhsLandDefaults, out var rhsLandDefaults, out var isLandDefaultsEqual))
                 {
-                    if (!((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)lhsLandDefaults).CommonInstance()!).Equals(lhsLandDefaults, rhsLandDefaults, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.LandDefaults))) return false;
+                    if (!((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)lhsLandDefaults).CommonInstance()!).Equals(lhsLandDefaults, rhsLandDefaults, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.LandDefaults))) return false;
                 }
                 else if (!isLandDefaultsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapImage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapImage) ?? true))
             {
                 if (!object.Equals(lhs.MapImage, rhs.MapImage)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.CloudModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CloudModel) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CloudModel, rhs.CloudModel, out var lhsCloudModel, out var rhsCloudModel, out var isCloudModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsCloudModel).CommonInstance()!).Equals(lhsCloudModel, rhsCloudModel, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.CloudModel))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsCloudModel).CommonInstance()!).Equals(lhsCloudModel, rhsCloudModel, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.CloudModel))) return false;
                 }
                 else if (!isCloudModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MapData, rhs.MapData, out var lhsMapData, out var rhsMapData, out var isMapDataEqual))
                 {
-                    if (!((WorldspaceMapCommon)((IWorldspaceMapGetter)lhsMapData).CommonInstance()!).Equals(lhsMapData, rhsMapData, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.MapData))) return false;
+                    if (!((WorldspaceMapCommon)((IWorldspaceMapGetter)lhsMapData).CommonInstance()!).Equals(lhsMapData, rhsMapData, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.MapData))) return false;
                 }
                 else if (!isMapDataEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapOffsetScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapOffsetScale) ?? true))
             {
                 if (!lhs.WorldMapOffsetScale.EqualsWithin(rhs.WorldMapOffsetScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapCellOffset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapCellOffset) ?? true))
             {
                 if (!lhs.WorldMapCellOffset.Equals(rhs.WorldMapCellOffset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.DistantLodMultiplier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DistantLodMultiplier) ?? true))
             {
                 if (!lhs.DistantLodMultiplier.EqualsWithin(rhs.DistantLodMultiplier)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
             {
                 if (!lhs.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
             {
                 if (!lhs.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
                 if (!lhs.Music.Equals(rhs.Music)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.CanopyShadow) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CanopyShadow) ?? true))
             {
                 if (!object.Equals(lhs.CanopyShadow, rhs.CanopyShadow)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterNoiseTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterNoiseTexture) ?? true))
             {
                 if (!object.Equals(lhs.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodDiffuseTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodDiffuseTexture) ?? true))
             {
                 if (!object.Equals(lhs.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodNormalTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodNormalTexture) ?? true))
             {
                 if (!object.Equals(lhs.HdLodNormalTexture, rhs.HdLodNormalTexture)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterEnvironmentMap) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterEnvironmentMap) ?? true))
             {
                 if (!object.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.OffsetData, rhs.OffsetData)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.OffsetData, rhs.OffsetData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.TopCell, rhs.TopCell, out var lhsTopCell, out var rhsTopCell, out var isTopCellEqual))
                 {
-                    if (!((CellCommon)((ICellGetter)lhsTopCell).CommonInstance()!).Equals(lhsTopCell, rhsTopCell, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell))) return false;
+                    if (!((CellCommon)((ICellGetter)lhsTopCell).CommonInstance()!).Equals(lhsTopCell, rhsTopCell, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell))) return false;
                 }
                 else if (!isTopCellEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
             {
                 if (lhs.SubCellsTimestamp != rhs.SubCellsTimestamp) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsUnknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsUnknown) ?? true))
             {
                 if (lhs.SubCellsUnknown != rhs.SubCellsUnknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
-                if (!lhs.SubCells.SequenceEqual(rhs.SubCells, (l, r) => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ONAMDataTypeState) ?? true))
-            {
-                if (lhs.ONAMDataTypeState != rhs.ONAMDataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM0DataTypeState) ?? true))
-            {
-                if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM9DataTypeState) ?? true))
-            {
-                if (lhs.NAM9DataTypeState != rhs.NAM9DataTypeState) return false;
+                if (!lhs.SubCells.SequenceEqual(rhs.SubCells, (l, r) => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells)))) return false;
             }
             return true;
         }
@@ -3746,23 +3612,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWorldspaceGetter?)lhs,
                 rhs: rhs as IWorldspaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWorldspaceGetter?)lhs,
                 rhs: rhs as IWorldspaceGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IWorldspaceGetter item)
@@ -3852,9 +3718,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.SubCellsTimestamp);
             hash.Add(item.SubCellsUnknown);
             hash.Add(item.SubCells);
-            hash.Add(item.ONAMDataTypeState);
-            hash.Add(item.NAM0DataTypeState);
-            hash.Add(item.NAM9DataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -5041,18 +4904,6 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ONAMDataTypeState) ?? true))
-            {
-                item.ONAMDataTypeState = rhs.ONAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM0DataTypeState) ?? true))
-            {
-                item.NAM0DataTypeState = rhs.NAM0DataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.NAM9DataTypeState) ?? true))
-            {
-                item.NAM9DataTypeState = rhs.NAM9DataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -5862,7 +5713,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IWorldspaceMapGetter? MapData => _MapDataLocation.HasValue ? WorldspaceMapBinaryOverlay.WorldspaceMapFactory(_recordData.Slice(_MapDataLocation!.Value.Min), _package) : default;
         #endregion
         private RangeInt32? _ONAMLocation;
-        public Worldspace.ONAMDataType ONAMDataTypeState { get; private set; }
         #region WorldMapOffsetScale
         private int _WorldMapOffsetScaleLocation => _ONAMLocation!.Value.Min;
         private bool _WorldMapOffsetScale_IsSet => _ONAMLocation.HasValue;
@@ -5882,7 +5732,6 @@ namespace Mutagen.Bethesda.Skyrim
         public Worldspace.Flag Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Worldspace.Flag);
         #endregion
         private RangeInt32? _NAM0Location;
-        public Worldspace.NAM0DataType NAM0DataTypeState { get; private set; }
         #region ObjectBoundsMin
         private int _ObjectBoundsMinLocation => _NAM0Location!.Value.Min;
         public partial P2Float GetObjectBoundsMinCustom();
@@ -5890,7 +5739,6 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomObjectBoundsMinEndPos();
         #endregion
         private RangeInt32? _NAM9Location;
-        public Worldspace.NAM9DataType NAM9DataTypeState { get; private set; }
         #region ObjectBoundsMax
         private int _ObjectBoundsMaxLocation => _NAM9Location!.Value.Min;
         public partial P2Float GetObjectBoundsMaxCustom();
@@ -6217,12 +6065,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IWorldspaceGetter rhs) return false;
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceGetter? obj)
         {
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).GetHashCode(this);

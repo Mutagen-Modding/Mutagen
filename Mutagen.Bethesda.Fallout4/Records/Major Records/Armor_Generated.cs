@@ -360,12 +360,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region DATADataTypeState
-        public Armor.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
-        #region FNAMDataTypeState
-        public Armor.FNAMDataType FNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -420,8 +414,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TemplateArmor = initialValue;
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
-                this.DATADataTypeState = initialValue;
-                this.FNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -431,6 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -459,16 +452,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Resistances,
                 TItem TemplateArmor,
                 TItem AttachParentSlots,
-                TItem ObjectTemplates,
-                TItem DATADataTypeState,
-                TItem FNAMDataTypeState)
+                TItem ObjectTemplates)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -499,8 +491,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TemplateArmor = TemplateArmor;
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
-                this.DATADataTypeState = DATADataTypeState;
-                this.FNAMDataTypeState = FNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -541,8 +531,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem TemplateArmor;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
-            public TItem DATADataTypeState;
-            public TItem FNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -585,8 +573,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.TemplateArmor, rhs.TemplateArmor)) return false;
                 if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
                 if (!object.Equals(this.ObjectTemplates, rhs.ObjectTemplates)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-                if (!object.Equals(this.FNAMDataTypeState, rhs.FNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -621,8 +607,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.TemplateArmor);
                 hash.Add(this.AttachParentSlots);
                 hash.Add(this.ObjectTemplates);
-                hash.Add(this.DATADataTypeState);
-                hash.Add(this.FNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -733,8 +717,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.DATADataTypeState)) return false;
-                if (!eval(this.FNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -843,8 +825,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.DATADataTypeState)) return true;
-                if (eval(this.FNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -960,8 +940,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
-                obj.FNAMDataTypeState = eval(this.FNAMDataTypeState);
             }
             #endregion
 
@@ -1176,14 +1154,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
-                    if (printMask?.FNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1224,8 +1194,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? TemplateArmor;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
-            public Exception? DATADataTypeState;
-            public Exception? FNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1292,10 +1260,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return AttachParentSlots;
                     case Armor_FieldIndex.ObjectTemplates:
                         return ObjectTemplates;
-                    case Armor_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
-                    case Armor_FieldIndex.FNAMDataTypeState:
-                        return FNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1392,12 +1356,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Armor_FieldIndex.ObjectTemplates:
                         this.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Armor_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
-                    case Armor_FieldIndex.FNAMDataTypeState:
-                        this.FNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1497,12 +1455,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Armor_FieldIndex.ObjectTemplates:
                         this.ObjectTemplates = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>)obj;
                         break;
-                    case Armor_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
-                    case Armor_FieldIndex.FNAMDataTypeState:
-                        this.FNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1541,8 +1493,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (TemplateArmor != null) return true;
                 if (AttachParentSlots != null) return true;
                 if (ObjectTemplates != null) return true;
-                if (DATADataTypeState != null) return true;
-                if (FNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1728,12 +1678,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
-                {
-                    sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1747,7 +1691,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.ObjectEffect = this.ObjectEffect.Combine(rhs.ObjectEffect);
-                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
+                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
                 ret.BipedBodyTemplate = this.BipedBodyTemplate.Combine(rhs.BipedBodyTemplate, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
@@ -1756,10 +1700,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.BlockBashImpactDataSet = this.BlockBashImpactDataSet.Combine(rhs.BlockBashImpactDataSet);
                 ret.AlternateBlockMaterial = this.AlternateBlockMaterial.Combine(rhs.AlternateBlockMaterial);
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.InstanceNaming = this.InstanceNaming.Combine(rhs.InstanceNaming);
-                ret.Armatures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorAddonModel.ErrorMask?>>?>(ExceptionExt.Combine(this.Armatures?.Overall, rhs.Armatures?.Overall), ExceptionExt.Combine(this.Armatures?.Specific, rhs.Armatures?.Specific));
+                ret.Armatures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorAddonModel.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Armatures?.Overall, rhs.Armatures?.Overall), Noggog.ExceptionExt.Combine(this.Armatures?.Specific, rhs.Armatures?.Specific));
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.Health = this.Health.Combine(rhs.Health);
@@ -1767,12 +1711,10 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.BaseAddonIndex = this.BaseAddonIndex.Combine(rhs.BaseAddonIndex);
                 ret.StaggerRating = this.StaggerRating.Combine(rhs.StaggerRating);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>(ExceptionExt.Combine(this.Resistances?.Overall, rhs.Resistances?.Overall), ExceptionExt.Combine(this.Resistances?.Specific, rhs.Resistances?.Specific));
+                ret.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resistances?.Overall, rhs.Resistances?.Overall), Noggog.ExceptionExt.Combine(this.Resistances?.Specific, rhs.Resistances?.Specific));
                 ret.TemplateArmor = this.TemplateArmor.Combine(rhs.TemplateArmor);
-                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
-                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-                ret.FNAMDataTypeState = this.FNAMDataTypeState.Combine(rhs.FNAMDataTypeState);
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1824,8 +1766,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool TemplateArmor;
             public bool AttachParentSlots;
             public ObjectTemplate.TranslationMask? ObjectTemplates;
-            public bool DATADataTypeState;
-            public bool FNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1855,8 +1795,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Unknown = defaultOn;
                 this.TemplateArmor = defaultOn;
                 this.AttachParentSlots = defaultOn;
-                this.DATADataTypeState = defaultOn;
-                this.FNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1893,8 +1831,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((TemplateArmor, null));
                 ret.Add((AttachParentSlots, null));
                 ret.Add((ObjectTemplates == null ? DefaultOn : !ObjectTemplates.GetCrystal().CopyNothing, ObjectTemplates?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
-                ret.Add((FNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1956,14 +1892,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum DATADataType
-        {
-        }
-        [Flags]
-        public enum FNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1972,12 +1900,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IArmorGetter rhs) return false;
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IArmorGetter? obj)
         {
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2106,8 +2034,6 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IArmorGetter> TemplateArmor { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new ExtendedList<ObjectTemplate<Armor.Property>>? ObjectTemplates { get; set; }
-        new Armor.DATADataType DATADataTypeState { get; set; }
-        new Armor.FNAMDataType FNAMDataTypeState { get; set; }
         #region Mutagen
         new Armor.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2198,8 +2124,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IArmorGetter> TemplateArmor { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         IReadOnlyList<IObjectTemplateGetter<Armor.Property>>? ObjectTemplates { get; }
-        Armor.DATADataType DATADataTypeState { get; }
-        Armor.FNAMDataType FNAMDataTypeState { get; }
 
         #region Mutagen
         Armor.MajorFlag MajorFlags { get; }
@@ -2260,7 +2184,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2336,6 +2260,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Armor Duplicate(
+            this IArmorGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2368,37 +2303,36 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        Name = 9,
-        ObjectEffect = 10,
-        WorldModel = 11,
-        BipedBodyTemplate = 12,
-        Destructible = 13,
-        PickUpSound = 14,
-        PutDownSound = 15,
-        EquipmentType = 16,
-        BlockBashImpactDataSet = 17,
-        AlternateBlockMaterial = 18,
-        Race = 19,
-        Keywords = 20,
-        Description = 21,
-        InstanceNaming = 22,
-        Armatures = 23,
-        Value = 24,
-        Weight = 25,
-        Health = 26,
-        ArmorRating = 27,
-        BaseAddonIndex = 28,
-        StaggerRating = 29,
-        Unknown = 30,
-        Resistances = 31,
-        TemplateArmor = 32,
-        AttachParentSlots = 33,
-        ObjectTemplates = 34,
-        DATADataTypeState = 35,
-        FNAMDataTypeState = 36,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        Name = 10,
+        ObjectEffect = 11,
+        WorldModel = 12,
+        BipedBodyTemplate = 13,
+        Destructible = 14,
+        PickUpSound = 15,
+        PutDownSound = 16,
+        EquipmentType = 17,
+        BlockBashImpactDataSet = 18,
+        AlternateBlockMaterial = 19,
+        Race = 20,
+        Keywords = 21,
+        Description = 22,
+        InstanceNaming = 23,
+        Armatures = 24,
+        Value = 25,
+        Weight = 26,
+        Health = 27,
+        ArmorRating = 28,
+        BaseAddonIndex = 29,
+        StaggerRating = 30,
+        Unknown = 31,
+        Resistances = 32,
+        TemplateArmor = 33,
+        AttachParentSlots = 34,
+        ObjectTemplates = 35,
     }
     #endregion
 
@@ -2416,9 +2350,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "c4d097a3-85cc-49c7-8a94-606c9086f0ca";
 
-        public const ushort AdditionalFieldCount = 31;
+        public const ushort AdditionalFieldCount = 29;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(Armor.Mask<>);
 
@@ -2597,8 +2531,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.TemplateArmor.Clear();
             item.AttachParentSlots = null;
             item.ObjectTemplates = null;
-            item.DATADataTypeState = default;
-            item.FNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2761,8 +2693,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.ObjectTemplates,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
-            ret.FNAMDataTypeState = item.FNAMDataTypeState == rhs.FNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2988,14 +2918,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
-            if (printMask?.FNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
-            }
         }
         
         public static Armor_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -3014,8 +2936,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Armor_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Armor_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Armor_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3032,7 +2956,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Armor_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3040,149 +2964,141 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IArmorGetter? lhs,
             IArmorGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Armor_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Armor_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ObjectEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectEffect) ?? true))
             {
                 if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.WorldModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.WorldModel) ?? true))
             {
                 if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.BipedBodyTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.BipedBodyTemplate) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.BipedBodyTemplate, rhs.BipedBodyTemplate, out var lhsBipedBodyTemplate, out var rhsBipedBodyTemplate, out var isBipedBodyTemplateEqual))
                 {
-                    if (!((BipedBodyTemplateCommon)((IBipedBodyTemplateGetter)lhsBipedBodyTemplate).CommonInstance()!).Equals(lhsBipedBodyTemplate, rhsBipedBodyTemplate, crystal?.GetSubCrystal((int)Armor_FieldIndex.BipedBodyTemplate))) return false;
+                    if (!((BipedBodyTemplateCommon)((IBipedBodyTemplateGetter)lhsBipedBodyTemplate).CommonInstance()!).Equals(lhsBipedBodyTemplate, rhsBipedBodyTemplate, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.BipedBodyTemplate))) return false;
                 }
                 else if (!isBipedBodyTemplateEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Armor_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.EquipmentType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.EquipmentType) ?? true))
             {
                 if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.BlockBashImpactDataSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.BlockBashImpactDataSet) ?? true))
             {
                 if (!lhs.BlockBashImpactDataSet.Equals(rhs.BlockBashImpactDataSet)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.AlternateBlockMaterial) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.AlternateBlockMaterial) ?? true))
             {
                 if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Race) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Race) ?? true))
             {
                 if (!lhs.Race.Equals(rhs.Race)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.InstanceNaming) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.InstanceNaming) ?? true))
             {
                 if (!lhs.InstanceNaming.Equals(rhs.InstanceNaming)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Armatures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Armatures) ?? true))
             {
-                if (!lhs.Armatures.SequenceEqual(rhs.Armatures, (l, r) => ((ArmorAddonModelCommon)((IArmorAddonModelGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Armor_FieldIndex.Armatures)))) return false;
+                if (!lhs.Armatures.SequenceEqual(rhs.Armatures, (l, r) => ((ArmorAddonModelCommon)((IArmorAddonModelGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Armatures)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Health) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Health) ?? true))
             {
                 if (lhs.Health != rhs.Health) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ArmorRating) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ArmorRating) ?? true))
             {
                 if (lhs.ArmorRating != rhs.ArmorRating) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.BaseAddonIndex) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.BaseAddonIndex) ?? true))
             {
                 if (lhs.BaseAddonIndex != rhs.BaseAddonIndex) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.StaggerRating) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.StaggerRating) ?? true))
             {
                 if (lhs.StaggerRating != rhs.StaggerRating) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Resistances) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Resistances) ?? true))
             {
-                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances, (l, r) => ((ArmorResistanceCommon)((IArmorResistanceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Armor_FieldIndex.Resistances)))) return false;
+                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances, (l, r) => ((ArmorResistanceCommon)((IArmorResistanceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Resistances)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.TemplateArmor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.TemplateArmor) ?? true))
             {
                 if (!lhs.TemplateArmor.Equals(rhs.TemplateArmor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.AttachParentSlots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.AttachParentSlots) ?? true))
             {
                 if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ObjectTemplates) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectTemplates) ?? true))
             {
-                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Armor.Property>)((IObjectTemplateGetter<Armor.Property>)l).CommonInstance(typeof(Armor.Property))!).Equals(l, r, crystal?.GetSubCrystal((int)Armor_FieldIndex.ObjectTemplates)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.FNAMDataTypeState) ?? true))
-            {
-                if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Armor.Property>)((IObjectTemplateGetter<Armor.Property>)l).CommonInstance(typeof(Armor.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.ObjectTemplates)))) return false;
             }
             return true;
         }
@@ -3190,23 +3106,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IArmorGetter?)lhs,
                 rhs: rhs as IArmorGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IArmorGetter?)lhs,
                 rhs: rhs as IArmorGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IArmorGetter item)
@@ -3259,8 +3175,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.TemplateArmor);
             hash.Add(item.AttachParentSlots);
             hash.Add(item.ObjectTemplates);
-            hash.Add(item.DATADataTypeState);
-            hash.Add(item.FNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3789,14 +3703,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.FNAMDataTypeState) ?? true))
-            {
-                item.FNAMDataTypeState = rhs.FNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -3944,15 +3850,6 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryWriteTranslator
     {
         public new static readonly ArmorBinaryWriteTranslation Instance = new();
-
-        public static void WriteEmbedded(
-            IArmorGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IArmorGetter item,
@@ -4143,7 +4040,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -4203,15 +4100,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ArmorBinaryCreateTranslation Instance = new ArmorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ARMO;
-        public static void FillBinaryStructs(
-            IArmorInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IArmorInternal item,
             MutagenFrame frame,
@@ -4578,7 +4466,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         public IReadOnlyList<IArmorAddonModelGetter> Armatures { get; private set; } = Array.Empty<IArmorAddonModelGetter>();
         private RangeInt32? _DATALocation;
-        public Armor.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
@@ -4595,7 +4482,6 @@ namespace Mutagen.Bethesda.Fallout4
         public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HealthLocation, 4)) : default;
         #endregion
         private RangeInt32? _FNAMLocation;
-        public Armor.FNAMDataType FNAMDataTypeState { get; private set; }
         #region ArmorRating
         private int _ArmorRatingLocation => _FNAMLocation!.Value.Min;
         private bool _ArmorRating_IsSet => _FNAMLocation.HasValue;
@@ -4920,12 +4806,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IArmorGetter rhs) return false;
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IArmorGetter? obj)
         {
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).GetHashCode(this);

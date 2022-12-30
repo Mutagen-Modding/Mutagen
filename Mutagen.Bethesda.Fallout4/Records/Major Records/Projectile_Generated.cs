@@ -314,9 +314,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region SoundLevel
         public UInt32 SoundLevel { get; set; } = default;
         #endregion
-        #region DNAMDataTypeState
-        public Projectile.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -375,7 +372,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MuzzleFlashModel = initialValue;
                 this.TextureFilesHashes = initialValue;
                 this.SoundLevel = initialValue;
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -385,6 +381,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
@@ -417,15 +414,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VATSProjectile,
                 TItem MuzzleFlashModel,
                 TItem TextureFilesHashes,
-                TItem SoundLevel,
-                TItem DNAMDataTypeState)
+                TItem SoundLevel)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -460,7 +457,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MuzzleFlashModel = MuzzleFlashModel;
                 this.TextureFilesHashes = TextureFilesHashes;
                 this.SoundLevel = SoundLevel;
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -505,7 +501,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem MuzzleFlashModel;
             public TItem TextureFilesHashes;
             public TItem SoundLevel;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -552,7 +547,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
                 if (!object.Equals(this.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
                 if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -591,7 +585,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.MuzzleFlashModel);
                 hash.Add(this.TextureFilesHashes);
                 hash.Add(this.SoundLevel);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -647,7 +640,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.MuzzleFlashModel)) return false;
                 if (!eval(this.TextureFilesHashes)) return false;
                 if (!eval(this.SoundLevel)) return false;
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -701,7 +693,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.MuzzleFlashModel)) return true;
                 if (eval(this.TextureFilesHashes)) return true;
                 if (eval(this.SoundLevel)) return true;
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -750,7 +741,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.MuzzleFlashModel = eval(this.MuzzleFlashModel);
                 obj.TextureFilesHashes = eval(this.TextureFilesHashes);
                 obj.SoundLevel = eval(this.SoundLevel);
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -901,10 +891,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(SoundLevel, "SoundLevel");
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -949,7 +935,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? MuzzleFlashModel;
             public Exception? TextureFilesHashes;
             public Exception? SoundLevel;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1024,8 +1009,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return TextureFilesHashes;
                     case Projectile_FieldIndex.SoundLevel:
                         return SoundLevel;
-                    case Projectile_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1134,9 +1117,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Projectile_FieldIndex.SoundLevel:
                         this.SoundLevel = ex;
-                        break;
-                    case Projectile_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1248,9 +1228,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Projectile_FieldIndex.SoundLevel:
                         this.SoundLevel = (Exception?)obj;
                         break;
-                    case Projectile_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1293,7 +1270,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (MuzzleFlashModel != null) return true;
                 if (TextureFilesHashes != null) return true;
                 if (SoundLevel != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1413,9 +1389,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(SoundLevel, "SoundLevel");
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -1457,7 +1430,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MuzzleFlashModel = this.MuzzleFlashModel.Combine(rhs.MuzzleFlashModel);
                 ret.TextureFilesHashes = this.TextureFilesHashes.Combine(rhs.TextureFilesHashes);
                 ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1513,7 +1485,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool MuzzleFlashModel;
             public bool TextureFilesHashes;
             public bool SoundLevel;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -1552,7 +1523,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MuzzleFlashModel = defaultOn;
                 this.TextureFilesHashes = defaultOn;
                 this.SoundLevel = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1593,7 +1563,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((MuzzleFlashModel, null));
                 ret.Add((TextureFilesHashes, null));
                 ret.Add((SoundLevel, null));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1650,10 +1619,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IProjectile);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1662,12 +1627,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IProjectileGetter rhs) return false;
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IProjectileGetter? obj)
         {
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1790,7 +1755,6 @@ namespace Mutagen.Bethesda.Fallout4
         new String MuzzleFlashModel { get; set; }
         new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new UInt32 SoundLevel { get; set; }
-        new Projectile.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IProjectileInternal :
@@ -1867,7 +1831,6 @@ namespace Mutagen.Bethesda.Fallout4
         String MuzzleFlashModel { get; }
         ReadOnlyMemorySlice<Byte>? TextureFilesHashes { get; }
         UInt32 SoundLevel { get; }
-        Projectile.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -1924,7 +1887,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2000,6 +1963,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Projectile Duplicate(
+            this IProjectileGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2032,40 +2006,40 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Model = 8,
-        Destructible = 9,
-        Unused = 10,
-        Flags = 11,
-        Type = 12,
-        Gravity = 13,
-        Speed = 14,
-        Range = 15,
-        Light = 16,
-        MuzzleFlash = 17,
-        ExplosionAltTriggerProximity = 18,
-        ExplosionAltTriggerTimer = 19,
-        Explosion = 20,
-        Sound = 21,
-        MuzzleFlashDuration = 22,
-        FadeDuration = 23,
-        ImpactForce = 24,
-        CountdownSound = 25,
-        DisaleSound = 26,
-        DefaultWeaponSource = 27,
-        ConeSpread = 28,
-        CollisionRadius = 29,
-        Lifetime = 30,
-        RelaunchInterval = 31,
-        DecalData = 32,
-        CollisionLayer = 33,
-        TracerFrequency = 34,
-        VATSProjectile = 35,
-        MuzzleFlashModel = 36,
-        TextureFilesHashes = 37,
-        SoundLevel = 38,
-        DNAMDataTypeState = 39,
+        Fallout4MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        Destructible = 10,
+        Unused = 11,
+        Flags = 12,
+        Type = 13,
+        Gravity = 14,
+        Speed = 15,
+        Range = 16,
+        Light = 17,
+        MuzzleFlash = 18,
+        ExplosionAltTriggerProximity = 19,
+        ExplosionAltTriggerTimer = 20,
+        Explosion = 21,
+        Sound = 22,
+        MuzzleFlashDuration = 23,
+        FadeDuration = 24,
+        ImpactForce = 25,
+        CountdownSound = 26,
+        DisaleSound = 27,
+        DefaultWeaponSource = 28,
+        ConeSpread = 29,
+        CollisionRadius = 30,
+        Lifetime = 31,
+        RelaunchInterval = 32,
+        DecalData = 33,
+        CollisionLayer = 34,
+        TracerFrequency = 35,
+        VATSProjectile = 36,
+        MuzzleFlashModel = 37,
+        TextureFilesHashes = 38,
+        SoundLevel = 39,
     }
     #endregion
 
@@ -2083,7 +2057,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "12c18f9e-ca09-4481-b659-f8d7c4498b9e";
 
-        public const ushort AdditionalFieldCount = 34;
+        public const ushort AdditionalFieldCount = 33;
 
         public const ushort FieldCount = 40;
 
@@ -2214,7 +2188,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.MuzzleFlashModel = string.Empty;
             item.TextureFilesHashes = default;
             item.SoundLevel = default;
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2323,7 +2296,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unused = MemorySliceExt.Equal(item.Unused, rhs.Unused);
+            ret.Unused = MemorySliceExt.SequenceEqual(item.Unused, rhs.Unused);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Type = item.Type == rhs.Type;
             ret.Gravity = item.Gravity.EqualsWithin(rhs.Gravity);
@@ -2350,9 +2323,8 @@ namespace Mutagen.Bethesda.Fallout4
             ret.TracerFrequency = item.TracerFrequency == rhs.TracerFrequency;
             ret.VATSProjectile = item.VATSProjectile.Equals(rhs.VATSProjectile);
             ret.MuzzleFlashModel = string.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
-            ret.TextureFilesHashes = MemorySliceExt.Equal(item.TextureFilesHashes, rhs.TextureFilesHashes);
+            ret.TextureFilesHashes = MemorySliceExt.SequenceEqual(item.TextureFilesHashes, rhs.TextureFilesHashes);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2539,10 +2511,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static Projectile_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2561,8 +2529,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Projectile_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Projectile_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Projectile_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2579,7 +2549,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Projectile_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2587,157 +2557,153 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IProjectileGetter? lhs,
             IProjectileGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Projectile_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Projectile_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Projectile_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Projectile_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Projectile_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Projectile_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Unused) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.Unused, rhs.Unused)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Unused, rhs.Unused)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Gravity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Gravity) ?? true))
             {
                 if (!lhs.Gravity.EqualsWithin(rhs.Gravity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Speed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Speed) ?? true))
             {
                 if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Range) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Range) ?? true))
             {
                 if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
             {
                 if (!lhs.Light.Equals(rhs.Light)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlash) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlash) ?? true))
             {
                 if (!lhs.MuzzleFlash.Equals(rhs.MuzzleFlash)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerProximity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerProximity) ?? true))
             {
                 if (!lhs.ExplosionAltTriggerProximity.EqualsWithin(rhs.ExplosionAltTriggerProximity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerTimer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerTimer) ?? true))
             {
                 if (!lhs.ExplosionAltTriggerTimer.EqualsWithin(rhs.ExplosionAltTriggerTimer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
             {
                 if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
             {
                 if (!lhs.MuzzleFlashDuration.EqualsWithin(rhs.MuzzleFlashDuration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.FadeDuration) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.FadeDuration) ?? true))
             {
                 if (!lhs.FadeDuration.EqualsWithin(rhs.FadeDuration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ImpactForce) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ImpactForce) ?? true))
             {
                 if (!lhs.ImpactForce.EqualsWithin(rhs.ImpactForce)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
             {
                 if (!lhs.CountdownSound.Equals(rhs.CountdownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DisaleSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DisaleSound) ?? true))
             {
                 if (!lhs.DisaleSound.Equals(rhs.DisaleSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
             {
                 if (!lhs.DefaultWeaponSource.Equals(rhs.DefaultWeaponSource)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ConeSpread) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ConeSpread) ?? true))
             {
                 if (!lhs.ConeSpread.EqualsWithin(rhs.ConeSpread)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionRadius) ?? true))
             {
                 if (!lhs.CollisionRadius.EqualsWithin(rhs.CollisionRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Lifetime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Lifetime) ?? true))
             {
                 if (!lhs.Lifetime.EqualsWithin(rhs.Lifetime)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.RelaunchInterval) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.RelaunchInterval) ?? true))
             {
                 if (!lhs.RelaunchInterval.EqualsWithin(rhs.RelaunchInterval)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DecalData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DecalData) ?? true))
             {
                 if (!lhs.DecalData.Equals(rhs.DecalData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionLayer) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionLayer) ?? true))
             {
                 if (!lhs.CollisionLayer.Equals(rhs.CollisionLayer)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.TracerFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.TracerFrequency) ?? true))
             {
                 if (lhs.TracerFrequency != rhs.TracerFrequency) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.VATSProjectile) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.VATSProjectile) ?? true))
             {
                 if (!lhs.VATSProjectile.Equals(rhs.VATSProjectile)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
             {
                 if (!string.Equals(lhs.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.SoundLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.SoundLevel) ?? true))
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -2745,23 +2711,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IProjectileGetter?)lhs,
                 rhs: rhs as IProjectileGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IProjectileGetter?)lhs,
                 rhs: rhs as IProjectileGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IProjectileGetter item)
@@ -2815,7 +2781,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(TextureFilesHashesItem);
             }
             hash.Add(item.SoundLevel);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3151,10 +3116,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.SoundLevel = rhs.SoundLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -3303,15 +3264,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ProjectileBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IProjectileGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IProjectileGetter item,
             MutagenWriter writer,
@@ -3454,7 +3406,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3514,15 +3466,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ProjectileBinaryCreateTranslation Instance = new ProjectileBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PROJ;
-        public static void FillBinaryStructs(
-            IProjectileInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IProjectileInternal item,
             MutagenFrame frame,
@@ -3742,7 +3685,6 @@ namespace Mutagen.Bethesda.Fallout4
         public ReadOnlyMemorySlice<Byte>? Unused => _UnusedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnusedLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         private RangeInt32? _DNAMLocation;
-        public Projectile.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
@@ -4048,12 +3990,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IProjectileGetter rhs) return false;
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IProjectileGetter? obj)
         {
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).GetHashCode(this);

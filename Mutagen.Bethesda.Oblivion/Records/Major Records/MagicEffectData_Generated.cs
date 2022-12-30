@@ -125,12 +125,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IMagicEffectDataGetter rhs) return false;
-            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectDataGetter? obj)
         {
-            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MagicEffectDataCommon)((IMagicEffectDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1271,54 +1271,54 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IMagicEffectDataGetter? lhs,
             IMagicEffectDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.BaseCost) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.BaseCost) ?? true))
             {
                 if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.MagicSchool) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.MagicSchool) ?? true))
             {
                 if (lhs.MagicSchool != rhs.MagicSchool) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Resistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Resistance) ?? true))
             {
                 if (lhs.Resistance != rhs.Resistance) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.CounterEffectCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.CounterEffectCount) ?? true))
             {
                 if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Light) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Light) ?? true))
             {
                 if (!lhs.Light.Equals(rhs.Light)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.ProjectileSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.ProjectileSpeed) ?? true))
             {
                 if (!lhs.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.EffectShader) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.EffectShader) ?? true))
             {
                 if (!lhs.EffectShader.Equals(rhs.EffectShader)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SubData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SubData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SubData, rhs.SubData, out var lhsSubData, out var rhsSubData, out var isSubDataEqual))
                 {
-                    if (!((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)lhsSubData).CommonInstance()!).Equals(lhsSubData, rhsSubData, crystal?.GetSubCrystal((int)MagicEffectData_FieldIndex.SubData))) return false;
+                    if (!((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)lhsSubData).CommonInstance()!).Equals(lhsSubData, rhsSubData, equalsMask?.GetSubCrystal((int)MagicEffectData_FieldIndex.SubData))) return false;
                 }
                 else if (!isSubDataEqual) return false;
             }
@@ -1792,12 +1792,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IMagicEffectDataGetter rhs) return false;
-            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMagicEffectDataGetter? obj)
         {
-            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).GetHashCode(this);

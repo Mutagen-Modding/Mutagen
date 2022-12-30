@@ -199,12 +199,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITemplateActorsGetter rhs) return false;
-            return ((TemplateActorsCommon)((ITemplateActorsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TemplateActorsCommon)((ITemplateActorsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITemplateActorsGetter? obj)
         {
-            return ((TemplateActorsCommon)((ITemplateActorsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TemplateActorsCommon)((ITemplateActorsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TemplateActorsCommon)((ITemplateActorsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((TemplateActorsCommon)((ITemplateActorsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1417,58 +1417,58 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ITemplateActorsGetter? lhs,
             ITemplateActorsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.TraitTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.TraitTemplate) ?? true))
             {
                 if (!lhs.TraitTemplate.Equals(rhs.TraitTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.StatsTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.StatsTemplate) ?? true))
             {
                 if (!lhs.StatsTemplate.Equals(rhs.StatsTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.FactionsTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.FactionsTemplate) ?? true))
             {
                 if (!lhs.FactionsTemplate.Equals(rhs.FactionsTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.SpellListTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.SpellListTemplate) ?? true))
             {
                 if (!lhs.SpellListTemplate.Equals(rhs.SpellListTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.AiDataTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.AiDataTemplate) ?? true))
             {
                 if (!lhs.AiDataTemplate.Equals(rhs.AiDataTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.AiPackagesTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.AiPackagesTemplate) ?? true))
             {
                 if (!lhs.AiPackagesTemplate.Equals(rhs.AiPackagesTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.ModelOrAnimationTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.ModelOrAnimationTemplate) ?? true))
             {
                 if (!lhs.ModelOrAnimationTemplate.Equals(rhs.ModelOrAnimationTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.BaseDataTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.BaseDataTemplate) ?? true))
             {
                 if (!lhs.BaseDataTemplate.Equals(rhs.BaseDataTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.InventoryTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.InventoryTemplate) ?? true))
             {
                 if (!lhs.InventoryTemplate.Equals(rhs.InventoryTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.ScriptTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.ScriptTemplate) ?? true))
             {
                 if (!lhs.ScriptTemplate.Equals(rhs.ScriptTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.DefPackListTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.DefPackListTemplate) ?? true))
             {
                 if (!lhs.DefPackListTemplate.Equals(rhs.DefPackListTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.AttackDataTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.AttackDataTemplate) ?? true))
             {
                 if (!lhs.AttackDataTemplate.Equals(rhs.AttackDataTemplate)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)TemplateActors_FieldIndex.KeywordsTemplate) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TemplateActors_FieldIndex.KeywordsTemplate) ?? true))
             {
                 if (!lhs.KeywordsTemplate.Equals(rhs.KeywordsTemplate)) return false;
             }
@@ -1923,12 +1923,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not ITemplateActorsGetter rhs) return false;
-            return ((TemplateActorsCommon)((ITemplateActorsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((TemplateActorsCommon)((ITemplateActorsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ITemplateActorsGetter? obj)
         {
-            return ((TemplateActorsCommon)((ITemplateActorsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((TemplateActorsCommon)((ITemplateActorsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((TemplateActorsCommon)((ITemplateActorsGetter)this).CommonInstance()!).GetHashCode(this);

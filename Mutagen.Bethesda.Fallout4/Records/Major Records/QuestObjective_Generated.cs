@@ -98,12 +98,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestObjectiveGetter rhs) return false;
-            return ((QuestObjectiveCommon)((IQuestObjectiveGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestObjectiveCommon)((IQuestObjectiveGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestObjectiveGetter? obj)
         {
-            return ((QuestObjectiveCommon)((IQuestObjectiveGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestObjectiveCommon)((IQuestObjectiveGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestObjectiveCommon)((IQuestObjectiveGetter)this).CommonInstance()!).GetHashCode(this);
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Index = this.Index.Combine(rhs.Index);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.DisplayText = this.DisplayText.Combine(rhs.DisplayText);
-                ret.Targets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjectiveTarget.ErrorMask?>>?>(ExceptionExt.Combine(this.Targets?.Overall, rhs.Targets?.Overall), ExceptionExt.Combine(this.Targets?.Specific, rhs.Targets?.Specific));
+                ret.Targets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjectiveTarget.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Targets?.Overall, rhs.Targets?.Overall), Noggog.ExceptionExt.Combine(this.Targets?.Specific, rhs.Targets?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((QuestObjectiveCommon)((IQuestObjectiveGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1037,24 +1037,24 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IQuestObjectiveGetter? lhs,
             IQuestObjectiveGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)QuestObjective_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestObjective_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestObjective_FieldIndex.DisplayText) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.DisplayText) ?? true))
             {
                 if (!object.Equals(lhs.DisplayText, rhs.DisplayText)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestObjective_FieldIndex.Targets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.Targets) ?? true))
             {
-                if (!lhs.Targets.SequenceEqual(rhs.Targets, (l, r) => ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestObjective_FieldIndex.Targets)))) return false;
+                if (!lhs.Targets.SequenceEqual(rhs.Targets, (l, r) => ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)QuestObjective_FieldIndex.Targets)))) return false;
             }
             return true;
         }
@@ -1535,12 +1535,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IQuestObjectiveGetter rhs) return false;
-            return ((QuestObjectiveCommon)((IQuestObjectiveGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((QuestObjectiveCommon)((IQuestObjectiveGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IQuestObjectiveGetter? obj)
         {
-            return ((QuestObjectiveCommon)((IQuestObjectiveGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((QuestObjectiveCommon)((IQuestObjectiveGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((QuestObjectiveCommon)((IQuestObjectiveGetter)this).CommonInstance()!).GetHashCode(this);

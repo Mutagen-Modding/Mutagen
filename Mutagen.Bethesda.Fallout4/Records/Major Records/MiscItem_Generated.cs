@@ -273,9 +273,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region DATADataTypeState
-        public MiscItem.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -316,7 +313,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Weight = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>());
                 this.ComponentDisplayIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -326,6 +322,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -340,15 +337,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Value,
                 TItem Weight,
                 TItem Components,
-                TItem ComponentDisplayIndices,
-                TItem DATADataTypeState)
+                TItem ComponentDisplayIndices)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -365,7 +362,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Weight = Weight;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>());
                 this.ComponentDisplayIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ComponentDisplayIndices, Enumerable.Empty<(int Index, TItem Value)>());
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -392,7 +388,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Weight;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ComponentDisplayIndices;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -421,7 +416,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.ComponentDisplayIndices, rhs.ComponentDisplayIndices)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -442,7 +436,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Weight);
                 hash.Add(this.Components);
                 hash.Add(this.ComponentDisplayIndices);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -519,7 +512,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -594,7 +586,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -665,7 +656,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -793,10 +783,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -823,7 +809,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Weight;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MiscItemComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ComponentDisplayIndices;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -862,8 +847,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Components;
                     case MiscItem_FieldIndex.ComponentDisplayIndices:
                         return ComponentDisplayIndices;
-                    case MiscItem_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -918,9 +901,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case MiscItem_FieldIndex.ComponentDisplayIndices:
                         this.ComponentDisplayIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                        break;
-                    case MiscItem_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -978,9 +958,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case MiscItem_FieldIndex.ComponentDisplayIndices:
                         this.ComponentDisplayIndices = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case MiscItem_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1005,7 +982,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Weight != null) return true;
                 if (Components != null) return true;
                 if (ComponentDisplayIndices != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1116,9 +1092,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -1136,13 +1109,12 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.FeaturedItemMessage = this.FeaturedItemMessage.Combine(rhs.FeaturedItemMessage);
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
-                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MiscItemComponent.ErrorMask?>>?>(ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
-                ret.ComponentDisplayIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ComponentDisplayIndices?.Overall, rhs.ComponentDisplayIndices?.Overall), ExceptionExt.Combine(this.ComponentDisplayIndices?.Specific, rhs.ComponentDisplayIndices?.Specific));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MiscItemComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.ComponentDisplayIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ComponentDisplayIndices?.Overall, rhs.ComponentDisplayIndices?.Overall), Noggog.ExceptionExt.Combine(this.ComponentDisplayIndices?.Specific, rhs.ComponentDisplayIndices?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1180,7 +1152,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Weight;
             public MiscItemComponent.TranslationMask? Components;
             public bool ComponentDisplayIndices;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1198,7 +1169,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Value = defaultOn;
                 this.Weight = defaultOn;
                 this.ComponentDisplayIndices = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1221,7 +1191,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Weight, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((ComponentDisplayIndices, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1283,10 +1252,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1295,12 +1260,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMiscItemGetter rhs) return false;
-            return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMiscItemGetter? obj)
         {
-            return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1421,7 +1386,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Single Weight { get; set; }
         new ExtendedList<MiscItemComponent>? Components { get; set; }
         new ExtendedList<Byte>? ComponentDisplayIndices { get; set; }
-        new MiscItem.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new MiscItem.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1507,7 +1471,6 @@ namespace Mutagen.Bethesda.Fallout4
         Single Weight { get; }
         IReadOnlyList<IMiscItemComponentGetter>? Components { get; }
         IReadOnlyList<Byte>? ComponentDisplayIndices { get; }
-        MiscItem.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         MiscItem.MajorFlag MajorFlags { get; }
@@ -1568,7 +1531,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((MiscItemCommon)((IMiscItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1644,6 +1607,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static MiscItem Duplicate(
+            this IMiscItemGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((MiscItemCommon)((IMiscItemGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1676,22 +1650,22 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        Name = 9,
-        Model = 10,
-        Icons = 11,
-        Destructible = 12,
-        PickUpSound = 13,
-        PutDownSound = 14,
-        Keywords = 15,
-        FeaturedItemMessage = 16,
-        Value = 17,
-        Weight = 18,
-        Components = 19,
-        ComponentDisplayIndices = 20,
-        DATADataTypeState = 21,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        Name = 10,
+        Model = 11,
+        Icons = 12,
+        Destructible = 13,
+        PickUpSound = 14,
+        PutDownSound = 15,
+        Keywords = 16,
+        FeaturedItemMessage = 17,
+        Value = 18,
+        Weight = 19,
+        Components = 20,
+        ComponentDisplayIndices = 21,
     }
     #endregion
 
@@ -1709,7 +1683,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "f2257a52-1a56-4afd-8c11-7e84a50f21d8";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 15;
 
         public const ushort FieldCount = 22;
 
@@ -1830,7 +1804,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.Weight = default;
             item.Components = null;
             item.ComponentDisplayIndices = null;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1964,7 +1937,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.ComponentDisplayIndices,
                 (l, r) => l == r,
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2112,10 +2084,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static MiscItem_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -2134,8 +2102,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (MiscItem_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (MiscItem_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (MiscItem_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2152,7 +2122,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (MiscItem_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2160,93 +2130,89 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IMiscItemGetter? lhs,
             IMiscItemGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)MiscItem_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)MiscItem_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)MiscItem_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)MiscItem_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)MiscItem_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.FeaturedItemMessage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.FeaturedItemMessage) ?? true))
             {
                 if (!lhs.FeaturedItemMessage.Equals(rhs.FeaturedItemMessage)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.Components) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Components) ?? true))
             {
-                if (!lhs.Components.SequenceEqualNullable(rhs.Components, (l, r) => ((MiscItemComponentCommon)((IMiscItemComponentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MiscItem_FieldIndex.Components)))) return false;
+                if (!lhs.Components.SequenceEqualNullable(rhs.Components, (l, r) => ((MiscItemComponentCommon)((IMiscItemComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.Components)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.ComponentDisplayIndices) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ComponentDisplayIndices) ?? true))
             {
                 if (!lhs.ComponentDisplayIndices.SequenceEqualNullable(rhs.ComponentDisplayIndices)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)MiscItem_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -2254,23 +2220,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMiscItemGetter?)lhs,
                 rhs: rhs as IMiscItemGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IMiscItemGetter?)lhs,
                 rhs: rhs as IMiscItemGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IMiscItemGetter item)
@@ -2306,7 +2272,6 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Weight);
             hash.Add(item.Components);
             hash.Add(item.ComponentDisplayIndices);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2700,10 +2665,6 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2852,15 +2813,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly MiscItemBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IMiscItemGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IMiscItemGetter item,
             MutagenWriter writer,
@@ -2974,7 +2926,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -3034,15 +2986,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly MiscItemBinaryCreateTranslation Instance = new MiscItemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MISC;
-        public static void FillBinaryStructs(
-            IMiscItemInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IMiscItemInternal item,
             MutagenFrame frame,
@@ -3287,7 +3230,6 @@ namespace Mutagen.Bethesda.Fallout4
         public IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage => _FeaturedItemMessageLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FeaturedItemMessageLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
         #endregion
         private RangeInt32? _DATALocation;
-        public MiscItem.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
@@ -3529,12 +3471,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IMiscItemGetter rhs) return false;
-            return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IMiscItemGetter? obj)
         {
-            return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).GetHashCode(this);

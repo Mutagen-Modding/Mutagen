@@ -95,12 +95,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICombatStyleMeleeGetter rhs) return false;
-            return ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleMeleeGetter? obj)
         {
-            return ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1145,42 +1145,42 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ICombatStyleMeleeGetter? lhs,
             ICombatStyleMeleeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.AttackStaggeredMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.AttackStaggeredMult) ?? true))
             {
                 if (!lhs.AttackStaggeredMult.EqualsWithin(rhs.AttackStaggeredMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.PowerAttackStaggeredMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.PowerAttackStaggeredMult) ?? true))
             {
                 if (!lhs.PowerAttackStaggeredMult.EqualsWithin(rhs.PowerAttackStaggeredMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.PowerAttackBlockingMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.PowerAttackBlockingMult) ?? true))
             {
                 if (!lhs.PowerAttackBlockingMult.EqualsWithin(rhs.PowerAttackBlockingMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.BashMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.BashMult) ?? true))
             {
                 if (!lhs.BashMult.EqualsWithin(rhs.BashMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.BashRecoilMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.BashRecoilMult) ?? true))
             {
                 if (!lhs.BashRecoilMult.EqualsWithin(rhs.BashRecoilMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.BashAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.BashAttackMult) ?? true))
             {
                 if (!lhs.BashAttackMult.EqualsWithin(rhs.BashAttackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.BashPowerAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.BashPowerAttackMult) ?? true))
             {
                 if (!lhs.BashPowerAttackMult.EqualsWithin(rhs.BashPowerAttackMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.SpecialAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.SpecialAttackMult) ?? true))
             {
                 if (!lhs.SpecialAttackMult.EqualsWithin(rhs.SpecialAttackMult)) return false;
             }
@@ -1589,12 +1589,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not ICombatStyleMeleeGetter rhs) return false;
-            return ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ICombatStyleMeleeGetter? obj)
         {
-            return ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)this).CommonInstance()!).GetHashCode(this);

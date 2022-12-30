@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
-using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using Xunit;
 
@@ -15,7 +14,7 @@ public class FindAllOfSubrecordsTests : RecordSpanExtensionTests
         byte[] b = Array.Empty<byte>();
         RecordSpanExtensions.FindAllOfSubrecords(
                 new ReadOnlyMemorySlice<byte>(b), GameConstants.Oblivion,
-                RecordTypes.EDID, RecordTypes.FNAM)
+                TestRecordTypes.EDID, TestRecordTypes.FNAM)
             .Should().BeEmpty();
     }
     
@@ -24,12 +23,12 @@ public class FindAllOfSubrecordsTests : RecordSpanExtensionTests
     {
         var result = RecordSpanExtensions.FindAllOfSubrecords(
             Repeating(), GameConstants.Oblivion,
-            RecordTypes.FNAM, RecordTypes.XNAM);
+            TestRecordTypes.FNAM, TestRecordTypes.XNAM);
         result.Should().HaveCount(2);
-        result[0].RecordType.Should().Be(RecordTypes.FNAM);
+        result[0].RecordType.Should().Be(TestRecordTypes.FNAM);
         result[0].ContentLength.Should().Be(9);
         result[0].Location.Should().Be(0x26);
-        result[1].RecordType.Should().Be(RecordTypes.XNAM);
+        result[1].RecordType.Should().Be(TestRecordTypes.XNAM);
         result[1].ContentLength.Should().Be(5);
         result[1].Location.Should().Be(0x3D);
     }
@@ -39,9 +38,9 @@ public class FindAllOfSubrecordsTests : RecordSpanExtensionTests
     {
         var result = RecordSpanExtensions.FindAllOfSubrecords(
             Repeating(), GameConstants.Oblivion,
-            RecordTypes.EDID);
+            TestRecordTypes.EDID);
         result.Should().HaveCount(5);
-        result.Select(x => x.RecordType).Should().AllBeEquivalentTo(RecordTypes.EDID);
+        result.Select(x => x.RecordType).Should().AllBeEquivalentTo(TestRecordTypes.EDID);
         result.Select(x => x.ContentLength).Should().Equal(7, 2, 3, 2, 2);
         result.Select(x => x.Location).Should().Equal(0, 0xD, 0x15, 0x1E, 0x35);
     }
@@ -51,9 +50,9 @@ public class FindAllOfSubrecordsTests : RecordSpanExtensionTests
     {
         var result = RecordSpanExtensions.FindAllOfSubrecords(
             Overflow(), GameConstants.Oblivion,
-            RecordTypes.MAST, RecordTypes.DATA, RecordTypes.EDID);
+            TestRecordTypes.MAST, TestRecordTypes.DATA, TestRecordTypes.EDID);
         result.Should().HaveCount(3);
-        result.Select(x => x.RecordType).Should().Equal(RecordTypes.MAST, RecordTypes.DATA, RecordTypes.EDID);
+        result.Select(x => x.RecordType).Should().Equal(TestRecordTypes.MAST, TestRecordTypes.DATA, TestRecordTypes.EDID);
         result.Select(x => x.ContentLength).Should().Equal(4, 2, 4);
         result.Select(x => x.Location).Should().Equal(0, 0x14, 0x1C);
         result[0].AsInt32().Should().Be(0x04030201);
@@ -66,9 +65,9 @@ public class FindAllOfSubrecordsTests : RecordSpanExtensionTests
     {
         var result = RecordSpanExtensions.FindAllOfSubrecords(
             Overflow(), GameConstants.Oblivion,
-            RecordTypes.EDID);
+            TestRecordTypes.EDID);
         result.Should().HaveCount(1);
-        result[0].RecordType.Should().Be(RecordTypes.EDID);
+        result[0].RecordType.Should().Be(TestRecordTypes.EDID);
         result[0].ContentLength.Should().Be(4);
         result[0].Location.Should().Be(0x1C);
         result[0].AsInt32().Should().Be(0x44332211);

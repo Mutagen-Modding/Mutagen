@@ -419,6 +419,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -456,7 +457,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1532,9 +1534,9 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.PreviewTransform = this.PreviewTransform.Combine(rhs.PreviewTransform);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.Time = this.Time.Combine(rhs.Time);
@@ -1758,12 +1760,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILightGetter rhs) return false;
-            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILightGetter? obj)
         {
-            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LightCommon)((ILightGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2063,7 +2065,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((LightCommon)((ILightGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2139,6 +2141,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Light Duplicate(
+            this ILightGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((LightCommon)((ILightGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2171,37 +2184,38 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        Model = 9,
-        Keywords = 10,
-        Destructible = 11,
-        Properties = 12,
-        Name = 13,
-        Icons = 14,
-        Time = 15,
-        Radius = 16,
-        Color = 17,
-        Flags = 18,
-        FalloffExponent = 19,
-        FOV = 20,
-        NearClip = 21,
-        FlickerPeriod = 22,
-        FlickerIntensityAmplitude = 23,
-        FlickerMovementAmplitude = 24,
-        Constant = 25,
-        Scalar = 26,
-        Exponent = 27,
-        GodRaysNearClip = 28,
-        Value = 29,
-        Weight = 30,
-        FadeValue = 31,
-        Gobo = 32,
-        Lens = 33,
-        GodRays = 34,
-        Sound = 35,
-        DATADataTypeState = 36,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        Model = 10,
+        Keywords = 11,
+        Destructible = 12,
+        Properties = 13,
+        Name = 14,
+        Icons = 15,
+        Time = 16,
+        Radius = 17,
+        Color = 18,
+        Flags = 19,
+        FalloffExponent = 20,
+        FOV = 21,
+        NearClip = 22,
+        FlickerPeriod = 23,
+        FlickerIntensityAmplitude = 24,
+        FlickerMovementAmplitude = 25,
+        Constant = 26,
+        Scalar = 27,
+        Exponent = 28,
+        GodRaysNearClip = 29,
+        Value = 30,
+        Weight = 31,
+        FadeValue = 32,
+        Gobo = 33,
+        Lens = 34,
+        GodRays = 35,
+        Sound = 36,
+        DATADataTypeState = 37,
     }
     #endregion
 
@@ -2221,7 +2235,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 38;
 
         public static readonly Type MaskType = typeof(Light.Mask<>);
 
@@ -2722,8 +2736,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Light_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Light_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Light_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2740,7 +2756,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Light_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2748,151 +2764,151 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             ILightGetter? lhs,
             ILightGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Light_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Light_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Light_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Light_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Light_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Light_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Light_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Properties)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Light_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Light_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
             {
                 if (lhs.Time != rhs.Time) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Radius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Radius) ?? true))
             {
                 if (lhs.Radius != rhs.Radius) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Color) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
             {
                 if (!lhs.FalloffExponent.EqualsWithin(rhs.FalloffExponent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
             {
                 if (!lhs.FOV.EqualsWithin(rhs.FOV)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.NearClip) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.NearClip) ?? true))
             {
                 if (!lhs.NearClip.EqualsWithin(rhs.NearClip)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.FlickerPeriod) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerPeriod) ?? true))
             {
                 if (!lhs.FlickerPeriod.EqualsWithin(rhs.FlickerPeriod)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.FlickerIntensityAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerIntensityAmplitude) ?? true))
             {
                 if (!lhs.FlickerIntensityAmplitude.EqualsWithin(rhs.FlickerIntensityAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.FlickerMovementAmplitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerMovementAmplitude) ?? true))
             {
                 if (!lhs.FlickerMovementAmplitude.EqualsWithin(rhs.FlickerMovementAmplitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Constant) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Constant) ?? true))
             {
                 if (!lhs.Constant.EqualsWithin(rhs.Constant)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Scalar) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Scalar) ?? true))
             {
                 if (!lhs.Scalar.EqualsWithin(rhs.Scalar)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Exponent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Exponent) ?? true))
             {
                 if (!lhs.Exponent.EqualsWithin(rhs.Exponent)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.GodRaysNearClip) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.GodRaysNearClip) ?? true))
             {
                 if (!lhs.GodRaysNearClip.EqualsWithin(rhs.GodRaysNearClip)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.FadeValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.FadeValue) ?? true))
             {
                 if (!lhs.FadeValue.EqualsWithin(rhs.FadeValue)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Gobo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Gobo) ?? true))
             {
                 if (!string.Equals(lhs.Gobo, rhs.Gobo)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Lens) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Lens) ?? true))
             {
                 if (!lhs.Lens.Equals(rhs.Lens)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.GodRays) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.GodRays) ?? true))
             {
                 if (!lhs.GodRays.Equals(rhs.GodRays)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.Sound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Sound) ?? true))
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Light_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
@@ -2902,23 +2918,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILightGetter?)lhs,
                 rhs: rhs as ILightGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ILightGetter?)lhs,
                 rhs: rhs as ILightGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ILightGetter item)
@@ -4410,12 +4426,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ILightGetter rhs) return false;
-            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ILightGetter? obj)
         {
-            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((LightCommon)((ILightGetter)this).CommonInstance()!).GetHashCode(this);

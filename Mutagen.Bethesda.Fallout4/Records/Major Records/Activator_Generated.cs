@@ -382,6 +382,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem PreviewTransform,
@@ -409,7 +410,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
@@ -1320,8 +1322,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
                 ret.ForcedLocRefType = this.ForcedLocRefType.Combine(rhs.ForcedLocRefType);
                 ret.MarkerColor = this.MarkerColor.Combine(rhs.MarkerColor);
@@ -1332,7 +1334,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.InteractionKeyword = this.InteractionKeyword.Combine(rhs.InteractionKeyword);
                 ret.RadioReceiver = this.RadioReceiver.Combine(rhs.RadioReceiver, (l, r) => l.Combine(r));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -1495,12 +1497,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IActivatorGetter rhs) return false;
-            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActivatorGetter? obj)
         {
-            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1762,7 +1764,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1838,6 +1840,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Activator Duplicate(
+            this IActivatorGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1870,27 +1883,28 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        ObjectBounds = 7,
-        PreviewTransform = 8,
-        AnimationSound = 9,
-        Name = 10,
-        Model = 11,
-        Destructible = 12,
-        Keywords = 13,
-        Properties = 14,
-        NativeTerminal = 15,
-        ForcedLocRefType = 16,
-        MarkerColor = 17,
-        LoopingSound = 18,
-        ActivationSound = 19,
-        WaterType = 20,
-        ActivateTextOverride = 21,
-        Flags = 22,
-        InteractionKeyword = 23,
-        RadioReceiver = 24,
-        Conditions = 25,
-        NavmeshGeometry = 26,
+        Fallout4MajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        PreviewTransform = 9,
+        AnimationSound = 10,
+        Name = 11,
+        Model = 12,
+        Destructible = 13,
+        Keywords = 14,
+        Properties = 15,
+        NativeTerminal = 16,
+        ForcedLocRefType = 17,
+        MarkerColor = 18,
+        LoopingSound = 19,
+        ActivationSound = 20,
+        WaterType = 21,
+        ActivateTextOverride = 22,
+        Flags = 23,
+        InteractionKeyword = 24,
+        RadioReceiver = 25,
+        Conditions = 26,
+        NavmeshGeometry = 27,
     }
     #endregion
 
@@ -1910,7 +1924,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(Activator.Mask<>);
 
@@ -2387,8 +2401,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Activator_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Activator_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Activator_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2405,7 +2421,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Activator_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2413,115 +2429,115 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IActivatorGetter? lhs,
             IActivatorGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Activator_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Activator_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.PreviewTransform) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.PreviewTransform) ?? true))
             {
                 if (!lhs.PreviewTransform.Equals(rhs.PreviewTransform)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.AnimationSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.AnimationSound) ?? true))
             {
                 if (!lhs.AnimationSound.Equals(rhs.AnimationSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Activator_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Activator_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Activator_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.Properties)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.NativeTerminal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.NativeTerminal) ?? true))
             {
                 if (!lhs.NativeTerminal.Equals(rhs.NativeTerminal)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.ForcedLocRefType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.ForcedLocRefType) ?? true))
             {
                 if (!lhs.ForcedLocRefType.Equals(rhs.ForcedLocRefType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.MarkerColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.MarkerColor) ?? true))
             {
                 if (!lhs.MarkerColor.ColorOnlyEquals(rhs.MarkerColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.LoopingSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.LoopingSound) ?? true))
             {
                 if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.ActivationSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivationSound) ?? true))
             {
                 if (!lhs.ActivationSound.Equals(rhs.ActivationSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.WaterType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.WaterType) ?? true))
             {
                 if (!lhs.WaterType.Equals(rhs.WaterType)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.ActivateTextOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivateTextOverride) ?? true))
             {
                 if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.InteractionKeyword) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.InteractionKeyword) ?? true))
             {
                 if (!lhs.InteractionKeyword.Equals(rhs.InteractionKeyword)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.RadioReceiver) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.RadioReceiver) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.RadioReceiver, rhs.RadioReceiver, out var lhsRadioReceiver, out var rhsRadioReceiver, out var isRadioReceiverEqual))
                 {
-                    if (!((RadioReceiverCommon)((IRadioReceiverGetter)lhsRadioReceiver).CommonInstance()!).Equals(lhsRadioReceiver, rhsRadioReceiver, crystal?.GetSubCrystal((int)Activator_FieldIndex.RadioReceiver))) return false;
+                    if (!((RadioReceiverCommon)((IRadioReceiverGetter)lhsRadioReceiver).CommonInstance()!).Equals(lhsRadioReceiver, rhsRadioReceiver, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.RadioReceiver))) return false;
                 }
                 else if (!isRadioReceiverEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Activator_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.NavmeshGeometry) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.NavmeshGeometry) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NavmeshGeometry, rhs.NavmeshGeometry, out var lhsNavmeshGeometry, out var rhsNavmeshGeometry, out var isNavmeshGeometryEqual))
                 {
-                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, crystal?.GetSubCrystal((int)Activator_FieldIndex.NavmeshGeometry))) return false;
+                    if (!((NavmeshGeometryCommon)((INavmeshGeometryGetter)lhsNavmeshGeometry).CommonInstance()!).Equals(lhsNavmeshGeometry, rhsNavmeshGeometry, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.NavmeshGeometry))) return false;
                 }
                 else if (!isNavmeshGeometryEqual) return false;
             }
@@ -2531,23 +2547,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IActivatorGetter?)lhs,
                 rhs: rhs as IActivatorGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IActivatorGetter?)lhs,
                 rhs: rhs as IActivatorGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IActivatorGetter item)
@@ -4037,12 +4053,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IActivatorGetter rhs) return false;
-            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IActivatorGetter? obj)
         {
-            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).GetHashCode(this);

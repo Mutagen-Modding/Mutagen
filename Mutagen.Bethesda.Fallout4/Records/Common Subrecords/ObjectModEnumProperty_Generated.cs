@@ -80,12 +80,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IObjectModEnumPropertyGetter<T> rhs) return false;
-            return ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IObjectModEnumPropertyGetter<T>? obj)
         {
-            return ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: null);
+                equalsMask: null);
         }
 
         public static bool Equals<T>(
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask.GetCrystal());
+                equalsMask: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T>(
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case AObjectModProperty_FieldIndex.Step:
                     return (ObjectModEnumProperty_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -589,19 +589,19 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IObjectModEnumPropertyGetter<T>? lhs,
             IObjectModEnumPropertyGetter<T>? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAObjectModPropertyGetter<T>)lhs, (IAObjectModPropertyGetter<T>)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ObjectModEnumProperty_FieldIndex.EnumIntValue) ?? true))
+            if (!base.Equals((IAObjectModPropertyGetter<T>)lhs, (IAObjectModPropertyGetter<T>)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ObjectModEnumProperty_FieldIndex.EnumIntValue) ?? true))
             {
                 if (lhs.EnumIntValue != rhs.EnumIntValue) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectModEnumProperty_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectModEnumProperty_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectModEnumProperty_FieldIndex.FunctionType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectModEnumProperty_FieldIndex.FunctionType) ?? true))
             {
                 if (lhs.FunctionType != rhs.FunctionType) return false;
             }
@@ -611,12 +611,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAObjectModPropertyGetter<T>? lhs,
             IAObjectModPropertyGetter<T>? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IObjectModEnumPropertyGetter<T>?)lhs,
                 rhs: rhs as IObjectModEnumPropertyGetter<T>,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IObjectModEnumPropertyGetter<T> item)
@@ -976,12 +976,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IObjectModEnumPropertyGetter<T> rhs) return false;
-            return ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
+            return ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IObjectModEnumPropertyGetter<T>? obj)
         {
-            return ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
+            return ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ObjectModEnumPropertyCommon<T>)((IObjectModEnumPropertyGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);

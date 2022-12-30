@@ -433,6 +433,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Name,
                 TItem Opacity,
                 TItem Flags,
@@ -491,7 +492,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
                 this.Opacity = Opacity;
@@ -2233,12 +2235,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IWaterGetter rhs) return false;
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWaterGetter? obj)
         {
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2505,7 +2507,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2581,6 +2583,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Water Duplicate(
+            this IWaterGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2613,58 +2626,59 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Name = 6,
-        Opacity = 7,
-        Flags = 8,
-        Material = 9,
-        OpenSound = 10,
-        ConsumeSpell = 11,
-        ContactSpell = 12,
-        ImageSpace = 13,
-        DATA = 14,
-        FogDepthAmount = 15,
-        FogShallowCo_rlor = 16,
-        FogDeepColor = 17,
-        FogColorShallowRange = 18,
-        FogColorDeepRange = 19,
-        FogShallowAlpha = 20,
-        FogDeepAlpha = 21,
-        FogAlphaShallowRange = 22,
-        FogAlphaDeepRange = 23,
-        FogUnderwaterColor = 24,
-        FogUnderwaterAmount = 25,
-        FogUnderwaterNear = 26,
-        FogUnderwaterFar = 27,
-        PhysicalNormalMagnitude = 28,
-        PhysicalShallowNormalFalloff = 29,
-        PhysicalDeepNormalFalloff = 30,
-        PhysicalReflectivityAmount = 31,
-        PhysicalFresnelAmount = 32,
-        PhysicalSurfaceEffectFalloff = 33,
-        PhysicalDisplacementSimulatorForce = 34,
-        PhysicalDisplacementSimulatorVelocity = 35,
-        PhysicalDisplacementSimulatorFalloff = 36,
-        PhysicalDisplacementSimulatorDampener = 37,
-        PhysicalDisplacementSimulatorStartingSize = 38,
-        PhysicalReflectionColor = 39,
-        SpecularSunSpecularPower = 40,
-        SpecularSunSpecularMagnitude = 41,
-        SpecularSunSparklePower = 42,
-        SpecularSunSparkleMagnitude = 43,
-        SpecularInteriorSpecularRadius = 44,
-        SpecularInteriorSpecularBrightness = 45,
-        SpecularInteriorSpecularPower = 46,
-        SiltAmount = 47,
-        SiltLightColor = 48,
-        SiltDarkColor = 49,
-        ScreenSpaceReflections = 50,
-        NoiseLayerOne = 51,
-        NoiseLayerTwo = 52,
-        NoiseLayerThree = 53,
-        GNAM = 54,
-        LinearVelocity = 55,
-        AngularVelocity = 56,
-        DNAMDataTypeState = 57,
+        Fallout4MajorRecordFlags = 6,
+        Name = 7,
+        Opacity = 8,
+        Flags = 9,
+        Material = 10,
+        OpenSound = 11,
+        ConsumeSpell = 12,
+        ContactSpell = 13,
+        ImageSpace = 14,
+        DATA = 15,
+        FogDepthAmount = 16,
+        FogShallowCo_rlor = 17,
+        FogDeepColor = 18,
+        FogColorShallowRange = 19,
+        FogColorDeepRange = 20,
+        FogShallowAlpha = 21,
+        FogDeepAlpha = 22,
+        FogAlphaShallowRange = 23,
+        FogAlphaDeepRange = 24,
+        FogUnderwaterColor = 25,
+        FogUnderwaterAmount = 26,
+        FogUnderwaterNear = 27,
+        FogUnderwaterFar = 28,
+        PhysicalNormalMagnitude = 29,
+        PhysicalShallowNormalFalloff = 30,
+        PhysicalDeepNormalFalloff = 31,
+        PhysicalReflectivityAmount = 32,
+        PhysicalFresnelAmount = 33,
+        PhysicalSurfaceEffectFalloff = 34,
+        PhysicalDisplacementSimulatorForce = 35,
+        PhysicalDisplacementSimulatorVelocity = 36,
+        PhysicalDisplacementSimulatorFalloff = 37,
+        PhysicalDisplacementSimulatorDampener = 38,
+        PhysicalDisplacementSimulatorStartingSize = 39,
+        PhysicalReflectionColor = 40,
+        SpecularSunSpecularPower = 41,
+        SpecularSunSpecularMagnitude = 42,
+        SpecularSunSparklePower = 43,
+        SpecularSunSparkleMagnitude = 44,
+        SpecularInteriorSpecularRadius = 45,
+        SpecularInteriorSpecularBrightness = 46,
+        SpecularInteriorSpecularPower = 47,
+        SiltAmount = 48,
+        SiltLightColor = 49,
+        SiltDarkColor = 50,
+        ScreenSpaceReflections = 51,
+        NoiseLayerOne = 52,
+        NoiseLayerTwo = 53,
+        NoiseLayerThree = 54,
+        GNAM = 55,
+        LinearVelocity = 56,
+        AngularVelocity = 57,
+        DNAMDataTypeState = 58,
     }
     #endregion
 
@@ -2684,7 +2698,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 52;
 
-        public const ushort FieldCount = 58;
+        public const ushort FieldCount = 59;
 
         public static readonly Type MaskType = typeof(Water.Mask<>);
 
@@ -2926,7 +2940,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.ConsumeSpell = item.ConsumeSpell.Equals(rhs.ConsumeSpell);
             ret.ContactSpell = item.ContactSpell.Equals(rhs.ContactSpell);
             ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
-            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.FogDepthAmount = item.FogDepthAmount.EqualsWithin(rhs.FogDepthAmount);
             ret.FogShallowCo_rlor = item.FogShallowCo_rlor.ColorOnlyEquals(rhs.FogShallowCo_rlor);
             ret.FogDeepColor = item.FogDeepColor.ColorOnlyEquals(rhs.FogDeepColor);
@@ -2966,7 +2980,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.NoiseLayerOne = MaskItemExt.Factory(item.NoiseLayerOne.GetEqualsMask(rhs.NoiseLayerOne, include), include);
             ret.NoiseLayerTwo = MaskItemExt.Factory(item.NoiseLayerTwo.GetEqualsMask(rhs.NoiseLayerTwo, include), include);
             ret.NoiseLayerThree = MaskItemExt.Factory(item.NoiseLayerThree.GetEqualsMask(rhs.NoiseLayerThree, include), include);
-            ret.GNAM = MemorySliceExt.Equal(item.GNAM, rhs.GNAM);
+            ret.GNAM = MemorySliceExt.SequenceEqual(item.GNAM, rhs.GNAM);
             ret.LinearVelocity = item.LinearVelocity.Equals(rhs.LinearVelocity);
             ret.AngularVelocity = item.AngularVelocity.Equals(rhs.AngularVelocity);
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
@@ -3250,8 +3264,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Water_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Water_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Water_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3268,7 +3284,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Water_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -3276,227 +3292,227 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWaterGetter? lhs,
             IWaterGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Name) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
             {
                 if (lhs.Opacity != rhs.Opacity) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
             {
                 if (!lhs.Material.Equals(rhs.Material)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.OpenSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.OpenSound) ?? true))
             {
                 if (!lhs.OpenSound.Equals(rhs.OpenSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.ConsumeSpell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.ConsumeSpell) ?? true))
             {
                 if (!lhs.ConsumeSpell.Equals(rhs.ConsumeSpell)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.ContactSpell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.ContactSpell) ?? true))
             {
                 if (!lhs.ContactSpell.Equals(rhs.ContactSpell)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.ImageSpace) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.ImageSpace) ?? true))
             {
                 if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.DATA) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.DATA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogDepthAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogDepthAmount) ?? true))
             {
                 if (!lhs.FogDepthAmount.EqualsWithin(rhs.FogDepthAmount)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogShallowCo_rlor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowCo_rlor) ?? true))
             {
                 if (!lhs.FogShallowCo_rlor.ColorOnlyEquals(rhs.FogShallowCo_rlor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogDeepColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogDeepColor) ?? true))
             {
                 if (!lhs.FogDeepColor.ColorOnlyEquals(rhs.FogDeepColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogColorShallowRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogColorShallowRange) ?? true))
             {
                 if (!lhs.FogColorShallowRange.EqualsWithin(rhs.FogColorShallowRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogColorDeepRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogColorDeepRange) ?? true))
             {
                 if (!lhs.FogColorDeepRange.EqualsWithin(rhs.FogColorDeepRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogShallowAlpha) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogShallowAlpha) ?? true))
             {
                 if (!lhs.FogShallowAlpha.EqualsWithin(rhs.FogShallowAlpha)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogDeepAlpha) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogDeepAlpha) ?? true))
             {
                 if (!lhs.FogDeepAlpha.EqualsWithin(rhs.FogDeepAlpha)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaShallowRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaShallowRange) ?? true))
             {
                 if (!lhs.FogAlphaShallowRange.EqualsWithin(rhs.FogAlphaShallowRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaDeepRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogAlphaDeepRange) ?? true))
             {
                 if (!lhs.FogAlphaDeepRange.EqualsWithin(rhs.FogAlphaDeepRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterColor) ?? true))
             {
                 if (!lhs.FogUnderwaterColor.ColorOnlyEquals(rhs.FogUnderwaterColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterAmount) ?? true))
             {
                 if (!lhs.FogUnderwaterAmount.EqualsWithin(rhs.FogUnderwaterAmount)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterNear) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterNear) ?? true))
             {
                 if (!lhs.FogUnderwaterNear.EqualsWithin(rhs.FogUnderwaterNear)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterFar) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderwaterFar) ?? true))
             {
                 if (!lhs.FogUnderwaterFar.EqualsWithin(rhs.FogUnderwaterFar)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalNormalMagnitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalNormalMagnitude) ?? true))
             {
                 if (!lhs.PhysicalNormalMagnitude.EqualsWithin(rhs.PhysicalNormalMagnitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalShallowNormalFalloff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalShallowNormalFalloff) ?? true))
             {
                 if (!lhs.PhysicalShallowNormalFalloff.EqualsWithin(rhs.PhysicalShallowNormalFalloff)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDeepNormalFalloff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDeepNormalFalloff) ?? true))
             {
                 if (!lhs.PhysicalDeepNormalFalloff.EqualsWithin(rhs.PhysicalDeepNormalFalloff)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectivityAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectivityAmount) ?? true))
             {
                 if (!lhs.PhysicalReflectivityAmount.EqualsWithin(rhs.PhysicalReflectivityAmount)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalFresnelAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalFresnelAmount) ?? true))
             {
                 if (!lhs.PhysicalFresnelAmount.EqualsWithin(rhs.PhysicalFresnelAmount)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalSurfaceEffectFalloff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalSurfaceEffectFalloff) ?? true))
             {
                 if (!lhs.PhysicalSurfaceEffectFalloff.EqualsWithin(rhs.PhysicalSurfaceEffectFalloff)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorForce) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorForce) ?? true))
             {
                 if (!lhs.PhysicalDisplacementSimulatorForce.EqualsWithin(rhs.PhysicalDisplacementSimulatorForce)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorVelocity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorVelocity) ?? true))
             {
                 if (!lhs.PhysicalDisplacementSimulatorVelocity.EqualsWithin(rhs.PhysicalDisplacementSimulatorVelocity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorFalloff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorFalloff) ?? true))
             {
                 if (!lhs.PhysicalDisplacementSimulatorFalloff.EqualsWithin(rhs.PhysicalDisplacementSimulatorFalloff)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorDampener) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorDampener) ?? true))
             {
                 if (!lhs.PhysicalDisplacementSimulatorDampener.EqualsWithin(rhs.PhysicalDisplacementSimulatorDampener)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalDisplacementSimulatorStartingSize) ?? true))
             {
                 if (!lhs.PhysicalDisplacementSimulatorStartingSize.EqualsWithin(rhs.PhysicalDisplacementSimulatorStartingSize)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectionColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.PhysicalReflectionColor) ?? true))
             {
                 if (!lhs.PhysicalReflectionColor.ColorOnlyEquals(rhs.PhysicalReflectionColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularPower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularPower) ?? true))
             {
                 if (!lhs.SpecularSunSpecularPower.EqualsWithin(rhs.SpecularSunSpecularPower)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularMagnitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularMagnitude) ?? true))
             {
                 if (!lhs.SpecularSunSpecularMagnitude.EqualsWithin(rhs.SpecularSunSpecularMagnitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparklePower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparklePower) ?? true))
             {
                 if (!lhs.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparkleMagnitude) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparkleMagnitude) ?? true))
             {
                 if (!lhs.SpecularSunSparkleMagnitude.EqualsWithin(rhs.SpecularSunSparkleMagnitude)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularRadius) ?? true))
             {
                 if (!lhs.SpecularInteriorSpecularRadius.EqualsWithin(rhs.SpecularInteriorSpecularRadius)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularBrightness) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularBrightness) ?? true))
             {
                 if (!lhs.SpecularInteriorSpecularBrightness.EqualsWithin(rhs.SpecularInteriorSpecularBrightness)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularPower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularInteriorSpecularPower) ?? true))
             {
                 if (!lhs.SpecularInteriorSpecularPower.EqualsWithin(rhs.SpecularInteriorSpecularPower)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SiltAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SiltAmount) ?? true))
             {
                 if (!lhs.SiltAmount.EqualsWithin(rhs.SiltAmount)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SiltLightColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SiltLightColor) ?? true))
             {
                 if (!lhs.SiltLightColor.ColorOnlyEquals(rhs.SiltLightColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.SiltDarkColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.SiltDarkColor) ?? true))
             {
                 if (!lhs.SiltDarkColor.ColorOnlyEquals(rhs.SiltDarkColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.ScreenSpaceReflections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.ScreenSpaceReflections) ?? true))
             {
                 if (lhs.ScreenSpaceReflections != rhs.ScreenSpaceReflections) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOne) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOne) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NoiseLayerOne, rhs.NoiseLayerOne, out var lhsNoiseLayerOne, out var rhsNoiseLayerOne, out var isNoiseLayerOneEqual))
                 {
-                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerOne).CommonInstance()!).Equals(lhsNoiseLayerOne, rhsNoiseLayerOne, crystal?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerOne))) return false;
+                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerOne).CommonInstance()!).Equals(lhsNoiseLayerOne, rhsNoiseLayerOne, equalsMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerOne))) return false;
                 }
                 else if (!isNoiseLayerOneEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwo) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NoiseLayerTwo, rhs.NoiseLayerTwo, out var lhsNoiseLayerTwo, out var rhsNoiseLayerTwo, out var isNoiseLayerTwoEqual))
                 {
-                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerTwo).CommonInstance()!).Equals(lhsNoiseLayerTwo, rhsNoiseLayerTwo, crystal?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerTwo))) return false;
+                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerTwo).CommonInstance()!).Equals(lhsNoiseLayerTwo, rhsNoiseLayerTwo, equalsMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerTwo))) return false;
                 }
                 else if (!isNoiseLayerTwoEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThree) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThree) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.NoiseLayerThree, rhs.NoiseLayerThree, out var lhsNoiseLayerThree, out var rhsNoiseLayerThree, out var isNoiseLayerThreeEqual))
                 {
-                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerThree).CommonInstance()!).Equals(lhsNoiseLayerThree, rhsNoiseLayerThree, crystal?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerThree))) return false;
+                    if (!((WaterNoisePropertiesCommon)((IWaterNoisePropertiesGetter)lhsNoiseLayerThree).CommonInstance()!).Equals(lhsNoiseLayerThree, rhsNoiseLayerThree, equalsMask?.GetSubCrystal((int)Water_FieldIndex.NoiseLayerThree))) return false;
                 }
                 else if (!isNoiseLayerThreeEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.GNAM, rhs.GNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.GNAM, rhs.GNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
             {
                 if (!lhs.LinearVelocity.Equals(rhs.LinearVelocity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
             {
                 if (!lhs.AngularVelocity.Equals(rhs.AngularVelocity)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
@@ -3506,23 +3522,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWaterGetter?)lhs,
                 rhs: rhs as IWaterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWaterGetter?)lhs,
                 rhs: rhs as IWaterGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IWaterGetter item)
@@ -5123,12 +5139,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IWaterGetter rhs) return false;
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWaterGetter? obj)
         {
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);

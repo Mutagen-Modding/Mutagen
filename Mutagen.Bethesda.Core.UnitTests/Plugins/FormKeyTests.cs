@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;
-using Mutagen.Bethesda.UnitTests.AutoData;
+using Mutagen.Bethesda.Testing.AutoData;
 using Mutagen.Bethesda.UnitTests.Placeholders;
 using Xunit;
 
@@ -205,6 +205,39 @@ public class FormKeyTests
     {
         new FormKey(ModKey.Null, 123456).IsNull.Should().BeTrue();
     }
+    #endregion
+    
+    #region Equality
+
+    [Fact]
+    public void SelfEquality()
+    {
+        var fk = FormKey.Factory("123456:Skyrim.esm");
+        fk.Should().Be(fk);
+    }
+
+    [Fact]
+    public void NullEquality()
+    {
+        var fk = FormKey.Null;
+        fk.Should().Be(fk);
+    }
+
+    [Fact]
+    public void NotNullEquality()
+    {
+        var fk = FormKey.Factory("123456:Skyrim.esm");
+        fk.Should().NotBe(FormKey.Null);
+    }
+
+    [Fact]
+    public void DifferentModKeyEquality()
+    {
+        var fk = FormKey.Factory("123456:Skyrim.esm");
+        var fk2 = FormKey.Factory("123456:Skyrim2.esm");
+        fk.Should().NotBe(fk2);
+    }
+    
     #endregion
 
     #region Comparers

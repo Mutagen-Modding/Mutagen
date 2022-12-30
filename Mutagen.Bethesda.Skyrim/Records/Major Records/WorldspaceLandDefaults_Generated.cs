@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IWorldspaceLandDefaultsGetter rhs) return false;
-            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceLandDefaultsGetter? obj)
         {
-            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -843,14 +843,14 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IWorldspaceLandDefaultsGetter? lhs,
             IWorldspaceLandDefaultsGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)WorldspaceLandDefaults_FieldIndex.DefaultLandHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceLandDefaults_FieldIndex.DefaultLandHeight) ?? true))
             {
                 if (!lhs.DefaultLandHeight.EqualsWithin(rhs.DefaultLandHeight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)WorldspaceLandDefaults_FieldIndex.DefaultWaterHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WorldspaceLandDefaults_FieldIndex.DefaultWaterHeight) ?? true))
             {
                 if (!lhs.DefaultWaterHeight.EqualsWithin(rhs.DefaultWaterHeight)) return false;
             }
@@ -1181,12 +1181,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IWorldspaceLandDefaultsGetter rhs) return false;
-            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWorldspaceLandDefaultsGetter? obj)
         {
-            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).GetHashCode(this);

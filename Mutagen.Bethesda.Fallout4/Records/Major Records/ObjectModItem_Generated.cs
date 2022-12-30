@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IObjectModItemGetter rhs) return false;
-            return ((ObjectModItemCommon)((IObjectModItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ObjectModItemCommon)((IObjectModItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IObjectModItemGetter? obj)
         {
-            return ((ObjectModItemCommon)((IObjectModItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ObjectModItemCommon)((IObjectModItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ObjectModItemCommon)((IObjectModItemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ObjectModItemCommon)((IObjectModItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -832,14 +832,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IObjectModItemGetter? lhs,
             IObjectModItemGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ObjectModItem_FieldIndex.Value1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectModItem_FieldIndex.Value1) ?? true))
             {
                 if (lhs.Value1 != rhs.Value1) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ObjectModItem_FieldIndex.Value2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ObjectModItem_FieldIndex.Value2) ?? true))
             {
                 if (lhs.Value2 != rhs.Value2) return false;
             }
@@ -1159,12 +1159,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IObjectModItemGetter rhs) return false;
-            return ((ObjectModItemCommon)((IObjectModItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ObjectModItemCommon)((IObjectModItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IObjectModItemGetter? obj)
         {
-            return ((ObjectModItemCommon)((IObjectModItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ObjectModItemCommon)((IObjectModItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ObjectModItemCommon)((IObjectModItemGetter)this).CommonInstance()!).GetHashCode(this);

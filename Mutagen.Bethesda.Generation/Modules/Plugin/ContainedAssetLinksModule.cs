@@ -610,7 +610,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
 
     public async Task GenerateInterfaceImplementation(ObjectGeneration obj, StructuredStringBuilder fg, bool getter)
     {
-        var shouldAlwaysOverride = obj.IsTopLevelGroup();
+        var shouldAlwaysOverride = obj.IsTopLevelGroup() || obj.IsTopLevelListGroup();
         fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLinkGetter)}> {nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(AssetLinkQuery queryCategories, {nameof(IAssetLinkCache)}? linkCache, Type? assetType) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
 
         if (!getter)

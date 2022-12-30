@@ -4,6 +4,8 @@ using IniParser.Model.Configuration;
 using IniParser.Parser;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis;
+using Mutagen.Bethesda.Inis.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Archives.DI;
@@ -44,20 +46,20 @@ public sealed class GetArchiveIniListings : IGetArchiveIniListings
     };
         
     private readonly IFileSystem _fileSystem;
-    private readonly IGameReleaseContext _gameReleaseContext;
+    private readonly IIniPathProvider _iniPathProvider;
 
     public GetArchiveIniListings(
         IFileSystem fileSystem,
-        IGameReleaseContext gameReleaseContext)
+        IIniPathProvider iniPathProvider)
     {
         _fileSystem = fileSystem;
-        _gameReleaseContext = gameReleaseContext;
+        _iniPathProvider = iniPathProvider;
     }
         
     /// <inheritdoc />
     public IEnumerable<FileName> Get()
     {
-        return Get(Ini.GetTypicalPath(_gameReleaseContext.Release));
+        return Get(_iniPathProvider.Path);
     }
 
     /// <inheritdoc />

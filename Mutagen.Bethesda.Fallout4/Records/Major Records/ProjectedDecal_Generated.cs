@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IProjectedDecalGetter rhs) return false;
-            return ((ProjectedDecalCommon)((IProjectedDecalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ProjectedDecalCommon)((IProjectedDecalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IProjectedDecalGetter? obj)
         {
-            return ((ProjectedDecalCommon)((IProjectedDecalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ProjectedDecalCommon)((IProjectedDecalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ProjectedDecalCommon)((IProjectedDecalGetter)this).CommonInstance()!).GetHashCode(this);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ProjectedDecalCommon)((IProjectedDecalGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -843,14 +843,14 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IProjectedDecalGetter? lhs,
             IProjectedDecalGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.WidthScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.WidthScale) ?? true))
             {
                 if (!lhs.WidthScale.EqualsWithin(rhs.WidthScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.HeightScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ProjectedDecal_FieldIndex.HeightScale) ?? true))
             {
                 if (!lhs.HeightScale.EqualsWithin(rhs.HeightScale)) return false;
             }
@@ -1181,12 +1181,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IProjectedDecalGetter rhs) return false;
-            return ((ProjectedDecalCommon)((IProjectedDecalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ProjectedDecalCommon)((IProjectedDecalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IProjectedDecalGetter? obj)
         {
-            return ((ProjectedDecalCommon)((IProjectedDecalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ProjectedDecalCommon)((IProjectedDecalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ProjectedDecalCommon)((IProjectedDecalGetter)this).CommonInstance()!).GetHashCode(this);

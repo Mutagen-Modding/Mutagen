@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptStringPropertyGetter rhs) return false;
-            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptStringPropertyGetter? obj)
         {
-            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).GetHashCode(this);
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case ScriptProperty_FieldIndex.Flags:
                     return (ScriptStringProperty_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -793,11 +793,11 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IScriptStringPropertyGetter? lhs,
             IScriptStringPropertyGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ScriptStringProperty_FieldIndex.Data) ?? true))
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ScriptStringProperty_FieldIndex.Data) ?? true))
             {
                 if (!string.Equals(lhs.Data, rhs.Data)) return false;
             }
@@ -807,12 +807,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             IScriptPropertyGetter? lhs,
             IScriptPropertyGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IScriptStringPropertyGetter?)lhs,
                 rhs: rhs as IScriptStringPropertyGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IScriptStringPropertyGetter item)
@@ -1155,12 +1155,12 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object? obj)
         {
             if (obj is not IScriptStringPropertyGetter rhs) return false;
-            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScriptStringPropertyGetter? obj)
         {
-            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).GetHashCode(this);

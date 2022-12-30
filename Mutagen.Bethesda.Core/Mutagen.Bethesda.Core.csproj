@@ -7,6 +7,7 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RootNamespace>Mutagen.Bethesda</RootNamespace>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
@@ -22,25 +23,17 @@
     <None Remove="Properties\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetZip" Version="1.16.0" />
-    <PackageReference Include="GitInfo" Version="2.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
-    <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.16" />
-    <PackageReference Include="Loqui" Version="2.50.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.50.1" />
-    <PackageReference Include="NuGetizer" Version="0.8.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="SharpZipLib" Version="1.3.3" />
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
-    <PackageReference Include="GameFinder" Version="1.7.3" />
-    <PackageReference Include="GameFinder.StoreHandlers.GOG" Version="1.7.3" />
-    <PackageReference Include="GameFinder.StoreHandlers.Steam" Version="1.7.3" />
+    <PackageReference Include="DotNetZip" />
+    <PackageReference Include="ini-parser-netstandard" />
+    <PackageReference Include="K4os.Compression.LZ4.Streams" />
+    <PackageReference Include="Loqui" />
+    <PackageReference Include="Noggog.CSharpExt" />
+    <PackageReference Include="SharpZipLib" />
+    <PackageReference Include="System.Collections.Immutable" />
+    <PackageReference Include="System.Text.Encoding.CodePages" />
+    <PackageReference Include="GameFinder" />
+    <PackageReference Include="GameFinder.StoreHandlers.GOG" />
+    <PackageReference Include="GameFinder.StoreHandlers.Steam" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
@@ -152,10 +145,17 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Inis\DI\IIniPathLookup.cs" />
+    <Compile Include="Inis\DI\IIniPathProvider.cs" />
     <Compile Include="Installs\DI\GameLocator.cs" />
+    <Compile Include="Installs\GameSource.cs" />
     <Compile Include="Installs\GameLocations.cs" />
     <Compile Include="Installs\GameMetaData.cs" />
+    <Compile Include="Installs\GogGameSource.cs" />
+    <Compile Include="Installs\IGameSource.cs" />
+    <Compile Include="Installs\RegistryGameSource.cs" />
     <Compile Include="Installs\RegistryHelper.cs" />
+    <Compile Include="Installs\SteamGameSource.cs" />
     <Compile Include="Plugins\Analysis\RecordLocationMarker.cs" />
     <Compile Include="Plugins\Analysis\RecordLocator.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -270,6 +270,8 @@
     <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
     <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
     <Compile Include="Plugins\Exceptions\ModPathException.cs" />
+    <Compile Include="Plugins\Exceptions\SelfReferenceException.cs" />
+    <Compile Include="Plugins\Exceptions\TooManyMastersException.cs" />
     <Compile Include="Plugins\Extensions\IModExt.cs" />
     <Compile Include="Plugins\Extensions\LinkCacheConstructionMixIn.cs" />
     <Compile Include="Plugins\Extensions\IAssetLinkExt.cs">
@@ -416,11 +418,13 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Order\DI\PluginListingCommentTrimmer.cs" />
     <Compile Include="Plugins\Order\DI\PluginListingsParser.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Order\DI\PluginListingsPathProvider.cs" />
     <Compile Include="Plugins\Order\DI\PluginListingsProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -431,7 +435,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Plugins\Order\DI\PluginListingsPathProvider.cs">
+    <Compile Include="Plugins\Order\DI\PluginListingsPathContext.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
@@ -466,6 +470,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Records\AListGroup.cs" />
     <Compile Include="Plugins\Records\DI\ModActivator.cs" />
     <Compile Include="Plugins\Records\DI\ModImporter.cs" />
     <Compile Include="Plugins\Records\GroupMergeGetter.cs" />
@@ -567,7 +572,7 @@
     <Compile Include="Plugins\Implicit\ImplicitRecordFormKeys.cs" />
     <Compile Include="Plugins\Implicit\ImplicitListings.cs" />
     <Compile Include="Plugins\Implicit\ImplicitBaseMasters.cs" />
-    <Compile Include="Ini\Ini.cs" />
+    <Compile Include="Inis\Ini.cs" />
     <Compile Include="Plugins\Aspects\IKeywordCommon.cs" />
     <Compile Include="Plugins\Records\IGameSettingCommon.cs" />
     <Compile Include="Plugins\Records\IGroup.cs" />

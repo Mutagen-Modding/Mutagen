@@ -123,12 +123,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScenePhaseUnusedDataGetter rhs) return false;
-            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScenePhaseUnusedDataGetter? obj)
         {
-            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -934,11 +934,11 @@ namespace Mutagen.Bethesda.Fallout4
             ScenePhaseUnusedData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
-            ret.SCDA = MemorySliceExt.Equal(item.SCDA, rhs.SCDA);
-            ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
-            ret.QNAM = MemorySliceExt.Equal(item.QNAM, rhs.QNAM);
-            ret.SCRO = MemorySliceExt.Equal(item.SCRO, rhs.SCRO);
+            ret.SCHR = MemorySliceExt.SequenceEqual(item.SCHR, rhs.SCHR);
+            ret.SCDA = MemorySliceExt.SequenceEqual(item.SCDA, rhs.SCDA);
+            ret.SCTX = MemorySliceExt.SequenceEqual(item.SCTX, rhs.SCTX);
+            ret.QNAM = MemorySliceExt.SequenceEqual(item.QNAM, rhs.QNAM);
+            ret.SCRO = MemorySliceExt.SequenceEqual(item.SCRO, rhs.SCRO);
         }
         
         public string Print(
@@ -1014,28 +1014,28 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IScenePhaseUnusedDataGetter? lhs,
             IScenePhaseUnusedDataGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCHR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCHR) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCHR, rhs.SCHR)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCDA) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCDA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCDA, rhs.SCDA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCDA, rhs.SCDA)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCTX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCTX) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCTX, rhs.SCTX)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.QNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.QNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.QNAM, rhs.QNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCRO) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCRO) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.SCRO, rhs.SCRO)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SCRO, rhs.SCRO)) return false;
             }
             return true;
         }
@@ -1547,12 +1547,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IScenePhaseUnusedDataGetter rhs) return false;
-            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IScenePhaseUnusedDataGetter? obj)
         {
-            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).GetHashCode(this);

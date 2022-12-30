@@ -37,7 +37,7 @@ public sealed class LoadOrderListingsProvider : ILoadOrderListingsProvider
 
 public sealed class LoadOrderListingsInjection : ILoadOrderListingsProvider
 {
-    private ILoadOrderListingGetter[] _listings;
+    private readonly ILoadOrderListingGetter[] _listings;
         
     public LoadOrderListingsInjection(IEnumerable<ILoadOrderListingGetter> listings)
     {

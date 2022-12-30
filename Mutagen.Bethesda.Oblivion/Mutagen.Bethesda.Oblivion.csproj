@@ -71,6 +71,9 @@
     <Compile Include="Records\Common Subrecords\ScriptEffect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\GlobalUnknown.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
@@ -893,18 +896,13 @@
     <Compile Include="Records\Major Records\SpellData_Generated.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\GlobalUnknown_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GitInfo" Version="2.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Loqui" Version="2.50.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.50.1" />
-    <PackageReference Include="NuGetizer" Version="0.8.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Loqui" />
+    <PackageReference Include="Noggog.CSharpExt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Pex
         public override bool Equals(object? obj)
         {
             if (obj is not IPexObjectVariableGetter rhs) return false;
-            return ((PexObjectVariableCommon)((IPexObjectVariableGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PexObjectVariableCommon)((IPexObjectVariableGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPexObjectVariableGetter? obj)
         {
-            return ((PexObjectVariableCommon)((IPexObjectVariableGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PexObjectVariableCommon)((IPexObjectVariableGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PexObjectVariableCommon)((IPexObjectVariableGetter)this).CommonInstance()!).GetHashCode(this);
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Pex
             return ((PexObjectVariableCommon)((IPexObjectVariableGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -843,26 +843,26 @@ namespace Mutagen.Bethesda.Pex
         public virtual bool Equals(
             IPexObjectVariableGetter? lhs,
             IPexObjectVariableGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PexObjectVariable_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectVariable_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectVariable_FieldIndex.TypeName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectVariable_FieldIndex.TypeName) ?? true))
             {
                 if (!string.Equals(lhs.TypeName, rhs.TypeName)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectVariable_FieldIndex.RawUserFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectVariable_FieldIndex.RawUserFlags) ?? true))
             {
                 if (lhs.RawUserFlags != rhs.RawUserFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectVariable_FieldIndex.VariableData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PexObjectVariable_FieldIndex.VariableData) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VariableData, rhs.VariableData, out var lhsVariableData, out var rhsVariableData, out var isVariableDataEqual))
                 {
-                    if (!((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)lhsVariableData).CommonInstance()!).Equals(lhsVariableData, rhsVariableData, crystal?.GetSubCrystal((int)PexObjectVariable_FieldIndex.VariableData))) return false;
+                    if (!((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)lhsVariableData).CommonInstance()!).Equals(lhsVariableData, rhsVariableData, equalsMask?.GetSubCrystal((int)PexObjectVariable_FieldIndex.VariableData))) return false;
                 }
                 else if (!isVariableDataEqual) return false;
             }

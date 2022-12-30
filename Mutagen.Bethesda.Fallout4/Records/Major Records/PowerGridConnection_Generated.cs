@@ -99,12 +99,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPowerGridConnectionGetter rhs) return false;
-            return ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPowerGridConnectionGetter? obj)
         {
-            return ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,18 +917,18 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IPowerGridConnectionGetter? lhs,
             IPowerGridConnectionGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PowerGridConnection_FieldIndex.NodeOne) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PowerGridConnection_FieldIndex.NodeOne) ?? true))
             {
                 if (!lhs.NodeOne.Equals(rhs.NodeOne)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PowerGridConnection_FieldIndex.NodeTwo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PowerGridConnection_FieldIndex.NodeTwo) ?? true))
             {
                 if (!lhs.NodeTwo.Equals(rhs.NodeTwo)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PowerGridConnection_FieldIndex.Line) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PowerGridConnection_FieldIndex.Line) ?? true))
             {
                 if (!lhs.Line.Equals(rhs.Line)) return false;
             }
@@ -1273,12 +1273,12 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(object? obj)
         {
             if (obj is not IPowerGridConnectionGetter rhs) return false;
-            return ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPowerGridConnectionGetter? obj)
         {
-            return ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PowerGridConnectionCommon)((IPowerGridConnectionGetter)this).CommonInstance()!).GetHashCode(this);

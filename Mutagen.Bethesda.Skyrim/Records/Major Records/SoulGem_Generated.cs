@@ -222,9 +222,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoulGemGetter> ISoulGemGetter.LinkedTo => this.LinkedTo;
         #endregion
-        #region DATADataTypeState
-        public SoulGem.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -263,7 +260,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ContainedSoul = initialValue;
                 this.MaximumCapacity = initialValue;
                 this.LinkedTo = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -273,6 +269,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
@@ -285,15 +282,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Weight,
                 TItem ContainedSoul,
                 TItem MaximumCapacity,
-                TItem LinkedTo,
-                TItem DATADataTypeState)
+                TItem LinkedTo)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
@@ -308,7 +305,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ContainedSoul = ContainedSoul;
                 this.MaximumCapacity = MaximumCapacity;
                 this.LinkedTo = LinkedTo;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -333,7 +329,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem ContainedSoul;
             public TItem MaximumCapacity;
             public TItem LinkedTo;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -360,7 +355,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ContainedSoul, rhs.ContainedSoul)) return false;
                 if (!object.Equals(this.MaximumCapacity, rhs.MaximumCapacity)) return false;
                 if (!object.Equals(this.LinkedTo, rhs.LinkedTo)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -379,7 +373,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ContainedSoul);
                 hash.Add(this.MaximumCapacity);
                 hash.Add(this.LinkedTo);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -429,7 +422,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.ContainedSoul)) return false;
                 if (!eval(this.MaximumCapacity)) return false;
                 if (!eval(this.LinkedTo)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -477,7 +469,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.ContainedSoul)) return true;
                 if (eval(this.MaximumCapacity)) return true;
                 if (eval(this.LinkedTo)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -519,7 +510,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ContainedSoul = eval(this.ContainedSoul);
                 obj.MaximumCapacity = eval(this.MaximumCapacity);
                 obj.LinkedTo = eval(this.LinkedTo);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -607,10 +597,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(LinkedTo, "LinkedTo");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -635,7 +621,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? ContainedSoul;
             public Exception? MaximumCapacity;
             public Exception? LinkedTo;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -670,8 +655,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return MaximumCapacity;
                     case SoulGem_FieldIndex.LinkedTo:
                         return LinkedTo;
-                    case SoulGem_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -720,9 +703,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SoulGem_FieldIndex.LinkedTo:
                         this.LinkedTo = ex;
-                        break;
-                    case SoulGem_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -774,9 +754,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case SoulGem_FieldIndex.LinkedTo:
                         this.LinkedTo = (Exception?)obj;
                         break;
-                    case SoulGem_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -799,7 +776,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ContainedSoul != null) return true;
                 if (MaximumCapacity != null) return true;
                 if (LinkedTo != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -874,9 +850,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(LinkedTo, "LinkedTo");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -892,13 +865,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.ContainedSoul = this.ContainedSoul.Combine(rhs.ContainedSoul);
                 ret.MaximumCapacity = this.MaximumCapacity.Combine(rhs.MaximumCapacity);
                 ret.LinkedTo = this.LinkedTo.Combine(rhs.LinkedTo);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -934,7 +906,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ContainedSoul;
             public bool MaximumCapacity;
             public bool LinkedTo;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -952,7 +923,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ContainedSoul = defaultOn;
                 this.MaximumCapacity = defaultOn;
                 this.LinkedTo = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -973,7 +943,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ContainedSoul, null));
                 ret.Add((MaximumCapacity, null));
                 ret.Add((LinkedTo, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1042,10 +1011,6 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        [Flags]
-        public enum DATADataType
-        {
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SoulGemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SoulGemSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SoulGemSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
@@ -1057,12 +1022,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISoulGemGetter rhs) return false;
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoulGemGetter? obj)
         {
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1175,7 +1140,6 @@ namespace Mutagen.Bethesda.Skyrim
         new SoulGem.Level ContainedSoul { get; set; }
         new SoulGem.Level MaximumCapacity { get; set; }
         new IFormLinkNullable<ISoulGemGetter> LinkedTo { get; set; }
-        new SoulGem.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new SoulGem.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1250,7 +1214,6 @@ namespace Mutagen.Bethesda.Skyrim
         SoulGem.Level ContainedSoul { get; }
         SoulGem.Level MaximumCapacity { get; }
         IFormLinkNullableGetter<ISoulGemGetter> LinkedTo { get; }
-        SoulGem.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         SoulGem.MajorFlag MajorFlags { get; }
@@ -1311,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1387,6 +1350,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static SoulGem Duplicate(
+            this ISoulGemGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1419,20 +1393,20 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        Name = 7,
-        Model = 8,
-        Icons = 9,
-        Destructible = 10,
-        PickUpSound = 11,
-        PutDownSound = 12,
-        Keywords = 13,
-        Value = 14,
-        Weight = 15,
-        ContainedSoul = 16,
-        MaximumCapacity = 17,
-        LinkedTo = 18,
-        DATADataTypeState = 19,
+        SkyrimMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        Icons = 10,
+        Destructible = 11,
+        PickUpSound = 12,
+        PutDownSound = 13,
+        Keywords = 14,
+        Value = 15,
+        Weight = 16,
+        ContainedSoul = 17,
+        MaximumCapacity = 18,
+        LinkedTo = 19,
     }
     #endregion
 
@@ -1450,7 +1424,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "1d5e8cdd-e010-45ed-aca9-7d332b1eb235";
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 13;
 
         public const ushort FieldCount = 20;
 
@@ -1557,7 +1531,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.ContainedSoul = default;
             item.MaximumCapacity = default;
             item.LinkedTo.Clear();
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1718,7 +1691,6 @@ namespace Mutagen.Bethesda.Skyrim
             ret.ContainedSoul = item.ContainedSoul == rhs.ContainedSoul;
             ret.MaximumCapacity = item.MaximumCapacity == rhs.MaximumCapacity;
             ret.LinkedTo = item.LinkedTo.Equals(rhs.LinkedTo);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1836,10 +1808,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.LinkedTo.FormKeyNullable, "LinkedTo");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public static SoulGem_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1858,8 +1826,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (SoulGem_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (SoulGem_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (SoulGem_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1876,7 +1846,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (SoulGem_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1884,81 +1854,77 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             ISoulGemGetter? lhs,
             ISoulGemGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.ObjectBounds) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)SoulGem_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)SoulGem_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)SoulGem_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Icons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Icons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
                 {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)SoulGem_FieldIndex.Icons))) return false;
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)SoulGem_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)SoulGem_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)SoulGem_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.PickUpSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.PutDownSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PutDownSound) ?? true))
             {
                 if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Keywords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
             {
                 if (lhs.ContainedSoul != rhs.ContainedSoul) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
             {
                 if (lhs.MaximumCapacity != rhs.MaximumCapacity) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.LinkedTo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoulGem_FieldIndex.LinkedTo) ?? true))
             {
                 if (!lhs.LinkedTo.Equals(rhs.LinkedTo)) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1966,23 +1932,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoulGemGetter?)lhs,
                 rhs: rhs as ISoulGemGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (ISoulGemGetter?)lhs,
                 rhs: rhs as ISoulGemGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(ISoulGemGetter item)
@@ -2016,7 +1982,6 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.ContainedSoul);
             hash.Add(item.MaximumCapacity);
             hash.Add(item.LinkedTo);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2349,10 +2314,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.LinkedTo.SetTo(rhs.LinkedTo.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -2501,15 +2462,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public new static readonly SoulGemBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ISoulGemGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ISoulGemGetter item,
             MutagenWriter writer,
@@ -2607,7 +2559,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 try
                 {
-                    WriteEmbedded(
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -2667,15 +2619,6 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly SoulGemBinaryCreateTranslation Instance = new SoulGemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SLGM;
-        public static void FillBinaryStructs(
-            ISoulGemInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ISoulGemInternal item,
             MutagenFrame frame,
@@ -2875,7 +2818,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private RangeInt32? _DATALocation;
-        public SoulGem.DATADataType DATADataTypeState { get; private set; }
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
         private bool _Value_IsSet => _DATALocation.HasValue;
@@ -3084,12 +3026,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISoulGemGetter rhs) return false;
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(ISoulGemGetter? obj)
         {
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).GetHashCode(this);

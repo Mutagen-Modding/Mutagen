@@ -267,6 +267,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem SkyrimMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem DATA,
                 TItem Flags,
@@ -288,7 +289,8 @@ namespace Mutagen.Bethesda.Skyrim
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>(VirtualMachineAdapter, new DialogResponsesAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.DATA = DATA;
@@ -1096,11 +1098,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Topic = this.Topic.Combine(rhs.Topic);
                 ret.PreviousDialog = this.PreviousDialog.Combine(rhs.PreviousDialog);
                 ret.FavorLevel = this.FavorLevel.Combine(rhs.FavorLevel);
-                ret.LinkTo = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LinkTo?.Overall, rhs.LinkTo?.Overall), ExceptionExt.Combine(this.LinkTo?.Specific, rhs.LinkTo?.Specific));
+                ret.LinkTo = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LinkTo?.Overall, rhs.LinkTo?.Overall), Noggog.ExceptionExt.Combine(this.LinkTo?.Specific, rhs.LinkTo?.Specific));
                 ret.ResponseData = this.ResponseData.Combine(rhs.ResponseData);
-                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.UnknownData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponsesUnknownData.ErrorMask?>>?>(ExceptionExt.Combine(this.UnknownData?.Overall, rhs.UnknownData?.Overall), ExceptionExt.Combine(this.UnknownData?.Specific, rhs.UnknownData?.Specific));
+                ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.UnknownData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponsesUnknownData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UnknownData?.Overall, rhs.UnknownData?.Overall), Noggog.ExceptionExt.Combine(this.UnknownData?.Specific, rhs.UnknownData?.Specific));
                 ret.Prompt = this.Prompt.Combine(rhs.Prompt);
                 ret.Speaker = this.Speaker.Combine(rhs.Speaker);
                 ret.WalkAwayTopic = this.WalkAwayTopic.Combine(rhs.WalkAwayTopic);
@@ -1261,12 +1263,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDialogResponsesGetter rhs) return false;
-            return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogResponsesGetter? obj)
         {
-            return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1459,7 +1461,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogResponsesCommon)((IDialogResponsesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1535,6 +1537,17 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static DialogResponses Duplicate(
+            this IDialogResponsesGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((DialogResponsesCommon)((IDialogResponsesGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1567,21 +1580,22 @@ namespace Mutagen.Bethesda.Skyrim
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        VirtualMachineAdapter = 6,
-        DATA = 7,
-        Flags = 8,
-        Topic = 9,
-        PreviousDialog = 10,
-        FavorLevel = 11,
-        LinkTo = 12,
-        ResponseData = 13,
-        Responses = 14,
-        Conditions = 15,
-        UnknownData = 16,
-        Prompt = 17,
-        Speaker = 18,
-        WalkAwayTopic = 19,
-        AudioOutputOverride = 20,
+        SkyrimMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        DATA = 8,
+        Flags = 9,
+        Topic = 10,
+        PreviousDialog = 11,
+        FavorLevel = 12,
+        LinkTo = 13,
+        ResponseData = 14,
+        Responses = 15,
+        Conditions = 16,
+        UnknownData = 17,
+        Prompt = 18,
+        Speaker = 19,
+        WalkAwayTopic = 20,
+        AudioOutputOverride = 21,
     }
     #endregion
 
@@ -1601,7 +1615,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(DialogResponses.Mask<>);
 
@@ -1635,6 +1649,7 @@ namespace Mutagen.Bethesda.Skyrim
             var all = RecordCollection.Factory(
                 RecordTypes.INFO,
                 RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.DATA,
                 RecordTypes.ENAM,
                 RecordTypes.TPIC,
@@ -1839,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.Flags = EqualsMaskHelper.EqualsHelper(
                 item.Flags,
                 rhs.Flags,
@@ -2041,8 +2056,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (DialogResponses_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return (DialogResponses_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (DialogResponses_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2059,7 +2076,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case MajorRecord_FieldIndex.EditorID:
                     return (DialogResponses_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -2067,75 +2084,75 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual bool Equals(
             IDialogResponsesGetter? lhs,
             IDialogResponsesGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.VirtualMachineAdapter) ?? true))
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.VirtualMachineAdapter) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
                 {
-                    if (!((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)DialogResponses_FieldIndex.VirtualMachineAdapter))) return false;
+                    if (!((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.VirtualMachineAdapter))) return false;
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.DATA) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.DATA) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Flags) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Flags, rhs.Flags, out var lhsFlags, out var rhsFlags, out var isFlagsEqual))
                 {
-                    if (!((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)lhsFlags).CommonInstance()!).Equals(lhsFlags, rhsFlags, crystal?.GetSubCrystal((int)DialogResponses_FieldIndex.Flags))) return false;
+                    if (!((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)lhsFlags).CommonInstance()!).Equals(lhsFlags, rhsFlags, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.Flags))) return false;
                 }
                 else if (!isFlagsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.Topic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Topic) ?? true))
             {
                 if (!lhs.Topic.Equals(rhs.Topic)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.PreviousDialog) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.PreviousDialog) ?? true))
             {
                 if (!lhs.PreviousDialog.Equals(rhs.PreviousDialog)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.FavorLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.FavorLevel) ?? true))
             {
                 if (lhs.FavorLevel != rhs.FavorLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.LinkTo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.LinkTo) ?? true))
             {
                 if (!lhs.LinkTo.SequenceEqualNullable(rhs.LinkTo)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.ResponseData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.ResponseData) ?? true))
             {
                 if (!lhs.ResponseData.Equals(rhs.ResponseData)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.Responses) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Responses) ?? true))
             {
-                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponseCommon)((IDialogResponseGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogResponses_FieldIndex.Responses)))) return false;
+                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponseCommon)((IDialogResponseGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.Responses)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogResponses_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.Conditions)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.UnknownData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.UnknownData) ?? true))
             {
-                if (!lhs.UnknownData.SequenceEqual(rhs.UnknownData, (l, r) => ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogResponses_FieldIndex.UnknownData)))) return false;
+                if (!lhs.UnknownData.SequenceEqual(rhs.UnknownData, (l, r) => ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogResponses_FieldIndex.UnknownData)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.Prompt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Prompt) ?? true))
             {
                 if (!object.Equals(lhs.Prompt, rhs.Prompt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.Speaker) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Speaker) ?? true))
             {
                 if (!lhs.Speaker.Equals(rhs.Speaker)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.WalkAwayTopic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.WalkAwayTopic) ?? true))
             {
                 if (!lhs.WalkAwayTopic.Equals(rhs.WalkAwayTopic)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.AudioOutputOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.AudioOutputOverride) ?? true))
             {
                 if (!lhs.AudioOutputOverride.Equals(rhs.AudioOutputOverride)) return false;
             }
@@ -2145,23 +2162,23 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDialogResponsesGetter?)lhs,
                 rhs: rhs as IDialogResponsesGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IDialogResponsesGetter?)lhs,
                 rhs: rhs as IDialogResponsesGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IDialogResponsesGetter item)
@@ -2715,7 +2732,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ((DialogResponsesAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
-                    translationParams: translationParams);
+                    translationParams: translationParams.With(RecordTypes.XXXX));
             }
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -2893,7 +2910,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.DialogResponsesAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.DialogResponsesAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)DialogResponses_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.DATA:
@@ -3001,6 +3020,11 @@ namespace Mutagen.Bethesda.Skyrim
                     item.AudioOutputOverride.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponses_FieldIndex.AudioOutputOverride;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -3063,8 +3087,9 @@ namespace Mutagen.Bethesda.Skyrim
         public DialogResponses.MajorFlag MajorFlags => (DialogResponses.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IDialogResponsesAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? DialogResponsesAdapterBinaryOverlay.DialogResponsesAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        public IDialogResponsesAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? DialogResponsesAdapterBinaryOverlay.DialogResponsesAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region DATA
@@ -3183,6 +3208,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)DialogResponses_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.DATA:
@@ -3284,6 +3314,11 @@ namespace Mutagen.Bethesda.Skyrim
                     _AudioOutputOverrideLocation = (stream.Position - offset);
                     return (int)DialogResponses_FieldIndex.AudioOutputOverride;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return base.FillRecordType(
                         stream: stream,
@@ -3322,12 +3357,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDialogResponsesGetter rhs) return false;
-            return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IDialogResponsesGetter? obj)
         {
-            return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).GetHashCode(this);

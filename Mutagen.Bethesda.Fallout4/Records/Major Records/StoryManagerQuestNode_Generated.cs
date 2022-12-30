@@ -89,9 +89,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region DNAMDataTypeState
-        public StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -123,7 +120,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaxNumQuestsToRun = initialValue;
                 this.HoursUntilReset = initialValue;
                 this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>());
-                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -133,6 +129,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem Parent,
                 TItem PreviousSibling,
                 TItem Conditions,
@@ -141,8 +138,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem MaxConcurrentQuests,
                 TItem MaxNumQuestsToRun,
                 TItem HoursUntilReset,
-                TItem Quests,
-                TItem DNAMDataTypeState)
+                TItem Quests)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -150,6 +146,7 @@ namespace Mutagen.Bethesda.Fallout4
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags,
                 Parent: Parent,
                 PreviousSibling: PreviousSibling,
                 Conditions: Conditions)
@@ -160,7 +157,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaxNumQuestsToRun = MaxNumQuestsToRun;
                 this.HoursUntilReset = HoursUntilReset;
                 this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(Quests, Enumerable.Empty<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>());
-                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -178,7 +174,6 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem MaxNumQuestsToRun;
             public TItem HoursUntilReset;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>? Quests;
-            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -198,7 +193,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.MaxNumQuestsToRun, rhs.MaxNumQuestsToRun)) return false;
                 if (!object.Equals(this.HoursUntilReset, rhs.HoursUntilReset)) return false;
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
-                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -210,7 +204,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.MaxNumQuestsToRun);
                 hash.Add(this.HoursUntilReset);
                 hash.Add(this.Quests);
-                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -238,7 +231,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -264,7 +256,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -300,7 +291,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -358,10 +348,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if (printMask?.DNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -379,7 +365,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? MaxNumQuestsToRun;
             public Exception? HoursUntilReset;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>? Quests;
-            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -400,8 +385,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return HoursUntilReset;
                     case StoryManagerQuestNode_FieldIndex.Quests:
                         return Quests;
-                    case StoryManagerQuestNode_FieldIndex.DNAMDataTypeState:
-                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -429,9 +412,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case StoryManagerQuestNode_FieldIndex.Quests:
                         this.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(ex, null);
-                        break;
-                    case StoryManagerQuestNode_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -462,9 +442,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case StoryManagerQuestNode_FieldIndex.Quests:
                         this.Quests = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>)obj;
                         break;
-                    case StoryManagerQuestNode_FieldIndex.DNAMDataTypeState:
-                        this.DNAMDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -480,7 +457,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (MaxNumQuestsToRun != null) return true;
                 if (HoursUntilReset != null) return true;
                 if (Quests != null) return true;
-                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -540,9 +516,6 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                {
-                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
-                }
             }
             #endregion
 
@@ -556,8 +529,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MaxConcurrentQuests = this.MaxConcurrentQuests.Combine(rhs.MaxConcurrentQuests);
                 ret.MaxNumQuestsToRun = this.MaxNumQuestsToRun.Combine(rhs.MaxNumQuestsToRun);
                 ret.HoursUntilReset = this.HoursUntilReset.Combine(rhs.HoursUntilReset);
-                ret.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), ExceptionExt.Combine(this.Quests?.Specific, rhs.Quests?.Specific));
-                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
+                ret.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), Noggog.ExceptionExt.Combine(this.Quests?.Specific, rhs.Quests?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -586,7 +558,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool MaxNumQuestsToRun;
             public bool HoursUntilReset;
             public StoryManagerQuest.TranslationMask? Quests;
-            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -600,7 +571,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaxConcurrentQuests = defaultOn;
                 this.MaxNumQuestsToRun = defaultOn;
                 this.HoursUntilReset = defaultOn;
-                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -614,7 +584,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((MaxNumQuestsToRun, null));
                 ret.Add((HoursUntilReset, null));
                 ret.Add((Quests == null ? DefaultOn : !Quests.GetCrystal().CopyNothing, Quests?.GetCrystal()));
-                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -671,10 +640,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IStoryManagerQuestNode);
 
-        [Flags]
-        public enum DNAMDataType
-        {
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -683,12 +648,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IStoryManagerQuestNodeGetter rhs) return false;
-            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStoryManagerQuestNodeGetter? obj)
         {
-            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -765,7 +730,6 @@ namespace Mutagen.Bethesda.Fallout4
         new UInt32? MaxNumQuestsToRun { get; set; }
         new Single? HoursUntilReset { get; set; }
         new ExtendedList<StoryManagerQuest> Quests { get; }
-        new StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IStoryManagerQuestNodeInternal :
@@ -790,7 +754,6 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32? MaxNumQuestsToRun { get; }
         Single? HoursUntilReset { get; }
         IReadOnlyList<IStoryManagerQuestGetter> Quests { get; }
-        StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -847,7 +810,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -923,6 +886,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static StoryManagerQuestNode Duplicate(
+            this IStoryManagerQuestNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -955,16 +929,16 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        PreviousSibling = 7,
-        Conditions = 8,
-        Flags = 9,
-        QuestFlags = 10,
-        MaxConcurrentQuests = 11,
-        MaxNumQuestsToRun = 12,
-        HoursUntilReset = 13,
-        Quests = 14,
-        DNAMDataTypeState = 15,
+        Fallout4MajorRecordFlags = 6,
+        Parent = 7,
+        PreviousSibling = 8,
+        Conditions = 9,
+        Flags = 10,
+        QuestFlags = 11,
+        MaxConcurrentQuests = 12,
+        MaxNumQuestsToRun = 13,
+        HoursUntilReset = 14,
+        Quests = 15,
     }
     #endregion
 
@@ -982,7 +956,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "486db3f7-2958-47a7-9344-ac18d213f276";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 16;
 
@@ -1075,7 +1049,6 @@ namespace Mutagen.Bethesda.Fallout4
             item.MaxNumQuestsToRun = default;
             item.HoursUntilReset = default;
             item.Quests.Clear();
-            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1186,7 +1159,6 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Quests,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1273,10 +1245,6 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.DNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
-            }
         }
         
         public static StoryManagerQuestNode_FieldIndex ConvertFieldIndex(AStoryManagerNode_FieldIndex index)
@@ -1295,6 +1263,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.Version2:
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
+                case AStoryManagerNode_FieldIndex.Fallout4MajorRecordFlags:
+                    return (StoryManagerQuestNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.Parent:
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
                 case AStoryManagerNode_FieldIndex.PreviousSibling:
@@ -1302,7 +1272,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case AStoryManagerNode_FieldIndex.Conditions:
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1322,8 +1292,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (StoryManagerQuestNode_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1340,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (StoryManagerQuestNode_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -1348,37 +1320,33 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IStoryManagerQuestNodeGetter? lhs,
             IStoryManagerQuestNodeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Flags) ?? true))
+            if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.QuestFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.QuestFlags) ?? true))
             {
                 if (lhs.QuestFlags != rhs.QuestFlags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests) ?? true))
             {
                 if (lhs.MaxConcurrentQuests != rhs.MaxConcurrentQuests) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun) ?? true))
             {
                 if (lhs.MaxNumQuestsToRun != rhs.MaxNumQuestsToRun) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.HoursUntilReset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.HoursUntilReset) ?? true))
             {
                 if (!lhs.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Quests) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Quests) ?? true))
             {
-                if (!lhs.Quests.SequenceEqual(rhs.Quests, (l, r) => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)StoryManagerQuestNode_FieldIndex.Quests)))) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+                if (!lhs.Quests.SequenceEqual(rhs.Quests, (l, r) => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)StoryManagerQuestNode_FieldIndex.Quests)))) return false;
             }
             return true;
         }
@@ -1386,34 +1354,34 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IAStoryManagerNodeGetter? lhs,
             IAStoryManagerNodeGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStoryManagerQuestNodeGetter?)lhs,
                 rhs: rhs as IStoryManagerQuestNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStoryManagerQuestNodeGetter?)lhs,
                 rhs: rhs as IStoryManagerQuestNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IStoryManagerQuestNodeGetter?)lhs,
                 rhs: rhs as IStoryManagerQuestNodeGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IStoryManagerQuestNodeGetter item)
@@ -1434,7 +1402,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(HoursUntilResetitem);
             }
             hash.Add(item.Quests);
-            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1601,10 +1568,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
             }
         }
         
@@ -1784,15 +1747,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly StoryManagerQuestNodeBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IStoryManagerQuestNodeGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IStoryManagerQuestNodeGetter item,
             MutagenWriter writer,
@@ -1851,7 +1805,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 try
                 {
-                    WriteEmbedded(
+                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -1922,15 +1876,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly StoryManagerQuestNodeBinaryCreateTranslation Instance = new StoryManagerQuestNodeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SMQN;
-        public static void FillBinaryStructs(
-            IStoryManagerQuestNodeInternal item,
-            MutagenFrame frame)
-        {
-            AStoryManagerNodeBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IStoryManagerQuestNodeInternal item,
             MutagenFrame frame,
@@ -2050,7 +1995,6 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         private RangeInt32? _DNAMLocation;
-        public StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
@@ -2217,12 +2161,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IStoryManagerQuestNodeGetter rhs) return false;
-            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IStoryManagerQuestNodeGetter? obj)
         {
-            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).GetHashCode(this);

@@ -99,12 +99,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IPathGridPointGetter rhs) return false;
-            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPathGridPointGetter? obj)
         {
-            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).GetHashCode(this);
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Point = this.Point.Combine(rhs.Point);
                 ret.NumConnections = this.NumConnections.Combine(rhs.NumConnections);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.Connections = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Connections?.Overall, rhs.Connections?.Overall), ExceptionExt.Combine(this.Connections?.Specific, rhs.Connections?.Specific));
+                ret.Connections = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Connections?.Overall, rhs.Connections?.Overall), Noggog.ExceptionExt.Combine(this.Connections?.Specific, rhs.Connections?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1015,22 +1015,22 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual bool Equals(
             IPathGridPointGetter? lhs,
             IPathGridPointGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((crystal?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Point) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Point) ?? true))
             {
                 if (!lhs.Point.Equals(rhs.Point)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PathGridPoint_FieldIndex.NumConnections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.NumConnections) ?? true))
             {
                 if (lhs.NumConnections != rhs.NumConnections) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Unused) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Connections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Connections) ?? true))
             {
                 if (!lhs.Connections.SequenceEqualNullable(rhs.Connections)) return false;
             }
@@ -1380,12 +1380,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (obj is not IPathGridPointGetter rhs) return false;
-            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IPathGridPointGetter? obj)
         {
-            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).GetHashCode(this);

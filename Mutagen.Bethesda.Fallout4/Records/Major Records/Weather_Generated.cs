@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Single FogDistanceNightMax { get; set; } = default;
         #endregion
         #region FogDistanceDayNearHeightMid
-        public readonly static Single _FogDistanceDayNearHeightMid_Default = 0f;
+        public static readonly Single FogDistanceDayNearHeightMidDefault = 0f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceDayNearHeightMid;
         public Single FogDistanceDayNearHeightMid
@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceDayNearHeightRange
-        public readonly static Single _FogDistanceDayNearHeightRange_Default = 10000f;
+        public static readonly Single FogDistanceDayNearHeightRangeDefault = 10000f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceDayNearHeightRange;
         public Single FogDistanceDayNearHeightRange
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceNightNearHeightMid
-        public readonly static Single _FogDistanceNightNearHeightMid_Default = 0f;
+        public static readonly Single FogDistanceNightNearHeightMidDefault = 0f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNightNearHeightMid;
         public Single FogDistanceNightNearHeightMid
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceNightNearHeightRange
-        public readonly static Single _FogDistanceNightNearHeightRange_Default = 10000f;
+        public static readonly Single FogDistanceNightNearHeightRangeDefault = 10000f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNightNearHeightRange;
         public Single FogDistanceNightNearHeightRange
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceDayHighDensityScale
-        public readonly static Single _FogDistanceDayHighDensityScale_Default = 1f;
+        public static readonly Single FogDistanceDayHighDensityScaleDefault = 1f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceDayHighDensityScale;
         public Single FogDistanceDayHighDensityScale
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceNightHighDensityScale
-        public readonly static Single _FogDistanceNightHighDensityScale_Default = 1f;
+        public static readonly Single FogDistanceNightHighDensityScaleDefault = 1f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNightHighDensityScale;
         public Single FogDistanceNightHighDensityScale
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceDayFarHeightMid
-        public readonly static Single _FogDistanceDayFarHeightMid_Default = 0f;
+        public static readonly Single FogDistanceDayFarHeightMidDefault = 0f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceDayFarHeightMid;
         public Single FogDistanceDayFarHeightMid
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceDayFarHeightRange
-        public readonly static Single _FogDistanceDayFarHeightRange_Default = 10000f;
+        public static readonly Single FogDistanceDayFarHeightRangeDefault = 10000f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceDayFarHeightRange;
         public Single FogDistanceDayFarHeightRange
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceNightFarHeightMid
-        public readonly static Single _FogDistanceNightFarHeightMid_Default = 0f;
+        public static readonly Single FogDistanceNightFarHeightMidDefault = 0f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNightFarHeightMid;
         public Single FogDistanceNightFarHeightMid
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region FogDistanceNightFarHeightRange
-        public readonly static Single _FogDistanceNightFarHeightRange_Default = 10000f;
+        public static readonly Single FogDistanceNightFarHeightRangeDefault = 10000f;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNightFarHeightRange;
         public Single FogDistanceNightFarHeightRange
@@ -766,6 +766,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
+                TItem Fallout4MajorRecordFlags,
                 TItem CloudTextures,
                 TItem LNAM,
                 TItem Precipitation,
@@ -854,7 +855,8 @@ namespace Mutagen.Bethesda.Fallout4
                 VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.CloudTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CloudTextures, Enumerable.Empty<(int Index, TItem Value)>());
                 this.LNAM = LNAM;
@@ -3458,12 +3460,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.CloudTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CloudTextures?.Overall, rhs.CloudTextures?.Overall), ExceptionExt.Combine(this.CloudTextures?.Specific, rhs.CloudTextures?.Specific));
+                ret.CloudTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CloudTextures?.Overall, rhs.CloudTextures?.Overall), Noggog.ExceptionExt.Combine(this.CloudTextures?.Specific, rhs.CloudTextures?.Specific));
                 ret.LNAM = this.LNAM.Combine(rhs.LNAM);
                 ret.Precipitation = this.Precipitation.Combine(rhs.Precipitation);
                 ret.VisualEffect = this.VisualEffect.Combine(rhs.VisualEffect);
                 ret.ONAM = this.ONAM.Combine(rhs.ONAM);
-                ret.Clouds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CloudLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Clouds?.Overall, rhs.Clouds?.Overall), ExceptionExt.Combine(this.Clouds?.Specific, rhs.Clouds?.Specific));
+                ret.Clouds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CloudLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Clouds?.Overall, rhs.Clouds?.Overall), Noggog.ExceptionExt.Combine(this.Clouds?.Specific, rhs.Clouds?.Specific));
                 ret.SkyUpperColor = this.SkyUpperColor.Combine(rhs.SkyUpperColor, (l, r) => l.Combine(r));
                 ret.FogNearColor = this.FogNearColor.Combine(rhs.FogNearColor, (l, r) => l.Combine(r));
                 ret.UnknownColor = this.UnknownColor.Combine(rhs.UnknownColor, (l, r) => l.Combine(r));
@@ -3483,7 +3485,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.MoonGlareColor = this.MoonGlareColor.Combine(rhs.MoonGlareColor, (l, r) => l.Combine(r));
                 ret.FogNearHigh = this.FogNearHigh.Combine(rhs.FogNearHigh, (l, r) => l.Combine(r));
                 ret.FogFarHigh = this.FogFarHigh.Combine(rhs.FogFarHigh, (l, r) => l.Combine(r));
-                ret.NAM4 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.NAM4?.Overall, rhs.NAM4?.Overall), ExceptionExt.Combine(this.NAM4?.Specific, rhs.NAM4?.Specific));
+                ret.NAM4 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.NAM4?.Overall, rhs.NAM4?.Overall), Noggog.ExceptionExt.Combine(this.NAM4?.Specific, rhs.NAM4?.Specific));
                 ret.FogDistanceDayNear = this.FogDistanceDayNear.Combine(rhs.FogDistanceDayNear);
                 ret.FogDistanceDayFar = this.FogDistanceDayFar.Combine(rhs.FogDistanceDayFar);
                 ret.FogDistanceNightNear = this.FogDistanceNightNear.Combine(rhs.FogDistanceNightNear);
@@ -3519,8 +3521,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.WindDirection = this.WindDirection.Combine(rhs.WindDirection);
                 ret.WindDirectionRange = this.WindDirectionRange.Combine(rhs.WindDirectionRange);
                 ret.WindTurbulance = this.WindTurbulance.Combine(rhs.WindTurbulance);
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
-                ret.SkyStatics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SkyStatics?.Overall, rhs.SkyStatics?.Overall), ExceptionExt.Combine(this.SkyStatics?.Specific, rhs.SkyStatics?.Specific));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.SkyStatics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SkyStatics?.Overall, rhs.SkyStatics?.Overall), Noggog.ExceptionExt.Combine(this.SkyStatics?.Specific, rhs.SkyStatics?.Specific));
                 ret.ImageSpaceSunrise = this.ImageSpaceSunrise.Combine(rhs.ImageSpaceSunrise);
                 ret.ImageSpaceDay = this.ImageSpaceDay.Combine(rhs.ImageSpaceDay);
                 ret.ImageSpaceSunset = this.ImageSpaceSunset.Combine(rhs.ImageSpaceSunset);
@@ -3884,12 +3886,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IWeatherGetter rhs) return false;
-            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherGetter? obj)
         {
-            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).GetHashCode(this);
@@ -4198,7 +4200,7 @@ namespace Mutagen.Bethesda.Fallout4
             return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
-                crystal: equalsMask?.GetCrystal());
+                equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -4274,6 +4276,17 @@ namespace Mutagen.Bethesda.Fallout4
                 copyMask: copyMask?.GetCrystal());
         }
 
+        public static Weather Duplicate(
+            this IWeatherGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -4306,88 +4319,89 @@ namespace Mutagen.Bethesda.Fallout4
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        CloudTextures = 6,
-        LNAM = 7,
-        Precipitation = 8,
-        VisualEffect = 9,
-        ONAM = 10,
-        Clouds = 11,
-        SkyUpperColor = 12,
-        FogNearColor = 13,
-        UnknownColor = 14,
-        AmbientColor = 15,
-        SunlightColor = 16,
-        SunColor = 17,
-        StarsColor = 18,
-        SkyLowerColor = 19,
-        HorizonColor = 20,
-        EffectLightingColor = 21,
-        CloudLodDiffuseColor = 22,
-        CloudLodAmbientColor = 23,
-        FogFarColor = 24,
-        SkyStaticsColor = 25,
-        WaterMultiplierColor = 26,
-        SunGlareColor = 27,
-        MoonGlareColor = 28,
-        FogNearHigh = 29,
-        FogFarHigh = 30,
-        NAM4 = 31,
-        FogDistanceDayNear = 32,
-        FogDistanceDayFar = 33,
-        FogDistanceNightNear = 34,
-        FogDistanceNightFar = 35,
-        FogDistanceDayPower = 36,
-        FogDistanceNightPower = 37,
-        FogDistanceDayMax = 38,
-        FogDistanceNightMax = 39,
-        FogDistanceDayNearHeightMid = 40,
-        FogDistanceDayNearHeightRange = 41,
-        FogDistanceNightNearHeightMid = 42,
-        FogDistanceNightNearHeightRange = 43,
-        FogDistanceDayHighDensityScale = 44,
-        FogDistanceNightHighDensityScale = 45,
-        FogDistanceDayFarHeightMid = 46,
-        FogDistanceDayFarHeightRange = 47,
-        FogDistanceNightFarHeightMid = 48,
-        FogDistanceNightFarHeightRange = 49,
-        WindSpeed = 50,
-        Unknown = 51,
-        TransDelta = 52,
-        SunGlare = 53,
-        SunDamage = 54,
-        PrecipitationBeginFadeIn = 55,
-        PrecipitationEndFadeOut = 56,
-        ThunderLightningBeginFadeIn = 57,
-        ThunderLightningEndFadeOut = 58,
-        ThunderLightningFrequency = 59,
-        Flags = 60,
-        LightningColor = 61,
-        VisualEffectBegin = 62,
-        VisualEffectEnd = 63,
-        WindDirection = 64,
-        WindDirectionRange = 65,
-        WindTurbulance = 66,
-        Sounds = 67,
-        SkyStatics = 68,
-        ImageSpaceSunrise = 69,
-        ImageSpaceDay = 70,
-        ImageSpaceSunset = 71,
-        ImageSpaceNight = 72,
-        ImageSpaceEarlySunrise = 73,
-        ImageSpaceLateSunrise = 74,
-        ImageSpaceEarlySunset = 75,
-        ImageSpaceLateSunset = 76,
-        GodRays = 77,
-        DirectionalAmbientLightingColors = 78,
-        Aurora = 79,
-        SunGlareLensFlare = 80,
-        Magic = 81,
-        VolatilityMult = 82,
-        VisibilityMult = 83,
-        NAM0DataTypeState = 84,
-        FNAMDataTypeState = 85,
-        DATADataTypeState = 86,
-        IMSPDataTypeState = 87,
+        Fallout4MajorRecordFlags = 6,
+        CloudTextures = 7,
+        LNAM = 8,
+        Precipitation = 9,
+        VisualEffect = 10,
+        ONAM = 11,
+        Clouds = 12,
+        SkyUpperColor = 13,
+        FogNearColor = 14,
+        UnknownColor = 15,
+        AmbientColor = 16,
+        SunlightColor = 17,
+        SunColor = 18,
+        StarsColor = 19,
+        SkyLowerColor = 20,
+        HorizonColor = 21,
+        EffectLightingColor = 22,
+        CloudLodDiffuseColor = 23,
+        CloudLodAmbientColor = 24,
+        FogFarColor = 25,
+        SkyStaticsColor = 26,
+        WaterMultiplierColor = 27,
+        SunGlareColor = 28,
+        MoonGlareColor = 29,
+        FogNearHigh = 30,
+        FogFarHigh = 31,
+        NAM4 = 32,
+        FogDistanceDayNear = 33,
+        FogDistanceDayFar = 34,
+        FogDistanceNightNear = 35,
+        FogDistanceNightFar = 36,
+        FogDistanceDayPower = 37,
+        FogDistanceNightPower = 38,
+        FogDistanceDayMax = 39,
+        FogDistanceNightMax = 40,
+        FogDistanceDayNearHeightMid = 41,
+        FogDistanceDayNearHeightRange = 42,
+        FogDistanceNightNearHeightMid = 43,
+        FogDistanceNightNearHeightRange = 44,
+        FogDistanceDayHighDensityScale = 45,
+        FogDistanceNightHighDensityScale = 46,
+        FogDistanceDayFarHeightMid = 47,
+        FogDistanceDayFarHeightRange = 48,
+        FogDistanceNightFarHeightMid = 49,
+        FogDistanceNightFarHeightRange = 50,
+        WindSpeed = 51,
+        Unknown = 52,
+        TransDelta = 53,
+        SunGlare = 54,
+        SunDamage = 55,
+        PrecipitationBeginFadeIn = 56,
+        PrecipitationEndFadeOut = 57,
+        ThunderLightningBeginFadeIn = 58,
+        ThunderLightningEndFadeOut = 59,
+        ThunderLightningFrequency = 60,
+        Flags = 61,
+        LightningColor = 62,
+        VisualEffectBegin = 63,
+        VisualEffectEnd = 64,
+        WindDirection = 65,
+        WindDirectionRange = 66,
+        WindTurbulance = 67,
+        Sounds = 68,
+        SkyStatics = 69,
+        ImageSpaceSunrise = 70,
+        ImageSpaceDay = 71,
+        ImageSpaceSunset = 72,
+        ImageSpaceNight = 73,
+        ImageSpaceEarlySunrise = 74,
+        ImageSpaceLateSunrise = 75,
+        ImageSpaceEarlySunset = 76,
+        ImageSpaceLateSunset = 77,
+        GodRays = 78,
+        DirectionalAmbientLightingColors = 79,
+        Aurora = 80,
+        SunGlareLensFlare = 81,
+        Magic = 82,
+        VolatilityMult = 83,
+        VisibilityMult = 84,
+        NAM0DataTypeState = 85,
+        FNAMDataTypeState = 86,
+        DATADataTypeState = 87,
+        IMSPDataTypeState = 88,
     }
     #endregion
 
@@ -4407,7 +4421,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 82;
 
-        public const ushort FieldCount = 88;
+        public const ushort FieldCount = 89;
 
         public static readonly Type MaskType = typeof(Weather.Mask<>);
 
@@ -4544,16 +4558,16 @@ namespace Mutagen.Bethesda.Fallout4
             item.FogDistanceNightPower = default;
             item.FogDistanceDayMax = default;
             item.FogDistanceNightMax = default;
-            item.FogDistanceDayNearHeightMid = Weather._FogDistanceDayNearHeightMid_Default;
-            item.FogDistanceDayNearHeightRange = Weather._FogDistanceDayNearHeightRange_Default;
-            item.FogDistanceNightNearHeightMid = Weather._FogDistanceNightNearHeightMid_Default;
-            item.FogDistanceNightNearHeightRange = Weather._FogDistanceNightNearHeightRange_Default;
-            item.FogDistanceDayHighDensityScale = Weather._FogDistanceDayHighDensityScale_Default;
-            item.FogDistanceNightHighDensityScale = Weather._FogDistanceNightHighDensityScale_Default;
-            item.FogDistanceDayFarHeightMid = Weather._FogDistanceDayFarHeightMid_Default;
-            item.FogDistanceDayFarHeightRange = Weather._FogDistanceDayFarHeightRange_Default;
-            item.FogDistanceNightFarHeightMid = Weather._FogDistanceNightFarHeightMid_Default;
-            item.FogDistanceNightFarHeightRange = Weather._FogDistanceNightFarHeightRange_Default;
+            item.FogDistanceDayNearHeightMid = Weather.FogDistanceDayNearHeightMidDefault;
+            item.FogDistanceDayNearHeightRange = Weather.FogDistanceDayNearHeightRangeDefault;
+            item.FogDistanceNightNearHeightMid = Weather.FogDistanceNightNearHeightMidDefault;
+            item.FogDistanceNightNearHeightRange = Weather.FogDistanceNightNearHeightRangeDefault;
+            item.FogDistanceDayHighDensityScale = Weather.FogDistanceDayHighDensityScaleDefault;
+            item.FogDistanceNightHighDensityScale = Weather.FogDistanceNightHighDensityScaleDefault;
+            item.FogDistanceDayFarHeightMid = Weather.FogDistanceDayFarHeightMidDefault;
+            item.FogDistanceDayFarHeightRange = Weather.FogDistanceDayFarHeightRangeDefault;
+            item.FogDistanceNightFarHeightMid = Weather.FogDistanceNightFarHeightMidDefault;
+            item.FogDistanceNightFarHeightRange = Weather.FogDistanceNightFarHeightRangeDefault;
             item.WindSpeed = default;
             item.Unknown = default;
             item.TransDelta = default;
@@ -4697,10 +4711,10 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.CloudTextures,
                 (l, r) => string.Equals(l, r),
                 include);
-            ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
+            ret.LNAM = MemorySliceExt.SequenceEqual(item.LNAM, rhs.LNAM);
             ret.Precipitation = item.Precipitation.Equals(rhs.Precipitation);
             ret.VisualEffect = item.VisualEffect.Equals(rhs.VisualEffect);
-            ret.ONAM = MemorySliceExt.Equal(item.ONAM, rhs.ONAM);
+            ret.ONAM = MemorySliceExt.SequenceEqual(item.ONAM, rhs.ONAM);
             ret.Clouds = EqualsMaskHelper.SpanEqualsHelper<ICloudLayerGetter, CloudLayer.Mask<bool>>(
                 item.Clouds,
                 rhs.Clouds,
@@ -5262,8 +5276,10 @@ namespace Mutagen.Bethesda.Fallout4
                     return (Weather_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
                     return (Weather_FieldIndex)((int)index);
+                case Fallout4MajorRecord_FieldIndex.Fallout4MajorRecordFlags:
+                    return (Weather_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -5280,7 +5296,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case MajorRecord_FieldIndex.EditorID:
                     return (Weather_FieldIndex)((int)index);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
@@ -5288,428 +5304,428 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual bool Equals(
             IWeatherGetter? lhs,
             IWeatherGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual<String>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.LNAM, rhs.LNAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
             {
                 if (!lhs.Precipitation.Equals(rhs.Precipitation)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
             {
                 if (!lhs.VisualEffect.Equals(rhs.VisualEffect)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.ONAM, rhs.ONAM)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Clouds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Clouds) ?? true))
             {
                 if (!lhs.Clouds.SequenceEqualNullable(rhs.Clouds)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SkyUpperColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyUpperColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkyUpperColor, rhs.SkyUpperColor, out var lhsSkyUpperColor, out var rhsSkyUpperColor, out var isSkyUpperColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSkyUpperColor).CommonInstance()!).Equals(lhsSkyUpperColor, rhsSkyUpperColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.SkyUpperColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSkyUpperColor).CommonInstance()!).Equals(lhsSkyUpperColor, rhsSkyUpperColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.SkyUpperColor))) return false;
                 }
                 else if (!isSkyUpperColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogNearColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNearColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FogNearColor, rhs.FogNearColor, out var lhsFogNearColor, out var rhsFogNearColor, out var isFogNearColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsFogNearColor).CommonInstance()!).Equals(lhsFogNearColor, rhsFogNearColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.FogNearColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsFogNearColor).CommonInstance()!).Equals(lhsFogNearColor, rhsFogNearColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.FogNearColor))) return false;
                 }
                 else if (!isFogNearColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.UnknownColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.UnknownColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.UnknownColor, rhs.UnknownColor, out var lhsUnknownColor, out var rhsUnknownColor, out var isUnknownColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsUnknownColor).CommonInstance()!).Equals(lhsUnknownColor, rhsUnknownColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.UnknownColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsUnknownColor).CommonInstance()!).Equals(lhsUnknownColor, rhsUnknownColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.UnknownColor))) return false;
                 }
                 else if (!isUnknownColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.AmbientColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.AmbientColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AmbientColor, rhs.AmbientColor, out var lhsAmbientColor, out var rhsAmbientColor, out var isAmbientColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsAmbientColor).CommonInstance()!).Equals(lhsAmbientColor, rhsAmbientColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.AmbientColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsAmbientColor).CommonInstance()!).Equals(lhsAmbientColor, rhsAmbientColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.AmbientColor))) return false;
                 }
                 else if (!isAmbientColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunlightColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SunlightColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SunlightColor, rhs.SunlightColor, out var lhsSunlightColor, out var rhsSunlightColor, out var isSunlightColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSunlightColor).CommonInstance()!).Equals(lhsSunlightColor, rhsSunlightColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.SunlightColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSunlightColor).CommonInstance()!).Equals(lhsSunlightColor, rhsSunlightColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.SunlightColor))) return false;
                 }
                 else if (!isSunlightColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SunColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SunColor, rhs.SunColor, out var lhsSunColor, out var rhsSunColor, out var isSunColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSunColor).CommonInstance()!).Equals(lhsSunColor, rhsSunColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.SunColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSunColor).CommonInstance()!).Equals(lhsSunColor, rhsSunColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.SunColor))) return false;
                 }
                 else if (!isSunColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.StarsColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.StarsColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.StarsColor, rhs.StarsColor, out var lhsStarsColor, out var rhsStarsColor, out var isStarsColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsStarsColor).CommonInstance()!).Equals(lhsStarsColor, rhsStarsColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.StarsColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsStarsColor).CommonInstance()!).Equals(lhsStarsColor, rhsStarsColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.StarsColor))) return false;
                 }
                 else if (!isStarsColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SkyLowerColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyLowerColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkyLowerColor, rhs.SkyLowerColor, out var lhsSkyLowerColor, out var rhsSkyLowerColor, out var isSkyLowerColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSkyLowerColor).CommonInstance()!).Equals(lhsSkyLowerColor, rhsSkyLowerColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.SkyLowerColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSkyLowerColor).CommonInstance()!).Equals(lhsSkyLowerColor, rhsSkyLowerColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.SkyLowerColor))) return false;
                 }
                 else if (!isSkyLowerColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.HorizonColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.HorizonColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.HorizonColor, rhs.HorizonColor, out var lhsHorizonColor, out var rhsHorizonColor, out var isHorizonColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsHorizonColor).CommonInstance()!).Equals(lhsHorizonColor, rhsHorizonColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.HorizonColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsHorizonColor).CommonInstance()!).Equals(lhsHorizonColor, rhsHorizonColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.HorizonColor))) return false;
                 }
                 else if (!isHorizonColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.EffectLightingColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.EffectLightingColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.EffectLightingColor, rhs.EffectLightingColor, out var lhsEffectLightingColor, out var rhsEffectLightingColor, out var isEffectLightingColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsEffectLightingColor).CommonInstance()!).Equals(lhsEffectLightingColor, rhsEffectLightingColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.EffectLightingColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsEffectLightingColor).CommonInstance()!).Equals(lhsEffectLightingColor, rhsEffectLightingColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.EffectLightingColor))) return false;
                 }
                 else if (!isEffectLightingColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudLodDiffuseColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudLodDiffuseColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CloudLodDiffuseColor, rhs.CloudLodDiffuseColor, out var lhsCloudLodDiffuseColor, out var rhsCloudLodDiffuseColor, out var isCloudLodDiffuseColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsCloudLodDiffuseColor).CommonInstance()!).Equals(lhsCloudLodDiffuseColor, rhsCloudLodDiffuseColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.CloudLodDiffuseColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsCloudLodDiffuseColor).CommonInstance()!).Equals(lhsCloudLodDiffuseColor, rhsCloudLodDiffuseColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.CloudLodDiffuseColor))) return false;
                 }
                 else if (!isCloudLodDiffuseColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudLodAmbientColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudLodAmbientColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CloudLodAmbientColor, rhs.CloudLodAmbientColor, out var lhsCloudLodAmbientColor, out var rhsCloudLodAmbientColor, out var isCloudLodAmbientColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsCloudLodAmbientColor).CommonInstance()!).Equals(lhsCloudLodAmbientColor, rhsCloudLodAmbientColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.CloudLodAmbientColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsCloudLodAmbientColor).CommonInstance()!).Equals(lhsCloudLodAmbientColor, rhsCloudLodAmbientColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.CloudLodAmbientColor))) return false;
                 }
                 else if (!isCloudLodAmbientColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogFarColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogFarColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FogFarColor, rhs.FogFarColor, out var lhsFogFarColor, out var rhsFogFarColor, out var isFogFarColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsFogFarColor).CommonInstance()!).Equals(lhsFogFarColor, rhsFogFarColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.FogFarColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsFogFarColor).CommonInstance()!).Equals(lhsFogFarColor, rhsFogFarColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.FogFarColor))) return false;
                 }
                 else if (!isFogFarColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SkyStaticsColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyStaticsColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SkyStaticsColor, rhs.SkyStaticsColor, out var lhsSkyStaticsColor, out var rhsSkyStaticsColor, out var isSkyStaticsColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSkyStaticsColor).CommonInstance()!).Equals(lhsSkyStaticsColor, rhsSkyStaticsColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.SkyStaticsColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSkyStaticsColor).CommonInstance()!).Equals(lhsSkyStaticsColor, rhsSkyStaticsColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.SkyStaticsColor))) return false;
                 }
                 else if (!isSkyStaticsColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.WaterMultiplierColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.WaterMultiplierColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.WaterMultiplierColor, rhs.WaterMultiplierColor, out var lhsWaterMultiplierColor, out var rhsWaterMultiplierColor, out var isWaterMultiplierColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsWaterMultiplierColor).CommonInstance()!).Equals(lhsWaterMultiplierColor, rhsWaterMultiplierColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.WaterMultiplierColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsWaterMultiplierColor).CommonInstance()!).Equals(lhsWaterMultiplierColor, rhsWaterMultiplierColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.WaterMultiplierColor))) return false;
                 }
                 else if (!isWaterMultiplierColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.SunGlareColor, rhs.SunGlareColor, out var lhsSunGlareColor, out var rhsSunGlareColor, out var isSunGlareColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSunGlareColor).CommonInstance()!).Equals(lhsSunGlareColor, rhsSunGlareColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.SunGlareColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsSunGlareColor).CommonInstance()!).Equals(lhsSunGlareColor, rhsSunGlareColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.SunGlareColor))) return false;
                 }
                 else if (!isSunGlareColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.MoonGlareColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.MoonGlareColor) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.MoonGlareColor, rhs.MoonGlareColor, out var lhsMoonGlareColor, out var rhsMoonGlareColor, out var isMoonGlareColorEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsMoonGlareColor).CommonInstance()!).Equals(lhsMoonGlareColor, rhsMoonGlareColor, crystal?.GetSubCrystal((int)Weather_FieldIndex.MoonGlareColor))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsMoonGlareColor).CommonInstance()!).Equals(lhsMoonGlareColor, rhsMoonGlareColor, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.MoonGlareColor))) return false;
                 }
                 else if (!isMoonGlareColorEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogNearHigh) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNearHigh) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FogNearHigh, rhs.FogNearHigh, out var lhsFogNearHigh, out var rhsFogNearHigh, out var isFogNearHighEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsFogNearHigh).CommonInstance()!).Equals(lhsFogNearHigh, rhsFogNearHigh, crystal?.GetSubCrystal((int)Weather_FieldIndex.FogNearHigh))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsFogNearHigh).CommonInstance()!).Equals(lhsFogNearHigh, rhsFogNearHigh, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.FogNearHigh))) return false;
                 }
                 else if (!isFogNearHighEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogFarHigh) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogFarHigh) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FogFarHigh, rhs.FogFarHigh, out var lhsFogFarHigh, out var rhsFogFarHigh, out var isFogFarHighEqual))
                 {
-                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsFogFarHigh).CommonInstance()!).Equals(lhsFogFarHigh, rhsFogFarHigh, crystal?.GetSubCrystal((int)Weather_FieldIndex.FogFarHigh))) return false;
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsFogFarHigh).CommonInstance()!).Equals(lhsFogFarHigh, rhsFogFarHigh, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.FogFarHigh))) return false;
                 }
                 else if (!isFogFarHighEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.NAM4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM4) ?? true))
             {
                 if (!ObjectExt.NullSame(lhs.NAM4, rhs.NAM4)) return false;
                 if (!MemoryExtensions.SequenceEqual<Single>(lhs.NAM4!.Value.Span!, rhs.NAM4!.Value.Span!)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayNear) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayNear) ?? true))
             {
                 if (!lhs.FogDistanceDayNear.EqualsWithin(rhs.FogDistanceDayNear)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayFar) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayFar) ?? true))
             {
                 if (!lhs.FogDistanceDayFar.EqualsWithin(rhs.FogDistanceDayFar)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightNear) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightNear) ?? true))
             {
                 if (!lhs.FogDistanceNightNear.EqualsWithin(rhs.FogDistanceNightNear)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightFar) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightFar) ?? true))
             {
                 if (!lhs.FogDistanceNightFar.EqualsWithin(rhs.FogDistanceNightFar)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayPower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayPower) ?? true))
             {
                 if (!lhs.FogDistanceDayPower.EqualsWithin(rhs.FogDistanceDayPower)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightPower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightPower) ?? true))
             {
                 if (!lhs.FogDistanceNightPower.EqualsWithin(rhs.FogDistanceNightPower)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayMax) ?? true))
             {
                 if (!lhs.FogDistanceDayMax.EqualsWithin(rhs.FogDistanceDayMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightMax) ?? true))
             {
                 if (!lhs.FogDistanceNightMax.EqualsWithin(rhs.FogDistanceNightMax)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayNearHeightMid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayNearHeightMid) ?? true))
             {
                 if (!lhs.FogDistanceDayNearHeightMid.EqualsWithin(rhs.FogDistanceDayNearHeightMid)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayNearHeightRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayNearHeightRange) ?? true))
             {
                 if (!lhs.FogDistanceDayNearHeightRange.EqualsWithin(rhs.FogDistanceDayNearHeightRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightNearHeightMid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightNearHeightMid) ?? true))
             {
                 if (!lhs.FogDistanceNightNearHeightMid.EqualsWithin(rhs.FogDistanceNightNearHeightMid)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightNearHeightRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightNearHeightRange) ?? true))
             {
                 if (!lhs.FogDistanceNightNearHeightRange.EqualsWithin(rhs.FogDistanceNightNearHeightRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayHighDensityScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayHighDensityScale) ?? true))
             {
                 if (!lhs.FogDistanceDayHighDensityScale.EqualsWithin(rhs.FogDistanceDayHighDensityScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightHighDensityScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightHighDensityScale) ?? true))
             {
                 if (!lhs.FogDistanceNightHighDensityScale.EqualsWithin(rhs.FogDistanceNightHighDensityScale)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayFarHeightMid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayFarHeightMid) ?? true))
             {
                 if (!lhs.FogDistanceDayFarHeightMid.EqualsWithin(rhs.FogDistanceDayFarHeightMid)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayFarHeightRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayFarHeightRange) ?? true))
             {
                 if (!lhs.FogDistanceDayFarHeightRange.EqualsWithin(rhs.FogDistanceDayFarHeightRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightFarHeightMid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightFarHeightMid) ?? true))
             {
                 if (!lhs.FogDistanceNightFarHeightMid.EqualsWithin(rhs.FogDistanceNightFarHeightMid)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightFarHeightRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightFarHeightRange) ?? true))
             {
                 if (!lhs.FogDistanceNightFarHeightRange.EqualsWithin(rhs.FogDistanceNightFarHeightRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
             {
                 if (!lhs.WindSpeed.Equals(rhs.WindSpeed)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
             {
                 if (!lhs.TransDelta.EqualsWithin(rhs.TransDelta)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
             {
                 if (!lhs.SunGlare.Equals(rhs.SunGlare)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
             {
                 if (!lhs.SunDamage.Equals(rhs.SunDamage)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
             {
                 if (!lhs.PrecipitationBeginFadeIn.Equals(rhs.PrecipitationBeginFadeIn)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
             {
                 if (!lhs.PrecipitationEndFadeOut.Equals(rhs.PrecipitationEndFadeOut)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
             {
                 if (!lhs.ThunderLightningBeginFadeIn.Equals(rhs.ThunderLightningBeginFadeIn)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
             {
                 if (!lhs.ThunderLightningEndFadeOut.Equals(rhs.ThunderLightningEndFadeOut)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
             {
                 if (!lhs.ThunderLightningFrequency.Equals(rhs.ThunderLightningFrequency)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
             {
                 if (!lhs.LightningColor.ColorOnlyEquals(rhs.LightningColor)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffectBegin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffectBegin) ?? true))
             {
                 if (!lhs.VisualEffectBegin.Equals(rhs.VisualEffectBegin)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffectEnd) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffectEnd) ?? true))
             {
                 if (!lhs.VisualEffectEnd.Equals(rhs.VisualEffectEnd)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.WindDirection) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.WindDirection) ?? true))
             {
                 if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.WindDirectionRange) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.WindDirectionRange) ?? true))
             {
                 if (!lhs.WindDirectionRange.EqualsWithin(rhs.WindDirectionRange)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.WindTurbulance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.WindTurbulance) ?? true))
             {
                 if (!lhs.WindTurbulance.Equals(rhs.WindTurbulance)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((WeatherSoundCommon)((IWeatherSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Weather_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((WeatherSoundCommon)((IWeatherSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.Sounds)))) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SkyStatics) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyStatics) ?? true))
             {
                 if (!lhs.SkyStatics.SequenceEqualNullable(rhs.SkyStatics)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceSunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceSunrise) ?? true))
             {
                 if (!lhs.ImageSpaceSunrise.Equals(rhs.ImageSpaceSunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceDay) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceDay) ?? true))
             {
                 if (!lhs.ImageSpaceDay.Equals(rhs.ImageSpaceDay)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceSunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceSunset) ?? true))
             {
                 if (!lhs.ImageSpaceSunset.Equals(rhs.ImageSpaceSunset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceNight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceNight) ?? true))
             {
                 if (!lhs.ImageSpaceNight.Equals(rhs.ImageSpaceNight)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceEarlySunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceEarlySunrise) ?? true))
             {
                 if (!lhs.ImageSpaceEarlySunrise.Equals(rhs.ImageSpaceEarlySunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceLateSunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceLateSunrise) ?? true))
             {
                 if (!lhs.ImageSpaceLateSunrise.Equals(rhs.ImageSpaceLateSunrise)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceEarlySunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceEarlySunset) ?? true))
             {
                 if (!lhs.ImageSpaceEarlySunset.Equals(rhs.ImageSpaceEarlySunset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceLateSunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaceLateSunset) ?? true))
             {
                 if (!lhs.ImageSpaceLateSunset.Equals(rhs.ImageSpaceLateSunset)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.GodRays) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.GodRays) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.GodRays, rhs.GodRays, out var lhsGodRays, out var rhsGodRays, out var isGodRaysEqual))
                 {
-                    if (!((WeatherGodRaysCommon)((IWeatherGodRaysGetter)lhsGodRays).CommonInstance()!).Equals(lhsGodRays, rhsGodRays, crystal?.GetSubCrystal((int)Weather_FieldIndex.GodRays))) return false;
+                    if (!((WeatherGodRaysCommon)((IWeatherGodRaysGetter)lhsGodRays).CommonInstance()!).Equals(lhsGodRays, rhsGodRays, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.GodRays))) return false;
                 }
                 else if (!isGodRaysEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DirectionalAmbientLightingColors) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.DirectionalAmbientLightingColors) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors, out var lhsDirectionalAmbientLightingColors, out var rhsDirectionalAmbientLightingColors, out var isDirectionalAmbientLightingColorsEqual))
                 {
-                    if (!((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)lhsDirectionalAmbientLightingColors).CommonInstance()!).Equals(lhsDirectionalAmbientLightingColors, rhsDirectionalAmbientLightingColors, crystal?.GetSubCrystal((int)Weather_FieldIndex.DirectionalAmbientLightingColors))) return false;
+                    if (!((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)lhsDirectionalAmbientLightingColors).CommonInstance()!).Equals(lhsDirectionalAmbientLightingColors, rhsDirectionalAmbientLightingColors, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.DirectionalAmbientLightingColors))) return false;
                 }
                 else if (!isDirectionalAmbientLightingColorsEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Aurora) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Aurora) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Aurora, rhs.Aurora, out var lhsAurora, out var rhsAurora, out var isAuroraEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsAurora).CommonInstance()!).Equals(lhsAurora, rhsAurora, crystal?.GetSubCrystal((int)Weather_FieldIndex.Aurora))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsAurora).CommonInstance()!).Equals(lhsAurora, rhsAurora, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.Aurora))) return false;
                 }
                 else if (!isAuroraEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
             {
                 if (!lhs.SunGlareLensFlare.Equals(rhs.SunGlareLensFlare)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Magic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Magic) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Magic, rhs.Magic, out var lhsMagic, out var rhsMagic, out var isMagicEqual))
                 {
-                    if (!((WeatherMagicCommon)((IWeatherMagicGetter)lhsMagic).CommonInstance()!).Equals(lhsMagic, rhsMagic, crystal?.GetSubCrystal((int)Weather_FieldIndex.Magic))) return false;
+                    if (!((WeatherMagicCommon)((IWeatherMagicGetter)lhsMagic).CommonInstance()!).Equals(lhsMagic, rhsMagic, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.Magic))) return false;
                 }
                 else if (!isMagicEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.VolatilityMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.VolatilityMult) ?? true))
             {
                 if (!lhs.VolatilityMult.EqualsWithin(rhs.VolatilityMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.VisibilityMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.VisibilityMult) ?? true))
             {
                 if (!lhs.VisibilityMult.EqualsWithin(rhs.VisibilityMult)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {
                 if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
             {
                 if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
             {
                 if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.IMSPDataTypeState) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.IMSPDataTypeState) ?? true))
             {
                 if (lhs.IMSPDataTypeState != rhs.IMSPDataTypeState) return false;
             }
@@ -5719,23 +5735,23 @@ namespace Mutagen.Bethesda.Fallout4
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
             IFallout4MajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWeatherGetter?)lhs,
                 rhs: rhs as IWeatherGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
             IMajorRecordGetter? rhs,
-            TranslationCrystal? crystal)
+            TranslationCrystal? equalsMask)
         {
             return Equals(
                 lhs: (IWeatherGetter?)lhs,
                 rhs: rhs as IWeatherGetter,
-                crystal: crystal);
+                equalsMask: equalsMask);
         }
         
         public virtual int GetHashCode(IWeatherGetter item)
@@ -8658,12 +8674,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IWeatherGetter rhs) return false;
-            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
         public bool Equals(IWeatherGetter? obj)
         {
-            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
         public override int GetHashCode() => ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).GetHashCode(this);
