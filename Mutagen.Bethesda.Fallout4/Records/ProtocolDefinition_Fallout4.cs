@@ -239,8 +239,6 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             MagicEffectGuideArchetype_Registration.Instance,
             MagicEffectSpawnHazardArchetype_Registration.Instance,
             MagicEffectCloakArchetype_Registration.Instance,
-            MagicEffectWerewolfArchetype_Registration.Instance,
-            MagicEffectVampireArchetype_Registration.Instance,
             MagicEffectEnhanceWeaponArchetype_Registration.Instance,
             MagicEffectPeakValueModArchetype_Registration.Instance,
             VisualEffect_Registration.Instance,
@@ -551,7 +549,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             ANavigationMapInfoParent_Registration.Instance,
             NavigationMapInfoWorldspaceParent_Registration.Instance,
             NavigationMapInfoCellParent_Registration.Instance,
-            UnknownObjectModification_Registration.Instance
+            UnknownObjectModification_Registration.Instance,
+            AMagicEffectArchetype_Registration.Instance
         );
     }
 }

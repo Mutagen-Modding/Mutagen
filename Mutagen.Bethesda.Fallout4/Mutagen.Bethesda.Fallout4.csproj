@@ -175,6 +175,9 @@
     <Compile Include="Records\Major Records\AddonNode.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
@@ -1446,12 +1449,6 @@
     <Compile Include="Records\Major Records\MagicEffectCloakArchetype_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MagicEffectWerewolfArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectVampireArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MagicEffectEnhanceWeaponArchetype_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
@@ -2434,6 +2431,9 @@
     <Compile Include="Interfaces\Link\IConstructibleObjectTarget_Generated.cs" />
     <Compile Include="Records\Major Records\UnknownObjectModification_Generated.cs">
       <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AMagicEffectArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

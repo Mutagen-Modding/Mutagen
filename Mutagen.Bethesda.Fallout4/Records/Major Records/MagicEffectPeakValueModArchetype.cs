@@ -4,28 +4,6 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class MagicEffectPeakValueModArchetype
 {
-    public FormLink<IKeywordGetter> Association => this.AssociationKey.ToLink<IKeywordGetter>();
-
-    IFormLink<IKeywordGetter> IMagicEffectPeakValueModArchetype.Association => this.Association;
-    IFormLinkGetter<IKeywordGetter> IMagicEffectPeakValueModArchetypeGetter.Association => this.Association;
-
-    public MagicEffectPeakValueModArchetype()
-        : base(TypeEnum.PeakValueModifier)
-    {
-    }
-}
-
-public partial interface IMagicEffectPeakValueModArchetype
-{
-    new IFormLink<IKeywordGetter> Association { get; }
-}
-
-public partial interface IMagicEffectPeakValueModArchetypeGetter
-{
-    IFormLinkGetter<IKeywordGetter> Association { get; }
-}
-
-partial class MagicEffectPeakValueModArchetypeBinaryOverlay
-{
-    public IFormLinkGetter<IKeywordGetter> Association => this.AssociationKey.ToLink<IKeywordGetter>();
+    public MagicEffectArchetype.TypeEnum Type => MagicEffectArchetype.TypeEnum.PeakValueModifier;
+    public override FormKey AssociationKey => Association.FormKey;
 }

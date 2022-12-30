@@ -226,9 +226,9 @@ namespace Mutagen.Bethesda.Fallout4
         public Single SecondActorValueWeight { get; set; } = default;
         #endregion
         #region Archetype
-        public MagicEffectArchetype Archetype { get; set; } = new MagicEffectArchetype();
+        public AMagicEffectArchetype Archetype { get; set; } = default!;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
+        IAMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
         #endregion
         #region Projectile
         private readonly IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TaperCurve = initialValue;
                 this.TaperDuration = initialValue;
                 this.SecondActorValueWeight = initialValue;
-                this.Archetype = new MaskItem<TItem, MagicEffectArchetype.Mask<TItem>?>(initialValue, new MagicEffectArchetype.Mask<TItem>(initialValue));
+                this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(initialValue, new AMagicEffectArchetype.Mask<TItem>(initialValue));
                 this.Projectile = initialValue;
                 this.Explosion = initialValue;
                 this.CastType = initialValue;
@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.TaperCurve = TaperCurve;
                 this.TaperDuration = TaperDuration;
                 this.SecondActorValueWeight = SecondActorValueWeight;
-                this.Archetype = new MaskItem<TItem, MagicEffectArchetype.Mask<TItem>?>(Archetype, new MagicEffectArchetype.Mask<TItem>(Archetype));
+                this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(Archetype, new AMagicEffectArchetype.Mask<TItem>(Archetype));
                 this.Projectile = Projectile;
                 this.Explosion = Explosion;
                 this.CastType = CastType;
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem TaperCurve;
             public TItem TaperDuration;
             public TItem SecondActorValueWeight;
-            public MaskItem<TItem, MagicEffectArchetype.Mask<TItem>?>? Archetype { get; set; }
+            public MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>? Archetype { get; set; }
             public TItem Projectile;
             public TItem Explosion;
             public TItem CastType;
@@ -1027,7 +1027,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.TaperCurve = eval(this.TaperCurve);
                 obj.TaperDuration = eval(this.TaperDuration);
                 obj.SecondActorValueWeight = eval(this.SecondActorValueWeight);
-                obj.Archetype = this.Archetype == null ? null : new MaskItem<R, MagicEffectArchetype.Mask<R>?>(eval(this.Archetype.Overall), this.Archetype.Specific?.Translate(eval));
+                obj.Archetype = this.Archetype == null ? null : new MaskItem<R, AMagicEffectArchetype.Mask<R>?>(eval(this.Archetype.Overall), this.Archetype.Specific?.Translate(eval));
                 obj.Projectile = eval(this.Projectile);
                 obj.Explosion = eval(this.Explosion);
                 obj.CastType = eval(this.CastType);
@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? TaperCurve;
             public Exception? TaperDuration;
             public Exception? SecondActorValueWeight;
-            public MaskItem<Exception?, MagicEffectArchetype.ErrorMask?>? Archetype;
+            public MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>? Archetype;
             public Exception? Projectile;
             public Exception? Explosion;
             public Exception? CastType;
@@ -1580,7 +1580,7 @@ namespace Mutagen.Bethesda.Fallout4
                         this.SecondActorValueWeight = ex;
                         break;
                     case MagicEffect_FieldIndex.Archetype:
-                        this.Archetype = new MaskItem<Exception?, MagicEffectArchetype.ErrorMask?>(ex, null);
+                        this.Archetype = new MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>(ex, null);
                         break;
                     case MagicEffect_FieldIndex.Projectile:
                         this.Projectile = ex;
@@ -1726,7 +1726,7 @@ namespace Mutagen.Bethesda.Fallout4
                         this.SecondActorValueWeight = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.Archetype:
-                        this.Archetype = (MaskItem<Exception?, MagicEffectArchetype.ErrorMask?>?)obj;
+                        this.Archetype = (MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>?)obj;
                         break;
                     case MagicEffect_FieldIndex.Projectile:
                         this.Projectile = (Exception?)obj;
@@ -2170,7 +2170,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool TaperCurve;
             public bool TaperDuration;
             public bool SecondActorValueWeight;
-            public MagicEffectArchetype.TranslationMask? Archetype;
+            public AMagicEffectArchetype.TranslationMask? Archetype;
             public bool Projectile;
             public bool Explosion;
             public bool CastType;
@@ -2471,7 +2471,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Single TaperCurve { get; set; }
         new Single TaperDuration { get; set; }
         new Single SecondActorValueWeight { get; set; }
-        new MagicEffectArchetype Archetype { get; set; }
+        new AMagicEffectArchetype Archetype { get; set; }
         new IFormLink<IProjectileGetter> Projectile { get; set; }
         new IFormLink<IExplosionGetter> Explosion { get; set; }
         new CastType CastType { get; set; }
@@ -2556,7 +2556,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single TaperCurve { get; }
         Single TaperDuration { get; }
         Single SecondActorValueWeight { get; }
-        IMagicEffectArchetypeGetter Archetype { get; }
+        IAMagicEffectArchetypeGetter Archetype { get; }
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
         IFormLinkGetter<IExplosionGetter> Explosion { get; }
         CastType CastType { get; }
@@ -3538,7 +3538,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Archetype, rhs.Archetype, out var lhsArchetype, out var rhsArchetype, out var isArchetypeEqual))
                 {
-                    if (!((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)lhsArchetype).CommonInstance()!).Equals(lhsArchetype, rhsArchetype, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype))) return false;
+                    if (!((AMagicEffectArchetypeCommon)((IAMagicEffectArchetypeGetter)lhsArchetype).CommonInstance()!).Equals(lhsArchetype, rhsArchetype, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype))) return false;
                 }
                 else if (!isArchetypeEqual) return false;
             }
@@ -4994,8 +4994,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Archetype
         private int _ArchetypeLocation => _DATALocation!.Value.Min + 0x40;
-        public partial IMagicEffectArchetypeGetter GetArchetypeCustom();
-        public IMagicEffectArchetypeGetter Archetype => GetArchetypeCustom();
+        public partial IAMagicEffectArchetypeGetter GetArchetypeCustom();
+        public IAMagicEffectArchetypeGetter Archetype => GetArchetypeCustom();
         #endregion
         #region Projectile
         private int _ProjectileLocation => _DATALocation!.Value.Min + 0x48;

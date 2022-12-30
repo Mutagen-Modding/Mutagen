@@ -443,7 +443,8 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             ANavigationMapInfoParent_Registration.Instance,
             NavigationMapInfoWorldParent_Registration.Instance,
             NavigationMapInfoCellParent_Registration.Instance,
-            GlobalUnknown_Registration.Instance
+            GlobalUnknown_Registration.Instance,
+            AMagicEffectArchetype_Registration.Instance
         );
     }
 }
