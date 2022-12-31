@@ -112,11 +112,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem Icons,
                 TItem Objects)
             : base(
-                Header: Header,
+                Flags: Flags,
+                Priority: Priority,
                 Icons: Icons)
             {
                 this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>());
@@ -646,9 +648,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Field Index
     internal enum RegionObjects_FieldIndex
     {
-        Header = 0,
-        Icons = 1,
-        Objects = 2,
+        Flags = 0,
+        Priority = 1,
+        Icons = 2,
+        Objects = 3,
     }
     #endregion
 
@@ -668,7 +671,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(RegionObjects.Mask<>);
 
@@ -694,15 +697,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(
-                RecordTypes.RDAT,
-                RecordTypes.ICON);
+            var triggers = RecordCollection.Factory(RecordTypes.RDAT);
             var all = RecordCollection.Factory(
                 RecordTypes.RDAT,
-                RecordTypes.ICON,
                 RecordTypes.RDOT);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
@@ -776,6 +777,7 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionObjectsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionObjectsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -891,7 +893,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Header:
+                case RegionData_FieldIndex.Flags:
+                    return (RegionObjects_FieldIndex)((int)index);
+                case RegionData_FieldIndex.Priority:
                     return (RegionObjects_FieldIndex)((int)index);
                 case RegionData_FieldIndex.Icons:
                     return (RegionObjects_FieldIndex)((int)index);
@@ -1149,6 +1153,9 @@ namespace Mutagen.Bethesda.Skyrim
             IRegionObjectsGetter item,
             TypedWriteParams translationParams)
         {
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,

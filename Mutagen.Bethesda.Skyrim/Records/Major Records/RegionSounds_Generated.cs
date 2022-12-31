@@ -123,12 +123,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem Icons,
                 TItem Music,
                 TItem Sounds)
             : base(
-                Header: Header,
+                Flags: Flags,
+                Priority: Priority,
                 Icons: Icons)
             {
                 this.Music = Music;
@@ -688,10 +690,11 @@ namespace Mutagen.Bethesda.Skyrim
     #region Field Index
     internal enum RegionSounds_FieldIndex
     {
-        Header = 0,
-        Icons = 1,
-        Music = 2,
-        Sounds = 3,
+        Flags = 0,
+        Priority = 1,
+        Icons = 2,
+        Music = 3,
+        Sounds = 4,
     }
     #endregion
 
@@ -711,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(RegionSounds.Mask<>);
 
@@ -737,15 +740,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(
-                RecordTypes.RDAT,
-                RecordTypes.ICON);
+            var triggers = RecordCollection.Factory(RecordTypes.RDAT);
             var all = RecordCollection.Factory(
                 RecordTypes.RDAT,
-                RecordTypes.ICON,
                 RecordTypes.RDMO,
                 RecordTypes.RDSA);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
@@ -822,6 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionSoundsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionSoundsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -942,7 +944,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Header:
+                case RegionData_FieldIndex.Flags:
+                    return (RegionSounds_FieldIndex)((int)index);
+                case RegionData_FieldIndex.Priority:
                     return (RegionSounds_FieldIndex)((int)index);
                 case RegionData_FieldIndex.Icons:
                     return (RegionSounds_FieldIndex)((int)index);
@@ -1217,6 +1221,9 @@ namespace Mutagen.Bethesda.Skyrim
             IRegionSoundsGetter item,
             TypedWriteParams translationParams)
         {
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,

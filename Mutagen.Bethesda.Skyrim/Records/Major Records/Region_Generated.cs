@@ -1205,8 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.WNAM,
                 RecordTypes.RPLI,
                 RecordTypes.RPLD,
-                RecordTypes.RDAT,
-                RecordTypes.ICON);
+                RecordTypes.RDAT);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);

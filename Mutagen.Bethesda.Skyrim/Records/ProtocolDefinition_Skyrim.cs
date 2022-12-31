@@ -229,7 +229,6 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             MusicType_Registration.Instance,
             RegionArea_Registration.Instance,
             RegionData_Registration.Instance,
-            RegionDataHeader_Registration.Instance,
             RegionSounds_Registration.Instance,
             RegionSound_Registration.Instance,
             RegionMap_Registration.Instance,
