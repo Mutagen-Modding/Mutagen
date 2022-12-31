@@ -88,6 +88,7 @@
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\IPlacedExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
+    <Compile Include="Extensions\PlacedContextExt.cs" />
     <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -2002,6 +2003,8 @@
     <Compile Include="Records\Major Records\PerkScriptFragments_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Tooling\GetContainingCell.cs" />
+    <Compile Include="Records\Tooling\WorldspaceCellLocationCache.cs" />
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
     <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
