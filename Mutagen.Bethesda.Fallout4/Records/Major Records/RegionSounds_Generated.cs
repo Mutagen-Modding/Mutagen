@@ -135,14 +135,16 @@ namespace Mutagen.Bethesda.Fallout4
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem Icons,
                 TItem Music,
                 TItem Sounds,
                 TItem LodDisplayDistanceMultiplier,
                 TItem OcclusionAccuracyDist)
             : base(
-                Header: Header,
+                Flags: Flags,
+                Priority: Priority,
                 Icons: Icons)
             {
                 this.Music = Music;
@@ -762,12 +764,13 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum RegionSounds_FieldIndex
     {
-        Header = 0,
-        Icons = 1,
-        Music = 2,
-        Sounds = 3,
-        LodDisplayDistanceMultiplier = 4,
-        OcclusionAccuracyDist = 5,
+        Flags = 0,
+        Priority = 1,
+        Icons = 2,
+        Music = 3,
+        Sounds = 4,
+        LodDisplayDistanceMultiplier = 5,
+        OcclusionAccuracyDist = 6,
     }
     #endregion
 
@@ -787,7 +790,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(RegionSounds.Mask<>);
 
@@ -813,17 +816,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(
-                RecordTypes.RDAT,
-                RecordTypes.ICON,
-                RecordTypes.MICO);
+            var triggers = RecordCollection.Factory(RecordTypes.RDAT);
             var all = RecordCollection.Factory(
                 RecordTypes.RDAT,
-                RecordTypes.ICON,
-                RecordTypes.MICO,
                 RecordTypes.RDMO,
                 RecordTypes.RDSA,
                 RecordTypes.RLDM,
@@ -904,6 +903,7 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionSoundsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionSoundsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -1036,7 +1036,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Header:
+                case RegionData_FieldIndex.Flags:
+                    return (RegionSounds_FieldIndex)((int)index);
+                case RegionData_FieldIndex.Priority:
                     return (RegionSounds_FieldIndex)((int)index);
                 case RegionData_FieldIndex.Icons:
                     return (RegionSounds_FieldIndex)((int)index);
@@ -1343,6 +1345,9 @@ namespace Mutagen.Bethesda.Fallout4
             IRegionSoundsGetter item,
             TypedWriteParams translationParams)
         {
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,

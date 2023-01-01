@@ -1190,9 +1190,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.RPLI,
                 RecordTypes.RPLD,
                 RecordTypes.ANAM,
-                RecordTypes.RDAT,
-                RecordTypes.ICON,
-                RecordTypes.MICO);
+                RecordTypes.RDAT);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);

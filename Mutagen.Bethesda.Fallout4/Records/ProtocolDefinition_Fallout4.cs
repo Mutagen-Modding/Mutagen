@@ -148,7 +148,6 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             Region_Registration.Instance,
             RegionArea_Registration.Instance,
             RegionData_Registration.Instance,
-            RegionDataHeader_Registration.Instance,
             RegionSounds_Registration.Instance,
             RegionSound_Registration.Instance,
             RegionMap_Registration.Instance,

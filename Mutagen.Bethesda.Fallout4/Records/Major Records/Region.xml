@@ -6,12 +6,12 @@
       <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" />
       <RefList name="RegionAreas" refName="RegionArea" />
       <CustomLogic name="RegionAreaLogic" recordType="RDAT" />
-      <RefDirect name="Objects" refName="RegionObjects" binary="NoGeneration" />
-      <RefDirect name="Weather" refName="RegionWeather" binary="NoGeneration" />
-      <RefDirect name="Map" refName="RegionMap" binary="NoGeneration" />
-      <RefDirect name="Land" refName="RegionLand" binary="NoGeneration" />
-      <RefDirect name="Grasses" refName="RegionGrasses" binary="NoGeneration" />
-      <RefDirect name="Sounds" refName="RegionSounds" binary="NoGeneration" />
+      <RefDirect name="Objects" refName="RegionObjects" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Weather" refName="RegionWeather" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Map" refName="RegionMap" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Land" refName="RegionLand" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Grasses" refName="RegionGrasses" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Sounds" refName="RegionSounds" binary="NoGeneration" nullable="True" />
     </Fields>
     <LinkInterface>IEmittance</LinkInterface>
   </Object>
@@ -26,16 +26,10 @@
   </Object>
   <Object name="RegionData" abstract="true" objType="Subrecord" GUID="1e3646b5-839a-4a90-975e-7b6ff569e130" ID="179">
     <Fields>
-      <RefDirect name="Header" refName="RegionDataHeader" />
+      <CustomLogic name="HeaderLogic" byteLength="8" recordType="RDAT" />
+      <Enum name="Flags" enumName="RegionData.RegionDataFlag" binary="NoGeneration" />
+      <UInt8 name="Priority" binary="NoGeneration" />
       <RefDirect name="Icons" refName="Icons" />
-    </Fields>
-  </Object>
-  <Object name="RegionDataHeader" objType="Subrecord" recordType="RDAT" GUID="776a8564-c903-4c08-9ab5-2ebee238473d" ID="180">
-    <Fields>
-      <Enum name="DataType" enumName="RegionData.RegionDataType" byteLength="4" setPermission="Protected" internalSetInterface="true" />
-      <Enum name="Flags" enumName="RegionData.RegionDataFlag" byteLength="1" />
-      <UInt8 name="Priority" />
-      <Zero byteLength="2" />
     </Fields>
   </Object>
   <Object name="RegionSounds" objType="Subrecord" baseClass="RegionData" GUID="d721a855-8c28-4887-be02-c29153dc8b8e" ID="181">
