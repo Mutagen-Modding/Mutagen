@@ -364,7 +364,7 @@ public readonly struct ModKey : IEquatable<ModKey>
     public static ModKey FromName(ReadOnlySpan<char> str, ModType type)
     {
         if (TryFromName(str, type, out var modKey, out _)) return modKey;
-        throw new ArgumentException("Could not construct ModKey.", nameof(str));
+        throw new ArgumentException($"Could not construct ModKey: {str}", nameof(str));
     }
 
     public static bool TryConvertExtensionToType(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModType modType)
@@ -406,7 +406,7 @@ public readonly struct ModKey : IEquatable<ModKey>
         {
             return key;
         }
-        throw new ArgumentException("Could not construct ModKey.", nameof(str));
+        throw new ArgumentException($"Could not construct ModKey: {str}", nameof(str));
     }
 
     /// <summary>
