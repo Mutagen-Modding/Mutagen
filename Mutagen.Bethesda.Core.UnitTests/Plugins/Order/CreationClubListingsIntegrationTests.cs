@@ -38,7 +38,7 @@ public class CreationClubListingsIntegrationTests
         [Frozen]IDataDirectoryProvider dataDir,
         [Frozen]ICreationClubListingsPathProvider cccPath)
     {
-        fs.File.WriteAllLines(cccPath.Path,
+        fs.File.WriteAllLines(cccPath.Path!,
             new string[]
             {
                 existingModPath.ModKey.FileName,

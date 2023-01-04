@@ -61,7 +61,7 @@ public class CreationClubLiveListingsFileReaderTests
     }
 
     [Theory, MutagenAutoData]
-    public void FileExists(Stream stream)
+    public void FileExists(FileSystemStream stream)
     {
         var scheduler = new TestScheduler();
         var path = $"{PathingUtil.DrivePrefix}SomePath";

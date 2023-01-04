@@ -42,7 +42,7 @@ public class LiveLoadOrderIntegrationTests
                 $"*{TestConstants.MasterModKey2}",
                 $"*{TestConstants.PluginModKey}",
             });
-        fs.File.WriteAllLines(cccPath.Path,
+        fs.File.WriteAllLines(cccPath.Path!,
             new string[]
             {
                 TestConstants.LightMasterModKey.ToString(),
@@ -158,7 +158,7 @@ public class LiveLoadOrderIntegrationTests
                 $"*{TestConstants.MasterModKey3}",
                 $"*{TestConstants.PluginModKey}",
             });
-        fs.File.WriteAllLines(cccPath.Path,
+        fs.File.WriteAllLines(cccPath.Path!,
             new string[]
             {
                 TestConstants.LightMasterModKey.ToString(),
@@ -249,7 +249,7 @@ public class LiveLoadOrderIntegrationTests
                 $"*{TestConstants.MasterModKey}",
                 $"*{TestConstants.PluginModKey}",
             });
-        fs.File.WriteAllLines(cccPath.Path,
+        fs.File.WriteAllLines(cccPath.Path!,
             new string[]
             {
                 TestConstants.LightMasterModKey.ToString(),
@@ -330,7 +330,7 @@ public class LiveLoadOrderIntegrationTests
                 $"*{TestConstants.MasterModKey}",
                 $"*{TestConstants.PluginModKey2}",
             });
-        fs.File.WriteAllLines(cccPath.Path,
+        fs.File.WriteAllLines(cccPath.Path!,
             new string[]
             {
                 TestConstants.LightMasterModKey.ToString(),
