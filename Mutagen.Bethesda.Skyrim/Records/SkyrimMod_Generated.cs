@@ -8873,6 +8873,12 @@ namespace Mutagen.Bethesda.Skyrim
                     Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "IEventDataTarget":
+                case "IEventDataTargetGetter":
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IPlacedTrapTarget":
                 case "IPlacedTrapTargetGetter":
                     Remove(obj, keys, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown);
@@ -8915,6 +8921,12 @@ namespace Mutagen.Bethesda.Skyrim
                 case "ILocationRecordGetter":
                     Remove(obj, keys, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IKnowable":
+                case "IKnowableGetter":
+                    Remove(obj, keys, typeof(IMagicEffectGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWordOfPowerGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IEffectRecord":
                 case "IEffectRecordGetter":

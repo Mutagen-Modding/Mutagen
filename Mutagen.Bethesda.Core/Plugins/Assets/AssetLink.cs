@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins.Exceptions;
 
 namespace Mutagen.Bethesda.Plugins.Assets;
 
@@ -122,10 +123,21 @@ public class AssetLink<TAssetType> :
         if (path.StartsWith(AssetInstance.BaseFolder, IAssetLinkGetter.PathComparison))
         {
             _rawPath = path[AssetInstance.BaseFolder.Length..];
+            _rawPath = _rawPath
+                .TrimStart(Path.DirectorySeparatorChar)
+                .TrimStart(Path.AltDirectorySeparatorChar);
             return true;
         }
         
         return false;
+    }
+
+    public void SetPath(string? path)
+    {
+        if (!TrySetPath(path))
+        {
+            throw new AssetPathMisalignedException(AssetInstance, path!);
+        }
     }
 
     public new string RawPath

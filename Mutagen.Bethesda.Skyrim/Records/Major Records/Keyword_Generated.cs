@@ -480,6 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// Aspects: IKeywordCommon
     /// </summary>
     public partial interface IKeyword :
+        IEventDataTarget,
         IKeywordCommon,
         IKeywordGetter,
         IKeywordLinkedReference,
@@ -503,6 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IKeywordGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IEventDataTargetGetter,
         IKeywordCommonGetter,
         IKeywordLinkedReferenceGetter,
         ILoquiObject<IKeywordGetter>,

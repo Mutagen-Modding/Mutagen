@@ -5,5 +5,6 @@
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Translation" recordType="TNAM" translated="Normal" nullable="False" />
     </Fields>
+    <LinkInterface>IKnowable</LinkInterface>
   </Object>
 </Loqui>

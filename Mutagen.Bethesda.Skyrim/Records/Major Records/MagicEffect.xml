@@ -58,6 +58,7 @@
       <String name="Description" recordType="DNAM" translated="Normal" />
       <RefList name="Conditions" refName="Condition" binary="Custom" />
     </Fields>
+    <LinkInterface>IKnowable</LinkInterface>
   </Object>
   <Object name="MagicEffectSound" objType="Subrecord" GUID="7e828ddb-2b33-49b7-ba04-0a01c3a5fbb6" ID="116">
     <Fields>

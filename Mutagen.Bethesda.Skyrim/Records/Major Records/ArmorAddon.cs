@@ -33,6 +33,22 @@ internal class ArmorAddonWeightSliderContainer : IGenderedItem<bool>
         set => _female = (byte)(value ? 2 : 0);
     }
 
+    public bool this[MaleFemaleGender gender]
+    {
+        get => gender == MaleFemaleGender.Male ? Male : Female;
+        set
+        {
+            if (gender == MaleFemaleGender.Male)
+            {
+                Male = value;
+            }
+            else
+            {
+                Female = value;
+            }
+        }
+    }
+
     public ArmorAddonWeightSliderContainer(byte male, byte female)
     {
         _male = male;

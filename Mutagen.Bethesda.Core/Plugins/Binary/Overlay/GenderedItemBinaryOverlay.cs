@@ -18,6 +18,8 @@ internal sealed class GenderedItemBinaryOverlay<T> : PluginBinaryOverlay, IGende
     public T Male => _male.HasValue ? _creator(_recordData.Slice(_male.Value), _package) : _fallback;
     public T Female => _female.HasValue ? _creator(_recordData.Slice(_female.Value), _package) : _fallback;
 
+    public T this[MaleFemaleGender gender] => gender == MaleFemaleGender.Male ? Male : Female;
+
     public GenderedItemBinaryOverlay(
         ReadOnlyMemorySlice<byte> bytes,
         BinaryOverlayFactoryPackage package,

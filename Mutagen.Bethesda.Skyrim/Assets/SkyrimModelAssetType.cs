@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Mutagen.Bethesda.Assets;
+﻿using Mutagen.Bethesda.Assets;
 
 namespace Mutagen.Bethesda.Skyrim.Assets;
 

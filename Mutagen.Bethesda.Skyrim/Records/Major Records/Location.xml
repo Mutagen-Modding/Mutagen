@@ -57,6 +57,7 @@
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
     </Fields>
     <LinkInterface>ILocationRecord</LinkInterface>
+    <LinkInterface>IEventDataTarget</LinkInterface>
   </Object>
   <Object name="LocationReference" objType="Subrecord" GUID="9eabb96c-a6a9-4367-b785-5a605234d4bf" ID="442">
     <Fields>

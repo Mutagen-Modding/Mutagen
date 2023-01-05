@@ -22,5 +22,6 @@
     </Fields>
     <LinkInterface>IEffectRecord</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IKnowable</LinkInterface>
   </Object>
 </Loqui>

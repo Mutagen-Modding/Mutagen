@@ -1,11 +1,16 @@
 using Loqui;
 using System.Collections;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog.StructuredStrings;
 using static Loqui.EqualsMaskHelper;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {
+    public enum MaleFemaleGender
+    {
+        Male,
+        Female,
+    }
+    
     /// <summary>
     /// An interface for an object exposing readonly Gendered Items
     /// </summary>
@@ -20,6 +25,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// Female item
         /// </summary>
         T Female { get; }
+        
+        T this[MaleFemaleGender gender] { get; }
     }
 
     /// <summary>
@@ -36,6 +43,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// Female item
         /// </summary>
         new T Female { set; get; }
+        
+        new T this[MaleFemaleGender gender] { get; set; }
     }
 
     /// <summary>
@@ -52,6 +61,22 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// Female item
         /// </summary>
         public T Female { get; set; }
+
+        public T this[MaleFemaleGender gender]
+        {
+            get => gender == MaleFemaleGender.Male ? Male : Female;
+            set
+            {
+                if (gender == MaleFemaleGender.Male)
+                {
+                    Male = value;
+                }
+                else
+                {
+                    Female = value;
+                }
+            }
+        }
 
         /// <summary>
         /// Constructor that takes a male and female item

@@ -1,0 +1,2491 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GetWantBlockingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e1b1f323-c8bb-4da4-b809-1d7cc2d168bc" ID="10000">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDistanceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e6f06dc8-6964-45b1-a52c-7f339e7dfbb1" ID="10001">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLockedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6517ffab-1c8e-486a-a435-93ab72403bf4" ID="10002">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPosConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f740842a-e7c9-48e8-b3c3-d52507c632f7" ID="10003">
+    <Fields>
+      <Enum enumName="Axis" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetAngleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e61df9bc-fa6d-4d63-ba77-96c562086b84" ID="10004">
+    <Fields>
+      <Enum enumName="Axis" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetStartingPosConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="4185eadf-813b-4992-8a9b-be2b54fba271" ID="10005">
+    <Fields>
+      <Enum enumName="Axis" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetStartingAngleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6963ee98-be1e-44d7-8a25-22258b3ef662" ID="10006">
+    <Fields>
+      <Enum enumName="Axis" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetSecondsPassedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e4f48687-83e5-455e-8ddb-80ba30cc08a7" ID="10007">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetActorValueConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1ace94d0-0658-4fcc-9472-9b849d938bf9" ID="10008">
+    <Fields>
+      <Enum enumName="ActorValue" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCurrentTimeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a4f7abcc-8fdd-4686-893e-aa32fddb944c" ID="10009">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetScaleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="684f5f48-ab45-48d6-b4cd-1991176bc2cd" ID="10010">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsMovingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="5a4b6ed6-6497-48e5-bff4-c89158da4b64" ID="10011">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsTurningConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d6d6a1ab-fbc1-468b-ac29-71a918c249e2" ID="10012">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLineOfSightConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6421f4ce-e74e-4ec1-966a-fd38990e58e4" ID="10013">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInSameCellConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1202083a-2e9b-4e12-888d-ad637f58d1a8" ID="10014">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDisabledConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ecb0ff4b-e5f7-488a-88a6-149600ba95e6" ID="10015">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="MenuModeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e5c1fe9e-fe9b-4b71-858b-4ee82dcf7eea" ID="10016">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDiseaseConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9d962f95-0501-4ac3-841a-72fdb80a7ad9" ID="10017">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetClothingValueConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a699dda3-767d-4e55-80ca-13fe80537596" ID="10018">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="SameFactionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="383ad20c-46cf-493c-88c1-2a4836409cdc" ID="10019">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="SameRaceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="30a51ec6-cb26-49e6-af04-66a5f3a34176" ID="10020">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="SameSexConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0b0ccb6c-9cfd-42e2-93fb-87988741a307" ID="10021">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDetectedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="5bd56716-72ef-451f-bffe-99a6a6c35a37" ID="10022">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDeadConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7c434126-ca4f-42fe-93bd-3d6e290efdfa" ID="10023">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetItemCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c5d4164a-8c82-415a-81a7-f3532a578bb5" ID="10024">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IItem</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetGoldConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="af1c028c-9a19-4e68-9646-cb4d85fe8720" ID="10025">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetSleepingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="65c81bc6-12e0-41b1-a11d-3ee3365f77ef" ID="10026">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetTalkedToPCConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="38ac2bf8-d24d-4ca7-bdd7-924e7afd3884" ID="10027">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetScriptVariableConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d2b9327d-8a21-410d-a7e2-1eb4e62faafd" ID="10028">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <String name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetQuestRunningConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d17cddea-e559-45ba-ac01-bfb565d50181" ID="10029">
+    <Fields>
+      <FormLink refName="Quest" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetStageConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="697751d3-eca5-41f8-99a4-a9cb7c8c1d88" ID="10030">
+    <Fields>
+      <FormLink refName="Quest" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetStageDoneConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="69fae57f-516b-4b94-a2d7-58090e1caed6" ID="10031">
+    <Fields>
+      <FormLink refName="Quest" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetFactionRankDifferenceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a937d4fc-707b-45e0-88c8-77dde79bac21" ID="10032">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <FormLink refName="Npc" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetAlarmedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="bf2a775f-e982-4ed9-b501-a569975982b5" ID="10033">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsRainingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="30332d8a-9c03-412e-a9b5-90b23fa9cd4f" ID="10034">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetAttackedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="833466f0-7bb5-4562-a75d-e04942acfb69" ID="10035">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsCreatureConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9a0300b9-0bf3-4ed8-af7f-ecaa2b3e8c2c" ID="10036">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLockLevelConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7b5b8503-f90e-4662-87ca-7c24221cdace" ID="10037">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetShouldAttackConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d969fbd8-a242-42cb-b24d-dbb08c68f297" ID="10038">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInCellConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7365732f-e831-4a0d-8edc-7d4679206573" ID="10039">
+    <Fields>
+      <FormLink refName="Cell" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsClassConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f907c02e-27d8-4a20-83f5-9903e43b20c1" ID="10040">
+    <Fields>
+      <FormLink refName="Class" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsRaceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f1d37aff-e2c6-4748-857e-69cba51eba30" ID="10041">
+    <Fields>
+      <FormLink refName="Race" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsSexConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d9283109-abe6-4078-9765-bb09193a0c7c" ID="10042">
+    <Fields>
+      <Enum enumName="MaleFemaleGender" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInFactionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ad6003a3-daac-4fb1-ac0b-4fc14ebb1aa8" ID="10043">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsIDConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="bf910999-34c1-4bfd-85fa-d75f50b9e85a" ID="10044">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlaceableObject</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetFactionRankConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b4923ced-d676-4d32-b787-e82973fee565" ID="10045">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetGlobalValueConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="88a8274e-47b7-401b-9518-ad68bca3b32b" ID="10046">
+    <Fields>
+      <FormLink refName="Global" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsSnowingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a07e57e4-edc4-4fe8-8fc1-f8d629c53396" ID="10047">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetRandomPercentConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a94ea603-03e3-485d-9a07-7100b5d9f207" ID="10048">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetQuestVariableConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="5ef1a86e-c000-4f21-9413-f6faaf6f930d" ID="10049">
+    <Fields>
+      <FormLink refName="Quest" name="FirstParameter" />
+      <String name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLevelConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="eabf3a4a-2ad5-4f37-902a-3d1022e5cfd3" ID="10050">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsRotatingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b0eab1a9-1d7f-4fdd-b151-5ab4b17f7033" ID="10051">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDeadCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6ed53c39-9fb5-4017-b374-8afbbfe3dfd4" ID="10052">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsAlertedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="93ab4f94-5830-472c-9c40-18c955e4c2e9" ID="10053">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPlayerControlsDisabledConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="91a75ac0-2924-44a1-b62e-48f434ac0517" ID="10054">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetHeadingAngleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ffa6dfa8-8a99-4ca6-b1cc-5a2c894ea0e2" ID="10055">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsWeaponMagicOutConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2f5a5249-f6ca-489d-a48a-c3220debe9f8" ID="10056">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsTorchOutConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8b625dbd-238f-42bf-9146-170c471369d1" ID="10057">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsShieldOutConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="00f4b582-292c-45bd-8881-07c00d7b56a6" ID="10058">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsFacingUpConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e77c47a8-dc08-4bec-a8a9-ad751051646e" ID="10059">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetKnockedStateConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ce29f2e6-7a80-4dc2-b968-c1dbb0196d2b" ID="10060">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetWeaponAnimTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b4881e14-ce65-4f6c-8e4c-b56c41a30b25" ID="10061">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsWeaponSkillTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1aeaddad-348f-44eb-a286-3f417dee6811" ID="10062">
+    <Fields>
+      <Enum enumName="ActorValue" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCurrentAIPackageConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="763c41a7-6f75-4bfd-9fa1-66f72f9b688d" ID="10063">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsWaitingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f28c0394-5997-4e28-8ac0-28fcc9751c40" ID="10064">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsIdlePlayingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="efaf9b60-6d6e-4c84-a17d-4f103bb804e4" ID="10065">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsIntimidatedbyPlayerConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="13b108b3-8d0b-480e-a680-44b8ac68164a" ID="10066">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPlayerInRegionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="391bdd31-e2a5-47cf-a2bd-ec741d4aed8d" ID="10067">
+    <Fields>
+      <FormLink refName="Region" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetActorAggroRadiusViolatedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6ffea78d-5463-4979-bfc8-e4e37f0ba89c" ID="10068">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCrimeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2db33da4-4973-4e53-a115-c63b9e48932f" ID="10069">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsGreetingPlayerConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c5c3581b-8084-44eb-a024-f43fc87e9cdd" ID="10070">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsGuardConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0bc286f8-23b4-4e0f-b8da-cc9eb4bfb56c" ID="10071">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasBeenEatenConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="90231bc6-4029-4c97-a071-82f3ff2a8e61" ID="10072">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetStaminaPercentageConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b205ccb6-4475-4a17-a709-410b8222c3f9" ID="10073">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPCIsClassConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="40f9bb56-b02c-478d-8f0b-50b28e5e39d0" ID="10074">
+    <Fields>
+      <FormLink refName="Class" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPCIsRaceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="11b5febb-6672-4f65-a0dc-3f8c7f1c8c79" ID="10075">
+    <Fields>
+      <FormLink refName="Race" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPCIsSexConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="69fa4c1b-aae9-4d1c-944a-a175170d8a6d" ID="10076">
+    <Fields>
+      <Enum enumName="MaleFemaleGender" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPCInFactionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6bbfeb0f-1139-4ff5-81fa-19e935891450" ID="10077">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="SameFactionAsPCConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d83c87d2-cb74-4a09-b71b-46a57c4c93b5" ID="10078">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="SameRaceAsPCConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="34c47f5a-2c6e-4280-935c-d66f8941bcbb" ID="10079">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="SameSexAsPCConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e0f62e2f-75df-465b-b61f-27394b74775c" ID="10080">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsReferenceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7689a5b9-b89c-4d61-9f26-ab0fb8b84cd9" ID="10081">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsTalkingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="05d06100-22e0-4516-8624-1597dd1df1ca" ID="10082">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetWalkSpeedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="61ac75f2-93a3-4b4d-ae33-e4940d3ce459" ID="10083">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCurrentAIProcedureConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="651fa137-e5c7-4f28-8097-678d330af9e3" ID="10084">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetTrespassWarningLevelConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="01203811-1a1f-4e39-beac-81b3ac41dbd2" ID="10085">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsTrespassingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="026f0cde-3535-435b-bd98-a29e42129830" ID="10086">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInMyOwnedCellConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="cb20d15a-8229-4d68-9d27-99483095fe6e" ID="10087">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetWindSpeedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a6c6219b-5d29-4cb8-803c-c926040edb82" ID="10088">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCurrentWeatherPercentConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="14085f6b-089d-4d5b-a197-3f50cf5f970d" ID="10089">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsCurrentWeatherConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0f7da43b-19ba-4969-a2a6-98c1c1a4f726" ID="10090">
+    <Fields>
+      <FormLink refName="Weather" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsContinuingPackagePCNearConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="cc2504c0-db3c-4796-b175-c9e26629d5a0" ID="10091">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsCrimeFactionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="216401a8-3f14-4910-b351-1e0633baa4bf" ID="10092">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="CanHaveFlamesConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8f8c0893-ced7-453a-a0d8-0a2c3783d18f" ID="10093">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasFlamesConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0afb0e23-0b34-4ae7-8672-32e88fe31c5c" ID="10094">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetOpenStateConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3bed2b9b-af01-4b1c-9b24-998b1bf89dc3" ID="10095">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetSittingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9526dd64-75bb-465b-9da0-9fdc62d2c0ae" ID="10096">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsCurrentPackageConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c0c1764f-a85d-4473-a7d2-c4f9634a9789" ID="10097">
+    <Fields>
+      <FormLink refName="Package" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsCurrentFurnitureRefConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="085c1179-5b91-4d14-8d43-20a7792ecbff" ID="10098">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsCurrentFurnitureObjConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="98c5e287-dd31-49be-9ee1-ba9daf1d545b" ID="10099">
+    <Fields>
+      <FormLink refName="Furniture" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDayOfWeekConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f1adb0d1-d2b4-469f-9315-bd55f82516da" ID="10100">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetTalkedToPCParamConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a3323b80-d795-4697-8e2f-98a0817bc1c4" ID="10101">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPCSleepingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9956d3dc-3df8-423d-9c16-abc419fb21c9" ID="10102">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPCAMurdererConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="16995b53-5dcd-493d-b603-b34b6d5235c4" ID="10103">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasSameEditorLocAsRefConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3cf2ccc7-ec2d-42c5-aa8d-f334f87e7a8f" ID="10104">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <FormLink refName="Keyword" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasSameEditorLocAsRefAliasConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c16dc867-2ad3-4889-a182-abb51b0d8e2f" ID="10105">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <FormLink refName="Keyword" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetEquippedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c9047e57-c255-47b5-bc66-9e06f28b86a7" ID="10106">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IItem</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsSwimmingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3552b198-27d0-4377-9028-aa990827ccde" ID="10107">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetAmountSoldStolenConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0311dea4-b606-461a-b0a9-596f10a28c73" ID="10108">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIgnoreCrimeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6c8deebd-353d-49dc-bdb0-b094800dc953" ID="10109">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPCExpelledConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="fc3499dd-c724-4e51-b242-c5c7cf6f3441" ID="10110">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPCFactionMurderConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a5257dae-3507-4567-8c1b-88fcb3e1d62f" ID="10111">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPCEnemyofFactionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="afaa330f-5e99-4504-8e19-124feb85edec" ID="10112">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPCFactionAttackConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="dc86ed3c-dffd-47c6-8304-9d4375060602" ID="10113">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDestroyedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="49ff6fef-8616-4e91-b944-efe5e2e48237" ID="10114">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasMagicEffectConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="536fbe60-1e68-4cfc-9230-bc039b9f1510" ID="10115">
+    <Fields>
+      <FormLink refName="MagicEffect" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDefaultOpenConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e0c0f5f7-b8e8-49a0-a25a-20aef2a85f71" ID="10116">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetAnimActionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7fa404a8-2423-4c95-8586-2cd888c637a5" ID="10117">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsSpellTargetConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="99796e7e-7ed8-41a3-8c60-7a21b003cc75" ID="10118">
+    <Fields>
+      <FormLink refName="Spell" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSModeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2fb398e6-9874-4daf-a988-5ced5c6d7391" ID="10119">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPersuasionNumberConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="945f53b0-3d75-4cfb-a886-6df8bce70db5" ID="10120">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVampireFeedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="956292bf-9df4-4d2d-821d-54f51e5292ed" ID="10121">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCannibalConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="59c3318d-0ba5-4509-a8aa-f6d3e01af43a" ID="10122">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsClassDefaultConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d21a8a3d-06ee-4383-ab7c-e9fa9bb0c3a2" ID="10123">
+    <Fields>
+      <FormLink refName="Class" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetClassDefaultMatchConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d06f60a9-0501-4ded-a6d3-016b8a142383" ID="10124">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInCellParamConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3ffeddd4-3221-4559-abcb-4f63d2359615" ID="10125">
+    <Fields>
+      <FormLink refName="Cell" name="FirstParameter" />
+      <FormLink name="SecondParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="GetVatsTargetHeightConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b35ef9d2-257e-45fb-89c0-7d6c1b12616e" ID="10126">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsGhostConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f4877380-cf7a-4385-b2bf-ab1468365325" ID="10127">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetUnconsciousConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="57cb8dcc-d267-44a6-b33f-a868f6713867" ID="10128">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetRestrainedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2c1b3424-0077-4f4d-a581-c2c8729b7431" ID="10129">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsUsedItemConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="230b9a76-061b-42da-a7c5-bd8010868d54" ID="10130">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlaceableObject</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsUsedItemTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8c8e4854-4306-4fca-bbbf-71cfd9f0ddc5" ID="10131">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsScenePlayingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="65696b09-8021-43bb-8cfb-a5eeee3594b7" ID="10132">
+    <Fields>
+      <FormLink refName="Scene" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInDialogueWithPlayerConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0922b529-f009-446b-bf2d-51b1ab031520" ID="10133">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLocationClearedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="192eddd3-69a6-4aa3-94bc-763e1c651dde" ID="10134">
+    <Fields>
+      <FormLink refName="Location" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsPlayableRaceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="24de0669-eda1-42d4-a6b7-be054cb2cfcc" ID="10135">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetOffersServicesNowConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b9020976-c77c-49a1-b4d3-b6f2651ae0ac" ID="10136">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasAssociationTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e0761b71-97bc-4366-a57a-aab640936436" ID="10137">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="AssociationType" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasFamilyRelationshipConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="811041ff-e8f7-4d2d-b24c-d0b63bdf7b7a" ID="10138">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasParentRelationshipConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="315d20df-45d7-4a96-883c-3598cb3f7c3d" ID="10139">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsWarningAboutConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="bd7be4c1-33a6-4f63-bfaf-0781dc4bd7c7" ID="10140">
+    <Fields>
+      <FormLink refName="FormList" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsWeaponOutConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="061a8f3e-48de-40c9-bfed-a4820c9a0a29" ID="10141">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasSpellConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="924745aa-5922-408a-a791-8939430ef5cc" ID="10142">
+    <Fields>
+      <FormLink refName="Spell" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsTimePassingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1b873f04-5e91-4bfc-92e5-f94a6451074b" ID="10143">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPleasantConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="094d6157-3f46-45d1-95fb-0ff084833f69" ID="10144">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsCloudyConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="683471d1-2b32-4578-982e-2051e8b591df" ID="10145">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsSmallBumpConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6680ac99-334f-48d2-b6dd-2c6a7262f991" ID="10146">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetBaseActorValueConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7fbfe743-562d-43d5-ba51-c6ca259338bc" ID="10147">
+    <Fields>
+      <Enum enumName="ActorValue" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsOwnerConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="5a009d85-c0be-4a2c-9055-ada177b262b1" ID="10148">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IOwner</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsCellOwnerConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ac72c068-0b92-4918-a876-1a48917b9967" ID="10149">
+    <Fields>
+      <FormLink refName="Cell" name="FirstParameter" />
+      <FormLink name="SecondParameter">
+        <Interface>IOwner</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="IsHorseStolenConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="fd69c01e-b930-403c-8240-3dcd0217d5d0" ID="10150">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsLeftUpConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b7b12c89-0498-4132-8877-629aca031288" ID="10151">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsSneakingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1a76c76d-ea3b-4438-9928-177e5e5734d5" ID="10152">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsRunningConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a1d67893-6452-4b09-9b5f-2fb5c17813a7" ID="10153">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetFriendHitConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2cc1a96e-0d3e-4b70-b6e9-03519d5ca0e9" ID="10154">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInCombatConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="be1b1378-4ba2-407a-b07f-d9b64251468b" ID="10155">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInInteriorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c21ca6e9-5a7d-42cd-ac53-d0b3e72414c2" ID="10156">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsWaterObjectConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="330887ad-692e-4a40-93b9-33e12d14bd49" ID="10157">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPlayerActionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="512609b4-461c-4687-963f-941711af27bb" ID="10158">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsActorUsingATorchConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="53bedb3a-2c15-4e79-9943-fd92b8606414" ID="10159">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsXBoxConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3dd8cf42-aa63-461d-8d54-131e195f1acd" ID="10160">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInWorldspaceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e4216b81-8e1c-4ba6-bed9-3e2258b6b80e" ID="10161">
+    <Fields>
+      <FormLink refName="Worldspace" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPCMiscStatConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="401825ed-fe29-468e-bbe6-f2d507da5369" ID="10162">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPairedAnimationConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7b70ffc7-d52f-4237-988d-30d1b917947e" ID="10163">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsActorAVictimConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="43a67050-42cf-4380-ba6d-0830013b0476" ID="10164">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetTotalPersuasionNumberConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f5154e90-1f10-478a-965d-91dd4e2ba188" ID="10165">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIdleDoneOnceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="151020b0-6ce7-4a90-99a1-25634ee993d2" ID="10166">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetNoRumorsConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0728ef80-3671-4472-8145-18ac2540a1e0" ID="10167">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCombatStateConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8a0c8c9d-7934-4752-acfe-d801a8ad9e96" ID="10168">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetWithinPackageLocationConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0a6a6907-a954-4614-8979-b263b5b542be" ID="10169">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsRidingMountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3f50fb01-3d5c-4cd3-863b-bdb207588f6a" ID="10170">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsFleeingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2bb46873-f765-473b-9990-6d492ab728c6" ID="10171">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInDangerousWaterConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0b1e17d8-cdc0-455a-b601-612626554e06" ID="10172">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIgnoreFriendlyHitsConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="02de5e1f-98f9-4dcd-8d10-7234002e8de7" ID="10173">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPlayersLastRiddenMountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="380f915e-6a27-44fd-b217-e892e338b999" ID="10174">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsActorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c3e42bde-e6dd-4f05-b47f-32f0d65bcb29" ID="10175">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsEssentialConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="4ada5839-44cd-4d86-8ec7-7a0a82c178df" ID="10176">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPlayerMovingIntoNewSpaceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6048ed41-8c37-4b14-9bf2-ddc68d2da102" ID="10177">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInCurrentLocConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a6ee83ee-d156-4d1d-a747-d329f8b61356" ID="10178">
+    <Fields>
+      <FormLink refName="Location" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInCurrentLocAliasConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8d1c0b1d-d84f-457c-af0a-8edc0a7a3084" ID="10179">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetTimeDeadConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6bf2bec5-546d-46de-aa9f-ce313e9efdf4" ID="10180">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasLinkedRefConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="160fc97a-bf53-400f-8753-84f1654bb2fd" ID="10181">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsChildConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="585de0dc-9ee0-4116-aab8-a5da23954ff8" ID="10182">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetStolenItemValueNoCrimeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f42903a5-7deb-4a28-9e5a-356421718983" ID="10183">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLastPlayerActionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="429fb2cd-9cb5-4b9f-bc05-ebd9921198ff" ID="10184">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPlayerActionActiveConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1d5084f7-4727-4c6b-9e27-45525da2f4e2" ID="10185">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsTalkingActivatorActorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3bca4377-80d3-4106-8377-b73e929053b5" ID="10186">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInListConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d46b7e73-85dc-4eff-a13e-638cc939fa8f" ID="10187">
+    <Fields>
+      <FormLink refName="FormList" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetStolenItemValueConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8fc5a958-89bf-4bab-9f79-38c1d0f20707" ID="10188">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCrimeGoldViolentConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f8beff23-6943-4a34-a4d9-3e6d18992278" ID="10189">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCrimeGoldNonviolentConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1c943ba5-6084-4f11-bb3d-395e7d9f470f" ID="10190">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasShoutConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="05c0d4b3-10b4-4b3a-9265-18fa9eb7521e" ID="10191">
+    <Fields>
+      <FormLink refName="Shout" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetHasNoteConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f1ffbab8-83fa-41b1-b267-eb6e54f09417" ID="10192">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetHitLocationConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7e99ec96-ab69-43ea-980a-75799b15ab83" ID="10193">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPC1stPersonConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="92336b69-5535-48a2-803a-b002799c0be9" ID="10194">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCauseofDeathConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a081096a-ac22-473d-8977-9066e41fed3f" ID="10195">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsLimbGoneConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8f4de337-0053-400b-8b64-3ba4c43012ba" ID="10196">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsWeaponInListConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d0930af4-883a-486c-bba1-dfdf253ed5f4" ID="10197">
+    <Fields>
+      <FormLink refName="FormList" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsBribedbyPlayerConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="68a20b19-421d-4939-b586-cd5d8116ab22" ID="10198">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetRelationshipRankConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d4e4ea07-f0a3-4fe1-8532-58da13b4a5fb" ID="10199">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="412b1835-dc3f-421d-bea7-816cab681c6f" ID="10200">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsKillerConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="262ec8b7-9eec-4ee9-a2a0-8b40140a8487" ID="10201">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsKillerObjectConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9247bc76-24bc-461c-8387-e61aec755cb3" ID="10202">
+    <Fields>
+      <FormLink refName="FormList" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetFactionCombatReactionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9997cf13-8cce-41a1-a246-e95ba571a2e3" ID="10203">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <FormLink refName="Faction" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="ExistsConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="113bfb5b-f952-45c5-85b2-fb967e219b43" ID="10204">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetGroupMemberCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="424ba4b5-5518-43fa-ae05-fe8368bbfeb9" ID="10205">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetGroupTargetCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="13f400bc-0c22-4ec4-87fe-4011d7491bfb" ID="10206">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsVoiceTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="81938d6e-b298-42b2-bb4f-33125d598e91" ID="10207">
+    <Fields>
+      <FormLink refName="VoiceType" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPlantedExplosiveConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="4d78b3a4-aa3a-4a16-8cba-3ae5b959ad25" ID="10208">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsScenePackageRunningConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="80f5cf5b-86d7-43d1-99af-3cd7129ec846" ID="10209">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetHealthPercentageConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="bf36b06f-9a41-4f87-a618-04485a729557" ID="10210">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsObjectTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="19cf5a9b-01c0-4415-891d-ac0c586fe912" ID="10211">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDialogueEmotionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="782fa967-3a46-41c5-9a21-dff2f7c57d11" ID="10212">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDialogueEmotionValueConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="cbb366bc-9dd7-413d-bf2c-4a7a9832a27f" ID="10213">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsCreatureTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="52b7094d-88f7-4126-853b-0be94d086779" ID="10214">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInCurrentLocFormListConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7f59baae-a63d-43e5-b307-cbfa5e23789a" ID="10215">
+    <Fields>
+      <FormLink refName="FormList" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInZoneConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3da9e90c-33e5-4c57-aefc-88cee8e42d30" ID="10216">
+    <Fields>
+      <FormLink refName="EncounterZone" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVelocityConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="477da13f-0f9d-4602-b0cf-3f9fbe283de2" ID="10217">
+    <Fields>
+      <Enum enumName="Axis" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetGraphVariableFloatConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0ba5129a-b1a1-4145-8954-eef996246b4a" ID="10218">
+    <Fields>
+      <String name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasPerkConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="695dbf7c-a361-4c7e-8e5c-218f3b968db4" ID="10219">
+    <Fields>
+      <FormLink refName="Perk" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetFactionRelationConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c418d213-9437-4253-b013-3e690e08aa47" ID="10220">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsLastIdlePlayedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1a6a3546-88fc-4b92-9705-a759e92f257d" ID="10221">
+    <Fields>
+      <FormLink refName="IdleAnimation" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPlayerTeammateConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="be1fa392-2eed-430f-bd96-039833fc1aec" ID="10222">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPlayerTeammateCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="efc2bc72-9ff4-4a2b-99a8-6e7b4050e413" ID="10223">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetActorCrimePlayerEnemyConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="894a0ae7-d488-4cdb-8cbc-3d103b6b2530" ID="10224">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCrimeGoldConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9120bdc3-3cf5-4ac1-9b40-9562e05332d0" ID="10225">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPlayerGrabbedRefConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e791ef2f-5bbc-489a-ae41-6e2130cc6224" ID="10226">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetKeywordItemCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="49a7ca6f-843f-4428-81ec-899db02c0e70" ID="10227">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDestructionStageConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c15048ce-6c75-475a-bc08-a6c9e55d8dfa" ID="10228">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsAlignmentConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ee84077c-39e6-4fc3-852a-82f55b187203" ID="10229">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsProtectedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="557112f4-177d-40c0-8853-a1d634fb49aa" ID="10230">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetThreatRatioConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="564fca6f-58c7-473f-a851-5b3c3843ac57" ID="10231">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsUsedItemEquipTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f2b103bc-c96f-4156-bafc-c1e084d7de17" ID="10232">
+    <Fields>
+      <Enum enumName="EquipTypeFlag" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsCarryableConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7676091f-3e28-49dc-b979-b33f1d482de5" ID="10233">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetConcussedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e2bf3c56-1fde-4af1-9925-1f769ee8fcf1" ID="10234">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetMapMarkerVisibleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="001bf934-3475-4d6f-a4af-b28fce4b9914" ID="10235">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="PlayerKnowsConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3cd3197f-7fce-4437-9b9f-356f87e5afb3" ID="10236">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IKnowable</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPermanentActorValueConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="bc962bdb-464a-47a8-98a5-cee6025dd40c" ID="10237">
+    <Fields>
+      <Enum enumName="ActorValue" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetKillingBlowLimbConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="deaf5f9c-6523-418f-80a3-5b377bb39446" ID="10238">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="CanPayCrimeGoldConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9516111c-5bbd-44ff-876c-2829d1a96a10" ID="10239">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetDaysInJailConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1123590a-bd5d-4013-8ab7-40772ab8f180" ID="10240">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="EPAlchemyGetMakingPoisonConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="22ff7b0d-1994-4600-8ead-089b9b888137" ID="10241">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="EPAlchemyEffectHasKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="089e315a-9061-4c57-850a-2a0dfca95d36" ID="10242">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetAllowWorldInteractionsConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="fb15fe55-d326-4578-8bdd-2c43f4b3da17" ID="10243">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLastHitCriticalConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8014cecd-b520-4f98-a66e-f86a07f06a7d" ID="10244">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsCombatTargetConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="168f6d6e-090b-4c9b-8ca5-f5cce16c18d6" ID="10245">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSRightAreaFreeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e1dc11b5-1117-458f-b27b-ee7727d45374" ID="10246">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSLeftAreaFreeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="971367c3-9415-45e0-abae-53cfefc43f97" ID="10247">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSBackAreaFreeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="29e73dea-1abf-4ee7-ac09-91745072dc20" ID="10248">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSFrontAreaFreeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="686ea714-abbb-43a8-a674-02f593b98b8e" ID="10249">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLockIsBrokenConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8f40a2c5-7b0e-4475-8259-9ffac8a67a34" ID="10250">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPS3ConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="fe84e9bb-2ff8-47ca-a3ea-346dc20fd144" ID="10251">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsWin32ConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e1a1477e-fa58-4527-bd12-db303be12c5b" ID="10252">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSRightTargetVisibleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9f039afa-a514-4279-9f76-1545f9125a0d" ID="10253">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSLeftTargetVisibleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a96633e8-1ded-4b87-a3fd-9b09938c8c7d" ID="10254">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSBackTargetVisibleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ac176bf0-dd13-4956-b4fa-7fc4cc7a438d" ID="10255">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSFrontTargetVisibleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="28df3009-bc94-4577-9ff0-eb17e01680a2" ID="10256">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInCriticalStageConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0df1eaa9-7dde-4b36-8999-464f06b3f521" ID="10257">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetXPForNextLevelConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0adace53-0baf-4778-aae2-9fe7f856f9c8" ID="10258">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInfamyConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c50330e7-580d-4cbb-bc25-b8772956699c" ID="10259">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInfamyViolentConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="178d2526-e5a6-4caa-871b-b8e80ca93971" ID="10260">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInfamyNonViolentConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="84f0f47f-471c-4150-98dd-1d91b0dd0e56" ID="10261">
+    <Fields>
+      <FormLink refName="Faction" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetQuestCompletedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8e643ffe-9e1b-4359-99f1-6e64fba6846c" ID="10262">
+    <Fields>
+      <FormLink refName="Quest" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsGoreDisabledConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e65640c8-f6b5-4ef8-8ce3-b1ff9bd98310" ID="10263">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsSceneActionCompleteConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="4fa5e963-81b3-472d-b5f2-ae1169187657" ID="10264">
+    <Fields>
+      <FormLink refName="Scene" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetSpellUsageNumConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="02419323-d60f-440d-b7cd-fb7ee3844508" ID="10265">
+    <Fields>
+      <FormLink refName="Spell" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetActorsInHighConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="bfec941e-1ec1-401c-a361-fff5f4f1257a" ID="10266">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasLoaded3DConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="4d932a4a-3155-4551-b4c8-811a2af2ba68" ID="10267">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a1780d0f-7cc5-4241-829f-8b3411752be8" ID="10268">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasRefTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b4500236-ca6f-4e06-9977-8896b6f7e713" ID="10269">
+    <Fields>
+      <FormLink refName="LocationReferenceType" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="LocationHasKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8f799f22-15f3-4104-aa2e-3fc1d9f814be" ID="10270">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="LocationHasRefTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a29cf9d3-fecd-4e47-a9d2-c38b1c0e6065" ID="10271">
+    <Fields>
+      <FormLink refName="LocationReferenceType" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsEditorLocationConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="96ba37f7-41df-46c0-8740-cd4fc351161f" ID="10272">
+    <Fields>
+      <FormLink refName="Location" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsAliasRefConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="cf4e0791-f95a-4708-9c0b-7db6d7ed45cf" ID="10273">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsEditorLocAliasConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="046f47d7-c5be-4a2a-a8fd-bd0825a4e3a7" ID="10274">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsSprintingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="35db3c07-929b-4747-a944-c04593449491" ID="10275">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsBlockingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e779c4e3-75e6-41bd-9b1f-e16fe07eeedf" ID="10276">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasEquippedSpellConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3060b92c-04ad-41db-9fb9-2b4e9dd80b3a" ID="10277">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCurrentCastingTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a5daea45-9bfd-44d1-896f-0196f2516542" ID="10278">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCurrentDeliveryTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="4a921615-b51b-4a0d-9265-8ea97067fa39" ID="10279">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetAttackStateConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="fa252f8d-26ef-4a3d-92a1-2780cf34158c" ID="10280">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetEventDataConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="67e2edf7-92fb-4dfe-835d-243a94223d7f" ID="10281">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <FormLink name="SecondParameter">
+        <Interface>IEventDataTarget</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="IsCloserToAThanBConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b889a8ef-38e2-47cf-9afe-f1ad39001c62" ID="10282">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <FormLink name="SecondParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="GetEquippedShoutConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9a0f32d4-083d-444b-b380-392bb9b4faba" ID="10283">
+    <Fields>
+      <FormLink refName="Shout" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsBleedingOutConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="afb8eb64-dc39-45b3-adfb-d4b1ef242327" ID="10284">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetRelativeAngleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="10b94f3a-03b4-4750-b217-cc0bda36e12c" ID="10285">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Enum enumName="Axis" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetMovementDirectionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7da6630e-917e-4522-9621-49c33121dc51" ID="10286">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInSceneConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="5bf737ce-23ad-4b9a-82f7-fe0364c9babc" ID="10287">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetRefTypeDeadCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="dbf5cdf5-b2a7-42d6-bc04-0c75829a1d34" ID="10288">
+    <Fields>
+      <FormLink refName="Location" name="FirstParameter" />
+      <FormLink refName="LocationReferenceType" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetRefTypeAliveCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="485e4e7f-cdf7-4a8e-b52e-4213d480587b" ID="10289">
+    <Fields>
+      <FormLink refName="Location" name="FirstParameter" />
+      <FormLink refName="LocationReferenceType" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsFlyingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f289bc37-0825-4af9-b025-a689059ad255" ID="10290">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsCurrentSpellConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3aba78a0-b15d-4841-803c-d3b19aeefcd8" ID="10291">
+    <Fields>
+      <FormLink refName="Spell" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="SpellHasKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="740eab22-14be-4839-ba14-a56bf34db7d1" ID="10292">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <FormLink refName="Keyword" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetEquippedItemTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d9155989-6ae0-490e-ae8a-04177ae52d4c" ID="10293">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLocationAliasClearedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="cd518c64-5eb1-411d-9ba4-103173246884" ID="10294">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLocAliasRefTypeDeadCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="da854523-eb1a-4517-9164-e1cb9f0d74cd" ID="10295">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <FormLink refName="LocationReferenceType" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLocAliasRefTypeAliveCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="21f5f56f-c206-4b04-9890-1e1e1f16f7d5" ID="10296">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <FormLink refName="LocationReferenceType" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsWardStateConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2a45a84b-7a18-40d9-b09a-4afb5644b78c" ID="10297">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInSameCurrentLocAsRefConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="28efb0ee-6171-455c-a69b-aac101e37cc0" ID="10298">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <FormLink refName="Keyword" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInSameCurrentLocAsRefAliasConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c2f9efbc-dd0a-4c64-bb7b-bd570900a185" ID="10299">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <FormLink refName="Keyword" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="LocAliasIsLocationConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a0234443-1573-48d1-9e29-a31e20af3ada" ID="10300">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <FormLink refName="Location" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetKeywordDataForLocationConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="bb89301c-e427-4eb4-bf0c-fa1e6866319c" ID="10301">
+    <Fields>
+      <FormLink refName="Location" name="FirstParameter" />
+      <FormLink refName="Keyword" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetKeywordDataForAliasConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="cc41c945-610a-4e1d-9fa1-67d16450bb32" ID="10302">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <FormLink refName="Keyword" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="LocAliasHasKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="5189dace-27dc-41d1-8560-588de0f8b0ff" ID="10303">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <FormLink refName="Keyword" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsNullPackageDataConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0055997e-f499-40c4-9284-f9e61a9144b5" ID="10304">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetNumericPackageDataConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="261b9ac6-85c3-4dd3-94f8-d5b2802522db" ID="10305">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsFurnitureAnimTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d91b569f-4508-4f7e-af0a-ca987125dfba" ID="10306">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsFurnitureEntryTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="58d153c5-b6d0-4269-b13c-66e42f08a325" ID="10307">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetHighestRelationshipRankConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="fa245a84-f72c-4443-802c-e42ad91d5182" ID="10308">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLowestRelationshipRankConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c200bbe4-9447-4517-937c-bbd6f61681f9" ID="10309">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasAssociationTypeAnyConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="04d4ad74-6d07-4459-94d9-8bd53115ea15" ID="10310">
+    <Fields>
+      <FormLink refName="AssociationType" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasFamilyRelationshipAnyConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="532efb88-0fda-42a7-8f70-394642e9c7b8" ID="10311">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPathingTargetOffsetConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="27a36076-6160-4220-bdf2-289df456d4db" ID="10312">
+    <Fields>
+      <Enum enumName="Axis" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPathingTargetAngleOffsetConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="615518f8-ac9b-40e3-ba31-b9f11a7c982e" ID="10313">
+    <Fields>
+      <Enum enumName="Axis" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPathingTargetSpeedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="32562160-3527-42fb-98ec-ae36125d64ac" ID="10314">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPathingTargetSpeedAngleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="dac9e471-23a4-426e-8e92-5ddd11626d98" ID="10315">
+    <Fields>
+      <Enum enumName="Axis" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetMovementSpeedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="452190d7-4991-412b-ba9c-52cc83aef75c" ID="10316">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInContainerConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8a60dc39-7bab-4301-9079-86602aae614f" ID="10317">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsLocationLoadedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9f837915-302f-4bb2-a23c-2642c21df625" ID="10318">
+    <Fields>
+      <FormLink refName="Location" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsLocAliasLoadedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="fe1e8d2c-3420-47c9-931e-b2fdfa3b882c" ID="10319">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsDualCastingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="141cdbb3-dafc-47d1-8a1e-1df4f094e5b9" ID="10320">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVMQuestVariableConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="43092b60-d1e2-400c-8a99-4ce7a282b92e" ID="10321">
+    <Fields>
+      <FormLink refName="Quest" name="FirstParameter" />
+      <String name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetVMScriptVariableConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6b85f148-fe5e-4f98-9a7f-ce6b4f452655" ID="10322">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <String name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsEnteringInteractionQuickConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ef16d1df-bd3e-4b75-af6b-a6554b7dfa4e" ID="10323">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsCastingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="96a933bd-3d88-4d15-b322-38474eb7af1c" ID="10324">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetFlyingStateConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="62ff4e5d-dc2c-4710-8721-95ee1496149b" ID="10325">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInFavorStateConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b96a5b50-8a5b-471b-a8ee-166cfc797f96" ID="10326">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasTwoHandedWeaponEquippedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b489a20f-8671-4b17-8cd5-790cc41a0da3" ID="10327">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsExitingInstantConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="45aea13c-55d4-4ca5-9224-2abe244018db" ID="10328">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInFriendStateWithPlayerConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="5412e58b-49b3-4fba-bc0d-2fa99b4b8348" ID="10329">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetWithinDistanceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ba5f69d0-337d-423d-9119-6268e3ceb39d" ID="10330">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Float name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetActorValuePercentConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8c857c6a-b6df-4f97-b255-8e97b0aef5ea" ID="10331">
+    <Fields>
+      <Enum enumName="ActorValue" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsUniqueConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9cd11e5b-2932-4fcb-95d9-7ecf854f26cf" ID="10332">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLastBumpDirectionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="20d20356-fcf5-46c8-8cc1-91b638476611" ID="10333">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsInFurnitureStateConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="eee4dd65-395a-4687-bb62-8b1bd6b0f311" ID="10334">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsInjuredConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="577096a7-e74c-4c64-98ff-ba5b6072cf1f" ID="10335">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsCrashLandRequestConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="36b7971d-d517-4346-988d-26d67985efea" ID="10336">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIsHastyLandRequestConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c720c816-756c-4ebe-9798-9d4dd43577b4" ID="10337">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsLinkedToConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="773e1088-e975-4509-89af-3b4187265dfa" ID="10338">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <FormLink refName="Keyword" name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetKeywordDataForCurrentLocationConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ed66177a-8a13-48c4-b343-6e4e7c8c99f6" ID="10339">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetInSharedCrimeFactionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ea3bfedc-6a91-4866-b761-500fe49e19be" ID="10340">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetBribeSuccessConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="33991a17-cfb7-47ce-8a73-769c5c9737b9" ID="10341">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetIntimidateSuccessConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7dd4ab4a-c437-43e3-9a02-3640e65dd73a" ID="10342">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetArrestedStateConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="292a21cf-8038-4469-a0a0-37208a86c7b8" ID="10343">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetArrestingActorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8f5d5400-e286-450c-88fa-bf2205dca84d" ID="10344">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="EPTemperingItemIsEnchantedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c1bea145-d178-4f96-9c81-1eda48a5416e" ID="10345">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="EPTemperingItemHasKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1ba8fdea-63a5-4207-a440-811216861b1d" ID="10346">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetReplacedItemTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="6a904bd1-46ae-4962-adab-554d29b6c57f" ID="10347">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsAttackingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0aa69f32-2d54-40d0-8cf8-3068d9c0039d" ID="10348">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPowerAttackingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9b1a28af-149f-4d63-a389-d4034df1a450" ID="10349">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsLastHostileActorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1088a365-6304-4735-bc5b-4f9020c9da61" ID="10350">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetGraphVariableIntConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2a2c697b-b35c-4c70-b49d-cb0c20d00ba2" ID="10351">
+    <Fields>
+      <String name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCurrentShoutVariationConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d4d37b62-1137-4a03-bc25-ad53ad9f105f" ID="10352">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="ShouldAttackKillConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2c0b0b53-5760-4e54-b801-fed5e9b35d6e" ID="10353">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetActivatorHeightConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="25455e28-8a7e-4709-93b6-9976dd24954e" ID="10354">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="EPMagic_IsAdvanceSkillConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="7838fa36-242d-49b5-bec1-214b500c6ecc" ID="10355">
+    <Fields>
+      <Enum enumName="ActorValue" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="WornHasKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="499dbc57-c071-4081-84a6-bcee5bd47bd3" ID="10356">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPathingCurrentSpeedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="22888d57-43da-412f-afc3-ece3449f288c" ID="10357">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetPathingCurrentSpeedAngleConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e670d36e-117d-49b6-b42d-aa04c7f0c005" ID="10358">
+    <Fields>
+      <Enum enumName="Axis" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="EPModSkillUsage_AdvanceObjectHasKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="b3f90954-64ef-4fb7-ad3b-1f4393851ac1" ID="10359">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="EPModSkillUsage_IsAdvanceActionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="f0154aeb-a7dd-4236-8be8-a004535d66d7" ID="10360">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="EPMagic_SpellHasKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="841a7c04-d844-4b28-9b83-fa4b7de9c0a2" ID="10361">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetNoBleedoutRecoveryConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="da3c31a3-0e88-474d-8953-f21108eeb7ea" ID="10362">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="EPMagic_SpellHasSkillConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="86e7ab08-a5fd-4edc-8832-a33574f92a65" ID="10363">
+    <Fields>
+      <Enum enumName="ActorValue" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsAttackTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="bba9292d-856b-4135-8ce2-f6f9c1508814" ID="10364">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsAllowedToFlyConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="39705abd-b75d-45c2-b132-60bf7451718d" ID="10365">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasMagicEffectKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d3b2edc4-12dc-4f93-b4fa-6aa0f9f15d08" ID="10366">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsCommandedActorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="39cdbd4c-db2d-4adb-9a68-ebaceb382b28" ID="10367">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsStaggeredConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="037d05dc-bd9a-400d-ba1a-ef45e2d22694" ID="10368">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsRecoilingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="747824d0-2318-429e-9094-c1f85526cfe3" ID="10369">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsExitingInteractionQuickConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d4e20fc3-a440-4957-b531-206af5e2e764" ID="10370">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPathingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="930ef5dd-5645-41e3-b4b6-69718db5faf5" ID="10371">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetShouldHelpConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ed9f3f76-311d-4fb9-955c-e90dacc1dd21" ID="10372">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="HasBoundWeaponEquippedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="31b40c10-a722-4268-90ab-4abf2c13a533" ID="10373">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCombatTargetHasKeywordConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e6c0de61-fd43-437d-aa1d-1cc73a0598b7" ID="10374">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetCombatGroupMemberCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="5b6737c6-393c-4fb9-80c9-0ae21e0b3646" ID="10375">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsIgnoringCombatConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d36e40ee-9904-4b23-a561-e2e096b9470f" ID="10376">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetLightLevelConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c2b5247a-90aa-4a2a-84d0-4aca59ba73d2" ID="10377">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="SpellHasCastingPerkConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a5ccb0d9-6f89-4809-afb0-097c5a68ef5f" ID="10378">
+    <Fields>
+      <FormLink refName="Perk" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsBeingRiddenConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1f99452b-aa35-49bf-94b7-7c0f81bd161e" ID="10379">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsUndeadConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ea78045f-301c-4186-9bcb-7c4dd32afe90" ID="10380">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetRealHoursPassedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="abd13fa8-aec4-4940-be7f-cc06ddd38c3b" ID="10381">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsUnlockedDoorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9a196839-6cca-408d-b75c-6469bb83cb7e" ID="10382">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsHostileToActorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e3e6586c-5aec-41ba-a438-43074da8c643" ID="10383">
+    <Fields>
+      <FormLink refName="Npc" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetTargetHeightConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="14c0b673-3a3d-443c-8912-6660cceb3255" ID="10384">
+    <Fields>
+      <FormLink name="FirstParameter">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsPoisonConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9047ecaa-9995-4a65-badc-c1bd3432c83b" ID="10385">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="WornApparelHasKeywordCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="63b557a3-eda5-4b5f-a803-3b0631bd84f5" ID="10386">
+    <Fields>
+      <FormLink refName="Keyword" name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetItemHealthPercentConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e30c9994-3e5d-41fc-a3ac-3c5ce9edc119" ID="10387">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="EffectWasDualCastConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="4d0d837c-c9dc-4a74-a72a-8c2317b5220a" ID="10388">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetKnockedStateEnumConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ad1c1d52-e122-403b-8b2e-4699a75b6a78" ID="10389">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="DoesNotExistConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0d702dfc-1e31-4c8a-9780-91ef1bea8f48" ID="10390">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsOnFlyingMountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="4c08139b-ca76-4934-b831-d995436d72c5" ID="10391">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="CanFlyHereConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="8558a80b-7ce9-44f3-af5f-84fe6d29b240" ID="10392">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsFlyingMountPatrolQueudConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="84caa34b-245e-4fe0-9ba9-e745e55b0927" ID="10393">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsFlyingMountFastTravellingConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="498024f6-77c5-42af-b87d-9979cc24abd2" ID="10394">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="IsOverEncumberedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="068f0663-ef67-4aeb-ad25-294013c33f3c" ID="10395">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetActorWarmthConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="154f739b-6cb6-43ce-8333-ed37314267d8" ID="10396">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetSKSEVersionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ec878eb6-0f80-4bfe-bab1-5fb20fd596c1" ID="10397">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetSKSEVersionMinorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2b054fe4-09c0-40ef-ad04-096a313ed8f1" ID="10398">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetSKSEVersionBetaConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="9b5adde7-7c7c-4bb2-9b14-cacaa01459a4" ID="10399">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="GetSKSEReleaseConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="beb9999b-38de-4a1c-9556-f51cca42e4bf" ID="10400">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+  <Object name="ClearInvalidRegistrationsConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="1665b025-937b-4348-a28f-a685f37836bc" ID="10401">
+    <Fields>
+      <Int32 name="FirstParameter" />
+      <Int32 name="SecondParameter" />
+    </Fields>
+  </Object>
+</Loqui>

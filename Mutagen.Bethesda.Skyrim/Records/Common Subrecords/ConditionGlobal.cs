@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Skyrim;
 public partial class ConditionGlobal
 {
     #region Data
-    public override ConditionData Data { get; set; } = new FunctionConditionData();
+    public override ConditionData Data { get; set; } = new GetWantBlockingConditionData();
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IConditionDataGetter IConditionGlobalGetter.Data => Data;
     #endregion

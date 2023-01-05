@@ -5,5 +5,6 @@
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
     </Fields>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
+    <LinkInterface>IEventDataTarget</LinkInterface>
   </Object>
 </Loqui>

@@ -36,6 +36,10 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IEmittance
 - Light
 - Region
+### IEventDataTarget
+- FormList
+- Keyword
+- Location
 ### IExplodeSpawn
 - AcousticSpace
 - Activator
@@ -101,6 +105,10 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Keyword
 - PlacedNpc
 - PlacedObject
+### IKnowable
+- MagicEffect
+- ObjectEffect
+- WordOfPower
 ### ILinkedReference
 - APlacedTrap
 - PlacedNpc
@@ -282,6 +290,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IRegionTarget
 ### FormList
 - IAliasVoiceType
+- IEventDataTarget
 - ILockList
 - IObjectId
 ### Furniture
@@ -319,6 +328,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 ### Keyword
+- IEventDataTarget
 - IKeywordLinkedReference
 ### LandscapeTexture
 - IRegionTarget
@@ -341,9 +351,12 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 ### Location
+- IEventDataTarget
 - ILocationRecord
 ### LocationReferenceType
 - ILocationRecord
+### MagicEffect
+- IKnowable
 ### MiscItem
 - IConstructible
 - IHarvestTarget
@@ -363,6 +376,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### ObjectEffect
 - IEffectRecord
 - IExplodeSpawn
+- IKnowable
 ### PlacedNpc
 - IKeywordLinkedReference
 - ILinkedReference
@@ -435,5 +449,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 - IObjectId
 - IPlaceableObject
+### WordOfPower
+- IKnowable
 ### Worldspace
 - IComplexLocation

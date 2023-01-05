@@ -222,6 +222,13 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Npc_Registration.Instance,
         });
         dict[typeof(ILockListGetter)] = dict[typeof(ILockList)] with { Setter = false };
+        dict[typeof(IEventDataTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            Keyword_Registration.Instance,
+            Location_Registration.Instance,
+        });
+        dict[typeof(IEventDataTargetGetter)] = dict[typeof(IEventDataTarget)] with { Setter = false };
         dict[typeof(IPlacedTrapTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Hazard_Registration.Instance,
@@ -269,6 +276,13 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             LocationReferenceType_Registration.Instance,
         });
         dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
+        dict[typeof(IKnowable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            MagicEffect_Registration.Instance,
+            ObjectEffect_Registration.Instance,
+            WordOfPower_Registration.Instance,
+        });
+        dict[typeof(IKnowableGetter)] = dict[typeof(IKnowable)] with { Setter = false };
         dict[typeof(IEffectRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ObjectEffect_Registration.Instance,

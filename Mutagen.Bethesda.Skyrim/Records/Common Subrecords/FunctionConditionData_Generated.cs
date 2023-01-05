@@ -38,7 +38,10 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class FunctionConditionData :
+    /// <summary>
+    /// Implemented by: [UnknownConditionData, GetWantBlockingConditionData, GetDistanceConditionData, GetLockedConditionData, GetPosConditionData, GetAngleConditionData, GetStartingPosConditionData, GetStartingAngleConditionData, GetSecondsPassedConditionData, GetActorValueConditionData, GetCurrentTimeConditionData, GetScaleConditionData, IsMovingConditionData, IsTurningConditionData, GetLineOfSightConditionData, GetInSameCellConditionData, GetDisabledConditionData, MenuModeConditionData, GetDiseaseConditionData, GetClothingValueConditionData, SameFactionConditionData, SameRaceConditionData, SameSexConditionData, GetDetectedConditionData, GetDeadConditionData, GetItemCountConditionData, GetGoldConditionData, GetSleepingConditionData, GetTalkedToPCConditionData, GetScriptVariableConditionData, GetQuestRunningConditionData, GetStageConditionData, GetStageDoneConditionData, GetFactionRankDifferenceConditionData, GetAlarmedConditionData, IsRainingConditionData, GetAttackedConditionData, GetIsCreatureConditionData, GetLockLevelConditionData, GetShouldAttackConditionData, GetInCellConditionData, GetIsClassConditionData, GetIsRaceConditionData, GetIsSexConditionData, GetInFactionConditionData, GetIsIDConditionData, GetFactionRankConditionData, GetGlobalValueConditionData, IsSnowingConditionData, GetRandomPercentConditionData, GetQuestVariableConditionData, GetLevelConditionData, IsRotatingConditionData, GetDeadCountConditionData, GetIsAlertedConditionData, GetPlayerControlsDisabledConditionData, GetHeadingAngleConditionData, IsWeaponMagicOutConditionData, IsTorchOutConditionData, IsShieldOutConditionData, IsFacingUpConditionData, GetKnockedStateConditionData, GetWeaponAnimTypeConditionData, IsWeaponSkillTypeConditionData, GetCurrentAIPackageConditionData, IsWaitingConditionData, IsIdlePlayingConditionData, IsIntimidatedbyPlayerConditionData, IsPlayerInRegionConditionData, GetActorAggroRadiusViolatedConditionData, GetCrimeConditionData, IsGreetingPlayerConditionData, IsGuardConditionData, HasBeenEatenConditionData, GetStaminaPercentageConditionData, GetPCIsClassConditionData, GetPCIsRaceConditionData, GetPCIsSexConditionData, GetPCInFactionConditionData, SameFactionAsPCConditionData, SameRaceAsPCConditionData, SameSexAsPCConditionData, GetIsReferenceConditionData, IsTalkingConditionData, GetWalkSpeedConditionData, GetCurrentAIProcedureConditionData, GetTrespassWarningLevelConditionData, IsTrespassingConditionData, IsInMyOwnedCellConditionData, GetWindSpeedConditionData, GetCurrentWeatherPercentConditionData, GetIsCurrentWeatherConditionData, IsContinuingPackagePCNearConditionData, GetIsCrimeFactionConditionData, CanHaveFlamesConditionData, HasFlamesConditionData, GetOpenStateConditionData, GetSittingConditionData, GetIsCurrentPackageConditionData, IsCurrentFurnitureRefConditionData, IsCurrentFurnitureObjConditionData, GetDayOfWeekConditionData, GetTalkedToPCParamConditionData, IsPCSleepingConditionData, IsPCAMurdererConditionData, HasSameEditorLocAsRefConditionData, HasSameEditorLocAsRefAliasConditionData, GetEquippedConditionData, IsSwimmingConditionData, GetAmountSoldStolenConditionData, GetIgnoreCrimeConditionData, GetPCExpelledConditionData, GetPCFactionMurderConditionData, GetPCEnemyofFactionConditionData, GetPCFactionAttackConditionData, GetDestroyedConditionData, HasMagicEffectConditionData, GetDefaultOpenConditionData, GetAnimActionConditionData, IsSpellTargetConditionData, GetVATSModeConditionData, GetPersuasionNumberConditionData, GetVampireFeedConditionData, GetCannibalConditionData, GetIsClassDefaultConditionData, GetClassDefaultMatchConditionData, GetInCellParamConditionData, GetVatsTargetHeightConditionData, GetIsGhostConditionData, GetUnconsciousConditionData, GetRestrainedConditionData, GetIsUsedItemConditionData, GetIsUsedItemTypeConditionData, IsScenePlayingConditionData, IsInDialogueWithPlayerConditionData, GetLocationClearedConditionData, GetIsPlayableRaceConditionData, GetOffersServicesNowConditionData, HasAssociationTypeConditionData, HasFamilyRelationshipConditionData, HasParentRelationshipConditionData, IsWarningAboutConditionData, IsWeaponOutConditionData, HasSpellConditionData, IsTimePassingConditionData, IsPleasantConditionData, IsCloudyConditionData, IsSmallBumpConditionData, GetBaseActorValueConditionData, IsOwnerConditionData, IsCellOwnerConditionData, IsHorseStolenConditionData, IsLeftUpConditionData, IsSneakingConditionData, IsRunningConditionData, GetFriendHitConditionData, IsInCombatConditionData, IsInInteriorConditionData, IsWaterObjectConditionData, GetPlayerActionConditionData, IsActorUsingATorchConditionData, IsXBoxConditionData, GetInWorldspaceConditionData, GetPCMiscStatConditionData, GetPairedAnimationConditionData, IsActorAVictimConditionData, GetTotalPersuasionNumberConditionData, GetIdleDoneOnceConditionData, GetNoRumorsConditionData, GetCombatStateConditionData, GetWithinPackageLocationConditionData, IsRidingMountConditionData, IsFleeingConditionData, IsInDangerousWaterConditionData, GetIgnoreFriendlyHitsConditionData, IsPlayersLastRiddenMountConditionData, IsActorConditionData, IsEssentialConditionData, IsPlayerMovingIntoNewSpaceConditionData, GetInCurrentLocConditionData, GetInCurrentLocAliasConditionData, GetTimeDeadConditionData, HasLinkedRefConditionData, IsChildConditionData, GetStolenItemValueNoCrimeConditionData, GetLastPlayerActionConditionData, IsPlayerActionActiveConditionData, IsTalkingActivatorActorConditionData, IsInListConditionData, GetStolenItemValueConditionData, GetCrimeGoldViolentConditionData, GetCrimeGoldNonviolentConditionData, HasShoutConditionData, GetHasNoteConditionData, GetHitLocationConditionData, IsPC1stPersonConditionData, GetCauseofDeathConditionData, IsLimbGoneConditionData, IsWeaponInListConditionData, IsBribedbyPlayerConditionData, GetRelationshipRankConditionData, GetVATSValueConditionData, IsKillerConditionData, IsKillerObjectConditionData, GetFactionCombatReactionConditionData, ExistsConditionData, GetGroupMemberCountConditionData, GetGroupTargetCountConditionData, GetIsVoiceTypeConditionData, GetPlantedExplosiveConditionData, IsScenePackageRunningConditionData, GetHealthPercentageConditionData, GetIsObjectTypeConditionData, GetDialogueEmotionConditionData, GetDialogueEmotionValueConditionData, GetIsCreatureTypeConditionData, GetInCurrentLocFormListConditionData, GetInZoneConditionData, GetVelocityConditionData, GetGraphVariableFloatConditionData, HasPerkConditionData, GetFactionRelationConditionData, IsLastIdlePlayedConditionData, GetPlayerTeammateConditionData, GetPlayerTeammateCountConditionData, GetActorCrimePlayerEnemyConditionData, GetCrimeGoldConditionData, IsPlayerGrabbedRefConditionData, GetKeywordItemCountConditionData, GetDestructionStageConditionData, GetIsAlignmentConditionData, IsProtectedConditionData, GetThreatRatioConditionData, GetIsUsedItemEquipTypeConditionData, IsCarryableConditionData, GetConcussedConditionData, GetMapMarkerVisibleConditionData, PlayerKnowsConditionData, GetPermanentActorValueConditionData, GetKillingBlowLimbConditionData, CanPayCrimeGoldConditionData, GetDaysInJailConditionData, EPAlchemyGetMakingPoisonConditionData, EPAlchemyEffectHasKeywordConditionData, GetAllowWorldInteractionsConditionData, GetLastHitCriticalConditionData, IsCombatTargetConditionData, GetVATSRightAreaFreeConditionData, GetVATSLeftAreaFreeConditionData, GetVATSBackAreaFreeConditionData, GetVATSFrontAreaFreeConditionData, GetLockIsBrokenConditionData, IsPS3ConditionData, IsWin32ConditionData, GetVATSRightTargetVisibleConditionData, GetVATSLeftTargetVisibleConditionData, GetVATSBackTargetVisibleConditionData, GetVATSFrontTargetVisibleConditionData, IsInCriticalStageConditionData, GetXPForNextLevelConditionData, GetInfamyConditionData, GetInfamyViolentConditionData, GetInfamyNonViolentConditionData, GetQuestCompletedConditionData, IsGoreDisabledConditionData, IsSceneActionCompleteConditionData, GetSpellUsageNumConditionData, GetActorsInHighConditionData, HasLoaded3DConditionData, HasKeywordConditionData, HasRefTypeConditionData, LocationHasKeywordConditionData, LocationHasRefTypeConditionData, GetIsEditorLocationConditionData, GetIsAliasRefConditionData, GetIsEditorLocAliasConditionData, IsSprintingConditionData, IsBlockingConditionData, HasEquippedSpellConditionData, GetCurrentCastingTypeConditionData, GetCurrentDeliveryTypeConditionData, GetAttackStateConditionData, GetEventDataConditionData, IsCloserToAThanBConditionData, GetEquippedShoutConditionData, IsBleedingOutConditionData, GetRelativeAngleConditionData, GetMovementDirectionConditionData, IsInSceneConditionData, GetRefTypeDeadCountConditionData, GetRefTypeAliveCountConditionData, GetIsFlyingConditionData, IsCurrentSpellConditionData, SpellHasKeywordConditionData, GetEquippedItemTypeConditionData, GetLocationAliasClearedConditionData, GetLocAliasRefTypeDeadCountConditionData, GetLocAliasRefTypeAliveCountConditionData, IsWardStateConditionData, IsInSameCurrentLocAsRefConditionData, IsInSameCurrentLocAsRefAliasConditionData, LocAliasIsLocationConditionData, GetKeywordDataForLocationConditionData, GetKeywordDataForAliasConditionData, LocAliasHasKeywordConditionData, IsNullPackageDataConditionData, GetNumericPackageDataConditionData, IsFurnitureAnimTypeConditionData, IsFurnitureEntryTypeConditionData, GetHighestRelationshipRankConditionData, GetLowestRelationshipRankConditionData, HasAssociationTypeAnyConditionData, HasFamilyRelationshipAnyConditionData, GetPathingTargetOffsetConditionData, GetPathingTargetAngleOffsetConditionData, GetPathingTargetSpeedConditionData, GetPathingTargetSpeedAngleConditionData, GetMovementSpeedConditionData, GetInContainerConditionData, IsLocationLoadedConditionData, IsLocAliasLoadedConditionData, IsDualCastingConditionData, GetVMQuestVariableConditionData, GetVMScriptVariableConditionData, IsEnteringInteractionQuickConditionData, IsCastingConditionData, GetFlyingStateConditionData, IsInFavorStateConditionData, HasTwoHandedWeaponEquippedConditionData, IsExitingInstantConditionData, IsInFriendStateWithPlayerConditionData, GetWithinDistanceConditionData, GetActorValuePercentConditionData, IsUniqueConditionData, GetLastBumpDirectionConditionData, IsInFurnitureStateConditionData, GetIsInjuredConditionData, GetIsCrashLandRequestConditionData, GetIsHastyLandRequestConditionData, IsLinkedToConditionData, GetKeywordDataForCurrentLocationConditionData, GetInSharedCrimeFactionConditionData, GetBribeSuccessConditionData, GetIntimidateSuccessConditionData, GetArrestedStateConditionData, GetArrestingActorConditionData, EPTemperingItemIsEnchantedConditionData, EPTemperingItemHasKeywordConditionData, GetReplacedItemTypeConditionData, IsAttackingConditionData, IsPowerAttackingConditionData, IsLastHostileActorConditionData, GetGraphVariableIntConditionData, GetCurrentShoutVariationConditionData, ShouldAttackKillConditionData, GetActivatorHeightConditionData, EPMagic_IsAdvanceSkillConditionData, WornHasKeywordConditionData, GetPathingCurrentSpeedConditionData, GetPathingCurrentSpeedAngleConditionData, EPModSkillUsage_AdvanceObjectHasKeywordConditionData, EPModSkillUsage_IsAdvanceActionConditionData, EPMagic_SpellHasKeywordConditionData, GetNoBleedoutRecoveryConditionData, EPMagic_SpellHasSkillConditionData, IsAttackTypeConditionData, IsAllowedToFlyConditionData, HasMagicEffectKeywordConditionData, IsCommandedActorConditionData, IsStaggeredConditionData, IsRecoilingConditionData, IsExitingInteractionQuickConditionData, IsPathingConditionData, GetShouldHelpConditionData, HasBoundWeaponEquippedConditionData, GetCombatTargetHasKeywordConditionData, GetCombatGroupMemberCountConditionData, IsIgnoringCombatConditionData, GetLightLevelConditionData, SpellHasCastingPerkConditionData, IsBeingRiddenConditionData, IsUndeadConditionData, GetRealHoursPassedConditionData, IsUnlockedDoorConditionData, IsHostileToActorConditionData, GetTargetHeightConditionData, IsPoisonConditionData, WornApparelHasKeywordCountConditionData, GetItemHealthPercentConditionData, EffectWasDualCastConditionData, GetKnockedStateEnumConditionData, DoesNotExistConditionData, IsOnFlyingMountConditionData, CanFlyHereConditionData, IsFlyingMountPatrolQueudConditionData, IsFlyingMountFastTravellingConditionData, IsOverEncumberedConditionData, GetActorWarmthConditionData, GetSKSEVersionConditionData, GetSKSEVersionMinorConditionData, GetSKSEVersionBetaConditionData, GetSKSEReleaseConditionData, ClearInvalidRegistrationsConditionData]
+    /// </summary>
+    public abstract partial class FunctionConditionData :
         ConditionData,
         IEquatable<IFunctionConditionDataGetter>,
         IFunctionConditionData,
@@ -58,36 +61,10 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown2
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
-        #region ParameterOneRecord
-        private readonly IFormLink<ISkyrimMajorRecordGetter> _ParameterOneRecord = new FormLink<ISkyrimMajorRecordGetter>();
-        public IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord
-        {
-            get => _ParameterOneRecord;
-            set => _ParameterOneRecord.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
-        #endregion
-        #region ParameterOneNumber
-        public Int32 ParameterOneNumber { get; set; } = default;
-        #endregion
         #region ParameterOneString
         public String? ParameterOneString { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
-        #endregion
-        #region ParameterTwoRecord
-        private readonly IFormLink<ISkyrimMajorRecordGetter> _ParameterTwoRecord = new FormLink<ISkyrimMajorRecordGetter>();
-        public IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord
-        {
-            get => _ParameterTwoRecord;
-            set => _ParameterTwoRecord.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
-        #endregion
-        #region ParameterTwoNumber
-        public Int32 ParameterTwoNumber { get; set; } = default;
         #endregion
         #region ParameterTwoString
         public String? ParameterTwoString { get; set; }
@@ -137,11 +114,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Function = initialValue;
                 this.Unknown2 = initialValue;
-                this.ParameterOneRecord = initialValue;
-                this.ParameterOneNumber = initialValue;
                 this.ParameterOneString = initialValue;
-                this.ParameterTwoRecord = initialValue;
-                this.ParameterTwoNumber = initialValue;
                 this.ParameterTwoString = initialValue;
             }
 
@@ -151,11 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Unknown3,
                 TItem Function,
                 TItem Unknown2,
-                TItem ParameterOneRecord,
-                TItem ParameterOneNumber,
                 TItem ParameterOneString,
-                TItem ParameterTwoRecord,
-                TItem ParameterTwoNumber,
                 TItem ParameterTwoString)
             : base(
                 RunOnType: RunOnType,
@@ -164,11 +133,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Function = Function;
                 this.Unknown2 = Unknown2;
-                this.ParameterOneRecord = ParameterOneRecord;
-                this.ParameterOneNumber = ParameterOneNumber;
                 this.ParameterOneString = ParameterOneString;
-                this.ParameterTwoRecord = ParameterTwoRecord;
-                this.ParameterTwoNumber = ParameterTwoNumber;
                 this.ParameterTwoString = ParameterTwoString;
             }
 
@@ -183,11 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public TItem Function;
             public TItem Unknown2;
-            public TItem ParameterOneRecord;
-            public TItem ParameterOneNumber;
             public TItem ParameterOneString;
-            public TItem ParameterTwoRecord;
-            public TItem ParameterTwoNumber;
             public TItem ParameterTwoString;
             #endregion
 
@@ -204,11 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Function, rhs.Function)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.ParameterOneRecord, rhs.ParameterOneRecord)) return false;
-                if (!object.Equals(this.ParameterOneNumber, rhs.ParameterOneNumber)) return false;
                 if (!object.Equals(this.ParameterOneString, rhs.ParameterOneString)) return false;
-                if (!object.Equals(this.ParameterTwoRecord, rhs.ParameterTwoRecord)) return false;
-                if (!object.Equals(this.ParameterTwoNumber, rhs.ParameterTwoNumber)) return false;
                 if (!object.Equals(this.ParameterTwoString, rhs.ParameterTwoString)) return false;
                 return true;
             }
@@ -217,11 +174,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.Function);
                 hash.Add(this.Unknown2);
-                hash.Add(this.ParameterOneRecord);
-                hash.Add(this.ParameterOneNumber);
                 hash.Add(this.ParameterOneString);
-                hash.Add(this.ParameterTwoRecord);
-                hash.Add(this.ParameterTwoNumber);
                 hash.Add(this.ParameterTwoString);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -235,11 +188,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.All(eval)) return false;
                 if (!eval(this.Function)) return false;
                 if (!eval(this.Unknown2)) return false;
-                if (!eval(this.ParameterOneRecord)) return false;
-                if (!eval(this.ParameterOneNumber)) return false;
                 if (!eval(this.ParameterOneString)) return false;
-                if (!eval(this.ParameterTwoRecord)) return false;
-                if (!eval(this.ParameterTwoNumber)) return false;
                 if (!eval(this.ParameterTwoString)) return false;
                 return true;
             }
@@ -251,11 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (base.Any(eval)) return true;
                 if (eval(this.Function)) return true;
                 if (eval(this.Unknown2)) return true;
-                if (eval(this.ParameterOneRecord)) return true;
-                if (eval(this.ParameterOneNumber)) return true;
                 if (eval(this.ParameterOneString)) return true;
-                if (eval(this.ParameterTwoRecord)) return true;
-                if (eval(this.ParameterTwoNumber)) return true;
                 if (eval(this.ParameterTwoString)) return true;
                 return false;
             }
@@ -274,11 +219,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 obj.Function = eval(this.Function);
                 obj.Unknown2 = eval(this.Unknown2);
-                obj.ParameterOneRecord = eval(this.ParameterOneRecord);
-                obj.ParameterOneNumber = eval(this.ParameterOneNumber);
                 obj.ParameterOneString = eval(this.ParameterOneString);
-                obj.ParameterTwoRecord = eval(this.ParameterTwoRecord);
-                obj.ParameterTwoNumber = eval(this.ParameterTwoNumber);
                 obj.ParameterTwoString = eval(this.ParameterTwoString);
             }
             #endregion
@@ -306,25 +247,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Unknown2, "Unknown2");
                     }
-                    if (printMask?.ParameterOneRecord ?? true)
-                    {
-                        sb.AppendItem(ParameterOneRecord, "ParameterOneRecord");
-                    }
-                    if (printMask?.ParameterOneNumber ?? true)
-                    {
-                        sb.AppendItem(ParameterOneNumber, "ParameterOneNumber");
-                    }
                     if (printMask?.ParameterOneString ?? true)
                     {
                         sb.AppendItem(ParameterOneString, "ParameterOneString");
-                    }
-                    if (printMask?.ParameterTwoRecord ?? true)
-                    {
-                        sb.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
-                    }
-                    if (printMask?.ParameterTwoNumber ?? true)
-                    {
-                        sb.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
                     }
                     if (printMask?.ParameterTwoString ?? true)
                     {
@@ -343,11 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public Exception? Function;
             public Exception? Unknown2;
-            public Exception? ParameterOneRecord;
-            public Exception? ParameterOneNumber;
             public Exception? ParameterOneString;
-            public Exception? ParameterTwoRecord;
-            public Exception? ParameterTwoNumber;
             public Exception? ParameterTwoString;
             #endregion
 
@@ -361,16 +282,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Function;
                     case FunctionConditionData_FieldIndex.Unknown2:
                         return Unknown2;
-                    case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                        return ParameterOneRecord;
-                    case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                        return ParameterOneNumber;
                     case FunctionConditionData_FieldIndex.ParameterOneString:
                         return ParameterOneString;
-                    case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                        return ParameterTwoRecord;
-                    case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                        return ParameterTwoNumber;
                     case FunctionConditionData_FieldIndex.ParameterTwoString:
                         return ParameterTwoString;
                     default:
@@ -389,20 +302,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case FunctionConditionData_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
                         break;
-                    case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                        this.ParameterOneRecord = ex;
-                        break;
-                    case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                        this.ParameterOneNumber = ex;
-                        break;
                     case FunctionConditionData_FieldIndex.ParameterOneString:
                         this.ParameterOneString = ex;
-                        break;
-                    case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                        this.ParameterTwoRecord = ex;
-                        break;
-                    case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                        this.ParameterTwoNumber = ex;
                         break;
                     case FunctionConditionData_FieldIndex.ParameterTwoString:
                         this.ParameterTwoString = ex;
@@ -424,20 +325,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case FunctionConditionData_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
                         break;
-                    case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                        this.ParameterOneRecord = (Exception?)obj;
-                        break;
-                    case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                        this.ParameterOneNumber = (Exception?)obj;
-                        break;
                     case FunctionConditionData_FieldIndex.ParameterOneString:
                         this.ParameterOneString = (Exception?)obj;
-                        break;
-                    case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                        this.ParameterTwoRecord = (Exception?)obj;
-                        break;
-                    case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                        this.ParameterTwoNumber = (Exception?)obj;
                         break;
                     case FunctionConditionData_FieldIndex.ParameterTwoString:
                         this.ParameterTwoString = (Exception?)obj;
@@ -453,11 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (Function != null) return true;
                 if (Unknown2 != null) return true;
-                if (ParameterOneRecord != null) return true;
-                if (ParameterOneNumber != null) return true;
                 if (ParameterOneString != null) return true;
-                if (ParameterTwoRecord != null) return true;
-                if (ParameterTwoNumber != null) return true;
                 if (ParameterTwoString != null) return true;
                 return false;
             }
@@ -492,19 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Unknown2, "Unknown2");
                 }
                 {
-                    sb.AppendItem(ParameterOneRecord, "ParameterOneRecord");
-                }
-                {
-                    sb.AppendItem(ParameterOneNumber, "ParameterOneNumber");
-                }
-                {
                     sb.AppendItem(ParameterOneString, "ParameterOneString");
-                }
-                {
-                    sb.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
-                }
-                {
-                    sb.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
                 }
                 {
                     sb.AppendItem(ParameterTwoString, "ParameterTwoString");
@@ -519,11 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.Function = this.Function.Combine(rhs.Function);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.ParameterOneRecord = this.ParameterOneRecord.Combine(rhs.ParameterOneRecord);
-                ret.ParameterOneNumber = this.ParameterOneNumber.Combine(rhs.ParameterOneNumber);
                 ret.ParameterOneString = this.ParameterOneString.Combine(rhs.ParameterOneString);
-                ret.ParameterTwoRecord = this.ParameterTwoRecord.Combine(rhs.ParameterTwoRecord);
-                ret.ParameterTwoNumber = this.ParameterTwoNumber.Combine(rhs.ParameterTwoNumber);
                 ret.ParameterTwoString = this.ParameterTwoString.Combine(rhs.ParameterTwoString);
                 return ret;
             }
@@ -549,11 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public bool Function;
             public bool Unknown2;
-            public bool ParameterOneRecord;
-            public bool ParameterOneNumber;
             public bool ParameterOneString;
-            public bool ParameterTwoRecord;
-            public bool ParameterTwoNumber;
             public bool ParameterTwoString;
             #endregion
 
@@ -565,11 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Function = defaultOn;
                 this.Unknown2 = defaultOn;
-                this.ParameterOneRecord = defaultOn;
-                this.ParameterOneNumber = defaultOn;
                 this.ParameterOneString = defaultOn;
-                this.ParameterTwoRecord = defaultOn;
-                this.ParameterTwoNumber = defaultOn;
                 this.ParameterTwoString = defaultOn;
             }
 
@@ -580,11 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Function, null));
                 ret.Add((Unknown2, null));
-                ret.Add((ParameterOneRecord, null));
-                ret.Add((ParameterOneNumber, null));
                 ret.Add((ParameterOneString, null));
-                ret.Add((ParameterTwoRecord, null));
-                ret.Add((ParameterTwoNumber, null));
                 ret.Add((ParameterTwoString, null));
             }
 
@@ -613,32 +470,6 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        #region Binary Create
-        public new static FunctionConditionData CreateFromBinary(
-            MutagenFrame frame,
-            TypedParseParams translationParams = default)
-        {
-            var ret = new FunctionConditionData();
-            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
-                item: ret,
-                frame: frame,
-                translationParams: translationParams);
-            return ret;
-        }
-
-        #endregion
-
-        public static bool TryCreateFromBinary(
-            MutagenFrame frame,
-            out FunctionConditionData item,
-            TypedParseParams translationParams = default)
-        {
-            var startPos = frame.Position;
-            item = CreateFromBinary(
-                frame: frame,
-                translationParams: translationParams);
-            return startPos != frame.Position;
-        }
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
@@ -650,13 +481,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         internal static new FunctionConditionData GetNew()
         {
-            return new FunctionConditionData();
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [UnknownConditionData, GetWantBlockingConditionData, GetDistanceConditionData, GetLockedConditionData, GetPosConditionData, GetAngleConditionData, GetStartingPosConditionData, GetStartingAngleConditionData, GetSecondsPassedConditionData, GetActorValueConditionData, GetCurrentTimeConditionData, GetScaleConditionData, IsMovingConditionData, IsTurningConditionData, GetLineOfSightConditionData, GetInSameCellConditionData, GetDisabledConditionData, MenuModeConditionData, GetDiseaseConditionData, GetClothingValueConditionData, SameFactionConditionData, SameRaceConditionData, SameSexConditionData, GetDetectedConditionData, GetDeadConditionData, GetItemCountConditionData, GetGoldConditionData, GetSleepingConditionData, GetTalkedToPCConditionData, GetScriptVariableConditionData, GetQuestRunningConditionData, GetStageConditionData, GetStageDoneConditionData, GetFactionRankDifferenceConditionData, GetAlarmedConditionData, IsRainingConditionData, GetAttackedConditionData, GetIsCreatureConditionData, GetLockLevelConditionData, GetShouldAttackConditionData, GetInCellConditionData, GetIsClassConditionData, GetIsRaceConditionData, GetIsSexConditionData, GetInFactionConditionData, GetIsIDConditionData, GetFactionRankConditionData, GetGlobalValueConditionData, IsSnowingConditionData, GetRandomPercentConditionData, GetQuestVariableConditionData, GetLevelConditionData, IsRotatingConditionData, GetDeadCountConditionData, GetIsAlertedConditionData, GetPlayerControlsDisabledConditionData, GetHeadingAngleConditionData, IsWeaponMagicOutConditionData, IsTorchOutConditionData, IsShieldOutConditionData, IsFacingUpConditionData, GetKnockedStateConditionData, GetWeaponAnimTypeConditionData, IsWeaponSkillTypeConditionData, GetCurrentAIPackageConditionData, IsWaitingConditionData, IsIdlePlayingConditionData, IsIntimidatedbyPlayerConditionData, IsPlayerInRegionConditionData, GetActorAggroRadiusViolatedConditionData, GetCrimeConditionData, IsGreetingPlayerConditionData, IsGuardConditionData, HasBeenEatenConditionData, GetStaminaPercentageConditionData, GetPCIsClassConditionData, GetPCIsRaceConditionData, GetPCIsSexConditionData, GetPCInFactionConditionData, SameFactionAsPCConditionData, SameRaceAsPCConditionData, SameSexAsPCConditionData, GetIsReferenceConditionData, IsTalkingConditionData, GetWalkSpeedConditionData, GetCurrentAIProcedureConditionData, GetTrespassWarningLevelConditionData, IsTrespassingConditionData, IsInMyOwnedCellConditionData, GetWindSpeedConditionData, GetCurrentWeatherPercentConditionData, GetIsCurrentWeatherConditionData, IsContinuingPackagePCNearConditionData, GetIsCrimeFactionConditionData, CanHaveFlamesConditionData, HasFlamesConditionData, GetOpenStateConditionData, GetSittingConditionData, GetIsCurrentPackageConditionData, IsCurrentFurnitureRefConditionData, IsCurrentFurnitureObjConditionData, GetDayOfWeekConditionData, GetTalkedToPCParamConditionData, IsPCSleepingConditionData, IsPCAMurdererConditionData, HasSameEditorLocAsRefConditionData, HasSameEditorLocAsRefAliasConditionData, GetEquippedConditionData, IsSwimmingConditionData, GetAmountSoldStolenConditionData, GetIgnoreCrimeConditionData, GetPCExpelledConditionData, GetPCFactionMurderConditionData, GetPCEnemyofFactionConditionData, GetPCFactionAttackConditionData, GetDestroyedConditionData, HasMagicEffectConditionData, GetDefaultOpenConditionData, GetAnimActionConditionData, IsSpellTargetConditionData, GetVATSModeConditionData, GetPersuasionNumberConditionData, GetVampireFeedConditionData, GetCannibalConditionData, GetIsClassDefaultConditionData, GetClassDefaultMatchConditionData, GetInCellParamConditionData, GetVatsTargetHeightConditionData, GetIsGhostConditionData, GetUnconsciousConditionData, GetRestrainedConditionData, GetIsUsedItemConditionData, GetIsUsedItemTypeConditionData, IsScenePlayingConditionData, IsInDialogueWithPlayerConditionData, GetLocationClearedConditionData, GetIsPlayableRaceConditionData, GetOffersServicesNowConditionData, HasAssociationTypeConditionData, HasFamilyRelationshipConditionData, HasParentRelationshipConditionData, IsWarningAboutConditionData, IsWeaponOutConditionData, HasSpellConditionData, IsTimePassingConditionData, IsPleasantConditionData, IsCloudyConditionData, IsSmallBumpConditionData, GetBaseActorValueConditionData, IsOwnerConditionData, IsCellOwnerConditionData, IsHorseStolenConditionData, IsLeftUpConditionData, IsSneakingConditionData, IsRunningConditionData, GetFriendHitConditionData, IsInCombatConditionData, IsInInteriorConditionData, IsWaterObjectConditionData, GetPlayerActionConditionData, IsActorUsingATorchConditionData, IsXBoxConditionData, GetInWorldspaceConditionData, GetPCMiscStatConditionData, GetPairedAnimationConditionData, IsActorAVictimConditionData, GetTotalPersuasionNumberConditionData, GetIdleDoneOnceConditionData, GetNoRumorsConditionData, GetCombatStateConditionData, GetWithinPackageLocationConditionData, IsRidingMountConditionData, IsFleeingConditionData, IsInDangerousWaterConditionData, GetIgnoreFriendlyHitsConditionData, IsPlayersLastRiddenMountConditionData, IsActorConditionData, IsEssentialConditionData, IsPlayerMovingIntoNewSpaceConditionData, GetInCurrentLocConditionData, GetInCurrentLocAliasConditionData, GetTimeDeadConditionData, HasLinkedRefConditionData, IsChildConditionData, GetStolenItemValueNoCrimeConditionData, GetLastPlayerActionConditionData, IsPlayerActionActiveConditionData, IsTalkingActivatorActorConditionData, IsInListConditionData, GetStolenItemValueConditionData, GetCrimeGoldViolentConditionData, GetCrimeGoldNonviolentConditionData, HasShoutConditionData, GetHasNoteConditionData, GetHitLocationConditionData, IsPC1stPersonConditionData, GetCauseofDeathConditionData, IsLimbGoneConditionData, IsWeaponInListConditionData, IsBribedbyPlayerConditionData, GetRelationshipRankConditionData, GetVATSValueConditionData, IsKillerConditionData, IsKillerObjectConditionData, GetFactionCombatReactionConditionData, ExistsConditionData, GetGroupMemberCountConditionData, GetGroupTargetCountConditionData, GetIsVoiceTypeConditionData, GetPlantedExplosiveConditionData, IsScenePackageRunningConditionData, GetHealthPercentageConditionData, GetIsObjectTypeConditionData, GetDialogueEmotionConditionData, GetDialogueEmotionValueConditionData, GetIsCreatureTypeConditionData, GetInCurrentLocFormListConditionData, GetInZoneConditionData, GetVelocityConditionData, GetGraphVariableFloatConditionData, HasPerkConditionData, GetFactionRelationConditionData, IsLastIdlePlayedConditionData, GetPlayerTeammateConditionData, GetPlayerTeammateCountConditionData, GetActorCrimePlayerEnemyConditionData, GetCrimeGoldConditionData, IsPlayerGrabbedRefConditionData, GetKeywordItemCountConditionData, GetDestructionStageConditionData, GetIsAlignmentConditionData, IsProtectedConditionData, GetThreatRatioConditionData, GetIsUsedItemEquipTypeConditionData, IsCarryableConditionData, GetConcussedConditionData, GetMapMarkerVisibleConditionData, PlayerKnowsConditionData, GetPermanentActorValueConditionData, GetKillingBlowLimbConditionData, CanPayCrimeGoldConditionData, GetDaysInJailConditionData, EPAlchemyGetMakingPoisonConditionData, EPAlchemyEffectHasKeywordConditionData, GetAllowWorldInteractionsConditionData, GetLastHitCriticalConditionData, IsCombatTargetConditionData, GetVATSRightAreaFreeConditionData, GetVATSLeftAreaFreeConditionData, GetVATSBackAreaFreeConditionData, GetVATSFrontAreaFreeConditionData, GetLockIsBrokenConditionData, IsPS3ConditionData, IsWin32ConditionData, GetVATSRightTargetVisibleConditionData, GetVATSLeftTargetVisibleConditionData, GetVATSBackTargetVisibleConditionData, GetVATSFrontTargetVisibleConditionData, IsInCriticalStageConditionData, GetXPForNextLevelConditionData, GetInfamyConditionData, GetInfamyViolentConditionData, GetInfamyNonViolentConditionData, GetQuestCompletedConditionData, IsGoreDisabledConditionData, IsSceneActionCompleteConditionData, GetSpellUsageNumConditionData, GetActorsInHighConditionData, HasLoaded3DConditionData, HasKeywordConditionData, HasRefTypeConditionData, LocationHasKeywordConditionData, LocationHasRefTypeConditionData, GetIsEditorLocationConditionData, GetIsAliasRefConditionData, GetIsEditorLocAliasConditionData, IsSprintingConditionData, IsBlockingConditionData, HasEquippedSpellConditionData, GetCurrentCastingTypeConditionData, GetCurrentDeliveryTypeConditionData, GetAttackStateConditionData, GetEventDataConditionData, IsCloserToAThanBConditionData, GetEquippedShoutConditionData, IsBleedingOutConditionData, GetRelativeAngleConditionData, GetMovementDirectionConditionData, IsInSceneConditionData, GetRefTypeDeadCountConditionData, GetRefTypeAliveCountConditionData, GetIsFlyingConditionData, IsCurrentSpellConditionData, SpellHasKeywordConditionData, GetEquippedItemTypeConditionData, GetLocationAliasClearedConditionData, GetLocAliasRefTypeDeadCountConditionData, GetLocAliasRefTypeAliveCountConditionData, IsWardStateConditionData, IsInSameCurrentLocAsRefConditionData, IsInSameCurrentLocAsRefAliasConditionData, LocAliasIsLocationConditionData, GetKeywordDataForLocationConditionData, GetKeywordDataForAliasConditionData, LocAliasHasKeywordConditionData, IsNullPackageDataConditionData, GetNumericPackageDataConditionData, IsFurnitureAnimTypeConditionData, IsFurnitureEntryTypeConditionData, GetHighestRelationshipRankConditionData, GetLowestRelationshipRankConditionData, HasAssociationTypeAnyConditionData, HasFamilyRelationshipAnyConditionData, GetPathingTargetOffsetConditionData, GetPathingTargetAngleOffsetConditionData, GetPathingTargetSpeedConditionData, GetPathingTargetSpeedAngleConditionData, GetMovementSpeedConditionData, GetInContainerConditionData, IsLocationLoadedConditionData, IsLocAliasLoadedConditionData, IsDualCastingConditionData, GetVMQuestVariableConditionData, GetVMScriptVariableConditionData, IsEnteringInteractionQuickConditionData, IsCastingConditionData, GetFlyingStateConditionData, IsInFavorStateConditionData, HasTwoHandedWeaponEquippedConditionData, IsExitingInstantConditionData, IsInFriendStateWithPlayerConditionData, GetWithinDistanceConditionData, GetActorValuePercentConditionData, IsUniqueConditionData, GetLastBumpDirectionConditionData, IsInFurnitureStateConditionData, GetIsInjuredConditionData, GetIsCrashLandRequestConditionData, GetIsHastyLandRequestConditionData, IsLinkedToConditionData, GetKeywordDataForCurrentLocationConditionData, GetInSharedCrimeFactionConditionData, GetBribeSuccessConditionData, GetIntimidateSuccessConditionData, GetArrestedStateConditionData, GetArrestingActorConditionData, EPTemperingItemIsEnchantedConditionData, EPTemperingItemHasKeywordConditionData, GetReplacedItemTypeConditionData, IsAttackingConditionData, IsPowerAttackingConditionData, IsLastHostileActorConditionData, GetGraphVariableIntConditionData, GetCurrentShoutVariationConditionData, ShouldAttackKillConditionData, GetActivatorHeightConditionData, EPMagic_IsAdvanceSkillConditionData, WornHasKeywordConditionData, GetPathingCurrentSpeedConditionData, GetPathingCurrentSpeedAngleConditionData, EPModSkillUsage_AdvanceObjectHasKeywordConditionData, EPModSkillUsage_IsAdvanceActionConditionData, EPMagic_SpellHasKeywordConditionData, GetNoBleedoutRecoveryConditionData, EPMagic_SpellHasSkillConditionData, IsAttackTypeConditionData, IsAllowedToFlyConditionData, HasMagicEffectKeywordConditionData, IsCommandedActorConditionData, IsStaggeredConditionData, IsRecoilingConditionData, IsExitingInteractionQuickConditionData, IsPathingConditionData, GetShouldHelpConditionData, HasBoundWeaponEquippedConditionData, GetCombatTargetHasKeywordConditionData, GetCombatGroupMemberCountConditionData, IsIgnoringCombatConditionData, GetLightLevelConditionData, SpellHasCastingPerkConditionData, IsBeingRiddenConditionData, IsUndeadConditionData, GetRealHoursPassedConditionData, IsUnlockedDoorConditionData, IsHostileToActorConditionData, GetTargetHeightConditionData, IsPoisonConditionData, WornApparelHasKeywordCountConditionData, GetItemHealthPercentConditionData, EffectWasDualCastConditionData, GetKnockedStateEnumConditionData, DoesNotExistConditionData, IsOnFlyingMountConditionData, CanFlyHereConditionData, IsFlyingMountPatrolQueudConditionData, IsFlyingMountFastTravellingConditionData, IsOverEncumberedConditionData, GetActorWarmthConditionData, GetSKSEVersionConditionData, GetSKSEVersionMinorConditionData, GetSKSEVersionBetaConditionData, GetSKSEReleaseConditionData, ClearInvalidRegistrationsConditionData]
+    /// </summary>
     public partial interface IFunctionConditionData :
         IConditionData,
         IFormLinkContainer,
@@ -665,14 +499,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Condition.Function Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; }
-        new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; }
-        new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [UnknownConditionData, GetWantBlockingConditionData, GetDistanceConditionData, GetLockedConditionData, GetPosConditionData, GetAngleConditionData, GetStartingPosConditionData, GetStartingAngleConditionData, GetSecondsPassedConditionData, GetActorValueConditionData, GetCurrentTimeConditionData, GetScaleConditionData, IsMovingConditionData, IsTurningConditionData, GetLineOfSightConditionData, GetInSameCellConditionData, GetDisabledConditionData, MenuModeConditionData, GetDiseaseConditionData, GetClothingValueConditionData, SameFactionConditionData, SameRaceConditionData, SameSexConditionData, GetDetectedConditionData, GetDeadConditionData, GetItemCountConditionData, GetGoldConditionData, GetSleepingConditionData, GetTalkedToPCConditionData, GetScriptVariableConditionData, GetQuestRunningConditionData, GetStageConditionData, GetStageDoneConditionData, GetFactionRankDifferenceConditionData, GetAlarmedConditionData, IsRainingConditionData, GetAttackedConditionData, GetIsCreatureConditionData, GetLockLevelConditionData, GetShouldAttackConditionData, GetInCellConditionData, GetIsClassConditionData, GetIsRaceConditionData, GetIsSexConditionData, GetInFactionConditionData, GetIsIDConditionData, GetFactionRankConditionData, GetGlobalValueConditionData, IsSnowingConditionData, GetRandomPercentConditionData, GetQuestVariableConditionData, GetLevelConditionData, IsRotatingConditionData, GetDeadCountConditionData, GetIsAlertedConditionData, GetPlayerControlsDisabledConditionData, GetHeadingAngleConditionData, IsWeaponMagicOutConditionData, IsTorchOutConditionData, IsShieldOutConditionData, IsFacingUpConditionData, GetKnockedStateConditionData, GetWeaponAnimTypeConditionData, IsWeaponSkillTypeConditionData, GetCurrentAIPackageConditionData, IsWaitingConditionData, IsIdlePlayingConditionData, IsIntimidatedbyPlayerConditionData, IsPlayerInRegionConditionData, GetActorAggroRadiusViolatedConditionData, GetCrimeConditionData, IsGreetingPlayerConditionData, IsGuardConditionData, HasBeenEatenConditionData, GetStaminaPercentageConditionData, GetPCIsClassConditionData, GetPCIsRaceConditionData, GetPCIsSexConditionData, GetPCInFactionConditionData, SameFactionAsPCConditionData, SameRaceAsPCConditionData, SameSexAsPCConditionData, GetIsReferenceConditionData, IsTalkingConditionData, GetWalkSpeedConditionData, GetCurrentAIProcedureConditionData, GetTrespassWarningLevelConditionData, IsTrespassingConditionData, IsInMyOwnedCellConditionData, GetWindSpeedConditionData, GetCurrentWeatherPercentConditionData, GetIsCurrentWeatherConditionData, IsContinuingPackagePCNearConditionData, GetIsCrimeFactionConditionData, CanHaveFlamesConditionData, HasFlamesConditionData, GetOpenStateConditionData, GetSittingConditionData, GetIsCurrentPackageConditionData, IsCurrentFurnitureRefConditionData, IsCurrentFurnitureObjConditionData, GetDayOfWeekConditionData, GetTalkedToPCParamConditionData, IsPCSleepingConditionData, IsPCAMurdererConditionData, HasSameEditorLocAsRefConditionData, HasSameEditorLocAsRefAliasConditionData, GetEquippedConditionData, IsSwimmingConditionData, GetAmountSoldStolenConditionData, GetIgnoreCrimeConditionData, GetPCExpelledConditionData, GetPCFactionMurderConditionData, GetPCEnemyofFactionConditionData, GetPCFactionAttackConditionData, GetDestroyedConditionData, HasMagicEffectConditionData, GetDefaultOpenConditionData, GetAnimActionConditionData, IsSpellTargetConditionData, GetVATSModeConditionData, GetPersuasionNumberConditionData, GetVampireFeedConditionData, GetCannibalConditionData, GetIsClassDefaultConditionData, GetClassDefaultMatchConditionData, GetInCellParamConditionData, GetVatsTargetHeightConditionData, GetIsGhostConditionData, GetUnconsciousConditionData, GetRestrainedConditionData, GetIsUsedItemConditionData, GetIsUsedItemTypeConditionData, IsScenePlayingConditionData, IsInDialogueWithPlayerConditionData, GetLocationClearedConditionData, GetIsPlayableRaceConditionData, GetOffersServicesNowConditionData, HasAssociationTypeConditionData, HasFamilyRelationshipConditionData, HasParentRelationshipConditionData, IsWarningAboutConditionData, IsWeaponOutConditionData, HasSpellConditionData, IsTimePassingConditionData, IsPleasantConditionData, IsCloudyConditionData, IsSmallBumpConditionData, GetBaseActorValueConditionData, IsOwnerConditionData, IsCellOwnerConditionData, IsHorseStolenConditionData, IsLeftUpConditionData, IsSneakingConditionData, IsRunningConditionData, GetFriendHitConditionData, IsInCombatConditionData, IsInInteriorConditionData, IsWaterObjectConditionData, GetPlayerActionConditionData, IsActorUsingATorchConditionData, IsXBoxConditionData, GetInWorldspaceConditionData, GetPCMiscStatConditionData, GetPairedAnimationConditionData, IsActorAVictimConditionData, GetTotalPersuasionNumberConditionData, GetIdleDoneOnceConditionData, GetNoRumorsConditionData, GetCombatStateConditionData, GetWithinPackageLocationConditionData, IsRidingMountConditionData, IsFleeingConditionData, IsInDangerousWaterConditionData, GetIgnoreFriendlyHitsConditionData, IsPlayersLastRiddenMountConditionData, IsActorConditionData, IsEssentialConditionData, IsPlayerMovingIntoNewSpaceConditionData, GetInCurrentLocConditionData, GetInCurrentLocAliasConditionData, GetTimeDeadConditionData, HasLinkedRefConditionData, IsChildConditionData, GetStolenItemValueNoCrimeConditionData, GetLastPlayerActionConditionData, IsPlayerActionActiveConditionData, IsTalkingActivatorActorConditionData, IsInListConditionData, GetStolenItemValueConditionData, GetCrimeGoldViolentConditionData, GetCrimeGoldNonviolentConditionData, HasShoutConditionData, GetHasNoteConditionData, GetHitLocationConditionData, IsPC1stPersonConditionData, GetCauseofDeathConditionData, IsLimbGoneConditionData, IsWeaponInListConditionData, IsBribedbyPlayerConditionData, GetRelationshipRankConditionData, GetVATSValueConditionData, IsKillerConditionData, IsKillerObjectConditionData, GetFactionCombatReactionConditionData, ExistsConditionData, GetGroupMemberCountConditionData, GetGroupTargetCountConditionData, GetIsVoiceTypeConditionData, GetPlantedExplosiveConditionData, IsScenePackageRunningConditionData, GetHealthPercentageConditionData, GetIsObjectTypeConditionData, GetDialogueEmotionConditionData, GetDialogueEmotionValueConditionData, GetIsCreatureTypeConditionData, GetInCurrentLocFormListConditionData, GetInZoneConditionData, GetVelocityConditionData, GetGraphVariableFloatConditionData, HasPerkConditionData, GetFactionRelationConditionData, IsLastIdlePlayedConditionData, GetPlayerTeammateConditionData, GetPlayerTeammateCountConditionData, GetActorCrimePlayerEnemyConditionData, GetCrimeGoldConditionData, IsPlayerGrabbedRefConditionData, GetKeywordItemCountConditionData, GetDestructionStageConditionData, GetIsAlignmentConditionData, IsProtectedConditionData, GetThreatRatioConditionData, GetIsUsedItemEquipTypeConditionData, IsCarryableConditionData, GetConcussedConditionData, GetMapMarkerVisibleConditionData, PlayerKnowsConditionData, GetPermanentActorValueConditionData, GetKillingBlowLimbConditionData, CanPayCrimeGoldConditionData, GetDaysInJailConditionData, EPAlchemyGetMakingPoisonConditionData, EPAlchemyEffectHasKeywordConditionData, GetAllowWorldInteractionsConditionData, GetLastHitCriticalConditionData, IsCombatTargetConditionData, GetVATSRightAreaFreeConditionData, GetVATSLeftAreaFreeConditionData, GetVATSBackAreaFreeConditionData, GetVATSFrontAreaFreeConditionData, GetLockIsBrokenConditionData, IsPS3ConditionData, IsWin32ConditionData, GetVATSRightTargetVisibleConditionData, GetVATSLeftTargetVisibleConditionData, GetVATSBackTargetVisibleConditionData, GetVATSFrontTargetVisibleConditionData, IsInCriticalStageConditionData, GetXPForNextLevelConditionData, GetInfamyConditionData, GetInfamyViolentConditionData, GetInfamyNonViolentConditionData, GetQuestCompletedConditionData, IsGoreDisabledConditionData, IsSceneActionCompleteConditionData, GetSpellUsageNumConditionData, GetActorsInHighConditionData, HasLoaded3DConditionData, HasKeywordConditionData, HasRefTypeConditionData, LocationHasKeywordConditionData, LocationHasRefTypeConditionData, GetIsEditorLocationConditionData, GetIsAliasRefConditionData, GetIsEditorLocAliasConditionData, IsSprintingConditionData, IsBlockingConditionData, HasEquippedSpellConditionData, GetCurrentCastingTypeConditionData, GetCurrentDeliveryTypeConditionData, GetAttackStateConditionData, GetEventDataConditionData, IsCloserToAThanBConditionData, GetEquippedShoutConditionData, IsBleedingOutConditionData, GetRelativeAngleConditionData, GetMovementDirectionConditionData, IsInSceneConditionData, GetRefTypeDeadCountConditionData, GetRefTypeAliveCountConditionData, GetIsFlyingConditionData, IsCurrentSpellConditionData, SpellHasKeywordConditionData, GetEquippedItemTypeConditionData, GetLocationAliasClearedConditionData, GetLocAliasRefTypeDeadCountConditionData, GetLocAliasRefTypeAliveCountConditionData, IsWardStateConditionData, IsInSameCurrentLocAsRefConditionData, IsInSameCurrentLocAsRefAliasConditionData, LocAliasIsLocationConditionData, GetKeywordDataForLocationConditionData, GetKeywordDataForAliasConditionData, LocAliasHasKeywordConditionData, IsNullPackageDataConditionData, GetNumericPackageDataConditionData, IsFurnitureAnimTypeConditionData, IsFurnitureEntryTypeConditionData, GetHighestRelationshipRankConditionData, GetLowestRelationshipRankConditionData, HasAssociationTypeAnyConditionData, HasFamilyRelationshipAnyConditionData, GetPathingTargetOffsetConditionData, GetPathingTargetAngleOffsetConditionData, GetPathingTargetSpeedConditionData, GetPathingTargetSpeedAngleConditionData, GetMovementSpeedConditionData, GetInContainerConditionData, IsLocationLoadedConditionData, IsLocAliasLoadedConditionData, IsDualCastingConditionData, GetVMQuestVariableConditionData, GetVMScriptVariableConditionData, IsEnteringInteractionQuickConditionData, IsCastingConditionData, GetFlyingStateConditionData, IsInFavorStateConditionData, HasTwoHandedWeaponEquippedConditionData, IsExitingInstantConditionData, IsInFriendStateWithPlayerConditionData, GetWithinDistanceConditionData, GetActorValuePercentConditionData, IsUniqueConditionData, GetLastBumpDirectionConditionData, IsInFurnitureStateConditionData, GetIsInjuredConditionData, GetIsCrashLandRequestConditionData, GetIsHastyLandRequestConditionData, IsLinkedToConditionData, GetKeywordDataForCurrentLocationConditionData, GetInSharedCrimeFactionConditionData, GetBribeSuccessConditionData, GetIntimidateSuccessConditionData, GetArrestedStateConditionData, GetArrestingActorConditionData, EPTemperingItemIsEnchantedConditionData, EPTemperingItemHasKeywordConditionData, GetReplacedItemTypeConditionData, IsAttackingConditionData, IsPowerAttackingConditionData, IsLastHostileActorConditionData, GetGraphVariableIntConditionData, GetCurrentShoutVariationConditionData, ShouldAttackKillConditionData, GetActivatorHeightConditionData, EPMagic_IsAdvanceSkillConditionData, WornHasKeywordConditionData, GetPathingCurrentSpeedConditionData, GetPathingCurrentSpeedAngleConditionData, EPModSkillUsage_AdvanceObjectHasKeywordConditionData, EPModSkillUsage_IsAdvanceActionConditionData, EPMagic_SpellHasKeywordConditionData, GetNoBleedoutRecoveryConditionData, EPMagic_SpellHasSkillConditionData, IsAttackTypeConditionData, IsAllowedToFlyConditionData, HasMagicEffectKeywordConditionData, IsCommandedActorConditionData, IsStaggeredConditionData, IsRecoilingConditionData, IsExitingInteractionQuickConditionData, IsPathingConditionData, GetShouldHelpConditionData, HasBoundWeaponEquippedConditionData, GetCombatTargetHasKeywordConditionData, GetCombatGroupMemberCountConditionData, IsIgnoringCombatConditionData, GetLightLevelConditionData, SpellHasCastingPerkConditionData, IsBeingRiddenConditionData, IsUndeadConditionData, GetRealHoursPassedConditionData, IsUnlockedDoorConditionData, IsHostileToActorConditionData, GetTargetHeightConditionData, IsPoisonConditionData, WornApparelHasKeywordCountConditionData, GetItemHealthPercentConditionData, EffectWasDualCastConditionData, GetKnockedStateEnumConditionData, DoesNotExistConditionData, IsOnFlyingMountConditionData, CanFlyHereConditionData, IsFlyingMountPatrolQueudConditionData, IsFlyingMountFastTravellingConditionData, IsOverEncumberedConditionData, GetActorWarmthConditionData, GetSKSEVersionConditionData, GetSKSEVersionMinorConditionData, GetSKSEVersionBetaConditionData, GetSKSEReleaseConditionData, ClearInvalidRegistrationsConditionData]
+    /// </summary>
     public partial interface IFunctionConditionDataGetter :
         IConditionDataGetter,
         IBinaryItem,
@@ -682,11 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => FunctionConditionData_Registration.Instance;
         Condition.Function Function { get; }
         UInt16 Unknown2 { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
-        Int32 ParameterOneNumber { get; }
         String? ParameterOneString { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
-        Int32 ParameterTwoNumber { get; }
         String? ParameterTwoString { get; }
 
     }
@@ -837,12 +666,8 @@ namespace Mutagen.Bethesda.Skyrim
         Unknown3 = 2,
         Function = 3,
         Unknown2 = 4,
-        ParameterOneRecord = 5,
-        ParameterOneNumber = 6,
-        ParameterOneString = 7,
-        ParameterTwoRecord = 8,
-        ParameterTwoNumber = 9,
-        ParameterTwoString = 10,
+        ParameterOneString = 5,
+        ParameterTwoString = 6,
     }
     #endregion
 
@@ -860,9 +685,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "c7686727-e470-4c34-80ce-423cf65c7b92";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(FunctionConditionData.Mask<>);
 
@@ -927,16 +752,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void ClearPartial();
         
-        public void Clear(IFunctionConditionData item)
+        public virtual void Clear(IFunctionConditionData item)
         {
             ClearPartial();
             item.Function = default;
             item.Unknown2 = default;
-            item.ParameterOneRecord.Clear();
-            item.ParameterOneNumber = default;
             item.ParameterOneString = default;
-            item.ParameterTwoRecord.Clear();
-            item.ParameterTwoNumber = default;
             item.ParameterTwoString = default;
             base.Clear(item);
         }
@@ -950,8 +771,6 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapLinks(IFunctionConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.ParameterOneRecord.Relink(mapping);
-            obj.ParameterTwoRecord.Relink(mapping);
         }
         
         #endregion
@@ -1009,11 +828,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ret.Function = item.Function == rhs.Function;
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.ParameterOneRecord = item.ParameterOneRecord.Equals(rhs.ParameterOneRecord);
-            ret.ParameterOneNumber = item.ParameterOneNumber == rhs.ParameterOneNumber;
             ret.ParameterOneString = string.Equals(item.ParameterOneString, rhs.ParameterOneString);
-            ret.ParameterTwoRecord = item.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord);
-            ret.ParameterTwoNumber = item.ParameterTwoNumber == rhs.ParameterTwoNumber;
             ret.ParameterTwoString = string.Equals(item.ParameterTwoString, rhs.ParameterTwoString);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1072,26 +887,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Unknown2, "Unknown2");
             }
-            if (printMask?.ParameterOneRecord ?? true)
-            {
-                sb.AppendItem(item.ParameterOneRecord.FormKey, "ParameterOneRecord");
-            }
-            if (printMask?.ParameterOneNumber ?? true)
-            {
-                sb.AppendItem(item.ParameterOneNumber, "ParameterOneNumber");
-            }
             if ((printMask?.ParameterOneString ?? true)
                 && item.ParameterOneString is {} ParameterOneStringItem)
             {
                 sb.AppendItem(ParameterOneStringItem, "ParameterOneString");
-            }
-            if (printMask?.ParameterTwoRecord ?? true)
-            {
-                sb.AppendItem(item.ParameterTwoRecord.FormKey, "ParameterTwoRecord");
-            }
-            if (printMask?.ParameterTwoNumber ?? true)
-            {
-                sb.AppendItem(item.ParameterTwoNumber, "ParameterTwoNumber");
             }
             if ((printMask?.ParameterTwoString ?? true)
                 && item.ParameterTwoString is {} ParameterTwoStringItem)
@@ -1131,25 +930,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
-            {
-                if (!lhs.ParameterOneRecord.Equals(rhs.ParameterOneRecord)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
-            {
-                if (lhs.ParameterOneNumber != rhs.ParameterOneNumber) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneString) ?? true))
             {
                 if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
-            {
-                if (!lhs.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
-            {
-                if (lhs.ParameterTwoNumber != rhs.ParameterTwoNumber) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
             {
@@ -1174,14 +957,10 @@ namespace Mutagen.Bethesda.Skyrim
             var hash = new HashCode();
             hash.Add(item.Function);
             hash.Add(item.Unknown2);
-            hash.Add(item.ParameterOneRecord);
-            hash.Add(item.ParameterOneNumber);
             if (item.ParameterOneString is {} ParameterOneStringitem)
             {
                 hash.Add(ParameterOneStringitem);
             }
-            hash.Add(item.ParameterTwoRecord);
-            hash.Add(item.ParameterTwoNumber);
             if (item.ParameterTwoString is {} ParameterTwoStringitem)
             {
                 hash.Add(ParameterTwoStringitem);
@@ -1210,8 +989,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.ParameterOneRecord);
-            yield return FormLinkInformation.Factory(obj.ParameterTwoRecord);
             yield break;
         }
         
@@ -1223,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly FunctionConditionDataSetterTranslationCommon Instance = new FunctionConditionDataSetterTranslationCommon();
 
         #region DeepCopyIn
-        public void DeepCopyIn(
+        public virtual void DeepCopyIn(
             IFunctionConditionData item,
             IFunctionConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1244,25 +1021,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Unknown2 = rhs.Unknown2;
             }
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
-            {
-                item.ParameterOneRecord.SetTo(rhs.ParameterOneRecord.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
-            {
-                item.ParameterOneNumber = rhs.ParameterOneNumber;
-            }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneString) ?? true))
             {
                 item.ParameterOneString = rhs.ParameterOneString;
-            }
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
-            {
-                item.ParameterTwoRecord.SetTo(rhs.ParameterTwoRecord.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
-            {
-                item.ParameterTwoNumber = rhs.ParameterTwoNumber;
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
             {
@@ -1384,25 +1145,9 @@ namespace Mutagen.Bethesda.Skyrim
                 item.Function,
                 length: 2);
             writer.Write(item.Unknown2);
-            FunctionConditionDataBinaryWriteTranslation.WriteBinaryParameterParsing(
-                writer: writer,
-                item: item);
         }
 
-        public static partial void WriteBinaryParameterParsingCustom(
-            MutagenWriter writer,
-            IFunctionConditionDataGetter item);
-
-        public static void WriteBinaryParameterParsing(
-            MutagenWriter writer,
-            IFunctionConditionDataGetter item)
-        {
-            WriteBinaryParameterParsingCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public void Write(
+        public virtual void Write(
             MutagenWriter writer,
             IFunctionConditionDataGetter item,
             TypedWriteParams translationParams)
@@ -1451,14 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim
                 reader: frame,
                 length: 2);
             item.Unknown2 = frame.ReadUInt16();
-            FunctionConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(
-                frame: frame,
-                item: item);
         }
-
-        public static partial void FillBinaryParameterParsingCustom(
-            MutagenFrame frame,
-            IFunctionConditionData item);
 
     }
 
@@ -1475,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class FunctionConditionDataBinaryOverlay :
+    internal abstract partial class FunctionConditionDataBinaryOverlay :
         ConditionDataBinaryOverlay,
         IFunctionConditionDataGetter
     {
@@ -1507,12 +1245,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public Condition.Function Function => (Condition.Function)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x0, 0x2));
         public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
-        #region ParameterParsing
-        partial void ParameterParsingCustomParse(
-            OverlayStream stream,
-            int offset);
-        protected int ParameterParsingEndingPos;
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1529,39 +1261,6 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static IFunctionConditionDataGetter FunctionConditionDataFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = ExtractTypelessSubrecordStructMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                translationParams: translationParams,
-                memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
-            var ret = new FunctionConditionDataBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            stream.Position += 0x4;
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset);
-            return ret;
-        }
-
-        public static IFunctionConditionDataGetter FunctionConditionDataFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return FunctionConditionDataFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
 
         #region To String
 

@@ -260,6 +260,7 @@
     <Compile Include="Plugins\Converters\FormKeyTypeConverter.cs" />
     <Compile Include="Plugins\Converters\ModKeyTypeConverter.cs" />
     <Compile Include="Plugins\Converters\ModPathTypeConverter.cs" />
+    <Compile Include="Plugins\Exceptions\AssetPathMisalignedException.cs" />
     <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
     <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
     <Compile Include="Plugins\Exceptions\ModPathException.cs" />
