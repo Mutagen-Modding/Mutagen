@@ -27,6 +27,7 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <AdditionalContainedRecordType>NONE</AdditionalContainedRecordType>
   </Object>

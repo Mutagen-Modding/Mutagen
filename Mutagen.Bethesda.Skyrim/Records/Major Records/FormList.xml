@@ -10,5 +10,8 @@
     <LinkInterface>ILockList</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IEventDataTarget</LinkInterface>
+    <LinkInterface>IWorldspaceOrList</LinkInterface>
+    <LinkInterface>IItemOrList</LinkInterface>
+    <LinkInterface>IVoiceTypeOrList</LinkInterface>
   </Object>
 </Loqui>

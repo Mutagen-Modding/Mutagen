@@ -581,6 +581,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ISoundMarkerInternal>,
         IObjectBounded,
         IPlaceableObject,
+        IReferenceableObject,
         ISound,
         ISoundMarkerGetter
     {
@@ -609,6 +610,7 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<ISoundMarkerGetter>,
         IObjectBoundedGetter,
         IPlaceableObjectGetter,
+        IReferenceableObjectGetter,
         ISoundGetter
     {
         static new ILoquiRegistration StaticRegistration => SoundMarker_Registration.Instance;

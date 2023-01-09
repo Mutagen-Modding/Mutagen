@@ -3364,6 +3364,10 @@
     <Compile Include="Records\Common Subrecords\UnknownConditionData_Generated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
+    <Compile Include="Interfaces\Link\IWorldspaceOrList_Generated.cs" />
+    <Compile Include="Interfaces\Link\IItemOrList_Generated.cs" />
+    <Compile Include="Interfaces\Link\IVoiceTypeOrList_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />

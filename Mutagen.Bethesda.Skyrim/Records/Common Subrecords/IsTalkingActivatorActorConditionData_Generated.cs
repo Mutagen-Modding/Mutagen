@@ -53,14 +53,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FirstParameter
-        private readonly IFormLink<INpcGetter> _FirstParameter = new FormLink<INpcGetter>();
-        public IFormLink<INpcGetter> FirstParameter
+        private readonly IFormLink<IPlacedNpcGetter> _FirstParameter = new FormLink<IPlacedNpcGetter>();
+        public IFormLink<IPlacedNpcGetter> FirstParameter
         {
             get => _FirstParameter;
             set => _FirstParameter.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<INpcGetter> IIsTalkingActivatorActorConditionDataGetter.FirstParameter => this.FirstParameter;
+        IFormLinkGetter<IPlacedNpcGetter> IIsTalkingActivatorActorConditionDataGetter.FirstParameter => this.FirstParameter;
         #endregion
         #region SecondParameter
         public Int32 SecondParameter { get; set; } = default;
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIsTalkingActivatorActorConditionDataGetter,
         ILoquiObjectSetter<IIsTalkingActivatorActorConditionData>
     {
-        new IFormLink<INpcGetter> FirstParameter { get; set; }
+        new IFormLink<IPlacedNpcGetter> FirstParameter { get; set; }
         new Int32 SecondParameter { get; set; }
     }
 
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IIsTalkingActivatorActorConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => IsTalkingActivatorActorConditionData_Registration.Instance;
-        IFormLinkGetter<INpcGetter> FirstParameter { get; }
+        IFormLinkGetter<IPlacedNpcGetter> FirstParameter { get; }
         Int32 SecondParameter { get; }
 
     }
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<INpcGetter> FirstParameter => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IPlacedNpcGetter> FirstParameter => new FormLink<IPlacedNpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

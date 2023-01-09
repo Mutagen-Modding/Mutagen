@@ -1710,6 +1710,7 @@ namespace Mutagen.Bethesda.Fallout4
         IPlaceableObject,
         IPlacedTrapTarget,
         IProjectileGetter,
+        IReferenceableObject,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -1779,6 +1780,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectIdGetter,
         IPlaceableObjectGetter,
         IPlacedTrapTargetGetter,
+        IReferenceableObjectGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

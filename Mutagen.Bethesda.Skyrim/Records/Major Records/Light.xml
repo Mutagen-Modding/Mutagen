@@ -28,10 +28,12 @@
       <FormLink name="Sound" refName="SoundDescriptor" recordType="SNAM" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IItemOrList</LinkInterface>
     <LinkInterface>IEmittance</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

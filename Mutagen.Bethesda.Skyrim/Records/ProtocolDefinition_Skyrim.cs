@@ -444,7 +444,6 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             NavigationMapInfoCellParent_Registration.Instance,
             GlobalUnknown_Registration.Instance,
             AMagicEffectArchetype_Registration.Instance,
-            GlobalUnknown_Registration.Instance,
             GetWantBlockingConditionData_Registration.Instance,
             GetDistanceConditionData_Registration.Instance,
             GetLockedConditionData_Registration.Instance,

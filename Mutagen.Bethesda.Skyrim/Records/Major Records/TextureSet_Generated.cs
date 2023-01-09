@@ -867,6 +867,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectId,
         IPlaceableObject,
+        IReferenceableObject,
         ISkyrimMajorRecordInternal,
         ITextureSetGetter
     {
@@ -903,7 +904,8 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ITextureSetGetter>,
         IObjectBoundedGetter,
         IObjectIdGetter,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IReferenceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         #region ObjectBounds

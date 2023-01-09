@@ -104,6 +104,7 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IFurnitureAssociation</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>

@@ -53,11 +53,13 @@
     </Fields>
     <Interface>IEnchantable</Interface>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IItemOrList</LinkInterface>
     <LinkInterface>IOutfitTarget</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IBindableEquipment</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="ArmorModel" objType="Subrecord" GUID="39a3a83f-68bd-473a-aa14-10efdb07031b" ID="151">

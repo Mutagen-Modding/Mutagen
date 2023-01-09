@@ -945,7 +945,7 @@ abstract partial class ConditionBinaryOverlay
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IConditionDataGetter IConditionGetter.Data => this.Data;
 
-    private static RecordTriggerSpecs IncludeTriggers = new RecordTriggerSpecs(
+    private static RecordTriggerSpecs IncludeTriggers = new(
         RecordCollection.Factory(
             RecordTypes.CIS1,
             RecordTypes.CIS2));

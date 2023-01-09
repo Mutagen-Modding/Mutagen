@@ -27,6 +27,7 @@
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <AdditionalContainedRecordType>MNAM</AdditionalContainedRecordType>

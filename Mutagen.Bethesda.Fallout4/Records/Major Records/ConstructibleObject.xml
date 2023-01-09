@@ -23,6 +23,7 @@
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
   </Object>
   <Object name="ConstructibleObjectComponent" objType="Subrecord" GUID="c43e9372-638e-4849-aabb-1575e750f577" ID="652">
     <Fields>

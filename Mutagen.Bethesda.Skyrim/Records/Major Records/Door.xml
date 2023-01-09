@@ -15,6 +15,7 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>ILocationTargetable</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

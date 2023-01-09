@@ -1236,7 +1236,8 @@ namespace Mutagen.Bethesda.Fallout4
         IHarvestTarget,
         IItem,
         ILoquiObjectSetter<IConstructibleObjectInternal>,
-        IPlaceableObject
+        IPlaceableObject,
+        IReferenceableObject
     {
         new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
@@ -1269,7 +1270,8 @@ namespace Mutagen.Bethesda.Fallout4
         IItemGetter,
         ILoquiObject<IConstructibleObjectGetter>,
         IMapsToGetter<IConstructibleObjectGetter>,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IReferenceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }

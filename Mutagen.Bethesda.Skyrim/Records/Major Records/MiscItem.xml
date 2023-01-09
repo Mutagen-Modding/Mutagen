@@ -21,9 +21,11 @@
       </Data>
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IItemOrList</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
   </Object>
 </Loqui>

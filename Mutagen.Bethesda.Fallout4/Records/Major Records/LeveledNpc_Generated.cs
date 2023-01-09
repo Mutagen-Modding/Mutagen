@@ -907,7 +907,8 @@ namespace Mutagen.Bethesda.Fallout4
         IModeled,
         INpcSpawn,
         IObjectBounded,
-        IPlaceableObject
+        IPlaceableObject,
+        IReferenceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -943,7 +944,8 @@ namespace Mutagen.Bethesda.Fallout4
         IModeledGetter,
         INpcSpawnGetter,
         IObjectBoundedGetter,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IReferenceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledNpc_Registration.Instance;
         #region ObjectBounds

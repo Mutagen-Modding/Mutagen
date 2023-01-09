@@ -895,7 +895,8 @@ namespace Mutagen.Bethesda.Fallout4
         IModeled,
         IObjectBounded,
         IObjectId,
-        IPlaceableObject
+        IPlaceableObject,
+        IReferenceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -938,7 +939,8 @@ namespace Mutagen.Bethesda.Fallout4
         IModeledGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IReferenceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => IdleMarker_Registration.Instance;
         #region ObjectBounds

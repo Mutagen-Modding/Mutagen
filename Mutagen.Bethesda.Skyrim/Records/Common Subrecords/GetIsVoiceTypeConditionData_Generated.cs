@@ -53,14 +53,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FirstParameter
-        private readonly IFormLink<IVoiceTypeGetter> _FirstParameter = new FormLink<IVoiceTypeGetter>();
-        public IFormLink<IVoiceTypeGetter> FirstParameter
+        private readonly IFormLink<IVoiceTypeOrListGetter> _FirstParameter = new FormLink<IVoiceTypeOrListGetter>();
+        public IFormLink<IVoiceTypeOrListGetter> FirstParameter
         {
             get => _FirstParameter;
             set => _FirstParameter.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IVoiceTypeGetter> IGetIsVoiceTypeConditionDataGetter.FirstParameter => this.FirstParameter;
+        IFormLinkGetter<IVoiceTypeOrListGetter> IGetIsVoiceTypeConditionDataGetter.FirstParameter => this.FirstParameter;
         #endregion
         #region SecondParameter
         public Int32 SecondParameter { get; set; } = default;
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGetIsVoiceTypeConditionDataGetter,
         ILoquiObjectSetter<IGetIsVoiceTypeConditionData>
     {
-        new IFormLink<IVoiceTypeGetter> FirstParameter { get; set; }
+        new IFormLink<IVoiceTypeOrListGetter> FirstParameter { get; set; }
         new Int32 SecondParameter { get; set; }
     }
 
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetIsVoiceTypeConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetIsVoiceTypeConditionData_Registration.Instance;
-        IFormLinkGetter<IVoiceTypeGetter> FirstParameter { get; }
+        IFormLinkGetter<IVoiceTypeOrListGetter> FirstParameter { get; }
         Int32 SecondParameter { get; }
 
     }
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IVoiceTypeGetter> FirstParameter => new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IVoiceTypeOrListGetter> FirstParameter => new FormLink<IVoiceTypeOrListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -421,6 +421,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILeveledSpellGetter,
         ILoquiObjectSetter<ILeveledSpellInternal>,
         IPlaceableObject,
+        IReferenceableObject,
         ISpellRecord
     {
     }
@@ -440,6 +441,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<ILeveledSpellGetter>,
         IMapsToGetter<ILeveledSpellGetter>,
         IPlaceableObjectGetter,
+        IReferenceableObjectGetter,
         ISpellRecordGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;

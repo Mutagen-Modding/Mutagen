@@ -1989,6 +1989,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectId,
         IOutfitTarget,
         IPlaceableObject,
+        IReferenceableObject,
         IScripted,
         ITranslatedNamed,
         ITranslatedNamedRequired
@@ -2070,6 +2071,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectIdGetter,
         IOutfitTargetGetter,
         IPlaceableObjectGetter,
+        IReferenceableObjectGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

@@ -28,9 +28,11 @@
       <String name="ShortName" recordType="ONAM" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IItemOrList</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

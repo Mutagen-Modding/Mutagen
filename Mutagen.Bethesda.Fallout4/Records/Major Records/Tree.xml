@@ -32,5 +32,6 @@
     <LinkInterface>IRegionTarget</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
   </Object>
 </Loqui>

@@ -53,14 +53,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FirstParameter
-        private readonly IFormLink<IWorldspaceGetter> _FirstParameter = new FormLink<IWorldspaceGetter>();
-        public IFormLink<IWorldspaceGetter> FirstParameter
+        private readonly IFormLink<IWorldspaceOrListGetter> _FirstParameter = new FormLink<IWorldspaceOrListGetter>();
+        public IFormLink<IWorldspaceOrListGetter> FirstParameter
         {
             get => _FirstParameter;
             set => _FirstParameter.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWorldspaceGetter> IGetInWorldspaceConditionDataGetter.FirstParameter => this.FirstParameter;
+        IFormLinkGetter<IWorldspaceOrListGetter> IGetInWorldspaceConditionDataGetter.FirstParameter => this.FirstParameter;
         #endregion
         #region SecondParameter
         public Int32 SecondParameter { get; set; } = default;
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGetInWorldspaceConditionDataGetter,
         ILoquiObjectSetter<IGetInWorldspaceConditionData>
     {
-        new IFormLink<IWorldspaceGetter> FirstParameter { get; set; }
+        new IFormLink<IWorldspaceOrListGetter> FirstParameter { get; set; }
         new Int32 SecondParameter { get; set; }
     }
 
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetInWorldspaceConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetInWorldspaceConditionData_Registration.Instance;
-        IFormLinkGetter<IWorldspaceGetter> FirstParameter { get; }
+        IFormLinkGetter<IWorldspaceOrListGetter> FirstParameter { get; }
         Int32 SecondParameter { get; }
 
     }
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IWorldspaceGetter> FirstParameter => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IWorldspaceOrListGetter> FirstParameter => new FormLink<IWorldspaceOrListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

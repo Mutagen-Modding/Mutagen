@@ -1924,7 +1924,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
-        IWorldspaceGetter
+        IWorldspaceGetter,
+        IWorldspaceOrList
     {
         new ExtendedList<WorldspaceGridReference> LargeReferences { get; }
         new WorldspaceMaxHeight? MaxHeight { get; set; }
@@ -1988,7 +1989,8 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,
-        ITranslatedNamedRequiredGetter
+        ITranslatedNamedRequiredGetter,
+        IWorldspaceOrListGetter
     {
         static new ILoquiRegistration StaticRegistration => Worldspace_Registration.Instance;
         IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; }

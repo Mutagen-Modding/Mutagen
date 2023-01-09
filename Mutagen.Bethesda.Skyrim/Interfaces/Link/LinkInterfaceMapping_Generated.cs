@@ -49,6 +49,37 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IPlaceableObjectGetter)] = dict[typeof(IPlaceableObject)] with { Setter = false };
+        dict[typeof(IReferenceableObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AcousticSpace_Registration.Instance,
+            Activator_Registration.Instance,
+            AlchemicalApparatus_Registration.Instance,
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            Book_Registration.Instance,
+            Container_Registration.Instance,
+            Door_Registration.Instance,
+            Flora_Registration.Instance,
+            Furniture_Registration.Instance,
+            Hazard_Registration.Instance,
+            IdleMarker_Registration.Instance,
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            Key_Registration.Instance,
+            Light_Registration.Instance,
+            MiscItem_Registration.Instance,
+            MoveableStatic_Registration.Instance,
+            Scroll_Registration.Instance,
+            SoulGem_Registration.Instance,
+            SoundMarker_Registration.Instance,
+            Spell_Registration.Instance,
+            Static_Registration.Instance,
+            TalkingActivator_Registration.Instance,
+            TextureSet_Registration.Instance,
+            Tree_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IReferenceableObjectGetter)] = dict[typeof(IReferenceableObject)] with { Setter = false };
         dict[typeof(IExplodeSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             AcousticSpace_Registration.Instance,
@@ -141,6 +172,24 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
+        dict[typeof(IItemOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AlchemicalApparatus_Registration.Instance,
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            Book_Registration.Instance,
+            FormList_Registration.Instance,
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            Key_Registration.Instance,
+            LeveledItem_Registration.Instance,
+            Light_Registration.Instance,
+            MiscItem_Registration.Instance,
+            Scroll_Registration.Instance,
+            SoulGem_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IItemOrListGetter)] = dict[typeof(IItemOrList)] with { Setter = false };
         dict[typeof(IConstructible)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             AlchemicalApparatus_Registration.Instance,
@@ -229,6 +278,18 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Location_Registration.Instance,
         });
         dict[typeof(IEventDataTargetGetter)] = dict[typeof(IEventDataTarget)] with { Setter = false };
+        dict[typeof(IWorldspaceOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            Worldspace_Registration.Instance,
+        });
+        dict[typeof(IWorldspaceOrListGetter)] = dict[typeof(IWorldspaceOrList)] with { Setter = false };
+        dict[typeof(IVoiceTypeOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            VoiceType_Registration.Instance,
+        });
+        dict[typeof(IVoiceTypeOrListGetter)] = dict[typeof(IVoiceTypeOrList)] with { Setter = false };
         dict[typeof(IPlacedTrapTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Hazard_Registration.Instance,

@@ -1218,6 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectId,
         IPlaceableObject,
+        IReferenceableObject,
         ISkyrimMajorRecordInternal,
         ISpellGetter,
         ISpellRecord,
@@ -1273,6 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectIdGetter,
         IPlaceableObjectGetter,
+        IReferenceableObjectGetter,
         ISpellRecordGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

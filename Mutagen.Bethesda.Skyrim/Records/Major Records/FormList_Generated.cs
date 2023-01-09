@@ -555,10 +555,13 @@ namespace Mutagen.Bethesda.Skyrim
         IEventDataTarget,
         IFormLinkContainer,
         IFormListGetter,
+        IItemOrList,
         ILockList,
         ILoquiObjectSetter<IFormListInternal>,
         IObjectId,
-        ISkyrimMajorRecordInternal
+        ISkyrimMajorRecordInternal,
+        IVoiceTypeOrList,
+        IWorldspaceOrList
     {
         new ExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>> Items { get; }
     }
@@ -577,10 +580,13 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IEventDataTargetGetter,
         IFormLinkContainerGetter,
+        IItemOrListGetter,
         ILockListGetter,
         ILoquiObject<IFormListGetter>,
         IMapsToGetter<IFormListGetter>,
-        IObjectIdGetter
+        IObjectIdGetter,
+        IVoiceTypeOrListGetter,
+        IWorldspaceOrListGetter
     {
         static new ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>> Items { get; }

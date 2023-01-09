@@ -9,6 +9,7 @@
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledItemEntry" counterLength="1" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IItemOrList</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IOutfitTarget</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>

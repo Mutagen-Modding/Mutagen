@@ -23,8 +23,10 @@
       <FormLink name="LinkedTo" refName="SoulGem" recordType="NAM0" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IItemOrList</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

@@ -2450,6 +2450,7 @@
     <Compile Include="Records\Major Records\AMagicEffectArchetype_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />

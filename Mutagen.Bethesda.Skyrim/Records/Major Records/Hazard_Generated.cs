@@ -1029,6 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IObjectBounded,
         IPlacedTrapTarget,
+        IReferenceableObject,
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
@@ -1079,6 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequiredGetter,
         IObjectBoundedGetter,
         IPlacedTrapTargetGetter,
+        IReferenceableObjectGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

@@ -25,5 +25,6 @@
     </Fields>
     <LinkInterface>IPlacedTrapTarget</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
   </Object>
 </Loqui>

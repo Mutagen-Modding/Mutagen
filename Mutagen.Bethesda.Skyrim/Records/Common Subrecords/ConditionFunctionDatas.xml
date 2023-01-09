@@ -122,25 +122,25 @@
   </Object>
   <Object name="SameFactionConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="383ad20c-46cf-493c-88c1-2a4836409cdc" ID="10019">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
   <Object name="SameRaceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="30a51ec6-cb26-49e6-af04-66a5f3a34176" ID="10020">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
   <Object name="SameSexConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="0b0ccb6c-9cfd-42e2-93fb-87988741a307" ID="10021">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
   <Object name="GetDetectedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="5bd56716-72ef-451f-bffe-99a6a6c35a37" ID="10022">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -153,7 +153,7 @@
   <Object name="GetItemCountConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c5d4164a-8c82-415a-81a7-f3532a578bb5" ID="10024">
     <Fields>
       <FormLink name="FirstParameter">
-        <Interface>IItem</Interface>
+        <Interface>IItemOrList</Interface>
       </FormLink>
       <Int32 name="SecondParameter" />
     </Fields>
@@ -205,7 +205,7 @@
   <Object name="GetFactionRankDifferenceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a937d4fc-707b-45e0-88c8-77dde79bac21" ID="10032">
     <Fields>
       <FormLink refName="Faction" name="FirstParameter" />
-      <FormLink refName="Npc" name="SecondParameter" />
+      <FormLink refName="PlacedNpc" name="SecondParameter" />
     </Fields>
   </Object>
   <Object name="GetAlarmedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="bf2a775f-e982-4ed9-b501-a569975982b5" ID="10033">
@@ -240,7 +240,7 @@
   </Object>
   <Object name="GetShouldAttackConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="d969fbd8-a242-42cb-b24d-dbb08c68f297" ID="10038">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -277,7 +277,7 @@
   <Object name="GetIsIDConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="bf910999-34c1-4bfd-85fa-d75f50b9e85a" ID="10044">
     <Fields>
       <FormLink name="FirstParameter">
-        <Interface>IPlaceableObject</Interface>
+        <Interface>IReferenceableObject</Interface>
       </FormLink>
       <Int32 name="SecondParameter" />
     </Fields>
@@ -430,7 +430,7 @@
   </Object>
   <Object name="GetCrimeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2db33da4-4973-4e53-a115-c63b9e48932f" ID="10069">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -626,7 +626,7 @@
   </Object>
   <Object name="GetTalkedToPCParamConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="a3323b80-d795-4697-8e2f-98a0817bc1c4" ID="10101">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -659,7 +659,7 @@
   <Object name="GetEquippedConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c9047e57-c255-47b5-bc66-9e06f28b86a7" ID="10106">
     <Fields>
       <FormLink name="FirstParameter">
-        <Interface>IItem</Interface>
+        <Interface>IItemOrItem</Interface>
       </FormLink>
       <Int32 name="SecondParameter" />
     </Fields>
@@ -850,19 +850,19 @@
   </Object>
   <Object name="HasAssociationTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e0761b71-97bc-4366-a57a-aab640936436" ID="10137">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <FormLink refName="AssociationType" name="SecondParameter" />
     </Fields>
   </Object>
   <Object name="HasFamilyRelationshipConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="811041ff-e8f7-4d2d-b24c-d0b63bdf7b7a" ID="10138">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
   <Object name="HasParentRelationshipConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="315d20df-45d7-4a96-883c-3598cb3f7c3d" ID="10139">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -998,7 +998,9 @@
   </Object>
   <Object name="GetInWorldspaceConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e4216b81-8e1c-4ba6-bed9-3e2258b6b80e" ID="10161">
     <Fields>
-      <FormLink refName="Worldspace" name="FirstParameter" />
+      <FormLink name="FirstParameter" >
+        <Interface>IWorldspaceOrList</Interface>
+      </FormLink>
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -1148,7 +1150,7 @@
   </Object>
   <Object name="IsTalkingActivatorActorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="3bca4377-80d3-4106-8377-b73e929053b5" ID="10186">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -1240,7 +1242,7 @@
   </Object>
   <Object name="IsKillerConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="262ec8b7-9eec-4ee9-a2a0-8b40140a8487" ID="10201">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -1278,7 +1280,9 @@
   </Object>
   <Object name="GetIsVoiceTypeConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="81938d6e-b298-42b2-bb4f-33125d598e91" ID="10207">
     <Fields>
-      <FormLink refName="VoiceType" name="FirstParameter" />
+      <FormLink name="FirstParameter" >
+        <Interface>IVoiceTypeOrList</Interface>
+      </FormLink>
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -1356,7 +1360,7 @@
   </Object>
   <Object name="GetFactionRelationConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c418d213-9437-4253-b013-3e690e08aa47" ID="10220">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -1424,7 +1428,7 @@
   </Object>
   <Object name="GetThreatRatioConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="564fca6f-58c7-473f-a851-5b3c3843ac57" ID="10231">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -1510,7 +1514,7 @@
   </Object>
   <Object name="IsCombatTargetConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="168f6d6e-090b-4c9b-8ca5-f5cce16c18d6" ID="10245">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -2194,7 +2198,7 @@
   </Object>
   <Object name="ShouldAttackKillConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="2c0b0b53-5760-4e54-b801-fed5e9b35d6e" ID="10353">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -2308,7 +2312,7 @@
   </Object>
   <Object name="GetShouldHelpConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="ed9f3f76-311d-4fb9-955c-e90dacc1dd21" ID="10372">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>
@@ -2374,7 +2378,7 @@
   </Object>
   <Object name="IsHostileToActorConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="e3e6586c-5aec-41ba-a438-43074da8c643" ID="10383">
     <Fields>
-      <FormLink refName="Npc" name="FirstParameter" />
+      <FormLink refName="PlacedNpc" name="FirstParameter" />
       <Int32 name="SecondParameter" />
     </Fields>
   </Object>

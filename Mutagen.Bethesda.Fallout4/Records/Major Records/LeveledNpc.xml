@@ -14,6 +14,7 @@
     <LinkInterface>INpcSpawn</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
   </Object>
   <Object name="LeveledNpcEntry" objType="Subrecord" GUID="e33c0ba1-7e56-404a-a61a-8015375de740" ID="215">
     <Fields>

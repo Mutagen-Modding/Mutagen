@@ -53,14 +53,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region FirstParameter
-        private readonly IFormLink<INpcGetter> _FirstParameter = new FormLink<INpcGetter>();
-        public IFormLink<INpcGetter> FirstParameter
+        private readonly IFormLink<IPlacedNpcGetter> _FirstParameter = new FormLink<IPlacedNpcGetter>();
+        public IFormLink<IPlacedNpcGetter> FirstParameter
         {
             get => _FirstParameter;
             set => _FirstParameter.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<INpcGetter> IHasAssociationTypeConditionDataGetter.FirstParameter => this.FirstParameter;
+        IFormLinkGetter<IPlacedNpcGetter> IHasAssociationTypeConditionDataGetter.FirstParameter => this.FirstParameter;
         #endregion
         #region SecondParameter
         private readonly IFormLink<IAssociationTypeGetter> _SecondParameter = new FormLink<IAssociationTypeGetter>();
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasAssociationTypeConditionDataGetter,
         ILoquiObjectSetter<IHasAssociationTypeConditionData>
     {
-        new IFormLink<INpcGetter> FirstParameter { get; set; }
+        new IFormLink<IPlacedNpcGetter> FirstParameter { get; set; }
         new IFormLink<IAssociationTypeGetter> SecondParameter { get; set; }
     }
 
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IHasAssociationTypeConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => HasAssociationTypeConditionData_Registration.Instance;
-        IFormLinkGetter<INpcGetter> FirstParameter { get; }
+        IFormLinkGetter<IPlacedNpcGetter> FirstParameter { get; }
         IFormLinkGetter<IAssociationTypeGetter> SecondParameter { get; }
 
     }
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<INpcGetter> FirstParameter => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IPlacedNpcGetter> FirstParameter => new FormLink<IPlacedNpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         public IFormLinkGetter<IAssociationTypeGetter> SecondParameter => new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
