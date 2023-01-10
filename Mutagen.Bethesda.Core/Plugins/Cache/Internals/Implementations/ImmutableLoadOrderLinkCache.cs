@@ -74,7 +74,7 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
             {
                 modsByKey.Add(modGetter.ModKey, modGetter.ToUntypedImmutableLinkCache(prefs));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ArgumentException(
                     $"Mods with duplicate ModKeys were passed into the Link Cache: {modGetter.ModKey}");
@@ -803,7 +803,7 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
             {
                 modsByKey.Add(modGetter.ModKey, modGetter.ToImmutableLinkCache<TMod, TModGetter>(prefs));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ArgumentException(
                     $"Mods with duplicate ModKeys were passed into the Link Cache: {modGetter.ModKey}");
