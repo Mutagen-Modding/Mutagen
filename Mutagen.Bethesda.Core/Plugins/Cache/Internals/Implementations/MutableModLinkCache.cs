@@ -822,6 +822,73 @@ public sealed class MutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
+    public string? ResolveIdentifier(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(IMajorRecordGetter));
+    }
+
+    public FormKey ResolveIdentifier(string editorId)
+    {
+        if (TryResolveIdentifier(editorId, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, typeof(IMajorRecordGetter));
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, type, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(IMajorRecordGetter));
+    }
+
+    public string? ResolveIdentifier(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formLink.FormKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formLink);
+    }
+
+    public FormKey ResolveIdentifier(string editorId, Type type)
+    {
+        if (TryResolveIdentifier(editorId, type, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, type);
+    }
+
+    public string? ResolveIdentifier<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (TryResolveIdentifier(formKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(TMajor));
+    }
+
+    public FormKey ResolveIdentifier<TMajor>(string editorId) where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (TryResolveIdentifier(editorId, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, typeof(TMajor));
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, params Type[] types)
+    {
+        if (TryResolveIdentifier(formKey, types, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, types);
+    }
+
+    public FormKey ResolveIdentifier(string editorId, params Type[] types)
+    {
+        if (TryResolveIdentifier(editorId, types, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, types);
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, types, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, types.ToArray());
+    }
+
+    public FormKey ResolveIdentifier(string editorId, IEnumerable<Type> types)
+    {
+        if (TryResolveIdentifier(editorId, types, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, types.ToArray());
+    }
+
+    /// <inheritdoc />
     public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
     {
         return AllIdentifiersNoUniqueness(type, cancel)
@@ -1916,6 +1983,73 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
         }
         formKey = default;
         return false;
+    }
+
+    /// <inheritdoc />
+    public string? ResolveIdentifier(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(IMajorRecordGetter));
+    }
+
+    public FormKey ResolveIdentifier(string editorId)
+    {
+        if (TryResolveIdentifier(editorId, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, typeof(IMajorRecordGetter));
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, type, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(IMajorRecordGetter));
+    }
+
+    public string? ResolveIdentifier(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formLink.FormKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formLink);
+    }
+
+    public FormKey ResolveIdentifier(string editorId, Type type)
+    {
+        if (TryResolveIdentifier(editorId, type, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, type);
+    }
+
+    public string? ResolveIdentifier<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (TryResolveIdentifier(formKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(TMajor));
+    }
+
+    public FormKey ResolveIdentifier<TMajor>(string editorId) where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (TryResolveIdentifier(editorId, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, typeof(TMajor));
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, params Type[] types)
+    {
+        if (TryResolveIdentifier(formKey, types, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, types);
+    }
+
+    public FormKey ResolveIdentifier(string editorId, params Type[] types)
+    {
+        if (TryResolveIdentifier(editorId, types, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, types);
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, types, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, types.ToArray());
+    }
+
+    public FormKey ResolveIdentifier(string editorId, IEnumerable<Type> types)
+    {
+        if (TryResolveIdentifier(editorId, types, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, types.ToArray());
     }
 
     /// <inheritdoc />

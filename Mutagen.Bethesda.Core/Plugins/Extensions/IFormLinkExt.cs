@@ -548,6 +548,165 @@ public static class IFormLinkExt
     }
     #endregion
 
+    #region ResolveIdentifier
+
+    /// <summary>
+    /// Retrieves the winning EditorID that matches the FormKey relative to the source the cache was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="cache">Link Cache to resolve against</param>
+    /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>True if a matching record was found</returns>
+    [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+    public static bool TryResolveIdentifier(
+        this IFormLinkGetter formLink,
+        ILinkCache cache, [MaybeNullWhen(false)] out string? editorId,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        return cache.TryResolveIdentifier(formLink.FormKey, out editorId);
+    }
+
+    /// <summary>
+    /// Retrieves the winning EditorID that matches the FormKey relative to the source the cache was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="cache">Link Cache to resolve against</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>the EditorID</returns>
+    [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+    public static string? ResolveIdentifier(
+        this IFormLinkGetter formLink,
+        ILinkCache cache,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        return cache.ResolveIdentifier(formLink.FormKey);
+    }
+
+    /// <summary>
+    /// Retrieves the winning EditorID that matches the FormKey relative to the source the cache was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="cache">Link Cache to resolve against</param>
+    /// <param name="type">The type of Major Record to look up</param>
+    /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>True if a matching record was found</returns>
+    public static bool TryResolveIdentifier(
+        this IFormLinkGetter formLink,
+        Type type,
+        ILinkCache cache, [MaybeNullWhen(false)] out string? editorId,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        return cache.TryResolveIdentifier(formLink.FormKey, type, out editorId);
+    }
+
+    /// <summary>
+    /// Retrieves the winning EditorID that matches the FormKey relative to the source the cache was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="cache">Link Cache to resolve against</param>
+    /// <param name="type">The type of Major Record to look up</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>the EditorID</returns>
+    public static string? ResolveIdentifier(
+        this IFormLinkGetter formLink,
+        Type type,
+        ILinkCache cache,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        return cache.ResolveIdentifier(formLink.FormKey, type);
+    }
+
+    /// <summary>
+    /// Retrieves the winning EditorID that matches the FormKey relative to the source the cache was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="cache">Link Cache to resolve against</param>
+    /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>True if a matching record was found</returns>
+    public static bool TryResolveIdentifier<TMajor>(
+        this IFormLinkGetter<TMajor> formLink,
+        ILinkCache cache, [MaybeNullWhen(false)] out string? editorId,
+        ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return cache.TryResolveIdentifier<TMajor>(formLink.FormKey, out editorId);
+    }
+
+    /// <summary>
+    /// Retrieves the winning EditorID that matches the FormKey relative to the source the cache was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false.
+    /// </summary>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="cache">Link Cache to resolve against</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>the EditorID</returns>
+    public static string? ResolveIdentifier<TMajor>(
+        this IFormLinkGetter<TMajor> formLink,
+        ILinkCache cache,
+        ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return cache.ResolveIdentifier<TMajor>(formLink.FormKey);
+    }
+
+    #endregion
+
     internal static bool EqualsWithInheritanceConsideration<TMajorGetter>(IFormLinkGetter<TMajorGetter> link, object? obj)
         where TMajorGetter : class, IMajorRecordGetter
     {
