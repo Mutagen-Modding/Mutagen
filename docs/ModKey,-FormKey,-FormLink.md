@@ -62,7 +62,7 @@ They contain:
 - A record's `uint` ID (without master indices)
 - A `ModKey`
 
-A `FormKey` might be printed to a string as such: `123456:Oblivion.esm`.  The first 6 numbers are the ID (with no mod index), followed by the string name of the mod it originated from. 
+A `FormKey` might be printed to a string as such: `123456:Oblivion.esm`.  The numbers are the last 6 digits of a FormID (with no mod index), followed by the string name of the mod it originated from. 
 
 ## Why does Mutagen use FormKeys instead of FormIDs?
 ### FormKeys Avoid Master Mismatch Bugs

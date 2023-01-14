@@ -23,6 +23,7 @@
   * [[Equality Checks]]
   * [[Translation Masks]]
   * [[Flags and Enums]]
+  * [[AssetLink]]
   * [[Binary Format Complexity Abstraction]]
   * [[Create, Duplicate, and Override]]
   * [[Abstract Subclassing]]
