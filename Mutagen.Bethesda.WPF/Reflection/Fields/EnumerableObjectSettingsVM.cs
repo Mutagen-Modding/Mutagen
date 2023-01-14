@@ -114,7 +114,16 @@ public class EnumerableObjectSettingsVM : SettingsNodeVM
 
     public static EnumerableObjectSettingsVM Factory(ReflectionSettingsParameters param, FieldMeta fieldMeta)
     {
-        var proto = new ObjectSettingsVM(param with { DefaultVal = null }, FieldMeta.Empty with 
+        object? protoDefault = null;
+        try
+        {
+            protoDefault = Activator.CreateInstance(param.TargetType);
+        }
+        catch (Exception)
+        {
+        }
+
+        var proto = new ObjectSettingsVM(param with { DefaultVal = protoDefault }, FieldMeta.Empty with 
         { 
             Parent = fieldMeta.Parent, 
             MainVM = fieldMeta.MainVM,
