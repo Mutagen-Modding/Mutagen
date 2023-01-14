@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [What is an AssetLink](#what-is-an-assetlink)
+- [AssetLink Members](#assetlink-members)
+  - [RawPath](#rawpath)
+  - [DataRelativePath](#datarelativepath)
+- [AssetTypes - AssetLink's Generic Type](#assettypes---assetlinks-generic-type)
+- [Asset Enumeration](#asset-enumeration)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # What is an AssetLink
 An AssetLink is a strongly typed object wrapping what is normally a `string` subpath pointing to an asset.
 

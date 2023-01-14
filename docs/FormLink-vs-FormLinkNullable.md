@@ -1,3 +1,12 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table Of Contents
+
+- [Which You Should Use](#which-you-should-use)
+- [What is FormLinkNullable](#what-is-formlinknullable)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 FormLinks are used widely as a strongly typed identifier of a record, as an alternative to FormID, EditorID, or even FormKey.
 
 When using them, though, there are two variants:
