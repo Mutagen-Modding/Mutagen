@@ -9,12 +9,11 @@
       <Version>4.5.0</Version>
     </PackageVersion>
     <PackageVersion Include="FluentAssertions" Version="6.8.0" />
-    <PackageVersion Include="GameFinder" Version="1.8.0" />
     <PackageVersion Include="GameFinder.StoreHandlers.GOG">
-      <Version>2.3.0</Version>
+      <Version>2.4.0</Version>
     </PackageVersion>
     <PackageVersion Include="GameFinder.StoreHandlers.Steam">
-      <Version>2.3.0</Version>
+      <Version>2.4.0</Version>
     </PackageVersion>
     <PackageVersion Include="GitInfo">
       <Version>2.3.0</Version>

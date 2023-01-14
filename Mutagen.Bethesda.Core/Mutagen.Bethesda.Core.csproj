@@ -17,12 +17,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Remove="Archives\Ba2\**" />
-    <EmbeddedResource Remove="Properties\**" />
-    <None Remove="Archives\Ba2\**" />
-    <None Remove="Properties\**" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="DotNetZip" />
     <PackageReference Include="ini-parser-netstandard" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" />
@@ -31,7 +25,6 @@
     <PackageReference Include="SharpZipLib" />
     <PackageReference Include="System.Collections.Immutable" />
     <PackageReference Include="System.Text.Encoding.CodePages" />
-    <PackageReference Include="GameFinder" />
     <PackageReference Include="GameFinder.StoreHandlers.GOG" />
     <PackageReference Include="GameFinder.StoreHandlers.Steam" />
   </ItemGroup>
