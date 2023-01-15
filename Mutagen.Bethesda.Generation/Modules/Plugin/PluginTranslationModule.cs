@@ -648,7 +648,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             yield return "Mutagen.Bethesda.Strings.DI";
         }
 
-        if (HasRecordTypeFields(obj))
+        if (obj.HasRecordTypeFields())
         {
             yield return "Mutagen.Bethesda.Plugins.Internals";
         }
@@ -826,7 +826,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
         }
 
-        if (HasRecordTypeFields(obj) && !obj.IsTopLevelGroup())
+        if (obj.HasRecordTypeFields() && !obj.IsTopLevelGroup())
         {
             using (var args = sb.Function(
                        $"public static {Loqui.Generation.Utility.TaskWrap(nameof(ParseResult), HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
@@ -1128,7 +1128,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.AddPassArg($"translationParams");
                             }
                         }
-                        else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
+                        else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => b.HasRecordTypeFields()))
                         {
                             using (var args = sb.Call(
                                        $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}RecordTypes"))
@@ -1510,10 +1510,10 @@ public class PluginTranslationModule : BinaryTranslationModule
 
     protected async Task GenerateOverlayExtras(ObjectGeneration obj, StructuredStringBuilder sb)
     {
-        if (HasRecordTypeFields(obj))
+        if (obj.HasRecordTypeFields())
         {
             using (var args = sb.Function(
-                       $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}{nameof(ParseResult)} FillRecordType"))
+                       $"public{await obj.FunctionOverride(async b => b.HasRecordTypeFields())}{nameof(ParseResult)} FillRecordType"))
             {
                 args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? nameof(IBinaryReadStream) : nameof(OverlayStream))} stream");
                 args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
@@ -1829,7 +1829,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
                         }
-                        else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b)))
+                        else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => b.HasRecordTypeFields()))
                         {
                             using (var args = sb.Call(
                                        "return base.FillRecordType"))
@@ -1978,7 +1978,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 case ObjectType.Subrecord:
                     var hasEmbedded = HasEmbeddedFields(obj) || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(HasEmbeddedFields));
-                    var hasRecord = HasRecordTypeFields(obj) || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(HasRecordTypeFields));
+                    var hasRecord = obj.HasRecordTypeFields() || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(o => o.HasRecordTypeFields()));
                     if (hasEmbedded || hasRecord)
                     {
                         using (var args = sb.Call(
@@ -2008,8 +2008,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                         args.AddPassArg(ReaderMemberName);
                         args.AddPassArg("translationParams");
                         args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
-                        if (HasRecordTypeFields(obj)
-                            || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
+                        if (obj.HasRecordTypeFields()
+                            || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => b.HasRecordTypeFields())))
                         {
                             args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
                         }
@@ -2039,8 +2039,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                             args.AddPassArg(ReaderMemberName);
                             args.AddPassArg($"translationParams");
                             args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
-                            if (HasRecordTypeFields(obj)
-                                || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
+                            if (obj.HasRecordTypeFields()
+                                || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => b.HasRecordTypeFields())))
                             {
                                 args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
                             }
@@ -2108,7 +2108,7 @@ public class PluginTranslationModule : BinaryTranslationModule
     public async Task<bool> HasStructBytes(ObjectGeneration obj)
     {
         if (obj.GetObjectType() != ObjectType.Subrecord) return true;
-        var anyHasRecordTypes = (await obj.EntireClassTree()).Any(c => HasRecordTypeFields(c));
+        var anyHasRecordTypes = (await obj.EntireClassTree()).Any(c => c.HasRecordTypeFields());
         if (anyHasRecordTypes) return false;
         return obj.IsTypelessStruct() || obj.HasRecordType();
     }
@@ -2129,7 +2129,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         var packageAccessor = new Accessor("_package");
         var metaAccessor = new Accessor($"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}");
         var needsMasters = await obj.GetNeedsMasters();
-        var anyHasRecordTypes = (await obj.EntireClassTree()).Any(c => HasRecordTypeFields(c));
+        var anyHasRecordTypes = await obj.HasAnyRecordTypesInTree();
 
         if (obj.GetObjectType() == ObjectType.Mod)
         {
@@ -3126,7 +3126,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                 using (sb.CurlyBrace(doIt: isMajor))
                 {
-                    if (HasRecordTypeFields(obj))
+                    if (obj.HasRecordTypeFields())
                     {
                         if (isMajor)
                         {
@@ -3157,7 +3157,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     else
                     {
-                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasRecordTypeFields(b));
+                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => b.HasRecordTypeFields());
                         if (firstBase != null)
                         {
                             using (var args = sb.Call(
@@ -3289,7 +3289,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             sb.AppendLine();
         }
 
-        if (HasRecordTypeFields(obj))
+        if (obj.HasRecordTypeFields())
         {
             using (var args = sb.Function(
                        $"public static void WriteRecordTypes{obj.GetGenericTypes(MaskType.Normal)}"))
@@ -3307,7 +3307,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 if (obj.HasLoquiBaseObject)
                 {
-                    var firstBase = obj.BaseClassTrail().FirstOrDefault((f) => HasRecordTypeFields(f));
+                    var firstBase = obj.BaseClassTrail().FirstOrDefault((f) => f.HasRecordTypeFields());
                     if (firstBase != null)
                     {
                         using (var args = sb.Call(

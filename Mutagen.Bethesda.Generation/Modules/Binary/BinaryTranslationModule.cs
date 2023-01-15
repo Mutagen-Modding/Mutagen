@@ -157,22 +157,6 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         }
     }
 
-    protected bool HasRecordTypeFields(ObjectGeneration obj)
-    {
-        return GetRecordTypeFields(obj).Any();
-    }
-
-    protected IEnumerable<TypeGeneration> GetRecordTypeFields(ObjectGeneration obj)
-    {
-        foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
-        {
-            if (field.GetFieldData().HasTrigger)
-            {
-                yield return field;
-            }
-        }
-    }
-
     protected IEnumerable<TypeGeneration> GetEmbeddedFields(ObjectGeneration obj)
     {
         foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
@@ -224,7 +208,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             enumer = enumer.And(obj);
         }
         return enumer
-            .SelectMany(o => GetRecordTypeFields(o))
+            .SelectMany(o => o.GetRecordTypeFields())
             .Any(t =>
             {
                 if (this.TryGetTypeGeneration(t.GetType(), out var gen))
