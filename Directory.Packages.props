@@ -23,8 +23,8 @@
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
     <PackageVersion Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageVersion Include="K4os.Compression.LZ4.Streams" Version="1.2.16" />
-    <PackageVersion Include="Loqui" Version="2.54.0.1-dev" />
-    <PackageVersion Include="Loqui.Generation" Version="2.54.0.1-dev" />
+    <PackageVersion Include="Loqui" Version="2.55" />
+    <PackageVersion Include="Loqui.Generation" Version="2.55" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.3.1" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.1" />
@@ -34,15 +34,15 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageVersion Include="Microsoft.Reactive.Testing" Version="5.0.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageVersion Include="Noggog.Autofac" Version="2.54.0.1-dev" />
+    <PackageVersion Include="Noggog.Autofac" Version="2.55" />
     <PackageVersion Include="Noggog.CSharpExt">
-      <Version>2.54.0.1-dev</Version>
+      <Version>2.55</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.Testing">
-      <Version>2.54.0.1-dev</Version>
+      <Version>2.55</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.WPF">
-      <Version>2.54.0.1-dev</Version>
+      <Version>2.55</Version>
     </PackageVersion>
     <PackageVersion Include="NuGetizer" Version="0.9.1" />
     <PackageVersion Include="ReactiveUI" Version="18.4.1" />
