@@ -253,7 +253,10 @@ internal static class PluginUtilityTranslation
             frame: frame);
         var lastParsed = new PreviousParse();
         Dictionary<RecordType, int>? recordParseCount = null;
-        while (!frame.Complete)
+        
+        // Keep going past the frame, as subrecord frames might not contain followup subrecords
+        // when bundled.  Rely on Stop commands to break accordingly
+        while (!frame.Reader.Complete)
         {
             var subMeta = frame.GetSubrecordHeader();
             var finalPos = frame.Position + subMeta.TotalLength;
