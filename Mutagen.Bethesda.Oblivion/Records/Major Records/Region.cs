@@ -10,14 +10,6 @@ namespace Mutagen.Bethesda.Oblivion;
 
 partial class RegionBinaryCreateTranslation
 {
-    public static readonly RecordType RDOT = new RecordType("RDOT");
-    public static readonly RecordType RDWT = new RecordType("RDWT");
-    public static readonly RecordType RDMP = new RecordType("RDMP");
-    public static readonly RecordType ICON = new RecordType("ICON");
-    public static readonly RecordType RDGS = new RecordType("RDGS");
-    public static readonly RecordType RDSD = new RecordType("RDSD");
-    public static readonly RecordType RDMD = new RecordType("RDMD");
-
     public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
     {
         var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
@@ -36,22 +28,22 @@ partial class RegionBinaryCreateTranslation
         switch (dataType)
         {
             case RegionData.RegionDataType.Object:
-                if (!recordType.Equals(RDOT)) return false;
+                if (!recordType.Equals(RecordTypes.RDOT)) return false;
                 break;
             case RegionData.RegionDataType.Weather:
-                if (!recordType.Equals(RDWT)) return false;
+                if (!recordType.Equals(RecordTypes.RDWT)) return false;
                 break;
             case RegionData.RegionDataType.Map:
-                if (!recordType.Equals(RDMP)) return false;
+                if (!recordType.Equals(RecordTypes.RDMP)) return false;
                 break;
             case RegionData.RegionDataType.Icon:
-                if (!recordType.Equals(ICON)) return false;
+                if (!recordType.Equals(RecordTypes.ICON)) return false;
                 break;
             case RegionData.RegionDataType.Grass:
-                if (!recordType.Equals(RDGS)) return false;
+                if (!recordType.Equals(RecordTypes.RDGS)) return false;
                 break;
             case RegionData.RegionDataType.Sound:
-                if (!recordType.Equals(RDSD) && !recordType.Equals(RDMD)) return false;
+                if (!recordType.Equals(RecordTypes.RDSD) && !recordType.Equals(RecordTypes.RDMD)) return false;
                 break;
             default:
                 return false;
@@ -82,7 +74,7 @@ partial class RegionBinaryCreateTranslation
                 break;
             case RegionData.RegionDataType.Sound:
                 if (frame.Reader.TryGetSubrecordHeader(out var nextRec, offset: len)
-                    && (nextRec.RecordType.Equals(RDSD) || nextRec.RecordType.Equals(RDMD)))
+                    && (nextRec.RecordType.Equals(RecordTypes.RDSD) || nextRec.RecordType.Equals(RecordTypes.RDMD)))
                 {
                     len += nextRec.TotalLength;
                 }
@@ -205,7 +197,7 @@ partial class RegionBinaryOverlay : IRegionGetter
                 break;
             case RegionData.RegionDataType.Sound:
                 var nextRec = stream.GetSubrecordHeader();
-                if (nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDSD) || nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDMD))
+                if (nextRec.RecordType.Equals(RecordTypes.RDSD) || nextRec.RecordType.Equals(RecordTypes.RDMD))
                 {
                     len += nextRec.TotalLength;
                 }
