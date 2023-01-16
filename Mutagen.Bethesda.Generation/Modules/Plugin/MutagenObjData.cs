@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 public class MutagenObjData
 {
     public ObjectGeneration ObjGen { get; }
-    public RecordType? RecordType;
+    public RecordType? RecordType { get; set; }
     public RecordType? OverflowRecordType;
     public bool FailOnUnknown;
     public ObjectType? ObjectType;

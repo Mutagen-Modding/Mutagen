@@ -187,7 +187,6 @@ internal class ProtocolDefinition_Oblivion : IProtocolRegistration
             QuestTargetData_Registration.Instance,
             QuestData_Registration.Instance,
             RaceData_Registration.Instance,
-            RegionDataHeader_Registration.Instance,
             LocalVariableData_Registration.Instance,
             SigilStoneData_Registration.Instance,
             SkillData_Registration.Instance,

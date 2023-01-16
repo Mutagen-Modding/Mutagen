@@ -74,6 +74,21 @@
     <Compile Include="Records\Major Records\GlobalUnknown.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\RegionGrasses.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionMap.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionObjects.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionSounds.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionWeather.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
@@ -703,9 +718,6 @@
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\RegionData_Generated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RegionDataHeader_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\RegionObjects_Generated.cs">

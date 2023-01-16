@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -54,16 +53,11 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region Header
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RegionDataHeader? _Header;
-        public RegionDataHeader? Header
-        {
-            get => _Header;
-            set => _Header = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRegionDataHeaderGetter? IRegionDataGetter.Header => this.Header;
+        #region Flags
+        public RegionData.RegionDataFlag Flags { get; set; } = default;
+        #endregion
+        #region Priority
+        public Byte Priority { get; set; } = default;
         #endregion
 
         #region To String
@@ -102,9 +96,18 @@ namespace Mutagen.Bethesda.Oblivion
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem Header)
+            public Mask(TItem initialValue)
             {
-                this.Header = new MaskItem<TItem, RegionDataHeader.Mask<TItem>?>(Header, new RegionDataHeader.Mask<TItem>(Header));
+                this.Flags = initialValue;
+                this.Priority = initialValue;
+            }
+
+            public Mask(
+                TItem Flags,
+                TItem Priority)
+            {
+                this.Flags = Flags;
+                this.Priority = Priority;
             }
 
             #pragma warning disable CS8618
@@ -116,7 +119,8 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, RegionDataHeader.Mask<TItem>?>? Header { get; set; }
+            public TItem Flags;
+            public TItem Priority;
             #endregion
 
             #region Equals
@@ -129,13 +133,15 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Header, rhs.Header)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Priority, rhs.Priority)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Header);
+                hash.Add(this.Flags);
+                hash.Add(this.Priority);
                 return hash.ToHashCode();
             }
 
@@ -144,11 +150,8 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public virtual bool All(Func<TItem, bool> eval)
             {
-                if (Header != null)
-                {
-                    if (!eval(this.Header.Overall)) return false;
-                    if (this.Header.Specific != null && !this.Header.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Priority)) return false;
                 return true;
             }
             #endregion
@@ -156,11 +159,8 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public virtual bool Any(Func<TItem, bool> eval)
             {
-                if (Header != null)
-                {
-                    if (eval(this.Header.Overall)) return true;
-                    if (this.Header.Specific != null && this.Header.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Flags)) return true;
+                if (eval(this.Priority)) return true;
                 return false;
             }
             #endregion
@@ -175,7 +175,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Header = this.Header == null ? null : new MaskItem<R, RegionDataHeader.Mask<R>?>(eval(this.Header.Overall), this.Header.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                obj.Priority = eval(this.Priority);
             }
             #endregion
 
@@ -194,9 +195,13 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{nameof(RegionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Header?.Overall ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        Header?.Print(sb);
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Priority ?? true)
+                    {
+                        sb.AppendItem(Priority, "Priority");
                     }
                 }
             }
@@ -222,7 +227,8 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, RegionDataHeader.ErrorMask?>? Header;
+            public Exception? Flags;
+            public Exception? Priority;
             #endregion
 
             #region IErrorMask
@@ -231,8 +237,10 @@ namespace Mutagen.Bethesda.Oblivion
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.Header:
-                        return Header;
+                    case RegionData_FieldIndex.Flags:
+                        return Flags;
+                    case RegionData_FieldIndex.Priority:
+                        return Priority;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -243,8 +251,11 @@ namespace Mutagen.Bethesda.Oblivion
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.Header:
-                        this.Header = new MaskItem<Exception?, RegionDataHeader.ErrorMask?>(ex, null);
+                    case RegionData_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case RegionData_FieldIndex.Priority:
+                        this.Priority = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -256,8 +267,11 @@ namespace Mutagen.Bethesda.Oblivion
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.Header:
-                        this.Header = (MaskItem<Exception?, RegionDataHeader.ErrorMask?>?)obj;
+                    case RegionData_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case RegionData_FieldIndex.Priority:
+                        this.Priority = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -267,7 +281,8 @@ namespace Mutagen.Bethesda.Oblivion
             public virtual bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Header != null) return true;
+                if (Flags != null) return true;
+                if (Priority != null) return true;
                 return false;
             }
             #endregion
@@ -293,7 +308,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Header?.Print(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Priority, "Priority");
+                }
             }
             #endregion
 
@@ -302,7 +322,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Header = this.Header.Combine(rhs.Header, (l, r) => l.Combine(r));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Priority = this.Priority.Combine(rhs.Priority);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -326,7 +347,8 @@ namespace Mutagen.Bethesda.Oblivion
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public RegionDataHeader.TranslationMask? Header;
+            public bool Flags;
+            public bool Priority;
             #endregion
 
             #region Ctors
@@ -336,6 +358,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Flags = defaultOn;
+                this.Priority = defaultOn;
             }
 
             #endregion
@@ -351,7 +375,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Header != null ? Header.OnOverall : DefaultOn, Header?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((Priority, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -407,7 +432,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionData>,
         IRegionDataGetter
     {
-        new RegionDataHeader? Header { get; set; }
+        new RegionData.RegionDataFlag Flags { get; set; }
+        new Byte Priority { get; set; }
     }
 
     /// <summary>
@@ -426,7 +452,8 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RegionData_Registration.Instance;
-        IRegionDataHeaderGetter? Header { get; }
+        RegionData.RegionDataFlag Flags { get; }
+        Byte Priority { get; }
 
     }
 
@@ -596,7 +623,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Field Index
     internal enum RegionData_FieldIndex
     {
-        Header = 0,
+        Flags = 0,
+        Priority = 1,
     }
     #endregion
 
@@ -614,9 +642,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public const string GUID = "46664e25-f4ef-428c-b13f-c81ff3127714";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(RegionData.Mask<>);
 
@@ -691,7 +719,8 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void Clear(IRegionData item)
         {
             ClearPartial();
-            item.Header = null;
+            item.Flags = default;
+            item.Priority = default;
         }
         
         #region Mutagen
@@ -707,11 +736,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionDataBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -742,11 +771,8 @@ namespace Mutagen.Bethesda.Oblivion
             RegionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Header = EqualsMaskHelper.EqualsHelper(
-                item.Header,
-                rhs.Header,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Priority = item.Priority == rhs.Priority;
         }
         
         public string Print(
@@ -791,10 +817,13 @@ namespace Mutagen.Bethesda.Oblivion
             StructuredStringBuilder sb,
             RegionData.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Header?.Overall ?? true)
-                && item.Header is {} HeaderItem)
+            if (printMask?.Flags ?? true)
             {
-                HeaderItem?.Print(sb, "Header");
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Priority ?? true)
+            {
+                sb.AppendItem(item.Priority, "Priority");
             }
         }
         
@@ -805,13 +834,13 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)RegionData_FieldIndex.Header) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Header, rhs.Header, out var lhsHeader, out var rhsHeader, out var isHeaderEqual))
-                {
-                    if (!((RegionDataHeaderCommon)((IRegionDataHeaderGetter)lhsHeader).CommonInstance()!).Equals(lhsHeader, rhsHeader, equalsMask?.GetSubCrystal((int)RegionData_FieldIndex.Header))) return false;
-                }
-                else if (!isHeaderEqual) return false;
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
+            {
+                if (lhs.Priority != rhs.Priority) return false;
             }
             return true;
         }
@@ -819,10 +848,8 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual int GetHashCode(IRegionDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Header is {} Headeritem)
-            {
-                hash.Add(Headeritem);
-            }
+            hash.Add(item.Flags);
+            hash.Add(item.Priority);
             return hash.ToHashCode();
         }
         
@@ -855,31 +882,13 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Header) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
             {
-                errorMask?.PushIndex((int)RegionData_FieldIndex.Header);
-                try
-                {
-                    if(rhs.Header is {} rhsHeader)
-                    {
-                        item.Header = rhsHeader.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)RegionData_FieldIndex.Header));
-                    }
-                    else
-                    {
-                        item.Header = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
+            {
+                item.Priority = rhs.Priority;
             }
         }
         
@@ -973,18 +982,33 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static readonly RegionDataBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IRegionDataGetter item,
+            MutagenWriter writer)
+        {
+        }
+
         public static void WriteRecordTypes(
             IRegionDataGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            if (item.Header is {} HeaderItem)
-            {
-                ((RegionDataHeaderBinaryWriteTranslation)((IBinaryItem)HeaderItem).BinaryWriteTranslator).Write(
-                    item: HeaderItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            RegionDataBinaryWriteTranslation.WriteBinaryHeaderLogic(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryHeaderLogicCustom(
+            MutagenWriter writer,
+            IRegionDataGetter item);
+
+        public static void WriteBinaryHeaderLogic(
+            MutagenWriter writer,
+            IRegionDataGetter item)
+        {
+            WriteBinaryHeaderLogicCustom(
+                writer: writer,
+                item: item);
         }
 
         public virtual void Write(
@@ -992,17 +1016,13 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Subrecord(
+            WriteEmbedded(
+                item: item,
+                writer: writer);
+            WriteRecordTypes(
+                item: item,
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RDAT),
-                overflowRecord: translationParams.OverflowRecordType,
-                out var writerToUse))
-            {
-                WriteRecordTypes(
-                    item: item,
-                    writer: writerToUse,
-                    translationParams: translationParams);
-            }
+                translationParams: translationParams);
         }
 
         public virtual void Write(
@@ -1022,6 +1042,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static readonly RegionDataBinaryCreateTranslation Instance = new RegionDataBinaryCreateTranslation();
 
+        public static void FillBinaryStructs(
+            IRegionData item,
+            MutagenFrame frame)
+        {
+        }
+
         public static ParseResult FillBinaryRecordTypes(
             IRegionData item,
             MutagenFrame frame,
@@ -1036,13 +1062,21 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RDAT:
                 {
-                    item.Header = Mutagen.Bethesda.Oblivion.RegionDataHeader.CreateFromBinary(frame: frame);
-                    return (int)RegionData_FieldIndex.Header;
+                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    return RegionDataBinaryCreateTranslation.FillBinaryHeaderLogicCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return ParseResult.Stop;
             }
         }
+
+        public static partial ParseResult FillBinaryHeaderLogicCustom(
+            MutagenFrame frame,
+            IRegionData item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1108,9 +1142,11 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        #region Header
-        private RangeInt32? _HeaderLocation;
-        public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(_recordData.Slice(_HeaderLocation!.Value.Min), _package) : default;
+        #region HeaderLogic
+        public partial ParseResult HeaderLogicCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1143,8 +1179,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RDAT:
                 {
-                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)RegionData_FieldIndex.Header;
+                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    return HeaderLogicCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return ParseResult.Stop;

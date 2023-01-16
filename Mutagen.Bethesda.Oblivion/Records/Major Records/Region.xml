@@ -7,11 +7,11 @@
       <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" />
       <RefList name="Areas" refName="RegionArea" />
       <CustomLogic name="RegionAreaLogic" recordType="RDAT" />
-      <RefDirect name="Objects" refName="RegionObjects" binary="NoGeneration" />
-      <RefDirect name="Weather" refName="RegionWeather" binary="NoGeneration" />
-      <RefDirect name="MapName" refName="RegionMap" binary="NoGeneration" />
-      <RefDirect name="Grasses" refName="RegionGrasses" binary="NoGeneration" />
-      <RefDirect name="Sounds" refName="RegionSounds" binary="NoGeneration" />
+      <RefDirect name="Objects" refName="RegionObjects" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Weather" refName="RegionWeather" binary="NoGeneration" nullable="True" />
+      <RefDirect name="MapName" refName="RegionMap" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Grasses" refName="RegionGrasses" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Sounds" refName="RegionSounds" binary="NoGeneration" nullable="True" />
     </Fields>
   </Object>
   <Object name="RegionArea" objType="Subrecord" GUID="9cbce207-fe81-4953-a29f-9010447d54ff" ID="108">
@@ -22,17 +22,11 @@
       </List>
     </Fields>
   </Object>
-  <Object name="RegionData" abstract="true" objType="Subrecord" GUID="46664e25-f4ef-428c-b13f-c81ff3127714" ID="109" recordType="RDAT">
+  <Object name="RegionData" abstract="true" objType="Subrecord" GUID="46664e25-f4ef-428c-b13f-c81ff3127714" ID="109" >
     <Fields>
-      <RefDirect name="Header" refName="RegionDataHeader" />
-    </Fields>
-  </Object>
-  <Object name="RegionDataHeader" objType="Subrecord" recordType="RDAT" GUID="b6f490ca-763f-4861-a7a1-327b1e091552" ID="206">
-    <Fields>
-      <Enum name="DataType" enumName="RegionData.RegionDataType" byteLength="4" setPermission="Protected" internalSetInterface="true" />
-      <Enum name="Flags" enumName="RegionData.RegionDataFlag" byteLength="1" />
-      <UInt8 name="Priority" />
-      <Zero byteLength="2" />
+      <CustomLogic name="HeaderLogic" byteLength="8" recordType="RDAT" />
+      <Enum name="Flags" enumName="RegionData.RegionDataFlag" binary="NoGeneration" />
+      <UInt8 name="Priority" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="RegionObjects" objType="Subrecord" baseClass="RegionData" GUID="6c1a729e-5137-4710-b72d-2f6a5a9f0b7e" ID="110">

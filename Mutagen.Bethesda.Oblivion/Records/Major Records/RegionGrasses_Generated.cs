@@ -111,9 +111,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem Grasses)
-            : base(Header: Header)
+            : base(
+                Flags: Flags,
+                Priority: Priority)
             {
                 this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Grasses, Enumerable.Empty<(int Index, TItem Value)>());
             }
@@ -642,8 +645,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Field Index
     internal enum RegionGrasses_FieldIndex
     {
-        Header = 0,
-        Grasses = 1,
+        Flags = 0,
+        Priority = 1,
+        Grasses = 2,
     }
     #endregion
 
@@ -663,7 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(RegionGrasses.Mask<>);
 
@@ -769,6 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionGrassesBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionGrassesBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -884,7 +889,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Header:
+                case RegionData_FieldIndex.Flags:
+                    return (RegionGrasses_FieldIndex)((int)index);
+                case RegionData_FieldIndex.Priority:
                     return (RegionGrasses_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1133,6 +1140,9 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionGrassesGetter item,
             TypedWriteParams translationParams)
         {
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,

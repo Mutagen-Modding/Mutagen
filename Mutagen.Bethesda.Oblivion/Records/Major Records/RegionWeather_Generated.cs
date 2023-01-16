@@ -111,9 +111,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem Weathers)
-            : base(Header: Header)
+            : base(
+                Flags: Flags,
+                Priority: Priority)
             {
                 this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(Weathers, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
             }
@@ -640,8 +643,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Field Index
     internal enum RegionWeather_FieldIndex
     {
-        Header = 0,
-        Weathers = 1,
+        Flags = 0,
+        Priority = 1,
+        Weathers = 2,
     }
     #endregion
 
@@ -661,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(RegionWeather.Mask<>);
 
@@ -767,6 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionWeatherBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionWeatherBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -882,7 +887,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Header:
+                case RegionData_FieldIndex.Flags:
+                    return (RegionWeather_FieldIndex)((int)index);
+                case RegionData_FieldIndex.Priority:
                     return (RegionWeather_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1138,6 +1145,9 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionWeatherGetter item,
             TypedWriteParams translationParams)
         {
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,

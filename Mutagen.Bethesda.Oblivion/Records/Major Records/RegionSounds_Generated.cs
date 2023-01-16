@@ -117,10 +117,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem MusicType,
                 TItem Sounds)
-            : base(Header: Header)
+            : base(
+                Flags: Flags,
+                Priority: Priority)
             {
                 this.MusicType = MusicType;
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>());
@@ -677,9 +680,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Field Index
     internal enum RegionSounds_FieldIndex
     {
-        Header = 0,
-        MusicType = 1,
-        Sounds = 2,
+        Flags = 0,
+        Priority = 1,
+        MusicType = 2,
+        Sounds = 3,
     }
     #endregion
 
@@ -699,7 +703,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(RegionSounds.Mask<>);
 
@@ -807,6 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionSoundsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionSoundsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -928,7 +933,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Header:
+                case RegionData_FieldIndex.Flags:
+                    return (RegionSounds_FieldIndex)((int)index);
+                case RegionData_FieldIndex.Priority:
                     return (RegionSounds_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1201,6 +1208,9 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionSoundsGetter item,
             TypedWriteParams translationParams)
         {
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
