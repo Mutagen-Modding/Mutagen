@@ -181,6 +181,7 @@ public partial class RecordTypeInts
     public const int TCLT = 0x544C4354;
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
+    public const int TPIC = 0x43495054;
     public const int TRDT = 0x54445254;
     public const int TREE = 0x45455254;
     public const int UNAM = 0x4D414E55;
