@@ -101,6 +101,30 @@ public static class ObjectGenerationExt
         return true;
     }
 
+    public static IEnumerable<TypeGeneration> GetEmbeddedFields(this ObjectGeneration obj)
+    {
+        foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
+        {
+            if (field.GetFieldData().HasTrigger) continue;
+            if (!field.IntegrateField)
+            {
+                if (field is CustomLogic)
+                {
+                    yield return field;
+                }
+            }
+            else
+            {
+                yield return field;
+            }
+        }
+    }
+
+    public static bool HasEmbeddedFields(this ObjectGeneration obj)
+    {
+        return GetEmbeddedFields(obj).Any();
+    }
+
     public static bool TryGetCustomRecordTypeTriggers(this ObjectGeneration objGen, out IEnumerable<RecordType> recTypes)
     {
         var data = objGen.GetObjectData();

@@ -765,10 +765,10 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
         }
 
-        if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
+        if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || obj.HasEmbeddedFields())
         {
             var async = HasAsyncStructs(obj, self: true);
-            if (HasEmbeddedFields(obj))
+            if (obj.HasEmbeddedFields())
             {
                 using (var args = sb.Function(
                            $"public static {Loqui.Generation.Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
@@ -778,7 +778,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 using (sb.CurlyBrace())
                 {
-                    if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
+                    if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => b.HasEmbeddedFields()))
                     {
                         using (var args = sb.Call(
                                    $"{Loqui.Generation.Utility.Await(async)}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}Structs"))
@@ -1977,7 +1977,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             switch (objType)
             {
                 case ObjectType.Subrecord:
-                    var hasEmbedded = HasEmbeddedFields(obj) || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(HasEmbeddedFields));
+                    var hasEmbedded = obj.HasEmbeddedFields() || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(x => x.HasEmbeddedFields()));
                     var hasRecord = obj.HasRecordTypeFields() || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(o => o.HasRecordTypeFields()));
                     if (hasEmbedded || hasRecord)
                     {
@@ -3097,7 +3097,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
             using (sb.CurlyBrace(doIt: isMajor))
             {
-                if (HasEmbeddedFields(obj))
+                if (obj.HasEmbeddedFields())
                 {
                     using (var args = sb.Call(
                                $"WriteEmbedded"))
@@ -3108,7 +3108,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 }
                 else
                 {
-                    var firstBase = obj.BaseClassTrail().FirstOrDefault(HasEmbeddedFields);
+                    var firstBase = obj.BaseClassTrail().FirstOrDefault(x => x.HasEmbeddedFields());
                     if (firstBase != null)
                     {
                         using (var args = sb.Call(
@@ -3196,7 +3196,7 @@ public class PluginTranslationModule : BinaryTranslationModule
     private async Task GenerateWriteExtras(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         var data = obj.GetObjectData();
-        if (HasEmbeddedFields(obj))
+        if (obj.HasEmbeddedFields())
         {
             using (var args = sb.Function(
                        $"public static void WriteEmbedded{obj.GetGenericTypes(MaskType.Normal)}"))
@@ -3209,7 +3209,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             {
                 if (obj.HasLoquiBaseObject)
                 {
-                    var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
+                    var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => b.HasEmbeddedFields());
                     if (firstBase != null)
                     {
                         using (var args = sb.Call(
