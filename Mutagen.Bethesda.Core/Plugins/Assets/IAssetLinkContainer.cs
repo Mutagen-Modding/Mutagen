@@ -1,4 +1,5 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Assets;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Assets;
 
@@ -31,14 +32,14 @@ public interface IAssetLinkContainerGetter
 
 public static class AssetLinkContainerGetterExt
 {
-    public static IEnumerable<TAsset> EnumerateAssetLinks<TAsset>(
+    public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
         AssetLinkQuery queryCategories,
         IAssetLinkCache? linkCache = null)
-        where TAsset : IAssetLinkGetter
+        where TAsset : IAssetType
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(queryCategories, linkCache, typeof(TAsset))
-            .WhereCastable<IAssetLinkGetter, TAsset>();
+            .WhereCastable<IAssetLinkGetter, IAssetLinkGetter<TAsset>>();
     }
     
     public static IEnumerable<IAssetLinkGetter> EnumerateListedAssetLinks(
@@ -48,11 +49,11 @@ public static class AssetLinkContainerGetterExt
         return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Listed, linkCache: null, assetType);
     }
     
-    public static IEnumerable<TAsset> EnumerateListedAssetLinks<TAsset>(this IAssetLinkContainerGetter assetLinkContainerGetter)
-        where TAsset : IAssetLinkGetter
+    public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateListedAssetLinks<TAsset>(this IAssetLinkContainerGetter assetLinkContainerGetter)
+        where TAsset : IAssetType
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Listed, linkCache: null, typeof(TAsset))
-            .WhereCastable<IAssetLinkGetter, TAsset>();
+            .WhereCastable<IAssetLinkGetter, IAssetLinkGetter<TAsset>>();
     }
     
     public static IEnumerable<IAssetLinkGetter> EnumerateInferredAssetLinks(
@@ -62,11 +63,11 @@ public static class AssetLinkContainerGetterExt
         return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Inferred, linkCache: null, assetType);
     }
     
-    public static IEnumerable<TAsset> EnumerateInferredAssetLinks<TAsset>(this IAssetLinkContainerGetter assetLinkContainerGetter)
-        where TAsset : IAssetLinkGetter
+    public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateInferredAssetLinks<TAsset>(this IAssetLinkContainerGetter assetLinkContainerGetter)
+        where TAsset : IAssetType
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Inferred, linkCache: null, typeof(TAsset))
-            .WhereCastable<IAssetLinkGetter, TAsset>();
+            .WhereCastable<IAssetLinkGetter, IAssetLinkGetter<TAsset>>();
     }
     
     public static IEnumerable<IAssetLinkGetter> EnumerateResolvedAssetLinks(
@@ -77,13 +78,13 @@ public static class AssetLinkContainerGetterExt
         return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Resolved, linkCache: linkCache, assetType);
     }
     
-    public static IEnumerable<TAsset> EnumerateResolvedAssetLinks<TAsset>(
+    public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateResolvedAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
         IAssetLinkCache? linkCache)
-        where TAsset : IAssetLinkGetter
+        where TAsset : IAssetType
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Resolved, linkCache: linkCache, typeof(TAsset))
-            .WhereCastable<IAssetLinkGetter, TAsset>();
+            .WhereCastable<IAssetLinkGetter, IAssetLinkGetter<TAsset>>();
     }
     
     public static IEnumerable<IAssetLinkGetter> EnumerateAllAssetLinks(
@@ -97,15 +98,15 @@ public static class AssetLinkContainerGetterExt
             assetType);
     }
     
-    public static IEnumerable<TAsset> EnumerateAllAssetLinks<TAsset>(
+    public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateAllAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
         IAssetLinkCache? linkCache)
-        where TAsset : IAssetLinkGetter
+        where TAsset : IAssetType
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(
                 AssetLinkQuery.Resolved | AssetLinkQuery.Inferred | AssetLinkQuery.Listed, 
                 linkCache: linkCache, 
                 typeof(TAsset))
-            .WhereCastable<IAssetLinkGetter, TAsset>();
+            .WhereCastable<IAssetLinkGetter, IAssetLinkGetter<TAsset>>();
     }
 }
