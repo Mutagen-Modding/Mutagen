@@ -4,7 +4,7 @@ using CellContext =
     Mutagen.Bethesda.Plugins.Cache.IModContext<Mutagen.Bethesda.Skyrim.ISkyrimMod,
         Mutagen.Bethesda.Skyrim.ISkyrimModGetter, Mutagen.Bethesda.Skyrim.ICell, Mutagen.Bethesda.Skyrim.ICellGetter>;
 
-namespace Mutagen.Bethesda.Skyrim.Records.Tooling;
+namespace Mutagen.Bethesda.Skyrim;
 
 public class WorldspaceCellLocationCache
 {

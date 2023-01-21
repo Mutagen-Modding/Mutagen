@@ -1,12 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Cache;
-using Mutagen.Bethesda.Skyrim.Records.Tooling;
+using Mutagen.Bethesda.Skyrim.Internals;
 using PlacedContext =
     Mutagen.Bethesda.Plugins.Cache.IModContext<Mutagen.Bethesda.Skyrim.ISkyrimMod,
         Mutagen.Bethesda.Skyrim.ISkyrimModGetter, Mutagen.Bethesda.Skyrim.IPlaced,
         Mutagen.Bethesda.Skyrim.IPlacedGetter>;
 
-namespace Mutagen.Bethesda.Skyrim.Extensions;
+namespace Mutagen.Bethesda.Skyrim;
 
 public static class PlacedContextExt
 {

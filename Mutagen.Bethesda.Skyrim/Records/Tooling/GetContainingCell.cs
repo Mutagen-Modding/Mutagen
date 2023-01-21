@@ -8,7 +8,7 @@ using PlacedContext =
         Mutagen.Bethesda.Skyrim.ISkyrimModGetter, Mutagen.Bethesda.Skyrim.IPlaced,
         Mutagen.Bethesda.Skyrim.IPlacedGetter>;
 
-namespace Mutagen.Bethesda.Skyrim.Records.Tooling;
+namespace Mutagen.Bethesda.Skyrim.Internals;
 
 internal static class GetContainingCell
 {
