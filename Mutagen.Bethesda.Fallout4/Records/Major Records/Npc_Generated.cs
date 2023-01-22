@@ -9713,11 +9713,6 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _XpValueOffset_IsSet => _ACBSLocation.HasValue;
         public Int16 XpValueOffset => _XpValueOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_XpValueOffsetLocation, 2)) : default;
         #endregion
-        #region Level
-        private int _LevelLocation => _ACBSLocation!.Value.Min + 0x6;
-        public partial IANpcLevelGetter GetLevelCustom();
-        public IANpcLevelGetter Level => GetLevelCustom();
-        #endregion
         #region CalcMinLevel
         private int _CalcMinLevelLocation => _ACBSLocation!.Value.Min + 0x8;
         private bool _CalcMinLevel_IsSet => _ACBSLocation.HasValue;
